@@ -1,0 +1,1 @@
+define(["underscore","Backbone"],function(t,e){var n=e.Model.extend({responsedetails:[],initialize:function(){this.get("ackStatus")&&(ackStatus=this.get("ackStatus"))}});return n});

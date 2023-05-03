@@ -1,0 +1,1 @@
+define(["jquery","underscore","Backbone","text!views/common/sadademailAdviceSuccessPage.tpl"],function(e,n,t,o){var o=t.View.extend({el:"#mobcontent",render:function(){return this.$("#mobcontent").html(n.template(o)),this},BackToWealth:function(){},errorresponse:function(){hideSpinner(),t.history.navigate("#/exception")}});return o});

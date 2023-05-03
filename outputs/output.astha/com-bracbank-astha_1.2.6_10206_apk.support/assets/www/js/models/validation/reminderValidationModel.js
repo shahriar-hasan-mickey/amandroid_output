@@ -1,0 +1,1 @@
+define(["underscore","Backbone"],function(e,r){var i=r.Model.extend({url:function(){return this.instanceUrl},validation:{addReminderDate:{required:!0,msg:"validation.reminders.reminderdatenull"},reminderText:{required:!0,msg:"validation.reminders.reminderdesc"}},initialize:function(e){this.url=e.url}});return i});

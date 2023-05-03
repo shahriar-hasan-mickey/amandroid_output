@@ -1,0 +1,668 @@
+record `okhttp3.internal.framed.Http2$Reader` @kind class @AccessFlag FINAL extends `okhttp3.internal.framed.FrameReader` @kind interface {
+  `boolean` `okhttp3.internal.framed.Http2$Reader.client` @AccessFlag PRIVATE_FINAL;
+  `okhttp3.internal.framed.Http2$ContinuationSource` `okhttp3.internal.framed.Http2$Reader.continuation` @AccessFlag PRIVATE_FINAL;
+  `okhttp3.internal.framed.Hpack$Reader` `okhttp3.internal.framed.Http2$Reader.hpackReader` @AccessFlag FINAL;
+  `okio.BufferedSource` `okhttp3.internal.framed.Http2$Reader.source` @AccessFlag PRIVATE_FINAL;
+}
+procedure `void` `<init>`(`okhttp3.internal.framed.Http2$Reader` v2 @kind this, `okio.BufferedSource` v3 @kind object @name `source`, `int` v4 @name `headerTableSize`, `boolean` v5 @name `client`) @signature `Lokhttp3/internal/framed/Http2$Reader;.<init>:(Lokio/BufferedSource;IZ)V` @AccessFlag CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+
+  #L30b3ec.  call `<init>`(v2) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L30b3f2.  v2.`okhttp3.internal.framed.Http2$Reader.source` @type ^`okio.BufferedSource` := v3 @kind object;
+  #L30b3f6.  v2.`okhttp3.internal.framed.Http2$Reader.client` @type ^`boolean` := v5 @kind boolean;
+  #L30b3fa.  v0:= new `okhttp3.internal.framed.Http2$ContinuationSource`;
+  #L30b3fe.  v1:= v2.`okhttp3.internal.framed.Http2$Reader.source` @type ^`okio.BufferedSource` @kind object;
+  #L30b402.  call `<init>`(v0, v1) @signature `Lokhttp3/internal/framed/Http2$ContinuationSource;.<init>:(Lokio/BufferedSource;)V` @kind direct;
+  #L30b408.  v2.`okhttp3.internal.framed.Http2$Reader.continuation` @type ^`okhttp3.internal.framed.Http2$ContinuationSource` := v0 @kind object;
+  #L30b40c.  v0:= new `okhttp3.internal.framed.Hpack$Reader`;
+  #L30b410.  v1:= v2.`okhttp3.internal.framed.Http2$Reader.continuation` @type ^`okhttp3.internal.framed.Http2$ContinuationSource` @kind object;
+  #L30b414.  call `<init>`(v0, v4, v1) @signature `Lokhttp3/internal/framed/Hpack$Reader;.<init>:(ILokio/Source;)V` @kind direct;
+  #L30b41a.  v2.`okhttp3.internal.framed.Http2$Reader.hpackReader` @type ^`okhttp3.internal.framed.Hpack$Reader` := v0 @kind object;
+  #L30b41e.  return @kind void;
+}
+procedure `void` `readData`(`okhttp3.internal.framed.Http2$Reader` v6 @kind this, `okhttp3.internal.framed.FrameReader$Handler` v7 @kind object @name `handler`, `int` v8 @name `length`, `byte` v9 @name `flags`, `int` v10 @name `streamId`) @signature `Lokhttp3/internal/framed/Http2$Reader;.readData:(Lokhttp3/internal/framed/FrameReader$Handler;IBI)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L30b430.  v0:= 1I;
+  #L30b432.  v2:= 0I;
+  #L30b434.  v3:= v9 ^& 1;
+  #L30b438.  if v3 == 0 then goto L30b45c;
+  #L30b43c.  v1:= v0;
+  #L30b43e.  v3:= v9 ^& 32;
+  #L30b442.  if v3 == 0 then goto L30b460;
+  #L30b446.  if v0 == 0 then goto L30b464;
+  #L30b44a.  v3:= "PROTOCOL_ERROR: FLAG_COMPRESSED without SETTINGS_COMPRESS_DATA" @kind object;
+  #L30b44e.  v4:= new `java.lang.Object`[v2];
+  #L30b452.  call temp:= `access$200`(v3, v4) @signature `Lokhttp3/internal/framed/Http2;.access$200:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/IOException;` @kind static;
+  #L30b458.  v3:= temp @kind object;
+  #L30b45a.  throw v3;
+  #L30b45c.  v1:= v2;
+  #L30b45e.  goto L30b43e;
+  #L30b460.  v0:= v2;
+  #L30b462.  goto L30b446;
+  #L30b464.  v3:= v9 ^& 8;
+  #L30b468.  if v3 == 0 then goto L30b47e;
+  #L30b46c.  v3:= v6.`okhttp3.internal.framed.Http2$Reader.source` @type ^`okio.BufferedSource` @kind object;
+  #L30b470.  call temp:= `readByte`(v3) @signature `Lokio/BufferedSource;.readByte:()B` @kind interface;
+  #L30b476.  v3:= temp;
+  #L30b478.  v3:= v3 ^& 255;
+  #L30b47c.  v2:= (`short`) v3 @kind i2s;
+  #L30b47e.  call temp:= `access$400`(v8, v9, v2) @signature `Lokhttp3/internal/framed/Http2;.access$400:(IBS)I` @kind static;
+  #L30b484.  v8:= temp;
+  #L30b486.  v3:= v6.`okhttp3.internal.framed.Http2$Reader.source` @type ^`okio.BufferedSource` @kind object;
+  #L30b48a.  call `data`(v7, v1, v10, v3, v8) @signature `Lokhttp3/internal/framed/FrameReader$Handler;.data:(ZILokio/BufferedSource;I)V` @kind interface;
+  #L30b490.  v3:= v6.`okhttp3.internal.framed.Http2$Reader.source` @type ^`okio.BufferedSource` @kind object;
+  #L30b494.  v4:= (`long`) v2 @kind i2l;
+  #L30b496.  call `skip`(v3, v4) @signature `Lokio/BufferedSource;.skip:(J)V` @kind interface;
+  #L30b49c.  return @kind void;
+}
+procedure `void` `readGoAway`(`okhttp3.internal.framed.Http2$Reader` v9 @kind this, `okhttp3.internal.framed.FrameReader$Handler` v10 @kind object @name `handler`, `int` v11 @name `length`, `byte` v12 @name `flags`, `int` v13 @name `streamId`) @signature `Lokhttp3/internal/framed/Http2$Reader;.readGoAway:(Lokhttp3/internal/framed/FrameReader$Handler;IBI)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+
+  #L30b4b0.  v6:= 1I;
+  #L30b4b2.  v8:= 0I;
+  #L30b4b4.  v5:= 8I;
+  #L30b4b8.  if v11 >= v5 then goto L30b4da;
+  #L30b4bc.  v5:= "TYPE_GOAWAY length < 8: %s" @kind object;
+  #L30b4c0.  v6:= new `java.lang.Object`[v6];
+  #L30b4c4.  call temp:= `valueOf`(v11) @signature `Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer;` @kind static;
+  #L30b4ca.  v7:= temp @kind object;
+  #L30b4cc.  v6[v8]:= v7 @kind object;
+  #L30b4d0.  call temp:= `access$200`(v5, v6) @signature `Lokhttp3/internal/framed/Http2;.access$200:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/IOException;` @kind static;
+  #L30b4d6.  v5:= temp @kind object;
+  #L30b4d8.  throw v5;
+  #L30b4da.  if v13 == 0 then goto L30b4f0;
+  #L30b4de.  v5:= "TYPE_GOAWAY streamId != 0" @kind object;
+  #L30b4e2.  v6:= new `java.lang.Object`[v8];
+  #L30b4e6.  call temp:= `access$200`(v5, v6) @signature `Lokhttp3/internal/framed/Http2;.access$200:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/IOException;` @kind static;
+  #L30b4ec.  v5:= temp @kind object;
+  #L30b4ee.  throw v5;
+  #L30b4f0.  v5:= v9.`okhttp3.internal.framed.Http2$Reader.source` @type ^`okio.BufferedSource` @kind object;
+  #L30b4f4.  call temp:= `readInt`(v5) @signature `Lokio/BufferedSource;.readInt:()I` @kind interface;
+  #L30b4fa.  v3:= temp;
+  #L30b4fc.  v5:= v9.`okhttp3.internal.framed.Http2$Reader.source` @type ^`okio.BufferedSource` @kind object;
+  #L30b500.  call temp:= `readInt`(v5) @signature `Lokio/BufferedSource;.readInt:()I` @kind interface;
+  #L30b506.  v2:= temp;
+  #L30b508.  v4:= v11 + -8;
+  #L30b50c.  call temp:= `fromHttp2`(v2) @signature `Lokhttp3/internal/framed/ErrorCode;.fromHttp2:(I)Lokhttp3/internal/framed/ErrorCode;` @kind static;
+  #L30b512.  v1:= temp @kind object;
+  #L30b514.  if v1 != 0 then goto L30b536;
+  #L30b518.  v5:= "TYPE_GOAWAY unexpected error code: %d" @kind object;
+  #L30b51c.  v6:= new `java.lang.Object`[v6];
+  #L30b520.  call temp:= `valueOf`(v2) @signature `Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer;` @kind static;
+  #L30b526.  v7:= temp @kind object;
+  #L30b528.  v6[v8]:= v7 @kind object;
+  #L30b52c.  call temp:= `access$200`(v5, v6) @signature `Lokhttp3/internal/framed/Http2;.access$200:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/IOException;` @kind static;
+  #L30b532.  v5:= temp @kind object;
+  #L30b534.  throw v5;
+  #L30b536.  v0:= `@@okio.ByteString.EMPTY` @type ^`okio.ByteString` @kind object;
+  #L30b53a.  if v4 <= 0 then goto L30b54c;
+  #L30b53e.  v5:= v9.`okhttp3.internal.framed.Http2$Reader.source` @type ^`okio.BufferedSource` @kind object;
+  #L30b542.  v6:= (`long`) v4 @kind i2l;
+  #L30b544.  call temp:= `readByteString`(v5, v6) @signature `Lokio/BufferedSource;.readByteString:(J)Lokio/ByteString;` @kind interface;
+  #L30b54a.  v0:= temp @kind object;
+  #L30b54c.  call `goAway`(v10, v3, v1, v0) @signature `Lokhttp3/internal/framed/FrameReader$Handler;.goAway:(ILokhttp3/internal/framed/ErrorCode;Lokio/ByteString;)V` @kind interface;
+  #L30b552.  return @kind void;
+}
+procedure `java.util.List` `readHeaderBlock`(`okhttp3.internal.framed.Http2$Reader` v2 @kind this, `int` v3 @name `length`, `short` v4 @name `padding`, `byte` v5 @name `flags`, `int` v6 @name `streamId`) @signature `Lokhttp3/internal/framed/Http2$Reader;.readHeaderBlock:(ISBI)Ljava/util/List;` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+
+  #L30b564.  v0:= v2.`okhttp3.internal.framed.Http2$Reader.continuation` @type ^`okhttp3.internal.framed.Http2$ContinuationSource` @kind object;
+  #L30b568.  v1:= v2.`okhttp3.internal.framed.Http2$Reader.continuation` @type ^`okhttp3.internal.framed.Http2$ContinuationSource` @kind object;
+  #L30b56c.  v1.`okhttp3.internal.framed.Http2$ContinuationSource.left` @type ^`int` := v3;
+  #L30b570.  v0.`okhttp3.internal.framed.Http2$ContinuationSource.length` @type ^`int` := v3;
+  #L30b574.  v0:= v2.`okhttp3.internal.framed.Http2$Reader.continuation` @type ^`okhttp3.internal.framed.Http2$ContinuationSource` @kind object;
+  #L30b578.  v0.`okhttp3.internal.framed.Http2$ContinuationSource.padding` @type ^`short` := v4 @kind char;
+  #L30b57c.  v0:= v2.`okhttp3.internal.framed.Http2$Reader.continuation` @type ^`okhttp3.internal.framed.Http2$ContinuationSource` @kind object;
+  #L30b580.  v0.`okhttp3.internal.framed.Http2$ContinuationSource.flags` @type ^`byte` := v5 @kind byte;
+  #L30b584.  v0:= v2.`okhttp3.internal.framed.Http2$Reader.continuation` @type ^`okhttp3.internal.framed.Http2$ContinuationSource` @kind object;
+  #L30b588.  v0.`okhttp3.internal.framed.Http2$ContinuationSource.streamId` @type ^`int` := v6;
+  #L30b58c.  v0:= v2.`okhttp3.internal.framed.Http2$Reader.hpackReader` @type ^`okhttp3.internal.framed.Hpack$Reader` @kind object;
+  #L30b590.  call `readHeaders`(v0) @signature `Lokhttp3/internal/framed/Hpack$Reader;.readHeaders:()V` @kind virtual;
+  #L30b596.  v0:= v2.`okhttp3.internal.framed.Http2$Reader.hpackReader` @type ^`okhttp3.internal.framed.Hpack$Reader` @kind object;
+  #L30b59a.  call temp:= `getAndResetHeaderList`(v0) @signature `Lokhttp3/internal/framed/Hpack$Reader;.getAndResetHeaderList:()Ljava/util/List;` @kind virtual;
+  #L30b5a0.  v0:= temp @kind object;
+  #L30b5a2.  return v0 @kind object;
+}
+procedure `void` `readHeaders`(`okhttp3.internal.framed.Http2$Reader` v8 @kind this, `okhttp3.internal.framed.FrameReader$Handler` v9 @kind object @name `handler`, `int` v10 @name `length`, `byte` v11 @name `flags`, `int` v12 @name `streamId`) @signature `Lokhttp3/internal/framed/Http2$Reader;.readHeaders:(Lokhttp3/internal/framed/FrameReader$Handler;IBI)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+
+  #L30b5b4.  v1:= 0I;
+  #L30b5b6.  if v12 != 0 then goto L30b5cc;
+  #L30b5ba.  v0:= "PROTOCOL_ERROR: TYPE_HEADERS streamId == 0" @kind object;
+  #L30b5be.  v1:= new `java.lang.Object`[v1];
+  #L30b5c2.  call temp:= `access$200`(v0, v1) @signature `Lokhttp3/internal/framed/Http2;.access$200:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/IOException;` @kind static;
+  #L30b5c8.  v0:= temp @kind object;
+  #L30b5ca.  throw v0;
+  #L30b5cc.  v0:= v11 ^& 1;
+  #L30b5d0.  if v0 == 0 then goto L30b624;
+  #L30b5d4.  v2:= 1I;
+  #L30b5d6.  v0:= v11 ^& 8;
+  #L30b5da.  if v0 == 0 then goto L30b628;
+  #L30b5de.  v0:= v8.`okhttp3.internal.framed.Http2$Reader.source` @type ^`okio.BufferedSource` @kind object;
+  #L30b5e2.  call temp:= `readByte`(v0) @signature `Lokio/BufferedSource;.readByte:()B` @kind interface;
+  #L30b5e8.  v0:= temp;
+  #L30b5ea.  v0:= v0 ^& 255;
+  #L30b5ee.  v7:= (`short`) v0 @kind i2s;
+  #L30b5f0.  v0:= v11 ^& 32;
+  #L30b5f4.  if v0 == 0 then goto L30b602;
+  #L30b5f8.  call `readPriority`(v8, v9, v12) @signature `Lokhttp3/internal/framed/Http2$Reader;.readPriority:(Lokhttp3/internal/framed/FrameReader$Handler;I)V` @kind direct;
+  #L30b5fe.  v10:= v10 + -5;
+  #L30b602.  call temp:= `access$400`(v10, v11, v7) @signature `Lokhttp3/internal/framed/Http2;.access$400:(IBS)I` @kind static;
+  #L30b608.  v10:= temp;
+  #L30b60a.  call temp:= `readHeaderBlock`(v8, v10, v7, v11, v12) @signature `Lokhttp3/internal/framed/Http2$Reader;.readHeaderBlock:(ISBI)Ljava/util/List;` @kind direct;
+  #L30b610.  v5:= temp @kind object;
+  #L30b612.  v4:= -1I;
+  #L30b614.  v6:= `@@okhttp3.internal.framed.HeadersMode.HTTP_20_HEADERS` @type ^`okhttp3.internal.framed.HeadersMode` @kind object;
+  #L30b618.  v0:= v9 @kind object;
+  #L30b61a.  v3:= v12;
+  #L30b61c.  call `headers`(v0, v1, v2, v3, v4, v5, v6) @signature `Lokhttp3/internal/framed/FrameReader$Handler;.headers:(ZZIILjava/util/List;Lokhttp3/internal/framed/HeadersMode;)V` @kind interface;
+  #L30b622.  return @kind void;
+  #L30b624.  v2:= v1;
+  #L30b626.  goto L30b5d6;
+  #L30b628.  v7:= v1;
+  #L30b62a.  goto L30b5f0;
+}
+procedure `void` `readPing`(`okhttp3.internal.framed.Http2$Reader` v7 @kind this, `okhttp3.internal.framed.FrameReader$Handler` v8 @kind object @name `handler`, `int` v9 @name `length`, `byte` v10 @name `flags`, `int` v11 @name `streamId`) @signature `Lokhttp3/internal/framed/Http2$Reader;.readPing:(Lokhttp3/internal/framed/FrameReader$Handler;IBI)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+
+  #L30b63c.  v0:= 1I;
+  #L30b63e.  v3:= 0I;
+  #L30b640.  v4:= 8I;
+  #L30b644.  if v9 == v4 then goto L30b666;
+  #L30b648.  v4:= "TYPE_PING length != 8: %s" @kind object;
+  #L30b64c.  v5:= new `java.lang.Object`[v0];
+  #L30b650.  call temp:= `valueOf`(v9) @signature `Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer;` @kind static;
+  #L30b656.  v6:= temp @kind object;
+  #L30b658.  v5[v3]:= v6 @kind object;
+  #L30b65c.  call temp:= `access$200`(v4, v5) @signature `Lokhttp3/internal/framed/Http2;.access$200:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/IOException;` @kind static;
+  #L30b662.  v3:= temp @kind object;
+  #L30b664.  throw v3;
+  #L30b666.  if v11 == 0 then goto L30b67c;
+  #L30b66a.  v4:= "TYPE_PING streamId != 0" @kind object;
+  #L30b66e.  v3:= new `java.lang.Object`[v3];
+  #L30b672.  call temp:= `access$200`(v4, v3) @signature `Lokhttp3/internal/framed/Http2;.access$200:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/IOException;` @kind static;
+  #L30b678.  v3:= temp @kind object;
+  #L30b67a.  throw v3;
+  #L30b67c.  v4:= v7.`okhttp3.internal.framed.Http2$Reader.source` @type ^`okio.BufferedSource` @kind object;
+  #L30b680.  call temp:= `readInt`(v4) @signature `Lokio/BufferedSource;.readInt:()I` @kind interface;
+  #L30b686.  v1:= temp;
+  #L30b688.  v4:= v7.`okhttp3.internal.framed.Http2$Reader.source` @type ^`okio.BufferedSource` @kind object;
+  #L30b68c.  call temp:= `readInt`(v4) @signature `Lokio/BufferedSource;.readInt:()I` @kind interface;
+  #L30b692.  v2:= temp;
+  #L30b694.  v4:= v10 ^& 1;
+  #L30b698.  if v4 == 0 then goto L30b6a4;
+  #L30b69c.  call `ping`(v8, v0, v1, v2) @signature `Lokhttp3/internal/framed/FrameReader$Handler;.ping:(ZII)V` @kind interface;
+  #L30b6a2.  return @kind void;
+  #L30b6a4.  v0:= v3;
+  #L30b6a6.  goto L30b69c;
+}
+procedure `void` `readPriority`(`okhttp3.internal.framed.Http2$Reader` v5 @kind this, `okhttp3.internal.framed.FrameReader$Handler` v6 @kind object @name `handler`, `int` v7 @name `streamId`) @signature `Lokhttp3/internal/framed/Http2$Reader;.readPriority:(Lokhttp3/internal/framed/FrameReader$Handler;I)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L30b6b8.  v4:= v5.`okhttp3.internal.framed.Http2$Reader.source` @type ^`okio.BufferedSource` @kind object;
+  #L30b6bc.  call temp:= `readInt`(v4) @signature `Lokio/BufferedSource;.readInt:()I` @kind interface;
+  #L30b6c2.  v2:= temp;
+  #L30b6c4.  v4:= -2147483648I;
+  #L30b6c8.  v4:= v4 ^& v2 @kind int;
+  #L30b6ca.  if v4 == 0 then goto L30b6f6;
+  #L30b6ce.  v0:= 1I;
+  #L30b6d0.  v4:= 2147483647I;
+  #L30b6d6.  v1:= v2 ^& v4 @kind int;
+  #L30b6da.  v4:= v5.`okhttp3.internal.framed.Http2$Reader.source` @type ^`okio.BufferedSource` @kind object;
+  #L30b6de.  call temp:= `readByte`(v4) @signature `Lokio/BufferedSource;.readByte:()B` @kind interface;
+  #L30b6e4.  v4:= temp;
+  #L30b6e6.  v4:= v4 ^& 255;
+  #L30b6ea.  v3:= v4 + 1;
+  #L30b6ee.  call `priority`(v6, v7, v1, v3, v0) @signature `Lokhttp3/internal/framed/FrameReader$Handler;.priority:(IIIZ)V` @kind interface;
+  #L30b6f4.  return @kind void;
+  #L30b6f6.  v0:= 0I;
+  #L30b6f8.  goto L30b6d0;
+}
+procedure `void` `readPriority`(`okhttp3.internal.framed.Http2$Reader` v4 @kind this, `okhttp3.internal.framed.FrameReader$Handler` v5 @kind object @name `handler`, `int` v6 @name `length`, `byte` v7 @name `flags`, `int` v8 @name `streamId`) @signature `Lokhttp3/internal/framed/Http2$Reader;.readPriority:(Lokhttp3/internal/framed/FrameReader$Handler;IBI)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L30b70c.  v3:= 0I;
+  #L30b70e.  v0:= 5I;
+  #L30b710.  if v6 == v0 then goto L30b734;
+  #L30b714.  v0:= "TYPE_PRIORITY length: %d != 5" @kind object;
+  #L30b718.  v1:= 1I;
+  #L30b71a.  v1:= new `java.lang.Object`[v1];
+  #L30b71e.  call temp:= `valueOf`(v6) @signature `Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer;` @kind static;
+  #L30b724.  v2:= temp @kind object;
+  #L30b726.  v1[v3]:= v2 @kind object;
+  #L30b72a.  call temp:= `access$200`(v0, v1) @signature `Lokhttp3/internal/framed/Http2;.access$200:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/IOException;` @kind static;
+  #L30b730.  v0:= temp @kind object;
+  #L30b732.  throw v0;
+  #L30b734.  if v8 != 0 then goto L30b74a;
+  #L30b738.  v0:= "TYPE_PRIORITY streamId == 0" @kind object;
+  #L30b73c.  v1:= new `java.lang.Object`[v3];
+  #L30b740.  call temp:= `access$200`(v0, v1) @signature `Lokhttp3/internal/framed/Http2;.access$200:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/IOException;` @kind static;
+  #L30b746.  v0:= temp @kind object;
+  #L30b748.  throw v0;
+  #L30b74a.  call `readPriority`(v4, v5, v8) @signature `Lokhttp3/internal/framed/Http2$Reader;.readPriority:(Lokhttp3/internal/framed/FrameReader$Handler;I)V` @kind direct;
+  #L30b750.  return @kind void;
+}
+procedure `void` `readPushPromise`(`okhttp3.internal.framed.Http2$Reader` v5 @kind this, `okhttp3.internal.framed.FrameReader$Handler` v6 @kind object @name `handler`, `int` v7 @name `length`, `byte` v8 @name `flags`, `int` v9 @name `streamId`) @signature `Lokhttp3/internal/framed/Http2$Reader;.readPushPromise:(Lokhttp3/internal/framed/FrameReader$Handler;IBI)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L30b764.  v1:= 0I;
+  #L30b766.  if v9 != 0 then goto L30b77c;
+  #L30b76a.  v3:= "PROTOCOL_ERROR: TYPE_PUSH_PROMISE streamId == 0" @kind object;
+  #L30b76e.  v4:= new `java.lang.Object`[v1];
+  #L30b772.  call temp:= `access$200`(v3, v4) @signature `Lokhttp3/internal/framed/Http2;.access$200:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/IOException;` @kind static;
+  #L30b778.  v3:= temp @kind object;
+  #L30b77a.  throw v3;
+  #L30b77c.  v3:= v8 ^& 8;
+  #L30b780.  if v3 == 0 then goto L30b796;
+  #L30b784.  v3:= v5.`okhttp3.internal.framed.Http2$Reader.source` @type ^`okio.BufferedSource` @kind object;
+  #L30b788.  call temp:= `readByte`(v3) @signature `Lokio/BufferedSource;.readByte:()B` @kind interface;
+  #L30b78e.  v3:= temp;
+  #L30b790.  v3:= v3 ^& 255;
+  #L30b794.  v1:= (`short`) v3 @kind i2s;
+  #L30b796.  v3:= v5.`okhttp3.internal.framed.Http2$Reader.source` @type ^`okio.BufferedSource` @kind object;
+  #L30b79a.  call temp:= `readInt`(v3) @signature `Lokio/BufferedSource;.readInt:()I` @kind interface;
+  #L30b7a0.  v3:= temp;
+  #L30b7a2.  v4:= 2147483647I;
+  #L30b7a8.  v2:= v3 ^& v4 @kind int;
+  #L30b7ac.  v7:= v7 + -4;
+  #L30b7b0.  call temp:= `access$400`(v7, v8, v1) @signature `Lokhttp3/internal/framed/Http2;.access$400:(IBS)I` @kind static;
+  #L30b7b6.  v7:= temp;
+  #L30b7b8.  call temp:= `readHeaderBlock`(v5, v7, v1, v8, v9) @signature `Lokhttp3/internal/framed/Http2$Reader;.readHeaderBlock:(ISBI)Ljava/util/List;` @kind direct;
+  #L30b7be.  v0:= temp @kind object;
+  #L30b7c0.  call `pushPromise`(v6, v9, v2, v0) @signature `Lokhttp3/internal/framed/FrameReader$Handler;.pushPromise:(IILjava/util/List;)V` @kind interface;
+  #L30b7c6.  return @kind void;
+}
+procedure `void` `readRstStream`(`okhttp3.internal.framed.Http2$Reader` v6 @kind this, `okhttp3.internal.framed.FrameReader$Handler` v7 @kind object @name `handler`, `int` v8 @name `length`, `byte` v9 @name `flags`, `int` v10 @name `streamId`) @signature `Lokhttp3/internal/framed/Http2$Reader;.readRstStream:(Lokhttp3/internal/framed/FrameReader$Handler;IBI)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L30b7d8.  v3:= 1I;
+  #L30b7da.  v5:= 0I;
+  #L30b7dc.  v2:= 4I;
+  #L30b7de.  if v8 == v2 then goto L30b800;
+  #L30b7e2.  v2:= "TYPE_RST_STREAM length: %d != 4" @kind object;
+  #L30b7e6.  v3:= new `java.lang.Object`[v3];
+  #L30b7ea.  call temp:= `valueOf`(v8) @signature `Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer;` @kind static;
+  #L30b7f0.  v4:= temp @kind object;
+  #L30b7f2.  v3[v5]:= v4 @kind object;
+  #L30b7f6.  call temp:= `access$200`(v2, v3) @signature `Lokhttp3/internal/framed/Http2;.access$200:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/IOException;` @kind static;
+  #L30b7fc.  v2:= temp @kind object;
+  #L30b7fe.  throw v2;
+  #L30b800.  if v10 != 0 then goto L30b816;
+  #L30b804.  v2:= "TYPE_RST_STREAM streamId == 0" @kind object;
+  #L30b808.  v3:= new `java.lang.Object`[v5];
+  #L30b80c.  call temp:= `access$200`(v2, v3) @signature `Lokhttp3/internal/framed/Http2;.access$200:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/IOException;` @kind static;
+  #L30b812.  v2:= temp @kind object;
+  #L30b814.  throw v2;
+  #L30b816.  v2:= v6.`okhttp3.internal.framed.Http2$Reader.source` @type ^`okio.BufferedSource` @kind object;
+  #L30b81a.  call temp:= `readInt`(v2) @signature `Lokio/BufferedSource;.readInt:()I` @kind interface;
+  #L30b820.  v1:= temp;
+  #L30b822.  call temp:= `fromHttp2`(v1) @signature `Lokhttp3/internal/framed/ErrorCode;.fromHttp2:(I)Lokhttp3/internal/framed/ErrorCode;` @kind static;
+  #L30b828.  v0:= temp @kind object;
+  #L30b82a.  if v0 != 0 then goto L30b84c;
+  #L30b82e.  v2:= "TYPE_RST_STREAM unexpected error code: %d" @kind object;
+  #L30b832.  v3:= new `java.lang.Object`[v3];
+  #L30b836.  call temp:= `valueOf`(v1) @signature `Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer;` @kind static;
+  #L30b83c.  v4:= temp @kind object;
+  #L30b83e.  v3[v5]:= v4 @kind object;
+  #L30b842.  call temp:= `access$200`(v2, v3) @signature `Lokhttp3/internal/framed/Http2;.access$200:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/IOException;` @kind static;
+  #L30b848.  v2:= temp @kind object;
+  #L30b84a.  throw v2;
+  #L30b84c.  call `rstStream`(v7, v10, v0) @signature `Lokhttp3/internal/framed/FrameReader$Handler;.rstStream:(ILokhttp3/internal/framed/ErrorCode;)V` @kind interface;
+  #L30b852.  return @kind void;
+}
+procedure `void` `readSettings`(`okhttp3.internal.framed.Http2$Reader` v8 @kind this, `okhttp3.internal.framed.FrameReader$Handler` v9 @kind object @name `handler`, `int` v10 @name `length`, `byte` v11 @name `flags`, `int` v12 @name `streamId`) @signature `Lokhttp3/internal/framed/Http2$Reader;.readSettings:(Lokhttp3/internal/framed/FrameReader$Handler;IBI)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+
+  #L30b864.  v5:= 1I;
+  #L30b866.  v7:= 0I;
+  #L30b868.  if v12 == 0 then goto L30b87e;
+  #L30b86c.  v4:= "TYPE_SETTINGS streamId != 0" @kind object;
+  #L30b870.  v5:= new `java.lang.Object`[v7];
+  #L30b874.  call temp:= `access$200`(v4, v5) @signature `Lokhttp3/internal/framed/Http2;.access$200:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/IOException;` @kind static;
+  #L30b87a.  v4:= temp @kind object;
+  #L30b87c.  throw v4;
+  #L30b87e.  v4:= v11 ^& 1;
+  #L30b882.  if v4 == 0 then goto L30b8a4;
+  #L30b886.  if v10 == 0 then goto L30b89c;
+  #L30b88a.  v4:= "FRAME_SIZE_ERROR ack frame should be empty!" @kind object;
+  #L30b88e.  v5:= new `java.lang.Object`[v7];
+  #L30b892.  call temp:= `access$200`(v4, v5) @signature `Lokhttp3/internal/framed/Http2;.access$200:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/IOException;` @kind static;
+  #L30b898.  v4:= temp @kind object;
+  #L30b89a.  throw v4;
+  #L30b89c.  call `ackSettings`(v9) @signature `Lokhttp3/internal/framed/FrameReader$Handler;.ackSettings:()V` @kind interface;
+  #L30b8a2.  return @kind void;
+  #L30b8a4.  v4:= v10 %% 6;
+  #L30b8a8.  if v4 == 0 then goto L30b8ca;
+  #L30b8ac.  v4:= "TYPE_SETTINGS length %% 6 != 0: %s" @kind object;
+  #L30b8b0.  v5:= new `java.lang.Object`[v5];
+  #L30b8b4.  call temp:= `valueOf`(v10) @signature `Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer;` @kind static;
+  #L30b8ba.  v6:= temp @kind object;
+  #L30b8bc.  v5[v7]:= v6 @kind object;
+  #L30b8c0.  call temp:= `access$200`(v4, v5) @signature `Lokhttp3/internal/framed/Http2;.access$200:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/IOException;` @kind static;
+  #L30b8c6.  v4:= temp @kind object;
+  #L30b8c8.  throw v4;
+  #L30b8ca.  v2:= new `okhttp3.internal.framed.Settings`;
+  #L30b8ce.  call `<init>`(v2) @signature `Lokhttp3/internal/framed/Settings;.<init>:()V` @kind direct;
+  #L30b8d4.  v0:= 0I;
+  #L30b8d6.  if v0 >= v10 then goto L30b96a;
+  #L30b8da.  v4:= v8.`okhttp3.internal.framed.Http2$Reader.source` @type ^`okio.BufferedSource` @kind object;
+  #L30b8de.  call temp:= `readShort`(v4) @signature `Lokio/BufferedSource;.readShort:()S` @kind interface;
+  #L30b8e4.  v1:= temp;
+  #L30b8e6.  v4:= v8.`okhttp3.internal.framed.Http2$Reader.source` @type ^`okio.BufferedSource` @kind object;
+  #L30b8ea.  call temp:= `readInt`(v4) @signature `Lokio/BufferedSource;.readInt:()I` @kind interface;
+  #L30b8f0.  v3:= temp;
+  #L30b8f2.  goto L30b990;
+  #L30b8f8.  call temp:= `set`(v2, v1, v7, v3) @signature `Lokhttp3/internal/framed/Settings;.set:(III)Lokhttp3/internal/framed/Settings;` @kind virtual;
+  #L30b8fe.  v0:= v0 + 6;
+  #L30b902.  goto L30b8d6;
+  #L30b904.  if v3 == 0 then goto L30b8f8;
+  #L30b908.  if v3 == v5 then goto L30b8f8;
+  #L30b90c.  v4:= "PROTOCOL_ERROR SETTINGS_ENABLE_PUSH != 0 or 1" @kind object;
+  #L30b910.  v5:= new `java.lang.Object`[v7];
+  #L30b914.  call temp:= `access$200`(v4, v5) @signature `Lokhttp3/internal/framed/Http2;.access$200:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/IOException;` @kind static;
+  #L30b91a.  v4:= temp @kind object;
+  #L30b91c.  throw v4;
+  #L30b91e.  v1:= 4I;
+  #L30b920.  goto L30b8f8;
+  #L30b922.  v1:= 7I;
+  #L30b924.  if v3 >= 0 then goto L30b8f8;
+  #L30b928.  v4:= "PROTOCOL_ERROR SETTINGS_INITIAL_WINDOW_SIZE > 2^31 - 1" @kind object;
+  #L30b92c.  v5:= new `java.lang.Object`[v7];
+  #L30b930.  call temp:= `access$200`(v4, v5) @signature `Lokhttp3/internal/framed/Http2;.access$200:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/IOException;` @kind static;
+  #L30b936.  v4:= temp @kind object;
+  #L30b938.  throw v4;
+  #L30b93a.  v4:= 16384I;
+  #L30b93e.  if v3 < v4 then goto L30b94c;
+  #L30b942.  v4:= 16777215I;
+  #L30b948.  if v3 <= v4 then goto L30b8f8;
+  #L30b94c.  v4:= "PROTOCOL_ERROR SETTINGS_MAX_FRAME_SIZE: %s" @kind object;
+  #L30b950.  v5:= new `java.lang.Object`[v5];
+  #L30b954.  call temp:= `valueOf`(v3) @signature `Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer;` @kind static;
+  #L30b95a.  v6:= temp @kind object;
+  #L30b95c.  v5[v7]:= v6 @kind object;
+  #L30b960.  call temp:= `access$200`(v4, v5) @signature `Lokhttp3/internal/framed/Http2;.access$200:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/IOException;` @kind static;
+  #L30b966.  v4:= temp @kind object;
+  #L30b968.  throw v4;
+  #L30b96a.  call `settings`(v9, v7, v2) @signature `Lokhttp3/internal/framed/FrameReader$Handler;.settings:(ZLokhttp3/internal/framed/Settings;)V` @kind interface;
+  #L30b970.  call temp:= `getHeaderTableSize`(v2) @signature `Lokhttp3/internal/framed/Settings;.getHeaderTableSize:()I` @kind virtual;
+  #L30b976.  v4:= temp;
+  #L30b978.  if v4 < 0 then goto L30b8a2;
+  #L30b97c.  v4:= v8.`okhttp3.internal.framed.Http2$Reader.hpackReader` @type ^`okhttp3.internal.framed.Hpack$Reader` @kind object;
+  #L30b980.  call temp:= `getHeaderTableSize`(v2) @signature `Lokhttp3/internal/framed/Settings;.getHeaderTableSize:()I` @kind virtual;
+  #L30b986.  v5:= temp;
+  #L30b988.  call `headerTableSizeSetting`(v4, v5) @signature `Lokhttp3/internal/framed/Hpack$Reader;.headerTableSizeSetting:(I)V` @kind virtual;
+  #L30b98e.  goto L30b8a2;
+  #L30b990.  switch v1
+                  | 1 => goto L30b8f8
+                  | 2 => goto L30b904
+                  | 3 => goto L30b91e
+                  | 4 => goto L30b922
+                  | 5 => goto L30b93a
+                  | 6 => goto L30b8f8
+                  | else => goto L30b8f8;
+}
+procedure `void` `readWindowUpdate`(`okhttp3.internal.framed.Http2$Reader` v8 @kind this, `okhttp3.internal.framed.FrameReader$Handler` v9 @kind object @name `handler`, `int` v10 @name `length`, `byte` v11 @name `flags`, `int` v12 @name `streamId`) @signature `Lokhttp3/internal/framed/Http2$Reader;.readWindowUpdate:(Lokhttp3/internal/framed/FrameReader$Handler;IBI)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+
+  #L30b9c0.  v7:= 1I;
+  #L30b9c2.  v6:= 0I;
+  #L30b9c4.  v2:= 4I;
+  #L30b9c6.  if v10 == v2 then goto L30b9e8;
+  #L30b9ca.  v2:= "TYPE_WINDOW_UPDATE length !=4: %s" @kind object;
+  #L30b9ce.  v3:= new `java.lang.Object`[v7];
+  #L30b9d2.  call temp:= `valueOf`(v10) @signature `Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer;` @kind static;
+  #L30b9d8.  v4:= temp @kind object;
+  #L30b9da.  v3[v6]:= v4 @kind object;
+  #L30b9de.  call temp:= `access$200`(v2, v3) @signature `Lokhttp3/internal/framed/Http2;.access$200:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/IOException;` @kind static;
+  #L30b9e4.  v2:= temp @kind object;
+  #L30b9e6.  throw v2;
+  #L30b9e8.  v2:= v8.`okhttp3.internal.framed.Http2$Reader.source` @type ^`okio.BufferedSource` @kind object;
+  #L30b9ec.  call temp:= `readInt`(v2) @signature `Lokio/BufferedSource;.readInt:()I` @kind interface;
+  #L30b9f2.  v2:= temp;
+  #L30b9f4.  v2:= (`long`) v2 @kind i2l;
+  #L30b9f6.  v4:= 2147483647L;
+  #L30b9fc.  v0:= v2 ^& v4 @kind long;
+  #L30ba00.  v2:= 0L;
+  #L30ba04.  v2:= lcmp(v0, v2);
+  #L30ba08.  if v2 != 0 then goto L30ba2a;
+  #L30ba0c.  v2:= "windowSizeIncrement was 0" @kind object;
+  #L30ba10.  v3:= new `java.lang.Object`[v7];
+  #L30ba14.  call temp:= `valueOf`(v0) @signature `Ljava/lang/Long;.valueOf:(J)Ljava/lang/Long;` @kind static;
+  #L30ba1a.  v4:= temp @kind object;
+  #L30ba1c.  v3[v6]:= v4 @kind object;
+  #L30ba20.  call temp:= `access$200`(v2, v3) @signature `Lokhttp3/internal/framed/Http2;.access$200:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/IOException;` @kind static;
+  #L30ba26.  v2:= temp @kind object;
+  #L30ba28.  throw v2;
+  #L30ba2a.  call `windowUpdate`(v9, v12, v0) @signature `Lokhttp3/internal/framed/FrameReader$Handler;.windowUpdate:(IJ)V` @kind interface;
+  #L30ba30.  return @kind void;
+}
+procedure `void` `close`(`okhttp3.internal.framed.Http2$Reader` v1 @kind this) @signature `Lokhttp3/internal/framed/Http2$Reader;.close:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L30ba44.  v0:= v1.`okhttp3.internal.framed.Http2$Reader.source` @type ^`okio.BufferedSource` @kind object;
+  #L30ba48.  call `close`(v0) @signature `Lokio/BufferedSource;.close:()V` @kind interface;
+  #L30ba4e.  return @kind void;
+}
+procedure `boolean` `nextFrame`(`okhttp3.internal.framed.Http2$Reader` v10 @kind this, `okhttp3.internal.framed.FrameReader$Handler` v11 @kind object @name `handler`) @signature `Lokhttp3/internal/framed/Http2$Reader;.nextFrame:(Lokhttp3/internal/framed/FrameReader$Handler;)Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+    v9;
+
+  #L30ba60.  v6:= 0I;
+  #L30ba62.  v5:= 1I;
+  #L30ba64.  v7:= v10.`okhttp3.internal.framed.Http2$Reader.source` @type ^`okio.BufferedSource` @kind object;
+  #L30ba68.  v8:= 9L;
+  #L30ba6c.  call `require`(v7, v8) @signature `Lokio/BufferedSource;.require:(J)V` @kind interface;
+  #L30ba72.  v7:= v10.`okhttp3.internal.framed.Http2$Reader.source` @type ^`okio.BufferedSource` @kind object;
+  #L30ba76.  call temp:= `access$300`(v7) @signature `Lokhttp3/internal/framed/Http2;.access$300:(Lokio/BufferedSource;)I` @kind static;
+  #L30ba7c.  v2:= temp;
+  #L30ba7e.  if v2 < 0 then goto L30ba8a;
+  #L30ba82.  v7:= 16384I;
+  #L30ba86.  if v2 <= v7 then goto L30baae;
+  #L30ba8a.  v7:= "FRAME_SIZE_ERROR: %s" @kind object;
+  #L30ba8e.  v5:= new `java.lang.Object`[v5];
+  #L30ba92.  call temp:= `valueOf`(v2) @signature `Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer;` @kind static;
+  #L30ba98.  v8:= temp @kind object;
+  #L30ba9a.  v5[v6]:= v8 @kind object;
+  #L30ba9e.  call temp:= `access$200`(v7, v5) @signature `Lokhttp3/internal/framed/Http2;.access$200:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/IOException;` @kind static;
+  #L30baa4.  v5:= temp @kind object;
+  #L30baa6.  throw v5;
+  #L30baa8.  v0:= Exception @type ^`java.io.IOException` @kind object;
+  #L30baaa.  v5:= v6;
+  #L30baac.  return v5;
+  #L30baae.  v6:= v10.`okhttp3.internal.framed.Http2$Reader.source` @type ^`okio.BufferedSource` @kind object;
+  #L30bab2.  call temp:= `readByte`(v6) @signature `Lokio/BufferedSource;.readByte:()B` @kind interface;
+  #L30bab8.  v6:= temp;
+  #L30baba.  v6:= v6 ^& 255;
+  #L30babe.  v4:= (`byte`) v6 @kind i2b;
+  #L30bac0.  v6:= v10.`okhttp3.internal.framed.Http2$Reader.source` @type ^`okio.BufferedSource` @kind object;
+  #L30bac4.  call temp:= `readByte`(v6) @signature `Lokio/BufferedSource;.readByte:()B` @kind interface;
+  #L30baca.  v6:= temp;
+  #L30bacc.  v6:= v6 ^& 255;
+  #L30bad0.  v1:= (`byte`) v6 @kind i2b;
+  #L30bad2.  v6:= v10.`okhttp3.internal.framed.Http2$Reader.source` @type ^`okio.BufferedSource` @kind object;
+  #L30bad6.  call temp:= `readInt`(v6) @signature `Lokio/BufferedSource;.readInt:()I` @kind interface;
+  #L30badc.  v6:= temp;
+  #L30bade.  v7:= 2147483647I;
+  #L30bae4.  v3:= v6 ^& v7 @kind int;
+  #L30bae8.  call temp:= `access$100`() @signature `Lokhttp3/internal/framed/Http2;.access$100:()Ljava/util/logging/Logger;` @kind static;
+  #L30baee.  v6:= temp @kind object;
+  #L30baf0.  v7:= `@@java.util.logging.Level.FINE` @type ^`java.util.logging.Level` @kind object;
+  #L30baf4.  call temp:= `isLoggable`(v6, v7) @signature `Ljava/util/logging/Logger;.isLoggable:(Ljava/util/logging/Level;)Z` @kind virtual;
+  #L30bafa.  v6:= temp;
+  #L30bafc.  if v6 == 0 then goto L30bb16;
+  #L30bb00.  call temp:= `access$100`() @signature `Lokhttp3/internal/framed/Http2;.access$100:()Ljava/util/logging/Logger;` @kind static;
+  #L30bb06.  v6:= temp @kind object;
+  #L30bb08.  call temp:= `formatHeader`(v5, v3, v2, v4, v1) @signature `Lokhttp3/internal/framed/Http2$FrameLogger;.formatHeader:(ZIIBB)Ljava/lang/String;` @kind static;
+  #L30bb0e.  v7:= temp @kind object;
+  #L30bb10.  call `fine`(v6, v7) @signature `Ljava/util/logging/Logger;.fine:(Ljava/lang/String;)V` @kind virtual;
+  #L30bb16.  goto L30bb74;
+  #L30bb1c.  v6:= v10.`okhttp3.internal.framed.Http2$Reader.source` @type ^`okio.BufferedSource` @kind object;
+  #L30bb20.  v8:= (`long`) v2 @kind i2l;
+  #L30bb22.  call `skip`(v6, v8) @signature `Lokio/BufferedSource;.skip:(J)V` @kind interface;
+  #L30bb28.  goto L30baac;
+  #L30bb2a.  call `readData`(v10, v11, v2, v1, v3) @signature `Lokhttp3/internal/framed/Http2$Reader;.readData:(Lokhttp3/internal/framed/FrameReader$Handler;IBI)V` @kind direct;
+  #L30bb30.  goto L30baac;
+  #L30bb32.  call `readHeaders`(v10, v11, v2, v1, v3) @signature `Lokhttp3/internal/framed/Http2$Reader;.readHeaders:(Lokhttp3/internal/framed/FrameReader$Handler;IBI)V` @kind direct;
+  #L30bb38.  goto L30baac;
+  #L30bb3a.  call `readPriority`(v10, v11, v2, v1, v3) @signature `Lokhttp3/internal/framed/Http2$Reader;.readPriority:(Lokhttp3/internal/framed/FrameReader$Handler;IBI)V` @kind direct;
+  #L30bb40.  goto L30baac;
+  #L30bb42.  call `readRstStream`(v10, v11, v2, v1, v3) @signature `Lokhttp3/internal/framed/Http2$Reader;.readRstStream:(Lokhttp3/internal/framed/FrameReader$Handler;IBI)V` @kind direct;
+  #L30bb48.  goto L30baac;
+  #L30bb4a.  call `readSettings`(v10, v11, v2, v1, v3) @signature `Lokhttp3/internal/framed/Http2$Reader;.readSettings:(Lokhttp3/internal/framed/FrameReader$Handler;IBI)V` @kind direct;
+  #L30bb50.  goto L30baac;
+  #L30bb52.  call `readPushPromise`(v10, v11, v2, v1, v3) @signature `Lokhttp3/internal/framed/Http2$Reader;.readPushPromise:(Lokhttp3/internal/framed/FrameReader$Handler;IBI)V` @kind direct;
+  #L30bb58.  goto L30baac;
+  #L30bb5a.  call `readPing`(v10, v11, v2, v1, v3) @signature `Lokhttp3/internal/framed/Http2$Reader;.readPing:(Lokhttp3/internal/framed/FrameReader$Handler;IBI)V` @kind direct;
+  #L30bb60.  goto L30baac;
+  #L30bb62.  call `readGoAway`(v10, v11, v2, v1, v3) @signature `Lokhttp3/internal/framed/Http2$Reader;.readGoAway:(Lokhttp3/internal/framed/FrameReader$Handler;IBI)V` @kind direct;
+  #L30bb68.  goto L30baac;
+  #L30bb6a.  call `readWindowUpdate`(v10, v11, v2, v1, v3) @signature `Lokhttp3/internal/framed/Http2$Reader;.readWindowUpdate:(Lokhttp3/internal/framed/FrameReader$Handler;IBI)V` @kind direct;
+  #L30bb70.  goto L30baac;
+  #L30bb72.  
+  #L30bb74.  switch v4
+                  | 0 => goto L30bb2a
+                  | 1 => goto L30bb32
+                  | 2 => goto L30bb3a
+                  | 3 => goto L30bb42
+                  | 4 => goto L30bb4a
+                  | 5 => goto L30bb52
+                  | 6 => goto L30bb5a
+                  | 7 => goto L30bb62
+                  | 8 => goto L30bb6a
+                  | else => goto L30bb1c;
+  catch `java.io.IOException` @[L30ba64..L30ba72] goto L30baa8;
+}
+procedure `void` `readConnectionPreface`(`okhttp3.internal.framed.Http2$Reader` v7 @kind this) @signature `Lokhttp3/internal/framed/Http2$Reader;.readConnectionPreface:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+
+  #L30bbc0.  v6:= 1I;
+  #L30bbc2.  v5:= 0I;
+  #L30bbc4.  v1:= v7.`okhttp3.internal.framed.Http2$Reader.client` @type ^`boolean` @kind boolean;
+  #L30bbc8.  if v1 == 0 then goto L30bbce;
+  #L30bbcc.  return @kind void;
+  #L30bbce.  v1:= v7.`okhttp3.internal.framed.Http2$Reader.source` @type ^`okio.BufferedSource` @kind object;
+  #L30bbd2.  call temp:= `access$000`() @signature `Lokhttp3/internal/framed/Http2;.access$000:()Lokio/ByteString;` @kind static;
+  #L30bbd8.  v2:= temp @kind object;
+  #L30bbda.  call temp:= `size`(v2) @signature `Lokio/ByteString;.size:()I` @kind virtual;
+  #L30bbe0.  v2:= temp;
+  #L30bbe2.  v2:= (`long`) v2 @kind i2l;
+  #L30bbe4.  call temp:= `readByteString`(v1, v2) @signature `Lokio/BufferedSource;.readByteString:(J)Lokio/ByteString;` @kind interface;
+  #L30bbea.  v0:= temp @kind object;
+  #L30bbec.  call temp:= `access$100`() @signature `Lokhttp3/internal/framed/Http2;.access$100:()Ljava/util/logging/Logger;` @kind static;
+  #L30bbf2.  v1:= temp @kind object;
+  #L30bbf4.  v2:= `@@java.util.logging.Level.FINE` @type ^`java.util.logging.Level` @kind object;
+  #L30bbf8.  call temp:= `isLoggable`(v1, v2) @signature `Ljava/util/logging/Logger;.isLoggable:(Ljava/util/logging/Level;)Z` @kind virtual;
+  #L30bbfe.  v1:= temp;
+  #L30bc00.  if v1 == 0 then goto L30bc2e;
+  #L30bc04.  call temp:= `access$100`() @signature `Lokhttp3/internal/framed/Http2;.access$100:()Ljava/util/logging/Logger;` @kind static;
+  #L30bc0a.  v1:= temp @kind object;
+  #L30bc0c.  v2:= "<< CONNECTION %s" @kind object;
+  #L30bc10.  v3:= new `java.lang.Object`[v6];
+  #L30bc14.  call temp:= `hex`(v0) @signature `Lokio/ByteString;.hex:()Ljava/lang/String;` @kind virtual;
+  #L30bc1a.  v4:= temp @kind object;
+  #L30bc1c.  v3[v5]:= v4 @kind object;
+  #L30bc20.  call temp:= `format`(v2, v3) @signature `Lokhttp3/internal/Util;.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;` @kind static;
+  #L30bc26.  v2:= temp @kind object;
+  #L30bc28.  call `fine`(v1, v2) @signature `Ljava/util/logging/Logger;.fine:(Ljava/lang/String;)V` @kind virtual;
+  #L30bc2e.  call temp:= `access$000`() @signature `Lokhttp3/internal/framed/Http2;.access$000:()Lokio/ByteString;` @kind static;
+  #L30bc34.  v1:= temp @kind object;
+  #L30bc36.  call temp:= `equals`(v1, v0) @signature `Lokio/ByteString;.equals:(Ljava/lang/Object;)Z` @kind virtual;
+  #L30bc3c.  v1:= temp;
+  #L30bc3e.  if v1 != 0 then goto L30bbcc;
+  #L30bc42.  v1:= "Expected a connection header but was %s" @kind object;
+  #L30bc46.  v2:= new `java.lang.Object`[v6];
+  #L30bc4a.  call temp:= `utf8`(v0) @signature `Lokio/ByteString;.utf8:()Ljava/lang/String;` @kind virtual;
+  #L30bc50.  v3:= temp @kind object;
+  #L30bc52.  v2[v5]:= v3 @kind object;
+  #L30bc56.  call temp:= `access$200`(v1, v2) @signature `Lokhttp3/internal/framed/Http2;.access$200:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/IOException;` @kind static;
+  #L30bc5c.  v1:= temp @kind object;
+  #L30bc5e.  throw v1;
+}

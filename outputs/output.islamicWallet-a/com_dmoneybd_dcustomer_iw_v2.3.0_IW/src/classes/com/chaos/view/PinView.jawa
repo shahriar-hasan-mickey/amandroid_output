@@ -1,0 +1,1448 @@
+record `com.chaos.view.PinView` @kind class @AccessFlag PUBLIC extends `androidx.appcompat.widget.AppCompatEditText` @kind class {
+  `boolean` `com.chaos.view.PinView.drawCursor` @AccessFlag PRIVATE;
+  `boolean` `com.chaos.view.PinView.isAnimationEnable` @AccessFlag PRIVATE;
+  `boolean` `com.chaos.view.PinView.isCursorVisible` @AccessFlag PRIVATE;
+  `android.graphics.Paint` `com.chaos.view.PinView.mAnimatorTextPaint` @AccessFlag PRIVATE_FINAL;
+  `com.chaos.view.PinView$Blink` `com.chaos.view.PinView.mBlink` @AccessFlag PRIVATE;
+  `int` `com.chaos.view.PinView.mCurLineColor` @AccessFlag PRIVATE;
+  `int` `com.chaos.view.PinView.mCursorColor` @AccessFlag PRIVATE;
+  `float` `com.chaos.view.PinView.mCursorHeight` @AccessFlag PRIVATE;
+  `int` `com.chaos.view.PinView.mCursorWidth` @AccessFlag PRIVATE;
+  `android.animation.ValueAnimator` `com.chaos.view.PinView.mDefaultAddAnimator` @AccessFlag PRIVATE;
+  `android.graphics.RectF` `com.chaos.view.PinView.mItemBorderRect` @AccessFlag PRIVATE_FINAL;
+  `android.graphics.PointF` `com.chaos.view.PinView.mItemCenterPoint` @AccessFlag PRIVATE_FINAL;
+  `android.graphics.RectF` `com.chaos.view.PinView.mItemLineRect` @AccessFlag PRIVATE_FINAL;
+  `android.content.res.ColorStateList` `com.chaos.view.PinView.mLineColor` @AccessFlag PRIVATE;
+  `int` `com.chaos.view.PinView.mLineWidth` @AccessFlag PRIVATE;
+  `android.graphics.Paint` `com.chaos.view.PinView.mPaint` @AccessFlag PRIVATE_FINAL;
+  `android.graphics.Path` `com.chaos.view.PinView.mPath` @AccessFlag PRIVATE_FINAL;
+  `int` `com.chaos.view.PinView.mPinItemCount` @AccessFlag PRIVATE;
+  `float` `com.chaos.view.PinView.mPinItemHeight` @AccessFlag PRIVATE;
+  `int` `com.chaos.view.PinView.mPinItemRadius` @AccessFlag PRIVATE;
+  `int` `com.chaos.view.PinView.mPinItemSpacing` @AccessFlag PRIVATE;
+  `float` `com.chaos.view.PinView.mPinItemWidth` @AccessFlag PRIVATE;
+  `android.text.TextPaint` `com.chaos.view.PinView.mTextPaint` @AccessFlag PRIVATE_FINAL;
+  `android.graphics.Rect` `com.chaos.view.PinView.mTextRect` @AccessFlag PRIVATE_FINAL;
+  `int` `com.chaos.view.PinView.mViewType` @AccessFlag PRIVATE;
+}
+global `int` `@@com.chaos.view.PinView.BLINK` @AccessFlag PRIVATE_STATIC_FINAL;
+global `boolean` `@@com.chaos.view.PinView.DBG` @AccessFlag PRIVATE_STATIC_FINAL;
+global `int` `@@com.chaos.view.PinView.DEFAULT_COUNT` @AccessFlag PRIVATE_STATIC_FINAL;
+global `android.text.InputFilter`[] `@@com.chaos.view.PinView.NO_FILTERS` @AccessFlag PRIVATE_STATIC_FINAL;
+global `java.lang.String` `@@com.chaos.view.PinView.TAG` @AccessFlag PRIVATE_STATIC_FINAL;
+global `int` `@@com.chaos.view.PinView.VIEW_TYPE_LINE` @AccessFlag PRIVATE_STATIC_FINAL;
+global `int` `@@com.chaos.view.PinView.VIEW_TYPE_RECTANGLE` @AccessFlag PRIVATE_STATIC_FINAL;
+procedure `void` `<clinit>`() @signature `Lcom/chaos/view/PinView;.<clinit>:()V` @AccessFlag STATIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L2bd4a8.  v0:= 0I;
+  #L2bd4aa.  v0:= new `android.text.InputFilter`[v0];
+  #L2bd4ae.  `@@com.chaos.view.PinView.NO_FILTERS` @type ^`android.text.InputFilter`[] := v0 @kind object;
+  #L2bd4b2.  return @kind void;
+}
+procedure `void` `<init>`(`com.chaos.view.PinView` v1 @kind this, `android.content.Context` v2 @kind object) @signature `Lcom/chaos/view/PinView;.<init>:(Landroid/content/Context;)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L2bd4c4.  v0:= 0I;
+  #L2bd4c6.  call `<init>`(v1, v2, v0) @signature `Lcom/chaos/view/PinView;.<init>:(Landroid/content/Context;Landroid/util/AttributeSet;)V` @kind direct;
+  #L2bd4cc.  return @kind void;
+}
+procedure `void` `<init>`(`com.chaos.view.PinView` v1 @kind this, `android.content.Context` v2 @kind object, `android.util.AttributeSet` v3 @kind object) @signature `Lcom/chaos/view/PinView;.<init>:(Landroid/content/Context;Landroid/util/AttributeSet;)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L2bd4e0.  v0:= `@@com.chaos.view.R$attr.pinViewStyle` @type ^`int`;
+  #L2bd4e4.  call `<init>`(v1, v2, v3, v0) @signature `Lcom/chaos/view/PinView;.<init>:(Landroid/content/Context;Landroid/util/AttributeSet;I)V` @kind direct;
+  #L2bd4ea.  return @kind void;
+}
+procedure `void` `<init>`(`com.chaos.view.PinView` v6 @kind this, `android.content.Context` v7 @kind object, `android.util.AttributeSet` v8 @kind object, `int` v9 ) @signature `Lcom/chaos/view/PinView;.<init>:(Landroid/content/Context;Landroid/util/AttributeSet;I)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L2bd4fc.  call `<init>`(v6, v7, v8, v9) @signature `Landroidx/appcompat/widget/AppCompatEditText;.<init>:(Landroid/content/Context;Landroid/util/AttributeSet;I)V` @kind direct;
+  #L2bd502.  v0:= -16777216I;
+  #L2bd506.  v6.`com.chaos.view.PinView.mCurLineColor` @type ^`int` := v0;
+  #L2bd50a.  v0:= new `android.graphics.Rect`;
+  #L2bd50e.  call `<init>`(v0) @signature `Landroid/graphics/Rect;.<init>:()V` @kind direct;
+  #L2bd514.  v6.`com.chaos.view.PinView.mTextRect` @type ^`android.graphics.Rect` := v0 @kind object;
+  #L2bd518.  v0:= new `android.graphics.RectF`;
+  #L2bd51c.  call `<init>`(v0) @signature `Landroid/graphics/RectF;.<init>:()V` @kind direct;
+  #L2bd522.  v6.`com.chaos.view.PinView.mItemBorderRect` @type ^`android.graphics.RectF` := v0 @kind object;
+  #L2bd526.  v0:= new `android.graphics.RectF`;
+  #L2bd52a.  call `<init>`(v0) @signature `Landroid/graphics/RectF;.<init>:()V` @kind direct;
+  #L2bd530.  v6.`com.chaos.view.PinView.mItemLineRect` @type ^`android.graphics.RectF` := v0 @kind object;
+  #L2bd534.  v0:= new `android.graphics.Path`;
+  #L2bd538.  call `<init>`(v0) @signature `Landroid/graphics/Path;.<init>:()V` @kind direct;
+  #L2bd53e.  v6.`com.chaos.view.PinView.mPath` @type ^`android.graphics.Path` := v0 @kind object;
+  #L2bd542.  v0:= new `android.graphics.PointF`;
+  #L2bd546.  call `<init>`(v0) @signature `Landroid/graphics/PointF;.<init>:()V` @kind direct;
+  #L2bd54c.  v6.`com.chaos.view.PinView.mItemCenterPoint` @type ^`android.graphics.PointF` := v0 @kind object;
+  #L2bd550.  v0:= 0I;
+  #L2bd552.  v6.`com.chaos.view.PinView.isAnimationEnable` @type ^`boolean` := v0 @kind boolean;
+  #L2bd556.  call temp:= `getResources`(v6) @signature `Landroid/widget/EditText;.getResources:()Landroid/content/res/Resources;` @kind virtual;
+  #L2bd55c.  v1:= temp @kind object;
+  #L2bd55e.  v2:= new `android.graphics.Paint`;
+  #L2bd562.  v3:= 1I;
+  #L2bd564.  call `<init>`(v2, v3) @signature `Landroid/graphics/Paint;.<init>:(I)V` @kind direct;
+  #L2bd56a.  v6.`com.chaos.view.PinView.mPaint` @type ^`android.graphics.Paint` := v2 @kind object;
+  #L2bd56e.  v4:= `@@android.graphics.Paint$Style.STROKE` @type ^`android.graphics.Paint$Style` @kind object;
+  #L2bd572.  call `setStyle`(v2, v4) @signature `Landroid/graphics/Paint;.setStyle:(Landroid/graphics/Paint$Style;)V` @kind virtual;
+  #L2bd578.  v4:= new `android.text.TextPaint`;
+  #L2bd57c.  call `<init>`(v4, v3) @signature `Landroid/text/TextPaint;.<init>:(I)V` @kind direct;
+  #L2bd582.  v6.`com.chaos.view.PinView.mTextPaint` @type ^`android.text.TextPaint` := v4 @kind object;
+  #L2bd586.  call temp:= `getDisplayMetrics`(v1) @signature `Landroid/content/res/Resources;.getDisplayMetrics:()Landroid/util/DisplayMetrics;` @kind virtual;
+  #L2bd58c.  v5:= temp @kind object;
+  #L2bd58e.  v5:= v5.`android.util.DisplayMetrics.density` @type ^`float`;
+  #L2bd592.  v4.`android.text.TextPaint.density` @type ^`float` := v5;
+  #L2bd596.  v5:= `@@android.graphics.Paint$Style.FILL` @type ^`android.graphics.Paint$Style` @kind object;
+  #L2bd59a.  call `setStyle`(v4, v5) @signature `Landroid/text/TextPaint;.setStyle:(Landroid/graphics/Paint$Style;)V` @kind virtual;
+  #L2bd5a0.  call temp:= `getTextSize`(v6) @signature `Landroid/widget/EditText;.getTextSize:()F` @kind virtual;
+  #L2bd5a6.  v5:= temp;
+  #L2bd5a8.  call `setTextSize`(v4, v5) @signature `Landroid/text/TextPaint;.setTextSize:(F)V` @kind virtual;
+  #L2bd5ae.  v5:= new `android.text.TextPaint`;
+  #L2bd5b2.  call `<init>`(v5, v4) @signature `Landroid/text/TextPaint;.<init>:(Landroid/graphics/Paint;)V` @kind direct;
+  #L2bd5b8.  v6.`com.chaos.view.PinView.mAnimatorTextPaint` @type ^`android.graphics.Paint` := v5 @kind object;
+  #L2bd5bc.  call temp:= `getTheme`(v7) @signature `Landroid/content/Context;.getTheme:()Landroid/content/res/Resources$Theme;` @kind virtual;
+  #L2bd5c2.  v7:= temp @kind object;
+  #L2bd5c4.  v4:= `@@com.chaos.view.R$styleable.PinView` @type ^`int`[] @kind object;
+  #L2bd5c8.  call temp:= `obtainStyledAttributes`(v7, v8, v4, v9, v0) @signature `Landroid/content/res/Resources$Theme;.obtainStyledAttributes:(Landroid/util/AttributeSet;[III)Landroid/content/res/TypedArray;` @kind virtual;
+  #L2bd5ce.  v7:= temp @kind object;
+  #L2bd5d0.  v8:= `@@com.chaos.view.R$styleable.PinView_viewType` @type ^`int`;
+  #L2bd5d4.  call temp:= `getInt`(v7, v8, v0) @signature `Landroid/content/res/TypedArray;.getInt:(II)I` @kind virtual;
+  #L2bd5da.  v8:= temp;
+  #L2bd5dc.  v6.`com.chaos.view.PinView.mViewType` @type ^`int` := v8;
+  #L2bd5e0.  v8:= `@@com.chaos.view.R$styleable.PinView_itemCount` @type ^`int`;
+  #L2bd5e4.  v9:= 4I;
+  #L2bd5e6.  call temp:= `getInt`(v7, v8, v9) @signature `Landroid/content/res/TypedArray;.getInt:(II)I` @kind virtual;
+  #L2bd5ec.  v8:= temp;
+  #L2bd5ee.  v6.`com.chaos.view.PinView.mPinItemCount` @type ^`int` := v8;
+  #L2bd5f2.  v8:= `@@com.chaos.view.R$styleable.PinView_itemHeight` @type ^`int`;
+  #L2bd5f6.  v9:= `@@com.chaos.view.R$dimen.pv_pin_view_item_size` @type ^`int`;
+  #L2bd5fa.  call temp:= `getDimensionPixelSize`(v1, v9) @signature `Landroid/content/res/Resources;.getDimensionPixelSize:(I)I` @kind virtual;
+  #L2bd600.  v4:= temp;
+  #L2bd602.  call temp:= `getDimensionPixelSize`(v7, v8, v4) @signature `Landroid/content/res/TypedArray;.getDimensionPixelSize:(II)I` @kind virtual;
+  #L2bd608.  v8:= temp;
+  #L2bd60a.  v8:= (`float`) v8 @kind i2f;
+  #L2bd60c.  v6.`com.chaos.view.PinView.mPinItemHeight` @type ^`float` := v8;
+  #L2bd610.  v8:= `@@com.chaos.view.R$styleable.PinView_itemWidth` @type ^`int`;
+  #L2bd614.  call temp:= `getDimensionPixelSize`(v1, v9) @signature `Landroid/content/res/Resources;.getDimensionPixelSize:(I)I` @kind virtual;
+  #L2bd61a.  v9:= temp;
+  #L2bd61c.  call temp:= `getDimensionPixelSize`(v7, v8, v9) @signature `Landroid/content/res/TypedArray;.getDimensionPixelSize:(II)I` @kind virtual;
+  #L2bd622.  v8:= temp;
+  #L2bd624.  v8:= (`float`) v8 @kind i2f;
+  #L2bd626.  v6.`com.chaos.view.PinView.mPinItemWidth` @type ^`float` := v8;
+  #L2bd62a.  v8:= `@@com.chaos.view.R$styleable.PinView_itemSpacing` @type ^`int`;
+  #L2bd62e.  v9:= `@@com.chaos.view.R$dimen.pv_pin_view_item_spacing` @type ^`int`;
+  #L2bd632.  call temp:= `getDimensionPixelSize`(v1, v9) @signature `Landroid/content/res/Resources;.getDimensionPixelSize:(I)I` @kind virtual;
+  #L2bd638.  v9:= temp;
+  #L2bd63a.  call temp:= `getDimensionPixelSize`(v7, v8, v9) @signature `Landroid/content/res/TypedArray;.getDimensionPixelSize:(II)I` @kind virtual;
+  #L2bd640.  v8:= temp;
+  #L2bd642.  v6.`com.chaos.view.PinView.mPinItemSpacing` @type ^`int` := v8;
+  #L2bd646.  v8:= `@@com.chaos.view.R$styleable.PinView_itemRadius` @type ^`int`;
+  #L2bd64a.  call temp:= `getDimensionPixelSize`(v7, v8, v0) @signature `Landroid/content/res/TypedArray;.getDimensionPixelSize:(II)I` @kind virtual;
+  #L2bd650.  v8:= temp;
+  #L2bd652.  v6.`com.chaos.view.PinView.mPinItemRadius` @type ^`int` := v8;
+  #L2bd656.  v8:= `@@com.chaos.view.R$styleable.PinView_lineWidth` @type ^`int`;
+  #L2bd65a.  v9:= `@@com.chaos.view.R$dimen.pv_pin_view_item_line_width` @type ^`int`;
+  #L2bd65e.  call temp:= `getDimensionPixelSize`(v1, v9) @signature `Landroid/content/res/Resources;.getDimensionPixelSize:(I)I` @kind virtual;
+  #L2bd664.  v9:= temp;
+  #L2bd666.  call temp:= `getDimensionPixelSize`(v7, v8, v9) @signature `Landroid/content/res/TypedArray;.getDimensionPixelSize:(II)I` @kind virtual;
+  #L2bd66c.  v8:= temp;
+  #L2bd66e.  v6.`com.chaos.view.PinView.mLineWidth` @type ^`int` := v8;
+  #L2bd672.  v8:= `@@com.chaos.view.R$styleable.PinView_lineColor` @type ^`int`;
+  #L2bd676.  call temp:= `getColorStateList`(v7, v8) @signature `Landroid/content/res/TypedArray;.getColorStateList:(I)Landroid/content/res/ColorStateList;` @kind virtual;
+  #L2bd67c.  v8:= temp @kind object;
+  #L2bd67e.  v6.`com.chaos.view.PinView.mLineColor` @type ^`android.content.res.ColorStateList` := v8 @kind object;
+  #L2bd682.  v8:= `@@com.chaos.view.R$styleable.PinView_android_cursorVisible` @type ^`int`;
+  #L2bd686.  call temp:= `getBoolean`(v7, v8, v3) @signature `Landroid/content/res/TypedArray;.getBoolean:(IZ)Z` @kind virtual;
+  #L2bd68c.  v8:= temp;
+  #L2bd68e.  v6.`com.chaos.view.PinView.isCursorVisible` @type ^`boolean` := v8 @kind boolean;
+  #L2bd692.  v8:= `@@com.chaos.view.R$styleable.PinView_cursorColor` @type ^`int`;
+  #L2bd696.  call temp:= `getCurrentTextColor`(v6) @signature `Landroid/widget/EditText;.getCurrentTextColor:()I` @kind virtual;
+  #L2bd69c.  v9:= temp;
+  #L2bd69e.  call temp:= `getColor`(v7, v8, v9) @signature `Landroid/content/res/TypedArray;.getColor:(II)I` @kind virtual;
+  #L2bd6a4.  v8:= temp;
+  #L2bd6a6.  v6.`com.chaos.view.PinView.mCursorColor` @type ^`int` := v8;
+  #L2bd6aa.  v8:= `@@com.chaos.view.R$styleable.PinView_cursorWidth` @type ^`int`;
+  #L2bd6ae.  v9:= `@@com.chaos.view.R$dimen.pv_pin_view_cursor_width` @type ^`int`;
+  #L2bd6b2.  call temp:= `getDimensionPixelSize`(v1, v9) @signature `Landroid/content/res/Resources;.getDimensionPixelSize:(I)I` @kind virtual;
+  #L2bd6b8.  v9:= temp;
+  #L2bd6ba.  call temp:= `getDimensionPixelSize`(v7, v8, v9) @signature `Landroid/content/res/TypedArray;.getDimensionPixelSize:(II)I` @kind virtual;
+  #L2bd6c0.  v8:= temp;
+  #L2bd6c2.  v6.`com.chaos.view.PinView.mCursorWidth` @type ^`int` := v8;
+  #L2bd6c6.  call `recycle`(v7) @signature `Landroid/content/res/TypedArray;.recycle:()V` @kind virtual;
+  #L2bd6cc.  v7:= v6.`com.chaos.view.PinView.mLineColor` @type ^`android.content.res.ColorStateList` @kind object;
+  #L2bd6d0.  if v7 == 0 then goto L2bd6e0;
+  #L2bd6d4.  call temp:= `getDefaultColor`(v7) @signature `Landroid/content/res/ColorStateList;.getDefaultColor:()I` @kind virtual;
+  #L2bd6da.  v7:= temp;
+  #L2bd6dc.  v6.`com.chaos.view.PinView.mCurLineColor` @type ^`int` := v7;
+  #L2bd6e0.  call `updateCursorHeight`(v6) @signature `Lcom/chaos/view/PinView;.updateCursorHeight:()V` @kind direct;
+  #L2bd6e6.  call `checkItemRadius`(v6) @signature `Lcom/chaos/view/PinView;.checkItemRadius:()V` @kind direct;
+  #L2bd6ec.  v7:= v6.`com.chaos.view.PinView.mPinItemCount` @type ^`int`;
+  #L2bd6f0.  call `setMaxLength`(v6, v7) @signature `Lcom/chaos/view/PinView;.setMaxLength:(I)V` @kind direct;
+  #L2bd6f6.  v7:= v6.`com.chaos.view.PinView.mLineWidth` @type ^`int`;
+  #L2bd6fa.  v7:= (`float`) v7 @kind i2f;
+  #L2bd6fc.  call `setStrokeWidth`(v2, v7) @signature `Landroid/graphics/Paint;.setStrokeWidth:(F)V` @kind virtual;
+  #L2bd702.  call `setupAnimator`(v6) @signature `Lcom/chaos/view/PinView;.setupAnimator:()V` @kind direct;
+  #L2bd708.  call `setCursorVisible`(v6, v0) @signature `Landroid/widget/EditText;.setCursorVisible:(Z)V` @kind super;
+  #L2bd70e.  call `setTextIsSelectable`(v6, v0) @signature `Landroid/widget/EditText;.setTextIsSelectable:(Z)V` @kind virtual;
+  #L2bd714.  return @kind void;
+}
+procedure `android.graphics.Paint` `a`(`com.chaos.view.PinView` v0 @kind object) @signature `Lcom/chaos/view/PinView;.a:(Lcom/chaos/view/PinView;)Landroid/graphics/Paint;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L2bd23c.  v0:= v0.`com.chaos.view.PinView.mAnimatorTextPaint` @type ^`android.graphics.Paint` @kind object;
+  #L2bd240.  return v0 @kind object;
+}
+procedure `boolean` `b`(`com.chaos.view.PinView` v0 @kind object) @signature `Lcom/chaos/view/PinView;.b:(Lcom/chaos/view/PinView;)Z` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L2bd2bc.  call temp:= `shouldBlink`(v0) @signature `Lcom/chaos/view/PinView;.shouldBlink:()Z` @kind direct;
+  #L2bd2c2.  v0:= temp;
+  #L2bd2c4.  return v0;
+}
+procedure `boolean` `c`(`com.chaos.view.PinView` v0 @kind object) @signature `Lcom/chaos/view/PinView;.c:(Lcom/chaos/view/PinView;)Z` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L2bd2d8.  v0:= v0.`com.chaos.view.PinView.drawCursor` @type ^`boolean` @kind boolean;
+  #L2bd2dc.  return v0;
+}
+procedure `void` `checkItemRadius`(`com.chaos.view.PinView` v2 @kind this) @signature `Lcom/chaos/view/PinView;.checkItemRadius:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+
+  #L2bd740.  v0:= v2.`com.chaos.view.PinView.mViewType` @type ^`int`;
+  #L2bd744.  v1:= 1I;
+  #L2bd746.  if v0 != v1 then goto L2bd76c;
+  #L2bd74a.  v0:= v2.`com.chaos.view.PinView.mLineWidth` @type ^`int`;
+  #L2bd74e.  v0:= v0 / 2;
+  #L2bd752.  v1:= v2.`com.chaos.view.PinView.mPinItemRadius` @type ^`int`;
+  #L2bd756.  if v1 > v0 then goto L2bd75c;
+  #L2bd75a.  goto L2bd76c;
+  #L2bd75c.  v0:= new `java.lang.RuntimeException`;
+  #L2bd760.  v1:= "The itemRadius can not be greater than lineWidth when viewType is line" @kind object;
+  #L2bd764.  call `<init>`(v0, v1) @signature `Ljava/lang/RuntimeException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L2bd76a.  throw v0;
+  #L2bd76c.  v0:= v2.`com.chaos.view.PinView.mPinItemWidth` @type ^`float`;
+  #L2bd770.  v1:= 2.0F;
+  #L2bd774.  v0:= v0 / v1 @kind float;
+  #L2bd776.  v0:= (`int`) v0 @kind f2i;
+  #L2bd778.  v1:= v2.`com.chaos.view.PinView.mPinItemRadius` @type ^`int`;
+  #L2bd77c.  if v1 > v0 then goto L2bd782;
+  #L2bd780.  return @kind void;
+  #L2bd782.  v0:= new `java.lang.RuntimeException`;
+  #L2bd786.  v1:= "The itemRadius can not be greater than itemWidth" @kind object;
+  #L2bd78a.  call `<init>`(v0, v1) @signature `Ljava/lang/RuntimeException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L2bd790.  throw v0;
+}
+procedure `void` `d`(`com.chaos.view.PinView` v0 @kind object, `boolean` v1 ) @signature `Lcom/chaos/view/PinView;.d:(Lcom/chaos/view/PinView;Z)V` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L2bd728.  call `invalidateCursor`(v0, v1) @signature `Lcom/chaos/view/PinView;.invalidateCursor:(Z)V` @kind direct;
+  #L2bd72e.  return @kind void;
+}
+procedure `int` `dpToPx`(`com.chaos.view.PinView` v1 @kind this, `float` v2 ) @signature `Lcom/chaos/view/PinView;.dpToPx:(F)I` @AccessFlag PRIVATE {
+    temp;
+    v0;
+
+  #L2bd3a0.  call temp:= `getResources`(v1) @signature `Landroid/widget/EditText;.getResources:()Landroid/content/res/Resources;` @kind virtual;
+  #L2bd3a6.  v0:= temp @kind object;
+  #L2bd3a8.  call temp:= `getDisplayMetrics`(v0) @signature `Landroid/content/res/Resources;.getDisplayMetrics:()Landroid/util/DisplayMetrics;` @kind virtual;
+  #L2bd3ae.  v0:= temp @kind object;
+  #L2bd3b0.  v0:= v0.`android.util.DisplayMetrics.density` @type ^`float`;
+  #L2bd3b4.  v2:= v2 * v0 @kind float;
+  #L2bd3b8.  v0:= 0.5F;
+  #L2bd3bc.  v2:= v2 + v0 @kind float;
+  #L2bd3be.  v2:= (`int`) v2 @kind f2i;
+  #L2bd3c0.  return v2;
+}
+procedure `void` `drawAnchorLine`(`com.chaos.view.PinView` v5 @kind this, `android.graphics.Canvas` v6 @kind object) @signature `Lcom/chaos/view/PinView;.drawAnchorLine:(Landroid/graphics/Canvas;)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L2bd7a4.  v0:= v5.`com.chaos.view.PinView.mItemCenterPoint` @type ^`android.graphics.PointF` @kind object;
+  #L2bd7a8.  v1:= v0.`android.graphics.PointF.x` @type ^`float`;
+  #L2bd7ac.  v0:= v0.`android.graphics.PointF.y` @type ^`float`;
+  #L2bd7b0.  v2:= v5.`com.chaos.view.PinView.mPaint` @type ^`android.graphics.Paint` @kind object;
+  #L2bd7b4.  v3:= 1.0F;
+  #L2bd7b8.  call `setStrokeWidth`(v2, v3) @signature `Landroid/graphics/Paint;.setStrokeWidth:(F)V` @kind virtual;
+  #L2bd7be.  v2:= v5.`com.chaos.view.PinView.mPaint` @type ^`android.graphics.Paint` @kind object;
+  #L2bd7c2.  call temp:= `getStrokeWidth`(v2) @signature `Landroid/graphics/Paint;.getStrokeWidth:()F` @kind virtual;
+  #L2bd7c8.  v2:= temp;
+  #L2bd7ca.  v3:= 2.0F;
+  #L2bd7ce.  v2:= v2 / v3 @kind float;
+  #L2bd7d0.  v1:= v1 - v2 @kind float;
+  #L2bd7d2.  v2:= v5.`com.chaos.view.PinView.mPaint` @type ^`android.graphics.Paint` @kind object;
+  #L2bd7d6.  call temp:= `getStrokeWidth`(v2) @signature `Landroid/graphics/Paint;.getStrokeWidth:()F` @kind virtual;
+  #L2bd7dc.  v2:= temp;
+  #L2bd7de.  v2:= v2 / v3 @kind float;
+  #L2bd7e0.  v0:= v0 - v2 @kind float;
+  #L2bd7e2.  v2:= v5.`com.chaos.view.PinView.mPath` @type ^`android.graphics.Path` @kind object;
+  #L2bd7e6.  call `reset`(v2) @signature `Landroid/graphics/Path;.reset:()V` @kind virtual;
+  #L2bd7ec.  v2:= v5.`com.chaos.view.PinView.mPath` @type ^`android.graphics.Path` @kind object;
+  #L2bd7f0.  v3:= v5.`com.chaos.view.PinView.mItemBorderRect` @type ^`android.graphics.RectF` @kind object;
+  #L2bd7f4.  v3:= v3.`android.graphics.RectF.top` @type ^`float`;
+  #L2bd7f8.  call `moveTo`(v2, v1, v3) @signature `Landroid/graphics/Path;.moveTo:(FF)V` @kind virtual;
+  #L2bd7fe.  v2:= v5.`com.chaos.view.PinView.mPath` @type ^`android.graphics.Path` @kind object;
+  #L2bd802.  v3:= v5.`com.chaos.view.PinView.mItemBorderRect` @type ^`android.graphics.RectF` @kind object;
+  #L2bd806.  v4:= v3.`android.graphics.RectF.top` @type ^`float`;
+  #L2bd80a.  call temp:= `height`(v3) @signature `Landroid/graphics/RectF;.height:()F` @kind virtual;
+  #L2bd810.  v3:= temp;
+  #L2bd812.  call temp:= `abs`(v3) @signature `Ljava/lang/Math;.abs:(F)F` @kind static;
+  #L2bd818.  v3:= temp;
+  #L2bd81a.  v4:= v4 + v3 @kind float;
+  #L2bd81c.  call `lineTo`(v2, v1, v4) @signature `Landroid/graphics/Path;.lineTo:(FF)V` @kind virtual;
+  #L2bd822.  v1:= v5.`com.chaos.view.PinView.mPath` @type ^`android.graphics.Path` @kind object;
+  #L2bd826.  v2:= v5.`com.chaos.view.PinView.mPaint` @type ^`android.graphics.Paint` @kind object;
+  #L2bd82a.  call `drawPath`(v6, v1, v2) @signature `Landroid/graphics/Canvas;.drawPath:(Landroid/graphics/Path;Landroid/graphics/Paint;)V` @kind virtual;
+  #L2bd830.  v1:= v5.`com.chaos.view.PinView.mPath` @type ^`android.graphics.Path` @kind object;
+  #L2bd834.  call `reset`(v1) @signature `Landroid/graphics/Path;.reset:()V` @kind virtual;
+  #L2bd83a.  v1:= v5.`com.chaos.view.PinView.mPath` @type ^`android.graphics.Path` @kind object;
+  #L2bd83e.  v2:= v5.`com.chaos.view.PinView.mItemBorderRect` @type ^`android.graphics.RectF` @kind object;
+  #L2bd842.  v2:= v2.`android.graphics.RectF.left` @type ^`float`;
+  #L2bd846.  call `moveTo`(v1, v2, v0) @signature `Landroid/graphics/Path;.moveTo:(FF)V` @kind virtual;
+  #L2bd84c.  v1:= v5.`com.chaos.view.PinView.mPath` @type ^`android.graphics.Path` @kind object;
+  #L2bd850.  v2:= v5.`com.chaos.view.PinView.mItemBorderRect` @type ^`android.graphics.RectF` @kind object;
+  #L2bd854.  v3:= v2.`android.graphics.RectF.left` @type ^`float`;
+  #L2bd858.  call temp:= `width`(v2) @signature `Landroid/graphics/RectF;.width:()F` @kind virtual;
+  #L2bd85e.  v2:= temp;
+  #L2bd860.  call temp:= `abs`(v2) @signature `Ljava/lang/Math;.abs:(F)F` @kind static;
+  #L2bd866.  v2:= temp;
+  #L2bd868.  v3:= v3 + v2 @kind float;
+  #L2bd86a.  call `lineTo`(v1, v3, v0) @signature `Landroid/graphics/Path;.lineTo:(FF)V` @kind virtual;
+  #L2bd870.  v0:= v5.`com.chaos.view.PinView.mPath` @type ^`android.graphics.Path` @kind object;
+  #L2bd874.  v1:= v5.`com.chaos.view.PinView.mPaint` @type ^`android.graphics.Paint` @kind object;
+  #L2bd878.  call `drawPath`(v6, v0, v1) @signature `Landroid/graphics/Canvas;.drawPath:(Landroid/graphics/Path;Landroid/graphics/Paint;)V` @kind virtual;
+  #L2bd87e.  v6:= v5.`com.chaos.view.PinView.mPath` @type ^`android.graphics.Path` @kind object;
+  #L2bd882.  call `reset`(v6) @signature `Landroid/graphics/Path;.reset:()V` @kind virtual;
+  #L2bd888.  v6:= v5.`com.chaos.view.PinView.mPaint` @type ^`android.graphics.Paint` @kind object;
+  #L2bd88c.  v0:= v5.`com.chaos.view.PinView.mLineWidth` @type ^`int`;
+  #L2bd890.  v0:= (`float`) v0 @kind i2f;
+  #L2bd892.  call `setStrokeWidth`(v6, v0) @signature `Landroid/graphics/Paint;.setStrokeWidth:(F)V` @kind virtual;
+  #L2bd898.  return @kind void;
+}
+procedure `void` `drawCircle`(`com.chaos.view.PinView` v4 @kind this, `android.graphics.Canvas` v5 @kind object, `int` v6 ) @signature `Lcom/chaos/view/PinView;.drawCircle:(Landroid/graphics/Canvas;I)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L2bd8ac.  call temp:= `getPaintByIndex`(v4, v6) @signature `Lcom/chaos/view/PinView;.getPaintByIndex:(I)Landroid/graphics/Paint;` @kind direct;
+  #L2bd8b2.  v6:= temp @kind object;
+  #L2bd8b4.  v0:= v4.`com.chaos.view.PinView.mItemCenterPoint` @type ^`android.graphics.PointF` @kind object;
+  #L2bd8b8.  v1:= v0.`android.graphics.PointF.x` @type ^`float`;
+  #L2bd8bc.  v0:= v0.`android.graphics.PointF.y` @type ^`float`;
+  #L2bd8c0.  call temp:= `getTextSize`(v6) @signature `Landroid/graphics/Paint;.getTextSize:()F` @kind virtual;
+  #L2bd8c6.  v2:= temp;
+  #L2bd8c8.  v3:= 2.0F;
+  #L2bd8cc.  v2:= v2 / v3 @kind float;
+  #L2bd8ce.  call `drawCircle`(v5, v1, v0, v2, v6) @signature `Landroid/graphics/Canvas;.drawCircle:(FFFLandroid/graphics/Paint;)V` @kind virtual;
+  #L2bd8d4.  return @kind void;
+}
+procedure `void` `drawCursor`(`com.chaos.view.PinView` v8 @kind this, `android.graphics.Canvas` v9 @kind object) @signature `Lcom/chaos/view/PinView;.drawCursor:(Landroid/graphics/Canvas;)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+
+  #L2bd8e8.  v0:= v8.`com.chaos.view.PinView.drawCursor` @type ^`boolean` @kind boolean;
+  #L2bd8ec.  if v0 == 0 then goto L2bd96a;
+  #L2bd8f0.  v0:= v8.`com.chaos.view.PinView.mItemCenterPoint` @type ^`android.graphics.PointF` @kind object;
+  #L2bd8f4.  v4:= v0.`android.graphics.PointF.x` @type ^`float`;
+  #L2bd8f8.  v0:= v0.`android.graphics.PointF.y` @type ^`float`;
+  #L2bd8fc.  v1:= v8.`com.chaos.view.PinView.mCursorHeight` @type ^`float`;
+  #L2bd900.  v2:= 2.0F;
+  #L2bd904.  v1:= v1 / v2 @kind float;
+  #L2bd906.  v3:= v0 - v1 @kind float;
+  #L2bd90a.  v0:= v8.`com.chaos.view.PinView.mPaint` @type ^`android.graphics.Paint` @kind object;
+  #L2bd90e.  call temp:= `getColor`(v0) @signature `Landroid/graphics/Paint;.getColor:()I` @kind virtual;
+  #L2bd914.  v0:= temp;
+  #L2bd916.  v1:= v8.`com.chaos.view.PinView.mPaint` @type ^`android.graphics.Paint` @kind object;
+  #L2bd91a.  call temp:= `getStrokeWidth`(v1) @signature `Landroid/graphics/Paint;.getStrokeWidth:()F` @kind virtual;
+  #L2bd920.  v7:= temp;
+  #L2bd922.  v1:= v8.`com.chaos.view.PinView.mPaint` @type ^`android.graphics.Paint` @kind object;
+  #L2bd926.  v2:= v8.`com.chaos.view.PinView.mCursorColor` @type ^`int`;
+  #L2bd92a.  call `setColor`(v1, v2) @signature `Landroid/graphics/Paint;.setColor:(I)V` @kind virtual;
+  #L2bd930.  v1:= v8.`com.chaos.view.PinView.mPaint` @type ^`android.graphics.Paint` @kind object;
+  #L2bd934.  v2:= v8.`com.chaos.view.PinView.mCursorWidth` @type ^`int`;
+  #L2bd938.  v2:= (`float`) v2 @kind i2f;
+  #L2bd93a.  call `setStrokeWidth`(v1, v2) @signature `Landroid/graphics/Paint;.setStrokeWidth:(F)V` @kind virtual;
+  #L2bd940.  v1:= v8.`com.chaos.view.PinView.mCursorHeight` @type ^`float`;
+  #L2bd944.  v5:= v3 + v1 @kind float;
+  #L2bd948.  v6:= v8.`com.chaos.view.PinView.mPaint` @type ^`android.graphics.Paint` @kind object;
+  #L2bd94c.  v1:= v9 @kind object;
+  #L2bd94e.  v2:= v4;
+  #L2bd950.  call `drawLine`(v1, v2, v3, v4, v5, v6) @signature `Landroid/graphics/Canvas;.drawLine:(FFFFLandroid/graphics/Paint;)V` @kind virtual;
+  #L2bd956.  v9:= v8.`com.chaos.view.PinView.mPaint` @type ^`android.graphics.Paint` @kind object;
+  #L2bd95a.  call `setColor`(v9, v0) @signature `Landroid/graphics/Paint;.setColor:(I)V` @kind virtual;
+  #L2bd960.  v9:= v8.`com.chaos.view.PinView.mPaint` @type ^`android.graphics.Paint` @kind object;
+  #L2bd964.  call `setStrokeWidth`(v9, v7) @signature `Landroid/graphics/Paint;.setStrokeWidth:(F)V` @kind virtual;
+  #L2bd96a.  return @kind void;
+}
+procedure `void` `drawHint`(`com.chaos.view.PinView` v2 @kind this, `android.graphics.Canvas` v3 @kind object, `int` v4 ) @signature `Lcom/chaos/view/PinView;.drawHint:(Landroid/graphics/Canvas;I)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+
+  #L2bd97c.  call temp:= `getPaintByIndex`(v2, v4) @signature `Lcom/chaos/view/PinView;.getPaintByIndex:(I)Landroid/graphics/Paint;` @kind direct;
+  #L2bd982.  v0:= temp @kind object;
+  #L2bd984.  call temp:= `getCurrentHintTextColor`(v2) @signature `Landroid/widget/EditText;.getCurrentHintTextColor:()I` @kind virtual;
+  #L2bd98a.  v1:= temp;
+  #L2bd98c.  call `setColor`(v0, v1) @signature `Landroid/graphics/Paint;.setColor:(I)V` @kind virtual;
+  #L2bd992.  call temp:= `getHint`(v2) @signature `Landroid/widget/EditText;.getHint:()Ljava/lang/CharSequence;` @kind virtual;
+  #L2bd998.  v1:= temp @kind object;
+  #L2bd99a.  call `drawTextAtBox`(v2, v3, v0, v1, v4) @signature `Lcom/chaos/view/PinView;.drawTextAtBox:(Landroid/graphics/Canvas;Landroid/graphics/Paint;Ljava/lang/CharSequence;I)V` @kind direct;
+  #L2bd9a0.  return @kind void;
+}
+procedure `void` `drawPinBox`(`com.chaos.view.PinView` v10 @kind this, `android.graphics.Canvas` v11 @kind object, `int` v12 ) @signature `Lcom/chaos/view/PinView;.drawPinBox:(Landroid/graphics/Canvas;I)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+    v9;
+
+  #L2bd9b4.  v0:= v10.`com.chaos.view.PinView.mPinItemSpacing` @type ^`int`;
+  #L2bd9b8.  v1:= 0I;
+  #L2bd9ba.  v2:= 1I;
+  #L2bd9bc.  if v0 == 0 then goto L2bd9c6;
+  #L2bd9c0.  v8:= 1I;
+  #L2bd9c2.  v9:= 1I;
+  #L2bd9c4.  goto L2bd9f0;
+  #L2bd9c6.  if v12 != 0 then goto L2bd9d8;
+  #L2bd9ca.  v0:= v10.`com.chaos.view.PinView.mPinItemCount` @type ^`int`;
+  #L2bd9ce.  v0:= v0 - v2 @kind int;
+  #L2bd9d0.  if v12 == v0 then goto L2bd9d8;
+  #L2bd9d4.  v0:= 1I;
+  #L2bd9d6.  goto L2bd9da;
+  #L2bd9d8.  v0:= 0I;
+  #L2bd9da.  v3:= v10.`com.chaos.view.PinView.mPinItemCount` @type ^`int`;
+  #L2bd9de.  v3:= v3 - v2 @kind int;
+  #L2bd9e0.  if v12 != v3 then goto L2bd9ec;
+  #L2bd9e4.  if v12 == 0 then goto L2bd9ec;
+  #L2bd9e8.  v8:= v0;
+  #L2bd9ea.  goto L2bd9c2;
+  #L2bd9ec.  v8:= v0;
+  #L2bd9ee.  v9:= 0I;
+  #L2bd9f0.  v5:= v10.`com.chaos.view.PinView.mItemBorderRect` @type ^`android.graphics.RectF` @kind object;
+  #L2bd9f4.  v12:= v10.`com.chaos.view.PinView.mPinItemRadius` @type ^`int`;
+  #L2bd9f8.  v6:= (`float`) v12 @kind i2f;
+  #L2bd9fa.  v7:= (`float`) v12 @kind i2f;
+  #L2bd9fc.  v4:= v10 @kind object;
+  #L2bd9fe.  call `updateRoundRectPath`(v4, v5, v6, v7, v8, v9) @signature `Lcom/chaos/view/PinView;.updateRoundRectPath:(Landroid/graphics/RectF;FFZZ)V` @kind direct;
+  #L2bda04.  v12:= v10.`com.chaos.view.PinView.mPath` @type ^`android.graphics.Path` @kind object;
+  #L2bda08.  v0:= v10.`com.chaos.view.PinView.mPaint` @type ^`android.graphics.Paint` @kind object;
+  #L2bda0c.  call `drawPath`(v11, v12, v0) @signature `Landroid/graphics/Canvas;.drawPath:(Landroid/graphics/Path;Landroid/graphics/Paint;)V` @kind virtual;
+  #L2bda12.  return @kind void;
+}
+procedure `void` `drawPinLine`(`com.chaos.view.PinView` v9 @kind this, `android.graphics.Canvas` v10 @kind object, `int` v11 ) @signature `Lcom/chaos/view/PinView;.drawPinLine:(Landroid/graphics/Canvas;I)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+
+  #L2bda24.  v0:= v9.`com.chaos.view.PinView.mPinItemSpacing` @type ^`int`;
+  #L2bda28.  v1:= 0I;
+  #L2bda2a.  v2:= 1I;
+  #L2bda2c.  if v0 != 0 then goto L2bda4c;
+  #L2bda30.  v0:= v9.`com.chaos.view.PinView.mPinItemCount` @type ^`int`;
+  #L2bda34.  if v0 <= v2 then goto L2bda4c;
+  #L2bda38.  if v11 != 0 then goto L2bda42;
+  #L2bda3c.  v7:= 1I;
+  #L2bda3e.  v8:= 0I;
+  #L2bda40.  goto L2bda50;
+  #L2bda42.  v0:= v0 - v2 @kind int;
+  #L2bda44.  v7:= 0I;
+  #L2bda46.  if v11 != v0 then goto L2bda3e;
+  #L2bda4a.  goto L2bda4e;
+  #L2bda4c.  v7:= 1I;
+  #L2bda4e.  v8:= 1I;
+  #L2bda50.  v11:= v9.`com.chaos.view.PinView.mPaint` @type ^`android.graphics.Paint` @kind object;
+  #L2bda54.  v0:= `@@android.graphics.Paint$Style.FILL` @type ^`android.graphics.Paint$Style` @kind object;
+  #L2bda58.  call `setStyle`(v11, v0) @signature `Landroid/graphics/Paint;.setStyle:(Landroid/graphics/Paint$Style;)V` @kind virtual;
+  #L2bda5e.  v11:= v9.`com.chaos.view.PinView.mPaint` @type ^`android.graphics.Paint` @kind object;
+  #L2bda62.  v0:= v9.`com.chaos.view.PinView.mLineWidth` @type ^`int`;
+  #L2bda66.  v0:= (`float`) v0 @kind i2f;
+  #L2bda68.  v1:= 10.0F;
+  #L2bda6c.  v0:= v0 / v1 @kind float;
+  #L2bda6e.  call `setStrokeWidth`(v11, v0) @signature `Landroid/graphics/Paint;.setStrokeWidth:(F)V` @kind virtual;
+  #L2bda74.  v11:= v9.`com.chaos.view.PinView.mLineWidth` @type ^`int`;
+  #L2bda78.  v11:= (`float`) v11 @kind i2f;
+  #L2bda7a.  v0:= 2.0F;
+  #L2bda7e.  v11:= v11 / v0 @kind float;
+  #L2bda80.  v0:= v9.`com.chaos.view.PinView.mItemLineRect` @type ^`android.graphics.RectF` @kind object;
+  #L2bda84.  v1:= v9.`com.chaos.view.PinView.mItemBorderRect` @type ^`android.graphics.RectF` @kind object;
+  #L2bda88.  v2:= v1.`android.graphics.RectF.left` @type ^`float`;
+  #L2bda8c.  v3:= v1.`android.graphics.RectF.bottom` @type ^`float`;
+  #L2bda90.  v4:= v3 - v11 @kind float;
+  #L2bda94.  v1:= v1.`android.graphics.RectF.right` @type ^`float`;
+  #L2bda98.  v3:= v3 + v11 @kind float;
+  #L2bda9a.  call `set`(v0, v2, v4, v1, v3) @signature `Landroid/graphics/RectF;.set:(FFFF)V` @kind virtual;
+  #L2bdaa0.  v4:= v9.`com.chaos.view.PinView.mItemLineRect` @type ^`android.graphics.RectF` @kind object;
+  #L2bdaa4.  v11:= v9.`com.chaos.view.PinView.mPinItemRadius` @type ^`int`;
+  #L2bdaa8.  v5:= (`float`) v11 @kind i2f;
+  #L2bdaaa.  v6:= (`float`) v11 @kind i2f;
+  #L2bdaac.  v3:= v9 @kind object;
+  #L2bdaae.  call `updateRoundRectPath`(v3, v4, v5, v6, v7, v8) @signature `Lcom/chaos/view/PinView;.updateRoundRectPath:(Landroid/graphics/RectF;FFZZ)V` @kind direct;
+  #L2bdab4.  v11:= v9.`com.chaos.view.PinView.mPath` @type ^`android.graphics.Path` @kind object;
+  #L2bdab8.  v0:= v9.`com.chaos.view.PinView.mPaint` @type ^`android.graphics.Paint` @kind object;
+  #L2bdabc.  call `drawPath`(v10, v11, v0) @signature `Landroid/graphics/Canvas;.drawPath:(Landroid/graphics/Path;Landroid/graphics/Paint;)V` @kind virtual;
+  #L2bdac2.  return @kind void;
+}
+procedure `void` `drawPinView`(`com.chaos.view.PinView` v5 @kind this, `android.graphics.Canvas` v6 @kind object) @signature `Lcom/chaos/view/PinView;.drawPinView:(Landroid/graphics/Canvas;)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L2bdad4.  v0:= 0I;
+  #L2bdad6.  v1:= 0I;
+  #L2bdad8.  v2:= v5.`com.chaos.view.PinView.mPinItemCount` @type ^`int`;
+  #L2bdadc.  if v1 >= v2 then goto L2bdb72;
+  #L2bdae0.  call `updateItemRectF`(v5, v1) @signature `Lcom/chaos/view/PinView;.updateItemRectF:(I)V` @kind direct;
+  #L2bdae6.  call `updateCenterPoint`(v5) @signature `Lcom/chaos/view/PinView;.updateCenterPoint:()V` @kind direct;
+  #L2bdaec.  v2:= v5.`com.chaos.view.PinView.mViewType` @type ^`int`;
+  #L2bdaf0.  if v2 != 0 then goto L2bdafc;
+  #L2bdaf4.  call `drawPinBox`(v5, v6, v1) @signature `Lcom/chaos/view/PinView;.drawPinBox:(Landroid/graphics/Canvas;I)V` @kind direct;
+  #L2bdafa.  goto L2bdb02;
+  #L2bdafc.  call `drawPinLine`(v5, v6, v1) @signature `Lcom/chaos/view/PinView;.drawPinLine:(Landroid/graphics/Canvas;I)V` @kind direct;
+  #L2bdb02.  call temp:= `getText`(v5) @signature `Landroidx/appcompat/widget/AppCompatEditText;.getText:()Landroid/text/Editable;` @kind virtual;
+  #L2bdb08.  v2:= temp @kind object;
+  #L2bdb0a.  call temp:= `length`(v2) @signature `Landroid/text/Editable;.length:()I` @kind interface;
+  #L2bdb10.  v2:= temp;
+  #L2bdb12.  if v2 <= v1 then goto L2bdb3a;
+  #L2bdb16.  call temp:= `getInputType`(v5) @signature `Landroid/widget/EditText;.getInputType:()I` @kind virtual;
+  #L2bdb1c.  v2:= temp;
+  #L2bdb1e.  call temp:= `isPasswordInputType`(v2) @signature `Lcom/chaos/view/PinView;.isPasswordInputType:(I)Z` @kind static;
+  #L2bdb24.  v2:= temp;
+  #L2bdb26.  if v2 == 0 then goto L2bdb32;
+  #L2bdb2a.  call `drawCircle`(v5, v6, v1) @signature `Lcom/chaos/view/PinView;.drawCircle:(Landroid/graphics/Canvas;I)V` @kind direct;
+  #L2bdb30.  goto L2bdb6c;
+  #L2bdb32.  call `drawText`(v5, v6, v1) @signature `Lcom/chaos/view/PinView;.drawText:(Landroid/graphics/Canvas;I)V` @kind direct;
+  #L2bdb38.  goto L2bdb6c;
+  #L2bdb3a.  call temp:= `getHint`(v5) @signature `Landroid/widget/EditText;.getHint:()Ljava/lang/CharSequence;` @kind virtual;
+  #L2bdb40.  v2:= temp @kind object;
+  #L2bdb42.  call temp:= `isEmpty`(v2) @signature `Landroid/text/TextUtils;.isEmpty:(Ljava/lang/CharSequence;)Z` @kind static;
+  #L2bdb48.  v2:= temp;
+  #L2bdb4a.  if v2 != 0 then goto L2bdb6c;
+  #L2bdb4e.  call temp:= `getHint`(v5) @signature `Landroid/widget/EditText;.getHint:()Ljava/lang/CharSequence;` @kind virtual;
+  #L2bdb54.  v2:= temp @kind object;
+  #L2bdb56.  call temp:= `length`(v2) @signature `Ljava/lang/CharSequence;.length:()I` @kind interface;
+  #L2bdb5c.  v2:= temp;
+  #L2bdb5e.  v3:= v5.`com.chaos.view.PinView.mPinItemCount` @type ^`int`;
+  #L2bdb62.  if v2 != v3 then goto L2bdb6c;
+  #L2bdb66.  call `drawHint`(v5, v6, v1) @signature `Lcom/chaos/view/PinView;.drawHint:(Landroid/graphics/Canvas;I)V` @kind direct;
+  #L2bdb6c.  v1:= v1 + 1;
+  #L2bdb70.  goto L2bdad8;
+  #L2bdb72.  call temp:= `isFocused`(v5) @signature `Landroid/widget/EditText;.isFocused:()Z` @kind virtual;
+  #L2bdb78.  v1:= temp;
+  #L2bdb7a.  if v1 == 0 then goto L2bdbf0;
+  #L2bdb7e.  call temp:= `getText`(v5) @signature `Landroidx/appcompat/widget/AppCompatEditText;.getText:()Landroid/text/Editable;` @kind virtual;
+  #L2bdb84.  v1:= temp @kind object;
+  #L2bdb86.  call temp:= `length`(v1) @signature `Landroid/text/Editable;.length:()I` @kind interface;
+  #L2bdb8c.  v1:= temp;
+  #L2bdb8e.  v2:= v5.`com.chaos.view.PinView.mPinItemCount` @type ^`int`;
+  #L2bdb92.  if v1 == v2 then goto L2bdbf0;
+  #L2bdb96.  call temp:= `getText`(v5) @signature `Landroidx/appcompat/widget/AppCompatEditText;.getText:()Landroid/text/Editable;` @kind virtual;
+  #L2bdb9c.  v1:= temp @kind object;
+  #L2bdb9e.  call temp:= `length`(v1) @signature `Landroid/text/Editable;.length:()I` @kind interface;
+  #L2bdba4.  v1:= temp;
+  #L2bdba6.  call `updateItemRectF`(v5, v1) @signature `Lcom/chaos/view/PinView;.updateItemRectF:(I)V` @kind direct;
+  #L2bdbac.  call `updateCenterPoint`(v5) @signature `Lcom/chaos/view/PinView;.updateCenterPoint:()V` @kind direct;
+  #L2bdbb2.  v2:= v5.`com.chaos.view.PinView.mPaint` @type ^`android.graphics.Paint` @kind object;
+  #L2bdbb6.  v3:= 1I;
+  #L2bdbb8.  v3:= new `int`[v3];
+  #L2bdbbc.  v4:= 16842913I;
+  #L2bdbc2.  v3[v0]:= v4;
+  #L2bdbc6.  call temp:= `getLineColorForState`(v5, v3) @signature `Lcom/chaos/view/PinView;.getLineColorForState:([I)I` @kind direct;
+  #L2bdbcc.  v0:= temp;
+  #L2bdbce.  call `setColor`(v2, v0) @signature `Landroid/graphics/Paint;.setColor:(I)V` @kind virtual;
+  #L2bdbd4.  call `drawCursor`(v5, v6) @signature `Lcom/chaos/view/PinView;.drawCursor:(Landroid/graphics/Canvas;)V` @kind direct;
+  #L2bdbda.  v0:= v5.`com.chaos.view.PinView.mViewType` @type ^`int`;
+  #L2bdbde.  if v0 != 0 then goto L2bdbea;
+  #L2bdbe2.  call `drawPinBox`(v5, v6, v1) @signature `Lcom/chaos/view/PinView;.drawPinBox:(Landroid/graphics/Canvas;I)V` @kind direct;
+  #L2bdbe8.  goto L2bdbf0;
+  #L2bdbea.  call `drawPinLine`(v5, v6, v1) @signature `Lcom/chaos/view/PinView;.drawPinLine:(Landroid/graphics/Canvas;I)V` @kind direct;
+  #L2bdbf0.  return @kind void;
+}
+procedure `void` `drawText`(`com.chaos.view.PinView` v2 @kind this, `android.graphics.Canvas` v3 @kind object, `int` v4 ) @signature `Lcom/chaos/view/PinView;.drawText:(Landroid/graphics/Canvas;I)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+
+  #L2bdc04.  call temp:= `getPaintByIndex`(v2, v4) @signature `Lcom/chaos/view/PinView;.getPaintByIndex:(I)Landroid/graphics/Paint;` @kind direct;
+  #L2bdc0a.  v0:= temp @kind object;
+  #L2bdc0c.  call temp:= `getText`(v2) @signature `Landroidx/appcompat/widget/AppCompatEditText;.getText:()Landroid/text/Editable;` @kind virtual;
+  #L2bdc12.  v1:= temp @kind object;
+  #L2bdc14.  call `drawTextAtBox`(v2, v3, v0, v1, v4) @signature `Lcom/chaos/view/PinView;.drawTextAtBox:(Landroid/graphics/Canvas;Landroid/graphics/Paint;Ljava/lang/CharSequence;I)V` @kind direct;
+  #L2bdc1a.  return @kind void;
+}
+procedure `void` `drawTextAtBox`(`com.chaos.view.PinView` v8 @kind this, `android.graphics.Canvas` v9 @kind object, `android.graphics.Paint` v10 @kind object, `java.lang.CharSequence` v11 @kind object, `int` v12 ) @signature `Lcom/chaos/view/PinView;.drawTextAtBox:(Landroid/graphics/Canvas;Landroid/graphics/Paint;Ljava/lang/CharSequence;I)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+
+  #L2bdc2c.  call temp:= `toString`(v11) @signature `Ljava/lang/CharSequence;.toString:()Ljava/lang/String;` @kind interface;
+  #L2bdc32.  v0:= temp @kind object;
+  #L2bdc34.  v4:= v12 + 1;
+  #L2bdc38.  v1:= v8.`com.chaos.view.PinView.mTextRect` @type ^`android.graphics.Rect` @kind object;
+  #L2bdc3c.  call `getTextBounds`(v10, v0, v12, v4, v1) @signature `Landroid/graphics/Paint;.getTextBounds:(Ljava/lang/String;IILandroid/graphics/Rect;)V` @kind virtual;
+  #L2bdc42.  v0:= v8.`com.chaos.view.PinView.mItemCenterPoint` @type ^`android.graphics.PointF` @kind object;
+  #L2bdc46.  v1:= v0.`android.graphics.PointF.x` @type ^`float`;
+  #L2bdc4a.  v0:= v0.`android.graphics.PointF.y` @type ^`float`;
+  #L2bdc4e.  v2:= v8.`com.chaos.view.PinView.mTextRect` @type ^`android.graphics.Rect` @kind object;
+  #L2bdc52.  call temp:= `width`(v2) @signature `Landroid/graphics/Rect;.width:()I` @kind virtual;
+  #L2bdc58.  v2:= temp;
+  #L2bdc5a.  call temp:= `abs`(v2) @signature `Ljava/lang/Math;.abs:(I)I` @kind static;
+  #L2bdc60.  v2:= temp;
+  #L2bdc62.  v2:= v2 / 2;
+  #L2bdc66.  v2:= (`float`) v2 @kind i2f;
+  #L2bdc68.  v1:= v1 - v2 @kind float;
+  #L2bdc6a.  v2:= v8.`com.chaos.view.PinView.mTextRect` @type ^`android.graphics.Rect` @kind object;
+  #L2bdc6e.  v3:= v2.`android.graphics.Rect.left` @type ^`int`;
+  #L2bdc72.  v3:= (`float`) v3 @kind i2f;
+  #L2bdc74.  v5:= v1 - v3 @kind float;
+  #L2bdc78.  call temp:= `height`(v2) @signature `Landroid/graphics/Rect;.height:()I` @kind virtual;
+  #L2bdc7e.  v1:= temp;
+  #L2bdc80.  call temp:= `abs`(v1) @signature `Ljava/lang/Math;.abs:(I)I` @kind static;
+  #L2bdc86.  v1:= temp;
+  #L2bdc88.  v1:= v1 / 2;
+  #L2bdc8c.  v1:= (`float`) v1 @kind i2f;
+  #L2bdc8e.  v0:= v0 + v1 @kind float;
+  #L2bdc90.  v1:= v8.`com.chaos.view.PinView.mTextRect` @type ^`android.graphics.Rect` @kind object;
+  #L2bdc94.  v1:= v1.`android.graphics.Rect.bottom` @type ^`int`;
+  #L2bdc98.  v1:= (`float`) v1 @kind i2f;
+  #L2bdc9a.  v6:= v0 - v1 @kind float;
+  #L2bdc9e.  v1:= v9 @kind object;
+  #L2bdca0.  v2:= v11 @kind object;
+  #L2bdca2.  v3:= v12;
+  #L2bdca4.  v7:= v10 @kind object;
+  #L2bdca6.  call `drawText`(v1, v2, v3, v4, v5, v6, v7) @signature `Landroid/graphics/Canvas;.drawText:(Ljava/lang/CharSequence;IIFFLandroid/graphics/Paint;)V` @kind virtual;
+  #L2bdcac.  return @kind void;
+}
+procedure `int` `getLineColorForState`(`com.chaos.view.PinView` v2 @kind this, `int`[] v3 @kind object) @signature `Lcom/chaos/view/PinView;.getLineColorForState:([I)I` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+
+  #L2bd464.  v0:= v2.`com.chaos.view.PinView.mLineColor` @type ^`android.content.res.ColorStateList` @kind object;
+  #L2bd468.  if v0 == 0 then goto L2bd47a;
+  #L2bd46c.  v1:= v2.`com.chaos.view.PinView.mCurLineColor` @type ^`int`;
+  #L2bd470.  call temp:= `getColorForState`(v0, v3, v1) @signature `Landroid/content/res/ColorStateList;.getColorForState:([II)I` @kind virtual;
+  #L2bd476.  v3:= temp;
+  #L2bd478.  goto L2bd47e;
+  #L2bd47a.  v3:= v2.`com.chaos.view.PinView.mCurLineColor` @type ^`int`;
+  #L2bd47e.  return v3;
+}
+procedure `android.graphics.Paint` `getPaintByIndex`(`com.chaos.view.PinView` v1 @kind this, `int` v2 ) @signature `Lcom/chaos/view/PinView;.getPaintByIndex:(I)Landroid/graphics/Paint;` @AccessFlag PRIVATE {
+    temp;
+    v0;
+
+  #L2bd254.  v0:= v1.`com.chaos.view.PinView.isAnimationEnable` @type ^`boolean` @kind boolean;
+  #L2bd258.  if v0 == 0 then goto L2bd290;
+  #L2bd25c.  call temp:= `getText`(v1) @signature `Landroidx/appcompat/widget/AppCompatEditText;.getText:()Landroid/text/Editable;` @kind virtual;
+  #L2bd262.  v0:= temp @kind object;
+  #L2bd264.  call temp:= `length`(v0) @signature `Landroid/text/Editable;.length:()I` @kind interface;
+  #L2bd26a.  v0:= temp;
+  #L2bd26c.  v0:= v0 + -1;
+  #L2bd270.  if v2 != v0 then goto L2bd290;
+  #L2bd274.  v2:= v1.`com.chaos.view.PinView.mAnimatorTextPaint` @type ^`android.graphics.Paint` @kind object;
+  #L2bd278.  v0:= v1.`com.chaos.view.PinView.mTextPaint` @type ^`android.text.TextPaint` @kind object;
+  #L2bd27c.  call temp:= `getColor`(v0) @signature `Landroid/text/TextPaint;.getColor:()I` @kind virtual;
+  #L2bd282.  v0:= temp;
+  #L2bd284.  call `setColor`(v2, v0) @signature `Landroid/graphics/Paint;.setColor:(I)V` @kind virtual;
+  #L2bd28a.  v2:= v1.`com.chaos.view.PinView.mAnimatorTextPaint` @type ^`android.graphics.Paint` @kind object;
+  #L2bd28e.  return v2 @kind object;
+  #L2bd290.  v2:= v1.`com.chaos.view.PinView.mTextPaint` @type ^`android.text.TextPaint` @kind object;
+  #L2bd294.  return v2 @kind object;
+}
+procedure `void` `invalidateCursor`(`com.chaos.view.PinView` v1 @kind this, `boolean` v2 ) @signature `Lcom/chaos/view/PinView;.invalidateCursor:(Z)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+
+  #L2bdcf4.  v0:= v1.`com.chaos.view.PinView.drawCursor` @type ^`boolean` @kind boolean;
+  #L2bdcf8.  if v0 == v2 then goto L2bdd06;
+  #L2bdcfc.  v1.`com.chaos.view.PinView.drawCursor` @type ^`boolean` := v2 @kind boolean;
+  #L2bdd00.  call `invalidate`(v1) @signature `Landroid/widget/EditText;.invalidate:()V` @kind virtual;
+  #L2bdd06.  return @kind void;
+}
+procedure `boolean` `isPasswordInputType`(`int` v1 ) @signature `Lcom/chaos/view/PinView;.isPasswordInputType:(I)Z` @AccessFlag PRIVATE_STATIC {
+    temp;
+    v0;
+
+  #L2bd308.  v1:= v1 ^& 4095;
+  #L2bd30c.  v0:= 129I;
+  #L2bd310.  if v1 == v0 then goto L2bd32a;
+  #L2bd314.  v0:= 225I;
+  #L2bd318.  if v1 == v0 then goto L2bd32a;
+  #L2bd31c.  v0:= 18I;
+  #L2bd320.  if v1 != v0 then goto L2bd326;
+  #L2bd324.  goto L2bd32a;
+  #L2bd326.  v1:= 0I;
+  #L2bd328.  goto L2bd32c;
+  #L2bd32a.  v1:= 1I;
+  #L2bd32c.  return v1;
+}
+procedure `void` `makeBlink`(`com.chaos.view.PinView` v3 @kind this) @signature `Lcom/chaos/view/PinView;.makeBlink:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L2bdd18.  call temp:= `shouldBlink`(v3) @signature `Lcom/chaos/view/PinView;.shouldBlink:()Z` @kind direct;
+  #L2bdd1e.  v0:= temp;
+  #L2bdd20.  if v0 == 0 then goto L2bdd5c;
+  #L2bdd24.  v0:= v3.`com.chaos.view.PinView.mBlink` @type ^`com.chaos.view.PinView$Blink` @kind object;
+  #L2bdd28.  if v0 != 0 then goto L2bdd3c;
+  #L2bdd2c.  v0:= new `com.chaos.view.PinView$Blink`;
+  #L2bdd30.  v1:= 0I;
+  #L2bdd32.  call `<init>`(v0, v3, v1) @signature `Lcom/chaos/view/PinView$Blink;.<init>:(Lcom/chaos/view/PinView;Lcom/chaos/view/PinView$1;)V` @kind direct;
+  #L2bdd38.  v3.`com.chaos.view.PinView.mBlink` @type ^`com.chaos.view.PinView$Blink` := v0 @kind object;
+  #L2bdd3c.  v0:= v3.`com.chaos.view.PinView.mBlink` @type ^`com.chaos.view.PinView$Blink` @kind object;
+  #L2bdd40.  call temp:= `removeCallbacks`(v3, v0) @signature `Landroid/widget/EditText;.removeCallbacks:(Ljava/lang/Runnable;)Z` @kind virtual;
+  #L2bdd46.  v0:= 0I;
+  #L2bdd48.  v3.`com.chaos.view.PinView.drawCursor` @type ^`boolean` := v0 @kind boolean;
+  #L2bdd4c.  v0:= v3.`com.chaos.view.PinView.mBlink` @type ^`com.chaos.view.PinView$Blink` @kind object;
+  #L2bdd50.  v1:= 500L;
+  #L2bdd54.  call temp:= `postDelayed`(v3, v0, v1) @signature `Landroid/widget/EditText;.postDelayed:(Ljava/lang/Runnable;J)Z` @kind virtual;
+  #L2bdd5a.  goto L2bdd6a;
+  #L2bdd5c.  v0:= v3.`com.chaos.view.PinView.mBlink` @type ^`com.chaos.view.PinView$Blink` @kind object;
+  #L2bdd60.  if v0 == 0 then goto L2bdd6a;
+  #L2bdd64.  call temp:= `removeCallbacks`(v3, v0) @signature `Landroid/widget/EditText;.removeCallbacks:(Ljava/lang/Runnable;)Z` @kind virtual;
+  #L2bdd6a.  return @kind void;
+}
+procedure `void` `moveSelectionToEnd`(`com.chaos.view.PinView` v1 @kind this) @signature `Lcom/chaos/view/PinView;.moveSelectionToEnd:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+
+  #L2bdd7c.  call temp:= `getText`(v1) @signature `Landroidx/appcompat/widget/AppCompatEditText;.getText:()Landroid/text/Editable;` @kind virtual;
+  #L2bdd82.  v0:= temp @kind object;
+  #L2bdd84.  call temp:= `length`(v0) @signature `Landroid/text/Editable;.length:()I` @kind interface;
+  #L2bdd8a.  v0:= temp;
+  #L2bdd8c.  call `setSelection`(v1, v0) @signature `Landroid/widget/EditText;.setSelection:(I)V` @kind virtual;
+  #L2bdd92.  return @kind void;
+}
+procedure `void` `resumeBlink`(`com.chaos.view.PinView` v1 @kind this) @signature `Lcom/chaos/view/PinView;.resumeBlink:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+
+  #L2bdfc0.  v0:= v1.`com.chaos.view.PinView.mBlink` @type ^`com.chaos.view.PinView$Blink` @kind object;
+  #L2bdfc4.  if v0 == 0 then goto L2bdfd4;
+  #L2bdfc8.  call `b`(v0) @signature `Lcom/chaos/view/PinView$Blink;.b:()V` @kind virtual;
+  #L2bdfce.  call `makeBlink`(v1) @signature `Lcom/chaos/view/PinView;.makeBlink:()V` @kind direct;
+  #L2bdfd4.  return @kind void;
+}
+procedure `void` `setMaxLength`(`com.chaos.view.PinView` v3 @kind this, `int` v4 ) @signature `Lcom/chaos/view/PinView;.setMaxLength:(I)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L2be1a0.  if v4 < 0 then goto L2be1c2;
+  #L2be1a4.  v0:= 1I;
+  #L2be1a6.  v0:= new `android.text.InputFilter`[v0];
+  #L2be1aa.  v1:= 0I;
+  #L2be1ac.  v2:= new `android.text.InputFilter$LengthFilter`;
+  #L2be1b0.  call `<init>`(v2, v4) @signature `Landroid/text/InputFilter$LengthFilter;.<init>:(I)V` @kind direct;
+  #L2be1b6.  v0[v1]:= v2 @kind object;
+  #L2be1ba.  call `setFilters`(v3, v0) @signature `Landroid/widget/EditText;.setFilters:([Landroid/text/InputFilter;)V` @kind virtual;
+  #L2be1c0.  goto L2be1cc;
+  #L2be1c2.  v4:= `@@com.chaos.view.PinView.NO_FILTERS` @type ^`android.text.InputFilter`[] @kind object;
+  #L2be1c6.  call `setFilters`(v3, v4) @signature `Landroid/widget/EditText;.setFilters:([Landroid/text/InputFilter;)V` @kind virtual;
+  #L2be1cc.  return @kind void;
+}
+procedure `void` `setupAnimator`(`com.chaos.view.PinView` v3 @kind this) @signature `Lcom/chaos/view/PinView;.setupAnimator:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L2be220.  v0:= 2I;
+  #L2be222.  v0:= new `float`[v0];
+  #L2be226.  goto L2be26c;
+  #L2be22c.  call temp:= `ofFloat`(v0) @signature `Landroid/animation/ValueAnimator;.ofFloat:([F)Landroid/animation/ValueAnimator;` @kind static;
+  #L2be232.  v0:= temp @kind object;
+  #L2be234.  v3.`com.chaos.view.PinView.mDefaultAddAnimator` @type ^`android.animation.ValueAnimator` := v0 @kind object;
+  #L2be238.  v1:= 150L;
+  #L2be23c.  call temp:= `setDuration`(v0, v1) @signature `Landroid/animation/ValueAnimator;.setDuration:(J)Landroid/animation/ValueAnimator;` @kind virtual;
+  #L2be242.  v0:= v3.`com.chaos.view.PinView.mDefaultAddAnimator` @type ^`android.animation.ValueAnimator` @kind object;
+  #L2be246.  v1:= new `android.view.animation.DecelerateInterpolator`;
+  #L2be24a.  call `<init>`(v1) @signature `Landroid/view/animation/DecelerateInterpolator;.<init>:()V` @kind direct;
+  #L2be250.  call `setInterpolator`(v0, v1) @signature `Landroid/animation/ValueAnimator;.setInterpolator:(Landroid/animation/TimeInterpolator;)V` @kind virtual;
+  #L2be256.  v0:= v3.`com.chaos.view.PinView.mDefaultAddAnimator` @type ^`android.animation.ValueAnimator` @kind object;
+  #L2be25a.  v1:= new `com.chaos.view.PinView$1`;
+  #L2be25e.  call `<init>`(v1, v3) @signature `Lcom/chaos/view/PinView$1;.<init>:(Lcom/chaos/view/PinView;)V` @kind direct;
+  #L2be264.  call `addUpdateListener`(v0, v1) @signature `Landroid/animation/ValueAnimator;.addUpdateListener:(Landroid/animation/ValueAnimator$AnimatorUpdateListener;)V` @kind virtual;
+  #L2be26a.  return @kind void;
+  #L2be26c.  v0:= (1056964608I, 1065353216I) @kind object;
+  #L2be27b.  goto L2be22c;
+}
+procedure `boolean` `shouldBlink`(`com.chaos.view.PinView` v1 @kind this) @signature `Lcom/chaos/view/PinView;.shouldBlink:()Z` @AccessFlag PRIVATE {
+    temp;
+    v0;
+
+  #L2bd340.  call temp:= `isCursorVisible`(v1) @signature `Lcom/chaos/view/PinView;.isCursorVisible:()Z` @kind virtual;
+  #L2bd346.  v0:= temp;
+  #L2bd348.  if v0 == 0 then goto L2bd35c;
+  #L2bd34c.  call temp:= `isFocused`(v1) @signature `Landroid/widget/EditText;.isFocused:()Z` @kind virtual;
+  #L2bd352.  v0:= temp;
+  #L2bd354.  if v0 == 0 then goto L2bd35c;
+  #L2bd358.  v0:= 1I;
+  #L2bd35a.  goto L2bd35e;
+  #L2bd35c.  v0:= 0I;
+  #L2bd35e.  return v0;
+}
+procedure `void` `suspendBlink`(`com.chaos.view.PinView` v1 @kind this) @signature `Lcom/chaos/view/PinView;.suspendBlink:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+
+  #L2be28c.  v0:= v1.`com.chaos.view.PinView.mBlink` @type ^`com.chaos.view.PinView$Blink` @kind object;
+  #L2be290.  if v0 == 0 then goto L2be2a2;
+  #L2be294.  call `a`(v0) @signature `Lcom/chaos/view/PinView$Blink;.a:(Lcom/chaos/view/PinView$Blink;)V` @kind static;
+  #L2be29a.  v0:= 0I;
+  #L2be29c.  call `invalidateCursor`(v1, v0) @signature `Lcom/chaos/view/PinView;.invalidateCursor:(Z)V` @kind direct;
+  #L2be2a2.  return @kind void;
+}
+procedure `void` `updateCenterPoint`(`com.chaos.view.PinView` v4 @kind this) @signature `Lcom/chaos/view/PinView;.updateCenterPoint:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L2be2b4.  v0:= v4.`com.chaos.view.PinView.mItemBorderRect` @type ^`android.graphics.RectF` @kind object;
+  #L2be2b8.  v1:= v0.`android.graphics.RectF.left` @type ^`float`;
+  #L2be2bc.  call temp:= `width`(v0) @signature `Landroid/graphics/RectF;.width:()F` @kind virtual;
+  #L2be2c2.  v0:= temp;
+  #L2be2c4.  call temp:= `abs`(v0) @signature `Ljava/lang/Math;.abs:(F)F` @kind static;
+  #L2be2ca.  v0:= temp;
+  #L2be2cc.  v2:= 2.0F;
+  #L2be2d0.  v0:= v0 / v2 @kind float;
+  #L2be2d2.  v1:= v1 + v0 @kind float;
+  #L2be2d4.  v0:= v4.`com.chaos.view.PinView.mItemBorderRect` @type ^`android.graphics.RectF` @kind object;
+  #L2be2d8.  v3:= v0.`android.graphics.RectF.top` @type ^`float`;
+  #L2be2dc.  call temp:= `height`(v0) @signature `Landroid/graphics/RectF;.height:()F` @kind virtual;
+  #L2be2e2.  v0:= temp;
+  #L2be2e4.  call temp:= `abs`(v0) @signature `Ljava/lang/Math;.abs:(F)F` @kind static;
+  #L2be2ea.  v0:= temp;
+  #L2be2ec.  v0:= v0 / v2 @kind float;
+  #L2be2ee.  v3:= v3 + v0 @kind float;
+  #L2be2f0.  v0:= v4.`com.chaos.view.PinView.mItemCenterPoint` @type ^`android.graphics.PointF` @kind object;
+  #L2be2f4.  call `set`(v0, v1, v3) @signature `Landroid/graphics/PointF;.set:(FF)V` @kind virtual;
+  #L2be2fa.  return @kind void;
+}
+procedure `void` `updateColors`(`com.chaos.view.PinView` v3 @kind this) @signature `Lcom/chaos/view/PinView;.updateColors:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L2be30c.  v0:= v3.`com.chaos.view.PinView.mLineColor` @type ^`android.content.res.ColorStateList` @kind object;
+  #L2be310.  v1:= 0I;
+  #L2be312.  if v0 == 0 then goto L2be328;
+  #L2be316.  call temp:= `getDrawableState`(v3) @signature `Landroid/widget/EditText;.getDrawableState:()[I` @kind virtual;
+  #L2be31c.  v2:= temp @kind object;
+  #L2be31e.  call temp:= `getColorForState`(v0, v2, v1) @signature `Landroid/content/res/ColorStateList;.getColorForState:([II)I` @kind virtual;
+  #L2be324.  v0:= temp;
+  #L2be326.  goto L2be330;
+  #L2be328.  call temp:= `getCurrentTextColor`(v3) @signature `Landroid/widget/EditText;.getCurrentTextColor:()I` @kind virtual;
+  #L2be32e.  v0:= temp;
+  #L2be330.  v2:= v3.`com.chaos.view.PinView.mCurLineColor` @type ^`int`;
+  #L2be334.  if v0 == v2 then goto L2be33e;
+  #L2be338.  v3.`com.chaos.view.PinView.mCurLineColor` @type ^`int` := v0;
+  #L2be33c.  v1:= 1I;
+  #L2be33e.  if v1 == 0 then goto L2be348;
+  #L2be342.  call `invalidate`(v3) @signature `Landroid/widget/EditText;.invalidate:()V` @kind virtual;
+  #L2be348.  return @kind void;
+}
+procedure `void` `updateCursorHeight`(`com.chaos.view.PinView` v3 @kind this) @signature `Lcom/chaos/view/PinView;.updateCursorHeight:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L2be35c.  v0:= 2.0F;
+  #L2be360.  call temp:= `dpToPx`(v3, v0) @signature `Lcom/chaos/view/PinView;.dpToPx:(F)I` @kind direct;
+  #L2be366.  v0:= temp;
+  #L2be368.  v0:= v0 * 2;
+  #L2be36c.  v1:= v3.`com.chaos.view.PinView.mPinItemHeight` @type ^`float`;
+  #L2be370.  call temp:= `getTextSize`(v3) @signature `Landroid/widget/EditText;.getTextSize:()F` @kind virtual;
+  #L2be376.  v2:= temp;
+  #L2be378.  v1:= v1 - v2 @kind float;
+  #L2be37a.  v0:= (`float`) v0 @kind i2f;
+  #L2be37c.  v1:= fcmpl(v1, v0);
+  #L2be380.  if v1 <= 0 then goto L2be390;
+  #L2be384.  call temp:= `getTextSize`(v3) @signature `Landroid/widget/EditText;.getTextSize:()F` @kind virtual;
+  #L2be38a.  v1:= temp;
+  #L2be38c.  v1:= v1 + v0 @kind float;
+  #L2be38e.  goto L2be398;
+  #L2be390.  call temp:= `getTextSize`(v3) @signature `Landroid/widget/EditText;.getTextSize:()F` @kind virtual;
+  #L2be396.  v1:= temp;
+  #L2be398.  v3.`com.chaos.view.PinView.mCursorHeight` @type ^`float` := v1;
+  #L2be39c.  return @kind void;
+}
+procedure `void` `updateItemRectF`(`com.chaos.view.PinView` v6 @kind this, `int` v7 ) @signature `Lcom/chaos/view/PinView;.updateItemRectF:(I)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L2be3b0.  v0:= v6.`com.chaos.view.PinView.mLineWidth` @type ^`int`;
+  #L2be3b4.  v0:= (`float`) v0 @kind i2f;
+  #L2be3b6.  v1:= 2.0F;
+  #L2be3ba.  v0:= v0 / v1 @kind float;
+  #L2be3bc.  call temp:= `getScrollX`(v6) @signature `Landroid/widget/EditText;.getScrollX:()I` @kind virtual;
+  #L2be3c2.  v1:= temp;
+  #L2be3c4.  call temp:= `getPaddingStart`(v6) @signature `Landroidx/core/view/ViewCompat;.getPaddingStart:(Landroid/view/View;)I` @kind static;
+  #L2be3ca.  v2:= temp;
+  #L2be3cc.  v1:= v1 + v2 @kind int;
+  #L2be3ce.  v1:= (`float`) v1 @kind i2f;
+  #L2be3d0.  v2:= (`float`) v7 @kind i2f;
+  #L2be3d2.  v3:= v6.`com.chaos.view.PinView.mPinItemSpacing` @type ^`int`;
+  #L2be3d6.  v4:= (`float`) v3 @kind i2f;
+  #L2be3d8.  v5:= v6.`com.chaos.view.PinView.mPinItemWidth` @type ^`float`;
+  #L2be3dc.  v4:= v4 + v5 @kind float;
+  #L2be3de.  v2:= v2 * v4 @kind float;
+  #L2be3e2.  v1:= v1 + v2 @kind float;
+  #L2be3e4.  v1:= v1 + v0 @kind float;
+  #L2be3e6.  if v3 != 0 then goto L2be3fa;
+  #L2be3ea.  if v7 <= 0 then goto L2be3fa;
+  #L2be3ee.  v2:= v6.`com.chaos.view.PinView.mLineWidth` @type ^`int`;
+  #L2be3f2.  v2:= v2 * v7 @kind int;
+  #L2be3f6.  v7:= (`float`) v2 @kind i2f;
+  #L2be3f8.  v1:= v1 - v7 @kind float;
+  #L2be3fa.  v5:= v5 + v1 @kind float;
+  #L2be3fc.  v7:= v6.`com.chaos.view.PinView.mLineWidth` @type ^`int`;
+  #L2be400.  v7:= (`float`) v7 @kind i2f;
+  #L2be402.  v5:= v5 - v7 @kind float;
+  #L2be404.  call temp:= `getScrollY`(v6) @signature `Landroid/widget/EditText;.getScrollY:()I` @kind virtual;
+  #L2be40a.  v7:= temp;
+  #L2be40c.  call temp:= `getPaddingTop`(v6) @signature `Landroid/widget/EditText;.getPaddingTop:()I` @kind virtual;
+  #L2be412.  v2:= temp;
+  #L2be414.  v7:= v7 + v2 @kind int;
+  #L2be416.  v7:= (`float`) v7 @kind i2f;
+  #L2be418.  v7:= v7 + v0 @kind float;
+  #L2be41a.  v0:= v6.`com.chaos.view.PinView.mPinItemHeight` @type ^`float`;
+  #L2be41e.  v0:= v0 + v7 @kind float;
+  #L2be420.  v2:= v6.`com.chaos.view.PinView.mLineWidth` @type ^`int`;
+  #L2be424.  v2:= (`float`) v2 @kind i2f;
+  #L2be426.  v0:= v0 - v2 @kind float;
+  #L2be428.  v2:= v6.`com.chaos.view.PinView.mItemBorderRect` @type ^`android.graphics.RectF` @kind object;
+  #L2be42c.  call `set`(v2, v1, v7, v5, v0) @signature `Landroid/graphics/RectF;.set:(FFFF)V` @kind virtual;
+  #L2be432.  return @kind void;
+}
+procedure `void` `updatePaints`(`com.chaos.view.PinView` v2 @kind this) @signature `Lcom/chaos/view/PinView;.updatePaints:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+
+  #L2be444.  v0:= v2.`com.chaos.view.PinView.mPaint` @type ^`android.graphics.Paint` @kind object;
+  #L2be448.  v1:= v2.`com.chaos.view.PinView.mCurLineColor` @type ^`int`;
+  #L2be44c.  call `setColor`(v0, v1) @signature `Landroid/graphics/Paint;.setColor:(I)V` @kind virtual;
+  #L2be452.  v0:= v2.`com.chaos.view.PinView.mPaint` @type ^`android.graphics.Paint` @kind object;
+  #L2be456.  v1:= `@@android.graphics.Paint$Style.STROKE` @type ^`android.graphics.Paint$Style` @kind object;
+  #L2be45a.  call `setStyle`(v0, v1) @signature `Landroid/graphics/Paint;.setStyle:(Landroid/graphics/Paint$Style;)V` @kind virtual;
+  #L2be460.  v0:= v2.`com.chaos.view.PinView.mPaint` @type ^`android.graphics.Paint` @kind object;
+  #L2be464.  v1:= v2.`com.chaos.view.PinView.mLineWidth` @type ^`int`;
+  #L2be468.  v1:= (`float`) v1 @kind i2f;
+  #L2be46a.  call `setStrokeWidth`(v0, v1) @signature `Landroid/graphics/Paint;.setStrokeWidth:(F)V` @kind virtual;
+  #L2be470.  v0:= v2.`com.chaos.view.PinView.mTextPaint` @type ^`android.text.TextPaint` @kind object;
+  #L2be474.  call temp:= `getCurrentTextColor`(v2) @signature `Landroid/widget/EditText;.getCurrentTextColor:()I` @kind virtual;
+  #L2be47a.  v1:= temp;
+  #L2be47c.  call `setColor`(v0, v1) @signature `Landroid/text/TextPaint;.setColor:(I)V` @kind virtual;
+  #L2be482.  return @kind void;
+}
+procedure `void` `updateRoundRectPath`(`com.chaos.view.PinView` v8 @kind this, `android.graphics.RectF` v9 @kind object, `float` v10 , `float` v11 , `boolean` v12 , `boolean` v13 ) @signature `Lcom/chaos/view/PinView;.updateRoundRectPath:(Landroid/graphics/RectF;FFZZ)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+
+  #L2be494.  v0:= v8 @kind object;
+  #L2be496.  v1:= v9 @kind object;
+  #L2be498.  v2:= v10;
+  #L2be49a.  v3:= v11;
+  #L2be49c.  v4:= v12;
+  #L2be49e.  v5:= v13;
+  #L2be4a0.  v6:= v13;
+  #L2be4a2.  v7:= v12;
+  #L2be4a4.  call `updateRoundRectPath`(v0, v1, v2, v3, v4, v5, v6, v7) @signature `Lcom/chaos/view/PinView;.updateRoundRectPath:(Landroid/graphics/RectF;FFZZZZ)V` @kind direct;
+  #L2be4aa.  return @kind void;
+}
+procedure `void` `updateRoundRectPath`(`com.chaos.view.PinView` v5 @kind this, `android.graphics.RectF` v6 @kind object, `float` v7 , `float` v8 , `boolean` v9 , `boolean` v10 , `boolean` v11 , `boolean` v12 ) @signature `Lcom/chaos/view/PinView;.updateRoundRectPath:(Landroid/graphics/RectF;FFZZZZ)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L2be4bc.  v0:= v5.`com.chaos.view.PinView.mPath` @type ^`android.graphics.Path` @kind object;
+  #L2be4c0.  call `reset`(v0) @signature `Landroid/graphics/Path;.reset:()V` @kind virtual;
+  #L2be4c6.  v0:= v6.`android.graphics.RectF.left` @type ^`float`;
+  #L2be4ca.  v1:= v6.`android.graphics.RectF.top` @type ^`float`;
+  #L2be4ce.  v2:= v6.`android.graphics.RectF.right` @type ^`float`;
+  #L2be4d2.  v6:= v6.`android.graphics.RectF.bottom` @type ^`float`;
+  #L2be4d6.  v2:= v2 - v0 @kind float;
+  #L2be4d8.  v6:= v6 - v1 @kind float;
+  #L2be4da.  v3:= 2.0F;
+  #L2be4de.  v4:= v7 * v3 @kind float;
+  #L2be4e2.  v2:= v2 - v4 @kind float;
+  #L2be4e4.  v3:= v3 * v8 @kind float;
+  #L2be4e8.  v6:= v6 - v3 @kind float;
+  #L2be4ea.  v3:= v5.`com.chaos.view.PinView.mPath` @type ^`android.graphics.Path` @kind object;
+  #L2be4ee.  v1:= v1 + v8 @kind float;
+  #L2be4f0.  call `moveTo`(v3, v0, v1) @signature `Landroid/graphics/Path;.moveTo:(FF)V` @kind virtual;
+  #L2be4f6.  v0:= 0I;
+  #L2be4f8.  if v9 == 0 then goto L2be50a;
+  #L2be4fc.  v9:= v5.`com.chaos.view.PinView.mPath` @type ^`android.graphics.Path` @kind object;
+  #L2be500.  v1:= -v8 @kind float;
+  #L2be502.  call `rQuadTo`(v9, v0, v1, v7, v1) @signature `Landroid/graphics/Path;.rQuadTo:(FFFF)V` @kind virtual;
+  #L2be508.  goto L2be520;
+  #L2be50a.  v9:= v5.`com.chaos.view.PinView.mPath` @type ^`android.graphics.Path` @kind object;
+  #L2be50e.  v1:= -v8 @kind float;
+  #L2be510.  call `rLineTo`(v9, v0, v1) @signature `Landroid/graphics/Path;.rLineTo:(FF)V` @kind virtual;
+  #L2be516.  v9:= v5.`com.chaos.view.PinView.mPath` @type ^`android.graphics.Path` @kind object;
+  #L2be51a.  call `rLineTo`(v9, v7, v0) @signature `Landroid/graphics/Path;.rLineTo:(FF)V` @kind virtual;
+  #L2be520.  v9:= v5.`com.chaos.view.PinView.mPath` @type ^`android.graphics.Path` @kind object;
+  #L2be524.  call `rLineTo`(v9, v2, v0) @signature `Landroid/graphics/Path;.rLineTo:(FF)V` @kind virtual;
+  #L2be52a.  v9:= v5.`com.chaos.view.PinView.mPath` @type ^`android.graphics.Path` @kind object;
+  #L2be52e.  if v10 == 0 then goto L2be53a;
+  #L2be532.  call `rQuadTo`(v9, v7, v0, v7, v8) @signature `Landroid/graphics/Path;.rQuadTo:(FFFF)V` @kind virtual;
+  #L2be538.  goto L2be54a;
+  #L2be53a.  call `rLineTo`(v9, v7, v0) @signature `Landroid/graphics/Path;.rLineTo:(FF)V` @kind virtual;
+  #L2be540.  v9:= v5.`com.chaos.view.PinView.mPath` @type ^`android.graphics.Path` @kind object;
+  #L2be544.  call `rLineTo`(v9, v0, v8) @signature `Landroid/graphics/Path;.rLineTo:(FF)V` @kind virtual;
+  #L2be54a.  v9:= v5.`com.chaos.view.PinView.mPath` @type ^`android.graphics.Path` @kind object;
+  #L2be54e.  call `rLineTo`(v9, v0, v6) @signature `Landroid/graphics/Path;.rLineTo:(FF)V` @kind virtual;
+  #L2be554.  v9:= v5.`com.chaos.view.PinView.mPath` @type ^`android.graphics.Path` @kind object;
+  #L2be558.  if v11 == 0 then goto L2be566;
+  #L2be55c.  v10:= -v7 @kind float;
+  #L2be55e.  call `rQuadTo`(v9, v0, v8, v10, v8) @signature `Landroid/graphics/Path;.rQuadTo:(FFFF)V` @kind virtual;
+  #L2be564.  goto L2be578;
+  #L2be566.  call `rLineTo`(v9, v0, v8) @signature `Landroid/graphics/Path;.rLineTo:(FF)V` @kind virtual;
+  #L2be56c.  v9:= v5.`com.chaos.view.PinView.mPath` @type ^`android.graphics.Path` @kind object;
+  #L2be570.  v10:= -v7 @kind float;
+  #L2be572.  call `rLineTo`(v9, v10, v0) @signature `Landroid/graphics/Path;.rLineTo:(FF)V` @kind virtual;
+  #L2be578.  v9:= v5.`com.chaos.view.PinView.mPath` @type ^`android.graphics.Path` @kind object;
+  #L2be57c.  v10:= -v2 @kind float;
+  #L2be57e.  call `rLineTo`(v9, v10, v0) @signature `Landroid/graphics/Path;.rLineTo:(FF)V` @kind virtual;
+  #L2be584.  v9:= v5.`com.chaos.view.PinView.mPath` @type ^`android.graphics.Path` @kind object;
+  #L2be588.  v7:= -v7 @kind float;
+  #L2be58a.  if v12 == 0 then goto L2be598;
+  #L2be58e.  v8:= -v8 @kind float;
+  #L2be590.  call `rQuadTo`(v9, v7, v0, v7, v8) @signature `Landroid/graphics/Path;.rQuadTo:(FFFF)V` @kind virtual;
+  #L2be596.  goto L2be5aa;
+  #L2be598.  call `rLineTo`(v9, v7, v0) @signature `Landroid/graphics/Path;.rLineTo:(FF)V` @kind virtual;
+  #L2be59e.  v7:= v5.`com.chaos.view.PinView.mPath` @type ^`android.graphics.Path` @kind object;
+  #L2be5a2.  v8:= -v8 @kind float;
+  #L2be5a4.  call `rLineTo`(v7, v0, v8) @signature `Landroid/graphics/Path;.rLineTo:(FF)V` @kind virtual;
+  #L2be5aa.  v7:= v5.`com.chaos.view.PinView.mPath` @type ^`android.graphics.Path` @kind object;
+  #L2be5ae.  v6:= -v6 @kind float;
+  #L2be5b0.  call `rLineTo`(v7, v0, v6) @signature `Landroid/graphics/Path;.rLineTo:(FF)V` @kind virtual;
+  #L2be5b6.  v6:= v5.`com.chaos.view.PinView.mPath` @type ^`android.graphics.Path` @kind object;
+  #L2be5ba.  call `close`(v6) @signature `Landroid/graphics/Path;.close:()V` @kind virtual;
+  #L2be5c0.  return @kind void;
+}
+procedure `void` `drawableStateChanged`(`com.chaos.view.PinView` v1 @kind this) @signature `Lcom/chaos/view/PinView;.drawableStateChanged:()V` @AccessFlag PROTECTED {
+    temp;
+    v0;
+
+  #L2bdcc0.  call `drawableStateChanged`(v1) @signature `Landroidx/appcompat/widget/AppCompatEditText;.drawableStateChanged:()V` @kind super;
+  #L2bdcc6.  v0:= v1.`com.chaos.view.PinView.mLineColor` @type ^`android.content.res.ColorStateList` @kind object;
+  #L2bdcca.  if v0 == 0 then goto L2bdcda;
+  #L2bdcce.  call temp:= `isStateful`(v0) @signature `Landroid/content/res/ColorStateList;.isStateful:()Z` @kind virtual;
+  #L2bdcd4.  v0:= temp;
+  #L2bdcd6.  if v0 == 0 then goto L2bdce0;
+  #L2bdcda.  call `updateColors`(v1) @signature `Lcom/chaos/view/PinView;.updateColors:()V` @kind direct;
+  #L2bdce0.  return @kind void;
+}
+procedure `int` `getCurrentLineColor`(`com.chaos.view.PinView` v1 @kind this) @signature `Lcom/chaos/view/PinView;.getCurrentLineColor:()I` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L2bd3d4.  v0:= v1.`com.chaos.view.PinView.mCurLineColor` @type ^`int`;
+  #L2bd3d8.  return v0;
+}
+procedure `int` `getCursorColor`(`com.chaos.view.PinView` v1 @kind this) @signature `Lcom/chaos/view/PinView;.getCursorColor:()I` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L2bd3ec.  v0:= v1.`com.chaos.view.PinView.mCursorColor` @type ^`int`;
+  #L2bd3f0.  return v0;
+}
+procedure `int` `getCursorWidth`(`com.chaos.view.PinView` v1 @kind this) @signature `Lcom/chaos/view/PinView;.getCursorWidth:()I` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L2bd404.  v0:= v1.`com.chaos.view.PinView.mCursorWidth` @type ^`int`;
+  #L2bd408.  return v0;
+}
+procedure `android.text.method.MovementMethod` `getDefaultMovementMethod`(`com.chaos.view.PinView` v1 @kind this) @signature `Lcom/chaos/view/PinView;.getDefaultMovementMethod:()Landroid/text/method/MovementMethod;` @AccessFlag PROTECTED {
+    temp;
+    v0;
+
+  #L2bd2a8.  v0:= 0I;
+  #L2bd2aa.  return v0 @kind object;
+}
+procedure `int` `getItemCount`(`com.chaos.view.PinView` v1 @kind this) @signature `Lcom/chaos/view/PinView;.getItemCount:()I` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L2bd41c.  v0:= v1.`com.chaos.view.PinView.mPinItemCount` @type ^`int`;
+  #L2bd420.  return v0;
+}
+procedure `float` `getItemHeight`(`com.chaos.view.PinView` v1 @kind this) @signature `Lcom/chaos/view/PinView;.getItemHeight:()F` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L2bd370.  v0:= v1.`com.chaos.view.PinView.mPinItemHeight` @type ^`float`;
+  #L2bd374.  return v0;
+}
+procedure `int` `getItemRadius`(`com.chaos.view.PinView` v1 @kind this) @signature `Lcom/chaos/view/PinView;.getItemRadius:()I` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L2bd434.  v0:= v1.`com.chaos.view.PinView.mPinItemRadius` @type ^`int`;
+  #L2bd438.  return v0;
+}
+procedure `int` `getItemSpacing`(`com.chaos.view.PinView` v1 @kind this) @signature `Lcom/chaos/view/PinView;.getItemSpacing:()I` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L2bd44c.  v0:= v1.`com.chaos.view.PinView.mPinItemSpacing` @type ^`int`;
+  #L2bd450.  return v0;
+}
+procedure `float` `getItemWidth`(`com.chaos.view.PinView` v1 @kind this) @signature `Lcom/chaos/view/PinView;.getItemWidth:()F` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L2bd388.  v0:= v1.`com.chaos.view.PinView.mPinItemWidth` @type ^`float`;
+  #L2bd38c.  return v0;
+}
+procedure `android.content.res.ColorStateList` `getLineColors`(`com.chaos.view.PinView` v1 @kind this) @signature `Lcom/chaos/view/PinView;.getLineColors:()Landroid/content/res/ColorStateList;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L2bd224.  v0:= v1.`com.chaos.view.PinView.mLineColor` @type ^`android.content.res.ColorStateList` @kind object;
+  #L2bd228.  return v0 @kind object;
+}
+procedure `int` `getLineWidth`(`com.chaos.view.PinView` v1 @kind this) @signature `Lcom/chaos/view/PinView;.getLineWidth:()I` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L2bd490.  v0:= v1.`com.chaos.view.PinView.mLineWidth` @type ^`int`;
+  #L2bd494.  return v0;
+}
+procedure `boolean` `isCursorVisible`(`com.chaos.view.PinView` v1 @kind this) @signature `Lcom/chaos/view/PinView;.isCursorVisible:()Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L2bd2f0.  v0:= v1.`com.chaos.view.PinView.isCursorVisible` @type ^`boolean` @kind boolean;
+  #L2bd2f4.  return v0;
+}
+procedure `void` `onAttachedToWindow`(`com.chaos.view.PinView` v0 @kind this) @signature `Lcom/chaos/view/PinView;.onAttachedToWindow:()V` @AccessFlag PROTECTED {
+    temp;
+
+  #L2bdda4.  call `onAttachedToWindow`(v0) @signature `Landroid/widget/EditText;.onAttachedToWindow:()V` @kind super;
+  #L2bddaa.  call `resumeBlink`(v0) @signature `Lcom/chaos/view/PinView;.resumeBlink:()V` @kind direct;
+  #L2bddb0.  return @kind void;
+}
+procedure `void` `onDetachedFromWindow`(`com.chaos.view.PinView` v0 @kind this) @signature `Lcom/chaos/view/PinView;.onDetachedFromWindow:()V` @AccessFlag PROTECTED {
+    temp;
+
+  #L2bddc4.  call `onDetachedFromWindow`(v0) @signature `Landroid/widget/EditText;.onDetachedFromWindow:()V` @kind super;
+  #L2bddca.  call `suspendBlink`(v0) @signature `Lcom/chaos/view/PinView;.suspendBlink:()V` @kind direct;
+  #L2bddd0.  return @kind void;
+}
+procedure `void` `onDraw`(`com.chaos.view.PinView` v0 @kind this, `android.graphics.Canvas` v1 @kind object) @signature `Lcom/chaos/view/PinView;.onDraw:(Landroid/graphics/Canvas;)V` @AccessFlag PROTECTED {
+    temp;
+
+  #L2bdde4.  call temp:= `save`(v1) @signature `Landroid/graphics/Canvas;.save:()I` @kind virtual;
+  #L2bddea.  call `updatePaints`(v0) @signature `Lcom/chaos/view/PinView;.updatePaints:()V` @kind direct;
+  #L2bddf0.  call `drawPinView`(v0, v1) @signature `Lcom/chaos/view/PinView;.drawPinView:(Landroid/graphics/Canvas;)V` @kind direct;
+  #L2bddf6.  call `restore`(v1) @signature `Landroid/graphics/Canvas;.restore:()V` @kind virtual;
+  #L2bddfc.  return @kind void;
+}
+procedure `void` `onFocusChanged`(`com.chaos.view.PinView` v0 @kind this, `boolean` v1 , `int` v2 , `android.graphics.Rect` v3 @kind object) @signature `Lcom/chaos/view/PinView;.onFocusChanged:(ZILandroid/graphics/Rect;)V` @AccessFlag PROTECTED {
+    temp;
+
+  #L2bde10.  call `onFocusChanged`(v0, v1, v2, v3) @signature `Landroid/widget/EditText;.onFocusChanged:(ZILandroid/graphics/Rect;)V` @kind super;
+  #L2bde16.  if v1 == 0 then goto L2bde26;
+  #L2bde1a.  call `moveSelectionToEnd`(v0) @signature `Lcom/chaos/view/PinView;.moveSelectionToEnd:()V` @kind direct;
+  #L2bde20.  call `makeBlink`(v0) @signature `Lcom/chaos/view/PinView;.makeBlink:()V` @kind direct;
+  #L2bde26.  return @kind void;
+}
+procedure `void` `onMeasure`(`com.chaos.view.PinView` v5 @kind this, `int` v6 , `int` v7 ) @signature `Lcom/chaos/view/PinView;.onMeasure:(II)V` @AccessFlag PROTECTED {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L2bde38.  call temp:= `getMode`(v6) @signature `Landroid/view/View$MeasureSpec;.getMode:(I)I` @kind static;
+  #L2bde3e.  v0:= temp;
+  #L2bde40.  call temp:= `getMode`(v7) @signature `Landroid/view/View$MeasureSpec;.getMode:(I)I` @kind static;
+  #L2bde46.  v1:= temp;
+  #L2bde48.  call temp:= `getSize`(v6) @signature `Landroid/view/View$MeasureSpec;.getSize:(I)I` @kind static;
+  #L2bde4e.  v6:= temp;
+  #L2bde50.  call temp:= `getSize`(v7) @signature `Landroid/view/View$MeasureSpec;.getSize:(I)I` @kind static;
+  #L2bde56.  v7:= temp;
+  #L2bde58.  v2:= v5.`com.chaos.view.PinView.mPinItemHeight` @type ^`float`;
+  #L2bde5c.  v3:= 2.0F;
+  #L2bde60.  if v0 != v3 then goto L2bde66;
+  #L2bde64.  goto L2bdebe;
+  #L2bde66.  v6:= v5.`com.chaos.view.PinView.mPinItemCount` @type ^`int`;
+  #L2bde6a.  v0:= v6 + -1;
+  #L2bde6e.  v4:= v5.`com.chaos.view.PinView.mPinItemSpacing` @type ^`int`;
+  #L2bde72.  v0:= v0 * v4 @kind int;
+  #L2bde76.  v0:= (`float`) v0 @kind i2f;
+  #L2bde78.  v6:= (`float`) v6 @kind i2f;
+  #L2bde7a.  v4:= v5.`com.chaos.view.PinView.mPinItemWidth` @type ^`float`;
+  #L2bde7e.  v6:= v6 * v4 @kind float;
+  #L2bde82.  v0:= v0 + v6 @kind float;
+  #L2bde84.  call temp:= `getPaddingEnd`(v5) @signature `Landroidx/core/view/ViewCompat;.getPaddingEnd:(Landroid/view/View;)I` @kind static;
+  #L2bde8a.  v6:= temp;
+  #L2bde8c.  v6:= (`float`) v6 @kind i2f;
+  #L2bde8e.  v0:= v0 + v6 @kind float;
+  #L2bde90.  call temp:= `getPaddingStart`(v5) @signature `Landroidx/core/view/ViewCompat;.getPaddingStart:(Landroid/view/View;)I` @kind static;
+  #L2bde96.  v6:= temp;
+  #L2bde98.  v6:= (`float`) v6 @kind i2f;
+  #L2bde9a.  v0:= v0 + v6 @kind float;
+  #L2bde9c.  call temp:= `round`(v0) @signature `Ljava/lang/Math;.round:(F)I` @kind static;
+  #L2bdea2.  v6:= temp;
+  #L2bdea4.  v0:= v5.`com.chaos.view.PinView.mPinItemSpacing` @type ^`int`;
+  #L2bdea8.  if v0 != 0 then goto L2bdebe;
+  #L2bdeac.  v0:= v5.`com.chaos.view.PinView.mPinItemCount` @type ^`int`;
+  #L2bdeb0.  v0:= v0 + -1;
+  #L2bdeb4.  v4:= v5.`com.chaos.view.PinView.mLineWidth` @type ^`int`;
+  #L2bdeb8.  v0:= v0 * v4 @kind int;
+  #L2bdebc.  v6:= v6 - v0 @kind int;
+  #L2bdebe.  if v1 != v3 then goto L2bdec4;
+  #L2bdec2.  goto L2bdee4;
+  #L2bdec4.  call temp:= `getPaddingTop`(v5) @signature `Landroid/widget/EditText;.getPaddingTop:()I` @kind virtual;
+  #L2bdeca.  v7:= temp;
+  #L2bdecc.  v7:= (`float`) v7 @kind i2f;
+  #L2bdece.  v2:= v2 + v7 @kind float;
+  #L2bded0.  call temp:= `getPaddingBottom`(v5) @signature `Landroid/widget/EditText;.getPaddingBottom:()I` @kind virtual;
+  #L2bded6.  v7:= temp;
+  #L2bded8.  v7:= (`float`) v7 @kind i2f;
+  #L2bdeda.  v2:= v2 + v7 @kind float;
+  #L2bdedc.  call temp:= `round`(v2) @signature `Ljava/lang/Math;.round:(F)I` @kind static;
+  #L2bdee2.  v7:= temp;
+  #L2bdee4.  call `setMeasuredDimension`(v5, v6, v7) @signature `Landroid/widget/EditText;.setMeasuredDimension:(II)V` @kind virtual;
+  #L2bdeea.  return @kind void;
+}
+procedure `void` `onScreenStateChanged`(`com.chaos.view.PinView` v1 @kind this, `int` v2 ) @signature `Lcom/chaos/view/PinView;.onScreenStateChanged:(I)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L2bdefc.  call `onScreenStateChanged`(v1, v2) @signature `Landroid/widget/EditText;.onScreenStateChanged:(I)V` @kind super;
+  #L2bdf02.  if v2 == 0 then goto L2bdf16;
+  #L2bdf06.  v0:= 1I;
+  #L2bdf08.  if v2 == v0 then goto L2bdf0e;
+  #L2bdf0c.  goto L2bdf1c;
+  #L2bdf0e.  call `resumeBlink`(v1) @signature `Lcom/chaos/view/PinView;.resumeBlink:()V` @kind direct;
+  #L2bdf14.  goto L2bdf1c;
+  #L2bdf16.  call `suspendBlink`(v1) @signature `Lcom/chaos/view/PinView;.suspendBlink:()V` @kind direct;
+  #L2bdf1c.  return @kind void;
+}
+procedure `void` `onSelectionChanged`(`com.chaos.view.PinView` v0 @kind this, `int` v1 , `int` v2 ) @signature `Lcom/chaos/view/PinView;.onSelectionChanged:(II)V` @AccessFlag PROTECTED {
+    temp;
+
+  #L2bdf30.  call `onSelectionChanged`(v0, v1, v2) @signature `Landroid/widget/EditText;.onSelectionChanged:(II)V` @kind super;
+  #L2bdf36.  call temp:= `getText`(v0) @signature `Landroidx/appcompat/widget/AppCompatEditText;.getText:()Landroid/text/Editable;` @kind virtual;
+  #L2bdf3c.  v1:= temp @kind object;
+  #L2bdf3e.  call temp:= `length`(v1) @signature `Landroid/text/Editable;.length:()I` @kind interface;
+  #L2bdf44.  v1:= temp;
+  #L2bdf46.  if v2 == v1 then goto L2bdf50;
+  #L2bdf4a.  call `moveSelectionToEnd`(v0) @signature `Lcom/chaos/view/PinView;.moveSelectionToEnd:()V` @kind direct;
+  #L2bdf50.  return @kind void;
+}
+procedure `void` `onTextChanged`(`com.chaos.view.PinView` v0 @kind this, `java.lang.CharSequence` v1 @kind object, `int` v2 , `int` v3 , `int` v4 ) @signature `Lcom/chaos/view/PinView;.onTextChanged:(Ljava/lang/CharSequence;III)V` @AccessFlag PROTECTED {
+    temp;
+
+  #L2bdf64.  call temp:= `length`(v1) @signature `Ljava/lang/CharSequence;.length:()I` @kind interface;
+  #L2bdf6a.  v1:= temp;
+  #L2bdf6c.  if v2 == v1 then goto L2bdf76;
+  #L2bdf70.  call `moveSelectionToEnd`(v0) @signature `Lcom/chaos/view/PinView;.moveSelectionToEnd:()V` @kind direct;
+  #L2bdf76.  call `makeBlink`(v0) @signature `Lcom/chaos/view/PinView;.makeBlink:()V` @kind direct;
+  #L2bdf7c.  v1:= v0.`com.chaos.view.PinView.isAnimationEnable` @type ^`boolean` @kind boolean;
+  #L2bdf80.  if v1 == 0 then goto L2bdfac;
+  #L2bdf84.  v4:= v4 - v3 @kind int;
+  #L2bdf86.  if v4 <= 0 then goto L2bdf8e;
+  #L2bdf8a.  v1:= 1I;
+  #L2bdf8c.  goto L2bdf90;
+  #L2bdf8e.  v1:= 0I;
+  #L2bdf90.  if v1 == 0 then goto L2bdfac;
+  #L2bdf94.  v1:= v0.`com.chaos.view.PinView.mDefaultAddAnimator` @type ^`android.animation.ValueAnimator` @kind object;
+  #L2bdf98.  if v1 == 0 then goto L2bdfac;
+  #L2bdf9c.  call `end`(v1) @signature `Landroid/animation/ValueAnimator;.end:()V` @kind virtual;
+  #L2bdfa2.  v1:= v0.`com.chaos.view.PinView.mDefaultAddAnimator` @type ^`android.animation.ValueAnimator` @kind object;
+  #L2bdfa6.  call `start`(v1) @signature `Landroid/animation/ValueAnimator;.start:()V` @kind virtual;
+  #L2bdfac.  return @kind void;
+}
+procedure `void` `setAnimationEnable`(`com.chaos.view.PinView` v0 @kind this, `boolean` v1 ) @signature `Lcom/chaos/view/PinView;.setAnimationEnable:(Z)V` @AccessFlag PUBLIC {
+    temp;
+
+  #L2bdfe8.  v0.`com.chaos.view.PinView.isAnimationEnable` @type ^`boolean` := v1 @kind boolean;
+  #L2bdfec.  return @kind void;
+}
+procedure `void` `setCursorColor`(`com.chaos.view.PinView` v0 @kind this, `int` v1 ) @signature `Lcom/chaos/view/PinView;.setCursorColor:(I)V` @AccessFlag PUBLIC {
+    temp;
+
+  #L2be000.  v0.`com.chaos.view.PinView.mCursorColor` @type ^`int` := v1;
+  #L2be004.  call temp:= `isCursorVisible`(v0) @signature `Lcom/chaos/view/PinView;.isCursorVisible:()Z` @kind virtual;
+  #L2be00a.  v1:= temp;
+  #L2be00c.  if v1 == 0 then goto L2be018;
+  #L2be010.  v1:= 1I;
+  #L2be012.  call `invalidateCursor`(v0, v1) @signature `Lcom/chaos/view/PinView;.invalidateCursor:(Z)V` @kind direct;
+  #L2be018.  return @kind void;
+}
+procedure `void` `setCursorVisible`(`com.chaos.view.PinView` v1 @kind this, `boolean` v2 ) @signature `Lcom/chaos/view/PinView;.setCursorVisible:(Z)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L2be02c.  v0:= v1.`com.chaos.view.PinView.isCursorVisible` @type ^`boolean` @kind boolean;
+  #L2be030.  if v0 == v2 then goto L2be044;
+  #L2be034.  v1.`com.chaos.view.PinView.isCursorVisible` @type ^`boolean` := v2 @kind boolean;
+  #L2be038.  call `invalidateCursor`(v1, v2) @signature `Lcom/chaos/view/PinView;.invalidateCursor:(Z)V` @kind direct;
+  #L2be03e.  call `makeBlink`(v1) @signature `Lcom/chaos/view/PinView;.makeBlink:()V` @kind direct;
+  #L2be044.  return @kind void;
+}
+procedure `void` `setCursorWidth`(`com.chaos.view.PinView` v0 @kind this, `int` v1 ) @signature `Lcom/chaos/view/PinView;.setCursorWidth:(I)V` @AccessFlag PUBLIC {
+    temp;
+
+  #L2be058.  call `checkItemRadius`(v0) @signature `Lcom/chaos/view/PinView;.checkItemRadius:()V` @kind direct;
+  #L2be05e.  v0.`com.chaos.view.PinView.mCursorWidth` @type ^`int` := v1;
+  #L2be062.  call temp:= `isCursorVisible`(v0) @signature `Lcom/chaos/view/PinView;.isCursorVisible:()Z` @kind virtual;
+  #L2be068.  v1:= temp;
+  #L2be06a.  if v1 == 0 then goto L2be076;
+  #L2be06e.  v1:= 1I;
+  #L2be070.  call `invalidateCursor`(v0, v1) @signature `Lcom/chaos/view/PinView;.invalidateCursor:(Z)V` @kind direct;
+  #L2be076.  return @kind void;
+}
+procedure `void` `setItemCount`(`com.chaos.view.PinView` v0 @kind this, `int` v1 ) @signature `Lcom/chaos/view/PinView;.setItemCount:(I)V` @AccessFlag PUBLIC {
+    temp;
+
+  #L2be088.  v0.`com.chaos.view.PinView.mPinItemCount` @type ^`int` := v1;
+  #L2be08c.  call `setMaxLength`(v0, v1) @signature `Lcom/chaos/view/PinView;.setMaxLength:(I)V` @kind direct;
+  #L2be092.  call `requestLayout`(v0) @signature `Landroid/widget/EditText;.requestLayout:()V` @kind virtual;
+  #L2be098.  return @kind void;
+}
+procedure `void` `setItemHeight`(`com.chaos.view.PinView` v0 @kind this, `float` v1 ) @signature `Lcom/chaos/view/PinView;.setItemHeight:(F)V` @AccessFlag PUBLIC {
+    temp;
+
+  #L2be0ac.  v0.`com.chaos.view.PinView.mPinItemHeight` @type ^`float` := v1;
+  #L2be0b0.  call `updateCursorHeight`(v0) @signature `Lcom/chaos/view/PinView;.updateCursorHeight:()V` @kind direct;
+  #L2be0b6.  call `requestLayout`(v0) @signature `Landroid/widget/EditText;.requestLayout:()V` @kind virtual;
+  #L2be0bc.  return @kind void;
+}
+procedure `void` `setItemRadius`(`com.chaos.view.PinView` v0 @kind this, `int` v1 ) @signature `Lcom/chaos/view/PinView;.setItemRadius:(I)V` @AccessFlag PUBLIC {
+    temp;
+
+  #L2be0d0.  call `checkItemRadius`(v0) @signature `Lcom/chaos/view/PinView;.checkItemRadius:()V` @kind direct;
+  #L2be0d6.  v0.`com.chaos.view.PinView.mPinItemRadius` @type ^`int` := v1;
+  #L2be0da.  call `requestLayout`(v0) @signature `Landroid/widget/EditText;.requestLayout:()V` @kind virtual;
+  #L2be0e0.  return @kind void;
+}
+procedure `void` `setItemSpacing`(`com.chaos.view.PinView` v0 @kind this, `int` v1 ) @signature `Lcom/chaos/view/PinView;.setItemSpacing:(I)V` @AccessFlag PUBLIC {
+    temp;
+
+  #L2be0f4.  v0.`com.chaos.view.PinView.mPinItemSpacing` @type ^`int` := v1;
+  #L2be0f8.  call `requestLayout`(v0) @signature `Landroid/widget/EditText;.requestLayout:()V` @kind virtual;
+  #L2be0fe.  return @kind void;
+}
+procedure `void` `setItemWidth`(`com.chaos.view.PinView` v0 @kind this, `float` v1 ) @signature `Lcom/chaos/view/PinView;.setItemWidth:(F)V` @AccessFlag PUBLIC {
+    temp;
+
+  #L2be110.  call `checkItemRadius`(v0) @signature `Lcom/chaos/view/PinView;.checkItemRadius:()V` @kind direct;
+  #L2be116.  v0.`com.chaos.view.PinView.mPinItemWidth` @type ^`float` := v1;
+  #L2be11a.  call `requestLayout`(v0) @signature `Landroid/widget/EditText;.requestLayout:()V` @kind virtual;
+  #L2be120.  return @kind void;
+}
+procedure `void` `setLineColor`(`com.chaos.view.PinView` v0 @kind this, `int` v1 ) @signature `Lcom/chaos/view/PinView;.setLineColor:(I)V` @AccessFlag PUBLIC {
+    temp;
+
+  #L2be158.  call temp:= `valueOf`(v1) @signature `Landroid/content/res/ColorStateList;.valueOf:(I)Landroid/content/res/ColorStateList;` @kind static;
+  #L2be15e.  v1:= temp @kind object;
+  #L2be160.  v0.`com.chaos.view.PinView.mLineColor` @type ^`android.content.res.ColorStateList` := v1 @kind object;
+  #L2be164.  call `updateColors`(v0) @signature `Lcom/chaos/view/PinView;.updateColors:()V` @kind direct;
+  #L2be16a.  return @kind void;
+}
+procedure `void` `setLineColor`(`com.chaos.view.PinView` v0 @kind this, `android.content.res.ColorStateList` v1 @kind object) @signature `Lcom/chaos/view/PinView;.setLineColor:(Landroid/content/res/ColorStateList;)V` @AccessFlag PUBLIC {
+    temp;
+
+  #L2be134.  call temp:= `getClass`(v1) @signature `Ljava/lang/Object;.getClass:()Ljava/lang/Class;` @kind virtual;
+  #L2be13a.  v0.`com.chaos.view.PinView.mLineColor` @type ^`android.content.res.ColorStateList` := v1 @kind object;
+  #L2be13e.  call `updateColors`(v0) @signature `Lcom/chaos/view/PinView;.updateColors:()V` @kind direct;
+  #L2be144.  return @kind void;
+}
+procedure `void` `setLineWidth`(`com.chaos.view.PinView` v0 @kind this, `int` v1 ) @signature `Lcom/chaos/view/PinView;.setLineWidth:(I)V` @AccessFlag PUBLIC {
+    temp;
+
+  #L2be17c.  call `checkItemRadius`(v0) @signature `Lcom/chaos/view/PinView;.checkItemRadius:()V` @kind direct;
+  #L2be182.  v0.`com.chaos.view.PinView.mLineWidth` @type ^`int` := v1;
+  #L2be186.  call `requestLayout`(v0) @signature `Landroid/widget/EditText;.requestLayout:()V` @kind virtual;
+  #L2be18c.  return @kind void;
+}
+procedure `void` `setTextSize`(`com.chaos.view.PinView` v0 @kind this, `float` v1 ) @signature `Lcom/chaos/view/PinView;.setTextSize:(F)V` @AccessFlag PUBLIC {
+    temp;
+
+  #L2be1e0.  call `setTextSize`(v0, v1) @signature `Landroid/widget/EditText;.setTextSize:(F)V` @kind super;
+  #L2be1e6.  call `updateCursorHeight`(v0) @signature `Lcom/chaos/view/PinView;.updateCursorHeight:()V` @kind direct;
+  #L2be1ec.  return @kind void;
+}
+procedure `void` `setTextSize`(`com.chaos.view.PinView` v0 @kind this, `int` v1 , `float` v2 ) @signature `Lcom/chaos/view/PinView;.setTextSize:(IF)V` @AccessFlag PUBLIC {
+    temp;
+
+  #L2be200.  call `setTextSize`(v0, v1, v2) @signature `Landroid/widget/EditText;.setTextSize:(IF)V` @kind super;
+  #L2be206.  call `updateCursorHeight`(v0) @signature `Lcom/chaos/view/PinView;.updateCursorHeight:()V` @kind direct;
+  #L2be20c.  return @kind void;
+}

@@ -1,0 +1,104 @@
+record `com.android.volley.toolbox.PoolingByteArrayOutputStream` @kind class @AccessFlag PUBLIC extends `java.io.ByteArrayOutputStream` @kind class {
+  `com.android.volley.toolbox.ByteArrayPool` `com.android.volley.toolbox.PoolingByteArrayOutputStream.mPool` @AccessFlag PRIVATE_FINAL;
+}
+global `int` `@@com.android.volley.toolbox.PoolingByteArrayOutputStream.DEFAULT_SIZE` @AccessFlag PRIVATE_STATIC_FINAL;
+procedure `void` `<init>`(`com.android.volley.toolbox.PoolingByteArrayOutputStream` v1 @kind this, `com.android.volley.toolbox.ByteArrayPool` v2 @kind object) @signature `Lcom/android/volley/toolbox/PoolingByteArrayOutputStream;.<init>:(Lcom/android/volley/toolbox/ByteArrayPool;)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L3bea70.  v0:= 256I;
+  #L3bea74.  call `<init>`(v1, v2, v0) @signature `Lcom/android/volley/toolbox/PoolingByteArrayOutputStream;.<init>:(Lcom/android/volley/toolbox/ByteArrayPool;I)V` @kind direct;
+  #L3bea7a.  return @kind void;
+}
+procedure `void` `<init>`(`com.android.volley.toolbox.PoolingByteArrayOutputStream` v1 @kind this, `com.android.volley.toolbox.ByteArrayPool` v2 @kind object, `int` v3 ) @signature `Lcom/android/volley/toolbox/PoolingByteArrayOutputStream;.<init>:(Lcom/android/volley/toolbox/ByteArrayPool;I)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L3bea8c.  call `<init>`(v1) @signature `Ljava/io/ByteArrayOutputStream;.<init>:()V` @kind direct;
+  #L3bea92.  v1.`com.android.volley.toolbox.PoolingByteArrayOutputStream.mPool` @type ^`com.android.volley.toolbox.ByteArrayPool` := v2 @kind object;
+  #L3bea96.  v0:= 256I;
+  #L3bea9a.  call temp:= `max`(v3, v0) @signature `Ljava/lang/Math;.max:(II)I` @kind static;
+  #L3beaa0.  v3:= temp;
+  #L3beaa2.  call temp:= `getBuf`(v2, v3) @signature `Lcom/android/volley/toolbox/ByteArrayPool;.getBuf:(I)[B` @kind virtual;
+  #L3beaa8.  v2:= temp @kind object;
+  #L3beaaa.  v1.`java.io.ByteArrayOutputStream.buf` @type ^`byte`[] := v2 @kind object;
+  #L3beaae.  return @kind void;
+}
+procedure `void` `expand`(`com.android.volley.toolbox.PoolingByteArrayOutputStream` v3 @kind this, `int` v4 ) @signature `Lcom/android/volley/toolbox/PoolingByteArrayOutputStream;.expand:(I)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L3beaec.  v0:= v3.`java.io.ByteArrayOutputStream.count` @type ^`int`;
+  #L3beaf0.  v1:= v0 + v4 @kind int;
+  #L3beaf4.  v2:= v3.`java.io.ByteArrayOutputStream.buf` @type ^`byte`[] @kind object;
+  #L3beaf8.  v2:= length @variable v2;
+  #L3beafa.  if v1 > v2 then goto L3beb00;
+  #L3beafe.  return @kind void;
+  #L3beb00.  v1:= v3.`com.android.volley.toolbox.PoolingByteArrayOutputStream.mPool` @type ^`com.android.volley.toolbox.ByteArrayPool` @kind object;
+  #L3beb04.  v0:= v0 + v4 @kind int;
+  #L3beb06.  v0:= v0 * 2;
+  #L3beb0a.  call temp:= `getBuf`(v1, v0) @signature `Lcom/android/volley/toolbox/ByteArrayPool;.getBuf:(I)[B` @kind virtual;
+  #L3beb10.  v4:= temp @kind object;
+  #L3beb12.  v0:= v3.`java.io.ByteArrayOutputStream.buf` @type ^`byte`[] @kind object;
+  #L3beb16.  v1:= v3.`java.io.ByteArrayOutputStream.count` @type ^`int`;
+  #L3beb1a.  v2:= 0I;
+  #L3beb1c.  call `arraycopy`(v0, v2, v4, v2, v1) @signature `Ljava/lang/System;.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V` @kind static;
+  #L3beb22.  v0:= v3.`com.android.volley.toolbox.PoolingByteArrayOutputStream.mPool` @type ^`com.android.volley.toolbox.ByteArrayPool` @kind object;
+  #L3beb26.  v1:= v3.`java.io.ByteArrayOutputStream.buf` @type ^`byte`[] @kind object;
+  #L3beb2a.  call `returnBuf`(v0, v1) @signature `Lcom/android/volley/toolbox/ByteArrayPool;.returnBuf:([B)V` @kind virtual;
+  #L3beb30.  v3.`java.io.ByteArrayOutputStream.buf` @type ^`byte`[] := v4 @kind object;
+  #L3beb34.  return @kind void;
+}
+procedure `void` `close`(`com.android.volley.toolbox.PoolingByteArrayOutputStream` v2 @kind this) @signature `Lcom/android/volley/toolbox/PoolingByteArrayOutputStream;.close:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L3beac0.  v0:= v2.`com.android.volley.toolbox.PoolingByteArrayOutputStream.mPool` @type ^`com.android.volley.toolbox.ByteArrayPool` @kind object;
+  #L3beac4.  v1:= v2.`java.io.ByteArrayOutputStream.buf` @type ^`byte`[] @kind object;
+  #L3beac8.  call `returnBuf`(v0, v1) @signature `Lcom/android/volley/toolbox/ByteArrayPool;.returnBuf:([B)V` @kind virtual;
+  #L3beace.  v0:= 0I;
+  #L3bead0.  v2.`java.io.ByteArrayOutputStream.buf` @type ^`byte`[] := v0 @kind object;
+  #L3bead4.  call `close`(v2) @signature `Ljava/io/ByteArrayOutputStream;.close:()V` @kind super;
+  #L3beada.  return @kind void;
+}
+procedure `void` `finalize`(`com.android.volley.toolbox.PoolingByteArrayOutputStream` v2 @kind this) @signature `Lcom/android/volley/toolbox/PoolingByteArrayOutputStream;.finalize:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L3beb48.  v0:= v2.`com.android.volley.toolbox.PoolingByteArrayOutputStream.mPool` @type ^`com.android.volley.toolbox.ByteArrayPool` @kind object;
+  #L3beb4c.  v1:= v2.`java.io.ByteArrayOutputStream.buf` @type ^`byte`[] @kind object;
+  #L3beb50.  call `returnBuf`(v0, v1) @signature `Lcom/android/volley/toolbox/ByteArrayPool;.returnBuf:([B)V` @kind virtual;
+  #L3beb56.  return @kind void;
+}
+procedure `void` `write`(`com.android.volley.toolbox.PoolingByteArrayOutputStream` v1 @kind this, `int` v2 ) @signature `Lcom/android/volley/toolbox/PoolingByteArrayOutputStream;.write:(I)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L3beb9c.  @monitorenter v1
+  #L3beb9e.  v0:= 1I;
+  #L3beba0.  call `expand`(v1, v0) @signature `Lcom/android/volley/toolbox/PoolingByteArrayOutputStream;.expand:(I)V` @kind direct;
+  #L3beba6.  call `write`(v1, v2) @signature `Ljava/io/ByteArrayOutputStream;.write:(I)V` @kind super;
+  #L3bebac.  @monitorexit v1
+  #L3bebae.  return @kind void;
+  #L3bebb0.  v2:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3bebb2.  @monitorexit v1
+  #L3bebb4.  throw v2;
+  catch `java.lang.Throwable` @[L3beba0..L3bebac] goto L3bebb0;
+}
+procedure `void` `write`(`com.android.volley.toolbox.PoolingByteArrayOutputStream` v0 @kind this, `byte`[] v1 @kind object, `int` v2 , `int` v3 ) @signature `Lcom/android/volley/toolbox/PoolingByteArrayOutputStream;.write:([BII)V` @AccessFlag PUBLIC {
+    temp;
+
+  #L3beb68.  @monitorenter v0
+  #L3beb6a.  call `expand`(v0, v3) @signature `Lcom/android/volley/toolbox/PoolingByteArrayOutputStream;.expand:(I)V` @kind direct;
+  #L3beb70.  call `write`(v0, v1, v2, v3) @signature `Ljava/io/ByteArrayOutputStream;.write:([BII)V` @kind super;
+  #L3beb76.  @monitorexit v0
+  #L3beb78.  return @kind void;
+  #L3beb7a.  v1:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3beb7c.  @monitorexit v0
+  #L3beb7e.  throw v1;
+  catch `java.lang.Throwable` @[L3beb6a..L3beb76] goto L3beb7a;
+}

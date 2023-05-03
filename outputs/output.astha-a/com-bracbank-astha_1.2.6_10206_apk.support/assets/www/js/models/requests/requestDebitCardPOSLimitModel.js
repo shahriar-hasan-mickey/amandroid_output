@@ -1,0 +1,1 @@
+define(["underscore","Backbone"],function(e,n){var i=n.Model.extend({url:function(){return this.instanceUrl},validation:{serviceType:{required:!0,msg:"validation.requestAccountOpening.selectAccountType"},newposlimit:{required:!0,msg:"validation.requestAccountOpening.checkConfirm"}}});return i});

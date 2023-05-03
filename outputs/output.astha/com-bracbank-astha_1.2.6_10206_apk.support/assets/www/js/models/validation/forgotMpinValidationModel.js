@@ -1,0 +1,1 @@
+define(["underscore","Backbone"],function(n,e){var i=Backbone.Model.extend({url:function(){return this.instanceUrl},validation:{username:[{required:!0,msg:"validation.forgotmpin.unamenotnull"},{minLength:8,msg:"Please Enter Minimum 8 characters."}],password:{required:!0,msg:"validation.forgotmpin.passwdnotnull"}},initialize:function(n){this.url=n.url}});return i});

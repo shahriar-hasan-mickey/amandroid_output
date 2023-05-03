@@ -1,0 +1,100 @@
+record `org.simpleframework.xml.convert.ConverterFactory` @kind class @AccessFlag PUBLIC {
+  `org.simpleframework.xml.util.Cache` `org.simpleframework.xml.convert.ConverterFactory.cache` @AccessFlag PRIVATE_FINAL;
+}
+procedure `void` `<init>`(`org.simpleframework.xml.convert.ConverterFactory` v1 @kind this) @signature `Lorg/simpleframework/xml/convert/ConverterFactory;.<init>:()V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L3dc6d0.  call `<init>`(v1) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L3dc6d6.  v0:= new `org.simpleframework.xml.util.ConcurrentCache`;
+  #L3dc6da.  call `<init>`(v0) @signature `Lorg/simpleframework/xml/util/ConcurrentCache;.<init>:()V` @kind direct;
+  #L3dc6e0.  v1.`org.simpleframework.xml.convert.ConverterFactory.cache` @type ^`org.simpleframework.xml.util.Cache` := v0 @kind object;
+  #L3dc6e4.  return @kind void;
+}
+procedure `java.lang.reflect.Constructor` `getConstructor`(`org.simpleframework.xml.convert.ConverterFactory` v1 @kind this, `java.lang.Class` v2 @kind object) @signature `Lorg/simpleframework/xml/convert/ConverterFactory;.getConstructor:(Ljava/lang/Class;)Ljava/lang/reflect/Constructor;` @AccessFlag PRIVATE {
+    temp;
+    v0;
+
+  #L3dc5a8.  v0:= 0I;
+  #L3dc5aa.  v0:= new `java.lang.Class`[v0];
+  #L3dc5ae.  call temp:= `getDeclaredConstructor`(v2, v0) @signature `Ljava/lang/Class;.getDeclaredConstructor:([Ljava/lang/Class;)Ljava/lang/reflect/Constructor;` @kind virtual;
+  #L3dc5b4.  v2:= temp @kind object;
+  #L3dc5b6.  call temp:= `isAccessible`(v2) @signature `Ljava/lang/reflect/Constructor;.isAccessible:()Z` @kind virtual;
+  #L3dc5bc.  v0:= temp;
+  #L3dc5be.  if v0 != 0 then goto L3dc5ca;
+  #L3dc5c2.  v0:= 1I;
+  #L3dc5c4.  call `setAccessible`(v2, v0) @signature `Ljava/lang/reflect/Constructor;.setAccessible:(Z)V` @kind virtual;
+  #L3dc5ca.  return v2 @kind object;
+}
+procedure `org.simpleframework.xml.convert.Converter` `getConverter`(`org.simpleframework.xml.convert.ConverterFactory` v3 @kind this, `java.lang.Class` v4 @kind object) @signature `Lorg/simpleframework/xml/convert/ConverterFactory;.getConverter:(Ljava/lang/Class;)Lorg/simpleframework/xml/convert/Converter;` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L3dc5dc.  call temp:= `getConstructor`(v3, v4) @signature `Lorg/simpleframework/xml/convert/ConverterFactory;.getConstructor:(Ljava/lang/Class;)Ljava/lang/reflect/Constructor;` @kind direct;
+  #L3dc5e2.  v0:= temp @kind object;
+  #L3dc5e4.  if v0 == 0 then goto L3dc5f2;
+  #L3dc5e8.  call temp:= `getConverter`(v3, v4, v0) @signature `Lorg/simpleframework/xml/convert/ConverterFactory;.getConverter:(Ljava/lang/Class;Ljava/lang/reflect/Constructor;)Lorg/simpleframework/xml/convert/Converter;` @kind direct;
+  #L3dc5ee.  v4:= temp @kind object;
+  #L3dc5f0.  return v4 @kind object;
+  #L3dc5f2.  v0:= new `org.simpleframework.xml.convert.ConvertException`;
+  #L3dc5f6.  v1:= 1I;
+  #L3dc5f8.  v1:= new `java.lang.Object`[v1];
+  #L3dc5fc.  v2:= 0I;
+  #L3dc5fe.  v1[v2]:= v4 @kind object;
+  #L3dc602.  v4:= "No default constructor for %s" @kind object;
+  #L3dc606.  call `<init>`(v0, v4, v1) @signature `Lorg/simpleframework/xml/convert/ConvertException;.<init>:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind direct;
+  #L3dc60c.  throw v0;
+}
+procedure `org.simpleframework.xml.convert.Converter` `getConverter`(`org.simpleframework.xml.convert.ConverterFactory` v1 @kind this, `java.lang.Class` v2 @kind object, `java.lang.reflect.Constructor` v3 @kind object) @signature `Lorg/simpleframework/xml/convert/ConverterFactory;.getConverter:(Ljava/lang/Class;Ljava/lang/reflect/Constructor;)Lorg/simpleframework/xml/convert/Converter;` @AccessFlag PRIVATE {
+    temp;
+    v0;
+
+  #L3dc620.  v0:= 0I;
+  #L3dc622.  v0:= new `java.lang.Object`[v0];
+  #L3dc626.  call temp:= `newInstance`(v3, v0) @signature `Ljava/lang/reflect/Constructor;.newInstance:([Ljava/lang/Object;)Ljava/lang/Object;` @kind virtual;
+  #L3dc62c.  v3:= temp @kind object;
+  #L3dc62e.  v3:= (`org.simpleframework.xml.convert.Converter`) v3 @kind object;
+  #L3dc632.  if v3 == 0 then goto L3dc640;
+  #L3dc636.  v0:= v1.`org.simpleframework.xml.convert.ConverterFactory.cache` @type ^`org.simpleframework.xml.util.Cache` @kind object;
+  #L3dc63a.  call `cache`(v0, v2, v3) @signature `Lorg/simpleframework/xml/util/Cache;.cache:(Ljava/lang/Object;Ljava/lang/Object;)V` @kind interface;
+  #L3dc640.  return v3 @kind object;
+}
+procedure `org.simpleframework.xml.convert.Converter` `getInstance`(`org.simpleframework.xml.convert.ConverterFactory` v1 @kind this, `java.lang.Class` v2 @kind object) @signature `Lorg/simpleframework/xml/convert/ConverterFactory;.getInstance:(Ljava/lang/Class;)Lorg/simpleframework/xml/convert/Converter;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L3dc654.  v0:= v1.`org.simpleframework.xml.convert.ConverterFactory.cache` @type ^`org.simpleframework.xml.util.Cache` @kind object;
+  #L3dc658.  call temp:= `fetch`(v0, v2) @signature `Lorg/simpleframework/xml/util/Cache;.fetch:(Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L3dc65e.  v0:= temp @kind object;
+  #L3dc660.  v0:= (`org.simpleframework.xml.convert.Converter`) v0 @kind object;
+  #L3dc664.  if v0 != 0 then goto L3dc672;
+  #L3dc668.  call temp:= `getConverter`(v1, v2) @signature `Lorg/simpleframework/xml/convert/ConverterFactory;.getConverter:(Ljava/lang/Class;)Lorg/simpleframework/xml/convert/Converter;` @kind direct;
+  #L3dc66e.  v2:= temp @kind object;
+  #L3dc670.  return v2 @kind object;
+  #L3dc672.  return v0 @kind object;
+}
+procedure `org.simpleframework.xml.convert.Converter` `getInstance`(`org.simpleframework.xml.convert.ConverterFactory` v3 @kind this, `org.simpleframework.xml.convert.Convert` v4 @kind object) @signature `Lorg/simpleframework/xml/convert/ConverterFactory;.getInstance:(Lorg/simpleframework/xml/convert/Convert;)Lorg/simpleframework/xml/convert/Converter;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L3dc684.  call temp:= `value`(v4) @signature `Lorg/simpleframework/xml/convert/Convert;.value:()Ljava/lang/Class;` @kind interface;
+  #L3dc68a.  v4:= temp @kind object;
+  #L3dc68c.  call temp:= `isInterface`(v4) @signature `Ljava/lang/Class;.isInterface:()Z` @kind virtual;
+  #L3dc692.  v0:= temp;
+  #L3dc694.  if v0 != 0 then goto L3dc6a2;
+  #L3dc698.  call temp:= `getInstance`(v3, v4) @signature `Lorg/simpleframework/xml/convert/ConverterFactory;.getInstance:(Ljava/lang/Class;)Lorg/simpleframework/xml/convert/Converter;` @kind virtual;
+  #L3dc69e.  v4:= temp @kind object;
+  #L3dc6a0.  return v4 @kind object;
+  #L3dc6a2.  v0:= new `org.simpleframework.xml.convert.ConvertException`;
+  #L3dc6a6.  v1:= 1I;
+  #L3dc6a8.  v1:= new `java.lang.Object`[v1];
+  #L3dc6ac.  v2:= 0I;
+  #L3dc6ae.  v1[v2]:= v4 @kind object;
+  #L3dc6b2.  v4:= "Can not instantiate %s" @kind object;
+  #L3dc6b6.  call `<init>`(v0, v4, v1) @signature `Lorg/simpleframework/xml/convert/ConvertException;.<init>:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind direct;
+  #L3dc6bc.  throw v0;
+}

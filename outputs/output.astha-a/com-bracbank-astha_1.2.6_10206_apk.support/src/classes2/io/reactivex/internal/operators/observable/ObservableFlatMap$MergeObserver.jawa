@@ -1,0 +1,653 @@
+record `io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver` @kind class @AccessFlag FINAL extends `java.util.concurrent.atomic.AtomicInteger` @kind class, `e2.b` @kind interface, `b2.p` @kind interface {
+  `b2.p` `io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.actual` @AccessFlag FINAL;
+  `int` `io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.bufferSize` @AccessFlag FINAL;
+  `boolean` `io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.cancelled` @AccessFlag VOLATILE;
+  `boolean` `io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.delayErrors` @AccessFlag FINAL;
+  `boolean` `io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.done` @AccessFlag VOLATILE;
+  `io.reactivex.internal.util.AtomicThrowable` `io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.errors` @AccessFlag FINAL;
+  `long` `io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.lastId` @AccessFlag ;
+  `int` `io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.lastIndex` @AccessFlag ;
+  `h2.e` `io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.mapper` @AccessFlag FINAL;
+  `int` `io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.maxConcurrency` @AccessFlag FINAL;
+  `java.util.concurrent.atomic.AtomicReference` `io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.observers` @AccessFlag FINAL;
+  `k2.i` `io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.queue` @AccessFlag VOLATILE;
+  `e2.b` `io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.s` @AccessFlag ;
+  `java.util.Queue` `io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.sources` @AccessFlag ;
+  `long` `io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.uniqueId` @AccessFlag ;
+  `int` `io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.wip` @AccessFlag ;
+}
+global `io.reactivex.internal.operators.observable.ObservableFlatMap$InnerObserver`[] `@@io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.a` @AccessFlag STATIC_FINAL;
+global `io.reactivex.internal.operators.observable.ObservableFlatMap$InnerObserver`[] `@@io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.b` @AccessFlag STATIC_FINAL;
+global `long` `@@io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.serialVersionUID` @AccessFlag PRIVATE_STATIC_FINAL;
+procedure `void` `<clinit>`() @signature `Lio/reactivex/internal/operators/observable/ObservableFlatMap$MergeObserver;.<clinit>:()V` @AccessFlag STATIC_CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+
+  #L399a40.  v0:= 0I;
+  #L399a42.  v1:= new `io.reactivex.internal.operators.observable.ObservableFlatMap$InnerObserver`[v0];
+  #L399a46.  `@@io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.a` @type ^`io.reactivex.internal.operators.observable.ObservableFlatMap$InnerObserver`[] := v1 @kind object;
+  #L399a4a.  v0:= new `io.reactivex.internal.operators.observable.ObservableFlatMap$InnerObserver`[v0];
+  #L399a4e.  `@@io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.b` @type ^`io.reactivex.internal.operators.observable.ObservableFlatMap$InnerObserver`[] := v0 @kind object;
+  #L399a52.  return @kind void;
+}
+procedure `void` `<init>`(`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver` v1 @kind this, `b2.p` v2 @kind object, `h2.e` v3 @kind object, `boolean` v4 , `int` v5 , `int` v6 ) @signature `Lio/reactivex/internal/operators/observable/ObservableFlatMap$MergeObserver;.<init>:(Lb2/p;Lh2/e;ZII)V` @AccessFlag CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L399a64.  call `<init>`(v1) @signature `Ljava/util/concurrent/atomic/AtomicInteger;.<init>:()V` @kind direct;
+  #L399a6a.  v0:= new `io.reactivex.internal.util.AtomicThrowable`;
+  #L399a6e.  call `<init>`(v0) @signature `Lio/reactivex/internal/util/AtomicThrowable;.<init>:()V` @kind direct;
+  #L399a74.  v1.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.errors` @type ^`io.reactivex.internal.util.AtomicThrowable` := v0 @kind object;
+  #L399a78.  v1.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.actual` @type ^`b2.p` := v2 @kind object;
+  #L399a7c.  v1.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.mapper` @type ^`h2.e` := v3 @kind object;
+  #L399a80.  v1.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.delayErrors` @type ^`boolean` := v4 @kind boolean;
+  #L399a84.  v1.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.maxConcurrency` @type ^`int` := v5;
+  #L399a88.  v1.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.bufferSize` @type ^`int` := v6;
+  #L399a8c.  v2:= 2147483647I;
+  #L399a92.  if v5 == v2 then goto L399aa4;
+  #L399a96.  v2:= new `java.util.ArrayDeque`;
+  #L399a9a.  call `<init>`(v2, v5) @signature `Ljava/util/ArrayDeque;.<init>:(I)V` @kind direct;
+  #L399aa0.  v1.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.sources` @type ^`java.util.Queue` := v2 @kind object;
+  #L399aa4.  v2:= new `java.util.concurrent.atomic.AtomicReference`;
+  #L399aa8.  v3:= `@@io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.a` @type ^`io.reactivex.internal.operators.observable.ObservableFlatMap$InnerObserver`[] @kind object;
+  #L399aac.  call `<init>`(v2, v3) @signature `Ljava/util/concurrent/atomic/AtomicReference;.<init>:(Ljava/lang/Object;)V` @kind direct;
+  #L399ab2.  v1.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.observers` @type ^`java.util.concurrent.atomic.AtomicReference` := v2 @kind object;
+  #L399ab6.  return @kind void;
+}
+procedure `void` `a`(`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver` v1 @kind this, `java.lang.Throwable` v2 @kind object) @signature `Lio/reactivex/internal/operators/observable/ObservableFlatMap$MergeObserver;.a:(Ljava/lang/Throwable;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L399df8.  v0:= v1.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.done` @type ^`boolean` @kind boolean;
+  #L399dfc.  if v0 == 0 then goto L399e08;
+  #L399e00.  call `q`(v2) @signature `Ll2/a;.q:(Ljava/lang/Throwable;)V` @kind static;
+  #L399e06.  return @kind void;
+  #L399e08.  v0:= v1.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.errors` @type ^`io.reactivex.internal.util.AtomicThrowable` @kind object;
+  #L399e0c.  call temp:= `a`(v0, v2) @signature `Lio/reactivex/internal/util/AtomicThrowable;.a:(Ljava/lang/Throwable;)Z` @kind virtual;
+  #L399e12.  v0:= temp;
+  #L399e14.  if v0 == 0 then goto L399e26;
+  #L399e18.  v2:= 1I;
+  #L399e1a.  v1.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.done` @type ^`boolean` := v2 @kind boolean;
+  #L399e1e.  call `h`(v1) @signature `Lio/reactivex/internal/operators/observable/ObservableFlatMap$MergeObserver;.h:()V` @kind virtual;
+  #L399e24.  goto L399e2c;
+  #L399e26.  call `q`(v2) @signature `Ll2/a;.q:(Ljava/lang/Throwable;)V` @kind static;
+  #L399e2c.  return @kind void;
+}
+procedure `void` `b`(`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver` v1 @kind this, `e2.b` v2 @kind object) @signature `Lio/reactivex/internal/operators/observable/ObservableFlatMap$MergeObserver;.b:(Le2/b;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L399eec.  v0:= v1.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.s` @type ^`e2.b` @kind object;
+  #L399ef0.  call temp:= `i`(v0, v2) @signature `Lio/reactivex/internal/disposables/DisposableHelper;.i:(Le2/b;Le2/b;)Z` @kind static;
+  #L399ef6.  v0:= temp;
+  #L399ef8.  if v0 == 0 then goto L399f0a;
+  #L399efc.  v1.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.s` @type ^`e2.b` := v2 @kind object;
+  #L399f00.  v2:= v1.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.actual` @type ^`b2.p` @kind object;
+  #L399f04.  call `b`(v2, v1) @signature `Lb2/p;.b:(Le2/b;)V` @kind interface;
+  #L399f0a.  return @kind void;
+}
+procedure `boolean` `c`(`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver` v4 @kind this, `io.reactivex.internal.operators.observable.ObservableFlatMap$InnerObserver` v5 @kind object) @signature `Lio/reactivex/internal/operators/observable/ObservableFlatMap$MergeObserver;.c:(Lio/reactivex/internal/operators/observable/ObservableFlatMap$InnerObserver;)Z` @AccessFlag  {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L39981c.  v0:= v4.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.observers` @type ^`java.util.concurrent.atomic.AtomicReference` @kind object;
+  #L399820.  call temp:= `get`(v0) @signature `Ljava/util/concurrent/atomic/AtomicReference;.get:()Ljava/lang/Object;` @kind virtual;
+  #L399826.  v0:= temp @kind object;
+  #L399828.  v0:= (`io.reactivex.internal.operators.observable.ObservableFlatMap$InnerObserver`[]) v0 @kind object;
+  #L39982c.  v1:= `@@io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.b` @type ^`io.reactivex.internal.operators.observable.ObservableFlatMap$InnerObserver`[] @kind object;
+  #L399830.  v2:= 0I;
+  #L399832.  if v0 != v1 then goto L39983e;
+  #L399836.  call `c`(v5) @signature `Lio/reactivex/internal/operators/observable/ObservableFlatMap$InnerObserver;.c:()V` @kind virtual;
+  #L39983c.  return v2;
+  #L39983e.  v1:= length @variable v0;
+  #L399840.  v3:= v1 + 1;
+  #L399844.  v3:= new `io.reactivex.internal.operators.observable.ObservableFlatMap$InnerObserver`[v3];
+  #L399848.  call `arraycopy`(v0, v2, v3, v2, v1) @signature `Ljava/lang/System;.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V` @kind static;
+  #L39984e.  v3[v1]:= v5 @kind object;
+  #L399852.  v1:= v4.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.observers` @type ^`java.util.concurrent.atomic.AtomicReference` @kind object;
+  #L399856.  call temp:= `compareAndSet`(v1, v0, v3) @signature `Ljava/util/concurrent/atomic/AtomicReference;.compareAndSet:(Ljava/lang/Object;Ljava/lang/Object;)Z` @kind virtual;
+  #L39985c.  v0:= temp;
+  #L39985e.  if v0 == 0 then goto L39981c;
+  #L399862.  v5:= 1I;
+  #L399864.  return v5;
+}
+procedure `boolean` `d`(`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver` v1 @kind this) @signature `Lio/reactivex/internal/operators/observable/ObservableFlatMap$MergeObserver;.d:()Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L399940.  v0:= v1.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.cancelled` @type ^`boolean` @kind boolean;
+  #L399944.  return v0;
+}
+procedure `void` `e`(`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver` v2 @kind this) @signature `Lio/reactivex/internal/operators/observable/ObservableFlatMap$MergeObserver;.e:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L399ac8.  v0:= v2.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.cancelled` @type ^`boolean` @kind boolean;
+  #L399acc.  if v0 != 0 then goto L399b00;
+  #L399ad0.  v0:= 1I;
+  #L399ad2.  v2.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.cancelled` @type ^`boolean` := v0 @kind boolean;
+  #L399ad6.  call temp:= `g`(v2) @signature `Lio/reactivex/internal/operators/observable/ObservableFlatMap$MergeObserver;.g:()Z` @kind virtual;
+  #L399adc.  v0:= temp;
+  #L399ade.  if v0 == 0 then goto L399b00;
+  #L399ae2.  v0:= v2.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.errors` @type ^`io.reactivex.internal.util.AtomicThrowable` @kind object;
+  #L399ae6.  call temp:= `b`(v0) @signature `Lio/reactivex/internal/util/AtomicThrowable;.b:()Ljava/lang/Throwable;` @kind virtual;
+  #L399aec.  v0:= temp @kind object;
+  #L399aee.  if v0 == 0 then goto L399b00;
+  #L399af2.  v1:= `@@io.reactivex.internal.util.ExceptionHelper.a` @type ^`java.lang.Throwable` @kind object;
+  #L399af6.  if v0 == v1 then goto L399b00;
+  #L399afa.  call `q`(v0) @signature `Ll2/a;.q:(Ljava/lang/Throwable;)V` @kind static;
+  #L399b00.  return @kind void;
+}
+procedure `boolean` `f`(`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver` v3 @kind this) @signature `Lio/reactivex/internal/operators/observable/ObservableFlatMap$MergeObserver;.f:()Z` @AccessFlag  {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L399878.  v0:= v3.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.cancelled` @type ^`boolean` @kind boolean;
+  #L39987c.  v1:= 1I;
+  #L39987e.  if v0 == 0 then goto L399884;
+  #L399882.  return v1;
+  #L399884.  v0:= v3.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.errors` @type ^`io.reactivex.internal.util.AtomicThrowable` @kind object;
+  #L399888.  call temp:= `get`(v0) @signature `Ljava/util/concurrent/atomic/AtomicReference;.get:()Ljava/lang/Object;` @kind virtual;
+  #L39988e.  v0:= temp @kind object;
+  #L399890.  v0:= (`java.lang.Throwable`) v0 @kind object;
+  #L399894.  v2:= v3.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.delayErrors` @type ^`boolean` @kind boolean;
+  #L399898.  if v2 != 0 then goto L3998c6;
+  #L39989c.  if v0 == 0 then goto L3998c6;
+  #L3998a0.  call temp:= `g`(v3) @signature `Lio/reactivex/internal/operators/observable/ObservableFlatMap$MergeObserver;.g:()Z` @kind virtual;
+  #L3998a6.  v0:= v3.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.errors` @type ^`io.reactivex.internal.util.AtomicThrowable` @kind object;
+  #L3998aa.  call temp:= `b`(v0) @signature `Lio/reactivex/internal/util/AtomicThrowable;.b:()Ljava/lang/Throwable;` @kind virtual;
+  #L3998b0.  v0:= temp @kind object;
+  #L3998b2.  v2:= `@@io.reactivex.internal.util.ExceptionHelper.a` @type ^`java.lang.Throwable` @kind object;
+  #L3998b6.  if v0 == v2 then goto L3998c4;
+  #L3998ba.  v2:= v3.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.actual` @type ^`b2.p` @kind object;
+  #L3998be.  call `a`(v2, v0) @signature `Lb2/p;.a:(Ljava/lang/Throwable;)V` @kind interface;
+  #L3998c4.  return v1;
+  #L3998c6.  v0:= 0I;
+  #L3998c8.  return v0;
+}
+procedure `boolean` `g`(`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver` v4 @kind this) @signature `Lio/reactivex/internal/operators/observable/ObservableFlatMap$MergeObserver;.g:()Z` @AccessFlag  {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L3998dc.  v0:= v4.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.s` @type ^`e2.b` @kind object;
+  #L3998e0.  call `e`(v0) @signature `Le2/b;.e:()V` @kind interface;
+  #L3998e6.  v0:= v4.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.observers` @type ^`java.util.concurrent.atomic.AtomicReference` @kind object;
+  #L3998ea.  call temp:= `get`(v0) @signature `Ljava/util/concurrent/atomic/AtomicReference;.get:()Ljava/lang/Object;` @kind virtual;
+  #L3998f0.  v0:= temp @kind object;
+  #L3998f2.  v0:= (`io.reactivex.internal.operators.observable.ObservableFlatMap$InnerObserver`[]) v0 @kind object;
+  #L3998f6.  v1:= `@@io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.b` @type ^`io.reactivex.internal.operators.observable.ObservableFlatMap$InnerObserver`[] @kind object;
+  #L3998fa.  v2:= 0I;
+  #L3998fc.  if v0 == v1 then goto L39992e;
+  #L399900.  v0:= v4.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.observers` @type ^`java.util.concurrent.atomic.AtomicReference` @kind object;
+  #L399904.  call temp:= `getAndSet`(v0, v1) @signature `Ljava/util/concurrent/atomic/AtomicReference;.getAndSet:(Ljava/lang/Object;)Ljava/lang/Object;` @kind virtual;
+  #L39990a.  v0:= temp @kind object;
+  #L39990c.  v0:= (`io.reactivex.internal.operators.observable.ObservableFlatMap$InnerObserver`[]) v0 @kind object;
+  #L399910.  if v0 == v1 then goto L39992e;
+  #L399914.  v1:= length @variable v0;
+  #L399916.  if v2 >= v1 then goto L39992a;
+  #L39991a.  v3:= v0[v2] @kind object;
+  #L39991e.  call `c`(v3) @signature `Lio/reactivex/internal/operators/observable/ObservableFlatMap$InnerObserver;.c:()V` @kind virtual;
+  #L399924.  v2:= v2 + 1;
+  #L399928.  goto L399916;
+  #L39992a.  v0:= 1I;
+  #L39992c.  return v0;
+  #L39992e.  return v2;
+}
+procedure `void` `h`(`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver` v1 @kind this) @signature `Lio/reactivex/internal/operators/observable/ObservableFlatMap$MergeObserver;.h:()V` @AccessFlag  {
+    temp;
+    v0;
+
+  #L399b14.  call temp:= `getAndIncrement`(v1) @signature `Ljava/util/concurrent/atomic/AtomicInteger;.getAndIncrement:()I` @kind virtual;
+  #L399b1a.  v0:= temp;
+  #L399b1c.  if v0 != 0 then goto L399b26;
+  #L399b20.  call `i`(v1) @signature `Lio/reactivex/internal/operators/observable/ObservableFlatMap$MergeObserver;.i:()V` @kind virtual;
+  #L399b26.  return @kind void;
+}
+procedure `void` `i`(`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver` v14 @kind this) @signature `Lio/reactivex/internal/operators/observable/ObservableFlatMap$MergeObserver;.i:()V` @AccessFlag  {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+    v9;
+    v10;
+    v11;
+    v12;
+    v13;
+
+  #L399b38.  v0:= v14.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.actual` @type ^`b2.p` @kind object;
+  #L399b3c.  v1:= 1I;
+  #L399b3e.  v2:= 1I;
+  #L399b40.  call temp:= `f`(v14) @signature `Lio/reactivex/internal/operators/observable/ObservableFlatMap$MergeObserver;.f:()Z` @kind virtual;
+  #L399b46.  v3:= temp;
+  #L399b48.  if v3 == 0 then goto L399b4e;
+  #L399b4c.  return @kind void;
+  #L399b4e.  v3:= v14.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.queue` @type ^`k2.i` @kind object;
+  #L399b52.  if v3 == 0 then goto L399b7e;
+  #L399b56.  call temp:= `f`(v14) @signature `Lio/reactivex/internal/operators/observable/ObservableFlatMap$MergeObserver;.f:()Z` @kind virtual;
+  #L399b5c.  v4:= temp;
+  #L399b5e.  if v4 == 0 then goto L399b64;
+  #L399b62.  return @kind void;
+  #L399b64.  call temp:= `poll`(v3) @signature `Lk2/i;.poll:()Ljava/lang/Object;` @kind interface;
+  #L399b6a.  v4:= temp @kind object;
+  #L399b6c.  if v4 != 0 then goto L399b76;
+  #L399b70.  if v4 != 0 then goto L399b56;
+  #L399b74.  goto L399b7e;
+  #L399b76.  call `onNext`(v0, v4) @signature `Lb2/p;.onNext:(Ljava/lang/Object;)V` @kind interface;
+  #L399b7c.  goto L399b56;
+  #L399b7e.  v3:= v14.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.done` @type ^`boolean` @kind boolean;
+  #L399b82.  v4:= v14.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.queue` @type ^`k2.i` @kind object;
+  #L399b86.  v5:= v14.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.observers` @type ^`java.util.concurrent.atomic.AtomicReference` @kind object;
+  #L399b8a.  call temp:= `get`(v5) @signature `Ljava/util/concurrent/atomic/AtomicReference;.get:()Ljava/lang/Object;` @kind virtual;
+  #L399b90.  v5:= temp @kind object;
+  #L399b92.  v5:= (`io.reactivex.internal.operators.observable.ObservableFlatMap$InnerObserver`[]) v5 @kind object;
+  #L399b96.  v6:= length @variable v5;
+  #L399b98.  v7:= v14.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.maxConcurrency` @type ^`int`;
+  #L399b9c.  v8:= 2147483647I;
+  #L399ba2.  v9:= 0I;
+  #L399ba4.  if v7 == v8 then goto L399bc0;
+  #L399ba8.  @monitorenter v14
+  #L399baa.  v7:= v14.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.sources` @type ^`java.util.Queue` @kind object;
+  #L399bae.  call temp:= `size`(v7) @signature `Ljava/util/Queue;.size:()I` @kind interface;
+  #L399bb4.  v7:= temp;
+  #L399bb6.  @monitorexit v14
+  #L399bb8.  goto L399bc2;
+  #L399bba.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L399bbc.  @monitorexit v14
+  #L399bbe.  throw v0;
+  #L399bc0.  v7:= 0I;
+  #L399bc2.  if v3 == 0 then goto L399c06;
+  #L399bc6.  if v4 == 0 then goto L399bd6;
+  #L399bca.  call temp:= `isEmpty`(v4) @signature `Lk2/j;.isEmpty:()Z` @kind interface;
+  #L399bd0.  v3:= temp;
+  #L399bd2.  if v3 == 0 then goto L399c06;
+  #L399bd6.  if v6 != 0 then goto L399c06;
+  #L399bda.  if v7 != 0 then goto L399c06;
+  #L399bde.  v1:= v14.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.errors` @type ^`io.reactivex.internal.util.AtomicThrowable` @kind object;
+  #L399be2.  call temp:= `b`(v1) @signature `Lio/reactivex/internal/util/AtomicThrowable;.b:()Ljava/lang/Throwable;` @kind virtual;
+  #L399be8.  v1:= temp @kind object;
+  #L399bea.  v2:= `@@io.reactivex.internal.util.ExceptionHelper.a` @type ^`java.lang.Throwable` @kind object;
+  #L399bee.  if v1 == v2 then goto L399c04;
+  #L399bf2.  if v1 != 0 then goto L399bfe;
+  #L399bf6.  call `onComplete`(v0) @signature `Lb2/p;.onComplete:()V` @kind interface;
+  #L399bfc.  goto L399c04;
+  #L399bfe.  call `a`(v0, v1) @signature `Lb2/p;.a:(Ljava/lang/Throwable;)V` @kind interface;
+  #L399c04.  return @kind void;
+  #L399c06.  if v6 == 0 then goto L399d40;
+  #L399c0a.  v3:= v14.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.lastId` @type ^`long` @kind wide;
+  #L399c0e.  v7:= v14.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.lastIndex` @type ^`int`;
+  #L399c12.  if v6 <= v7 then goto L399c26;
+  #L399c16.  v10:= v5[v7] @kind object;
+  #L399c1a.  v10:= v10.`io.reactivex.internal.operators.observable.ObservableFlatMap$InnerObserver.id` @type ^`long` @kind wide;
+  #L399c1e.  v12:= lcmp(v10, v3);
+  #L399c22.  if v12 == 0 then goto L399c64;
+  #L399c26.  if v6 > v7 then goto L399c2c;
+  #L399c2a.  v7:= 0I;
+  #L399c2c.  v10:= 0I;
+  #L399c2e.  if v10 >= v6 then goto L399c54;
+  #L399c32.  v11:= v5[v7] @kind object;
+  #L399c36.  v11:= v11.`io.reactivex.internal.operators.observable.ObservableFlatMap$InnerObserver.id` @type ^`long` @kind wide;
+  #L399c3a.  v13:= lcmp(v11, v3);
+  #L399c3e.  if v13 != 0 then goto L399c44;
+  #L399c42.  goto L399c54;
+  #L399c44.  v7:= v7 + 1;
+  #L399c48.  if v7 != v6 then goto L399c4e;
+  #L399c4c.  v7:= 0I;
+  #L399c4e.  v10:= v10 + 1;
+  #L399c52.  goto L399c2e;
+  #L399c54.  v14.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.lastIndex` @type ^`int` := v7;
+  #L399c58.  v3:= v5[v7] @kind object;
+  #L399c5c.  v3:= v3.`io.reactivex.internal.operators.observable.ObservableFlatMap$InnerObserver.id` @type ^`long` @kind wide;
+  #L399c60.  v14.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.lastId` @type ^`long` := v3 @kind wide;
+  #L399c64.  v3:= 0I;
+  #L399c66.  v4:= 0I;
+  #L399c68.  if v3 >= v6 then goto L399d2e;
+  #L399c6c.  call temp:= `f`(v14) @signature `Lio/reactivex/internal/operators/observable/ObservableFlatMap$MergeObserver;.f:()Z` @kind virtual;
+  #L399c72.  v10:= temp;
+  #L399c74.  if v10 == 0 then goto L399c7a;
+  #L399c78.  return @kind void;
+  #L399c7a.  v10:= v5[v7] @kind object;
+  #L399c7e.  call temp:= `f`(v14) @signature `Lio/reactivex/internal/operators/observable/ObservableFlatMap$MergeObserver;.f:()Z` @kind virtual;
+  #L399c84.  v11:= temp;
+  #L399c86.  if v11 == 0 then goto L399c8c;
+  #L399c8a.  return @kind void;
+  #L399c8c.  v11:= v10.`io.reactivex.internal.operators.observable.ObservableFlatMap$InnerObserver.queue` @type ^`k2.j` @kind object;
+  #L399c90.  if v11 != 0 then goto L399c96;
+  #L399c94.  goto L399ca6;
+  #L399c96.  call temp:= `poll`(v11) @signature `Lk2/j;.poll:()Ljava/lang/Object;` @kind interface;
+  #L399c9c.  v12:= temp @kind object;
+  #L399c9e.  if v12 != 0 then goto L399ce4;
+  #L399ca2.  if v12 != 0 then goto L399c7e;
+  #L399ca6.  v11:= v10.`io.reactivex.internal.operators.observable.ObservableFlatMap$InnerObserver.done` @type ^`boolean` @kind boolean;
+  #L399caa.  v12:= v10.`io.reactivex.internal.operators.observable.ObservableFlatMap$InnerObserver.queue` @type ^`k2.j` @kind object;
+  #L399cae.  if v11 == 0 then goto L399cd8;
+  #L399cb2.  if v12 == 0 then goto L399cc2;
+  #L399cb6.  call temp:= `isEmpty`(v12) @signature `Lk2/j;.isEmpty:()Z` @kind interface;
+  #L399cbc.  v11:= temp;
+  #L399cbe.  if v11 == 0 then goto L399cd8;
+  #L399cc2.  call `j`(v14, v10) @signature `Lio/reactivex/internal/operators/observable/ObservableFlatMap$MergeObserver;.j:(Lio/reactivex/internal/operators/observable/ObservableFlatMap$InnerObserver;)V` @kind virtual;
+  #L399cc8.  call temp:= `f`(v14) @signature `Lio/reactivex/internal/operators/observable/ObservableFlatMap$MergeObserver;.f:()Z` @kind virtual;
+  #L399cce.  v4:= temp;
+  #L399cd0.  if v4 == 0 then goto L399cd6;
+  #L399cd4.  return @kind void;
+  #L399cd6.  v4:= 1I;
+  #L399cd8.  v7:= v7 + 1;
+  #L399cdc.  if v7 != v6 then goto L399d2a;
+  #L399ce0.  v7:= 0I;
+  #L399ce2.  goto L399d2a;
+  #L399ce4.  call `onNext`(v0, v12) @signature `Lb2/p;.onNext:(Ljava/lang/Object;)V` @kind interface;
+  #L399cea.  call temp:= `f`(v14) @signature `Lio/reactivex/internal/operators/observable/ObservableFlatMap$MergeObserver;.f:()Z` @kind virtual;
+  #L399cf0.  v12:= temp;
+  #L399cf2.  if v12 == 0 then goto L399c96;
+  #L399cf6.  return @kind void;
+  #L399cf8.  v4:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L399cfa.  call `b`(v4) @signature `Lf2/a;.b:(Ljava/lang/Throwable;)V` @kind static;
+  #L399d00.  call `c`(v10) @signature `Lio/reactivex/internal/operators/observable/ObservableFlatMap$InnerObserver;.c:()V` @kind virtual;
+  #L399d06.  v11:= v14.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.errors` @type ^`io.reactivex.internal.util.AtomicThrowable` @kind object;
+  #L399d0a.  call temp:= `a`(v11, v4) @signature `Lio/reactivex/internal/util/AtomicThrowable;.a:(Ljava/lang/Throwable;)Z` @kind virtual;
+  #L399d10.  call temp:= `f`(v14) @signature `Lio/reactivex/internal/operators/observable/ObservableFlatMap$MergeObserver;.f:()Z` @kind virtual;
+  #L399d16.  v4:= temp;
+  #L399d18.  if v4 == 0 then goto L399d1e;
+  #L399d1c.  return @kind void;
+  #L399d1e.  call `j`(v14, v10) @signature `Lio/reactivex/internal/operators/observable/ObservableFlatMap$MergeObserver;.j:(Lio/reactivex/internal/operators/observable/ObservableFlatMap$InnerObserver;)V` @kind virtual;
+  #L399d24.  v3:= v3 + 1;
+  #L399d28.  v4:= 1I;
+  #L399d2a.  v3:= v3 + v1 @kind int;
+  #L399d2c.  goto L399c68;
+  #L399d2e.  v14.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.lastIndex` @type ^`int` := v7;
+  #L399d32.  v3:= v5[v7] @kind object;
+  #L399d36.  v5:= v3.`io.reactivex.internal.operators.observable.ObservableFlatMap$InnerObserver.id` @type ^`long` @kind wide;
+  #L399d3a.  v14.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.lastId` @type ^`long` := v5 @kind wide;
+  #L399d3e.  v9:= v4;
+  #L399d40.  if v9 == 0 then goto L399d84;
+  #L399d44.  v3:= v14.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.maxConcurrency` @type ^`int`;
+  #L399d48.  if v3 == v8 then goto L399b40;
+  #L399d4c.  @monitorenter v14
+  #L399d4e.  v3:= v14.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.sources` @type ^`java.util.Queue` @kind object;
+  #L399d52.  call temp:= `poll`(v3) @signature `Ljava/util/Queue;.poll:()Ljava/lang/Object;` @kind interface;
+  #L399d58.  v3:= temp @kind object;
+  #L399d5a.  v3:= (`b2.o`) v3 @kind object;
+  #L399d5e.  if v3 != 0 then goto L399d72;
+  #L399d62.  v3:= v14.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.wip` @type ^`int`;
+  #L399d66.  v3:= v3 - v1 @kind int;
+  #L399d68.  v14.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.wip` @type ^`int` := v3;
+  #L399d6c.  @monitorexit v14
+  #L399d6e.  goto L399b40;
+  #L399d72.  @monitorexit v14
+  #L399d74.  call `k`(v14, v3) @signature `Lio/reactivex/internal/operators/observable/ObservableFlatMap$MergeObserver;.k:(Lb2/o;)V` @kind virtual;
+  #L399d7a.  goto L399b40;
+  #L399d7e.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L399d80.  @monitorexit v14
+  #L399d82.  throw v0;
+  #L399d84.  v2:= -v2 @kind int;
+  #L399d86.  call temp:= `addAndGet`(v14, v2) @signature `Ljava/util/concurrent/atomic/AtomicInteger;.addAndGet:(I)I` @kind virtual;
+  #L399d8c.  v2:= temp;
+  #L399d8e.  if v2 != 0 then goto L399b40;
+  #L399d92.  return @kind void;
+  catch `java.lang.Throwable` @[L399baa..L399bbe] goto L399bba;
+  catch `java.lang.Throwable` @[L399c96..L399c9e] goto L399cf8;
+  catch `java.lang.Throwable` @[L399d4e..L399d74] goto L399d7e;
+  catch `java.lang.Throwable` @[L399d80..L399d82] goto L399d7e;
+}
+procedure `void` `j`(`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver` v6 @kind this, `io.reactivex.internal.operators.observable.ObservableFlatMap$InnerObserver` v7 @kind object) @signature `Lio/reactivex/internal/operators/observable/ObservableFlatMap$MergeObserver;.j:(Lio/reactivex/internal/operators/observable/ObservableFlatMap$InnerObserver;)V` @AccessFlag  {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L399f1c.  v0:= v6.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.observers` @type ^`java.util.concurrent.atomic.AtomicReference` @kind object;
+  #L399f20.  call temp:= `get`(v0) @signature `Ljava/util/concurrent/atomic/AtomicReference;.get:()Ljava/lang/Object;` @kind virtual;
+  #L399f26.  v0:= temp @kind object;
+  #L399f28.  v0:= (`io.reactivex.internal.operators.observable.ObservableFlatMap$InnerObserver`[]) v0 @kind object;
+  #L399f2c.  v1:= length @variable v0;
+  #L399f2e.  if v1 != 0 then goto L399f34;
+  #L399f32.  return @kind void;
+  #L399f34.  v2:= -1I;
+  #L399f36.  v3:= 0I;
+  #L399f38.  v4:= 0I;
+  #L399f3a.  if v4 >= v1 then goto L399f50;
+  #L399f3e.  v5:= v0[v4] @kind object;
+  #L399f42.  if v5 != v7 then goto L399f4a;
+  #L399f46.  v2:= v4;
+  #L399f48.  goto L399f50;
+  #L399f4a.  v4:= v4 + 1;
+  #L399f4e.  goto L399f3a;
+  #L399f50.  if v2 >= 0 then goto L399f56;
+  #L399f54.  return @kind void;
+  #L399f56.  v4:= 1I;
+  #L399f58.  if v1 != v4 then goto L399f62;
+  #L399f5c.  v1:= `@@io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.a` @type ^`io.reactivex.internal.operators.observable.ObservableFlatMap$InnerObserver`[] @kind object;
+  #L399f60.  goto L399f80;
+  #L399f62.  v5:= v1 + -1;
+  #L399f66.  v5:= new `io.reactivex.internal.operators.observable.ObservableFlatMap$InnerObserver`[v5];
+  #L399f6a.  call `arraycopy`(v0, v3, v5, v3, v2) @signature `Ljava/lang/System;.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V` @kind static;
+  #L399f70.  v3:= v2 + 1;
+  #L399f74.  v1:= v1 - v2 @kind int;
+  #L399f76.  v1:= v1 - v4 @kind int;
+  #L399f78.  call `arraycopy`(v0, v3, v5, v2, v1) @signature `Ljava/lang/System;.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V` @kind static;
+  #L399f7e.  v1:= v5 @kind object;
+  #L399f80.  v2:= v6.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.observers` @type ^`java.util.concurrent.atomic.AtomicReference` @kind object;
+  #L399f84.  call temp:= `compareAndSet`(v2, v0, v1) @signature `Ljava/util/concurrent/atomic/AtomicReference;.compareAndSet:(Ljava/lang/Object;Ljava/lang/Object;)Z` @kind virtual;
+  #L399f8a.  v0:= temp;
+  #L399f8c.  if v0 == 0 then goto L399f1c;
+  #L399f90.  return @kind void;
+}
+procedure `void` `k`(`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver` v5 @kind this, `b2.o` v6 @kind object) @signature `Lio/reactivex/internal/operators/observable/ObservableFlatMap$MergeObserver;.k:(Lb2/o;)V` @AccessFlag  {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L399fa4.  v0:= instanceof @variable v6 @type ^`java.util.concurrent.Callable` @kind boolean;
+  #L399fa8.  if v0 == 0 then goto L39a008;
+  #L399fac.  v6:= (`java.util.concurrent.Callable`) v6 @kind object;
+  #L399fb0.  call temp:= `m`(v5, v6) @signature `Lio/reactivex/internal/operators/observable/ObservableFlatMap$MergeObserver;.m:(Ljava/util/concurrent/Callable;)Z` @kind virtual;
+  #L399fb6.  v6:= temp;
+  #L399fb8.  if v6 == 0 then goto L39a032;
+  #L399fbc.  v6:= v5.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.maxConcurrency` @type ^`int`;
+  #L399fc0.  v0:= 2147483647I;
+  #L399fc6.  if v6 == v0 then goto L39a032;
+  #L399fca.  v6:= 0I;
+  #L399fcc.  @monitorenter v5
+  #L399fce.  v0:= v5.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.sources` @type ^`java.util.Queue` @kind object;
+  #L399fd2.  call temp:= `poll`(v0) @signature `Ljava/util/Queue;.poll:()Ljava/lang/Object;` @kind interface;
+  #L399fd8.  v0:= temp @kind object;
+  #L399fda.  v0:= (`b2.o`) v0 @kind object;
+  #L399fde.  v1:= 1I;
+  #L399fe0.  if v0 != 0 then goto L399ff0;
+  #L399fe4.  v6:= v5.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.wip` @type ^`int`;
+  #L399fe8.  v6:= v6 - v1 @kind int;
+  #L399fea.  v5.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.wip` @type ^`int` := v6;
+  #L399fee.  v6:= 1I;
+  #L399ff0.  @monitorexit v5
+  #L399ff2.  if v6 == 0 then goto L399ffe;
+  #L399ff6.  call `h`(v5) @signature `Lio/reactivex/internal/operators/observable/ObservableFlatMap$MergeObserver;.h:()V` @kind virtual;
+  #L399ffc.  goto L39a032;
+  #L399ffe.  v6:= v0 @kind object;
+  #L39a000.  goto L399fa4;
+  #L39a002.  v6:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L39a004.  @monitorexit v5
+  #L39a006.  throw v6;
+  #L39a008.  v0:= new `io.reactivex.internal.operators.observable.ObservableFlatMap$InnerObserver`;
+  #L39a00c.  v1:= v5.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.uniqueId` @type ^`long` @kind wide;
+  #L39a010.  v3:= 1L;
+  #L39a014.  v3:= v3 + v1 @kind long;
+  #L39a016.  v5.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.uniqueId` @type ^`long` := v3 @kind wide;
+  #L39a01a.  call `<init>`(v0, v5, v1) @signature `Lio/reactivex/internal/operators/observable/ObservableFlatMap$InnerObserver;.<init>:(Lio/reactivex/internal/operators/observable/ObservableFlatMap$MergeObserver;J)V` @kind direct;
+  #L39a020.  call temp:= `c`(v5, v0) @signature `Lio/reactivex/internal/operators/observable/ObservableFlatMap$MergeObserver;.c:(Lio/reactivex/internal/operators/observable/ObservableFlatMap$InnerObserver;)Z` @kind virtual;
+  #L39a026.  v1:= temp;
+  #L39a028.  if v1 == 0 then goto L39a032;
+  #L39a02c.  call `c`(v6, v0) @signature `Lb2/o;.c:(Lb2/p;)V` @kind interface;
+  #L39a032.  return @kind void;
+  catch `java.lang.Throwable` @[L399fce..L399ff2] goto L39a002;
+  catch `java.lang.Throwable` @[L39a004..L39a006] goto L39a002;
+}
+procedure `void` `l`(`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver` v2 @kind this, `java.lang.Object` v3 @kind object, `io.reactivex.internal.operators.observable.ObservableFlatMap$InnerObserver` v4 @kind object) @signature `Lio/reactivex/internal/operators/observable/ObservableFlatMap$MergeObserver;.l:(Ljava/lang/Object;Lio/reactivex/internal/operators/observable/ObservableFlatMap$InnerObserver;)V` @AccessFlag  {
+    temp;
+    v0;
+    v1;
+
+  #L39a058.  call temp:= `get`(v2) @signature `Ljava/util/concurrent/atomic/AtomicInteger;.get:()I` @kind virtual;
+  #L39a05e.  v0:= temp;
+  #L39a060.  if v0 != 0 then goto L39a08c;
+  #L39a064.  v0:= 0I;
+  #L39a066.  v1:= 1I;
+  #L39a068.  call temp:= `compareAndSet`(v2, v0, v1) @signature `Ljava/util/concurrent/atomic/AtomicInteger;.compareAndSet:(II)Z` @kind virtual;
+  #L39a06e.  v0:= temp;
+  #L39a070.  if v0 == 0 then goto L39a08c;
+  #L39a074.  v4:= v2.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.actual` @type ^`b2.p` @kind object;
+  #L39a078.  call `onNext`(v4, v3) @signature `Lb2/p;.onNext:(Ljava/lang/Object;)V` @kind interface;
+  #L39a07e.  call temp:= `decrementAndGet`(v2) @signature `Ljava/util/concurrent/atomic/AtomicInteger;.decrementAndGet:()I` @kind virtual;
+  #L39a084.  v3:= temp;
+  #L39a086.  if v3 != 0 then goto L39a0ba;
+  #L39a08a.  return @kind void;
+  #L39a08c.  v0:= v4.`io.reactivex.internal.operators.observable.ObservableFlatMap$InnerObserver.queue` @type ^`k2.j` @kind object;
+  #L39a090.  if v0 != 0 then goto L39a0a6;
+  #L39a094.  v0:= new `io.reactivex.internal.queue.a`;
+  #L39a098.  v1:= v2.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.bufferSize` @type ^`int`;
+  #L39a09c.  call `<init>`(v0, v1) @signature `Lio/reactivex/internal/queue/a;.<init>:(I)V` @kind direct;
+  #L39a0a2.  v4.`io.reactivex.internal.operators.observable.ObservableFlatMap$InnerObserver.queue` @type ^`k2.j` := v0 @kind object;
+  #L39a0a6.  call temp:= `offer`(v0, v3) @signature `Lk2/j;.offer:(Ljava/lang/Object;)Z` @kind interface;
+  #L39a0ac.  call temp:= `getAndIncrement`(v2) @signature `Ljava/util/concurrent/atomic/AtomicInteger;.getAndIncrement:()I` @kind virtual;
+  #L39a0b2.  v3:= temp;
+  #L39a0b4.  if v3 == 0 then goto L39a0ba;
+  #L39a0b8.  return @kind void;
+  #L39a0ba.  call `i`(v2) @signature `Lio/reactivex/internal/operators/observable/ObservableFlatMap$MergeObserver;.i:()V` @kind virtual;
+  #L39a0c0.  return @kind void;
+}
+procedure `boolean` `m`(`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver` v4 @kind this, `java.util.concurrent.Callable` v5 @kind object) @signature `Lio/reactivex/internal/operators/observable/ObservableFlatMap$MergeObserver;.m:(Ljava/util/concurrent/Callable;)Z` @AccessFlag  {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L399958.  v0:= 1I;
+  #L39995a.  call temp:= `call`(v5) @signature `Ljava/util/concurrent/Callable;.call:()Ljava/lang/Object;` @kind interface;
+  #L399960.  v5:= temp @kind object;
+  #L399962.  if v5 != 0 then goto L399968;
+  #L399966.  return v0;
+  #L399968.  call temp:= `get`(v4) @signature `Ljava/util/concurrent/atomic/AtomicInteger;.get:()I` @kind virtual;
+  #L39996e.  v1:= temp;
+  #L399970.  v2:= 0I;
+  #L399972.  if v1 != 0 then goto L39999a;
+  #L399976.  call temp:= `compareAndSet`(v4, v2, v0) @signature `Ljava/util/concurrent/atomic/AtomicInteger;.compareAndSet:(II)Z` @kind virtual;
+  #L39997c.  v1:= temp;
+  #L39997e.  if v1 == 0 then goto L39999a;
+  #L399982.  v1:= v4.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.actual` @type ^`b2.p` @kind object;
+  #L399986.  call `onNext`(v1, v5) @signature `Lb2/p;.onNext:(Ljava/lang/Object;)V` @kind interface;
+  #L39998c.  call temp:= `decrementAndGet`(v4) @signature `Ljava/util/concurrent/atomic/AtomicInteger;.decrementAndGet:()I` @kind virtual;
+  #L399992.  v5:= temp;
+  #L399994.  if v5 != 0 then goto L399a02;
+  #L399998.  return v0;
+  #L39999a.  v1:= v4.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.queue` @type ^`k2.i` @kind object;
+  #L39999e.  if v1 != 0 then goto L3999d2;
+  #L3999a2.  v1:= v4.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.maxConcurrency` @type ^`int`;
+  #L3999a6.  v3:= 2147483647I;
+  #L3999ac.  if v1 != v3 then goto L3999c0;
+  #L3999b0.  v1:= new `io.reactivex.internal.queue.a`;
+  #L3999b4.  v3:= v4.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.bufferSize` @type ^`int`;
+  #L3999b8.  call `<init>`(v1, v3) @signature `Lio/reactivex/internal/queue/a;.<init>:(I)V` @kind direct;
+  #L3999be.  goto L3999ce;
+  #L3999c0.  v1:= new `io.reactivex.internal.queue.SpscArrayQueue`;
+  #L3999c4.  v3:= v4.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.maxConcurrency` @type ^`int`;
+  #L3999c8.  call `<init>`(v1, v3) @signature `Lio/reactivex/internal/queue/SpscArrayQueue;.<init>:(I)V` @kind direct;
+  #L3999ce.  v4.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.queue` @type ^`k2.i` := v1 @kind object;
+  #L3999d2.  call temp:= `offer`(v1, v5) @signature `Lk2/j;.offer:(Ljava/lang/Object;)Z` @kind interface;
+  #L3999d8.  v5:= temp;
+  #L3999da.  if v5 != 0 then goto L3999f4;
+  #L3999de.  v5:= new `java.lang.IllegalStateException`;
+  #L3999e2.  v1:= "Scalar queue full?!" @kind object;
+  #L3999e6.  call `<init>`(v5, v1) @signature `Ljava/lang/IllegalStateException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L3999ec.  call `a`(v4, v5) @signature `Lio/reactivex/internal/operators/observable/ObservableFlatMap$MergeObserver;.a:(Ljava/lang/Throwable;)V` @kind virtual;
+  #L3999f2.  return v0;
+  #L3999f4.  call temp:= `getAndIncrement`(v4) @signature `Ljava/util/concurrent/atomic/AtomicInteger;.getAndIncrement:()I` @kind virtual;
+  #L3999fa.  v5:= temp;
+  #L3999fc.  if v5 == 0 then goto L399a02;
+  #L399a00.  return v2;
+  #L399a02.  call `i`(v4) @signature `Lio/reactivex/internal/operators/observable/ObservableFlatMap$MergeObserver;.i:()V` @kind virtual;
+  #L399a08.  return v0;
+  #L399a0a.  v5:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L399a0c.  call `b`(v5) @signature `Lf2/a;.b:(Ljava/lang/Throwable;)V` @kind static;
+  #L399a12.  v1:= v4.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.errors` @type ^`io.reactivex.internal.util.AtomicThrowable` @kind object;
+  #L399a16.  call temp:= `a`(v1, v5) @signature `Lio/reactivex/internal/util/AtomicThrowable;.a:(Ljava/lang/Throwable;)Z` @kind virtual;
+  #L399a1c.  call `h`(v4) @signature `Lio/reactivex/internal/operators/observable/ObservableFlatMap$MergeObserver;.h:()V` @kind virtual;
+  #L399a22.  return v0;
+  catch `java.lang.Throwable` @[L39995a..L399962] goto L399a0a;
+}
+procedure `void` `onComplete`(`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver` v1 @kind this) @signature `Lio/reactivex/internal/operators/observable/ObservableFlatMap$MergeObserver;.onComplete:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L399dd0.  v0:= v1.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.done` @type ^`boolean` @kind boolean;
+  #L399dd4.  if v0 == 0 then goto L399dda;
+  #L399dd8.  return @kind void;
+  #L399dda.  v0:= 1I;
+  #L399ddc.  v1.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.done` @type ^`boolean` := v0 @kind boolean;
+  #L399de0.  call `h`(v1) @signature `Lio/reactivex/internal/operators/observable/ObservableFlatMap$MergeObserver;.h:()V` @kind virtual;
+  #L399de6.  return @kind void;
+}
+procedure `void` `onNext`(`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver` v2 @kind this, `java.lang.Object` v3 @kind object) @signature `Lio/reactivex/internal/operators/observable/ObservableFlatMap$MergeObserver;.onNext:(Ljava/lang/Object;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L399e40.  v0:= v2.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.done` @type ^`boolean` @kind boolean;
+  #L399e44.  if v0 == 0 then goto L399e4a;
+  #L399e48.  return @kind void;
+  #L399e4a.  v0:= v2.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.mapper` @type ^`h2.e` @kind object;
+  #L399e4e.  call temp:= `apply`(v0, v3) @signature `Lh2/e;.apply:(Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L399e54.  v3:= temp @kind object;
+  #L399e56.  v0:= "The mapper returned a null ObservableSource" @kind object;
+  #L399e5a.  call temp:= `d`(v3, v0) @signature `Lj2/b;.d:(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/Object;` @kind static;
+  #L399e60.  v3:= temp @kind object;
+  #L399e62.  v3:= (`b2.o`) v3 @kind object;
+  #L399e66.  v0:= v2.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.maxConcurrency` @type ^`int`;
+  #L399e6a.  v1:= 2147483647I;
+  #L399e70.  if v0 == v1 then goto L399ea2;
+  #L399e74.  @monitorenter v2
+  #L399e76.  v0:= v2.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.wip` @type ^`int`;
+  #L399e7a.  v1:= v2.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.maxConcurrency` @type ^`int`;
+  #L399e7e.  if v0 != v1 then goto L399e90;
+  #L399e82.  v0:= v2.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.sources` @type ^`java.util.Queue` @kind object;
+  #L399e86.  call temp:= `offer`(v0, v3) @signature `Ljava/util/Queue;.offer:(Ljava/lang/Object;)Z` @kind interface;
+  #L399e8c.  @monitorexit v2
+  #L399e8e.  return @kind void;
+  #L399e90.  v0:= v0 + 1;
+  #L399e94.  v2.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.wip` @type ^`int` := v0;
+  #L399e98.  @monitorexit v2
+  #L399e9a.  goto L399ea2;
+  #L399e9c.  v3:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L399e9e.  @monitorexit v2
+  #L399ea0.  throw v3;
+  #L399ea2.  call `k`(v2, v3) @signature `Lio/reactivex/internal/operators/observable/ObservableFlatMap$MergeObserver;.k:(Lb2/o;)V` @kind virtual;
+  #L399ea8.  return @kind void;
+  #L399eaa.  v3:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L399eac.  call `b`(v3) @signature `Lf2/a;.b:(Ljava/lang/Throwable;)V` @kind static;
+  #L399eb2.  v0:= v2.`io.reactivex.internal.operators.observable.ObservableFlatMap$MergeObserver.s` @type ^`e2.b` @kind object;
+  #L399eb6.  call `e`(v0) @signature `Le2/b;.e:()V` @kind interface;
+  #L399ebc.  call `a`(v2, v3) @signature `Lio/reactivex/internal/operators/observable/ObservableFlatMap$MergeObserver;.a:(Ljava/lang/Throwable;)V` @kind virtual;
+  #L399ec2.  return @kind void;
+  catch `java.lang.Throwable` @[L399e4a..L399e66] goto L399eaa;
+  catch `java.lang.Throwable` @[L399e76..L399ea0] goto L399e9c;
+}

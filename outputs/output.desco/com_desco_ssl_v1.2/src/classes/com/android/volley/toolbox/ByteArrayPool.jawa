@@ -1,0 +1,138 @@
+record `com.android.volley.toolbox.ByteArrayPool` @kind class @AccessFlag PUBLIC {
+  `java.util.List` `com.android.volley.toolbox.ByteArrayPool.mBuffersByLastUse` @AccessFlag PRIVATE;
+  `java.util.List` `com.android.volley.toolbox.ByteArrayPool.mBuffersBySize` @AccessFlag PRIVATE;
+  `int` `com.android.volley.toolbox.ByteArrayPool.mCurrentSize` @AccessFlag PRIVATE;
+  `int` `com.android.volley.toolbox.ByteArrayPool.mSizeLimit` @AccessFlag PRIVATE_FINAL;
+}
+global `java.util.Comparator` `@@com.android.volley.toolbox.ByteArrayPool.BUF_COMPARATOR` @AccessFlag PROTECTED_STATIC_FINAL;
+procedure `void` `<clinit>`() @signature `Lcom/android/volley/toolbox/ByteArrayPool;.<clinit>:()V` @AccessFlag STATIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L1c8724.  v0:= new `com.android.volley.toolbox.ByteArrayPool$1`;
+  #L1c8728.  call `<init>`(v0) @signature `Lcom/android/volley/toolbox/ByteArrayPool$1;.<init>:()V` @kind direct;
+  #L1c872e.  `@@com.android.volley.toolbox.ByteArrayPool.BUF_COMPARATOR` @type ^`java.util.Comparator` := v0 @kind object;
+  #L1c8732.  return @kind void;
+}
+procedure `void` `<init>`(`com.android.volley.toolbox.ByteArrayPool` v2 @kind this, `int` v3 @name `sizeLimit`) @signature `Lcom/android/volley/toolbox/ByteArrayPool;.<init>:(I)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+
+  #L1c8744.  call `<init>`(v2) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L1c874a.  v0:= new `java.util.LinkedList`;
+  #L1c874e.  call `<init>`(v0) @signature `Ljava/util/LinkedList;.<init>:()V` @kind direct;
+  #L1c8754.  v2.`com.android.volley.toolbox.ByteArrayPool.mBuffersByLastUse` @type ^`java.util.List` := v0 @kind object;
+  #L1c8758.  v0:= new `java.util.ArrayList`;
+  #L1c875c.  v1:= 64I;
+  #L1c8760.  call `<init>`(v0, v1) @signature `Ljava/util/ArrayList;.<init>:(I)V` @kind direct;
+  #L1c8766.  v2.`com.android.volley.toolbox.ByteArrayPool.mBuffersBySize` @type ^`java.util.List` := v0 @kind object;
+  #L1c876a.  v0:= 0I;
+  #L1c876c.  v2.`com.android.volley.toolbox.ByteArrayPool.mCurrentSize` @type ^`int` := v0;
+  #L1c8770.  v2.`com.android.volley.toolbox.ByteArrayPool.mSizeLimit` @type ^`int` := v3;
+  #L1c8774.  return @kind void;
+}
+procedure `void` `trim`(`com.android.volley.toolbox.ByteArrayPool` v3 @kind this) @signature `Lcom/android/volley/toolbox/ByteArrayPool;.trim:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L1c8788.  @monitorenter v3
+  #L1c878a.  v1:= v3.`com.android.volley.toolbox.ByteArrayPool.mCurrentSize` @type ^`int`;
+  #L1c878e.  v2:= v3.`com.android.volley.toolbox.ByteArrayPool.mSizeLimit` @type ^`int`;
+  #L1c8792.  if v1 <= v2 then goto L1c87c6;
+  #L1c8796.  v1:= v3.`com.android.volley.toolbox.ByteArrayPool.mBuffersByLastUse` @type ^`java.util.List` @kind object;
+  #L1c879a.  v2:= 0I;
+  #L1c879c.  call temp:= `remove`(v1, v2) @signature `Ljava/util/List;.remove:(I)Ljava/lang/Object;` @kind interface;
+  #L1c87a2.  v0:= temp @kind object;
+  #L1c87a4.  v0:= (`byte`[]) v0 @kind object;
+  #L1c87a8.  v1:= v3.`com.android.volley.toolbox.ByteArrayPool.mBuffersBySize` @type ^`java.util.List` @kind object;
+  #L1c87ac.  call temp:= `remove`(v1, v0) @signature `Ljava/util/List;.remove:(Ljava/lang/Object;)Z` @kind interface;
+  #L1c87b2.  v1:= v3.`com.android.volley.toolbox.ByteArrayPool.mCurrentSize` @type ^`int`;
+  #L1c87b6.  v2:= length @variable v0;
+  #L1c87b8.  v1:= v1 - v2 @kind int;
+  #L1c87ba.  v3.`com.android.volley.toolbox.ByteArrayPool.mCurrentSize` @type ^`int` := v1;
+  #L1c87be.  goto L1c878a;
+  #L1c87c0.  v1:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L1c87c2.  @monitorexit v3
+  #L1c87c4.  throw v1;
+  #L1c87c6.  @monitorexit v3
+  #L1c87c8.  return @kind void;
+  catch `java.lang.Throwable` @[L1c878a..L1c87be] goto L1c87c0;
+}
+procedure `byte`[] `getBuf`(`com.android.volley.toolbox.ByteArrayPool` v4 @kind this, `int` v5 @name `len`) @signature `Lcom/android/volley/toolbox/ByteArrayPool;.getBuf:(I)[B` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L1c87e8.  @monitorenter v4
+  #L1c87ea.  v1:= 0I;
+  #L1c87ec.  v2:= v4.`com.android.volley.toolbox.ByteArrayPool.mBuffersBySize` @type ^`java.util.List` @kind object;
+  #L1c87f0.  call temp:= `size`(v2) @signature `Ljava/util/List;.size:()I` @kind interface;
+  #L1c87f6.  v2:= temp;
+  #L1c87f8.  if v1 >= v2 then goto L1c883c;
+  #L1c87fc.  v2:= v4.`com.android.volley.toolbox.ByteArrayPool.mBuffersBySize` @type ^`java.util.List` @kind object;
+  #L1c8800.  call temp:= `get`(v2, v1) @signature `Ljava/util/List;.get:(I)Ljava/lang/Object;` @kind interface;
+  #L1c8806.  v0:= temp @kind object;
+  #L1c8808.  v0:= (`byte`[]) v0 @kind object;
+  #L1c880c.  v2:= length @variable v0;
+  #L1c880e.  if v2 < v5 then goto L1c8836;
+  #L1c8812.  v2:= v4.`com.android.volley.toolbox.ByteArrayPool.mCurrentSize` @type ^`int`;
+  #L1c8816.  v3:= length @variable v0;
+  #L1c8818.  v2:= v2 - v3 @kind int;
+  #L1c881a.  v4.`com.android.volley.toolbox.ByteArrayPool.mCurrentSize` @type ^`int` := v2;
+  #L1c881e.  v2:= v4.`com.android.volley.toolbox.ByteArrayPool.mBuffersBySize` @type ^`java.util.List` @kind object;
+  #L1c8822.  call temp:= `remove`(v2, v1) @signature `Ljava/util/List;.remove:(I)Ljava/lang/Object;` @kind interface;
+  #L1c8828.  v2:= v4.`com.android.volley.toolbox.ByteArrayPool.mBuffersByLastUse` @type ^`java.util.List` @kind object;
+  #L1c882c.  call temp:= `remove`(v2, v0) @signature `Ljava/util/List;.remove:(Ljava/lang/Object;)Z` @kind interface;
+  #L1c8832.  @monitorexit v4
+  #L1c8834.  return v0 @kind object;
+  #L1c8836.  v1:= v1 + 1;
+  #L1c883a.  goto L1c87ec;
+  #L1c883c.  v0:= new `byte`[v5];
+  #L1c8840.  goto L1c8832;
+  #L1c8842.  v2:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L1c8844.  @monitorexit v4
+  #L1c8846.  throw v2;
+  catch `java.lang.Throwable` @[L1c87ec..L1c8832] goto L1c8842;
+  catch `java.lang.Throwable` @[L1c883c..L1c8840] goto L1c8842;
+}
+procedure `void` `returnBuf`(`com.android.volley.toolbox.ByteArrayPool` v3 @kind this, `byte`[] v4 @kind object @name `buf`) @signature `Lcom/android/volley/toolbox/ByteArrayPool;.returnBuf:([B)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L1c886c.  @monitorenter v3
+  #L1c886e.  if v4 == 0 then goto L1c887c;
+  #L1c8872.  v1:= length @variable v4;
+  #L1c8874.  v2:= v3.`com.android.volley.toolbox.ByteArrayPool.mSizeLimit` @type ^`int`;
+  #L1c8878.  if v1 <= v2 then goto L1c8880;
+  #L1c887c.  @monitorexit v3
+  #L1c887e.  return @kind void;
+  #L1c8880.  v1:= v3.`com.android.volley.toolbox.ByteArrayPool.mBuffersByLastUse` @type ^`java.util.List` @kind object;
+  #L1c8884.  call temp:= `add`(v1, v4) @signature `Ljava/util/List;.add:(Ljava/lang/Object;)Z` @kind interface;
+  #L1c888a.  v1:= v3.`com.android.volley.toolbox.ByteArrayPool.mBuffersBySize` @type ^`java.util.List` @kind object;
+  #L1c888e.  v2:= `@@com.android.volley.toolbox.ByteArrayPool.BUF_COMPARATOR` @type ^`java.util.Comparator` @kind object;
+  #L1c8892.  call temp:= `binarySearch`(v1, v4, v2) @signature `Ljava/util/Collections;.binarySearch:(Ljava/util/List;Ljava/lang/Object;Ljava/util/Comparator;)I` @kind static;
+  #L1c8898.  v0:= temp;
+  #L1c889a.  if v0 >= 0 then goto L1c88a4;
+  #L1c889e.  v1:= -v0 @kind int;
+  #L1c88a0.  v0:= v1 + -1;
+  #L1c88a4.  v1:= v3.`com.android.volley.toolbox.ByteArrayPool.mBuffersBySize` @type ^`java.util.List` @kind object;
+  #L1c88a8.  call `add`(v1, v0, v4) @signature `Ljava/util/List;.add:(ILjava/lang/Object;)V` @kind interface;
+  #L1c88ae.  v1:= v3.`com.android.volley.toolbox.ByteArrayPool.mCurrentSize` @type ^`int`;
+  #L1c88b2.  v2:= length @variable v4;
+  #L1c88b4.  v1:= v1 + v2 @kind int;
+  #L1c88b6.  v3.`com.android.volley.toolbox.ByteArrayPool.mCurrentSize` @type ^`int` := v1;
+  #L1c88ba.  call `trim`(v3) @signature `Lcom/android/volley/toolbox/ByteArrayPool;.trim:()V` @kind direct;
+  #L1c88c0.  goto L1c887c;
+  #L1c88c2.  v1:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L1c88c4.  @monitorexit v3
+  #L1c88c6.  throw v1;
+  catch `java.lang.Throwable` @[L1c8872..L1c8878] goto L1c88c2;
+  catch `java.lang.Throwable` @[L1c8880..L1c88c0] goto L1c88c2;
+}

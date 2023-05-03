@@ -1,0 +1,48 @@
+record `okhttp3.internal.huc.StreamedRequestBody` @kind class @AccessFlag FINAL extends `okhttp3.internal.huc.OutputStreamRequestBody` @kind class, `okhttp3.internal.http.UnrepeatableRequestBody` @kind interface {
+  `okio.Pipe` `okhttp3.internal.huc.StreamedRequestBody.pipe` @AccessFlag PRIVATE_FINAL;
+}
+procedure `void` `<init>`(`okhttp3.internal.huc.StreamedRequestBody` v3 @kind this, `long` v4 ) @signature `Lokhttp3/internal/huc/StreamedRequestBody;.<init>:(J)V` @AccessFlag CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L245e7c.  call `<init>`(v3) @signature `Lokhttp3/internal/huc/OutputStreamRequestBody;.<init>:()V` @kind direct;
+  #L245e82.  v0:= new `okio.Pipe`;
+  #L245e86.  v1:= 8192L;
+  #L245e8a.  call `<init>`(v0, v1) @signature `Lokio/Pipe;.<init>:(J)V` @kind direct;
+  #L245e90.  v3.`okhttp3.internal.huc.StreamedRequestBody.pipe` @type ^`okio.Pipe` := v0 @kind object;
+  #L245e94.  v0:= v3.`okhttp3.internal.huc.StreamedRequestBody.pipe` @type ^`okio.Pipe` @kind object;
+  #L245e98.  call temp:= `sink`(v0) @signature `Lokio/Pipe;.sink:()Lokio/Sink;` @kind virtual;
+  #L245e9e.  v0:= temp @kind object;
+  #L245ea0.  call temp:= `buffer`(v0) @signature `Lokio/Okio;.buffer:(Lokio/Sink;)Lokio/BufferedSink;` @kind static;
+  #L245ea6.  v0:= temp @kind object;
+  #L245ea8.  call `initOutputStream`(v3, v0, v4) @signature `Lokhttp3/internal/huc/StreamedRequestBody;.initOutputStream:(Lokio/BufferedSink;J)V` @kind virtual;
+  #L245eae.  return @kind void;
+}
+procedure `void` `writeTo`(`okhttp3.internal.huc.StreamedRequestBody` v6 @kind this, `okio.BufferedSink` v7 @kind object) @signature `Lokhttp3/internal/huc/StreamedRequestBody;.writeTo:(Lokio/BufferedSink;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L245ec0.  v0:= new `okio.Buffer`;
+  #L245ec4.  call `<init>`(v0) @signature `Lokio/Buffer;.<init>:()V` @kind direct;
+  #L245eca.  v1:= v6.`okhttp3.internal.huc.StreamedRequestBody.pipe` @type ^`okio.Pipe` @kind object;
+  #L245ece.  call temp:= `source`(v1) @signature `Lokio/Pipe;.source:()Lokio/Source;` @kind virtual;
+  #L245ed4.  v1:= temp @kind object;
+  #L245ed6.  v2:= 8192L;
+  #L245eda.  call temp:= `read`(v1, v0, v2) @signature `Lokio/Source;.read:(Lokio/Buffer;J)J` @kind interface;
+  #L245ee0.  v1:= temp @kind wide;
+  #L245ee2.  v3:= -1L;
+  #L245ee6.  v5:= lcmp(v1, v3);
+  #L245eea.  if v5 == 0 then goto L245efe;
+  #L245eee.  call temp:= `size`(v0) @signature `Lokio/Buffer;.size:()J` @kind virtual;
+  #L245ef4.  v1:= temp @kind wide;
+  #L245ef6.  call `write`(v7, v0, v1) @signature `Lokio/BufferedSink;.write:(Lokio/Buffer;J)V` @kind interface;
+  #L245efc.  goto L245eca;
+  #L245efe.  return @kind void;
+}

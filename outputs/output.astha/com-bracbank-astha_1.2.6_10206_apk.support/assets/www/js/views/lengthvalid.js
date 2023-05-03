@@ -1,0 +1,1 @@
+!function(t){t.fn.inputlength=function(){return this.each(function(){var n=t(this).attr("maxlength");t(this).on("keypress",function(e){return t(this).val().length>=n&&"8"!=e.keyCode&&"46"!=e.keyCode?(e.preventDefault(),!1):void 0})})}}(jQuery),$(".lenthcontrol").inputlength();

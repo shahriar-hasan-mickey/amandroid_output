@@ -1,0 +1,223 @@
+record `com.android.volley.WaitingRequestManager` @kind class @AccessFlag  extends `com.android.volley.Request$NetworkRequestCompleteListener` @kind interface {
+  `com.android.volley.CacheDispatcher` `com.android.volley.WaitingRequestManager.mCacheDispatcher` @AccessFlag PRIVATE_FINAL;
+  `java.util.concurrent.BlockingQueue` `com.android.volley.WaitingRequestManager.mNetworkQueue` @AccessFlag PRIVATE_FINAL;
+  `com.android.volley.RequestQueue` `com.android.volley.WaitingRequestManager.mRequestQueue` @AccessFlag PRIVATE_FINAL;
+  `com.android.volley.ResponseDelivery` `com.android.volley.WaitingRequestManager.mResponseDelivery` @AccessFlag PRIVATE_FINAL;
+  `java.util.Map` `com.android.volley.WaitingRequestManager.mWaitingRequests` @AccessFlag PRIVATE_FINAL;
+}
+procedure `void` `<init>`(`com.android.volley.WaitingRequestManager` v1 @kind this, `com.android.volley.CacheDispatcher` v2 @kind object, `java.util.concurrent.BlockingQueue` v3 @kind object, `com.android.volley.ResponseDelivery` v4 @kind object) @signature `Lcom/android/volley/WaitingRequestManager;.<init>:(Lcom/android/volley/CacheDispatcher;Ljava/util/concurrent/BlockingQueue;Lcom/android/volley/ResponseDelivery;)V` @AccessFlag CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L3b9d44.  call `<init>`(v1) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L3b9d4a.  v0:= new `java.util.HashMap`;
+  #L3b9d4e.  call `<init>`(v0) @signature `Ljava/util/HashMap;.<init>:()V` @kind direct;
+  #L3b9d54.  v1.`com.android.volley.WaitingRequestManager.mWaitingRequests` @type ^`java.util.Map` := v0 @kind object;
+  #L3b9d58.  v0:= 0I;
+  #L3b9d5a.  v1.`com.android.volley.WaitingRequestManager.mRequestQueue` @type ^`com.android.volley.RequestQueue` := v0 @kind object;
+  #L3b9d5e.  v1.`com.android.volley.WaitingRequestManager.mResponseDelivery` @type ^`com.android.volley.ResponseDelivery` := v4 @kind object;
+  #L3b9d62.  v1.`com.android.volley.WaitingRequestManager.mCacheDispatcher` @type ^`com.android.volley.CacheDispatcher` := v2 @kind object;
+  #L3b9d66.  v1.`com.android.volley.WaitingRequestManager.mNetworkQueue` @type ^`java.util.concurrent.BlockingQueue` := v3 @kind object;
+  #L3b9d6a.  return @kind void;
+}
+procedure `void` `<init>`(`com.android.volley.WaitingRequestManager` v1 @kind this, `com.android.volley.RequestQueue` v2 @kind object) @signature `Lcom/android/volley/WaitingRequestManager;.<init>:(Lcom/android/volley/RequestQueue;)V` @AccessFlag CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L3b9d7c.  call `<init>`(v1) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L3b9d82.  v0:= new `java.util.HashMap`;
+  #L3b9d86.  call `<init>`(v0) @signature `Ljava/util/HashMap;.<init>:()V` @kind direct;
+  #L3b9d8c.  v1.`com.android.volley.WaitingRequestManager.mWaitingRequests` @type ^`java.util.Map` := v0 @kind object;
+  #L3b9d90.  v1.`com.android.volley.WaitingRequestManager.mRequestQueue` @type ^`com.android.volley.RequestQueue` := v2 @kind object;
+  #L3b9d94.  call temp:= `getResponseDelivery`(v2) @signature `Lcom/android/volley/RequestQueue;.getResponseDelivery:()Lcom/android/volley/ResponseDelivery;` @kind virtual;
+  #L3b9d9a.  v2:= temp @kind object;
+  #L3b9d9c.  v1.`com.android.volley.WaitingRequestManager.mResponseDelivery` @type ^`com.android.volley.ResponseDelivery` := v2 @kind object;
+  #L3b9da0.  v2:= 0I;
+  #L3b9da2.  v1.`com.android.volley.WaitingRequestManager.mCacheDispatcher` @type ^`com.android.volley.CacheDispatcher` := v2 @kind object;
+  #L3b9da6.  v1.`com.android.volley.WaitingRequestManager.mNetworkQueue` @type ^`java.util.concurrent.BlockingQueue` := v2 @kind object;
+  #L3b9daa.  return @kind void;
+}
+procedure `boolean` `maybeAddToWaitingRequests`(`com.android.volley.WaitingRequestManager` v5 @kind this, `com.android.volley.Request` v6 @kind object) @signature `Lcom/android/volley/WaitingRequestManager;.maybeAddToWaitingRequests:(Lcom/android/volley/Request;)Z` @AccessFlag  {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L3b9c74.  @monitorenter v5
+  #L3b9c76.  call temp:= `getCacheKey`(v6) @signature `Lcom/android/volley/Request;.getCacheKey:()Ljava/lang/String;` @kind virtual;
+  #L3b9c7c.  v0:= temp @kind object;
+  #L3b9c7e.  v1:= v5.`com.android.volley.WaitingRequestManager.mWaitingRequests` @type ^`java.util.Map` @kind object;
+  #L3b9c82.  call temp:= `containsKey`(v1, v0) @signature `Ljava/util/Map;.containsKey:(Ljava/lang/Object;)Z` @kind interface;
+  #L3b9c88.  v1:= temp;
+  #L3b9c8a.  v2:= 1I;
+  #L3b9c8c.  v3:= 0I;
+  #L3b9c8e.  if v1 == 0 then goto L3b9ce8;
+  #L3b9c92.  v1:= v5.`com.android.volley.WaitingRequestManager.mWaitingRequests` @type ^`java.util.Map` @kind object;
+  #L3b9c96.  call temp:= `get`(v1, v0) @signature `Ljava/util/Map;.get:(Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L3b9c9c.  v1:= temp @kind object;
+  #L3b9c9e.  v1:= (`java.util.List`) v1 @kind object;
+  #L3b9ca2.  if v1 != 0 then goto L3b9cb0;
+  #L3b9ca6.  v1:= new `java.util.ArrayList`;
+  #L3b9caa.  call `<init>`(v1) @signature `Ljava/util/ArrayList;.<init>:()V` @kind direct;
+  #L3b9cb0.  v4:= "waiting-for-response" @kind object;
+  #L3b9cb4.  call `addMarker`(v6, v4) @signature `Lcom/android/volley/Request;.addMarker:(Ljava/lang/String;)V` @kind virtual;
+  #L3b9cba.  call temp:= `add`(v1, v6) @signature `Ljava/util/List;.add:(Ljava/lang/Object;)Z` @kind interface;
+  #L3b9cc0.  v6:= v5.`com.android.volley.WaitingRequestManager.mWaitingRequests` @type ^`java.util.Map` @kind object;
+  #L3b9cc4.  call temp:= `put`(v6, v0, v1) @signature `Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L3b9cca.  v6:= `@@com.android.volley.VolleyLog.DEBUG` @type ^`boolean` @kind boolean;
+  #L3b9cce.  if v6 == 0 then goto L3b9ce4;
+  #L3b9cd2.  v6:= "Request for cacheKey=%s is in flight, putting on hold." @kind object;
+  #L3b9cd6.  v1:= new `java.lang.Object`[v2];
+  #L3b9cda.  v1[v3]:= v0 @kind object;
+  #L3b9cde.  call `d`(v6, v1) @signature `Lcom/android/volley/VolleyLog;.d:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind static;
+  #L3b9ce4.  @monitorexit v5
+  #L3b9ce6.  return v2;
+  #L3b9ce8.  v1:= v5.`com.android.volley.WaitingRequestManager.mWaitingRequests` @type ^`java.util.Map` @kind object;
+  #L3b9cec.  v4:= 0I;
+  #L3b9cee.  call temp:= `put`(v1, v0, v4) @signature `Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L3b9cf4.  call `setNetworkRequestCompleteListener`(v6, v5) @signature `Lcom/android/volley/Request;.setNetworkRequestCompleteListener:(Lcom/android/volley/Request$NetworkRequestCompleteListener;)V` @kind virtual;
+  #L3b9cfa.  v6:= `@@com.android.volley.VolleyLog.DEBUG` @type ^`boolean` @kind boolean;
+  #L3b9cfe.  if v6 == 0 then goto L3b9d14;
+  #L3b9d02.  v6:= "new request, sending to network %s" @kind object;
+  #L3b9d06.  v1:= new `java.lang.Object`[v2];
+  #L3b9d0a.  v1[v3]:= v0 @kind object;
+  #L3b9d0e.  call `d`(v6, v1) @signature `Lcom/android/volley/VolleyLog;.d:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind static;
+  #L3b9d14.  @monitorexit v5
+  #L3b9d16.  return v3;
+  #L3b9d18.  v6:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3b9d1a.  @monitorexit v5
+  #L3b9d1c.  throw v6;
+  catch `java.lang.Throwable` @[L3b9c76..L3b9ce4] goto L3b9d18;
+  catch `java.lang.Throwable` @[L3b9ce8..L3b9d14] goto L3b9d18;
+}
+procedure `void` `onNoUsableResponseReceived`(`com.android.volley.WaitingRequestManager` v6 @kind this, `com.android.volley.Request` v7 @kind object) @signature `Lcom/android/volley/WaitingRequestManager;.onNoUsableResponseReceived:(Lcom/android/volley/Request;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L3b9dbc.  @monitorenter v6
+  #L3b9dbe.  call temp:= `getCacheKey`(v7) @signature `Lcom/android/volley/Request;.getCacheKey:()Ljava/lang/String;` @kind virtual;
+  #L3b9dc4.  v7:= temp @kind object;
+  #L3b9dc6.  v0:= v6.`com.android.volley.WaitingRequestManager.mWaitingRequests` @type ^`java.util.Map` @kind object;
+  #L3b9dca.  call temp:= `remove`(v0, v7) @signature `Ljava/util/Map;.remove:(Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L3b9dd0.  v0:= temp @kind object;
+  #L3b9dd2.  v0:= (`java.util.List`) v0 @kind object;
+  #L3b9dd6.  if v0 == 0 then goto L3b9e92;
+  #L3b9dda.  call temp:= `isEmpty`(v0) @signature `Ljava/util/List;.isEmpty:()Z` @kind interface;
+  #L3b9de0.  v1:= temp;
+  #L3b9de2.  if v1 != 0 then goto L3b9e92;
+  #L3b9de6.  v1:= `@@com.android.volley.VolleyLog.DEBUG` @type ^`boolean` @kind boolean;
+  #L3b9dea.  v2:= 1I;
+  #L3b9dec.  v3:= 0I;
+  #L3b9dee.  if v1 == 0 then goto L3b9e1a;
+  #L3b9df2.  v1:= "%d waiting requests for cacheKey=%s; resend to network" @kind object;
+  #L3b9df6.  v4:= 2I;
+  #L3b9df8.  v4:= new `java.lang.Object`[v4];
+  #L3b9dfc.  call temp:= `size`(v0) @signature `Ljava/util/List;.size:()I` @kind interface;
+  #L3b9e02.  v5:= temp;
+  #L3b9e04.  call temp:= `valueOf`(v5) @signature `Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer;` @kind static;
+  #L3b9e0a.  v5:= temp @kind object;
+  #L3b9e0c.  v4[v3]:= v5 @kind object;
+  #L3b9e10.  v4[v2]:= v7 @kind object;
+  #L3b9e14.  call `v`(v1, v4) @signature `Lcom/android/volley/VolleyLog;.v:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind static;
+  #L3b9e1a.  call temp:= `remove`(v0, v3) @signature `Ljava/util/List;.remove:(I)Ljava/lang/Object;` @kind interface;
+  #L3b9e20.  v1:= temp @kind object;
+  #L3b9e22.  v1:= (`com.android.volley.Request`) v1 @kind object;
+  #L3b9e26.  v4:= v6.`com.android.volley.WaitingRequestManager.mWaitingRequests` @type ^`java.util.Map` @kind object;
+  #L3b9e2a.  call temp:= `put`(v4, v7, v0) @signature `Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L3b9e30.  call `setNetworkRequestCompleteListener`(v1, v6) @signature `Lcom/android/volley/Request;.setNetworkRequestCompleteListener:(Lcom/android/volley/Request$NetworkRequestCompleteListener;)V` @kind virtual;
+  #L3b9e36.  v7:= v6.`com.android.volley.WaitingRequestManager.mRequestQueue` @type ^`com.android.volley.RequestQueue` @kind object;
+  #L3b9e3a.  if v7 == 0 then goto L3b9e46;
+  #L3b9e3e.  call `sendRequestOverNetwork`(v7, v1) @signature `Lcom/android/volley/RequestQueue;.sendRequestOverNetwork:(Lcom/android/volley/Request;)V` @kind virtual;
+  #L3b9e44.  goto L3b9e92;
+  #L3b9e46.  v7:= v6.`com.android.volley.WaitingRequestManager.mCacheDispatcher` @type ^`com.android.volley.CacheDispatcher` @kind object;
+  #L3b9e4a.  if v7 == 0 then goto L3b9e92;
+  #L3b9e4e.  v7:= v6.`com.android.volley.WaitingRequestManager.mNetworkQueue` @type ^`java.util.concurrent.BlockingQueue` @kind object;
+  #L3b9e52.  if v7 == 0 then goto L3b9e92;
+  #L3b9e56.  call `put`(v7, v1) @signature `Ljava/util/concurrent/BlockingQueue;.put:(Ljava/lang/Object;)V` @kind interface;
+  #L3b9e5c.  goto L3b9e92;
+  #L3b9e5e.  v7:= Exception @type ^`java.lang.InterruptedException` @kind object;
+  #L3b9e60.  v0:= "Couldn't add request to queue. %s" @kind object;
+  #L3b9e64.  v1:= new `java.lang.Object`[v2];
+  #L3b9e68.  call temp:= `toString`(v7) @signature `Ljava/lang/InterruptedException;.toString:()Ljava/lang/String;` @kind virtual;
+  #L3b9e6e.  v7:= temp @kind object;
+  #L3b9e70.  v1[v3]:= v7 @kind object;
+  #L3b9e74.  call `e`(v0, v1) @signature `Lcom/android/volley/VolleyLog;.e:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind static;
+  #L3b9e7a.  call temp:= `currentThread`() @signature `Ljava/lang/Thread;.currentThread:()Ljava/lang/Thread;` @kind static;
+  #L3b9e80.  v7:= temp @kind object;
+  #L3b9e82.  call `interrupt`(v7) @signature `Ljava/lang/Thread;.interrupt:()V` @kind virtual;
+  #L3b9e88.  v7:= v6.`com.android.volley.WaitingRequestManager.mCacheDispatcher` @type ^`com.android.volley.CacheDispatcher` @kind object;
+  #L3b9e8c.  call `quit`(v7) @signature `Lcom/android/volley/CacheDispatcher;.quit:()V` @kind virtual;
+  #L3b9e92.  @monitorexit v6
+  #L3b9e94.  return @kind void;
+  #L3b9e96.  v7:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3b9e98.  @monitorexit v6
+  #L3b9e9a.  throw v7;
+  catch `java.lang.Throwable` @[L3b9dbe..L3b9e52] goto L3b9e96;
+  catch `java.lang.InterruptedException` @[L3b9e56..L3b9e5c] goto L3b9e5e;
+  catch `java.lang.Throwable` @[L3b9e56..L3b9e5c] goto L3b9e96;
+  catch `java.lang.Throwable` @[L3b9e60..L3b9e92] goto L3b9e96;
+}
+procedure `void` `onResponseReceived`(`com.android.volley.WaitingRequestManager` v5 @kind this, `com.android.volley.Request` v6 @kind object, `com.android.volley.Response` v7 @kind object) @signature `Lcom/android/volley/WaitingRequestManager;.onResponseReceived:(Lcom/android/volley/Request;Lcom/android/volley/Response;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L3b9ecc.  v0:= v7.`com.android.volley.Response.cacheEntry` @type ^`com.android.volley.Cache$Entry` @kind object;
+  #L3b9ed0.  if v0 == 0 then goto L3b9f6a;
+  #L3b9ed4.  call temp:= `isExpired`(v0) @signature `Lcom/android/volley/Cache$Entry;.isExpired:()Z` @kind virtual;
+  #L3b9eda.  v0:= temp;
+  #L3b9edc.  if v0 == 0 then goto L3b9ee2;
+  #L3b9ee0.  goto L3b9f6a;
+  #L3b9ee2.  call temp:= `getCacheKey`(v6) @signature `Lcom/android/volley/Request;.getCacheKey:()Ljava/lang/String;` @kind virtual;
+  #L3b9ee8.  v6:= temp @kind object;
+  #L3b9eea.  @monitorenter v5
+  #L3b9eec.  v0:= v5.`com.android.volley.WaitingRequestManager.mWaitingRequests` @type ^`java.util.Map` @kind object;
+  #L3b9ef0.  call temp:= `remove`(v0, v6) @signature `Ljava/util/Map;.remove:(Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L3b9ef6.  v0:= temp @kind object;
+  #L3b9ef8.  v0:= (`java.util.List`) v0 @kind object;
+  #L3b9efc.  @monitorexit v5
+  #L3b9efe.  if v0 == 0 then goto L3b9f62;
+  #L3b9f02.  v1:= `@@com.android.volley.VolleyLog.DEBUG` @type ^`boolean` @kind boolean;
+  #L3b9f06.  if v1 == 0 then goto L3b9f36;
+  #L3b9f0a.  v1:= "Releasing %d waiting requests for cacheKey=%s." @kind object;
+  #L3b9f0e.  v2:= 2I;
+  #L3b9f10.  v2:= new `java.lang.Object`[v2];
+  #L3b9f14.  v3:= 0I;
+  #L3b9f16.  call temp:= `size`(v0) @signature `Ljava/util/List;.size:()I` @kind interface;
+  #L3b9f1c.  v4:= temp;
+  #L3b9f1e.  call temp:= `valueOf`(v4) @signature `Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer;` @kind static;
+  #L3b9f24.  v4:= temp @kind object;
+  #L3b9f26.  v2[v3]:= v4 @kind object;
+  #L3b9f2a.  v3:= 1I;
+  #L3b9f2c.  v2[v3]:= v6 @kind object;
+  #L3b9f30.  call `v`(v1, v2) @signature `Lcom/android/volley/VolleyLog;.v:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind static;
+  #L3b9f36.  call temp:= `iterator`(v0) @signature `Ljava/util/List;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L3b9f3c.  v6:= temp @kind object;
+  #L3b9f3e.  call temp:= `hasNext`(v6) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L3b9f44.  v0:= temp;
+  #L3b9f46.  if v0 == 0 then goto L3b9f62;
+  #L3b9f4a.  call temp:= `next`(v6) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L3b9f50.  v0:= temp @kind object;
+  #L3b9f52.  v0:= (`com.android.volley.Request`) v0 @kind object;
+  #L3b9f56.  v1:= v5.`com.android.volley.WaitingRequestManager.mResponseDelivery` @type ^`com.android.volley.ResponseDelivery` @kind object;
+  #L3b9f5a.  call `postResponse`(v1, v0, v7) @signature `Lcom/android/volley/ResponseDelivery;.postResponse:(Lcom/android/volley/Request;Lcom/android/volley/Response;)V` @kind interface;
+  #L3b9f60.  goto L3b9f3e;
+  #L3b9f62.  return @kind void;
+  #L3b9f64.  v6:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3b9f66.  @monitorexit v5
+  #L3b9f68.  throw v6;
+  #L3b9f6a.  call `onNoUsableResponseReceived`(v5, v6) @signature `Lcom/android/volley/WaitingRequestManager;.onNoUsableResponseReceived:(Lcom/android/volley/Request;)V` @kind virtual;
+  #L3b9f70.  return @kind void;
+  catch `java.lang.Throwable` @[L3b9eec..L3b9efe] goto L3b9f64;
+  catch `java.lang.Throwable` @[L3b9f66..L3b9f68] goto L3b9f64;
+}

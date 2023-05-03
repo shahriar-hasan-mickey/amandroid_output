@@ -1,0 +1,193 @@
+record `kotlinx.coroutines.internal.LimitedDispatcher` @kind class @AccessFlag PUBLIC_FINAL extends `kotlinx.coroutines.CoroutineDispatcher` @kind class, `java.lang.Runnable` @kind interface, `kotlinx.coroutines.Delay` @kind interface {
+  `kotlinx.coroutines.CoroutineDispatcher` `kotlinx.coroutines.internal.LimitedDispatcher.a` @AccessFlag PRIVATE_FINAL;
+  `int` `kotlinx.coroutines.internal.LimitedDispatcher.b` @AccessFlag PRIVATE_FINAL;
+  `kotlinx.coroutines.Delay` `kotlinx.coroutines.internal.LimitedDispatcher.c` @AccessFlag PRIVATE_FINAL_SYNTHETIC;
+  `kotlinx.coroutines.internal.LockFreeTaskQueue` `kotlinx.coroutines.internal.LimitedDispatcher.d` @AccessFlag PRIVATE_FINAL;
+  `java.lang.Object` `kotlinx.coroutines.internal.LimitedDispatcher.e` @AccessFlag PRIVATE_FINAL;
+  `int` `kotlinx.coroutines.internal.LimitedDispatcher.runningWorkers` @AccessFlag PRIVATE_VOLATILE;
+}
+procedure `void` `<init>`(`kotlinx.coroutines.internal.LimitedDispatcher` v0 @kind this, `kotlinx.coroutines.CoroutineDispatcher` v1 @kind object, `int` v2 ) @signature `Lkotlinx/coroutines/internal/LimitedDispatcher;.<init>:(Lkotlinx/coroutines/CoroutineDispatcher;I)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+
+  #L11f414.  call `<init>`(v0) @signature `Lkotlinx/coroutines/CoroutineDispatcher;.<init>:()V` @kind direct;
+  #L11f41a.  v0.`kotlinx.coroutines.internal.LimitedDispatcher.a` @type ^`kotlinx.coroutines.CoroutineDispatcher` := v1 @kind object;
+  #L11f41e.  v0.`kotlinx.coroutines.internal.LimitedDispatcher.b` @type ^`int` := v2;
+  #L11f422.  v2:= instanceof @variable v1 @type ^`kotlinx.coroutines.Delay` @kind boolean;
+  #L11f426.  if v2 == 0 then goto L11f430;
+  #L11f42a.  v1:= (`kotlinx.coroutines.Delay`) v1 @kind object;
+  #L11f42e.  goto L11f432;
+  #L11f430.  v1:= 0I;
+  #L11f432.  if v1 != 0 then goto L11f43e;
+  #L11f436.  call temp:= `getDefaultDelay`() @signature `Lkotlinx/coroutines/DefaultExecutorKt;.getDefaultDelay:()Lkotlinx/coroutines/Delay;` @kind static;
+  #L11f43c.  v1:= temp @kind object;
+  #L11f43e.  v0.`kotlinx.coroutines.internal.LimitedDispatcher.c` @type ^`kotlinx.coroutines.Delay` := v1 @kind object;
+  #L11f442.  v1:= new `kotlinx.coroutines.internal.LockFreeTaskQueue`;
+  #L11f446.  v2:= 0I;
+  #L11f448.  call `<init>`(v1, v2) @signature `Lkotlinx/coroutines/internal/LockFreeTaskQueue;.<init>:(Z)V` @kind direct;
+  #L11f44e.  v0.`kotlinx.coroutines.internal.LimitedDispatcher.d` @type ^`kotlinx.coroutines.internal.LockFreeTaskQueue` := v1 @kind object;
+  #L11f452.  v1:= new `java.lang.Object`;
+  #L11f456.  call `<init>`(v1) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L11f45c.  v0.`kotlinx.coroutines.internal.LimitedDispatcher.e` @type ^`java.lang.Object` := v1 @kind object;
+  #L11f460.  return @kind void;
+}
+procedure `boolean` `a`(`kotlinx.coroutines.internal.LimitedDispatcher` v1 @kind this, `java.lang.Runnable` v2 @kind object) @signature `Lkotlinx/coroutines/internal/LimitedDispatcher;.a:(Ljava/lang/Runnable;)Z` @AccessFlag PRIVATE_FINAL {
+    temp;
+    v0;
+
+  #L11f324.  v0:= v1.`kotlinx.coroutines.internal.LimitedDispatcher.d` @type ^`kotlinx.coroutines.internal.LockFreeTaskQueue` @kind object;
+  #L11f328.  call temp:= `addLast`(v0, v2) @signature `Lkotlinx/coroutines/internal/LockFreeTaskQueue;.addLast:(Ljava/lang/Object;)Z` @kind virtual;
+  #L11f32e.  v2:= v1.`kotlinx.coroutines.internal.LimitedDispatcher.runningWorkers` @type ^`int`;
+  #L11f332.  v0:= v1.`kotlinx.coroutines.internal.LimitedDispatcher.b` @type ^`int`;
+  #L11f336.  if v2 < v0 then goto L11f33e;
+  #L11f33a.  v2:= 1I;
+  #L11f33c.  goto L11f340;
+  #L11f33e.  v2:= 0I;
+  #L11f340.  return v2;
+}
+procedure `boolean` `b`(`kotlinx.coroutines.internal.LimitedDispatcher` v3 @kind this) @signature `Lkotlinx/coroutines/internal/LimitedDispatcher;.b:()Z` @AccessFlag PRIVATE_FINAL {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L11f354.  v0:= v3.`kotlinx.coroutines.internal.LimitedDispatcher.e` @type ^`java.lang.Object` @kind object;
+  #L11f358.  @monitorenter v0
+  #L11f35a.  v1:= v3.`kotlinx.coroutines.internal.LimitedDispatcher.runningWorkers` @type ^`int`;
+  #L11f35e.  v2:= v3.`kotlinx.coroutines.internal.LimitedDispatcher.b` @type ^`int`;
+  #L11f362.  if v1 < v2 then goto L11f36c;
+  #L11f366.  v1:= 0I;
+  #L11f368.  @monitorexit v0
+  #L11f36a.  return v1;
+  #L11f36c.  v1:= v3.`kotlinx.coroutines.internal.LimitedDispatcher.runningWorkers` @type ^`int`;
+  #L11f370.  v2:= 1I;
+  #L11f372.  v1:= v1 + v2 @kind int;
+  #L11f374.  v3.`kotlinx.coroutines.internal.LimitedDispatcher.runningWorkers` @type ^`int` := v1;
+  #L11f378.  @monitorexit v0
+  #L11f37a.  return v2;
+  #L11f37c.  v1:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L11f37e.  @monitorexit v0
+  #L11f380.  throw v1;
+  catch `java.lang.Throwable` @[L11f35a..L11f362] goto L11f37c;
+  catch `java.lang.Throwable` @[L11f36c..L11f378] goto L11f37c;
+}
+procedure `java.lang.Object` `delay`(`kotlinx.coroutines.internal.LimitedDispatcher` v1 @kind this, `long` v2 , `kotlin.coroutines.Continuation` v4 @kind object) @signature `Lkotlinx/coroutines/internal/LimitedDispatcher;.delay:(JLkotlin/coroutines/Continuation;)Ljava/lang/Object;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L11f3a8.  v0:= v1.`kotlinx.coroutines.internal.LimitedDispatcher.c` @type ^`kotlinx.coroutines.Delay` @kind object;
+  #L11f3ac.  call temp:= `delay`(v0, v2, v4) @signature `Lkotlinx/coroutines/Delay;.delay:(JLkotlin/coroutines/Continuation;)Ljava/lang/Object;` @kind interface;
+  #L11f3b2.  v2:= temp @kind object;
+  #L11f3b4.  return v2 @kind object;
+}
+procedure `void` `dispatch`(`kotlinx.coroutines.internal.LimitedDispatcher` v0 @kind this, `kotlin.coroutines.CoroutineContext` v1 @kind object, `java.lang.Runnable` v2 @kind object) @signature `Lkotlinx/coroutines/internal/LimitedDispatcher;.dispatch:(Lkotlin/coroutines/CoroutineContext;Ljava/lang/Runnable;)V` @AccessFlag PUBLIC {
+    temp;
+
+  #L11f474.  call temp:= `a`(v0, v2) @signature `Lkotlinx/coroutines/internal/LimitedDispatcher;.a:(Ljava/lang/Runnable;)Z` @kind direct;
+  #L11f47a.  v1:= temp;
+  #L11f47c.  if v1 == 0 then goto L11f482;
+  #L11f480.  goto L11f49a;
+  #L11f482.  call temp:= `b`(v0) @signature `Lkotlinx/coroutines/internal/LimitedDispatcher;.b:()Z` @kind direct;
+  #L11f488.  v1:= temp;
+  #L11f48a.  if v1 != 0 then goto L11f490;
+  #L11f48e.  goto L11f49a;
+  #L11f490.  v1:= v0.`kotlinx.coroutines.internal.LimitedDispatcher.a` @type ^`kotlinx.coroutines.CoroutineDispatcher` @kind object;
+  #L11f494.  call `dispatch`(v1, v0, v0) @signature `Lkotlinx/coroutines/CoroutineDispatcher;.dispatch:(Lkotlin/coroutines/CoroutineContext;Ljava/lang/Runnable;)V` @kind virtual;
+  #L11f49a.  return @kind void;
+}
+procedure `void` `dispatchYield`(`kotlinx.coroutines.internal.LimitedDispatcher` v0 @kind this, `kotlin.coroutines.CoroutineContext` v1 @kind object, `java.lang.Runnable` v2 @kind object) @signature `Lkotlinx/coroutines/internal/LimitedDispatcher;.dispatchYield:(Lkotlin/coroutines/CoroutineContext;Ljava/lang/Runnable;)V` @AccessFlag PUBLIC {
+    temp;
+
+  #L11f4ac.  call temp:= `a`(v0, v2) @signature `Lkotlinx/coroutines/internal/LimitedDispatcher;.a:(Ljava/lang/Runnable;)Z` @kind direct;
+  #L11f4b2.  v1:= temp;
+  #L11f4b4.  if v1 == 0 then goto L11f4ba;
+  #L11f4b8.  goto L11f4d2;
+  #L11f4ba.  call temp:= `b`(v0) @signature `Lkotlinx/coroutines/internal/LimitedDispatcher;.b:()Z` @kind direct;
+  #L11f4c0.  v1:= temp;
+  #L11f4c2.  if v1 != 0 then goto L11f4c8;
+  #L11f4c6.  goto L11f4d2;
+  #L11f4c8.  v1:= v0.`kotlinx.coroutines.internal.LimitedDispatcher.a` @type ^`kotlinx.coroutines.CoroutineDispatcher` @kind object;
+  #L11f4cc.  call `dispatchYield`(v1, v0, v0) @signature `Lkotlinx/coroutines/CoroutineDispatcher;.dispatchYield:(Lkotlin/coroutines/CoroutineContext;Ljava/lang/Runnable;)V` @kind virtual;
+  #L11f4d2.  return @kind void;
+}
+procedure `kotlinx.coroutines.DisposableHandle` `invokeOnTimeout`(`kotlinx.coroutines.internal.LimitedDispatcher` v1 @kind this, `long` v2 , `java.lang.Runnable` v4 @kind object, `kotlin.coroutines.CoroutineContext` v5 @kind object) @signature `Lkotlinx/coroutines/internal/LimitedDispatcher;.invokeOnTimeout:(JLjava/lang/Runnable;Lkotlin/coroutines/CoroutineContext;)Lkotlinx/coroutines/DisposableHandle;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L11f3f4.  v0:= v1.`kotlinx.coroutines.internal.LimitedDispatcher.c` @type ^`kotlinx.coroutines.Delay` @kind object;
+  #L11f3f8.  call temp:= `invokeOnTimeout`(v0, v2, v4, v5) @signature `Lkotlinx/coroutines/Delay;.invokeOnTimeout:(JLjava/lang/Runnable;Lkotlin/coroutines/CoroutineContext;)Lkotlinx/coroutines/DisposableHandle;` @kind interface;
+  #L11f3fe.  v2:= temp @kind object;
+  #L11f400.  return v2 @kind object;
+}
+procedure `kotlinx.coroutines.CoroutineDispatcher` `limitedParallelism`(`kotlinx.coroutines.internal.LimitedDispatcher` v1 @kind this, `int` v2 ) @signature `Lkotlinx/coroutines/internal/LimitedDispatcher;.limitedParallelism:(I)Lkotlinx/coroutines/CoroutineDispatcher;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L11f3c8.  call `checkParallelism`(v2) @signature `Lkotlinx/coroutines/internal/LimitedDispatcherKt;.checkParallelism:(I)V` @kind static;
+  #L11f3ce.  v0:= v1.`kotlinx.coroutines.internal.LimitedDispatcher.b` @type ^`int`;
+  #L11f3d2.  if v2 < v0 then goto L11f3d8;
+  #L11f3d6.  return v1 @kind object;
+  #L11f3d8.  call temp:= `limitedParallelism`(v1, v2) @signature `Lkotlinx/coroutines/CoroutineDispatcher;.limitedParallelism:(I)Lkotlinx/coroutines/CoroutineDispatcher;` @kind super;
+  #L11f3de.  v2:= temp @kind object;
+  #L11f3e0.  return v2 @kind object;
+}
+procedure `void` `run`(`kotlinx.coroutines.internal.LimitedDispatcher` v4 @kind this) @signature `Lkotlinx/coroutines/internal/LimitedDispatcher;.run:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L11f4e4.  v0:= 0I;
+  #L11f4e6.  v1:= 0I;
+  #L11f4e8.  v2:= v4.`kotlinx.coroutines.internal.LimitedDispatcher.d` @type ^`kotlinx.coroutines.internal.LockFreeTaskQueue` @kind object;
+  #L11f4ec.  call temp:= `removeFirstOrNull`(v2) @signature `Lkotlinx/coroutines/internal/LockFreeTaskQueue;.removeFirstOrNull:()Ljava/lang/Object;` @kind virtual;
+  #L11f4f2.  v2:= temp @kind object;
+  #L11f4f4.  v2:= (`java.lang.Runnable`) v2 @kind object;
+  #L11f4f8.  if v2 == 0 then goto L11f538;
+  #L11f4fc.  call `run`(v2) @signature `Ljava/lang/Runnable;.run:()V` @kind interface;
+  #L11f502.  goto L11f510;
+  #L11f504.  v2:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L11f506.  v3:= `@@kotlin.coroutines.EmptyCoroutineContext.INSTANCE` @type ^`kotlin.coroutines.EmptyCoroutineContext` @kind object;
+  #L11f50a.  call `handleCoroutineException`(v3, v2) @signature `Lkotlinx/coroutines/CoroutineExceptionHandlerKt;.handleCoroutineException:(Lkotlin/coroutines/CoroutineContext;Ljava/lang/Throwable;)V` @kind static;
+  #L11f510.  v1:= v1 + 1;
+  #L11f514.  v2:= 16I;
+  #L11f518.  if v1 < v2 then goto L11f4e8;
+  #L11f51c.  v2:= v4.`kotlinx.coroutines.internal.LimitedDispatcher.a` @type ^`kotlinx.coroutines.CoroutineDispatcher` @kind object;
+  #L11f520.  call temp:= `isDispatchNeeded`(v2, v4) @signature `Lkotlinx/coroutines/CoroutineDispatcher;.isDispatchNeeded:(Lkotlin/coroutines/CoroutineContext;)Z` @kind virtual;
+  #L11f526.  v2:= temp;
+  #L11f528.  if v2 == 0 then goto L11f4e8;
+  #L11f52c.  v0:= v4.`kotlinx.coroutines.internal.LimitedDispatcher.a` @type ^`kotlinx.coroutines.CoroutineDispatcher` @kind object;
+  #L11f530.  call `dispatch`(v0, v4, v4) @signature `Lkotlinx/coroutines/CoroutineDispatcher;.dispatch:(Lkotlin/coroutines/CoroutineContext;Ljava/lang/Runnable;)V` @kind virtual;
+  #L11f536.  return @kind void;
+  #L11f538.  v1:= v4.`kotlinx.coroutines.internal.LimitedDispatcher.e` @type ^`java.lang.Object` @kind object;
+  #L11f53c.  @monitorenter v1
+  #L11f53e.  v2:= v4.`kotlinx.coroutines.internal.LimitedDispatcher.runningWorkers` @type ^`int`;
+  #L11f542.  v2:= v2 + -1;
+  #L11f546.  v4.`kotlinx.coroutines.internal.LimitedDispatcher.runningWorkers` @type ^`int` := v2;
+  #L11f54a.  v2:= v4.`kotlinx.coroutines.internal.LimitedDispatcher.d` @type ^`kotlinx.coroutines.internal.LockFreeTaskQueue` @kind object;
+  #L11f54e.  call temp:= `getSize`(v2) @signature `Lkotlinx/coroutines/internal/LockFreeTaskQueue;.getSize:()I` @kind virtual;
+  #L11f554.  v2:= temp;
+  #L11f556.  if v2 != 0 then goto L11f55e;
+  #L11f55a.  @monitorexit v1
+  #L11f55c.  return @kind void;
+  #L11f55e.  v2:= v4.`kotlinx.coroutines.internal.LimitedDispatcher.runningWorkers` @type ^`int`;
+  #L11f562.  v2:= v2 + 1;
+  #L11f566.  v4.`kotlinx.coroutines.internal.LimitedDispatcher.runningWorkers` @type ^`int` := v2;
+  #L11f56a.  v2:= `@@kotlin.Unit.INSTANCE` @type ^`kotlin.Unit` @kind object;
+  #L11f56e.  @monitorexit v1
+  #L11f570.  goto L11f4e6;
+  #L11f572.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L11f574.  @monitorexit v1
+  #L11f576.  throw v0;
+  catch `java.lang.Throwable` @[L11f4fc..L11f502] goto L11f504;
+  catch `java.lang.Throwable` @[L11f53e..L11f556] goto L11f572;
+  catch `java.lang.Throwable` @[L11f55e..L11f56e] goto L11f572;
+}
+procedure `void` `scheduleResumeAfterDelay`(`kotlinx.coroutines.internal.LimitedDispatcher` v1 @kind this, `long` v2 , `kotlinx.coroutines.CancellableContinuation` v4 @kind object) @signature `Lkotlinx/coroutines/internal/LimitedDispatcher;.scheduleResumeAfterDelay:(JLkotlinx/coroutines/CancellableContinuation;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L11f5a8.  v0:= v1.`kotlinx.coroutines.internal.LimitedDispatcher.c` @type ^`kotlinx.coroutines.Delay` @kind object;
+  #L11f5ac.  call `scheduleResumeAfterDelay`(v0, v2, v4) @signature `Lkotlinx/coroutines/Delay;.scheduleResumeAfterDelay:(JLkotlinx/coroutines/CancellableContinuation;)V` @kind interface;
+  #L11f5b2.  return @kind void;
+}

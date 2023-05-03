@@ -1,0 +1,229 @@
+record `io.reactivex.internal.observers.FutureObserver` @kind class @AccessFlag PUBLIC_FINAL extends `java.util.concurrent.CountDownLatch` @kind class, `io.reactivex.Observer` @kind interface, `java.util.concurrent.Future` @kind interface, `io.reactivex.disposables.Disposable` @kind interface {
+  `java.lang.Object` `io.reactivex.internal.observers.FutureObserver.a` @AccessFlag ;
+  `java.lang.Throwable` `io.reactivex.internal.observers.FutureObserver.b` @AccessFlag ;
+  `java.util.concurrent.atomic.AtomicReference` `io.reactivex.internal.observers.FutureObserver.c` @AccessFlag FINAL;
+}
+procedure `void` `<init>`(`io.reactivex.internal.observers.FutureObserver` v1 @kind this) @signature `Lio/reactivex/internal/observers/FutureObserver;.<init>:()V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L40521c.  v0:= 1I;
+  #L40521e.  call `<init>`(v1, v0) @signature `Ljava/util/concurrent/CountDownLatch;.<init>:(I)V` @kind direct;
+  #L405224.  v0:= new `java.util.concurrent.atomic.AtomicReference`;
+  #L405228.  call `<init>`(v0) @signature `Ljava/util/concurrent/atomic/AtomicReference;.<init>:()V` @kind direct;
+  #L40522e.  v1.`io.reactivex.internal.observers.FutureObserver.c` @type ^`java.util.concurrent.atomic.AtomicReference` := v0 @kind object;
+  #L405232.  return @kind void;
+}
+procedure `boolean` `cancel`(`io.reactivex.internal.observers.FutureObserver` v2 @kind this, `boolean` v3 ) @signature `Lio/reactivex/internal/observers/FutureObserver;.cancel:(Z)Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L405074.  v3:= v2.`io.reactivex.internal.observers.FutureObserver.c` @type ^`java.util.concurrent.atomic.AtomicReference` @kind object;
+  #L405078.  call temp:= `get`(v3) @signature `Ljava/util/concurrent/atomic/AtomicReference;.get:()Ljava/lang/Object;` @kind virtual;
+  #L40507e.  v3:= temp @kind object;
+  #L405080.  v3:= (`io.reactivex.disposables.Disposable`) v3 @kind object;
+  #L405084.  if v3 == v2 then goto L4050b6;
+  #L405088.  v0:= `@@io.reactivex.internal.disposables.DisposableHelper.DISPOSED` @type ^`io.reactivex.internal.disposables.DisposableHelper` @kind object;
+  #L40508c.  if v3 != v0 then goto L405092;
+  #L405090.  goto L4050b6;
+  #L405092.  v1:= v2.`io.reactivex.internal.observers.FutureObserver.c` @type ^`java.util.concurrent.atomic.AtomicReference` @kind object;
+  #L405096.  call temp:= `compareAndSet`(v1, v3, v0) @signature `Ljava/util/concurrent/atomic/AtomicReference;.compareAndSet:(Ljava/lang/Object;Ljava/lang/Object;)Z` @kind virtual;
+  #L40509c.  v0:= temp;
+  #L40509e.  if v0 == 0 then goto L405074;
+  #L4050a2.  if v3 == 0 then goto L4050ac;
+  #L4050a6.  call `dispose`(v3) @signature `Lio/reactivex/disposables/Disposable;.dispose:()V` @kind interface;
+  #L4050ac.  call `countDown`(v2) @signature `Ljava/util/concurrent/CountDownLatch;.countDown:()V` @kind virtual;
+  #L4050b2.  v3:= 1I;
+  #L4050b4.  return v3;
+  #L4050b6.  v3:= 0I;
+  #L4050b8.  return v3;
+}
+procedure `void` `dispose`(`io.reactivex.internal.observers.FutureObserver` v0 @kind this) @signature `Lio/reactivex/internal/observers/FutureObserver;.dispose:()V` @AccessFlag PUBLIC {
+    temp;
+
+  #L405244.  return @kind void;
+}
+procedure `java.lang.Object` `get`(`io.reactivex.internal.observers.FutureObserver` v5 @kind this) @signature `Lio/reactivex/internal/observers/FutureObserver;.get:()Ljava/lang/Object;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L405140.  call temp:= `getCount`(v5) @signature `Ljava/util/concurrent/CountDownLatch;.getCount:()J` @kind virtual;
+  #L405146.  v0:= temp @kind wide;
+  #L405148.  v2:= 0L;
+  #L40514c.  v4:= lcmp(v0, v2);
+  #L405150.  if v4 == 0 then goto L405160;
+  #L405154.  call `verifyNonBlocking`() @signature `Lio/reactivex/internal/util/BlockingHelper;.verifyNonBlocking:()V` @kind static;
+  #L40515a.  call `await`(v5) @signature `Ljava/util/concurrent/CountDownLatch;.await:()V` @kind virtual;
+  #L405160.  call temp:= `isCancelled`(v5) @signature `Lio/reactivex/internal/observers/FutureObserver;.isCancelled:()Z` @kind virtual;
+  #L405166.  v0:= temp;
+  #L405168.  if v0 != 0 then goto L405186;
+  #L40516c.  v0:= v5.`io.reactivex.internal.observers.FutureObserver.b` @type ^`java.lang.Throwable` @kind object;
+  #L405170.  if v0 != 0 then goto L40517a;
+  #L405174.  v0:= v5.`io.reactivex.internal.observers.FutureObserver.a` @type ^`java.lang.Object` @kind object;
+  #L405178.  return v0 @kind object;
+  #L40517a.  v1:= new `java.util.concurrent.ExecutionException`;
+  #L40517e.  call `<init>`(v1, v0) @signature `Ljava/util/concurrent/ExecutionException;.<init>:(Ljava/lang/Throwable;)V` @kind direct;
+  #L405184.  throw v1;
+  #L405186.  v0:= new `java.util.concurrent.CancellationException`;
+  #L40518a.  call `<init>`(v0) @signature `Ljava/util/concurrent/CancellationException;.<init>:()V` @kind direct;
+  #L405190.  throw v0;
+}
+procedure `java.lang.Object` `get`(`io.reactivex.internal.observers.FutureObserver` v5 @kind this, `long` v6 , `java.util.concurrent.TimeUnit` v8 @kind object) @signature `Lio/reactivex/internal/observers/FutureObserver;.get:(JLjava/util/concurrent/TimeUnit;)Ljava/lang/Object;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L4051a4.  call temp:= `getCount`(v5) @signature `Ljava/util/concurrent/CountDownLatch;.getCount:()J` @kind virtual;
+  #L4051aa.  v0:= temp @kind wide;
+  #L4051ac.  v2:= 0L;
+  #L4051b0.  v4:= lcmp(v0, v2);
+  #L4051b4.  if v4 == 0 then goto L4051d8;
+  #L4051b8.  call `verifyNonBlocking`() @signature `Lio/reactivex/internal/util/BlockingHelper;.verifyNonBlocking:()V` @kind static;
+  #L4051be.  call temp:= `await`(v5, v6, v8) @signature `Ljava/util/concurrent/CountDownLatch;.await:(JLjava/util/concurrent/TimeUnit;)Z` @kind virtual;
+  #L4051c4.  v6:= temp;
+  #L4051c6.  if v6 == 0 then goto L4051cc;
+  #L4051ca.  goto L4051d8;
+  #L4051cc.  v6:= new `java.util.concurrent.TimeoutException`;
+  #L4051d0.  call `<init>`(v6) @signature `Ljava/util/concurrent/TimeoutException;.<init>:()V` @kind direct;
+  #L4051d6.  throw v6;
+  #L4051d8.  call temp:= `isCancelled`(v5) @signature `Lio/reactivex/internal/observers/FutureObserver;.isCancelled:()Z` @kind virtual;
+  #L4051de.  v6:= temp;
+  #L4051e0.  if v6 != 0 then goto L4051fe;
+  #L4051e4.  v6:= v5.`io.reactivex.internal.observers.FutureObserver.b` @type ^`java.lang.Throwable` @kind object;
+  #L4051e8.  if v6 != 0 then goto L4051f2;
+  #L4051ec.  v6:= v5.`io.reactivex.internal.observers.FutureObserver.a` @type ^`java.lang.Object` @kind object;
+  #L4051f0.  return v6 @kind object;
+  #L4051f2.  v7:= new `java.util.concurrent.ExecutionException`;
+  #L4051f6.  call `<init>`(v7, v6) @signature `Ljava/util/concurrent/ExecutionException;.<init>:(Ljava/lang/Throwable;)V` @kind direct;
+  #L4051fc.  throw v7;
+  #L4051fe.  v6:= new `java.util.concurrent.CancellationException`;
+  #L405202.  call `<init>`(v6) @signature `Ljava/util/concurrent/CancellationException;.<init>:()V` @kind direct;
+  #L405208.  throw v6;
+}
+procedure `boolean` `isCancelled`(`io.reactivex.internal.observers.FutureObserver` v1 @kind this) @signature `Lio/reactivex/internal/observers/FutureObserver;.isCancelled:()Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L4050cc.  v0:= v1.`io.reactivex.internal.observers.FutureObserver.c` @type ^`java.util.concurrent.atomic.AtomicReference` @kind object;
+  #L4050d0.  call temp:= `get`(v0) @signature `Ljava/util/concurrent/atomic/AtomicReference;.get:()Ljava/lang/Object;` @kind virtual;
+  #L4050d6.  v0:= temp @kind object;
+  #L4050d8.  v0:= (`io.reactivex.disposables.Disposable`) v0 @kind object;
+  #L4050dc.  call temp:= `isDisposed`(v0) @signature `Lio/reactivex/internal/disposables/DisposableHelper;.isDisposed:(Lio/reactivex/disposables/Disposable;)Z` @kind static;
+  #L4050e2.  v0:= temp;
+  #L4050e4.  return v0;
+}
+procedure `boolean` `isDisposed`(`io.reactivex.internal.observers.FutureObserver` v1 @kind this) @signature `Lio/reactivex/internal/observers/FutureObserver;.isDisposed:()Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L4050f8.  call temp:= `isDone`(v1) @signature `Lio/reactivex/internal/observers/FutureObserver;.isDone:()Z` @kind virtual;
+  #L4050fe.  v0:= temp;
+  #L405100.  return v0;
+}
+procedure `boolean` `isDone`(`io.reactivex.internal.observers.FutureObserver` v5 @kind this) @signature `Lio/reactivex/internal/observers/FutureObserver;.isDone:()Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L405114.  call temp:= `getCount`(v5) @signature `Ljava/util/concurrent/CountDownLatch;.getCount:()J` @kind virtual;
+  #L40511a.  v0:= temp @kind wide;
+  #L40511c.  v2:= 0L;
+  #L405120.  v4:= lcmp(v0, v2);
+  #L405124.  if v4 != 0 then goto L40512c;
+  #L405128.  v0:= 1I;
+  #L40512a.  goto L40512e;
+  #L40512c.  v0:= 0I;
+  #L40512e.  return v0;
+}
+procedure `void` `onComplete`(`io.reactivex.internal.observers.FutureObserver` v2 @kind this) @signature `Lio/reactivex/internal/observers/FutureObserver;.onComplete:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L405258.  v0:= v2.`io.reactivex.internal.observers.FutureObserver.a` @type ^`java.lang.Object` @kind object;
+  #L40525c.  if v0 != 0 then goto L405276;
+  #L405260.  v0:= new `java.util.NoSuchElementException`;
+  #L405264.  v1:= "The source is empty" @kind object;
+  #L405268.  call `<init>`(v0, v1) @signature `Ljava/util/NoSuchElementException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L40526e.  call `onError`(v2, v0) @signature `Lio/reactivex/internal/observers/FutureObserver;.onError:(Ljava/lang/Throwable;)V` @kind virtual;
+  #L405274.  return @kind void;
+  #L405276.  v0:= v2.`io.reactivex.internal.observers.FutureObserver.c` @type ^`java.util.concurrent.atomic.AtomicReference` @kind object;
+  #L40527a.  call temp:= `get`(v0) @signature `Ljava/util/concurrent/atomic/AtomicReference;.get:()Ljava/lang/Object;` @kind virtual;
+  #L405280.  v0:= temp @kind object;
+  #L405282.  v0:= (`io.reactivex.disposables.Disposable`) v0 @kind object;
+  #L405286.  if v0 == v2 then goto L4052aa;
+  #L40528a.  v1:= `@@io.reactivex.internal.disposables.DisposableHelper.DISPOSED` @type ^`io.reactivex.internal.disposables.DisposableHelper` @kind object;
+  #L40528e.  if v0 != v1 then goto L405294;
+  #L405292.  goto L4052aa;
+  #L405294.  v1:= v2.`io.reactivex.internal.observers.FutureObserver.c` @type ^`java.util.concurrent.atomic.AtomicReference` @kind object;
+  #L405298.  call temp:= `compareAndSet`(v1, v0, v2) @signature `Ljava/util/concurrent/atomic/AtomicReference;.compareAndSet:(Ljava/lang/Object;Ljava/lang/Object;)Z` @kind virtual;
+  #L40529e.  v0:= temp;
+  #L4052a0.  if v0 == 0 then goto L405276;
+  #L4052a4.  call `countDown`(v2) @signature `Ljava/util/concurrent/CountDownLatch;.countDown:()V` @kind virtual;
+  #L4052aa.  return @kind void;
+}
+procedure `void` `onError`(`io.reactivex.internal.observers.FutureObserver` v2 @kind this, `java.lang.Throwable` v3 @kind object) @signature `Lio/reactivex/internal/observers/FutureObserver;.onError:(Ljava/lang/Throwable;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L4052bc.  v0:= v2.`io.reactivex.internal.observers.FutureObserver.b` @type ^`java.lang.Throwable` @kind object;
+  #L4052c0.  if v0 != 0 then goto L405306;
+  #L4052c4.  v2.`io.reactivex.internal.observers.FutureObserver.b` @type ^`java.lang.Throwable` := v3 @kind object;
+  #L4052c8.  v0:= v2.`io.reactivex.internal.observers.FutureObserver.c` @type ^`java.util.concurrent.atomic.AtomicReference` @kind object;
+  #L4052cc.  call temp:= `get`(v0) @signature `Ljava/util/concurrent/atomic/AtomicReference;.get:()Ljava/lang/Object;` @kind virtual;
+  #L4052d2.  v0:= temp @kind object;
+  #L4052d4.  v0:= (`io.reactivex.disposables.Disposable`) v0 @kind object;
+  #L4052d8.  if v0 == v2 then goto L4052fe;
+  #L4052dc.  v1:= `@@io.reactivex.internal.disposables.DisposableHelper.DISPOSED` @type ^`io.reactivex.internal.disposables.DisposableHelper` @kind object;
+  #L4052e0.  if v0 != v1 then goto L4052e6;
+  #L4052e4.  goto L4052fe;
+  #L4052e6.  v1:= v2.`io.reactivex.internal.observers.FutureObserver.c` @type ^`java.util.concurrent.atomic.AtomicReference` @kind object;
+  #L4052ea.  call temp:= `compareAndSet`(v1, v0, v2) @signature `Ljava/util/concurrent/atomic/AtomicReference;.compareAndSet:(Ljava/lang/Object;Ljava/lang/Object;)Z` @kind virtual;
+  #L4052f0.  v0:= temp;
+  #L4052f2.  if v0 == 0 then goto L4052c8;
+  #L4052f6.  call `countDown`(v2) @signature `Ljava/util/concurrent/CountDownLatch;.countDown:()V` @kind virtual;
+  #L4052fc.  return @kind void;
+  #L4052fe.  call `onError`(v3) @signature `Lio/reactivex/plugins/RxJavaPlugins;.onError:(Ljava/lang/Throwable;)V` @kind static;
+  #L405304.  return @kind void;
+  #L405306.  call `onError`(v3) @signature `Lio/reactivex/plugins/RxJavaPlugins;.onError:(Ljava/lang/Throwable;)V` @kind static;
+  #L40530c.  return @kind void;
+}
+procedure `void` `onNext`(`io.reactivex.internal.observers.FutureObserver` v1 @kind this, `java.lang.Object` v2 @kind object) @signature `Lio/reactivex/internal/observers/FutureObserver;.onNext:(Ljava/lang/Object;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L405320.  v0:= v1.`io.reactivex.internal.observers.FutureObserver.a` @type ^`java.lang.Object` @kind object;
+  #L405324.  if v0 == 0 then goto L405354;
+  #L405328.  v2:= v1.`io.reactivex.internal.observers.FutureObserver.c` @type ^`java.util.concurrent.atomic.AtomicReference` @kind object;
+  #L40532c.  call temp:= `get`(v2) @signature `Ljava/util/concurrent/atomic/AtomicReference;.get:()Ljava/lang/Object;` @kind virtual;
+  #L405332.  v2:= temp @kind object;
+  #L405334.  v2:= (`io.reactivex.disposables.Disposable`) v2 @kind object;
+  #L405338.  call `dispose`(v2) @signature `Lio/reactivex/disposables/Disposable;.dispose:()V` @kind interface;
+  #L40533e.  v2:= new `java.lang.IndexOutOfBoundsException`;
+  #L405342.  v0:= "More than one element received" @kind object;
+  #L405346.  call `<init>`(v2, v0) @signature `Ljava/lang/IndexOutOfBoundsException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L40534c.  call `onError`(v1, v2) @signature `Lio/reactivex/internal/observers/FutureObserver;.onError:(Ljava/lang/Throwable;)V` @kind virtual;
+  #L405352.  return @kind void;
+  #L405354.  v1.`io.reactivex.internal.observers.FutureObserver.a` @type ^`java.lang.Object` := v2 @kind object;
+  #L405358.  return @kind void;
+}
+procedure `void` `onSubscribe`(`io.reactivex.internal.observers.FutureObserver` v1 @kind this, `io.reactivex.disposables.Disposable` v2 @kind object) @signature `Lio/reactivex/internal/observers/FutureObserver;.onSubscribe:(Lio/reactivex/disposables/Disposable;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L40536c.  v0:= v1.`io.reactivex.internal.observers.FutureObserver.c` @type ^`java.util.concurrent.atomic.AtomicReference` @kind object;
+  #L405370.  call temp:= `setOnce`(v0, v2) @signature `Lio/reactivex/internal/disposables/DisposableHelper;.setOnce:(Ljava/util/concurrent/atomic/AtomicReference;Lio/reactivex/disposables/Disposable;)Z` @kind static;
+  #L405376.  return @kind void;
+}

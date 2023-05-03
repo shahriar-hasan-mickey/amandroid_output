@@ -1,0 +1,297 @@
+record `org.eclipse.paho.client.mqttv3.internal.CommsSender` @kind class @AccessFlag PUBLIC extends `java.lang.Runnable` @kind interface {
+  `org.eclipse.paho.client.mqttv3.internal.ClientComms` `org.eclipse.paho.client.mqttv3.internal.CommsSender.clientComms` @AccessFlag PRIVATE;
+  `org.eclipse.paho.client.mqttv3.internal.ClientState` `org.eclipse.paho.client.mqttv3.internal.CommsSender.clientState` @AccessFlag PRIVATE;
+  `java.lang.Object` `org.eclipse.paho.client.mqttv3.internal.CommsSender.lifecycle` @AccessFlag PRIVATE;
+  `org.eclipse.paho.client.mqttv3.internal.wire.MqttOutputStream` `org.eclipse.paho.client.mqttv3.internal.CommsSender.out` @AccessFlag PRIVATE;
+  `boolean` `org.eclipse.paho.client.mqttv3.internal.CommsSender.running` @AccessFlag PRIVATE;
+  `java.util.concurrent.Semaphore` `org.eclipse.paho.client.mqttv3.internal.CommsSender.runningSemaphore` @AccessFlag PRIVATE_FINAL;
+  `java.lang.Thread` `org.eclipse.paho.client.mqttv3.internal.CommsSender.sendThread` @AccessFlag PRIVATE;
+  `java.util.concurrent.Future` `org.eclipse.paho.client.mqttv3.internal.CommsSender.senderFuture` @AccessFlag PRIVATE;
+  `java.lang.String` `org.eclipse.paho.client.mqttv3.internal.CommsSender.threadName` @AccessFlag PRIVATE;
+  `org.eclipse.paho.client.mqttv3.internal.CommsTokenStore` `org.eclipse.paho.client.mqttv3.internal.CommsSender.tokenStore` @AccessFlag PRIVATE;
+}
+global `java.lang.String` `@@org.eclipse.paho.client.mqttv3.internal.CommsSender.CLASS_NAME` @AccessFlag PRIVATE_STATIC_FINAL;
+global `org.eclipse.paho.client.mqttv3.logging.Logger` `@@org.eclipse.paho.client.mqttv3.internal.CommsSender.log` @AccessFlag PRIVATE_STATIC_FINAL;
+procedure `void` `<clinit>`() @signature `Lorg/eclipse/paho/client/mqttv3/internal/CommsSender;.<clinit>:()V` @AccessFlag STATIC_CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+
+  #L230574.  v0:= constclass @type ^`org.eclipse.paho.client.mqttv3.internal.CommsSender` @kind object;
+  #L230578.  call temp:= `getName`(v0) @signature `Ljava/lang/Class;.getName:()Ljava/lang/String;` @kind virtual;
+  #L23057e.  v0:= temp @kind object;
+  #L230580.  `@@org.eclipse.paho.client.mqttv3.internal.CommsSender.CLASS_NAME` @type ^`java.lang.String` := v0 @kind object;
+  #L230584.  v0:= `@@org.eclipse.paho.client.mqttv3.internal.CommsSender.CLASS_NAME` @type ^`java.lang.String` @kind object;
+  #L230588.  v1:= "org.eclipse.paho.client.mqttv3.internal.nls.logcat" @kind object;
+  #L23058c.  call temp:= `getLogger`(v1, v0) @signature `Lorg/eclipse/paho/client/mqttv3/logging/LoggerFactory;.getLogger:(Ljava/lang/String;Ljava/lang/String;)Lorg/eclipse/paho/client/mqttv3/logging/Logger;` @kind static;
+  #L230592.  v0:= temp @kind object;
+  #L230594.  `@@org.eclipse.paho.client.mqttv3.internal.CommsSender.log` @type ^`org.eclipse.paho.client.mqttv3.logging.Logger` := v0 @kind object;
+  #L230598.  return @kind void;
+}
+procedure `void` `<init>`(`org.eclipse.paho.client.mqttv3.internal.CommsSender` v2 @kind this, `org.eclipse.paho.client.mqttv3.internal.ClientComms` v3 @kind object, `org.eclipse.paho.client.mqttv3.internal.ClientState` v4 @kind object, `org.eclipse.paho.client.mqttv3.internal.CommsTokenStore` v5 @kind object, `java.io.OutputStream` v6 @kind object) @signature `Lorg/eclipse/paho/client/mqttv3/internal/CommsSender;.<init>:(Lorg/eclipse/paho/client/mqttv3/internal/ClientComms;Lorg/eclipse/paho/client/mqttv3/internal/ClientState;Lorg/eclipse/paho/client/mqttv3/internal/CommsTokenStore;Ljava/io/OutputStream;)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+
+  #L2305ac.  call `<init>`(v2) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L2305b2.  v0:= 0I;
+  #L2305b4.  v2.`org.eclipse.paho.client.mqttv3.internal.CommsSender.running` @type ^`boolean` := v0 @kind boolean;
+  #L2305b8.  v0:= new `java.lang.Object`;
+  #L2305bc.  call `<init>`(v0) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L2305c2.  v2.`org.eclipse.paho.client.mqttv3.internal.CommsSender.lifecycle` @type ^`java.lang.Object` := v0 @kind object;
+  #L2305c6.  v0:= 0I;
+  #L2305c8.  v2.`org.eclipse.paho.client.mqttv3.internal.CommsSender.clientState` @type ^`org.eclipse.paho.client.mqttv3.internal.ClientState` := v0 @kind object;
+  #L2305cc.  v2.`org.eclipse.paho.client.mqttv3.internal.CommsSender.clientComms` @type ^`org.eclipse.paho.client.mqttv3.internal.ClientComms` := v0 @kind object;
+  #L2305d0.  v2.`org.eclipse.paho.client.mqttv3.internal.CommsSender.tokenStore` @type ^`org.eclipse.paho.client.mqttv3.internal.CommsTokenStore` := v0 @kind object;
+  #L2305d4.  v2.`org.eclipse.paho.client.mqttv3.internal.CommsSender.sendThread` @type ^`java.lang.Thread` := v0 @kind object;
+  #L2305d8.  v0:= new `java.util.concurrent.Semaphore`;
+  #L2305dc.  v1:= 1I;
+  #L2305de.  call `<init>`(v0, v1) @signature `Ljava/util/concurrent/Semaphore;.<init>:(I)V` @kind direct;
+  #L2305e4.  v2.`org.eclipse.paho.client.mqttv3.internal.CommsSender.runningSemaphore` @type ^`java.util.concurrent.Semaphore` := v0 @kind object;
+  #L2305e8.  v0:= new `org.eclipse.paho.client.mqttv3.internal.wire.MqttOutputStream`;
+  #L2305ec.  call `<init>`(v0, v4, v6) @signature `Lorg/eclipse/paho/client/mqttv3/internal/wire/MqttOutputStream;.<init>:(Lorg/eclipse/paho/client/mqttv3/internal/ClientState;Ljava/io/OutputStream;)V` @kind direct;
+  #L2305f2.  v2.`org.eclipse.paho.client.mqttv3.internal.CommsSender.out` @type ^`org.eclipse.paho.client.mqttv3.internal.wire.MqttOutputStream` := v0 @kind object;
+  #L2305f6.  v2.`org.eclipse.paho.client.mqttv3.internal.CommsSender.clientComms` @type ^`org.eclipse.paho.client.mqttv3.internal.ClientComms` := v3 @kind object;
+  #L2305fa.  v2.`org.eclipse.paho.client.mqttv3.internal.CommsSender.clientState` @type ^`org.eclipse.paho.client.mqttv3.internal.ClientState` := v4 @kind object;
+  #L2305fe.  v2.`org.eclipse.paho.client.mqttv3.internal.CommsSender.tokenStore` @type ^`org.eclipse.paho.client.mqttv3.internal.CommsTokenStore` := v5 @kind object;
+  #L230602.  v4:= `@@org.eclipse.paho.client.mqttv3.internal.CommsSender.log` @type ^`org.eclipse.paho.client.mqttv3.logging.Logger` @kind object;
+  #L230606.  call temp:= `getClient`(v3) @signature `Lorg/eclipse/paho/client/mqttv3/internal/ClientComms;.getClient:()Lorg/eclipse/paho/client/mqttv3/IMqttAsyncClient;` @kind virtual;
+  #L23060c.  v3:= temp @kind object;
+  #L23060e.  call temp:= `getClientId`(v3) @signature `Lorg/eclipse/paho/client/mqttv3/IMqttAsyncClient;.getClientId:()Ljava/lang/String;` @kind interface;
+  #L230614.  v3:= temp @kind object;
+  #L230616.  call `setResourceName`(v4, v3) @signature `Lorg/eclipse/paho/client/mqttv3/logging/Logger;.setResourceName:(Ljava/lang/String;)V` @kind interface;
+  #L23061c.  return @kind void;
+}
+procedure `void` `handleRunException`(`org.eclipse.paho.client.mqttv3.internal.CommsSender` v6 @kind this, `org.eclipse.paho.client.mqttv3.internal.wire.MqttWireMessage` v7 @kind object, `java.lang.Exception` v8 @kind object) @signature `Lorg/eclipse/paho/client/mqttv3/internal/CommsSender;.handleRunException:(Lorg/eclipse/paho/client/mqttv3/internal/wire/MqttWireMessage;Ljava/lang/Exception;)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L230630.  v0:= `@@org.eclipse.paho.client.mqttv3.internal.CommsSender.log` @type ^`org.eclipse.paho.client.mqttv3.logging.Logger` @kind object;
+  #L230634.  v1:= `@@org.eclipse.paho.client.mqttv3.internal.CommsSender.CLASS_NAME` @type ^`java.lang.String` @kind object;
+  #L230638.  v2:= "handleRunException" @kind object;
+  #L23063c.  v3:= "804" @kind object;
+  #L230640.  v4:= 0I;
+  #L230642.  v5:= v8 @kind object;
+  #L230644.  call `fine`(v0, v1, v2, v3, v4, v5) @signature `Lorg/eclipse/paho/client/mqttv3/logging/Logger;.fine:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;Ljava/lang/Throwable;)V` @kind interface;
+  #L23064a.  v7:= instanceof @variable v8 @type ^`org.eclipse.paho.client.mqttv3.MqttException` @kind boolean;
+  #L23064e.  if v7 != 0 then goto L230662;
+  #L230652.  v7:= new `org.eclipse.paho.client.mqttv3.MqttException`;
+  #L230656.  v0:= 32109I;
+  #L23065a.  call `<init>`(v7, v0, v8) @signature `Lorg/eclipse/paho/client/mqttv3/MqttException;.<init>:(ILjava/lang/Throwable;)V` @kind direct;
+  #L230660.  goto L230668;
+  #L230662.  v7:= v8 @kind object;
+  #L230664.  v7:= (`org.eclipse.paho.client.mqttv3.MqttException`) v7 @kind object;
+  #L230668.  v8:= 0I;
+  #L23066a.  v6.`org.eclipse.paho.client.mqttv3.internal.CommsSender.running` @type ^`boolean` := v8 @kind boolean;
+  #L23066e.  v8:= v6.`org.eclipse.paho.client.mqttv3.internal.CommsSender.clientComms` @type ^`org.eclipse.paho.client.mqttv3.internal.ClientComms` @kind object;
+  #L230672.  v0:= 0I;
+  #L230674.  call `shutdownConnection`(v8, v0, v7) @signature `Lorg/eclipse/paho/client/mqttv3/internal/ClientComms;.shutdownConnection:(Lorg/eclipse/paho/client/mqttv3/MqttToken;Lorg/eclipse/paho/client/mqttv3/MqttException;)V` @kind virtual;
+  #L23067a.  return @kind void;
+}
+procedure `void` `run`(`org.eclipse.paho.client.mqttv3.internal.CommsSender` v8 @kind this) @signature `Lorg/eclipse/paho/client/mqttv3/internal/CommsSender;.run:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+
+  #L23068c.  call temp:= `currentThread`() @signature `Ljava/lang/Thread;.currentThread:()Ljava/lang/Thread;` @kind static;
+  #L230692.  v0:= temp @kind object;
+  #L230694.  v8.`org.eclipse.paho.client.mqttv3.internal.CommsSender.sendThread` @type ^`java.lang.Thread` := v0 @kind object;
+  #L230698.  v0:= v8.`org.eclipse.paho.client.mqttv3.internal.CommsSender.sendThread` @type ^`java.lang.Thread` @kind object;
+  #L23069c.  v1:= v8.`org.eclipse.paho.client.mqttv3.internal.CommsSender.threadName` @type ^`java.lang.String` @kind object;
+  #L2306a0.  call `setName`(v0, v1) @signature `Ljava/lang/Thread;.setName:(Ljava/lang/String;)V` @kind virtual;
+  #L2306a6.  v0:= 0I;
+  #L2306a8.  v1:= v8.`org.eclipse.paho.client.mqttv3.internal.CommsSender.runningSemaphore` @type ^`java.util.concurrent.Semaphore` @kind object;
+  #L2306ac.  call `acquire`(v1) @signature `Ljava/util/concurrent/Semaphore;.acquire:()V` @kind virtual;
+  #L2306b2.  v1:= 0I;
+  #L2306b4.  v2:= v8.`org.eclipse.paho.client.mqttv3.internal.CommsSender.running` @type ^`boolean` @kind boolean;
+  #L2306b8.  if v2 == 0 then goto L23079a;
+  #L2306bc.  v2:= v8.`org.eclipse.paho.client.mqttv3.internal.CommsSender.out` @type ^`org.eclipse.paho.client.mqttv3.internal.wire.MqttOutputStream` @kind object;
+  #L2306c0.  if v2 != 0 then goto L2306c6;
+  #L2306c4.  goto L23079a;
+  #L2306c6.  v2:= v8.`org.eclipse.paho.client.mqttv3.internal.CommsSender.clientState` @type ^`org.eclipse.paho.client.mqttv3.internal.ClientState` @kind object;
+  #L2306ca.  call temp:= `get`(v2) @signature `Lorg/eclipse/paho/client/mqttv3/internal/ClientState;.get:()Lorg/eclipse/paho/client/mqttv3/internal/wire/MqttWireMessage;` @kind virtual;
+  #L2306d0.  v1:= temp @kind object;
+  #L2306d2.  if v1 == 0 then goto L23076a;
+  #L2306d6.  v2:= `@@org.eclipse.paho.client.mqttv3.internal.CommsSender.log` @type ^`org.eclipse.paho.client.mqttv3.logging.Logger` @kind object;
+  #L2306da.  v3:= `@@org.eclipse.paho.client.mqttv3.internal.CommsSender.CLASS_NAME` @type ^`java.lang.String` @kind object;
+  #L2306de.  v4:= "run" @kind object;
+  #L2306e2.  v5:= "802" @kind object;
+  #L2306e6.  v6:= 2I;
+  #L2306e8.  v6:= new `java.lang.Object`[v6];
+  #L2306ec.  call temp:= `getKey`(v1) @signature `Lorg/eclipse/paho/client/mqttv3/internal/wire/MqttWireMessage;.getKey:()Ljava/lang/String;` @kind virtual;
+  #L2306f2.  v7:= temp @kind object;
+  #L2306f4.  v6[v0]:= v7 @kind object;
+  #L2306f8.  v7:= 1I;
+  #L2306fa.  v6[v7]:= v1 @kind object;
+  #L2306fe.  call `fine`(v2, v3, v4, v5, v6) @signature `Lorg/eclipse/paho/client/mqttv3/logging/Logger;.fine:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L230704.  v2:= instanceof @variable v1 @type ^`org.eclipse.paho.client.mqttv3.internal.wire.MqttAck` @kind boolean;
+  #L230708.  if v2 == 0 then goto L230722;
+  #L23070c.  v2:= v8.`org.eclipse.paho.client.mqttv3.internal.CommsSender.out` @type ^`org.eclipse.paho.client.mqttv3.internal.wire.MqttOutputStream` @kind object;
+  #L230710.  call `write`(v2, v1) @signature `Lorg/eclipse/paho/client/mqttv3/internal/wire/MqttOutputStream;.write:(Lorg/eclipse/paho/client/mqttv3/internal/wire/MqttWireMessage;)V` @kind virtual;
+  #L230716.  v2:= v8.`org.eclipse.paho.client.mqttv3.internal.CommsSender.out` @type ^`org.eclipse.paho.client.mqttv3.internal.wire.MqttOutputStream` @kind object;
+  #L23071a.  call `flush`(v2) @signature `Lorg/eclipse/paho/client/mqttv3/internal/wire/MqttOutputStream;.flush:()V` @kind virtual;
+  #L230720.  goto L2306b4;
+  #L230722.  v2:= v8.`org.eclipse.paho.client.mqttv3.internal.CommsSender.tokenStore` @type ^`org.eclipse.paho.client.mqttv3.internal.CommsTokenStore` @kind object;
+  #L230726.  call temp:= `getToken`(v2, v1) @signature `Lorg/eclipse/paho/client/mqttv3/internal/CommsTokenStore;.getToken:(Lorg/eclipse/paho/client/mqttv3/internal/wire/MqttWireMessage;)Lorg/eclipse/paho/client/mqttv3/MqttToken;` @kind virtual;
+  #L23072c.  v2:= temp @kind object;
+  #L23072e.  if v2 == 0 then goto L2306b4;
+  #L230732.  @monitorenter v2
+  #L230734.  v3:= v8.`org.eclipse.paho.client.mqttv3.internal.CommsSender.out` @type ^`org.eclipse.paho.client.mqttv3.internal.wire.MqttOutputStream` @kind object;
+  #L230738.  call `write`(v3, v1) @signature `Lorg/eclipse/paho/client/mqttv3/internal/wire/MqttOutputStream;.write:(Lorg/eclipse/paho/client/mqttv3/internal/wire/MqttWireMessage;)V` @kind virtual;
+  #L23073e.  v3:= v8.`org.eclipse.paho.client.mqttv3.internal.CommsSender.out` @type ^`org.eclipse.paho.client.mqttv3.internal.wire.MqttOutputStream` @kind object;
+  #L230742.  call `flush`(v3) @signature `Lorg/eclipse/paho/client/mqttv3/internal/wire/MqttOutputStream;.flush:()V` @kind virtual;
+  #L230748.  goto L230754;
+  #L23074a.  v3:= Exception @type ^`java.io.IOException` @kind object;
+  #L23074c.  v4:= instanceof @variable v1 @type ^`org.eclipse.paho.client.mqttv3.internal.wire.MqttDisconnect` @kind boolean;
+  #L230750.  if v4 == 0 then goto L230762;
+  #L230754.  v3:= v8.`org.eclipse.paho.client.mqttv3.internal.CommsSender.clientState` @type ^`org.eclipse.paho.client.mqttv3.internal.ClientState` @kind object;
+  #L230758.  call `notifySent`(v3, v1) @signature `Lorg/eclipse/paho/client/mqttv3/internal/ClientState;.notifySent:(Lorg/eclipse/paho/client/mqttv3/internal/wire/MqttWireMessage;)V` @kind virtual;
+  #L23075e.  @monitorexit v2
+  #L230760.  goto L2306b4;
+  #L230762.  throw v3;
+  #L230764.  v3:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L230766.  @monitorexit v2
+  #L230768.  throw v3;
+  #L23076a.  v2:= `@@org.eclipse.paho.client.mqttv3.internal.CommsSender.log` @type ^`org.eclipse.paho.client.mqttv3.logging.Logger` @kind object;
+  #L23076e.  v3:= `@@org.eclipse.paho.client.mqttv3.internal.CommsSender.CLASS_NAME` @type ^`java.lang.String` @kind object;
+  #L230772.  v4:= "run" @kind object;
+  #L230776.  v5:= "803" @kind object;
+  #L23077a.  call `fine`(v2, v3, v4, v5) @signature `Lorg/eclipse/paho/client/mqttv3/logging/Logger;.fine:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V` @kind interface;
+  #L230780.  v8.`org.eclipse.paho.client.mqttv3.internal.CommsSender.running` @type ^`boolean` := v0 @kind boolean;
+  #L230784.  goto L2306b4;
+  #L230786.  v2:= Exception @type ^`java.lang.Exception` @kind object;
+  #L230788.  call `handleRunException`(v8, v1, v2) @signature `Lorg/eclipse/paho/client/mqttv3/internal/CommsSender;.handleRunException:(Lorg/eclipse/paho/client/mqttv3/internal/wire/MqttWireMessage;Ljava/lang/Exception;)V` @kind direct;
+  #L23078e.  goto L2306b4;
+  #L230790.  v2:= Exception @type ^`org.eclipse.paho.client.mqttv3.MqttException` @kind object;
+  #L230792.  call `handleRunException`(v8, v1, v2) @signature `Lorg/eclipse/paho/client/mqttv3/internal/CommsSender;.handleRunException:(Lorg/eclipse/paho/client/mqttv3/internal/wire/MqttWireMessage;Ljava/lang/Exception;)V` @kind direct;
+  #L230798.  goto L2306b4;
+  #L23079a.  v8.`org.eclipse.paho.client.mqttv3.internal.CommsSender.running` @type ^`boolean` := v0 @kind boolean;
+  #L23079e.  v0:= v8.`org.eclipse.paho.client.mqttv3.internal.CommsSender.runningSemaphore` @type ^`java.util.concurrent.Semaphore` @kind object;
+  #L2307a2.  call `release`(v0) @signature `Ljava/util/concurrent/Semaphore;.release:()V` @kind virtual;
+  #L2307a8.  v0:= `@@org.eclipse.paho.client.mqttv3.internal.CommsSender.log` @type ^`org.eclipse.paho.client.mqttv3.logging.Logger` @kind object;
+  #L2307ac.  v1:= `@@org.eclipse.paho.client.mqttv3.internal.CommsSender.CLASS_NAME` @type ^`java.lang.String` @kind object;
+  #L2307b0.  v2:= "run" @kind object;
+  #L2307b4.  v3:= "805" @kind object;
+  #L2307b8.  call `fine`(v0, v1, v2, v3) @signature `Lorg/eclipse/paho/client/mqttv3/logging/Logger;.fine:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V` @kind interface;
+  #L2307be.  return @kind void;
+  #L2307c0.  v1:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L2307c2.  v8.`org.eclipse.paho.client.mqttv3.internal.CommsSender.running` @type ^`boolean` := v0 @kind boolean;
+  #L2307c6.  v0:= v8.`org.eclipse.paho.client.mqttv3.internal.CommsSender.runningSemaphore` @type ^`java.util.concurrent.Semaphore` @kind object;
+  #L2307ca.  call `release`(v0) @signature `Ljava/util/concurrent/Semaphore;.release:()V` @kind virtual;
+  #L2307d0.  throw v1;
+  #L2307d2.  v8.`org.eclipse.paho.client.mqttv3.internal.CommsSender.running` @type ^`boolean` := v0 @kind boolean;
+  #L2307d6.  return @kind void;
+  catch `java.lang.InterruptedException` @[L2306a8..L2306b2] goto L2307d2;
+  catch `java.lang.Throwable` @[L2306b4..L2306c0] goto L2307c0;
+  catch `org.eclipse.paho.client.mqttv3.MqttException` @[L2306c6..L230734] goto L230790;
+  catch `java.lang.Exception` @[L2306c6..L230734] goto L230786;
+  catch `java.lang.Throwable` @[L2306c6..L230734] goto L2307c0;
+  catch `java.lang.Throwable` @[L230734..L23073e] goto L230764;
+  catch `java.io.IOException` @[L23073e..L230748] goto L23074a;
+  catch `java.lang.Throwable` @[L23073e..L230748] goto L230764;
+  catch `java.lang.Throwable` @[L23074c..L230768] goto L230764;
+  catch `org.eclipse.paho.client.mqttv3.MqttException` @[L230768..L230784] goto L230790;
+  catch `java.lang.Exception` @[L230768..L230784] goto L230786;
+  catch `java.lang.Throwable` @[L230768..L230784] goto L2307c0;
+  catch `java.lang.Throwable` @[L230788..L230798] goto L2307c0;
+}
+procedure `void` `start`(`org.eclipse.paho.client.mqttv3.internal.CommsSender` v1 @kind this, `java.lang.String` v2 @kind object, `java.util.concurrent.ExecutorService` v3 @kind object) @signature `Lorg/eclipse/paho/client/mqttv3/internal/CommsSender;.start:(Ljava/lang/String;Ljava/util/concurrent/ExecutorService;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L230844.  v1.`org.eclipse.paho.client.mqttv3.internal.CommsSender.threadName` @type ^`java.lang.String` := v2 @kind object;
+  #L230848.  v2:= v1.`org.eclipse.paho.client.mqttv3.internal.CommsSender.lifecycle` @type ^`java.lang.Object` @kind object;
+  #L23084c.  @monitorenter v2
+  #L23084e.  v0:= v1.`org.eclipse.paho.client.mqttv3.internal.CommsSender.running` @type ^`boolean` @kind boolean;
+  #L230852.  if v0 != 0 then goto L230868;
+  #L230856.  v0:= 1I;
+  #L230858.  v1.`org.eclipse.paho.client.mqttv3.internal.CommsSender.running` @type ^`boolean` := v0 @kind boolean;
+  #L23085c.  call temp:= `submit`(v3, v1) @signature `Ljava/util/concurrent/ExecutorService;.submit:(Ljava/lang/Runnable;)Ljava/util/concurrent/Future;` @kind interface;
+  #L230862.  v3:= temp @kind object;
+  #L230864.  v1.`org.eclipse.paho.client.mqttv3.internal.CommsSender.senderFuture` @type ^`java.util.concurrent.Future` := v3 @kind object;
+  #L230868.  @monitorexit v2
+  #L23086a.  return @kind void;
+  #L23086c.  v3:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L23086e.  @monitorexit v2
+  #L230870.  throw v3;
+  catch `java.lang.Throwable` @[L23084e..L230870] goto L23086c;
+}
+procedure `void` `stop`(`org.eclipse.paho.client.mqttv3.internal.CommsSender` v5 @kind this) @signature `Lorg/eclipse/paho/client/mqttv3/internal/CommsSender;.stop:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L230890.  v0:= v5.`org.eclipse.paho.client.mqttv3.internal.CommsSender.lifecycle` @type ^`java.lang.Object` @kind object;
+  #L230894.  @monitorenter v0
+  #L230896.  v1:= v5.`org.eclipse.paho.client.mqttv3.internal.CommsSender.senderFuture` @type ^`java.util.concurrent.Future` @kind object;
+  #L23089a.  if v1 == 0 then goto L2308aa;
+  #L23089e.  v1:= v5.`org.eclipse.paho.client.mqttv3.internal.CommsSender.senderFuture` @type ^`java.util.concurrent.Future` @kind object;
+  #L2308a2.  v2:= 1I;
+  #L2308a4.  call temp:= `cancel`(v1, v2) @signature `Ljava/util/concurrent/Future;.cancel:(Z)Z` @kind interface;
+  #L2308aa.  v1:= `@@org.eclipse.paho.client.mqttv3.internal.CommsSender.log` @type ^`org.eclipse.paho.client.mqttv3.logging.Logger` @kind object;
+  #L2308ae.  v2:= `@@org.eclipse.paho.client.mqttv3.internal.CommsSender.CLASS_NAME` @type ^`java.lang.String` @kind object;
+  #L2308b2.  v3:= "stop" @kind object;
+  #L2308b6.  v4:= "800" @kind object;
+  #L2308ba.  call `fine`(v1, v2, v3, v4) @signature `Lorg/eclipse/paho/client/mqttv3/logging/Logger;.fine:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V` @kind interface;
+  #L2308c0.  v1:= v5.`org.eclipse.paho.client.mqttv3.internal.CommsSender.running` @type ^`boolean` @kind boolean;
+  #L2308c4.  if v1 == 0 then goto L23092c;
+  #L2308c8.  v1:= 0I;
+  #L2308ca.  v5.`org.eclipse.paho.client.mqttv3.internal.CommsSender.running` @type ^`boolean` := v1 @kind boolean;
+  #L2308ce.  call temp:= `currentThread`() @signature `Ljava/lang/Thread;.currentThread:()Ljava/lang/Thread;` @kind static;
+  #L2308d4.  v1:= temp @kind object;
+  #L2308d6.  v2:= v5.`org.eclipse.paho.client.mqttv3.internal.CommsSender.sendThread` @type ^`java.lang.Thread` @kind object;
+  #L2308da.  call temp:= `equals`(v1, v2) @signature `Ljava/lang/Object;.equals:(Ljava/lang/Object;)Z` @kind virtual;
+  #L2308e0.  v1:= temp;
+  #L2308e2.  if v1 != 0 then goto L23092c;
+  #L2308e6.  v1:= v5.`org.eclipse.paho.client.mqttv3.internal.CommsSender.running` @type ^`boolean` @kind boolean;
+  #L2308ea.  if v1 != 0 then goto L2308fa;
+  #L2308ee.  v1:= v5.`org.eclipse.paho.client.mqttv3.internal.CommsSender.runningSemaphore` @type ^`java.util.concurrent.Semaphore` @kind object;
+  #L2308f2.  call `release`(v1) @signature `Ljava/util/concurrent/Semaphore;.release:()V` @kind virtual;
+  #L2308f8.  goto L23092c;
+  #L2308fa.  v1:= v5.`org.eclipse.paho.client.mqttv3.internal.CommsSender.clientState` @type ^`org.eclipse.paho.client.mqttv3.internal.ClientState` @kind object;
+  #L2308fe.  call `notifyQueueLock`(v1) @signature `Lorg/eclipse/paho/client/mqttv3/internal/ClientState;.notifyQueueLock:()V` @kind virtual;
+  #L230904.  v1:= v5.`org.eclipse.paho.client.mqttv3.internal.CommsSender.runningSemaphore` @type ^`java.util.concurrent.Semaphore` @kind object;
+  #L230908.  v2:= 100L;
+  #L23090c.  v4:= `@@java.util.concurrent.TimeUnit.MILLISECONDS` @type ^`java.util.concurrent.TimeUnit` @kind object;
+  #L230910.  call temp:= `tryAcquire`(v1, v2, v4) @signature `Ljava/util/concurrent/Semaphore;.tryAcquire:(JLjava/util/concurrent/TimeUnit;)Z` @kind virtual;
+  #L230916.  goto L2308e6;
+  #L230918.  v1:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L23091a.  v2:= v5.`org.eclipse.paho.client.mqttv3.internal.CommsSender.runningSemaphore` @type ^`java.util.concurrent.Semaphore` @kind object;
+  #L23091e.  call `release`(v2) @signature `Ljava/util/concurrent/Semaphore;.release:()V` @kind virtual;
+  #L230924.  throw v1;
+  #L230926.  v1:= v5.`org.eclipse.paho.client.mqttv3.internal.CommsSender.runningSemaphore` @type ^`java.util.concurrent.Semaphore` @kind object;
+  #L23092a.  goto L2308f2;
+  #L23092c.  v1:= 0I;
+  #L23092e.  v5.`org.eclipse.paho.client.mqttv3.internal.CommsSender.sendThread` @type ^`java.lang.Thread` := v1 @kind object;
+  #L230932.  v1:= `@@org.eclipse.paho.client.mqttv3.internal.CommsSender.log` @type ^`org.eclipse.paho.client.mqttv3.logging.Logger` @kind object;
+  #L230936.  v2:= `@@org.eclipse.paho.client.mqttv3.internal.CommsSender.CLASS_NAME` @type ^`java.lang.String` @kind object;
+  #L23093a.  v3:= "stop" @kind object;
+  #L23093e.  v4:= "801" @kind object;
+  #L230942.  call `fine`(v1, v2, v3, v4) @signature `Lorg/eclipse/paho/client/mqttv3/logging/Logger;.fine:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V` @kind interface;
+  #L230948.  @monitorexit v0
+  #L23094a.  return @kind void;
+  #L23094c.  v1:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L23094e.  @monitorexit v0
+  #L230950.  throw v1;
+  catch `java.lang.Throwable` @[L230896..L2308e2] goto L23094c;
+  catch `java.lang.InterruptedException` @[L2308e6..L2308ea] goto L230926;
+  catch `java.lang.Throwable` @[L2308e6..L2308ea] goto L230918;
+  catch `java.lang.Throwable` @[L2308ee..L2308f8] goto L23094c;
+  catch `java.lang.InterruptedException` @[L2308fa..L230916] goto L230926;
+  catch `java.lang.Throwable` @[L2308fa..L230916] goto L230918;
+  catch `java.lang.Throwable` @[L23091a..L230950] goto L23094c;
+}

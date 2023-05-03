@@ -1,0 +1,68 @@
+record `com.google.crypto.tink.subtle.EcdsaVerifyJce` @kind class @AccessFlag PUBLIC_FINAL extends `com.google.crypto.tink.PublicKeyVerify` @kind interface {
+  `java.security.interfaces.ECPublicKey` `com.google.crypto.tink.subtle.EcdsaVerifyJce.a` @AccessFlag PRIVATE_FINAL;
+  `java.lang.String` `com.google.crypto.tink.subtle.EcdsaVerifyJce.b` @AccessFlag PRIVATE_FINAL;
+  `com.google.crypto.tink.subtle.EllipticCurves$EcdsaEncoding` `com.google.crypto.tink.subtle.EcdsaVerifyJce.c` @AccessFlag PRIVATE_FINAL;
+}
+procedure `void` `<init>`(`com.google.crypto.tink.subtle.EcdsaVerifyJce` v0 @kind this, `java.security.interfaces.ECPublicKey` v1 @kind object, `com.google.crypto.tink.subtle.Enums$HashType` v2 @kind object, `com.google.crypto.tink.subtle.EllipticCurves$EcdsaEncoding` v3 @kind object) @signature `Lcom/google/crypto/tink/subtle/EcdsaVerifyJce;.<init>:(Ljava/security/interfaces/ECPublicKey;Lcom/google/crypto/tink/subtle/Enums$HashType;Lcom/google/crypto/tink/subtle/EllipticCurves$EcdsaEncoding;)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+
+  #L1e4a00.  call `<init>`(v0) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L1e4a06.  call `b`(v1) @signature `Lcom/google/crypto/tink/subtle/EllipticCurves;.b:(Ljava/security/interfaces/ECPublicKey;)V` @kind static;
+  #L1e4a0c.  call temp:= `toEcdsaAlgo`(v2) @signature `Lcom/google/crypto/tink/subtle/SubtleUtil;.toEcdsaAlgo:(Lcom/google/crypto/tink/subtle/Enums$HashType;)Ljava/lang/String;` @kind static;
+  #L1e4a12.  v2:= temp @kind object;
+  #L1e4a14.  v0.`com.google.crypto.tink.subtle.EcdsaVerifyJce.b` @type ^`java.lang.String` := v2 @kind object;
+  #L1e4a18.  v0.`com.google.crypto.tink.subtle.EcdsaVerifyJce.a` @type ^`java.security.interfaces.ECPublicKey` := v1 @kind object;
+  #L1e4a1c.  v0.`com.google.crypto.tink.subtle.EcdsaVerifyJce.c` @type ^`com.google.crypto.tink.subtle.EllipticCurves$EcdsaEncoding` := v3 @kind object;
+  #L1e4a20.  return @kind void;
+}
+procedure `void` `verify`(`com.google.crypto.tink.subtle.EcdsaVerifyJce` v3 @kind this, `byte`[] v4 @kind object, `byte`[] v5 @kind object) @signature `Lcom/google/crypto/tink/subtle/EcdsaVerifyJce;.verify:([B[B)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L1e4a34.  v0:= v3.`com.google.crypto.tink.subtle.EcdsaVerifyJce.c` @type ^`com.google.crypto.tink.subtle.EllipticCurves$EcdsaEncoding` @kind object;
+  #L1e4a38.  v1:= `@@com.google.crypto.tink.subtle.EllipticCurves$EcdsaEncoding.IEEE_P1363` @type ^`com.google.crypto.tink.subtle.EllipticCurves$EcdsaEncoding` @kind object;
+  #L1e4a3c.  v2:= "Invalid signature" @kind object;
+  #L1e4a40.  if v0 != v1 then goto L1e4a80;
+  #L1e4a44.  v0:= v3.`com.google.crypto.tink.subtle.EcdsaVerifyJce.a` @type ^`java.security.interfaces.ECPublicKey` @kind object;
+  #L1e4a48.  call temp:= `getParams`(v0) @signature `Ljava/security/interfaces/ECPublicKey;.getParams:()Ljava/security/spec/ECParameterSpec;` @kind interface;
+  #L1e4a4e.  v0:= temp @kind object;
+  #L1e4a50.  call temp:= `getCurve`(v0) @signature `Ljava/security/spec/ECParameterSpec;.getCurve:()Ljava/security/spec/EllipticCurve;` @kind virtual;
+  #L1e4a56.  v0:= temp @kind object;
+  #L1e4a58.  v1:= length @variable v4;
+  #L1e4a5a.  call temp:= `fieldSizeInBytes`(v0) @signature `Lcom/google/crypto/tink/subtle/EllipticCurves;.fieldSizeInBytes:(Ljava/security/spec/EllipticCurve;)I` @kind static;
+  #L1e4a60.  v0:= temp;
+  #L1e4a62.  v0:= v0 * 2;
+  #L1e4a66.  if v1 != v0 then goto L1e4a74;
+  #L1e4a6a.  call temp:= `ecdsaIeee2Der`(v4) @signature `Lcom/google/crypto/tink/subtle/EllipticCurves;.ecdsaIeee2Der:([B)[B` @kind static;
+  #L1e4a70.  v4:= temp @kind object;
+  #L1e4a72.  goto L1e4a80;
+  #L1e4a74.  v4:= new `java.security.GeneralSecurityException`;
+  #L1e4a78.  call `<init>`(v4, v2) @signature `Ljava/security/GeneralSecurityException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L1e4a7e.  throw v4;
+  #L1e4a80.  call temp:= `isValidDerEncoding`(v4) @signature `Lcom/google/crypto/tink/subtle/EllipticCurves;.isValidDerEncoding:([B)Z` @kind static;
+  #L1e4a86.  v0:= temp;
+  #L1e4a88.  if v0 == 0 then goto L1e4ace;
+  #L1e4a8c.  v0:= `@@com.google.crypto.tink.subtle.EngineFactory.SIGNATURE` @type ^`com.google.crypto.tink.subtle.EngineFactory` @kind object;
+  #L1e4a90.  v1:= v3.`com.google.crypto.tink.subtle.EcdsaVerifyJce.b` @type ^`java.lang.String` @kind object;
+  #L1e4a94.  call temp:= `getInstance`(v0, v1) @signature `Lcom/google/crypto/tink/subtle/EngineFactory;.getInstance:(Ljava/lang/String;)Ljava/lang/Object;` @kind virtual;
+  #L1e4a9a.  v0:= temp @kind object;
+  #L1e4a9c.  v0:= (`java.security.Signature`) v0 @kind object;
+  #L1e4aa0.  v1:= v3.`com.google.crypto.tink.subtle.EcdsaVerifyJce.a` @type ^`java.security.interfaces.ECPublicKey` @kind object;
+  #L1e4aa4.  call `initVerify`(v0, v1) @signature `Ljava/security/Signature;.initVerify:(Ljava/security/PublicKey;)V` @kind virtual;
+  #L1e4aaa.  call `update`(v0, v5) @signature `Ljava/security/Signature;.update:([B)V` @kind virtual;
+  #L1e4ab0.  call temp:= `verify`(v0, v4) @signature `Ljava/security/Signature;.verify:([B)Z` @kind virtual;
+  #L1e4ab6.  v4:= temp;
+  #L1e4ab8.  goto L1e4abc;
+  #L1e4aba.  v4:= 0I;
+  #L1e4abc.  if v4 == 0 then goto L1e4ac2;
+  #L1e4ac0.  return @kind void;
+  #L1e4ac2.  v4:= new `java.security.GeneralSecurityException`;
+  #L1e4ac6.  call `<init>`(v4, v2) @signature `Ljava/security/GeneralSecurityException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L1e4acc.  throw v4;
+  #L1e4ace.  v4:= new `java.security.GeneralSecurityException`;
+  #L1e4ad2.  call `<init>`(v4, v2) @signature `Ljava/security/GeneralSecurityException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L1e4ad8.  throw v4;
+  catch `java.lang.RuntimeException` @[L1e4ab0..L1e4ab8] goto L1e4aba;
+}

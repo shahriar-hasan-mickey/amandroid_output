@@ -1,0 +1,504 @@
+record `com.konasl.konapayment.sdk.kcm.KcmClientService` @kind class @AccessFlag PUBLIC extends `android.app.Service` @kind class {
+  `java.lang.String` `com.konasl.konapayment.sdk.kcm.KcmClientService.SCHEDULED_INTENT_ACTION` @AccessFlag PRIVATE_FINAL;
+  `java.lang.String` `com.konasl.konapayment.sdk.kcm.KcmClientService.TAG` @AccessFlag PRIVATE_FINAL;
+  `org.eclipse.paho.client.mqttv3.MqttClient` `com.konasl.konapayment.sdk.kcm.KcmClientService.client` @AccessFlag PRIVATE;
+  `android.os.Handler` `com.konasl.konapayment.sdk.kcm.KcmClientService.handler` @AccessFlag ;
+  `boolean` `com.konasl.konapayment.sdk.kcm.KcmClientService.isSubscribed` @AccessFlag PRIVATE;
+  `java.lang.String` `com.konasl.konapayment.sdk.kcm.KcmClientService.kcmClientIdentifier` @AccessFlag PRIVATE;
+  `com.konasl.konapayment.sdk.l0.c.q` `com.konasl.konapayment.sdk.kcm.KcmClientService.rnsPayloadDispatcher` @AccessFlag PRIVATE;
+  `java.lang.Runnable` `com.konasl.konapayment.sdk.kcm.KcmClientService.runnable` @AccessFlag ;
+  `com.konasl.konapayment.sdk.kcm.KcmClientService$ScheduledPingSender` `com.konasl.konapayment.sdk.kcm.KcmClientService.scheduledPingSender` @AccessFlag PRIVATE;
+  `com.konasl.konapayment.sdk.dao.interfaces.WalletPropertiesDao` `com.konasl.konapayment.sdk.kcm.KcmClientService.walletPropertiesDao` @AccessFlag PRIVATE;
+}
+global `boolean` `@@com.konasl.konapayment.sdk.kcm.KcmClientService.CLEAN_SESSION` @AccessFlag PRIVATE_STATIC_FINAL;
+global `int` `@@com.konasl.konapayment.sdk.kcm.KcmClientService.DELAY` @AccessFlag PRIVATE_STATIC_FINAL;
+global `int` `@@com.konasl.konapayment.sdk.kcm.KcmClientService.KEEP_ALIVE_SECONDS` @AccessFlag PRIVATE_STATIC_FINAL;
+global `int` `@@com.konasl.konapayment.sdk.kcm.KcmClientService.QOS` @AccessFlag PRIVATE_STATIC_FINAL;
+global `com.konasl.konapayment.sdk.kcm.KcmClientService` `@@com.konasl.konapayment.sdk.kcm.KcmClientService.kcmClientService` @AccessFlag PRIVATE_STATIC;
+procedure `void` `<clinit>`() @signature `Lcom/konasl/konapayment/sdk/kcm/KcmClientService;.<clinit>:()V` @AccessFlag STATIC_CONSTRUCTOR {
+    temp;
+
+  #L11dc88.  return @kind void;
+}
+procedure `void` `<init>`(`com.konasl.konapayment.sdk.kcm.KcmClientService` v1 @kind this) @signature `Lcom/konasl/konapayment/sdk/kcm/KcmClientService;.<init>:()V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L11dc9c.  call `<init>`(v1) @signature `Landroid/app/Service;.<init>:()V` @kind direct;
+  #L11dca2.  v0:= constclass @type ^`com.konasl.konapayment.sdk.kcm.KcmClientService` @kind object;
+  #L11dca6.  call temp:= `getName`(v0) @signature `Ljava/lang/Class;.getName:()Ljava/lang/String;` @kind virtual;
+  #L11dcac.  v0:= temp @kind object;
+  #L11dcae.  v1.`com.konasl.konapayment.sdk.kcm.KcmClientService.TAG` @type ^`java.lang.String` := v0 @kind object;
+  #L11dcb2.  v0:= "com.konasl.konapayment.sdk.kcm.scheduledIntentPing" @kind object;
+  #L11dcb6.  v1.`com.konasl.konapayment.sdk.kcm.KcmClientService.SCHEDULED_INTENT_ACTION` @type ^`java.lang.String` := v0 @kind object;
+  #L11dcba.  call temp:= `getInstance`() @signature `Lcom/konasl/konapayment/sdk/dao/core/KonaPaymentDaoFactory;.getInstance:()Lcom/konasl/konapayment/sdk/dao/core/KonaPaymentDaoFactory;` @kind static;
+  #L11dcc0.  v0:= temp @kind object;
+  #L11dcc2.  call temp:= `getWalletPropertiesDao`(v0) @signature `Lcom/konasl/konapayment/sdk/dao/core/KonaPaymentDaoFactory;.getWalletPropertiesDao:()Lcom/konasl/konapayment/sdk/dao/interfaces/WalletPropertiesDao;` @kind virtual;
+  #L11dcc8.  v0:= temp @kind object;
+  #L11dcca.  v1.`com.konasl.konapayment.sdk.kcm.KcmClientService.walletPropertiesDao` @type ^`com.konasl.konapayment.sdk.dao.interfaces.WalletPropertiesDao` := v0 @kind object;
+  #L11dcce.  v0:= new `android.os.Handler`;
+  #L11dcd2.  call `<init>`(v0) @signature `Landroid/os/Handler;.<init>:()V` @kind direct;
+  #L11dcd8.  v1.`com.konasl.konapayment.sdk.kcm.KcmClientService.handler` @type ^`android.os.Handler` := v0 @kind object;
+  #L11dcdc.  v0:= new `com.konasl.konapayment.sdk.kcm.KcmClientService$2`;
+  #L11dce0.  call `<init>`(v0, v1) @signature `Lcom/konasl/konapayment/sdk/kcm/KcmClientService$2;.<init>:(Lcom/konasl/konapayment/sdk/kcm/KcmClientService;)V` @kind direct;
+  #L11dce6.  v1.`com.konasl.konapayment.sdk.kcm.KcmClientService.runnable` @type ^`java.lang.Runnable` := v0 @kind object;
+  #L11dcea.  return @kind void;
+}
+procedure `com.konasl.konapayment.sdk.l0.c.q` `access$100`(`com.konasl.konapayment.sdk.kcm.KcmClientService` v0 @kind object) @signature `Lcom/konasl/konapayment/sdk/kcm/KcmClientService;.access$100:(Lcom/konasl/konapayment/sdk/kcm/KcmClientService;)Lcom/konasl/konapayment/sdk/l0/c/q;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L11dbd0.  v0:= v0.`com.konasl.konapayment.sdk.kcm.KcmClientService.rnsPayloadDispatcher` @type ^`com.konasl.konapayment.sdk.l0.c.q` @kind object;
+  #L11dbd4.  return v0 @kind object;
+}
+procedure `java.lang.String` `access$200`(`com.konasl.konapayment.sdk.kcm.KcmClientService` v0 @kind object) @signature `Lcom/konasl/konapayment/sdk/kcm/KcmClientService;.access$200:(Lcom/konasl/konapayment/sdk/kcm/KcmClientService;)Ljava/lang/String;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L11dc58.  v0:= v0.`com.konasl.konapayment.sdk.kcm.KcmClientService.TAG` @type ^`java.lang.String` @kind object;
+  #L11dc5c.  return v0 @kind object;
+}
+procedure `void` `access$300`(`com.konasl.konapayment.sdk.kcm.KcmClientService` v0 @kind object) @signature `Lcom/konasl/konapayment/sdk/kcm/KcmClientService;.access$300:(Lcom/konasl/konapayment/sdk/kcm/KcmClientService;)V` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L11dcfc.  call `scheduleNextPing`(v0) @signature `Lcom/konasl/konapayment/sdk/kcm/KcmClientService;.scheduleNextPing:()V` @kind direct;
+  #L11dd02.  return @kind void;
+}
+procedure `org.eclipse.paho.client.mqttv3.MqttClient` `access$400`(`com.konasl.konapayment.sdk.kcm.KcmClientService` v0 @kind object) @signature `Lcom/konasl/konapayment/sdk/kcm/KcmClientService;.access$400:(Lcom/konasl/konapayment/sdk/kcm/KcmClientService;)Lorg/eclipse/paho/client/mqttv3/MqttClient;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L11dc70.  v0:= v0.`com.konasl.konapayment.sdk.kcm.KcmClientService.client` @type ^`org.eclipse.paho.client.mqttv3.MqttClient` @kind object;
+  #L11dc74.  return v0 @kind object;
+}
+procedure `void` `access$500`(`com.konasl.konapayment.sdk.kcm.KcmClientService` v0 @kind object) @signature `Lcom/konasl/konapayment/sdk/kcm/KcmClientService;.access$500:(Lcom/konasl/konapayment/sdk/kcm/KcmClientService;)V` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L11dd14.  call `executeAsyncTask`(v0) @signature `Lcom/konasl/konapayment/sdk/kcm/KcmClientService;.executeAsyncTask:()V` @kind direct;
+  #L11dd1a.  return @kind void;
+}
+procedure `void` `access$600`(`com.konasl.konapayment.sdk.kcm.KcmClientService` v0 @kind object) @signature `Lcom/konasl/konapayment/sdk/kcm/KcmClientService;.access$600:(Lcom/konasl/konapayment/sdk/kcm/KcmClientService;)V` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L11dd2c.  call `establishMqttConnection`(v0) @signature `Lcom/konasl/konapayment/sdk/kcm/KcmClientService;.establishMqttConnection:()V` @kind direct;
+  #L11dd32.  return @kind void;
+}
+procedure `void` `backGroundAsyncTaskConnection`(`com.konasl.konapayment.sdk.kcm.KcmClientService` v2 @kind this) @signature `Lcom/konasl/konapayment/sdk/kcm/KcmClientService;.backGroundAsyncTaskConnection:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+
+  #L11dd44.  v0:= new `com.konasl.konapayment.sdk.kcm.KcmClientService$3`;
+  #L11dd48.  call `<init>`(v0, v2) @signature `Lcom/konasl/konapayment/sdk/kcm/KcmClientService$3;.<init>:(Lcom/konasl/konapayment/sdk/kcm/KcmClientService;)V` @kind direct;
+  #L11dd4e.  call temp:= `fromCallable`(v0) @signature `Lf/a/a/b/b;.fromCallable:(Ljava/util/concurrent/Callable;)Lf/a/a/b/b;` @kind static;
+  #L11dd54.  v0:= temp @kind object;
+  #L11dd56.  call temp:= `io`() @signature `Lf/a/a/h/b;.io:()Lf/a/a/b/e;` @kind static;
+  #L11dd5c.  v1:= temp @kind object;
+  #L11dd5e.  call temp:= `subscribeOn`(v0, v1) @signature `Lf/a/a/b/b;.subscribeOn:(Lf/a/a/b/e;)Lf/a/a/b/b;` @kind virtual;
+  #L11dd64.  v0:= temp @kind object;
+  #L11dd66.  call temp:= `mainThread`() @signature `Lf/a/a/a/b/b;.mainThread:()Lf/a/a/b/e;` @kind static;
+  #L11dd6c.  v1:= temp @kind object;
+  #L11dd6e.  call temp:= `observeOn`(v0, v1) @signature `Lf/a/a/b/b;.observeOn:(Lf/a/a/b/e;)Lf/a/a/b/b;` @kind virtual;
+  #L11dd74.  v0:= temp @kind object;
+  #L11dd76.  call temp:= `subscribe`(v0) @signature `Lf/a/a/b/b;.subscribe:()Lf/a/a/c/c;` @kind virtual;
+  #L11dd7c.  return @kind void;
+}
+procedure `void` `connect`(`com.konasl.konapayment.sdk.kcm.KcmClientService` v2 @kind this) @signature `Lcom/konasl/konapayment/sdk/kcm/KcmClientService;.connect:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+
+  #L11dd90.  v0:= new `org.eclipse.paho.client.mqttv3.MqttConnectOptions`;
+  #L11dd94.  call `<init>`(v0) @signature `Lorg/eclipse/paho/client/mqttv3/MqttConnectOptions;.<init>:()V` @kind direct;
+  #L11dd9a.  v1:= 0I;
+  #L11dd9c.  call `setCleanSession`(v0, v1) @signature `Lorg/eclipse/paho/client/mqttv3/MqttConnectOptions;.setCleanSession:(Z)V` @kind virtual;
+  #L11dda2.  v1:= 60I;
+  #L11dda6.  call `setKeepAliveInterval`(v0, v1) @signature `Lorg/eclipse/paho/client/mqttv3/MqttConnectOptions;.setKeepAliveInterval:(I)V` @kind virtual;
+  #L11ddac.  v1:= v2.`com.konasl.konapayment.sdk.kcm.KcmClientService.client` @type ^`org.eclipse.paho.client.mqttv3.MqttClient` @kind object;
+  #L11ddb0.  call `connect`(v1, v0) @signature `Lorg/eclipse/paho/client/mqttv3/MqttClient;.connect:(Lorg/eclipse/paho/client/mqttv3/MqttConnectOptions;)V` @kind virtual;
+  #L11ddb6.  return @kind void;
+}
+procedure `void` `createClient`(`com.konasl.konapayment.sdk.kcm.KcmClientService` v5 @kind this) @signature `Lcom/konasl/konapayment/sdk/kcm/KcmClientService;.createClient:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L11ddc8.  v0:= v5.`com.konasl.konapayment.sdk.kcm.KcmClientService.client` @type ^`org.eclipse.paho.client.mqttv3.MqttClient` @kind object;
+  #L11ddcc.  if v0 == 0 then goto L11ddd2;
+  #L11ddd0.  return @kind void;
+  #L11ddd2.  v0:= v5.`com.konasl.konapayment.sdk.kcm.KcmClientService.walletPropertiesDao` @type ^`com.konasl.konapayment.sdk.dao.interfaces.WalletPropertiesDao` @kind object;
+  #L11ddd6.  call temp:= `findRnsId`(v0) @signature `Lcom/konasl/konapayment/sdk/dao/interfaces/WalletPropertiesDao;.findRnsId:()Ljava/lang/String;` @kind interface;
+  #L11dddc.  v0:= temp @kind object;
+  #L11ddde.  call temp:= `isEmpty`(v0) @signature `Landroid/text/TextUtils;.isEmpty:(Ljava/lang/CharSequence;)Z` @kind static;
+  #L11dde4.  v1:= temp;
+  #L11dde6.  if v1 == 0 then goto L11ddf2;
+  #L11ddea.  call `stopSelf`(v5) @signature `Landroid/app/Service;.stopSelf:()V` @kind virtual;
+  #L11ddf0.  return @kind void;
+  #L11ddf2.  v1:= v5.`com.konasl.konapayment.sdk.kcm.KcmClientService.TAG` @type ^`java.lang.String` @kind object;
+  #L11ddf6.  v2:= "Retrieving RNS ID" @kind object;
+  #L11ddfa.  call `debugLog`(v1, v2) @signature `Lcom/konasl/konapayment/sdk/p0/e;.debugLog:(Ljava/lang/String;Ljava/lang/String;)V` @kind static;
+  #L11de00.  v5.`com.konasl.konapayment.sdk.kcm.KcmClientService.kcmClientIdentifier` @type ^`java.lang.String` := v0 @kind object;
+  #L11de04.  v0:= v5.`com.konasl.konapayment.sdk.kcm.KcmClientService.TAG` @type ^`java.lang.String` @kind object;
+  #L11de08.  v1:= v5.`com.konasl.konapayment.sdk.kcm.KcmClientService.kcmClientIdentifier` @type ^`java.lang.String` @kind object;
+  #L11de0c.  call `debugLog`(v0, v1) @signature `Lcom/konasl/konapayment/sdk/p0/e;.debugLog:(Ljava/lang/String;Ljava/lang/String;)V` @kind static;
+  #L11de12.  v0:= `@@com.konasl.konapayment.sdk.p0.c.b` @type ^`java.lang.String` @kind object;
+  #L11de16.  if v0 != 0 then goto L11de2a;
+  #L11de1a.  v0:= v5.`com.konasl.konapayment.sdk.kcm.KcmClientService.TAG` @type ^`java.lang.String` @kind object;
+  #L11de1e.  v1:= "MQTT server url null" @kind object;
+  #L11de22.  call `debugLog`(v0, v1) @signature `Lcom/konasl/konapayment/sdk/p0/e;.debugLog:(Ljava/lang/String;Ljava/lang/String;)V` @kind static;
+  #L11de28.  return @kind void;
+  #L11de2a.  v1:= new `org.eclipse.paho.client.mqttv3.MqttClient`;
+  #L11de2e.  v2:= v5.`com.konasl.konapayment.sdk.kcm.KcmClientService.kcmClientIdentifier` @type ^`java.lang.String` @kind object;
+  #L11de32.  v3:= new `org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence`;
+  #L11de36.  call temp:= `getFilesDir`(v5) @signature `Landroid/app/Service;.getFilesDir:()Ljava/io/File;` @kind virtual;
+  #L11de3c.  v4:= temp @kind object;
+  #L11de3e.  call temp:= `getAbsolutePath`(v4) @signature `Ljava/io/File;.getAbsolutePath:()Ljava/lang/String;` @kind virtual;
+  #L11de44.  v4:= temp @kind object;
+  #L11de46.  call `<init>`(v3, v4) @signature `Lorg/eclipse/paho/client/mqttv3/persist/MqttDefaultFilePersistence;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L11de4c.  call `<init>`(v1, v0, v2, v3) @signature `Lorg/eclipse/paho/client/mqttv3/MqttClient;.<init>:(Ljava/lang/String;Ljava/lang/String;Lorg/eclipse/paho/client/mqttv3/MqttClientPersistence;)V` @kind direct;
+  #L11de52.  v5.`com.konasl.konapayment.sdk.kcm.KcmClientService.client` @type ^`org.eclipse.paho.client.mqttv3.MqttClient` := v1 @kind object;
+  #L11de56.  v0:= v5.`com.konasl.konapayment.sdk.kcm.KcmClientService.client` @type ^`org.eclipse.paho.client.mqttv3.MqttClient` @kind object;
+  #L11de5a.  v1:= new `com.konasl.konapayment.sdk.kcm.KcmClientService$1`;
+  #L11de5e.  call `<init>`(v1, v5) @signature `Lcom/konasl/konapayment/sdk/kcm/KcmClientService$1;.<init>:(Lcom/konasl/konapayment/sdk/kcm/KcmClientService;)V` @kind direct;
+  #L11de64.  call `setCallback`(v0, v1) @signature `Lorg/eclipse/paho/client/mqttv3/MqttClient;.setCallback:(Lorg/eclipse/paho/client/mqttv3/MqttCallback;)V` @kind virtual;
+  #L11de6a.  return @kind void;
+}
+procedure `void` `establishMqttConnection`(`com.konasl.konapayment.sdk.kcm.KcmClientService` v6 @kind this) @signature `Lcom/konasl/konapayment/sdk/kcm/KcmClientService;.establishMqttConnection:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L11de7c.  @monitorenter v6
+  #L11de7e.  call `createClient`(v6) @signature `Lcom/konasl/konapayment/sdk/kcm/KcmClientService;.createClient:()V` @kind direct;
+  #L11de84.  v0:= v6.`com.konasl.konapayment.sdk.kcm.KcmClientService.client` @type ^`org.eclipse.paho.client.mqttv3.MqttClient` @kind object;
+  #L11de88.  if v0 != 0 then goto L11de90;
+  #L11de8c.  @monitorexit v6
+  #L11de8e.  return @kind void;
+  #L11de90.  v0:= v6.`com.konasl.konapayment.sdk.kcm.KcmClientService.client` @type ^`org.eclipse.paho.client.mqttv3.MqttClient` @kind object;
+  #L11de94.  call temp:= `isConnected`(v0) @signature `Lorg/eclipse/paho/client/mqttv3/MqttClient;.isConnected:()Z` @kind virtual;
+  #L11de9a.  v0:= temp;
+  #L11de9c.  if v0 != 0 then goto L11df6a;
+  #L11dea0.  v0:= v6.`com.konasl.konapayment.sdk.kcm.KcmClientService.TAG` @type ^`java.lang.String` @kind object;
+  #L11dea4.  v1:= new `java.lang.StringBuilder`;
+  #L11dea8.  call `<init>`(v1) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L11deae.  v2:= "Connecting..." @kind object;
+  #L11deb2.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L11deb8.  v2:= v6.`com.konasl.konapayment.sdk.kcm.KcmClientService.kcmClientIdentifier` @type ^`java.lang.String` @kind object;
+  #L11debc.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L11dec2.  call temp:= `toString`(v1) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L11dec8.  v1:= temp @kind object;
+  #L11deca.  call `debugLog`(v0, v1) @signature `Lcom/konasl/konapayment/sdk/p0/e;.debugLog:(Ljava/lang/String;Ljava/lang/String;)V` @kind static;
+  #L11ded0.  call `connect`(v6) @signature `Lcom/konasl/konapayment/sdk/kcm/KcmClientService;.connect:()V` @kind direct;
+  #L11ded6.  v0:= v6.`com.konasl.konapayment.sdk.kcm.KcmClientService.isSubscribed` @type ^`boolean` @kind boolean;
+  #L11deda.  if v0 != 0 then goto L11df5a;
+  #L11dede.  call temp:= `getInstance`() @signature `Lcom/konasl/konapayment/sdk/e;.getInstance:()Lcom/konasl/konapayment/sdk/e;` @kind static;
+  #L11dee4.  v0:= temp @kind object;
+  #L11dee6.  call temp:= `getRnsTopicList`(v0) @signature `Lcom/konasl/konapayment/sdk/e;.getRnsTopicList:()Ljava/util/List;` @kind virtual;
+  #L11deec.  v0:= temp @kind object;
+  #L11deee.  call temp:= `size`(v0) @signature `Ljava/util/List;.size:()I` @kind interface;
+  #L11def4.  v1:= temp;
+  #L11def6.  v2:= v6.`com.konasl.konapayment.sdk.kcm.KcmClientService.kcmClientIdentifier` @type ^`java.lang.String` @kind object;
+  #L11defa.  v3:= 0I;
+  #L11defc.  v4:= 1I;
+  #L11defe.  if v2 != 0 then goto L11df06;
+  #L11df02.  v2:= 0I;
+  #L11df04.  goto L11df08;
+  #L11df06.  v2:= 1I;
+  #L11df08.  v1:= v1 + v2 @kind int;
+  #L11df0a.  v2:= new `java.lang.String`[v1];
+  #L11df0e.  call temp:= `size`(v0) @signature `Ljava/util/List;.size:()I` @kind interface;
+  #L11df14.  v5:= temp;
+  #L11df16.  if v3 >= v5 then goto L11df30;
+  #L11df1a.  call temp:= `get`(v0, v3) @signature `Ljava/util/List;.get:(I)Ljava/lang/Object;` @kind interface;
+  #L11df20.  v5:= temp @kind object;
+  #L11df22.  v5:= (`java.lang.String`) v5 @kind object;
+  #L11df26.  v2[v3]:= v5 @kind object;
+  #L11df2a.  v3:= v3 + 1;
+  #L11df2e.  goto L11df0e;
+  #L11df30.  v0:= v6.`com.konasl.konapayment.sdk.kcm.KcmClientService.kcmClientIdentifier` @type ^`java.lang.String` @kind object;
+  #L11df34.  if v0 == 0 then goto L11df42;
+  #L11df38.  v1:= v1 - v4 @kind int;
+  #L11df3a.  v0:= v6.`com.konasl.konapayment.sdk.kcm.KcmClientService.kcmClientIdentifier` @type ^`java.lang.String` @kind object;
+  #L11df3e.  v2[v1]:= v0 @kind object;
+  #L11df42.  call `subscribe`(v6, v2) @signature `Lcom/konasl/konapayment/sdk/kcm/KcmClientService;.subscribe:([Ljava/lang/String;)V` @kind direct;
+  #L11df48.  v6.`com.konasl.konapayment.sdk.kcm.KcmClientService.isSubscribed` @type ^`boolean` := v4 @kind boolean;
+  #L11df4c.  v0:= v6.`com.konasl.konapayment.sdk.kcm.KcmClientService.TAG` @type ^`java.lang.String` @kind object;
+  #L11df50.  v1:= "is subcribe true" @kind object;
+  #L11df54.  call `debugLog`(v0, v1) @signature `Lcom/konasl/konapayment/sdk/p0/e;.debugLog:(Ljava/lang/String;Ljava/lang/String;)V` @kind static;
+  #L11df5a.  v0:= v6.`com.konasl.konapayment.sdk.kcm.KcmClientService.TAG` @type ^`java.lang.String` @kind object;
+  #L11df5e.  v1:= "Client is now connected" @kind object;
+  #L11df62.  call `debugLog`(v0, v1) @signature `Lcom/konasl/konapayment/sdk/p0/e;.debugLog:(Ljava/lang/String;Ljava/lang/String;)V` @kind static;
+  #L11df68.  goto L11dfda;
+  #L11df6a.  v0:= v6.`com.konasl.konapayment.sdk.kcm.KcmClientService.TAG` @type ^`java.lang.String` @kind object;
+  #L11df6e.  v1:= "Client is connected" @kind object;
+  #L11df72.  call `debugLog`(v0, v1) @signature `Lcom/konasl/konapayment/sdk/p0/e;.debugLog:(Ljava/lang/String;Ljava/lang/String;)V` @kind static;
+  #L11df78.  goto L11dfda;
+  #L11df7a.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L11df7c.  goto L11dfde;
+  #L11df7e.  v0:= Exception @type ^`org.eclipse.paho.client.mqttv3.MqttException` @kind object;
+  #L11df80.  v1:= v6.`com.konasl.konapayment.sdk.kcm.KcmClientService.TAG` @type ^`java.lang.String` @kind object;
+  #L11df84.  v2:= "Could Not connect or subscribe With MQTT Broker\n" @kind object;
+  #L11df88.  call `debugLog`(v1, v2, v0) @signature `Lcom/konasl/konapayment/sdk/p0/e;.debugLog:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V` @kind static;
+  #L11df8e.  v1:= v6.`com.konasl.konapayment.sdk.kcm.KcmClientService.TAG` @type ^`java.lang.String` @kind object;
+  #L11df92.  v2:= new `java.lang.StringBuilder`;
+  #L11df96.  call `<init>`(v2) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L11df9c.  call temp:= `getMessage`(v0) @signature `Lorg/eclipse/paho/client/mqttv3/MqttException;.getMessage:()Ljava/lang/String;` @kind virtual;
+  #L11dfa2.  v3:= temp @kind object;
+  #L11dfa4.  call temp:= `append`(v2, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L11dfaa.  call temp:= `getCause`(v0) @signature `Lorg/eclipse/paho/client/mqttv3/MqttException;.getCause:()Ljava/lang/Throwable;` @kind virtual;
+  #L11dfb0.  v3:= temp @kind object;
+  #L11dfb2.  call temp:= `append`(v2, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L11dfb8.  call temp:= `getReasonCode`(v0) @signature `Lorg/eclipse/paho/client/mqttv3/MqttException;.getReasonCode:()I` @kind virtual;
+  #L11dfbe.  v0:= temp;
+  #L11dfc0.  call temp:= `append`(v2, v0) @signature `Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder;` @kind virtual;
+  #L11dfc6.  call temp:= `toString`(v2) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L11dfcc.  v0:= temp @kind object;
+  #L11dfce.  call `debugLog`(v1, v0) @signature `Lcom/konasl/konapayment/sdk/p0/e;.debugLog:(Ljava/lang/String;Ljava/lang/String;)V` @kind static;
+  #L11dfd4.  call `scheduleNextPing`(v6) @signature `Lcom/konasl/konapayment/sdk/kcm/KcmClientService;.scheduleNextPing:()V` @kind direct;
+  #L11dfda.  @monitorexit v6
+  #L11dfdc.  return @kind void;
+  #L11dfde.  @monitorexit v6
+  #L11dfe0.  throw v0;
+  catch `org.eclipse.paho.client.mqttv3.MqttException` @[L11de7e..L11de88] goto L11df7e;
+  catch `java.lang.Throwable` @[L11de7e..L11de88] goto L11df7a;
+  catch `org.eclipse.paho.client.mqttv3.MqttException` @[L11de90..L11df78] goto L11df7e;
+  catch `java.lang.Throwable` @[L11de90..L11df78] goto L11df7a;
+  catch `java.lang.Throwable` @[L11df80..L11dfda] goto L11df7a;
+}
+procedure `void` `executeAsyncTask`(`com.konasl.konapayment.sdk.kcm.KcmClientService` v4 @kind this) @signature `Lcom/konasl/konapayment/sdk/kcm/KcmClientService;.executeAsyncTask:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L11e018.  call temp:= `getInstance`() @signature `Lcom/konasl/konapayment/sdk/e;.getInstance:()Lcom/konasl/konapayment/sdk/e;` @kind static;
+  #L11e01e.  v0:= temp @kind object;
+  #L11e020.  call temp:= `isSdkInitialized`(v0) @signature `Lcom/konasl/konapayment/sdk/e;.isSdkInitialized:()Z` @kind virtual;
+  #L11e026.  v0:= temp;
+  #L11e028.  if v0 == 0 then goto L11e034;
+  #L11e02c.  call `startBackGroundTask`(v4) @signature `Lcom/konasl/konapayment/sdk/kcm/KcmClientService;.startBackGroundTask:()V` @kind direct;
+  #L11e032.  goto L11e046;
+  #L11e034.  v0:= v4.`com.konasl.konapayment.sdk.kcm.KcmClientService.handler` @type ^`android.os.Handler` @kind object;
+  #L11e038.  v1:= v4.`com.konasl.konapayment.sdk.kcm.KcmClientService.runnable` @type ^`java.lang.Runnable` @kind object;
+  #L11e03c.  v2:= 1000L;
+  #L11e040.  call temp:= `postDelayed`(v0, v1, v2) @signature `Landroid/os/Handler;.postDelayed:(Ljava/lang/Runnable;J)Z` @kind virtual;
+  #L11e046.  return @kind void;
+}
+procedure `com.konasl.konapayment.sdk.kcm.KcmClientService` `getKcmClientService`() @signature `Lcom/konasl/konapayment/sdk/kcm/KcmClientService;.getKcmClientService:()Lcom/konasl/konapayment/sdk/kcm/KcmClientService;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+
+  #L11dbb8.  v0:= `@@com.konasl.konapayment.sdk.kcm.KcmClientService.kcmClientService` @type ^`com.konasl.konapayment.sdk.kcm.KcmClientService` @kind object;
+  #L11dbbc.  return v0 @kind object;
+}
+procedure `void` `scheduleNextPing`(`com.konasl.konapayment.sdk.kcm.KcmClientService` v6 @kind this) @signature `Lcom/konasl/konapayment/sdk/kcm/KcmClientService;.scheduleNextPing:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L11e100.  v0:= `@@android.os.Build$VERSION.SDK_INT` @type ^`int`;
+  #L11e104.  v1:= "com.konasl.konapayment.sdk.kcm.scheduledIntentPing" @kind object;
+  #L11e108.  v2:= 0I;
+  #L11e10a.  v3:= 23I;
+  #L11e10e.  if v0 < v3 then goto L11e12a;
+  #L11e112.  v0:= new `android.content.Intent`;
+  #L11e116.  call `<init>`(v0, v1) @signature `Landroid/content/Intent;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L11e11c.  v1:= 201326592I;
+  #L11e120.  call temp:= `getBroadcast`(v6, v2, v0, v1) @signature `Landroid/app/PendingIntent;.getBroadcast:(Landroid/content/Context;ILandroid/content/Intent;I)Landroid/app/PendingIntent;` @kind static;
+  #L11e126.  v0:= temp @kind object;
+  #L11e128.  goto L11e140;
+  #L11e12a.  v0:= new `android.content.Intent`;
+  #L11e12e.  call `<init>`(v0, v1) @signature `Landroid/content/Intent;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L11e134.  v1:= 134217728I;
+  #L11e138.  call temp:= `getBroadcast`(v6, v2, v0, v1) @signature `Landroid/app/PendingIntent;.getBroadcast:(Landroid/content/Context;ILandroid/content/Intent;I)Landroid/app/PendingIntent;` @kind static;
+  #L11e13e.  v0:= temp @kind object;
+  #L11e140.  call temp:= `getInstance`() @signature `Ljava/util/Calendar;.getInstance:()Ljava/util/Calendar;` @kind static;
+  #L11e146.  v1:= temp @kind object;
+  #L11e148.  v3:= 13I;
+  #L11e14c.  v4:= 30I;
+  #L11e150.  call `add`(v1, v3, v4) @signature `Ljava/util/Calendar;.add:(II)V` @kind virtual;
+  #L11e156.  v3:= "alarm" @kind object;
+  #L11e15a.  call temp:= `getSystemService`(v6, v3) @signature `Landroid/app/Service;.getSystemService:(Ljava/lang/String;)Ljava/lang/Object;` @kind virtual;
+  #L11e160.  v3:= temp @kind object;
+  #L11e162.  v3:= (`android.app.AlarmManager`) v3 @kind object;
+  #L11e166.  call temp:= `getTimeInMillis`(v1) @signature `Ljava/util/Calendar;.getTimeInMillis:()J` @kind virtual;
+  #L11e16c.  v4:= temp @kind wide;
+  #L11e16e.  call `set`(v3, v2, v4, v0) @signature `Landroid/app/AlarmManager;.set:(IJLandroid/app/PendingIntent;)V` @kind virtual;
+  #L11e174.  v0:= v6.`com.konasl.konapayment.sdk.kcm.KcmClientService.TAG` @type ^`java.lang.String` @kind object;
+  #L11e178.  v1:= "Next ping scheduled" @kind object;
+  #L11e17c.  call `debugLog`(v0, v1) @signature `Lcom/konasl/konapayment/sdk/p0/e;.debugLog:(Ljava/lang/String;Ljava/lang/String;)V` @kind static;
+  #L11e182.  return @kind void;
+}
+procedure `void` `startBackGroundTask`(`com.konasl.konapayment.sdk.kcm.KcmClientService` v4 @kind this) @signature `Lcom/konasl/konapayment/sdk/kcm/KcmClientService;.startBackGroundTask:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L11e194.  v0:= v4.`com.konasl.konapayment.sdk.kcm.KcmClientService.TAG` @type ^`java.lang.String` @kind object;
+  #L11e198.  call `logMethodName`(v0) @signature `Lcom/konasl/konapayment/sdk/p0/e;.logMethodName:(Ljava/lang/String;)V` @kind static;
+  #L11e19e.  v0:= v4.`com.konasl.konapayment.sdk.kcm.KcmClientService.TAG` @type ^`java.lang.String` @kind object;
+  #L11e1a2.  v1:= "Initiated and executed new Background Connection Task" @kind object;
+  #L11e1a6.  call `debugLog`(v0, v1) @signature `Lcom/konasl/konapayment/sdk/p0/e;.debugLog:(Ljava/lang/String;Ljava/lang/String;)V` @kind static;
+  #L11e1ac.  call `backGroundAsyncTaskConnection`(v4) @signature `Lcom/konasl/konapayment/sdk/kcm/KcmClientService;.backGroundAsyncTaskConnection:()V` @kind direct;
+  #L11e1b2.  goto L11e1f0;
+  #L11e1b4.  v0:= Exception @type ^`java.util.concurrent.RejectedExecutionException` @kind object;
+  #L11e1b6.  v1:= v4.`com.konasl.konapayment.sdk.kcm.KcmClientService.TAG` @type ^`java.lang.String` @kind object;
+  #L11e1ba.  v2:= new `java.lang.StringBuilder`;
+  #L11e1be.  call `<init>`(v2) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L11e1c4.  v3:= "Background Connection Task Got Error (RejectedExecutionException)." @kind object;
+  #L11e1c8.  call temp:= `append`(v2, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L11e1ce.  call temp:= `getMessage`(v0) @signature `Ljava/util/concurrent/RejectedExecutionException;.getMessage:()Ljava/lang/String;` @kind virtual;
+  #L11e1d4.  v0:= temp @kind object;
+  #L11e1d6.  call temp:= `append`(v2, v0) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L11e1dc.  call temp:= `toString`(v2) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L11e1e2.  v0:= temp @kind object;
+  #L11e1e4.  call `loge`(v1, v0) @signature `Lcom/konasl/konapayment/sdk/p0/e;.loge:(Ljava/lang/String;Ljava/lang/String;)V` @kind static;
+  #L11e1ea.  call `scheduleNextPing`(v4) @signature `Lcom/konasl/konapayment/sdk/kcm/KcmClientService;.scheduleNextPing:()V` @kind direct;
+  #L11e1f0.  return @kind void;
+  catch `java.util.concurrent.RejectedExecutionException` @[L11e19e..L11e1b2] goto L11e1b4;
+}
+procedure `void` `stopMQTTClient`(`com.konasl.konapayment.sdk.kcm.KcmClientService` v2 @kind this) @signature `Lcom/konasl/konapayment/sdk/kcm/KcmClientService;.stopMQTTClient:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+
+  #L11e214.  v0:= v2.`com.konasl.konapayment.sdk.kcm.KcmClientService.client` @type ^`org.eclipse.paho.client.mqttv3.MqttClient` @kind object;
+  #L11e218.  if v0 == 0 then goto L11e250;
+  #L11e21c.  call temp:= `isConnected`(v0) @signature `Lorg/eclipse/paho/client/mqttv3/MqttClient;.isConnected:()Z` @kind virtual;
+  #L11e222.  v0:= temp;
+  #L11e224.  if v0 == 0 then goto L11e232;
+  #L11e228.  v0:= v2.`com.konasl.konapayment.sdk.kcm.KcmClientService.client` @type ^`org.eclipse.paho.client.mqttv3.MqttClient` @kind object;
+  #L11e22c.  call `disconnect`(v0) @signature `Lorg/eclipse/paho/client/mqttv3/MqttClient;.disconnect:()V` @kind virtual;
+  #L11e232.  v0:= v2.`com.konasl.konapayment.sdk.kcm.KcmClientService.client` @type ^`org.eclipse.paho.client.mqttv3.MqttClient` @kind object;
+  #L11e236.  call `close`(v0) @signature `Lorg/eclipse/paho/client/mqttv3/MqttClient;.close:()V` @kind virtual;
+  #L11e23c.  goto L11e24a;
+  #L11e23e.  v0:= Exception @type ^`org.eclipse.paho.client.mqttv3.MqttException` @kind object;
+  #L11e240.  v1:= v2.`com.konasl.konapayment.sdk.kcm.KcmClientService.TAG` @type ^`java.lang.String` @kind object;
+  #L11e244.  call `debugLog`(v1, v0) @signature `Lcom/konasl/konapayment/sdk/p0/e;.debugLog:(Ljava/lang/String;Ljava/lang/Throwable;)V` @kind static;
+  #L11e24a.  v0:= 0I;
+  #L11e24c.  v2.`com.konasl.konapayment.sdk.kcm.KcmClientService.client` @type ^`org.eclipse.paho.client.mqttv3.MqttClient` := v0 @kind object;
+  #L11e250.  return @kind void;
+  catch `org.eclipse.paho.client.mqttv3.MqttException` @[L11e21c..L11e23c] goto L11e23e;
+}
+procedure `void` `subscribe`(`com.konasl.konapayment.sdk.kcm.KcmClientService` v1 @kind this, `java.lang.String`[] v2 @kind object) @signature `Lcom/konasl/konapayment/sdk/kcm/KcmClientService;.subscribe:([Ljava/lang/String;)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+
+  #L11e274.  v0:= v1.`com.konasl.konapayment.sdk.kcm.KcmClientService.client` @type ^`org.eclipse.paho.client.mqttv3.MqttClient` @kind object;
+  #L11e278.  call `subscribe`(v0, v2) @signature `Lorg/eclipse/paho/client/mqttv3/MqttClient;.subscribe:([Ljava/lang/String;)V` @kind virtual;
+  #L11e27e.  return @kind void;
+}
+procedure `boolean` `isClientConnectedWithMQTT`(`com.konasl.konapayment.sdk.kcm.KcmClientService` v1 @kind this) @signature `Lcom/konasl/konapayment/sdk/kcm/KcmClientService;.isClientConnectedWithMQTT:()Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L11db60.  v0:= v1.`com.konasl.konapayment.sdk.kcm.KcmClientService.client` @type ^`org.eclipse.paho.client.mqttv3.MqttClient` @kind object;
+  #L11db64.  if v0 == 0 then goto L11db72;
+  #L11db68.  call temp:= `isConnected`(v0) @signature `Lorg/eclipse/paho/client/mqttv3/MqttClient;.isConnected:()Z` @kind virtual;
+  #L11db6e.  v0:= temp;
+  #L11db70.  return v0;
+  #L11db72.  v0:= 0I;
+  #L11db74.  return v0;
+}
+procedure `android.os.IBinder` `onBind`(`com.konasl.konapayment.sdk.kcm.KcmClientService` v1 @kind this, `android.content.Intent` v2 @kind object) @signature `Lcom/konasl/konapayment/sdk/kcm/KcmClientService;.onBind:(Landroid/content/Intent;)Landroid/os/IBinder;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L11db40.  v2:= new `java.lang.UnsupportedOperationException`;
+  #L11db44.  v0:= "Not Supported" @kind object;
+  #L11db48.  call `<init>`(v2, v0) @signature `Ljava/lang/UnsupportedOperationException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L11db4e.  throw v2;
+}
+procedure `void` `onCreate`(`com.konasl.konapayment.sdk.kcm.KcmClientService` v3 @kind this) @signature `Lcom/konasl/konapayment/sdk/kcm/KcmClientService;.onCreate:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L11e058.  call `onCreate`(v3) @signature `Landroid/app/Service;.onCreate:()V` @kind super;
+  #L11e05e.  `@@com.konasl.konapayment.sdk.kcm.KcmClientService.kcmClientService` @type ^`com.konasl.konapayment.sdk.kcm.KcmClientService` := v3 @kind object;
+  #L11e062.  v0:= new `com.konasl.konapayment.sdk.kcm.KcmClientService$ScheduledPingSender`;
+  #L11e066.  v1:= 0I;
+  #L11e068.  call `<init>`(v0, v3, v1) @signature `Lcom/konasl/konapayment/sdk/kcm/KcmClientService$ScheduledPingSender;.<init>:(Lcom/konasl/konapayment/sdk/kcm/KcmClientService;Lcom/konasl/konapayment/sdk/kcm/KcmClientService$1;)V` @kind direct;
+  #L11e06e.  v3.`com.konasl.konapayment.sdk.kcm.KcmClientService.scheduledPingSender` @type ^`com.konasl.konapayment.sdk.kcm.KcmClientService$ScheduledPingSender` := v0 @kind object;
+  #L11e072.  call temp:= `getInstance`() @signature `Lcom/konasl/konapayment/sdk/l0/d/s;.getInstance:()Lcom/konasl/konapayment/sdk/l0/d/s;` @kind static;
+  #L11e078.  v0:= temp @kind object;
+  #L11e07a.  call temp:= `getRnsPayloadDispatcher`(v0) @signature `Lcom/konasl/konapayment/sdk/l0/d/s;.getRnsPayloadDispatcher:()Lcom/konasl/konapayment/sdk/l0/c/q;` @kind virtual;
+  #L11e080.  v0:= temp @kind object;
+  #L11e082.  v3.`com.konasl.konapayment.sdk.kcm.KcmClientService.rnsPayloadDispatcher` @type ^`com.konasl.konapayment.sdk.l0.c.q` := v0 @kind object;
+  #L11e086.  v0:= v3.`com.konasl.konapayment.sdk.kcm.KcmClientService.scheduledPingSender` @type ^`com.konasl.konapayment.sdk.kcm.KcmClientService$ScheduledPingSender` @kind object;
+  #L11e08a.  v1:= new `android.content.IntentFilter`;
+  #L11e08e.  v2:= "com.konasl.konapayment.sdk.kcm.scheduledIntentPing" @kind object;
+  #L11e092.  call `<init>`(v1, v2) @signature `Landroid/content/IntentFilter;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L11e098.  call temp:= `registerReceiver`(v3, v0, v1) @signature `Landroid/app/Service;.registerReceiver:(Landroid/content/BroadcastReceiver;Landroid/content/IntentFilter;)Landroid/content/Intent;` @kind virtual;
+  #L11e09e.  return @kind void;
+}
+procedure `void` `onDestroy`(`com.konasl.konapayment.sdk.kcm.KcmClientService` v2 @kind this) @signature `Lcom/konasl/konapayment/sdk/kcm/KcmClientService;.onDestroy:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L11e0b0.  v0:= v2.`com.konasl.konapayment.sdk.kcm.KcmClientService.scheduledPingSender` @type ^`com.konasl.konapayment.sdk.kcm.KcmClientService$ScheduledPingSender` @kind object;
+  #L11e0b4.  if v0 == 0 then goto L11e0d2;
+  #L11e0b8.  call `unregisterReceiver`(v2, v0) @signature `Landroid/app/Service;.unregisterReceiver:(Landroid/content/BroadcastReceiver;)V` @kind virtual;
+  #L11e0be.  v0:= 0I;
+  #L11e0c0.  v2.`com.konasl.konapayment.sdk.kcm.KcmClientService.scheduledPingSender` @type ^`com.konasl.konapayment.sdk.kcm.KcmClientService$ScheduledPingSender` := v0 @kind object;
+  #L11e0c4.  v0:= v2.`com.konasl.konapayment.sdk.kcm.KcmClientService.TAG` @type ^`java.lang.String` @kind object;
+  #L11e0c8.  v1:= "Pingsender broadcast is disabled for service onDestroy" @kind object;
+  #L11e0cc.  call `debugLog`(v0, v1) @signature `Lcom/konasl/konapayment/sdk/p0/e;.debugLog:(Ljava/lang/String;Ljava/lang/String;)V` @kind static;
+  #L11e0d2.  call `stopMQTTClient`(v2) @signature `Lcom/konasl/konapayment/sdk/kcm/KcmClientService;.stopMQTTClient:()V` @kind direct;
+  #L11e0d8.  v0:= v2.`com.konasl.konapayment.sdk.kcm.KcmClientService.TAG` @type ^`java.lang.String` @kind object;
+  #L11e0dc.  v1:= "Service is getting destroyed" @kind object;
+  #L11e0e0.  call `debugLog`(v0, v1) @signature `Lcom/konasl/konapayment/sdk/p0/e;.debugLog:(Ljava/lang/String;Ljava/lang/String;)V` @kind static;
+  #L11e0e6.  call `onDestroy`(v2) @signature `Landroid/app/Service;.onDestroy:()V` @kind super;
+  #L11e0ec.  return @kind void;
+}
+procedure `int` `onStartCommand`(`com.konasl.konapayment.sdk.kcm.KcmClientService` v1 @kind this, `android.content.Intent` v2 @kind object, `int` v3 , `int` v4 ) @signature `Lcom/konasl/konapayment/sdk/kcm/KcmClientService;.onStartCommand:(Landroid/content/Intent;II)I` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L11dbe8.  v2:= v1.`com.konasl.konapayment.sdk.kcm.KcmClientService.TAG` @type ^`java.lang.String` @kind object;
+  #L11dbec.  v3:= "Starting KCM Client Service" @kind object;
+  #L11dbf0.  call `debugLog`(v2, v3) @signature `Lcom/konasl/konapayment/sdk/p0/e;.debugLog:(Ljava/lang/String;Ljava/lang/String;)V` @kind static;
+  #L11dbf6.  call `executeAsyncTask`(v1) @signature `Lcom/konasl/konapayment/sdk/kcm/KcmClientService;.executeAsyncTask:()V` @kind direct;
+  #L11dbfc.  goto L11dc34;
+  #L11dbfe.  v2:= Exception @type ^`java.lang.Exception` @kind object;
+  #L11dc00.  v3:= v1.`com.konasl.konapayment.sdk.kcm.KcmClientService.TAG` @type ^`java.lang.String` @kind object;
+  #L11dc04.  v4:= new `java.lang.StringBuilder`;
+  #L11dc08.  call `<init>`(v4) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L11dc0e.  v0:= "AsyncTask exception" @kind object;
+  #L11dc12.  call temp:= `append`(v4, v0) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L11dc18.  call temp:= `toString`(v2) @signature `Ljava/lang/Exception;.toString:()Ljava/lang/String;` @kind virtual;
+  #L11dc1e.  v2:= temp @kind object;
+  #L11dc20.  call temp:= `append`(v4, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L11dc26.  call temp:= `toString`(v4) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L11dc2c.  v2:= temp @kind object;
+  #L11dc2e.  call `debugLog`(v3, v2) @signature `Lcom/konasl/konapayment/sdk/p0/e;.debugLog:(Ljava/lang/String;Ljava/lang/String;)V` @kind static;
+  #L11dc34.  v2:= 3I;
+  #L11dc36.  return v2;
+  catch `java.lang.Exception` @[L11dbf6..L11dbfc] goto L11dbfe;
+}
+procedure `boolean` `stopService`(`com.konasl.konapayment.sdk.kcm.KcmClientService` v2 @kind this, `android.content.Intent` v3 @kind object) @signature `Lcom/konasl/konapayment/sdk/kcm/KcmClientService;.stopService:(Landroid/content/Intent;)Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L11db88.  v0:= v2.`com.konasl.konapayment.sdk.kcm.KcmClientService.TAG` @type ^`java.lang.String` @kind object;
+  #L11db8c.  v1:= "Service stopped" @kind object;
+  #L11db90.  call `debugLog`(v0, v1) @signature `Lcom/konasl/konapayment/sdk/p0/e;.debugLog:(Ljava/lang/String;Ljava/lang/String;)V` @kind static;
+  #L11db96.  call `stopMQTTClient`(v2) @signature `Lcom/konasl/konapayment/sdk/kcm/KcmClientService;.stopMQTTClient:()V` @kind direct;
+  #L11db9c.  call temp:= `stopService`(v2, v3) @signature `Landroid/app/Service;.stopService:(Landroid/content/Intent;)Z` @kind super;
+  #L11dba2.  v3:= temp;
+  #L11dba4.  return v3;
+}

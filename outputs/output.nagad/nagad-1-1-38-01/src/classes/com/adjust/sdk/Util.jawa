@@ -1,0 +1,1514 @@
+record `com.adjust.sdk.Util` @kind class @AccessFlag PUBLIC {
+}
+global `java.lang.String` `@@com.adjust.sdk.Util.DATE_FORMAT` @AccessFlag PRIVATE_STATIC_FINAL;
+global `java.text.DecimalFormat` `@@com.adjust.sdk.Util.SecondsDisplayFormat` @AccessFlag PUBLIC_STATIC_FINAL;
+global `java.text.SimpleDateFormat` `@@com.adjust.sdk.Util.dateFormatter` @AccessFlag PUBLIC_STATIC_FINAL;
+global `java.lang.String` `@@com.adjust.sdk.Util.fieldReadErrorMessage` @AccessFlag PRIVATE_STATIC_FINAL;
+global `com.adjust.sdk.scheduler.SingleThreadFutureScheduler` `@@com.adjust.sdk.Util.playAdIdScheduler` @AccessFlag PRIVATE_STATIC_VOLATILE;
+procedure `void` `<clinit>`() @signature `Lcom/adjust/sdk/Util;.<clinit>:()V` @AccessFlag STATIC_CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L2787a8.  call temp:= `newLocalDecimalFormat`() @signature `Lcom/adjust/sdk/Util;.newLocalDecimalFormat:()Ljava/text/DecimalFormat;` @kind static;
+  #L2787ae.  v0:= temp @kind object;
+  #L2787b0.  `@@com.adjust.sdk.Util.SecondsDisplayFormat` @type ^`java.text.DecimalFormat` := v0 @kind object;
+  #L2787b4.  v0:= new `java.text.SimpleDateFormat`;
+  #L2787b8.  v1:= `@@java.util.Locale.US` @type ^`java.util.Locale` @kind object;
+  #L2787bc.  v2:= "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'Z" @kind object;
+  #L2787c0.  call `<init>`(v0, v2, v1) @signature `Ljava/text/SimpleDateFormat;.<init>:(Ljava/lang/String;Ljava/util/Locale;)V` @kind direct;
+  #L2787c6.  `@@com.adjust.sdk.Util.dateFormatter` @type ^`java.text.SimpleDateFormat` := v0 @kind object;
+  #L2787ca.  v0:= 0I;
+  #L2787cc.  `@@com.adjust.sdk.Util.playAdIdScheduler` @type ^`com.adjust.sdk.scheduler.SingleThreadFutureScheduler` := v0 @kind object;
+  #L2787d0.  return @kind void;
+}
+procedure `void` `<init>`(`com.adjust.sdk.Util` v0 @kind this) @signature `Lcom/adjust/sdk/Util;.<init>:()V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+
+  #L2787e4.  call `<init>`(v0) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L2787ea.  return @kind void;
+}
+procedure `java.lang.String` `access$000`(`android.content.Context` v0 @kind object) @signature `Lcom/adjust/sdk/Util;.access$000:(Landroid/content/Context;)Ljava/lang/String;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L278028.  call temp:= `getGoogleAdId`(v0) @signature `Lcom/adjust/sdk/Util;.getGoogleAdId:(Landroid/content/Context;)Ljava/lang/String;` @kind static;
+  #L27802e.  v0:= temp @kind object;
+  #L278030.  return v0 @kind object;
+}
+procedure `boolean` `checkPermission`(`android.content.Context` v4 @kind object, `java.lang.String` v5 @kind object) @signature `Lcom/adjust/sdk/Util;.checkPermission:(Landroid/content/Context;Ljava/lang/String;)Z` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L27753c.  v0:= 1I;
+  #L27753e.  v1:= 0I;
+  #L277540.  call temp:= `checkCallingOrSelfPermission`(v4, v5) @signature `Landroid/content/Context;.checkCallingOrSelfPermission:(Ljava/lang/String;)I` @kind virtual;
+  #L277546.  v4:= temp;
+  #L277548.  if v4 != 0 then goto L27754e;
+  #L27754c.  goto L277550;
+  #L27754e.  v0:= 0I;
+  #L277550.  return v0;
+  #L277552.  v4:= Exception @type ^`java.lang.Exception` @kind object;
+  #L277554.  call temp:= `getLogger`() @signature `Lcom/adjust/sdk/Util;.getLogger:()Lcom/adjust/sdk/ILogger;` @kind static;
+  #L27755a.  v2:= temp @kind object;
+  #L27755c.  v3:= 2I;
+  #L27755e.  v3:= new `java.lang.Object`[v3];
+  #L277562.  v3[v1]:= v5 @kind object;
+  #L277566.  call temp:= `getMessage`(v4) @signature `Ljava/lang/Exception;.getMessage:()Ljava/lang/String;` @kind virtual;
+  #L27756c.  v4:= temp @kind object;
+  #L27756e.  v3[v0]:= v4 @kind object;
+  #L277572.  v4:= "Unable to check permission '%s' with message (%s)" @kind object;
+  #L277576.  call `debug`(v2, v4, v3) @signature `Lcom/adjust/sdk/ILogger;.debug:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L27757c.  return v1;
+  catch `java.lang.Exception` @[L277540..L277548] goto L277552;
+}
+procedure `java.lang.String` `convertToHex`(`byte`[] v4 @kind object) @signature `Lcom/adjust/sdk/Util;.convertToHex:([B)Ljava/lang/String;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L278044.  v0:= new `java.math.BigInteger`;
+  #L278048.  v1:= 1I;
+  #L27804a.  call `<init>`(v0, v1, v4) @signature `Ljava/math/BigInteger;.<init>:(I[B)V` @kind direct;
+  #L278050.  v2:= new `java.lang.StringBuilder`;
+  #L278054.  call `<init>`(v2) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L27805a.  v3:= "%0" @kind object;
+  #L27805e.  call temp:= `append`(v2, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L278064.  v4:= length @variable v4;
+  #L278066.  v4:= v4 ^< v1 @kind int;
+  #L278068.  call temp:= `append`(v2, v4) @signature `Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder;` @kind virtual;
+  #L27806e.  v4:= "x" @kind object;
+  #L278072.  call temp:= `append`(v2, v4) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L278078.  call temp:= `toString`(v2) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L27807e.  v4:= temp @kind object;
+  #L278080.  v1:= new `java.lang.Object`[v1];
+  #L278084.  v2:= 0I;
+  #L278086.  v1[v2]:= v0 @kind object;
+  #L27808a.  call temp:= `formatString`(v4, v1) @signature `Lcom/adjust/sdk/Util;.formatString:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;` @kind static;
+  #L278090.  v4:= temp @kind object;
+  #L278092.  return v4 @kind object;
+}
+procedure `java.lang.String` `createUuid`() @signature `Lcom/adjust/sdk/Util;.createUuid:()Ljava/lang/String;` @AccessFlag PROTECTED_STATIC {
+    temp;
+    v0;
+
+  #L2780a4.  call temp:= `randomUUID`() @signature `Ljava/util/UUID;.randomUUID:()Ljava/util/UUID;` @kind static;
+  #L2780aa.  v0:= temp @kind object;
+  #L2780ac.  call temp:= `toString`(v0) @signature `Ljava/util/UUID;.toString:()Ljava/lang/String;` @kind virtual;
+  #L2780b2.  v0:= temp @kind object;
+  #L2780b4.  return v0 @kind object;
+}
+procedure `boolean` `equalBoolean`(`java.lang.Boolean` v0 @kind object, `java.lang.Boolean` v1 @kind object) @signature `Lcom/adjust/sdk/Util;.equalBoolean:(Ljava/lang/Boolean;Ljava/lang/Boolean;)Z` @AccessFlag PUBLIC_STATIC {
+    temp;
+
+  #L2775a0.  call temp:= `equalObject`(v0, v1) @signature `Lcom/adjust/sdk/Util;.equalObject:(Ljava/lang/Object;Ljava/lang/Object;)Z` @kind static;
+  #L2775a6.  v0:= temp;
+  #L2775a8.  return v0;
+}
+procedure `boolean` `equalEnum`(`java.lang.Enum` v0 @kind object, `java.lang.Enum` v1 @kind object) @signature `Lcom/adjust/sdk/Util;.equalEnum:(Ljava/lang/Enum;Ljava/lang/Enum;)Z` @AccessFlag PUBLIC_STATIC {
+    temp;
+
+  #L2775bc.  call temp:= `equalObject`(v0, v1) @signature `Lcom/adjust/sdk/Util;.equalObject:(Ljava/lang/Object;Ljava/lang/Object;)Z` @kind static;
+  #L2775c2.  v0:= temp;
+  #L2775c4.  return v0;
+}
+procedure `boolean` `equalInt`(`java.lang.Integer` v0 @kind object, `java.lang.Integer` v1 @kind object) @signature `Lcom/adjust/sdk/Util;.equalInt:(Ljava/lang/Integer;Ljava/lang/Integer;)Z` @AccessFlag PUBLIC_STATIC {
+    temp;
+
+  #L2775d8.  call temp:= `equalObject`(v0, v1) @signature `Lcom/adjust/sdk/Util;.equalObject:(Ljava/lang/Object;Ljava/lang/Object;)Z` @kind static;
+  #L2775de.  v0:= temp;
+  #L2775e0.  return v0;
+}
+procedure `boolean` `equalLong`(`java.lang.Long` v0 @kind object, `java.lang.Long` v1 @kind object) @signature `Lcom/adjust/sdk/Util;.equalLong:(Ljava/lang/Long;Ljava/lang/Long;)Z` @AccessFlag PUBLIC_STATIC {
+    temp;
+
+  #L2775f4.  call temp:= `equalObject`(v0, v1) @signature `Lcom/adjust/sdk/Util;.equalObject:(Ljava/lang/Object;Ljava/lang/Object;)Z` @kind static;
+  #L2775fa.  v0:= temp;
+  #L2775fc.  return v0;
+}
+procedure `boolean` `equalObject`(`java.lang.Object` v0 @kind object, `java.lang.Object` v1 @kind object) @signature `Lcom/adjust/sdk/Util;.equalObject:(Ljava/lang/Object;Ljava/lang/Object;)Z` @AccessFlag PUBLIC_STATIC {
+    temp;
+
+  #L277610.  if v0 == 0 then goto L277624;
+  #L277614.  if v1 != 0 then goto L27761a;
+  #L277618.  goto L277624;
+  #L27761a.  call temp:= `equals`(v0, v1) @signature `Ljava/lang/Object;.equals:(Ljava/lang/Object;)Z` @kind virtual;
+  #L277620.  v0:= temp;
+  #L277622.  return v0;
+  #L277624.  if v0 != 0 then goto L277630;
+  #L277628.  if v1 != 0 then goto L277630;
+  #L27762c.  v0:= 1I;
+  #L27762e.  goto L277632;
+  #L277630.  v0:= 0I;
+  #L277632.  return v0;
+}
+procedure `boolean` `equalString`(`java.lang.String` v0 @kind object, `java.lang.String` v1 @kind object) @signature `Lcom/adjust/sdk/Util;.equalString:(Ljava/lang/String;Ljava/lang/String;)Z` @AccessFlag PUBLIC_STATIC {
+    temp;
+
+  #L277644.  call temp:= `equalObject`(v0, v1) @signature `Lcom/adjust/sdk/Util;.equalObject:(Ljava/lang/Object;Ljava/lang/Object;)Z` @kind static;
+  #L27764a.  v0:= temp;
+  #L27764c.  return v0;
+}
+procedure `boolean` `equalsDouble`(`java.lang.Double` v5 @kind object, `java.lang.Double` v6 @kind object) @signature `Lcom/adjust/sdk/Util;.equalsDouble:(Ljava/lang/Double;Ljava/lang/Double;)Z` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L277660.  v0:= 1I;
+  #L277662.  v1:= 0I;
+  #L277664.  if v5 == 0 then goto L27769c;
+  #L277668.  if v6 != 0 then goto L27766e;
+  #L27766c.  goto L27769c;
+  #L27766e.  call temp:= `doubleValue`(v5) @signature `Ljava/lang/Double;.doubleValue:()D` @kind virtual;
+  #L277674.  v2:= temp @kind wide;
+  #L277676.  call temp:= `doubleToLongBits`(v2) @signature `Ljava/lang/Double;.doubleToLongBits:(D)J` @kind static;
+  #L27767c.  v2:= temp @kind wide;
+  #L27767e.  call temp:= `doubleValue`(v6) @signature `Ljava/lang/Double;.doubleValue:()D` @kind virtual;
+  #L277684.  v5:= temp @kind wide;
+  #L277686.  call temp:= `doubleToLongBits`(v5) @signature `Ljava/lang/Double;.doubleToLongBits:(D)J` @kind static;
+  #L27768c.  v5:= temp @kind wide;
+  #L27768e.  v4:= lcmp(v2, v5);
+  #L277692.  if v4 != 0 then goto L277698;
+  #L277696.  goto L27769a;
+  #L277698.  v0:= 0I;
+  #L27769a.  return v0;
+  #L27769c.  if v5 != 0 then goto L2776a6;
+  #L2776a0.  if v6 != 0 then goto L2776a6;
+  #L2776a4.  goto L2776a8;
+  #L2776a6.  v0:= 0I;
+  #L2776a8.  return v0;
+}
+procedure `java.lang.String` `formatString`(`java.lang.String` v1 @kind object, `java.lang.Object`[] v2 @kind object) @signature `Lcom/adjust/sdk/Util;.formatString:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+
+  #L2780c8.  v0:= `@@java.util.Locale.US` @type ^`java.util.Locale` @kind object;
+  #L2780cc.  call temp:= `format`(v0, v1, v2) @signature `Ljava/lang/String;.format:(Ljava/util/Locale;Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;` @kind static;
+  #L2780d2.  v1:= temp @kind object;
+  #L2780d4.  return v1 @kind object;
+}
+procedure `java.lang.Object` `getAdvertisingInfoObject`(`android.content.Context` v1 @kind object, `long` v2 ) @signature `Lcom/adjust/sdk/Util;.getAdvertisingInfoObject:(Landroid/content/Context;J)Ljava/lang/Object;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+
+  #L277d64.  v0:= new `com.adjust.sdk.Util$1`;
+  #L277d68.  call `<init>`(v0, v1) @signature `Lcom/adjust/sdk/Util$1;.<init>:(Landroid/content/Context;)V` @kind direct;
+  #L277d6e.  call temp:= `runSyncInPlayAdIdSchedulerWithTimeout`(v1, v0, v2) @signature `Lcom/adjust/sdk/Util;.runSyncInPlayAdIdSchedulerWithTimeout:(Landroid/content/Context;Ljava/util/concurrent/Callable;J)Ljava/lang/Object;` @kind static;
+  #L277d74.  v1:= temp @kind object;
+  #L277d76.  return v1 @kind object;
+}
+procedure `java.lang.String` `getAndroidId`(`android.content.Context` v0 @kind object) @signature `Lcom/adjust/sdk/Util;.getAndroidId:(Landroid/content/Context;)Ljava/lang/String;` @AccessFlag PUBLIC_STATIC {
+    temp;
+
+  #L2780e8.  call temp:= `getAndroidId`(v0) @signature `Lcom/adjust/sdk/AndroidIdUtil;.getAndroidId:(Landroid/content/Context;)Ljava/lang/String;` @kind static;
+  #L2780ee.  v0:= temp @kind object;
+  #L2780f0.  return v0 @kind object;
+}
+procedure `int` `getConnectivityType`(`android.content.Context` v5 @kind object) @signature `Lcom/adjust/sdk/Util;.getConnectivityType:(Landroid/content/Context;)I` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L277a24.  v0:= 0I;
+  #L277a26.  v1:= 1I;
+  #L277a28.  v2:= -1I;
+  #L277a2a.  v3:= "connectivity" @kind object;
+  #L277a2e.  call temp:= `getSystemService`(v5, v3) @signature `Landroid/content/Context;.getSystemService:(Ljava/lang/String;)Ljava/lang/Object;` @kind virtual;
+  #L277a34.  v5:= temp @kind object;
+  #L277a36.  v5:= (`android.net.ConnectivityManager`) v5 @kind object;
+  #L277a3a.  if v5 != 0 then goto L277a40;
+  #L277a3e.  return v2;
+  #L277a40.  v3:= `@@android.os.Build$VERSION.SDK_INT` @type ^`int`;
+  #L277a44.  v4:= 23I;
+  #L277a48.  if v3 >= v4 then goto L277a5e;
+  #L277a4c.  call temp:= `getActiveNetworkInfo`(v5) @signature `Landroid/net/ConnectivityManager;.getActiveNetworkInfo:()Landroid/net/NetworkInfo;` @kind virtual;
+  #L277a52.  v5:= temp @kind object;
+  #L277a54.  call temp:= `getType`(v5) @signature `Landroid/net/NetworkInfo;.getType:()I` @kind virtual;
+  #L277a5a.  v5:= temp;
+  #L277a5c.  return v5;
+  #L277a5e.  call temp:= `getActiveNetwork`(v5) @signature `Landroid/net/ConnectivityManager;.getActiveNetwork:()Landroid/net/Network;` @kind virtual;
+  #L277a64.  v3:= temp @kind object;
+  #L277a66.  if v3 != 0 then goto L277a6c;
+  #L277a6a.  return v2;
+  #L277a6c.  call temp:= `getNetworkCapabilities`(v5, v3) @signature `Landroid/net/ConnectivityManager;.getNetworkCapabilities:(Landroid/net/Network;)Landroid/net/NetworkCapabilities;` @kind virtual;
+  #L277a72.  v5:= temp @kind object;
+  #L277a74.  if v5 != 0 then goto L277a7a;
+  #L277a78.  return v2;
+  #L277a7a.  call temp:= `hasTransport`(v5, v1) @signature `Landroid/net/NetworkCapabilities;.hasTransport:(I)Z` @kind virtual;
+  #L277a80.  v3:= temp;
+  #L277a82.  if v3 == 0 then goto L277a88;
+  #L277a86.  return v1;
+  #L277a88.  call temp:= `hasTransport`(v5, v0) @signature `Landroid/net/NetworkCapabilities;.hasTransport:(I)Z` @kind virtual;
+  #L277a8e.  v3:= temp;
+  #L277a90.  if v3 == 0 then goto L277a96;
+  #L277a94.  return v0;
+  #L277a96.  v3:= 3I;
+  #L277a98.  call temp:= `hasTransport`(v5, v3) @signature `Landroid/net/NetworkCapabilities;.hasTransport:(I)Z` @kind virtual;
+  #L277a9e.  v4:= temp;
+  #L277aa0.  if v4 == 0 then goto L277aa6;
+  #L277aa4.  return v3;
+  #L277aa6.  v3:= 4I;
+  #L277aa8.  call temp:= `hasTransport`(v5, v3) @signature `Landroid/net/NetworkCapabilities;.hasTransport:(I)Z` @kind virtual;
+  #L277aae.  v4:= temp;
+  #L277ab0.  if v4 == 0 then goto L277ab6;
+  #L277ab4.  return v3;
+  #L277ab6.  v3:= 2I;
+  #L277ab8.  call temp:= `hasTransport`(v5, v3) @signature `Landroid/net/NetworkCapabilities;.hasTransport:(I)Z` @kind virtual;
+  #L277abe.  v4:= temp;
+  #L277ac0.  if v4 == 0 then goto L277ac6;
+  #L277ac4.  return v3;
+  #L277ac6.  v3:= `@@android.os.Build$VERSION.SDK_INT` @type ^`int`;
+  #L277aca.  v4:= 26I;
+  #L277ace.  if v3 >= v4 then goto L277ad4;
+  #L277ad2.  return v2;
+  #L277ad4.  v3:= 5I;
+  #L277ad6.  call temp:= `hasTransport`(v5, v3) @signature `Landroid/net/NetworkCapabilities;.hasTransport:(I)Z` @kind virtual;
+  #L277adc.  v4:= temp;
+  #L277ade.  if v4 == 0 then goto L277ae4;
+  #L277ae2.  return v3;
+  #L277ae4.  v3:= `@@android.os.Build$VERSION.SDK_INT` @type ^`int`;
+  #L277ae8.  v4:= 27I;
+  #L277aec.  if v3 >= v4 then goto L277af2;
+  #L277af0.  return v2;
+  #L277af2.  v3:= 6I;
+  #L277af4.  call temp:= `hasTransport`(v5, v3) @signature `Landroid/net/NetworkCapabilities;.hasTransport:(I)Z` @kind virtual;
+  #L277afa.  v5:= temp;
+  #L277afc.  if v5 == 0 then goto L277b26;
+  #L277b00.  return v3;
+  #L277b02.  v5:= Exception @type ^`java.lang.Exception` @kind object;
+  #L277b04.  call temp:= `getLogger`() @signature `Lcom/adjust/sdk/Util;.getLogger:()Lcom/adjust/sdk/ILogger;` @kind static;
+  #L277b0a.  v3:= temp @kind object;
+  #L277b0c.  v1:= new `java.lang.Object`[v1];
+  #L277b10.  call temp:= `getMessage`(v5) @signature `Ljava/lang/Exception;.getMessage:()Ljava/lang/String;` @kind virtual;
+  #L277b16.  v5:= temp @kind object;
+  #L277b18.  v1[v0]:= v5 @kind object;
+  #L277b1c.  v5:= "Couldn't read connectivity type (%s)" @kind object;
+  #L277b20.  call `warn`(v3, v5, v1) @signature `Lcom/adjust/sdk/ILogger;.warn:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L277b26.  return v2;
+  catch `java.lang.Exception` @[L277a2a..L277afc] goto L277b02;
+}
+procedure `java.lang.String` `getCpuAbi`() @signature `Lcom/adjust/sdk/Util;.getCpuAbi:()Ljava/lang/String;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+
+  #L278104.  v0:= `@@android.os.Build$VERSION.SDK_INT` @type ^`int`;
+  #L278108.  v1:= 21I;
+  #L27810c.  if v0 >= v1 then goto L278116;
+  #L278110.  v0:= `@@android.os.Build.CPU_ABI` @type ^`java.lang.String` @kind object;
+  #L278114.  return v0 @kind object;
+  #L278116.  v0:= 0I;
+  #L278118.  return v0 @kind object;
+}
+procedure `java.lang.String` `getFireAdvertisingId`(`android.content.ContentResolver` v2 @kind object) @signature `Lcom/adjust/sdk/Util;.getFireAdvertisingId:(Landroid/content/ContentResolver;)Ljava/lang/String;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+
+  #L27812c.  v0:= 0I;
+  #L27812e.  if v2 != 0 then goto L278134;
+  #L278132.  return v0 @kind object;
+  #L278134.  v1:= "advertising_id" @kind object;
+  #L278138.  call temp:= `getString`(v2, v1) @signature `Landroid/provider/Settings$Secure;.getString:(Landroid/content/ContentResolver;Ljava/lang/String;)Ljava/lang/String;` @kind static;
+  #L27813e.  v2:= temp @kind object;
+  #L278140.  return v2 @kind object;
+  #L278142.  return v0 @kind object;
+  catch `java.lang.Exception` @[L278134..L278140] goto L278142;
+}
+procedure `java.lang.Boolean` `getFireTrackingEnabled`(`android.content.ContentResolver` v1 @kind object) @signature `Lcom/adjust/sdk/Util;.getFireTrackingEnabled:(Landroid/content/ContentResolver;)Ljava/lang/Boolean;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+
+  #L277cf8.  v0:= "limit_ad_tracking" @kind object;
+  #L277cfc.  call temp:= `getInt`(v1, v0) @signature `Landroid/provider/Settings$Secure;.getInt:(Landroid/content/ContentResolver;Ljava/lang/String;)I` @kind static;
+  #L277d02.  v1:= temp;
+  #L277d04.  if v1 != 0 then goto L277d0c;
+  #L277d08.  v1:= 1I;
+  #L277d0a.  goto L277d0e;
+  #L277d0c.  v1:= 0I;
+  #L277d0e.  call temp:= `valueOf`(v1) @signature `Ljava/lang/Boolean;.valueOf:(Z)Ljava/lang/Boolean;` @kind static;
+  #L277d14.  v1:= temp @kind object;
+  #L277d16.  return v1 @kind object;
+  #L277d18.  v1:= 0I;
+  #L277d1a.  return v1 @kind object;
+  catch `java.lang.Exception` @[L277cf8..L277d16] goto L277d18;
+}
+procedure `java.lang.String` `getGoogleAdId`(`android.content.Context` v4 @kind object) @signature `Lcom/adjust/sdk/Util;.getGoogleAdId:(Landroid/content/Context;)Ljava/lang/String;` @AccessFlag PRIVATE_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L278164.  v0:= 11000L;
+  #L278168.  v2:= 0I;
+  #L27816a.  call temp:= `getGooglePlayServicesInfo`(v4, v0) @signature `Lcom/adjust/sdk/GooglePlayServicesClient;.getGooglePlayServicesInfo:(Landroid/content/Context;J)Lcom/adjust/sdk/GooglePlayServicesClient$GooglePlayServicesInfo;` @kind static;
+  #L278170.  v3:= temp @kind object;
+  #L278172.  if v3 == 0 then goto L278182;
+  #L278176.  call temp:= `getGpsAdid`(v3) @signature `Lcom/adjust/sdk/GooglePlayServicesClient$GooglePlayServicesInfo;.getGpsAdid:()Ljava/lang/String;` @kind virtual;
+  #L27817c.  v2:= temp @kind object;
+  #L27817e.  goto L278182;
+  #L278180.  
+  #L278182.  if v2 != 0 then goto L27819e;
+  #L278186.  call temp:= `getAdvertisingInfoObject`(v4, v0) @signature `Lcom/adjust/sdk/Util;.getAdvertisingInfoObject:(Landroid/content/Context;J)Ljava/lang/Object;` @kind static;
+  #L27818c.  v0:= temp @kind object;
+  #L27818e.  if v0 == 0 then goto L27819e;
+  #L278192.  v1:= 1000L;
+  #L278196.  call temp:= `getPlayAdId`(v4, v0, v1) @signature `Lcom/adjust/sdk/Util;.getPlayAdId:(Landroid/content/Context;Ljava/lang/Object;J)Ljava/lang/String;` @kind static;
+  #L27819c.  v2:= temp @kind object;
+  #L27819e.  return v2 @kind object;
+  catch `java.lang.Exception` @[L27816a..L27817e] goto L278180;
+}
+procedure `void` `getGoogleAdId`(`android.content.Context` v4 @kind object, `com.adjust.sdk.OnDeviceIdsRead` v5 @kind object) @signature `Lcom/adjust/sdk/Util;.getGoogleAdId:(Landroid/content/Context;Lcom/adjust/sdk/OnDeviceIdsRead;)V` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L2787fc.  call temp:= `getLogger`() @signature `Lcom/adjust/sdk/AdjustFactory;.getLogger:()Lcom/adjust/sdk/ILogger;` @kind static;
+  #L278802.  v0:= temp @kind object;
+  #L278804.  call temp:= `myLooper`() @signature `Landroid/os/Looper;.myLooper:()Landroid/os/Looper;` @kind static;
+  #L27880a.  v1:= temp @kind object;
+  #L27880c.  call temp:= `getMainLooper`() @signature `Landroid/os/Looper;.getMainLooper:()Landroid/os/Looper;` @kind static;
+  #L278812.  v2:= temp @kind object;
+  #L278814.  v3:= 0I;
+  #L278816.  if v1 == v2 then goto L278864;
+  #L27881a.  v1:= new `java.lang.Object`[v3];
+  #L27881e.  v2:= "GoogleAdId being read in the background" @kind object;
+  #L278822.  call `debug`(v0, v2, v1) @signature `Lcom/adjust/sdk/ILogger;.debug:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L278828.  call temp:= `getGoogleAdId`(v4) @signature `Lcom/adjust/sdk/Util;.getGoogleAdId:(Landroid/content/Context;)Ljava/lang/String;` @kind static;
+  #L27882e.  v4:= temp @kind object;
+  #L278830.  v1:= new `java.lang.StringBuilder`;
+  #L278834.  call `<init>`(v1) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L27883a.  v2:= "GoogleAdId read " @kind object;
+  #L27883e.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L278844.  call temp:= `append`(v1, v4) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L27884a.  call temp:= `toString`(v1) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L278850.  v1:= temp @kind object;
+  #L278852.  v2:= new `java.lang.Object`[v3];
+  #L278856.  call `debug`(v0, v1, v2) @signature `Lcom/adjust/sdk/ILogger;.debug:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L27885c.  call `onGoogleAdIdRead`(v5, v4) @signature `Lcom/adjust/sdk/OnDeviceIdsRead;.onGoogleAdIdRead:(Ljava/lang/String;)V` @kind interface;
+  #L278862.  return @kind void;
+  #L278864.  v1:= new `java.lang.Object`[v3];
+  #L278868.  v2:= "GoogleAdId being read in the foreground" @kind object;
+  #L27886c.  call `debug`(v0, v2, v1) @signature `Lcom/adjust/sdk/ILogger;.debug:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L278872.  v0:= new `com.adjust.sdk.Util$5`;
+  #L278876.  call `<init>`(v0, v5) @signature `Lcom/adjust/sdk/Util$5;.<init>:(Lcom/adjust/sdk/OnDeviceIdsRead;)V` @kind direct;
+  #L27887c.  v5:= 1I;
+  #L27887e.  v5:= new `android.content.Context`[v5];
+  #L278882.  v5[v3]:= v4 @kind object;
+  #L278886.  call temp:= `execute`(v0, v5) @signature `Lcom/adjust/sdk/scheduler/AsyncTaskExecutor;.execute:([Ljava/lang/Object;)Lcom/adjust/sdk/scheduler/AsyncTaskExecutor;` @kind virtual;
+  #L27888c.  return @kind void;
+}
+procedure `java.util.Locale` `getLocale`(`android.content.res.Configuration` v3 @kind object) @signature `Lcom/adjust/sdk/Util;.getLocale:(Landroid/content/res/Configuration;)Ljava/util/Locale;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L2785e4.  v0:= `@@android.os.Build$VERSION.SDK_INT` @type ^`int`;
+  #L2785e8.  v1:= 24I;
+  #L2785ec.  if v0 < v1 then goto L278614;
+  #L2785f0.  call temp:= `getLocales`(v3) @signature `Landroid/content/res/Configuration;.getLocales:()Landroid/os/LocaleList;` @kind virtual;
+  #L2785f6.  v0:= temp @kind object;
+  #L2785f8.  if v0 == 0 then goto L278614;
+  #L2785fc.  call temp:= `isEmpty`(v0) @signature `Landroid/os/LocaleList;.isEmpty:()Z` @kind virtual;
+  #L278602.  v2:= temp;
+  #L278604.  if v2 != 0 then goto L278614;
+  #L278608.  v3:= 0I;
+  #L27860a.  call temp:= `get`(v0, v3) @signature `Landroid/os/LocaleList;.get:(I)Ljava/util/Locale;` @kind virtual;
+  #L278610.  v3:= temp @kind object;
+  #L278612.  return v3 @kind object;
+  #L278614.  v0:= `@@android.os.Build$VERSION.SDK_INT` @type ^`int`;
+  #L278618.  if v0 >= v1 then goto L278622;
+  #L27861c.  v3:= v3.`android.content.res.Configuration.locale` @type ^`java.util.Locale` @kind object;
+  #L278620.  return v3 @kind object;
+  #L278622.  v3:= 0I;
+  #L278624.  return v3 @kind object;
+}
+procedure `com.adjust.sdk.ILogger` `getLogger`() @signature `Lcom/adjust/sdk/Util;.getLogger:()Lcom/adjust/sdk/ILogger;` @AccessFlag PRIVATE_STATIC {
+    temp;
+    v0;
+
+  #L2779dc.  call temp:= `getLogger`() @signature `Lcom/adjust/sdk/AdjustFactory;.getLogger:()Lcom/adjust/sdk/ILogger;` @kind static;
+  #L2779e2.  v0:= temp @kind object;
+  #L2779e4.  return v0 @kind object;
+}
+procedure `java.lang.String` `getMacAddress`(`android.content.Context` v0 @kind object) @signature `Lcom/adjust/sdk/Util;.getMacAddress:(Landroid/content/Context;)Ljava/lang/String;` @AccessFlag PUBLIC_STATIC {
+    temp;
+
+  #L2781c0.  call temp:= `getMacAddress`(v0) @signature `Lcom/adjust/sdk/MacAddressUtil;.getMacAddress:(Landroid/content/Context;)Ljava/lang/String;` @kind static;
+  #L2781c6.  v0:= temp @kind object;
+  #L2781c8.  return v0 @kind object;
+}
+procedure `java.lang.String` `getMcc`(`android.content.Context` v4 @kind object) @signature `Lcom/adjust/sdk/Util;.getMcc:(Landroid/content/Context;)Ljava/lang/String;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L2781dc.  v0:= 0I;
+  #L2781de.  v1:= 0I;
+  #L2781e0.  v2:= "phone" @kind object;
+  #L2781e4.  call temp:= `getSystemService`(v4, v2) @signature `Landroid/content/Context;.getSystemService:(Ljava/lang/String;)Ljava/lang/Object;` @kind virtual;
+  #L2781ea.  v4:= temp @kind object;
+  #L2781ec.  v4:= (`android.telephony.TelephonyManager`) v4 @kind object;
+  #L2781f0.  call temp:= `getNetworkOperator`(v4) @signature `Landroid/telephony/TelephonyManager;.getNetworkOperator:()Ljava/lang/String;` @kind virtual;
+  #L2781f6.  v4:= temp @kind object;
+  #L2781f8.  call temp:= `isEmpty`(v4) @signature `Landroid/text/TextUtils;.isEmpty:(Ljava/lang/CharSequence;)Z` @kind static;
+  #L2781fe.  v2:= temp;
+  #L278200.  if v2 == 0 then goto L27821c;
+  #L278204.  call temp:= `getLogger`() @signature `Lcom/adjust/sdk/AdjustFactory;.getLogger:()Lcom/adjust/sdk/ILogger;` @kind static;
+  #L27820a.  v4:= temp @kind object;
+  #L27820c.  v2:= "Couldn't receive networkOperator string to read MCC" @kind object;
+  #L278210.  v3:= new `java.lang.Object`[v1];
+  #L278214.  call `warn`(v4, v2, v3) @signature `Lcom/adjust/sdk/ILogger;.warn:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L27821a.  return v0 @kind object;
+  #L27821c.  v2:= 3I;
+  #L27821e.  call temp:= `substring`(v4, v1, v2) @signature `Ljava/lang/String;.substring:(II)Ljava/lang/String;` @kind virtual;
+  #L278224.  v4:= temp @kind object;
+  #L278226.  return v4 @kind object;
+  #L278228.  call temp:= `getLogger`() @signature `Lcom/adjust/sdk/AdjustFactory;.getLogger:()Lcom/adjust/sdk/ILogger;` @kind static;
+  #L27822e.  v4:= temp @kind object;
+  #L278230.  v1:= new `java.lang.Object`[v1];
+  #L278234.  v2:= "Couldn't return mcc" @kind object;
+  #L278238.  call `warn`(v4, v2, v1) @signature `Lcom/adjust/sdk/ILogger;.warn:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L27823e.  return v0 @kind object;
+  catch `java.lang.Exception` @[L2781e0..L278226] goto L278228;
+}
+procedure `java.lang.String` `getMnc`(`android.content.Context` v4 @kind object) @signature `Lcom/adjust/sdk/Util;.getMnc:(Landroid/content/Context;)Ljava/lang/String;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L278260.  v0:= 0I;
+  #L278262.  v1:= 0I;
+  #L278264.  v2:= "phone" @kind object;
+  #L278268.  call temp:= `getSystemService`(v4, v2) @signature `Landroid/content/Context;.getSystemService:(Ljava/lang/String;)Ljava/lang/Object;` @kind virtual;
+  #L27826e.  v4:= temp @kind object;
+  #L278270.  v4:= (`android.telephony.TelephonyManager`) v4 @kind object;
+  #L278274.  call temp:= `getNetworkOperator`(v4) @signature `Landroid/telephony/TelephonyManager;.getNetworkOperator:()Ljava/lang/String;` @kind virtual;
+  #L27827a.  v4:= temp @kind object;
+  #L27827c.  call temp:= `isEmpty`(v4) @signature `Landroid/text/TextUtils;.isEmpty:(Ljava/lang/CharSequence;)Z` @kind static;
+  #L278282.  v2:= temp;
+  #L278284.  if v2 == 0 then goto L2782a0;
+  #L278288.  call temp:= `getLogger`() @signature `Lcom/adjust/sdk/AdjustFactory;.getLogger:()Lcom/adjust/sdk/ILogger;` @kind static;
+  #L27828e.  v4:= temp @kind object;
+  #L278290.  v2:= "Couldn't receive networkOperator string to read MNC" @kind object;
+  #L278294.  v3:= new `java.lang.Object`[v1];
+  #L278298.  call `warn`(v4, v2, v3) @signature `Lcom/adjust/sdk/ILogger;.warn:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L27829e.  return v0 @kind object;
+  #L2782a0.  v2:= 3I;
+  #L2782a2.  call temp:= `substring`(v4, v2) @signature `Ljava/lang/String;.substring:(I)Ljava/lang/String;` @kind virtual;
+  #L2782a8.  v4:= temp @kind object;
+  #L2782aa.  return v4 @kind object;
+  #L2782ac.  call temp:= `getLogger`() @signature `Lcom/adjust/sdk/AdjustFactory;.getLogger:()Lcom/adjust/sdk/ILogger;` @kind static;
+  #L2782b2.  v4:= temp @kind object;
+  #L2782b4.  v1:= new `java.lang.Object`[v1];
+  #L2782b8.  v2:= "Couldn't return mnc" @kind object;
+  #L2782bc.  call `warn`(v4, v2, v1) @signature `Lcom/adjust/sdk/ILogger;.warn:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L2782c2.  return v0 @kind object;
+  catch `java.lang.Exception` @[L278264..L2782aa] goto L2782ac;
+}
+procedure `int` `getNetworkType`(`android.content.Context` v3 @kind object) @signature `Lcom/adjust/sdk/Util;.getNetworkType:(Landroid/content/Context;)I` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L277b48.  v0:= "phone" @kind object;
+  #L277b4c.  call temp:= `getSystemService`(v3, v0) @signature `Landroid/content/Context;.getSystemService:(Ljava/lang/String;)Ljava/lang/Object;` @kind virtual;
+  #L277b52.  v3:= temp @kind object;
+  #L277b54.  v3:= (`android.telephony.TelephonyManager`) v3 @kind object;
+  #L277b58.  v0:= `@@android.os.Build$VERSION.SDK_INT` @type ^`int`;
+  #L277b5c.  v1:= 30I;
+  #L277b60.  if v0 < v1 then goto L277b6e;
+  #L277b64.  call temp:= `getDataNetworkType`(v3) @signature `Landroid/telephony/TelephonyManager;.getDataNetworkType:()I` @kind virtual;
+  #L277b6a.  v3:= temp;
+  #L277b6c.  goto L277ba2;
+  #L277b6e.  call temp:= `getNetworkType`(v3) @signature `Landroid/telephony/TelephonyManager;.getNetworkType:()I` @kind virtual;
+  #L277b74.  v3:= temp;
+  #L277b76.  goto L277ba2;
+  #L277b78.  v3:= Exception @type ^`java.lang.Exception` @kind object;
+  #L277b7a.  call temp:= `getLogger`() @signature `Lcom/adjust/sdk/Util;.getLogger:()Lcom/adjust/sdk/ILogger;` @kind static;
+  #L277b80.  v0:= temp @kind object;
+  #L277b82.  v1:= 1I;
+  #L277b84.  v1:= new `java.lang.Object`[v1];
+  #L277b88.  v2:= 0I;
+  #L277b8a.  call temp:= `getMessage`(v3) @signature `Ljava/lang/Exception;.getMessage:()Ljava/lang/String;` @kind virtual;
+  #L277b90.  v3:= temp @kind object;
+  #L277b92.  v1[v2]:= v3 @kind object;
+  #L277b96.  v3:= "Couldn't read network type (%s)" @kind object;
+  #L277b9a.  call `warn`(v0, v3, v1) @signature `Lcom/adjust/sdk/ILogger;.warn:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L277ba0.  v3:= -1I;
+  #L277ba2.  return v3;
+  catch `java.lang.Exception` @[L277b48..L277b76] goto L277b78;
+}
+procedure `java.lang.String` `getPlayAdId`(`android.content.Context` v1 @kind object, `java.lang.Object` v2 @kind object, `long` v3 ) @signature `Lcom/adjust/sdk/Util;.getPlayAdId:(Landroid/content/Context;Ljava/lang/Object;J)Ljava/lang/String;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+
+  #L2782e4.  v0:= new `com.adjust.sdk.Util$2`;
+  #L2782e8.  call `<init>`(v0, v1, v2) @signature `Lcom/adjust/sdk/Util$2;.<init>:(Landroid/content/Context;Ljava/lang/Object;)V` @kind direct;
+  #L2782ee.  call temp:= `runSyncInPlayAdIdSchedulerWithTimeout`(v1, v0, v3) @signature `Lcom/adjust/sdk/Util;.runSyncInPlayAdIdSchedulerWithTimeout:(Landroid/content/Context;Ljava/util/concurrent/Callable;J)Ljava/lang/Object;` @kind static;
+  #L2782f4.  v1:= temp @kind object;
+  #L2782f6.  v1:= (`java.lang.String`) v1 @kind object;
+  #L2782fa.  return v1 @kind object;
+}
+procedure `java.lang.String` `getReasonString`(`java.lang.String` v3 @kind object, `java.lang.Throwable` v4 @kind object) @signature `Lcom/adjust/sdk/Util;.getReasonString:(Ljava/lang/String;Ljava/lang/Throwable;)Ljava/lang/String;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L27830c.  v0:= 0I;
+  #L27830e.  v1:= 1I;
+  #L278310.  if v4 == 0 then goto L278330;
+  #L278314.  v2:= 2I;
+  #L278316.  v2:= new `java.lang.Object`[v2];
+  #L27831a.  v2[v0]:= v3 @kind object;
+  #L27831e.  v2[v1]:= v4 @kind object;
+  #L278322.  v3:= "%s: %s" @kind object;
+  #L278326.  call temp:= `formatString`(v3, v2) @signature `Lcom/adjust/sdk/Util;.formatString:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;` @kind static;
+  #L27832c.  v3:= temp @kind object;
+  #L27832e.  return v3 @kind object;
+  #L278330.  v4:= new `java.lang.Object`[v1];
+  #L278334.  v4[v0]:= v3 @kind object;
+  #L278338.  v3:= "%s" @kind object;
+  #L27833c.  call temp:= `formatString`(v3, v4) @signature `Lcom/adjust/sdk/Util;.formatString:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;` @kind static;
+  #L278342.  v3:= temp @kind object;
+  #L278344.  return v3 @kind object;
+}
+procedure `java.lang.String` `getRootCause`(`java.lang.Exception` v2 @kind object) @signature `Lcom/adjust/sdk/Util;.getRootCause:(Ljava/lang/Exception;)Ljava/lang/String;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+
+  #L278358.  call temp:= `hasRootCause`(v2) @signature `Lcom/adjust/sdk/Util;.hasRootCause:(Ljava/lang/Exception;)Z` @kind static;
+  #L27835e.  v0:= temp;
+  #L278360.  if v0 != 0 then goto L278368;
+  #L278364.  v2:= 0I;
+  #L278366.  return v2 @kind object;
+  #L278368.  v0:= new `java.io.StringWriter`;
+  #L27836c.  call `<init>`(v0) @signature `Ljava/io/StringWriter;.<init>:()V` @kind direct;
+  #L278372.  v1:= new `java.io.PrintWriter`;
+  #L278376.  call `<init>`(v1, v0) @signature `Ljava/io/PrintWriter;.<init>:(Ljava/io/Writer;)V` @kind direct;
+  #L27837c.  call `printStackTrace`(v2, v1) @signature `Ljava/lang/Exception;.printStackTrace:(Ljava/io/PrintWriter;)V` @kind virtual;
+  #L278382.  call temp:= `toString`(v0) @signature `Ljava/io/StringWriter;.toString:()Ljava/lang/String;` @kind virtual;
+  #L278388.  v2:= temp @kind object;
+  #L27838a.  v0:= "Caused by:" @kind object;
+  #L27838e.  call temp:= `indexOf`(v2, v0) @signature `Ljava/lang/String;.indexOf:(Ljava/lang/String;)I` @kind virtual;
+  #L278394.  v0:= temp;
+  #L278396.  v1:= "\n" @kind object;
+  #L27839a.  call temp:= `indexOf`(v2, v1, v0) @signature `Ljava/lang/String;.indexOf:(Ljava/lang/String;I)I` @kind virtual;
+  #L2783a0.  v1:= temp;
+  #L2783a2.  call temp:= `substring`(v2, v0, v1) @signature `Ljava/lang/String;.substring:(II)Ljava/lang/String;` @kind virtual;
+  #L2783a8.  v2:= temp @kind object;
+  #L2783aa.  return v2 @kind object;
+}
+procedure `java.lang.String` `getSdkPrefix`(`java.lang.String` v3 @kind object) @signature `Lcom/adjust/sdk/Util;.getSdkPrefix:(Ljava/lang/String;)Ljava/lang/String;` @AccessFlag PRIVATE_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L2783bc.  v0:= 0I;
+  #L2783be.  if v3 != 0 then goto L2783c4;
+  #L2783c2.  return v0 @kind object;
+  #L2783c4.  v1:= "@" @kind object;
+  #L2783c8.  call temp:= `contains`(v3, v1) @signature `Ljava/lang/String;.contains:(Ljava/lang/CharSequence;)Z` @kind virtual;
+  #L2783ce.  v2:= temp;
+  #L2783d0.  if v2 != 0 then goto L2783d6;
+  #L2783d4.  return v0 @kind object;
+  #L2783d6.  call temp:= `split`(v3, v1) @signature `Ljava/lang/String;.split:(Ljava/lang/String;)[Ljava/lang/String;` @kind virtual;
+  #L2783dc.  v3:= temp @kind object;
+  #L2783de.  if v3 != 0 then goto L2783e4;
+  #L2783e2.  return v0 @kind object;
+  #L2783e4.  v1:= length @variable v3;
+  #L2783e6.  v2:= 2I;
+  #L2783e8.  if v1 == v2 then goto L2783ee;
+  #L2783ec.  return v0 @kind object;
+  #L2783ee.  v0:= 0I;
+  #L2783f0.  v3:= v3[v0] @kind object;
+  #L2783f4.  return v3 @kind object;
+}
+procedure `java.lang.String` `getSdkPrefixPlatform`(`java.lang.String` v3 @kind object) @signature `Lcom/adjust/sdk/Util;.getSdkPrefixPlatform:(Ljava/lang/String;)Ljava/lang/String;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L278408.  call temp:= `getSdkPrefix`(v3) @signature `Lcom/adjust/sdk/Util;.getSdkPrefix:(Ljava/lang/String;)Ljava/lang/String;` @kind static;
+  #L27840e.  v3:= temp @kind object;
+  #L278410.  v0:= 0I;
+  #L278412.  if v3 != 0 then goto L278418;
+  #L278416.  return v0 @kind object;
+  #L278418.  v1:= 2I;
+  #L27841a.  v2:= "\\d+" @kind object;
+  #L27841e.  call temp:= `split`(v3, v2, v1) @signature `Ljava/lang/String;.split:(Ljava/lang/String;I)[Ljava/lang/String;` @kind virtual;
+  #L278424.  v3:= temp @kind object;
+  #L278426.  if v3 != 0 then goto L27842c;
+  #L27842a.  return v0 @kind object;
+  #L27842c.  v1:= length @variable v3;
+  #L27842e.  if v1 != 0 then goto L278434;
+  #L278432.  return v0 @kind object;
+  #L278434.  v0:= 0I;
+  #L278436.  v3:= v3[v0] @kind object;
+  #L27843a.  return v3 @kind object;
+}
+procedure `java.lang.String` `getSdkVersion`() @signature `Lcom/adjust/sdk/Util;.getSdkVersion:()Ljava/lang/String;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+
+  #L27844c.  v0:= "android4.28.6" @kind object;
+  #L278450.  return v0 @kind object;
+}
+procedure `java.lang.String`[] `getSupportedAbis`() @signature `Lcom/adjust/sdk/Util;.getSupportedAbis:()[Ljava/lang/String;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+
+  #L27858c.  v0:= `@@android.os.Build$VERSION.SDK_INT` @type ^`int`;
+  #L278590.  v1:= 21I;
+  #L278594.  if v0 < v1 then goto L27859e;
+  #L278598.  v0:= `@@android.os.Build.SUPPORTED_ABIS` @type ^`java.lang.String`[] @kind object;
+  #L27859c.  return v0 @kind object;
+  #L27859e.  v0:= 0I;
+  #L2785a0.  return v0 @kind object;
+}
+procedure `long` `getWaitingTime`(`int` v4 , `com.adjust.sdk.BackoffStrategy` v5 @kind object) @signature `Lcom/adjust/sdk/Util;.getWaitingTime:(ILcom/adjust/sdk/BackoffStrategy;)J` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L2786ec.  v0:= v5.`com.adjust.sdk.BackoffStrategy.minRetries` @type ^`int`;
+  #L2786f0.  if v4 >= v0 then goto L2786fa;
+  #L2786f4.  v4:= 0L;
+  #L2786f8.  return v4 @kind wide;
+  #L2786fa.  v4:= v4 - v0 @kind int;
+  #L2786fc.  v0:= 2.0D;
+  #L278700.  v2:= (`double`) v4 @kind i2d;
+  #L278702.  call temp:= `pow`(v0, v2) @signature `Ljava/lang/Math;.pow:(DD)D` @kind static;
+  #L278708.  v0:= temp @kind wide;
+  #L27870a.  v0:= (`long`) v0 @kind d2l;
+  #L27870c.  v2:= v5.`com.adjust.sdk.BackoffStrategy.milliSecondMultiplier` @type ^`long` @kind wide;
+  #L278710.  v0:= v0 * v2 @kind long;
+  #L278714.  v2:= v5.`com.adjust.sdk.BackoffStrategy.maxWait` @type ^`long` @kind wide;
+  #L278718.  call temp:= `min`(v0, v2) @signature `Ljava/lang/Math;.min:(JJ)J` @kind static;
+  #L27871e.  v0:= temp @kind wide;
+  #L278720.  v2:= v5.`com.adjust.sdk.BackoffStrategy.minRange` @type ^`double` @kind wide;
+  #L278724.  v4:= v5.`com.adjust.sdk.BackoffStrategy.maxRange` @type ^`double` @kind wide;
+  #L278728.  call temp:= `randomInRange`(v2, v4) @signature `Lcom/adjust/sdk/Util;.randomInRange:(DD)D` @kind static;
+  #L27872e.  v4:= temp @kind wide;
+  #L278730.  v0:= (`double`) v0 @kind l2d;
+  #L278732.  v0:= v0 * v4 @kind double;
+  #L278736.  v4:= (`long`) v0 @kind d2l;
+  #L278738.  return v4 @kind wide;
+}
+procedure `boolean` `hasRootCause`(`java.lang.Exception` v2 @kind object) @signature `Lcom/adjust/sdk/Util;.hasRootCause:(Ljava/lang/Exception;)Z` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+
+  #L2776bc.  v0:= new `java.io.StringWriter`;
+  #L2776c0.  call `<init>`(v0) @signature `Ljava/io/StringWriter;.<init>:()V` @kind direct;
+  #L2776c6.  v1:= new `java.io.PrintWriter`;
+  #L2776ca.  call `<init>`(v1, v0) @signature `Ljava/io/PrintWriter;.<init>:(Ljava/io/Writer;)V` @kind direct;
+  #L2776d0.  call `printStackTrace`(v2, v1) @signature `Ljava/lang/Exception;.printStackTrace:(Ljava/io/PrintWriter;)V` @kind virtual;
+  #L2776d6.  call temp:= `toString`(v0) @signature `Ljava/io/StringWriter;.toString:()Ljava/lang/String;` @kind virtual;
+  #L2776dc.  v2:= temp @kind object;
+  #L2776de.  v0:= "Caused by:" @kind object;
+  #L2776e2.  call temp:= `contains`(v2, v0) @signature `Ljava/lang/String;.contains:(Ljava/lang/CharSequence;)Z` @kind virtual;
+  #L2776e8.  v2:= temp;
+  #L2776ea.  return v2;
+}
+procedure `java.lang.String` `hash`(`java.lang.String` v2 @kind object, `java.lang.String` v3 @kind object) @signature `Lcom/adjust/sdk/Util;.hash:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+
+  #L278464.  v0:= "UTF-8" @kind object;
+  #L278468.  call temp:= `getBytes`(v2, v0) @signature `Ljava/lang/String;.getBytes:(Ljava/lang/String;)[B` @kind virtual;
+  #L27846e.  v2:= temp @kind object;
+  #L278470.  call temp:= `getInstance`(v3) @signature `Ljava/security/MessageDigest;.getInstance:(Ljava/lang/String;)Ljava/security/MessageDigest;` @kind static;
+  #L278476.  v3:= temp @kind object;
+  #L278478.  v0:= 0I;
+  #L27847a.  v1:= length @variable v2;
+  #L27847c.  call `update`(v3, v2, v0, v1) @signature `Ljava/security/MessageDigest;.update:([BII)V` @kind virtual;
+  #L278482.  call temp:= `digest`(v3) @signature `Ljava/security/MessageDigest;.digest:()[B` @kind virtual;
+  #L278488.  v2:= temp @kind object;
+  #L27848a.  call temp:= `convertToHex`(v2) @signature `Lcom/adjust/sdk/Util;.convertToHex:([B)Ljava/lang/String;` @kind static;
+  #L278490.  v2:= temp @kind object;
+  #L278492.  goto L278496;
+  #L278494.  v2:= 0I;
+  #L278496.  return v2 @kind object;
+  catch `java.lang.Exception` @[L278464..L278492] goto L278494;
+}
+procedure `int` `hashBoolean`(`java.lang.Boolean` v0 @kind object) @signature `Lcom/adjust/sdk/Util;.hashBoolean:(Ljava/lang/Boolean;)I` @AccessFlag PUBLIC_STATIC {
+    temp;
+
+  #L277bc4.  if v0 != 0 then goto L277bcc;
+  #L277bc8.  v0:= 0I;
+  #L277bca.  return v0;
+  #L277bcc.  call temp:= `hashCode`(v0) @signature `Ljava/lang/Boolean;.hashCode:()I` @kind virtual;
+  #L277bd2.  v0:= temp;
+  #L277bd4.  return v0;
+}
+procedure `int` `hashDouble`(`java.lang.Double` v0 @kind object) @signature `Lcom/adjust/sdk/Util;.hashDouble:(Ljava/lang/Double;)I` @AccessFlag PUBLIC_STATIC {
+    temp;
+
+  #L277be8.  if v0 != 0 then goto L277bf0;
+  #L277bec.  v0:= 0I;
+  #L277bee.  return v0;
+  #L277bf0.  call temp:= `hashCode`(v0) @signature `Ljava/lang/Double;.hashCode:()I` @kind virtual;
+  #L277bf6.  v0:= temp;
+  #L277bf8.  return v0;
+}
+procedure `int` `hashEnum`(`java.lang.Enum` v0 @kind object) @signature `Lcom/adjust/sdk/Util;.hashEnum:(Ljava/lang/Enum;)I` @AccessFlag PUBLIC_STATIC {
+    temp;
+
+  #L277c0c.  if v0 != 0 then goto L277c14;
+  #L277c10.  v0:= 0I;
+  #L277c12.  return v0;
+  #L277c14.  call temp:= `hashCode`(v0) @signature `Ljava/lang/Enum;.hashCode:()I` @kind virtual;
+  #L277c1a.  v0:= temp;
+  #L277c1c.  return v0;
+}
+procedure `int` `hashLong`(`java.lang.Long` v0 @kind object) @signature `Lcom/adjust/sdk/Util;.hashLong:(Ljava/lang/Long;)I` @AccessFlag PUBLIC_STATIC {
+    temp;
+
+  #L277c30.  if v0 != 0 then goto L277c38;
+  #L277c34.  v0:= 0I;
+  #L277c36.  return v0;
+  #L277c38.  call temp:= `hashCode`(v0) @signature `Ljava/lang/Long;.hashCode:()I` @kind virtual;
+  #L277c3e.  v0:= temp;
+  #L277c40.  return v0;
+}
+procedure `int` `hashObject`(`java.lang.Object` v0 @kind object) @signature `Lcom/adjust/sdk/Util;.hashObject:(Ljava/lang/Object;)I` @AccessFlag PUBLIC_STATIC {
+    temp;
+
+  #L277c54.  if v0 != 0 then goto L277c5c;
+  #L277c58.  v0:= 0I;
+  #L277c5a.  return v0;
+  #L277c5c.  call temp:= `hashCode`(v0) @signature `Ljava/lang/Object;.hashCode:()I` @kind virtual;
+  #L277c62.  v0:= temp;
+  #L277c64.  return v0;
+}
+procedure `int` `hashString`(`java.lang.String` v0 @kind object) @signature `Lcom/adjust/sdk/Util;.hashString:(Ljava/lang/String;)I` @AccessFlag PUBLIC_STATIC {
+    temp;
+
+  #L277c78.  if v0 != 0 then goto L277c80;
+  #L277c7c.  v0:= 0I;
+  #L277c7e.  return v0;
+  #L277c80.  call temp:= `hashCode`(v0) @signature `Ljava/lang/String;.hashCode:()I` @kind virtual;
+  #L277c86.  v0:= temp;
+  #L277c88.  return v0;
+}
+procedure `boolean` `isEqualGoogleReferrerDetails`(`com.adjust.sdk.ReferrerDetails` v5 @kind object, `com.adjust.sdk.ActivityState` v6 @kind object) @signature `Lcom/adjust/sdk/Util;.isEqualGoogleReferrerDetails:(Lcom/adjust/sdk/ReferrerDetails;Lcom/adjust/sdk/ActivityState;)Z` @AccessFlag PRIVATE_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L2776fc.  v0:= v5.`com.adjust.sdk.ReferrerDetails.referrerClickTimestampSeconds` @type ^`long` @kind wide;
+  #L277700.  v2:= v6.`com.adjust.sdk.ActivityState.clickTime` @type ^`long` @kind wide;
+  #L277704.  v4:= lcmp(v0, v2);
+  #L277708.  if v4 != 0 then goto L27777c;
+  #L27770c.  v0:= v5.`com.adjust.sdk.ReferrerDetails.installBeginTimestampSeconds` @type ^`long` @kind wide;
+  #L277710.  v2:= v6.`com.adjust.sdk.ActivityState.installBegin` @type ^`long` @kind wide;
+  #L277714.  v4:= lcmp(v0, v2);
+  #L277718.  if v4 != 0 then goto L27777c;
+  #L27771c.  v0:= v5.`com.adjust.sdk.ReferrerDetails.referrerClickTimestampServerSeconds` @type ^`long` @kind wide;
+  #L277720.  v2:= v6.`com.adjust.sdk.ActivityState.clickTimeServer` @type ^`long` @kind wide;
+  #L277724.  v4:= lcmp(v0, v2);
+  #L277728.  if v4 != 0 then goto L27777c;
+  #L27772c.  v0:= v5.`com.adjust.sdk.ReferrerDetails.installBeginTimestampServerSeconds` @type ^`long` @kind wide;
+  #L277730.  v2:= v6.`com.adjust.sdk.ActivityState.installBeginServer` @type ^`long` @kind wide;
+  #L277734.  v4:= lcmp(v0, v2);
+  #L277738.  if v4 != 0 then goto L27777c;
+  #L27773c.  v0:= v5.`com.adjust.sdk.ReferrerDetails.installReferrer` @type ^`java.lang.String` @kind object;
+  #L277740.  v1:= v6.`com.adjust.sdk.ActivityState.installReferrer` @type ^`java.lang.String` @kind object;
+  #L277744.  call temp:= `equalString`(v0, v1) @signature `Lcom/adjust/sdk/Util;.equalString:(Ljava/lang/String;Ljava/lang/String;)Z` @kind static;
+  #L27774a.  v0:= temp;
+  #L27774c.  if v0 == 0 then goto L27777c;
+  #L277750.  v0:= v5.`com.adjust.sdk.ReferrerDetails.installVersion` @type ^`java.lang.String` @kind object;
+  #L277754.  v1:= v6.`com.adjust.sdk.ActivityState.installVersion` @type ^`java.lang.String` @kind object;
+  #L277758.  call temp:= `equalString`(v0, v1) @signature `Lcom/adjust/sdk/Util;.equalString:(Ljava/lang/String;Ljava/lang/String;)Z` @kind static;
+  #L27775e.  v0:= temp;
+  #L277760.  if v0 == 0 then goto L27777c;
+  #L277764.  v5:= v5.`com.adjust.sdk.ReferrerDetails.googlePlayInstant` @type ^`java.lang.Boolean` @kind object;
+  #L277768.  v6:= v6.`com.adjust.sdk.ActivityState.googlePlayInstant` @type ^`java.lang.Boolean` @kind object;
+  #L27776c.  call temp:= `equalBoolean`(v5, v6) @signature `Lcom/adjust/sdk/Util;.equalBoolean:(Ljava/lang/Boolean;Ljava/lang/Boolean;)Z` @kind static;
+  #L277772.  v5:= temp;
+  #L277774.  if v5 == 0 then goto L27777c;
+  #L277778.  v5:= 1I;
+  #L27777a.  goto L27777e;
+  #L27777c.  v5:= 0I;
+  #L27777e.  return v5;
+}
+procedure `boolean` `isEqualHuaweiReferrerAdsDetails`(`com.adjust.sdk.ReferrerDetails` v5 @kind object, `com.adjust.sdk.ActivityState` v6 @kind object) @signature `Lcom/adjust/sdk/Util;.isEqualHuaweiReferrerAdsDetails:(Lcom/adjust/sdk/ReferrerDetails;Lcom/adjust/sdk/ActivityState;)Z` @AccessFlag PRIVATE_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L277790.  v0:= v5.`com.adjust.sdk.ReferrerDetails.referrerClickTimestampSeconds` @type ^`long` @kind wide;
+  #L277794.  v2:= v6.`com.adjust.sdk.ActivityState.clickTimeHuawei` @type ^`long` @kind wide;
+  #L277798.  v4:= lcmp(v0, v2);
+  #L27779c.  if v4 != 0 then goto L2777c8;
+  #L2777a0.  v0:= v5.`com.adjust.sdk.ReferrerDetails.installBeginTimestampSeconds` @type ^`long` @kind wide;
+  #L2777a4.  v2:= v6.`com.adjust.sdk.ActivityState.installBeginHuawei` @type ^`long` @kind wide;
+  #L2777a8.  v4:= lcmp(v0, v2);
+  #L2777ac.  if v4 != 0 then goto L2777c8;
+  #L2777b0.  v5:= v5.`com.adjust.sdk.ReferrerDetails.installReferrer` @type ^`java.lang.String` @kind object;
+  #L2777b4.  v6:= v6.`com.adjust.sdk.ActivityState.installReferrerHuawei` @type ^`java.lang.String` @kind object;
+  #L2777b8.  call temp:= `equalString`(v5, v6) @signature `Lcom/adjust/sdk/Util;.equalString:(Ljava/lang/String;Ljava/lang/String;)Z` @kind static;
+  #L2777be.  v5:= temp;
+  #L2777c0.  if v5 == 0 then goto L2777c8;
+  #L2777c4.  v5:= 1I;
+  #L2777c6.  goto L2777ca;
+  #L2777c8.  v5:= 0I;
+  #L2777ca.  return v5;
+}
+procedure `boolean` `isEqualHuaweiReferrerAppGalleryDetails`(`com.adjust.sdk.ReferrerDetails` v5 @kind object, `com.adjust.sdk.ActivityState` v6 @kind object) @signature `Lcom/adjust/sdk/Util;.isEqualHuaweiReferrerAppGalleryDetails:(Lcom/adjust/sdk/ReferrerDetails;Lcom/adjust/sdk/ActivityState;)Z` @AccessFlag PRIVATE_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L2777dc.  v0:= v5.`com.adjust.sdk.ReferrerDetails.referrerClickTimestampSeconds` @type ^`long` @kind wide;
+  #L2777e0.  v2:= v6.`com.adjust.sdk.ActivityState.clickTimeHuawei` @type ^`long` @kind wide;
+  #L2777e4.  v4:= lcmp(v0, v2);
+  #L2777e8.  if v4 != 0 then goto L277814;
+  #L2777ec.  v0:= v5.`com.adjust.sdk.ReferrerDetails.installBeginTimestampSeconds` @type ^`long` @kind wide;
+  #L2777f0.  v2:= v6.`com.adjust.sdk.ActivityState.installBeginHuawei` @type ^`long` @kind wide;
+  #L2777f4.  v4:= lcmp(v0, v2);
+  #L2777f8.  if v4 != 0 then goto L277814;
+  #L2777fc.  v5:= v5.`com.adjust.sdk.ReferrerDetails.installReferrer` @type ^`java.lang.String` @kind object;
+  #L277800.  v6:= v6.`com.adjust.sdk.ActivityState.installReferrerHuaweiAppGallery` @type ^`java.lang.String` @kind object;
+  #L277804.  call temp:= `equalString`(v5, v6) @signature `Lcom/adjust/sdk/Util;.equalString:(Ljava/lang/String;Ljava/lang/String;)Z` @kind static;
+  #L27780a.  v5:= temp;
+  #L27780c.  if v5 == 0 then goto L277814;
+  #L277810.  v5:= 1I;
+  #L277812.  goto L277816;
+  #L277814.  v5:= 0I;
+  #L277816.  return v5;
+}
+procedure `boolean` `isEqualReferrerDetails`(`com.adjust.sdk.ReferrerDetails` v1 @kind object, `java.lang.String` v2 @kind object, `com.adjust.sdk.ActivityState` v3 @kind object) @signature `Lcom/adjust/sdk/Util;.isEqualReferrerDetails:(Lcom/adjust/sdk/ReferrerDetails;Ljava/lang/String;Lcom/adjust/sdk/ActivityState;)Z` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+
+  #L277828.  v0:= "google" @kind object;
+  #L27782c.  call temp:= `equals`(v2, v0) @signature `Ljava/lang/String;.equals:(Ljava/lang/Object;)Z` @kind virtual;
+  #L277832.  v0:= temp;
+  #L277834.  if v0 == 0 then goto L277842;
+  #L277838.  call temp:= `isEqualGoogleReferrerDetails`(v1, v3) @signature `Lcom/adjust/sdk/Util;.isEqualGoogleReferrerDetails:(Lcom/adjust/sdk/ReferrerDetails;Lcom/adjust/sdk/ActivityState;)Z` @kind static;
+  #L27783e.  v1:= temp;
+  #L277840.  return v1;
+  #L277842.  v0:= "huawei_ads" @kind object;
+  #L277846.  call temp:= `equals`(v2, v0) @signature `Ljava/lang/String;.equals:(Ljava/lang/Object;)Z` @kind virtual;
+  #L27784c.  v0:= temp;
+  #L27784e.  if v0 == 0 then goto L27785c;
+  #L277852.  call temp:= `isEqualHuaweiReferrerAdsDetails`(v1, v3) @signature `Lcom/adjust/sdk/Util;.isEqualHuaweiReferrerAdsDetails:(Lcom/adjust/sdk/ReferrerDetails;Lcom/adjust/sdk/ActivityState;)Z` @kind static;
+  #L277858.  v1:= temp;
+  #L27785a.  return v1;
+  #L27785c.  v0:= "huawei_app_gallery" @kind object;
+  #L277860.  call temp:= `equals`(v2, v0) @signature `Ljava/lang/String;.equals:(Ljava/lang/Object;)Z` @kind virtual;
+  #L277866.  v2:= temp;
+  #L277868.  if v2 == 0 then goto L277876;
+  #L27786c.  call temp:= `isEqualHuaweiReferrerAppGalleryDetails`(v1, v3) @signature `Lcom/adjust/sdk/Util;.isEqualHuaweiReferrerAppGalleryDetails:(Lcom/adjust/sdk/ReferrerDetails;Lcom/adjust/sdk/ActivityState;)Z` @kind static;
+  #L277872.  v1:= temp;
+  #L277874.  return v1;
+  #L277876.  v1:= 0I;
+  #L277878.  return v1;
+}
+procedure `java.lang.Boolean` `isPlayTrackingEnabled`(`android.content.Context` v1 @kind object, `java.lang.Object` v2 @kind object, `long` v3 ) @signature `Lcom/adjust/sdk/Util;.isPlayTrackingEnabled:(Landroid/content/Context;Ljava/lang/Object;J)Ljava/lang/Boolean;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+
+  #L277d3c.  v0:= new `com.adjust.sdk.Util$3`;
+  #L277d40.  call `<init>`(v0, v1, v2) @signature `Lcom/adjust/sdk/Util$3;.<init>:(Landroid/content/Context;Ljava/lang/Object;)V` @kind direct;
+  #L277d46.  call temp:= `runSyncInPlayAdIdSchedulerWithTimeout`(v1, v0, v3) @signature `Lcom/adjust/sdk/Util;.runSyncInPlayAdIdSchedulerWithTimeout:(Landroid/content/Context;Ljava/util/concurrent/Callable;J)Ljava/lang/Object;` @kind static;
+  #L277d4c.  v1:= temp @kind object;
+  #L277d4e.  v1:= (`java.lang.Boolean`) v1 @kind object;
+  #L277d52.  return v1 @kind object;
+}
+procedure `boolean` `isUrlFilteredOut`(`android.net.Uri` v2 @kind object) @signature `Lcom/adjust/sdk/Util;.isUrlFilteredOut:(Landroid/net/Uri;)Z` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+
+  #L27788c.  v0:= 1I;
+  #L27788e.  if v2 != 0 then goto L277894;
+  #L277892.  return v0;
+  #L277894.  call temp:= `toString`(v2) @signature `Landroid/net/Uri;.toString:()Ljava/lang/String;` @kind virtual;
+  #L27789a.  v2:= temp @kind object;
+  #L27789c.  if v2 == 0 then goto L2778c4;
+  #L2778a0.  call temp:= `length`(v2) @signature `Ljava/lang/String;.length:()I` @kind virtual;
+  #L2778a6.  v1:= temp;
+  #L2778a8.  if v1 != 0 then goto L2778ae;
+  #L2778ac.  goto L2778c4;
+  #L2778ae.  v1:= "^(fb|vk)[0-9]{5,}[^:]*://authorize.*access_token=.*" @kind object;
+  #L2778b2.  call temp:= `matches`(v2, v1) @signature `Ljava/lang/String;.matches:(Ljava/lang/String;)Z` @kind virtual;
+  #L2778b8.  v2:= temp;
+  #L2778ba.  if v2 == 0 then goto L2778c0;
+  #L2778be.  return v0;
+  #L2778c0.  v2:= 0I;
+  #L2778c2.  return v2;
+  #L2778c4.  return v0;
+}
+procedure `boolean` `isValidParameter`(`java.lang.String` v4 @kind object, `java.lang.String` v5 @kind object, `java.lang.String` v6 @kind object) @signature `Lcom/adjust/sdk/Util;.isValidParameter:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Z` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L2778d8.  v0:= 2I;
+  #L2778da.  v1:= 1I;
+  #L2778dc.  v2:= 0I;
+  #L2778de.  if v4 != 0 then goto L277902;
+  #L2778e2.  call temp:= `getLogger`() @signature `Lcom/adjust/sdk/Util;.getLogger:()Lcom/adjust/sdk/ILogger;` @kind static;
+  #L2778e8.  v4:= temp @kind object;
+  #L2778ea.  v0:= new `java.lang.Object`[v0];
+  #L2778ee.  v0[v2]:= v6 @kind object;
+  #L2778f2.  v0[v1]:= v5 @kind object;
+  #L2778f6.  v5:= "%s parameter %s is missing" @kind object;
+  #L2778fa.  call `error`(v4, v5, v0) @signature `Lcom/adjust/sdk/ILogger;.error:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L277900.  return v2;
+  #L277902.  v3:= "" @kind object;
+  #L277906.  call temp:= `equals`(v4, v3) @signature `Ljava/lang/String;.equals:(Ljava/lang/Object;)Z` @kind virtual;
+  #L27790c.  v4:= temp;
+  #L27790e.  if v4 == 0 then goto L277932;
+  #L277912.  call temp:= `getLogger`() @signature `Lcom/adjust/sdk/Util;.getLogger:()Lcom/adjust/sdk/ILogger;` @kind static;
+  #L277918.  v4:= temp @kind object;
+  #L27791a.  v0:= new `java.lang.Object`[v0];
+  #L27791e.  v0[v2]:= v6 @kind object;
+  #L277922.  v0[v1]:= v5 @kind object;
+  #L277926.  v5:= "%s parameter %s is empty" @kind object;
+  #L27792a.  call `error`(v4, v5, v0) @signature `Lcom/adjust/sdk/ILogger;.error:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L277930.  return v2;
+  #L277932.  return v1;
+}
+procedure `java.lang.String` `md5`(`java.lang.String` v1 @kind object) @signature `Lcom/adjust/sdk/Util;.md5:(Ljava/lang/String;)Ljava/lang/String;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+
+  #L2784b8.  v0:= "MD5" @kind object;
+  #L2784bc.  call temp:= `hash`(v1, v0) @signature `Lcom/adjust/sdk/Util;.hash:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;` @kind static;
+  #L2784c2.  v1:= temp @kind object;
+  #L2784c4.  return v1 @kind object;
+}
+procedure `java.util.Map` `mergeParameters`(`java.util.Map` v6 @kind object, `java.util.Map` v7 @kind object, `java.lang.String` v8 @kind object) @signature `Lcom/adjust/sdk/Util;.mergeParameters:(Ljava/util/Map;Ljava/util/Map;Ljava/lang/String;)Ljava/util/Map;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L278638.  if v6 != 0 then goto L27863e;
+  #L27863c.  return v7 @kind object;
+  #L27863e.  if v7 != 0 then goto L278644;
+  #L278642.  return v6 @kind object;
+  #L278644.  v0:= new `java.util.HashMap`;
+  #L278648.  call `<init>`(v0, v6) @signature `Ljava/util/HashMap;.<init>:(Ljava/util/Map;)V` @kind direct;
+  #L27864e.  call temp:= `getLogger`() @signature `Lcom/adjust/sdk/Util;.getLogger:()Lcom/adjust/sdk/ILogger;` @kind static;
+  #L278654.  v6:= temp @kind object;
+  #L278656.  call temp:= `entrySet`(v7) @signature `Ljava/util/Map;.entrySet:()Ljava/util/Set;` @kind interface;
+  #L27865c.  v7:= temp @kind object;
+  #L27865e.  call temp:= `iterator`(v7) @signature `Ljava/util/Set;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L278664.  v7:= temp @kind object;
+  #L278666.  call temp:= `hasNext`(v7) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L27866c.  v1:= temp;
+  #L27866e.  if v1 == 0 then goto L2786d8;
+  #L278672.  call temp:= `next`(v7) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L278678.  v1:= temp @kind object;
+  #L27867a.  v1:= (`java.util.Map$Entry`) v1 @kind object;
+  #L27867e.  call temp:= `getKey`(v1) @signature `Ljava/util/Map$Entry;.getKey:()Ljava/lang/Object;` @kind interface;
+  #L278684.  v2:= temp @kind object;
+  #L278686.  call temp:= `getValue`(v1) @signature `Ljava/util/Map$Entry;.getValue:()Ljava/lang/Object;` @kind interface;
+  #L27868c.  v3:= temp @kind object;
+  #L27868e.  call temp:= `put`(v0, v2, v3) @signature `Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L278694.  v2:= temp @kind object;
+  #L278696.  v2:= (`java.lang.String`) v2 @kind object;
+  #L27869a.  if v2 == 0 then goto L278666;
+  #L27869e.  v3:= 4I;
+  #L2786a0.  v3:= new `java.lang.Object`[v3];
+  #L2786a4.  v4:= 0I;
+  #L2786a6.  call temp:= `getKey`(v1) @signature `Ljava/util/Map$Entry;.getKey:()Ljava/lang/Object;` @kind interface;
+  #L2786ac.  v5:= temp @kind object;
+  #L2786ae.  v3[v4]:= v5 @kind object;
+  #L2786b2.  v4:= 1I;
+  #L2786b4.  v3[v4]:= v2 @kind object;
+  #L2786b8.  v2:= 2I;
+  #L2786ba.  v3[v2]:= v8 @kind object;
+  #L2786be.  v2:= 3I;
+  #L2786c0.  call temp:= `getValue`(v1) @signature `Ljava/util/Map$Entry;.getValue:()Ljava/lang/Object;` @kind interface;
+  #L2786c6.  v1:= temp @kind object;
+  #L2786c8.  v3[v2]:= v1 @kind object;
+  #L2786cc.  v1:= "Key %s with value %s from %s parameter was replaced by value %s" @kind object;
+  #L2786d0.  call `warn`(v6, v1, v3) @signature `Lcom/adjust/sdk/ILogger;.warn:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L2786d6.  goto L278666;
+  #L2786d8.  return v0 @kind object;
+}
+procedure `java.text.DecimalFormat` `newLocalDecimalFormat`() @signature `Lcom/adjust/sdk/Util;.newLocalDecimalFormat:()Ljava/text/DecimalFormat;` @AccessFlag PRIVATE_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L2785b4.  v0:= new `java.text.DecimalFormatSymbols`;
+  #L2785b8.  v1:= `@@java.util.Locale.US` @type ^`java.util.Locale` @kind object;
+  #L2785bc.  call `<init>`(v0, v1) @signature `Ljava/text/DecimalFormatSymbols;.<init>:(Ljava/util/Locale;)V` @kind direct;
+  #L2785c2.  v1:= new `java.text.DecimalFormat`;
+  #L2785c6.  v2:= "0.0" @kind object;
+  #L2785ca.  call `<init>`(v1, v2, v0) @signature `Ljava/text/DecimalFormat;.<init>:(Ljava/lang/String;Ljava/text/DecimalFormatSymbols;)V` @kind direct;
+  #L2785d0.  return v1 @kind object;
+}
+procedure `java.lang.String` `quote`(`java.lang.String` v2 @kind object) @signature `Lcom/adjust/sdk/Util;.quote:(Ljava/lang/String;)Ljava/lang/String;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+
+  #L2784d8.  if v2 != 0 then goto L2784e0;
+  #L2784dc.  v2:= 0I;
+  #L2784de.  return v2 @kind object;
+  #L2784e0.  v0:= "\\s" @kind object;
+  #L2784e4.  call temp:= `compile`(v0) @signature `Ljava/util/regex/Pattern;.compile:(Ljava/lang/String;)Ljava/util/regex/Pattern;` @kind static;
+  #L2784ea.  v0:= temp @kind object;
+  #L2784ec.  call temp:= `matcher`(v0, v2) @signature `Ljava/util/regex/Pattern;.matcher:(Ljava/lang/CharSequence;)Ljava/util/regex/Matcher;` @kind virtual;
+  #L2784f2.  v0:= temp @kind object;
+  #L2784f4.  call temp:= `find`(v0) @signature `Ljava/util/regex/Matcher;.find:()Z` @kind virtual;
+  #L2784fa.  v0:= temp;
+  #L2784fc.  if v0 != 0 then goto L278502;
+  #L278500.  return v2 @kind object;
+  #L278502.  v0:= 1I;
+  #L278504.  v0:= new `java.lang.Object`[v0];
+  #L278508.  v1:= 0I;
+  #L27850a.  v0[v1]:= v2 @kind object;
+  #L27850e.  v2:= "'%s'" @kind object;
+  #L278512.  call temp:= `formatString`(v2, v0) @signature `Lcom/adjust/sdk/Util;.formatString:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;` @kind static;
+  #L278518.  v2:= temp @kind object;
+  #L27851a.  return v2 @kind object;
+}
+procedure `double` `randomInRange`(`double` v2 , `double` v4 ) @signature `Lcom/adjust/sdk/Util;.randomInRange:(DD)D` @AccessFlag PRIVATE_STATIC {
+    temp;
+    v0;
+    v1;
+
+  #L2779f8.  v0:= new `java.util.Random`;
+  #L2779fc.  call `<init>`(v0) @signature `Ljava/util/Random;.<init>:()V` @kind direct;
+  #L277a02.  v4:= v4 - v2 @kind double;
+  #L277a04.  call temp:= `nextDouble`(v0) @signature `Ljava/util/Random;.nextDouble:()D` @kind virtual;
+  #L277a0a.  v0:= temp @kind wide;
+  #L277a0c.  v0:= v0 * v4 @kind double;
+  #L277a10.  v0:= v0 + v2 @kind double;
+  #L277a12.  return v0 @kind wide;
+}
+procedure `boolean` `readBooleanField`(`java.io.ObjectInputStream$GetField` v3 @kind object, `java.lang.String` v4 @kind object, `boolean` v5 ) @signature `Lcom/adjust/sdk/Util;.readBooleanField:(Ljava/io/ObjectInputStream$GetField;Ljava/lang/String;Z)Z` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L277944.  call temp:= `get`(v3, v4, v5) @signature `Ljava/io/ObjectInputStream$GetField;.get:(Ljava/lang/String;Z)Z` @kind virtual;
+  #L27794a.  v3:= temp;
+  #L27794c.  return v3;
+  #L27794e.  v3:= Exception @type ^`java.lang.Exception` @kind object;
+  #L277950.  call temp:= `getLogger`() @signature `Lcom/adjust/sdk/Util;.getLogger:()Lcom/adjust/sdk/ILogger;` @kind static;
+  #L277956.  v0:= temp @kind object;
+  #L277958.  v1:= 2I;
+  #L27795a.  v1:= new `java.lang.Object`[v1];
+  #L27795e.  v2:= 0I;
+  #L277960.  v1[v2]:= v4 @kind object;
+  #L277964.  v4:= 1I;
+  #L277966.  call temp:= `getMessage`(v3) @signature `Ljava/lang/Exception;.getMessage:()Ljava/lang/String;` @kind virtual;
+  #L27796c.  v3:= temp @kind object;
+  #L27796e.  v1[v4]:= v3 @kind object;
+  #L277972.  v3:= "Unable to read '%s' field in migration device with message (%s)" @kind object;
+  #L277976.  call `debug`(v0, v3, v1) @signature `Lcom/adjust/sdk/ILogger;.debug:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L27797c.  return v5;
+  catch `java.lang.Exception` @[L277944..L27794c] goto L27794e;
+}
+procedure `int` `readIntField`(`java.io.ObjectInputStream$GetField` v3 @kind object, `java.lang.String` v4 @kind object, `int` v5 ) @signature `Lcom/adjust/sdk/Util;.readIntField:(Ljava/io/ObjectInputStream$GetField;Ljava/lang/String;I)I` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L277c9c.  call temp:= `get`(v3, v4, v5) @signature `Ljava/io/ObjectInputStream$GetField;.get:(Ljava/lang/String;I)I` @kind virtual;
+  #L277ca2.  v3:= temp;
+  #L277ca4.  return v3;
+  #L277ca6.  v3:= Exception @type ^`java.lang.Exception` @kind object;
+  #L277ca8.  call temp:= `getLogger`() @signature `Lcom/adjust/sdk/Util;.getLogger:()Lcom/adjust/sdk/ILogger;` @kind static;
+  #L277cae.  v0:= temp @kind object;
+  #L277cb0.  v1:= 2I;
+  #L277cb2.  v1:= new `java.lang.Object`[v1];
+  #L277cb6.  v2:= 0I;
+  #L277cb8.  v1[v2]:= v4 @kind object;
+  #L277cbc.  v4:= 1I;
+  #L277cbe.  call temp:= `getMessage`(v3) @signature `Ljava/lang/Exception;.getMessage:()Ljava/lang/String;` @kind virtual;
+  #L277cc4.  v3:= temp @kind object;
+  #L277cc6.  v1[v4]:= v3 @kind object;
+  #L277cca.  v3:= "Unable to read '%s' field in migration device with message (%s)" @kind object;
+  #L277cce.  call `debug`(v0, v3, v1) @signature `Lcom/adjust/sdk/ILogger;.debug:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L277cd4.  return v5;
+  catch `java.lang.Exception` @[L277c9c..L277ca4] goto L277ca6;
+}
+procedure `long` `readLongField`(`java.io.ObjectInputStream$GetField` v3 @kind object, `java.lang.String` v4 @kind object, `long` v5 ) @signature `Lcom/adjust/sdk/Util;.readLongField:(Ljava/io/ObjectInputStream$GetField;Ljava/lang/String;J)J` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L27874c.  call temp:= `get`(v3, v4, v5) @signature `Ljava/io/ObjectInputStream$GetField;.get:(Ljava/lang/String;J)J` @kind virtual;
+  #L278752.  v3:= temp @kind wide;
+  #L278754.  return v3 @kind wide;
+  #L278756.  v3:= Exception @type ^`java.lang.Exception` @kind object;
+  #L278758.  call temp:= `getLogger`() @signature `Lcom/adjust/sdk/Util;.getLogger:()Lcom/adjust/sdk/ILogger;` @kind static;
+  #L27875e.  v0:= temp @kind object;
+  #L278760.  v1:= 2I;
+  #L278762.  v1:= new `java.lang.Object`[v1];
+  #L278766.  v2:= 0I;
+  #L278768.  v1[v2]:= v4 @kind object;
+  #L27876c.  v4:= 1I;
+  #L27876e.  call temp:= `getMessage`(v3) @signature `Ljava/lang/Exception;.getMessage:()Ljava/lang/String;` @kind virtual;
+  #L278774.  v3:= temp @kind object;
+  #L278776.  v1[v4]:= v3 @kind object;
+  #L27877a.  v3:= "Unable to read '%s' field in migration device with message (%s)" @kind object;
+  #L27877e.  call `debug`(v0, v3, v1) @signature `Lcom/adjust/sdk/ILogger;.debug:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L278784.  return v5 @kind wide;
+  catch `java.lang.Exception` @[L27874c..L278754] goto L278756;
+}
+procedure `java.lang.Object` `readObject`(`android.content.Context` v7 @kind object, `java.lang.String` v8 @kind object, `java.lang.String` v9 @kind object, `java.lang.Class` v10 @kind object) @signature `Lcom/adjust/sdk/Util;.readObject:(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Class;)Ljava/lang/Object;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+
+  #L277d88.  v0:= 0I;
+  #L277d8a.  v1:= 2I;
+  #L277d8c.  v2:= 0I;
+  #L277d8e.  v3:= 1I;
+  #L277d90.  call temp:= `openFileInput`(v7, v8) @signature `Landroid/content/Context;.openFileInput:(Ljava/lang/String;)Ljava/io/FileInputStream;` @kind virtual;
+  #L277d96.  v7:= temp @kind object;
+  #L277d98.  v8:= new `java.io.BufferedInputStream`;
+  #L277d9c.  call `<init>`(v8, v7) @signature `Ljava/io/BufferedInputStream;.<init>:(Ljava/io/InputStream;)V` @kind direct;
+  #L277da2.  v7:= new `java.io.ObjectInputStream`;
+  #L277da6.  call `<init>`(v7, v8) @signature `Ljava/io/ObjectInputStream;.<init>:(Ljava/io/InputStream;)V` @kind direct;
+  #L277dac.  call temp:= `readObject`(v7) @signature `Ljava/io/ObjectInputStream;.readObject:()Ljava/lang/Object;` @kind virtual;
+  #L277db2.  v8:= temp @kind object;
+  #L277db4.  call temp:= `cast`(v10, v8) @signature `Ljava/lang/Class;.cast:(Ljava/lang/Object;)Ljava/lang/Object;` @kind virtual;
+  #L277dba.  v0:= temp @kind object;
+  #L277dbc.  call temp:= `getLogger`() @signature `Lcom/adjust/sdk/Util;.getLogger:()Lcom/adjust/sdk/ILogger;` @kind static;
+  #L277dc2.  v8:= temp @kind object;
+  #L277dc4.  v10:= "Read %s: %s" @kind object;
+  #L277dc8.  v4:= new `java.lang.Object`[v1];
+  #L277dcc.  v4[v2]:= v9 @kind object;
+  #L277dd0.  v4[v3]:= v0 @kind object;
+  #L277dd4.  call `debug`(v8, v10, v4) @signature `Lcom/adjust/sdk/ILogger;.debug:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L277dda.  goto L277eae;
+  #L277dde.  v8:= Exception @type ^`java.lang.Exception` @kind object;
+  #L277de0.  call temp:= `getLogger`() @signature `Lcom/adjust/sdk/Util;.getLogger:()Lcom/adjust/sdk/ILogger;` @kind static;
+  #L277de6.  v10:= temp @kind object;
+  #L277de8.  v4:= "Failed to read %s object (%s)" @kind object;
+  #L277dec.  v5:= new `java.lang.Object`[v1];
+  #L277df0.  v5[v2]:= v9 @kind object;
+  #L277df4.  call temp:= `getMessage`(v8) @signature `Ljava/lang/Exception;.getMessage:()Ljava/lang/String;` @kind virtual;
+  #L277dfa.  v8:= temp @kind object;
+  #L277dfc.  v5[v3]:= v8 @kind object;
+  #L277e00.  call `error`(v10, v4, v5) @signature `Lcom/adjust/sdk/ILogger;.error:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L277e06.  goto L277eae;
+  #L277e08.  v8:= Exception @type ^`java.lang.ClassCastException` @kind object;
+  #L277e0a.  call temp:= `getLogger`() @signature `Lcom/adjust/sdk/Util;.getLogger:()Lcom/adjust/sdk/ILogger;` @kind static;
+  #L277e10.  v10:= temp @kind object;
+  #L277e12.  v4:= "Failed to cast %s object (%s)" @kind object;
+  #L277e16.  v5:= new `java.lang.Object`[v1];
+  #L277e1a.  v5[v2]:= v9 @kind object;
+  #L277e1e.  call temp:= `getMessage`(v8) @signature `Ljava/lang/ClassCastException;.getMessage:()Ljava/lang/String;` @kind virtual;
+  #L277e24.  v8:= temp @kind object;
+  #L277e26.  v5[v3]:= v8 @kind object;
+  #L277e2a.  call `error`(v10, v4, v5) @signature `Lcom/adjust/sdk/ILogger;.error:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L277e30.  goto L277eae;
+  #L277e32.  v8:= Exception @type ^`java.lang.ClassNotFoundException` @kind object;
+  #L277e34.  call temp:= `getLogger`() @signature `Lcom/adjust/sdk/Util;.getLogger:()Lcom/adjust/sdk/ILogger;` @kind static;
+  #L277e3a.  v10:= temp @kind object;
+  #L277e3c.  v4:= "Failed to find %s class (%s)" @kind object;
+  #L277e40.  v5:= new `java.lang.Object`[v1];
+  #L277e44.  v5[v2]:= v9 @kind object;
+  #L277e48.  call temp:= `getMessage`(v8) @signature `Ljava/lang/ClassNotFoundException;.getMessage:()Ljava/lang/String;` @kind virtual;
+  #L277e4e.  v8:= temp @kind object;
+  #L277e50.  v5[v3]:= v8 @kind object;
+  #L277e54.  call `error`(v10, v4, v5) @signature `Lcom/adjust/sdk/ILogger;.error:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L277e5a.  goto L277eae;
+  #L277e5c.  v7:= Exception @type ^`java.lang.Exception` @kind object;
+  #L277e5e.  v6:= v8 @kind object;
+  #L277e60.  v8:= v7 @kind object;
+  #L277e62.  v7:= v6 @kind object;
+  #L277e64.  goto L277e72;
+  #L277e66.  v7:= v8 @kind object;
+  #L277e68.  goto L277e94;
+  #L277e6a.  v8:= Exception @type ^`java.lang.Exception` @kind object;
+  #L277e6c.  goto L277e72;
+  #L277e6e.  v8:= Exception @type ^`java.lang.Exception` @kind object;
+  #L277e70.  v7:= v0 @kind object;
+  #L277e72.  call temp:= `getLogger`() @signature `Lcom/adjust/sdk/Util;.getLogger:()Lcom/adjust/sdk/ILogger;` @kind static;
+  #L277e78.  v10:= temp @kind object;
+  #L277e7a.  v4:= new `java.lang.Object`[v1];
+  #L277e7e.  v4[v2]:= v9 @kind object;
+  #L277e82.  v4[v3]:= v8 @kind object;
+  #L277e86.  v8:= "Failed to open %s file for reading (%s)" @kind object;
+  #L277e8a.  call `error`(v10, v8, v4) @signature `Lcom/adjust/sdk/ILogger;.error:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L277e90.  goto L277eae;
+  #L277e92.  v7:= v0 @kind object;
+  #L277e94.  call temp:= `getLogger`() @signature `Lcom/adjust/sdk/Util;.getLogger:()Lcom/adjust/sdk/ILogger;` @kind static;
+  #L277e9a.  v8:= temp @kind object;
+  #L277e9c.  v10:= new `java.lang.Object`[v3];
+  #L277ea0.  v10[v2]:= v9 @kind object;
+  #L277ea4.  v4:= "%s file not found" @kind object;
+  #L277ea8.  call `debug`(v8, v4, v10) @signature `Lcom/adjust/sdk/ILogger;.debug:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L277eae.  if v7 == 0 then goto L277eda;
+  #L277eb2.  call `close`(v7) @signature `Ljava/io/Closeable;.close:()V` @kind interface;
+  #L277eb8.  goto L277eda;
+  #L277eba.  v7:= Exception @type ^`java.lang.Exception` @kind object;
+  #L277ebc.  call temp:= `getLogger`() @signature `Lcom/adjust/sdk/Util;.getLogger:()Lcom/adjust/sdk/ILogger;` @kind static;
+  #L277ec2.  v8:= temp @kind object;
+  #L277ec4.  v10:= new `java.lang.Object`[v1];
+  #L277ec8.  v10[v2]:= v9 @kind object;
+  #L277ecc.  v10[v3]:= v7 @kind object;
+  #L277ed0.  v7:= "Failed to close %s file for reading (%s)" @kind object;
+  #L277ed4.  call `error`(v8, v7, v10) @signature `Lcom/adjust/sdk/ILogger;.error:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L277eda.  return v0 @kind object;
+  catch `java.io.FileNotFoundException` @[L277d90..L277d98] goto L277e92;
+  catch `java.lang.Exception` @[L277d90..L277d98] goto L277e6e;
+  catch `java.io.FileNotFoundException` @[L277d98..L277da2] goto L277e94;
+  catch `java.lang.Exception` @[L277d98..L277da2] goto L277e6a;
+  catch `java.io.FileNotFoundException` @[L277da2..L277dac] goto L277e66;
+  catch `java.lang.Exception` @[L277da2..L277dac] goto L277e5c;
+  catch `java.lang.ClassNotFoundException` @[L277dac..L277dda] goto L277e32;
+  catch `java.lang.ClassCastException` @[L277dac..L277dda] goto L277e08;
+  catch `java.lang.Exception` @[L277dac..L277dda] goto L277dde;
+  catch `java.io.FileNotFoundException` @[L277de0..L277e5a] goto L277e94;
+  catch `java.lang.Exception` @[L277de0..L277e5a] goto L277e6a;
+  catch `java.lang.Exception` @[L277eb2..L277eb8] goto L277eba;
+}
+procedure `java.lang.Object` `readObjectField`(`java.io.ObjectInputStream$GetField` v3 @kind object, `java.lang.String` v4 @kind object, `java.lang.Object` v5 @kind object) @signature `Lcom/adjust/sdk/Util;.readObjectField:(Ljava/io/ObjectInputStream$GetField;Ljava/lang/String;Ljava/lang/Object;)Ljava/lang/Object;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L277f44.  call temp:= `get`(v3, v4, v5) @signature `Ljava/io/ObjectInputStream$GetField;.get:(Ljava/lang/String;Ljava/lang/Object;)Ljava/lang/Object;` @kind virtual;
+  #L277f4a.  v3:= temp @kind object;
+  #L277f4c.  return v3 @kind object;
+  #L277f4e.  v3:= Exception @type ^`java.lang.Exception` @kind object;
+  #L277f50.  call temp:= `getLogger`() @signature `Lcom/adjust/sdk/Util;.getLogger:()Lcom/adjust/sdk/ILogger;` @kind static;
+  #L277f56.  v0:= temp @kind object;
+  #L277f58.  v1:= 2I;
+  #L277f5a.  v1:= new `java.lang.Object`[v1];
+  #L277f5e.  v2:= 0I;
+  #L277f60.  v1[v2]:= v4 @kind object;
+  #L277f64.  v4:= 1I;
+  #L277f66.  call temp:= `getMessage`(v3) @signature `Ljava/lang/Exception;.getMessage:()Ljava/lang/String;` @kind virtual;
+  #L277f6c.  v3:= temp @kind object;
+  #L277f6e.  v1[v4]:= v3 @kind object;
+  #L277f72.  v3:= "Unable to read '%s' field in migration device with message (%s)" @kind object;
+  #L277f76.  call `debug`(v0, v3, v1) @signature `Lcom/adjust/sdk/ILogger;.debug:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L277f7c.  return v5 @kind object;
+  catch `java.lang.Exception` @[L277f44..L277f4c] goto L277f4e;
+}
+procedure `java.lang.String` `readStringField`(`java.io.ObjectInputStream$GetField` v0 @kind object, `java.lang.String` v1 @kind object, `java.lang.String` v2 @kind object) @signature `Lcom/adjust/sdk/Util;.readStringField:(Ljava/io/ObjectInputStream$GetField;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;` @AccessFlag PUBLIC_STATIC {
+    temp;
+
+  #L27852c.  call temp:= `readObjectField`(v0, v1, v2) @signature `Lcom/adjust/sdk/Util;.readObjectField:(Ljava/io/ObjectInputStream$GetField;Ljava/lang/String;Ljava/lang/Object;)Ljava/lang/Object;` @kind static;
+  #L278532.  v0:= temp @kind object;
+  #L278534.  v0:= (`java.lang.String`) v0 @kind object;
+  #L278538.  return v0 @kind object;
+}
+procedure `boolean` `resolveContentProvider`(`android.content.Context` v1 @kind object, `java.lang.String` v2 @kind object) @signature `Lcom/adjust/sdk/Util;.resolveContentProvider:(Landroid/content/Context;Ljava/lang/String;)Z` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+
+  #L2779a0.  v0:= 0I;
+  #L2779a2.  call temp:= `getPackageManager`(v1) @signature `Landroid/content/Context;.getPackageManager:()Landroid/content/pm/PackageManager;` @kind virtual;
+  #L2779a8.  v1:= temp @kind object;
+  #L2779aa.  call temp:= `resolveContentProvider`(v1, v2, v0) @signature `Landroid/content/pm/PackageManager;.resolveContentProvider:(Ljava/lang/String;I)Landroid/content/pm/ProviderInfo;` @kind virtual;
+  #L2779b0.  v1:= temp @kind object;
+  #L2779b2.  if v1 == 0 then goto L2779b8;
+  #L2779b6.  v0:= 1I;
+  #L2779b8.  return v0;
+  catch `java.lang.Exception` @[L2779a2..L2779b2] goto L2779b8;
+}
+procedure `void` `runInBackground`(`java.lang.Runnable` v3 @kind object) @signature `Lcom/adjust/sdk/Util;.runInBackground:(Ljava/lang/Runnable;)V` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L2788a0.  call temp:= `myLooper`() @signature `Landroid/os/Looper;.myLooper:()Landroid/os/Looper;` @kind static;
+  #L2788a6.  v0:= temp @kind object;
+  #L2788a8.  call temp:= `getMainLooper`() @signature `Landroid/os/Looper;.getMainLooper:()Landroid/os/Looper;` @kind static;
+  #L2788ae.  v1:= temp @kind object;
+  #L2788b0.  if v0 == v1 then goto L2788bc;
+  #L2788b4.  call `run`(v3) @signature `Ljava/lang/Runnable;.run:()V` @kind interface;
+  #L2788ba.  return @kind void;
+  #L2788bc.  v0:= new `com.adjust.sdk.Util$4`;
+  #L2788c0.  call `<init>`(v0) @signature `Lcom/adjust/sdk/Util$4;.<init>:()V` @kind direct;
+  #L2788c6.  v1:= 1I;
+  #L2788c8.  v1:= new `java.lang.Object`[v1];
+  #L2788cc.  v2:= 0I;
+  #L2788ce.  v1[v2]:= v3 @kind object;
+  #L2788d2.  call temp:= `execute`(v0, v1) @signature `Lcom/adjust/sdk/scheduler/AsyncTaskExecutor;.execute:([Ljava/lang/Object;)Lcom/adjust/sdk/scheduler/AsyncTaskExecutor;` @kind virtual;
+  #L2788d8.  return @kind void;
+}
+procedure `java.lang.Object` `runSyncInPlayAdIdSchedulerWithTimeout`(`android.content.Context` v3 @kind object, `java.util.concurrent.Callable` v4 @kind object, `long` v5 ) @signature `Lcom/adjust/sdk/Util;.runSyncInPlayAdIdSchedulerWithTimeout:(Landroid/content/Context;Ljava/util/concurrent/Callable;J)Ljava/lang/Object;` @AccessFlag PRIVATE_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L277fa0.  v3:= `@@com.adjust.sdk.Util.playAdIdScheduler` @type ^`com.adjust.sdk.scheduler.SingleThreadFutureScheduler` @kind object;
+  #L277fa4.  if v3 != 0 then goto L277fd4;
+  #L277fa8.  v3:= constclass @type ^`com.adjust.sdk.Util` @kind object;
+  #L277fac.  @monitorenter v3
+  #L277fae.  v0:= `@@com.adjust.sdk.Util.playAdIdScheduler` @type ^`com.adjust.sdk.scheduler.SingleThreadFutureScheduler` @kind object;
+  #L277fb2.  if v0 != 0 then goto L277fca;
+  #L277fb6.  v0:= new `com.adjust.sdk.scheduler.SingleThreadFutureScheduler`;
+  #L277fba.  v1:= "PlayAdIdLibrary" @kind object;
+  #L277fbe.  v2:= 1I;
+  #L277fc0.  call `<init>`(v0, v1, v2) @signature `Lcom/adjust/sdk/scheduler/SingleThreadFutureScheduler;.<init>:(Ljava/lang/String;Z)V` @kind direct;
+  #L277fc6.  `@@com.adjust.sdk.Util.playAdIdScheduler` @type ^`com.adjust.sdk.scheduler.SingleThreadFutureScheduler` := v0 @kind object;
+  #L277fca.  @monitorexit v3
+  #L277fcc.  goto L277fd4;
+  #L277fce.  v4:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L277fd0.  @monitorexit v3
+  #L277fd2.  throw v4;
+  #L277fd4.  v3:= `@@com.adjust.sdk.Util.playAdIdScheduler` @type ^`com.adjust.sdk.scheduler.SingleThreadFutureScheduler` @kind object;
+  #L277fd8.  v0:= 0L;
+  #L277fdc.  call temp:= `scheduleFutureWithReturn`(v3, v4, v0) @signature `Lcom/adjust/sdk/scheduler/SingleThreadFutureScheduler;.scheduleFutureWithReturn:(Ljava/util/concurrent/Callable;J)Ljava/util/concurrent/ScheduledFuture;` @kind virtual;
+  #L277fe2.  v3:= temp @kind object;
+  #L277fe4.  v4:= `@@java.util.concurrent.TimeUnit.MILLISECONDS` @type ^`java.util.concurrent.TimeUnit` @kind object;
+  #L277fe8.  call temp:= `get`(v3, v5, v4) @signature `Ljava/util/concurrent/ScheduledFuture;.get:(JLjava/util/concurrent/TimeUnit;)Ljava/lang/Object;` @kind interface;
+  #L277fee.  v3:= temp @kind object;
+  #L277ff0.  return v3 @kind object;
+  #L277ff2.  v3:= 0I;
+  #L277ff4.  return v3 @kind object;
+  catch `java.lang.Throwable` @[L277fae..L277fd2] goto L277fce;
+  catch `java.util.concurrent.ExecutionException` @[L277fe4..L277ff0] goto L277ff2;
+  catch `java.lang.InterruptedException` @[L277fe4..L277ff0] goto L277ff2;
+  catch `java.util.concurrent.TimeoutException` @[L277fe4..L277ff0] goto L277ff2;
+}
+procedure `java.lang.String` `sha1`(`java.lang.String` v1 @kind object) @signature `Lcom/adjust/sdk/Util;.sha1:(Ljava/lang/String;)Ljava/lang/String;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+
+  #L27854c.  v0:= "SHA-1" @kind object;
+  #L278550.  call temp:= `hash`(v1, v0) @signature `Lcom/adjust/sdk/Util;.hash:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;` @kind static;
+  #L278556.  v1:= temp @kind object;
+  #L278558.  return v1 @kind object;
+}
+procedure `java.lang.String` `sha256`(`java.lang.String` v1 @kind object) @signature `Lcom/adjust/sdk/Util;.sha256:(Ljava/lang/String;)Ljava/lang/String;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+
+  #L27856c.  v0:= "SHA-256" @kind object;
+  #L278570.  call temp:= `hash`(v1, v0) @signature `Lcom/adjust/sdk/Util;.hash:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;` @kind static;
+  #L278576.  v1:= temp @kind object;
+  #L278578.  return v1 @kind object;
+}
+procedure `void` `writeObject`(`java.lang.Object` v5 @kind object, `android.content.Context` v6 @kind object, `java.lang.String` v7 @kind object, `java.lang.String` v8 @kind object) @signature `Lcom/adjust/sdk/Util;.writeObject:(Ljava/lang/Object;Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)V` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L2788ec.  v0:= 2I;
+  #L2788ee.  v1:= 1I;
+  #L2788f0.  v2:= 0I;
+  #L2788f2.  call temp:= `openFileOutput`(v6, v7, v2) @signature `Landroid/content/Context;.openFileOutput:(Ljava/lang/String;I)Ljava/io/FileOutputStream;` @kind virtual;
+  #L2788f8.  v6:= temp @kind object;
+  #L2788fa.  v7:= new `java.io.BufferedOutputStream`;
+  #L2788fe.  call `<init>`(v7, v6) @signature `Ljava/io/BufferedOutputStream;.<init>:(Ljava/io/OutputStream;)V` @kind direct;
+  #L278904.  v6:= new `java.io.ObjectOutputStream`;
+  #L278908.  call `<init>`(v6, v7) @signature `Ljava/io/ObjectOutputStream;.<init>:(Ljava/io/OutputStream;)V` @kind direct;
+  #L27890e.  call `writeObject`(v6, v5) @signature `Ljava/io/ObjectOutputStream;.writeObject:(Ljava/lang/Object;)V` @kind virtual;
+  #L278914.  call temp:= `getLogger`() @signature `Lcom/adjust/sdk/Util;.getLogger:()Lcom/adjust/sdk/ILogger;` @kind static;
+  #L27891a.  v7:= temp @kind object;
+  #L27891c.  v3:= "Wrote %s: %s" @kind object;
+  #L278920.  v4:= new `java.lang.Object`[v0];
+  #L278924.  v4[v2]:= v8 @kind object;
+  #L278928.  v4[v1]:= v5 @kind object;
+  #L27892c.  call `debug`(v7, v3, v4) @signature `Lcom/adjust/sdk/ILogger;.debug:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L278932.  goto L27897c;
+  #L278934.  call temp:= `getLogger`() @signature `Lcom/adjust/sdk/Util;.getLogger:()Lcom/adjust/sdk/ILogger;` @kind static;
+  #L27893a.  v5:= temp @kind object;
+  #L27893c.  v7:= "Failed to serialize %s" @kind object;
+  #L278940.  v3:= new `java.lang.Object`[v1];
+  #L278944.  v3[v2]:= v8 @kind object;
+  #L278948.  call `error`(v5, v7, v3) @signature `Lcom/adjust/sdk/ILogger;.error:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L27894e.  goto L27897c;
+  #L278950.  v5:= Exception @type ^`java.lang.Exception` @kind object;
+  #L278952.  v6:= v7 @kind object;
+  #L278954.  goto L27895e;
+  #L278956.  v5:= Exception @type ^`java.lang.Exception` @kind object;
+  #L278958.  goto L27895e;
+  #L27895a.  v5:= Exception @type ^`java.lang.Exception` @kind object;
+  #L27895c.  v6:= 0I;
+  #L27895e.  call temp:= `getLogger`() @signature `Lcom/adjust/sdk/Util;.getLogger:()Lcom/adjust/sdk/ILogger;` @kind static;
+  #L278964.  v7:= temp @kind object;
+  #L278966.  v3:= new `java.lang.Object`[v0];
+  #L27896a.  v3[v2]:= v8 @kind object;
+  #L27896e.  v3[v1]:= v5 @kind object;
+  #L278972.  v5:= "Failed to open %s for writing (%s)" @kind object;
+  #L278976.  call `error`(v7, v5, v3) @signature `Lcom/adjust/sdk/ILogger;.error:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L27897c.  if v6 == 0 then goto L2789a8;
+  #L278980.  call `close`(v6) @signature `Ljava/io/Closeable;.close:()V` @kind interface;
+  #L278986.  goto L2789a8;
+  #L278988.  v5:= Exception @type ^`java.lang.Exception` @kind object;
+  #L27898a.  call temp:= `getLogger`() @signature `Lcom/adjust/sdk/Util;.getLogger:()Lcom/adjust/sdk/ILogger;` @kind static;
+  #L278990.  v6:= temp @kind object;
+  #L278992.  v7:= new `java.lang.Object`[v0];
+  #L278996.  v7[v2]:= v8 @kind object;
+  #L27899a.  v7[v1]:= v5 @kind object;
+  #L27899e.  v5:= "Failed to close %s file for writing (%s)" @kind object;
+  #L2789a2.  call `error`(v6, v5, v7) @signature `Lcom/adjust/sdk/ILogger;.error:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L2789a8.  return @kind void;
+  catch `java.lang.Exception` @[L2788f2..L2788fa] goto L27895a;
+  catch `java.lang.Exception` @[L2788fa..L278904] goto L278956;
+  catch `java.lang.Exception` @[L278904..L27890e] goto L278950;
+  catch `java.io.NotSerializableException` @[L27890e..L278932] goto L278934;
+  catch `java.lang.Exception` @[L27890e..L278932] goto L278956;
+  catch `java.lang.Exception` @[L278934..L27894e] goto L278956;
+  catch `java.lang.Exception` @[L278980..L278986] goto L278988;
+}

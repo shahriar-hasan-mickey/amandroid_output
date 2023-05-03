@@ -1,0 +1,1 @@
+define(["jquery","underscore","Backbone","text!views/common/prerequisitecheck.tpl"],function(e,n,t,i){var r=t.View.extend({events:{},initialize:function(){},render:function(){return this.$el.html(n.template(i)).i18n(),this}});return r});

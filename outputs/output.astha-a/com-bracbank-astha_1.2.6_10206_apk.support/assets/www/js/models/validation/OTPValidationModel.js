@@ -1,0 +1,1 @@
+define(["underscore","Backbone"],function(n,t){var i=t.Model.extend({url:function(){return this.instanceUrl},validation:{otp:[{required:!0,msg:"validation.otp.otpnotnull"},{minLength:6,msg:"validation.otp.otpnotnull"},{maxLength:6,msg:"validation.otp.otpnotnull"}],mpinotp:{required:!0,msg:"validation.otp.otpnotnull"}},initialize:function(n){this.url=n.url}});return i});

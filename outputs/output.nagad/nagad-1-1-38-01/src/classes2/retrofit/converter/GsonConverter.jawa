@@ -1,0 +1,97 @@
+record `retrofit.converter.GsonConverter` @kind class @AccessFlag PUBLIC extends `retrofit.converter.Converter` @kind interface {
+  `java.lang.String` `retrofit.converter.GsonConverter.charset` @AccessFlag PRIVATE;
+  `com.google.gson.Gson` `retrofit.converter.GsonConverter.gson` @AccessFlag PRIVATE_FINAL;
+}
+procedure `void` `<init>`(`retrofit.converter.GsonConverter` v1 @kind this, `com.google.gson.Gson` v2 @kind object) @signature `Lretrofit/converter/GsonConverter;.<init>:(Lcom/google/gson/Gson;)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L252294.  v0:= "UTF-8" @kind object;
+  #L252298.  call `<init>`(v1, v2, v0) @signature `Lretrofit/converter/GsonConverter;.<init>:(Lcom/google/gson/Gson;Ljava/lang/String;)V` @kind direct;
+  #L25229e.  return @kind void;
+}
+procedure `void` `<init>`(`retrofit.converter.GsonConverter` v0 @kind this, `com.google.gson.Gson` v1 @kind object, `java.lang.String` v2 @kind object) @signature `Lretrofit/converter/GsonConverter;.<init>:(Lcom/google/gson/Gson;Ljava/lang/String;)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+
+  #L2522b0.  call `<init>`(v0) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L2522b6.  v0.`retrofit.converter.GsonConverter.gson` @type ^`com.google.gson.Gson` := v1 @kind object;
+  #L2522ba.  v0.`retrofit.converter.GsonConverter.charset` @type ^`java.lang.String` := v2 @kind object;
+  #L2522be.  return @kind void;
+}
+procedure `java.lang.Object` `fromBody`(`retrofit.converter.GsonConverter` v3 @kind this, `retrofit.mime.TypedInput` v4 @kind object, `java.lang.reflect.Type` v5 @kind object) @signature `Lretrofit/converter/GsonConverter;.fromBody:(Lretrofit/mime/TypedInput;Ljava/lang/reflect/Type;)Ljava/lang/Object;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L252160.  v0:= v3.`retrofit.converter.GsonConverter.charset` @type ^`java.lang.String` @kind object;
+  #L252164.  call temp:= `mimeType`(v4) @signature `Lretrofit/mime/TypedInput;.mimeType:()Ljava/lang/String;` @kind interface;
+  #L25216a.  v1:= temp @kind object;
+  #L25216c.  if v1 == 0 then goto L252180;
+  #L252170.  call temp:= `mimeType`(v4) @signature `Lretrofit/mime/TypedInput;.mimeType:()Ljava/lang/String;` @kind interface;
+  #L252176.  v1:= temp @kind object;
+  #L252178.  call temp:= `parseCharset`(v1, v0) @signature `Lretrofit/mime/MimeUtil;.parseCharset:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;` @kind static;
+  #L25217e.  v0:= temp @kind object;
+  #L252180.  v1:= 0I;
+  #L252182.  v2:= new `java.io.InputStreamReader`;
+  #L252186.  call temp:= `in`(v4) @signature `Lretrofit/mime/TypedInput;.in:()Ljava/io/InputStream;` @kind interface;
+  #L25218c.  v4:= temp @kind object;
+  #L25218e.  call `<init>`(v2, v4, v0) @signature `Ljava/io/InputStreamReader;.<init>:(Ljava/io/InputStream;Ljava/lang/String;)V` @kind direct;
+  #L252194.  v4:= v3.`retrofit.converter.GsonConverter.gson` @type ^`com.google.gson.Gson` @kind object;
+  #L252198.  call temp:= `fromJson`(v4, v2, v5) @signature `Lcom/google/gson/Gson;.fromJson:(Ljava/io/Reader;Ljava/lang/reflect/Type;)Ljava/lang/Object;` @kind virtual;
+  #L25219e.  v4:= temp @kind object;
+  #L2521a0.  call `close`(v2) @signature `Ljava/io/InputStreamReader;.close:()V` @kind virtual;
+  #L2521a6.  return v4 @kind object;
+  #L2521a8.  v4:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L2521aa.  v1:= v2 @kind object;
+  #L2521ac.  goto L2521da;
+  #L2521ae.  v4:= Exception @type ^`com.google.gson.JsonParseException` @kind object;
+  #L2521b0.  v1:= v2 @kind object;
+  #L2521b2.  goto L2521c0;
+  #L2521b4.  v4:= Exception @type ^`java.io.IOException` @kind object;
+  #L2521b6.  v1:= v2 @kind object;
+  #L2521b8.  goto L2521ce;
+  #L2521ba.  v4:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L2521bc.  goto L2521da;
+  #L2521be.  v4:= Exception @type ^`com.google.gson.JsonParseException` @kind object;
+  #L2521c0.  v5:= new `retrofit.converter.ConversionException`;
+  #L2521c4.  call `<init>`(v5, v4) @signature `Lretrofit/converter/ConversionException;.<init>:(Ljava/lang/Throwable;)V` @kind direct;
+  #L2521ca.  throw v5;
+  #L2521cc.  v4:= Exception @type ^`java.io.IOException` @kind object;
+  #L2521ce.  v5:= new `retrofit.converter.ConversionException`;
+  #L2521d2.  call `<init>`(v5, v4) @signature `Lretrofit/converter/ConversionException;.<init>:(Ljava/lang/Throwable;)V` @kind direct;
+  #L2521d8.  throw v5;
+  #L2521da.  if v1 == 0 then goto L2521e4;
+  #L2521de.  call `close`(v1) @signature `Ljava/io/InputStreamReader;.close:()V` @kind virtual;
+  #L2521e4.  throw v4;
+  catch `java.io.IOException` @[L252182..L252194] goto L2521cc;
+  catch `com.google.gson.JsonParseException` @[L252182..L252194] goto L2521be;
+  catch `java.lang.Throwable` @[L252182..L252194] goto L2521ba;
+  catch `java.io.IOException` @[L252194..L2521a0] goto L2521b4;
+  catch `com.google.gson.JsonParseException` @[L252194..L2521a0] goto L2521ae;
+  catch `java.lang.Throwable` @[L252194..L2521a0] goto L2521a8;
+  catch `java.io.IOException` @[L2521a0..L2521a6] goto L2521a6;
+  catch `java.lang.Throwable` @[L2521c0..L2521da] goto L2521ba;
+  catch `java.io.IOException` @[L2521de..L2521e4] goto L2521e4;
+}
+procedure `retrofit.mime.TypedOutput` `toBody`(`retrofit.converter.GsonConverter` v2 @kind this, `java.lang.Object` v3 @kind object) @signature `Lretrofit/converter/GsonConverter;.toBody:(Ljava/lang/Object;)Lretrofit/mime/TypedOutput;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L25223c.  v0:= new `retrofit.converter.GsonConverter$JsonTypedOutput`;
+  #L252240.  v1:= v2.`retrofit.converter.GsonConverter.gson` @type ^`com.google.gson.Gson` @kind object;
+  #L252244.  call temp:= `toJson`(v1, v3) @signature `Lcom/google/gson/Gson;.toJson:(Ljava/lang/Object;)Ljava/lang/String;` @kind virtual;
+  #L25224a.  v3:= temp @kind object;
+  #L25224c.  v1:= v2.`retrofit.converter.GsonConverter.charset` @type ^`java.lang.String` @kind object;
+  #L252250.  call temp:= `getBytes`(v3, v1) @signature `Ljava/lang/String;.getBytes:(Ljava/lang/String;)[B` @kind virtual;
+  #L252256.  v3:= temp @kind object;
+  #L252258.  v1:= v2.`retrofit.converter.GsonConverter.charset` @type ^`java.lang.String` @kind object;
+  #L25225c.  call `<init>`(v0, v3, v1) @signature `Lretrofit/converter/GsonConverter$JsonTypedOutput;.<init>:([BLjava/lang/String;)V` @kind direct;
+  #L252262.  return v0 @kind object;
+  #L252264.  v3:= Exception @type ^`java.io.UnsupportedEncodingException` @kind object;
+  #L252266.  v0:= new `java.lang.AssertionError`;
+  #L25226a.  call `<init>`(v0, v3) @signature `Ljava/lang/AssertionError;.<init>:(Ljava/lang/Object;)V` @kind direct;
+  #L252270.  throw v0;
+  catch `java.io.UnsupportedEncodingException` @[L25223c..L252262] goto L252264;
+}

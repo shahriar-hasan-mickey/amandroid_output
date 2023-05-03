@@ -1,0 +1,180 @@
+record `com.google.crypto.tink.subtle.AesGcmJce` @kind class @AccessFlag PUBLIC_FINAL extends `com.google.crypto.tink.Aead` @kind interface {
+  `javax.crypto.SecretKey` `com.google.crypto.tink.subtle.AesGcmJce.a` @AccessFlag PRIVATE_FINAL;
+}
+global `java.lang.ThreadLocal` `@@com.google.crypto.tink.subtle.AesGcmJce.b` @AccessFlag PRIVATE_STATIC_FINAL;
+procedure `void` `<clinit>`() @signature `Lcom/google/crypto/tink/subtle/AesGcmJce;.<clinit>:()V` @AccessFlag STATIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L1e1ff8.  v0:= new `com.google.crypto.tink.subtle.AesGcmJce$a`;
+  #L1e1ffc.  call `<init>`(v0) @signature `Lcom/google/crypto/tink/subtle/AesGcmJce$a;.<init>:()V` @kind direct;
+  #L1e2002.  `@@com.google.crypto.tink.subtle.AesGcmJce.b` @type ^`java.lang.ThreadLocal` := v0 @kind object;
+  #L1e2006.  return @kind void;
+}
+procedure `void` `<init>`(`com.google.crypto.tink.subtle.AesGcmJce` v2 @kind this, `byte`[] v3 @kind object) @signature `Lcom/google/crypto/tink/subtle/AesGcmJce;.<init>:([B)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+
+  #L1e2018.  call `<init>`(v2) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L1e201e.  v0:= length @variable v3;
+  #L1e2020.  call `validateAesKeySize`(v0) @signature `Lcom/google/crypto/tink/subtle/Validators;.validateAesKeySize:(I)V` @kind static;
+  #L1e2026.  v0:= new `javax.crypto.spec.SecretKeySpec`;
+  #L1e202a.  v1:= "AES" @kind object;
+  #L1e202e.  call `<init>`(v0, v3, v1) @signature `Ljavax/crypto/spec/SecretKeySpec;.<init>:([BLjava/lang/String;)V` @kind direct;
+  #L1e2034.  v2.`com.google.crypto.tink.subtle.AesGcmJce.a` @type ^`javax.crypto.SecretKey` := v0 @kind object;
+  #L1e2038.  return @kind void;
+}
+procedure `java.security.spec.AlgorithmParameterSpec` `a`(`byte`[] v2 @kind object) @signature `Lcom/google/crypto/tink/subtle/AesGcmJce;.a:([B)Ljava/security/spec/AlgorithmParameterSpec;` @AccessFlag PRIVATE_STATIC {
+    temp;
+    v0;
+    v1;
+
+  #L1e1f90.  v0:= length @variable v2;
+  #L1e1f92.  v1:= 0I;
+  #L1e1f94.  call temp:= `b`(v2, v1, v0) @signature `Lcom/google/crypto/tink/subtle/AesGcmJce;.b:([BII)Ljava/security/spec/AlgorithmParameterSpec;` @kind static;
+  #L1e1f9a.  v2:= temp @kind object;
+  #L1e1f9c.  return v2 @kind object;
+}
+procedure `java.security.spec.AlgorithmParameterSpec` `b`(`byte`[] v2 @kind object, `int` v3 , `int` v4 ) @signature `Lcom/google/crypto/tink/subtle/AesGcmJce;.b:([BII)Ljava/security/spec/AlgorithmParameterSpec;` @AccessFlag PRIVATE_STATIC {
+    temp;
+    v0;
+    v1;
+
+  #L1e1fb0.  call temp:= `isAndroid`() @signature `Lcom/google/crypto/tink/subtle/SubtleUtil;.isAndroid:()Z` @kind static;
+  #L1e1fb6.  v0:= temp;
+  #L1e1fb8.  if v0 == 0 then goto L1e1fd8;
+  #L1e1fbc.  call temp:= `androidApiLevel`() @signature `Lcom/google/crypto/tink/subtle/SubtleUtil;.androidApiLevel:()I` @kind static;
+  #L1e1fc2.  v0:= temp;
+  #L1e1fc4.  v1:= 19I;
+  #L1e1fc8.  if v0 > v1 then goto L1e1fd8;
+  #L1e1fcc.  v0:= new `javax.crypto.spec.IvParameterSpec`;
+  #L1e1fd0.  call `<init>`(v0, v2, v3, v4) @signature `Ljavax/crypto/spec/IvParameterSpec;.<init>:([BII)V` @kind direct;
+  #L1e1fd6.  return v0 @kind object;
+  #L1e1fd8.  v0:= new `javax.crypto.spec.GCMParameterSpec`;
+  #L1e1fdc.  v1:= 128I;
+  #L1e1fe0.  call `<init>`(v0, v1, v2, v3, v4) @signature `Ljavax/crypto/spec/GCMParameterSpec;.<init>:(I[BII)V` @kind direct;
+  #L1e1fe6.  return v0 @kind object;
+}
+procedure `byte`[] `decrypt`(`com.google.crypto.tink.subtle.AesGcmJce` v6 @kind this, `byte`[] v7 @kind object, `byte`[] v8 @kind object) @signature `Lcom/google/crypto/tink/subtle/AesGcmJce;.decrypt:([B[B)[B` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L1e1e10.  v0:= length @variable v7;
+  #L1e1e12.  v1:= 28I;
+  #L1e1e16.  if v0 < v1 then goto L1e1e7a;
+  #L1e1e1a.  v0:= 0I;
+  #L1e1e1c.  v1:= 12I;
+  #L1e1e20.  call temp:= `b`(v7, v0, v1) @signature `Lcom/google/crypto/tink/subtle/AesGcmJce;.b:([BII)Ljava/security/spec/AlgorithmParameterSpec;` @kind static;
+  #L1e1e26.  v0:= temp @kind object;
+  #L1e1e28.  v2:= `@@com.google.crypto.tink.subtle.AesGcmJce.b` @type ^`java.lang.ThreadLocal` @kind object;
+  #L1e1e2c.  call temp:= `get`(v2) @signature `Ljava/lang/ThreadLocal;.get:()Ljava/lang/Object;` @kind virtual;
+  #L1e1e32.  v3:= temp @kind object;
+  #L1e1e34.  v3:= (`javax.crypto.Cipher`) v3 @kind object;
+  #L1e1e38.  v4:= 2I;
+  #L1e1e3a.  v5:= v6.`com.google.crypto.tink.subtle.AesGcmJce.a` @type ^`javax.crypto.SecretKey` @kind object;
+  #L1e1e3e.  call `init`(v3, v4, v5, v0) @signature `Ljavax/crypto/Cipher;.init:(ILjava/security/Key;Ljava/security/spec/AlgorithmParameterSpec;)V` @kind virtual;
+  #L1e1e44.  if v8 == 0 then goto L1e1e60;
+  #L1e1e48.  v0:= length @variable v8;
+  #L1e1e4a.  if v0 == 0 then goto L1e1e60;
+  #L1e1e4e.  call temp:= `get`(v2) @signature `Ljava/lang/ThreadLocal;.get:()Ljava/lang/Object;` @kind virtual;
+  #L1e1e54.  v0:= temp @kind object;
+  #L1e1e56.  v0:= (`javax.crypto.Cipher`) v0 @kind object;
+  #L1e1e5a.  call `updateAAD`(v0, v8) @signature `Ljavax/crypto/Cipher;.updateAAD:([B)V` @kind virtual;
+  #L1e1e60.  call temp:= `get`(v2) @signature `Ljava/lang/ThreadLocal;.get:()Ljava/lang/Object;` @kind virtual;
+  #L1e1e66.  v8:= temp @kind object;
+  #L1e1e68.  v8:= (`javax.crypto.Cipher`) v8 @kind object;
+  #L1e1e6c.  v0:= length @variable v7;
+  #L1e1e6e.  v0:= v0 - v1 @kind int;
+  #L1e1e70.  call temp:= `doFinal`(v8, v7, v1, v0) @signature `Ljavax/crypto/Cipher;.doFinal:([BII)[B` @kind virtual;
+  #L1e1e76.  v7:= temp @kind object;
+  #L1e1e78.  return v7 @kind object;
+  #L1e1e7a.  v7:= new `java.security.GeneralSecurityException`;
+  #L1e1e7e.  v8:= "ciphertext too short" @kind object;
+  #L1e1e82.  call `<init>`(v7, v8) @signature `Ljava/security/GeneralSecurityException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L1e1e88.  throw v7;
+}
+procedure `byte`[] `encrypt`(`com.google.crypto.tink.subtle.AesGcmJce` v11 @kind this, `byte`[] v12 @kind object, `byte`[] v13 @kind object) @signature `Lcom/google/crypto/tink/subtle/AesGcmJce;.encrypt:([B[B)[B` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+    v9;
+    v10;
+
+  #L1e1e9c.  v0:= length @variable v12;
+  #L1e1e9e.  v1:= 2147483619I;
+  #L1e1ea4.  if v0 > v1 then goto L1e1f70;
+  #L1e1ea8.  v0:= length @variable v12;
+  #L1e1eaa.  v1:= 12I;
+  #L1e1eae.  v0:= v0 + v1 @kind int;
+  #L1e1eb0.  v2:= 16I;
+  #L1e1eb4.  v0:= v0 + v2 @kind int;
+  #L1e1eb6.  v0:= new `byte`[v0];
+  #L1e1eba.  call temp:= `randBytes`(v1) @signature `Lcom/google/crypto/tink/subtle/Random;.randBytes:(I)[B` @kind static;
+  #L1e1ec0.  v3:= temp @kind object;
+  #L1e1ec2.  v9:= 0I;
+  #L1e1ec4.  call `arraycopy`(v3, v9, v0, v9, v1) @signature `Ljava/lang/System;.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V` @kind static;
+  #L1e1eca.  call temp:= `a`(v3) @signature `Lcom/google/crypto/tink/subtle/AesGcmJce;.a:([B)Ljava/security/spec/AlgorithmParameterSpec;` @kind static;
+  #L1e1ed0.  v1:= temp @kind object;
+  #L1e1ed2.  v3:= `@@com.google.crypto.tink.subtle.AesGcmJce.b` @type ^`java.lang.ThreadLocal` @kind object;
+  #L1e1ed6.  call temp:= `get`(v3) @signature `Ljava/lang/ThreadLocal;.get:()Ljava/lang/Object;` @kind virtual;
+  #L1e1edc.  v4:= temp @kind object;
+  #L1e1ede.  v4:= (`javax.crypto.Cipher`) v4 @kind object;
+  #L1e1ee2.  v5:= v11.`com.google.crypto.tink.subtle.AesGcmJce.a` @type ^`javax.crypto.SecretKey` @kind object;
+  #L1e1ee6.  v10:= 1I;
+  #L1e1ee8.  call `init`(v4, v10, v5, v1) @signature `Ljavax/crypto/Cipher;.init:(ILjava/security/Key;Ljava/security/spec/AlgorithmParameterSpec;)V` @kind virtual;
+  #L1e1eee.  if v13 == 0 then goto L1e1f0a;
+  #L1e1ef2.  v1:= length @variable v13;
+  #L1e1ef4.  if v1 == 0 then goto L1e1f0a;
+  #L1e1ef8.  call temp:= `get`(v3) @signature `Ljava/lang/ThreadLocal;.get:()Ljava/lang/Object;` @kind virtual;
+  #L1e1efe.  v1:= temp @kind object;
+  #L1e1f00.  v1:= (`javax.crypto.Cipher`) v1 @kind object;
+  #L1e1f04.  call `updateAAD`(v1, v13) @signature `Ljavax/crypto/Cipher;.updateAAD:([B)V` @kind virtual;
+  #L1e1f0a.  call temp:= `get`(v3) @signature `Ljava/lang/ThreadLocal;.get:()Ljava/lang/Object;` @kind virtual;
+  #L1e1f10.  v13:= temp @kind object;
+  #L1e1f12.  v3:= v13 @kind object;
+  #L1e1f14.  v3:= (`javax.crypto.Cipher`) v3 @kind object;
+  #L1e1f18.  v5:= 0I;
+  #L1e1f1a.  v6:= length @variable v12;
+  #L1e1f1c.  v8:= 12I;
+  #L1e1f20.  v4:= v12 @kind object;
+  #L1e1f22.  v7:= v0 @kind object;
+  #L1e1f24.  call temp:= `doFinal`(v3, v4, v5, v6, v7, v8) @signature `Ljavax/crypto/Cipher;.doFinal:([BII[BI)I` @kind virtual;
+  #L1e1f2a.  v13:= temp;
+  #L1e1f2c.  v1:= length @variable v12;
+  #L1e1f2e.  v1:= v1 + v2 @kind int;
+  #L1e1f30.  if v13 != v1 then goto L1e1f36;
+  #L1e1f34.  return v0 @kind object;
+  #L1e1f36.  v12:= length @variable v12;
+  #L1e1f38.  v13:= v13 - v12 @kind int;
+  #L1e1f3a.  v12:= new `java.security.GeneralSecurityException`;
+  #L1e1f3e.  v0:= 2I;
+  #L1e1f40.  v0:= new `java.lang.Object`[v0];
+  #L1e1f44.  call temp:= `valueOf`(v2) @signature `Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer;` @kind static;
+  #L1e1f4a.  v1:= temp @kind object;
+  #L1e1f4c.  v0[v9]:= v1 @kind object;
+  #L1e1f50.  call temp:= `valueOf`(v13) @signature `Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer;` @kind static;
+  #L1e1f56.  v13:= temp @kind object;
+  #L1e1f58.  v0[v10]:= v13 @kind object;
+  #L1e1f5c.  v13:= "encryption failed; GCM tag must be %s bytes, but got only %s bytes" @kind object;
+  #L1e1f60.  call temp:= `format`(v13, v0) @signature `Ljava/lang/String;.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;` @kind static;
+  #L1e1f66.  v13:= temp @kind object;
+  #L1e1f68.  call `<init>`(v12, v13) @signature `Ljava/security/GeneralSecurityException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L1e1f6e.  throw v12;
+  #L1e1f70.  v12:= new `java.security.GeneralSecurityException`;
+  #L1e1f74.  v13:= "plaintext too long" @kind object;
+  #L1e1f78.  call `<init>`(v12, v13) @signature `Ljava/security/GeneralSecurityException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L1e1f7e.  throw v12;
+}

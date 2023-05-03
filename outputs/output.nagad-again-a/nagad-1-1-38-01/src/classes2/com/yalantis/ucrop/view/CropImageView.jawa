@@ -1,0 +1,842 @@
+record `com.yalantis.ucrop.view.CropImageView` @kind class @AccessFlag PUBLIC extends `com.yalantis.ucrop.view.TransformImageView` @kind class {
+  `com.yalantis.ucrop.callback.CropBoundsChangeListener` `com.yalantis.ucrop.view.CropImageView.mCropBoundsChangeListener` @AccessFlag PRIVATE;
+  `android.graphics.RectF` `com.yalantis.ucrop.view.CropImageView.mCropRect` @AccessFlag PRIVATE_FINAL;
+  `long` `com.yalantis.ucrop.view.CropImageView.mImageToWrapCropBoundsAnimDuration` @AccessFlag PRIVATE;
+  `int` `com.yalantis.ucrop.view.CropImageView.mMaxResultImageSizeX` @AccessFlag PRIVATE;
+  `int` `com.yalantis.ucrop.view.CropImageView.mMaxResultImageSizeY` @AccessFlag PRIVATE;
+  `float` `com.yalantis.ucrop.view.CropImageView.mMaxScale` @AccessFlag PRIVATE;
+  `float` `com.yalantis.ucrop.view.CropImageView.mMaxScaleMultiplier` @AccessFlag PRIVATE;
+  `float` `com.yalantis.ucrop.view.CropImageView.mMinScale` @AccessFlag PRIVATE;
+  `float` `com.yalantis.ucrop.view.CropImageView.mTargetAspectRatio` @AccessFlag PRIVATE;
+  `android.graphics.Matrix` `com.yalantis.ucrop.view.CropImageView.mTempMatrix` @AccessFlag PRIVATE_FINAL;
+  `java.lang.Runnable` `com.yalantis.ucrop.view.CropImageView.mWrapCropBoundsRunnable` @AccessFlag PRIVATE;
+  `java.lang.Runnable` `com.yalantis.ucrop.view.CropImageView.mZoomImageToPositionRunnable` @AccessFlag PRIVATE;
+}
+global `float` `@@com.yalantis.ucrop.view.CropImageView.DEFAULT_ASPECT_RATIO` @AccessFlag PUBLIC_STATIC_FINAL;
+global `int` `@@com.yalantis.ucrop.view.CropImageView.DEFAULT_IMAGE_TO_CROP_BOUNDS_ANIM_DURATION` @AccessFlag PUBLIC_STATIC_FINAL;
+global `int` `@@com.yalantis.ucrop.view.CropImageView.DEFAULT_MAX_BITMAP_SIZE` @AccessFlag PUBLIC_STATIC_FINAL;
+global `float` `@@com.yalantis.ucrop.view.CropImageView.DEFAULT_MAX_SCALE_MULTIPLIER` @AccessFlag PUBLIC_STATIC_FINAL;
+global `float` `@@com.yalantis.ucrop.view.CropImageView.SOURCE_IMAGE_ASPECT_RATIO` @AccessFlag PUBLIC_STATIC_FINAL;
+procedure `void` `<init>`(`com.yalantis.ucrop.view.CropImageView` v1 @kind this, `android.content.Context` v2 @kind object) @signature `Lcom/yalantis/ucrop/view/CropImageView;.<init>:(Landroid/content/Context;)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L1be938.  v0:= 0I;
+  #L1be93a.  call `<init>`(v1, v2, v0) @signature `Lcom/yalantis/ucrop/view/CropImageView;.<init>:(Landroid/content/Context;Landroid/util/AttributeSet;)V` @kind direct;
+  #L1be940.  return @kind void;
+}
+procedure `void` `<init>`(`com.yalantis.ucrop.view.CropImageView` v1 @kind this, `android.content.Context` v2 @kind object, `android.util.AttributeSet` v3 @kind object) @signature `Lcom/yalantis/ucrop/view/CropImageView;.<init>:(Landroid/content/Context;Landroid/util/AttributeSet;)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L1be954.  v0:= 0I;
+  #L1be956.  call `<init>`(v1, v2, v3, v0) @signature `Lcom/yalantis/ucrop/view/CropImageView;.<init>:(Landroid/content/Context;Landroid/util/AttributeSet;I)V` @kind direct;
+  #L1be95c.  return @kind void;
+}
+procedure `void` `<init>`(`com.yalantis.ucrop.view.CropImageView` v0 @kind this, `android.content.Context` v1 @kind object, `android.util.AttributeSet` v2 @kind object, `int` v3 ) @signature `Lcom/yalantis/ucrop/view/CropImageView;.<init>:(Landroid/content/Context;Landroid/util/AttributeSet;I)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+
+  #L1be970.  call `<init>`(v0, v1, v2, v3) @signature `Lcom/yalantis/ucrop/view/TransformImageView;.<init>:(Landroid/content/Context;Landroid/util/AttributeSet;I)V` @kind direct;
+  #L1be976.  v1:= new `android.graphics.RectF`;
+  #L1be97a.  call `<init>`(v1) @signature `Landroid/graphics/RectF;.<init>:()V` @kind direct;
+  #L1be980.  v0.`com.yalantis.ucrop.view.CropImageView.mCropRect` @type ^`android.graphics.RectF` := v1 @kind object;
+  #L1be984.  v1:= new `android.graphics.Matrix`;
+  #L1be988.  call `<init>`(v1) @signature `Landroid/graphics/Matrix;.<init>:()V` @kind direct;
+  #L1be98e.  v0.`com.yalantis.ucrop.view.CropImageView.mTempMatrix` @type ^`android.graphics.Matrix` := v1 @kind object;
+  #L1be992.  v1:= 10.0F;
+  #L1be996.  v0.`com.yalantis.ucrop.view.CropImageView.mMaxScaleMultiplier` @type ^`float` := v1;
+  #L1be99a.  v1:= 0I;
+  #L1be99c.  v0.`com.yalantis.ucrop.view.CropImageView.mZoomImageToPositionRunnable` @type ^`java.lang.Runnable` := v1 @kind object;
+  #L1be9a0.  v1:= 0I;
+  #L1be9a2.  v0.`com.yalantis.ucrop.view.CropImageView.mMaxResultImageSizeX` @type ^`int` := v1;
+  #L1be9a6.  v0.`com.yalantis.ucrop.view.CropImageView.mMaxResultImageSizeY` @type ^`int` := v1;
+  #L1be9aa.  v1:= 500L;
+  #L1be9ae.  v0.`com.yalantis.ucrop.view.CropImageView.mImageToWrapCropBoundsAnimDuration` @type ^`long` := v1 @kind wide;
+  #L1be9b2.  return @kind void;
+}
+procedure `android.graphics.RectF` `access$000`(`com.yalantis.ucrop.view.CropImageView` v0 @kind object) @signature `Lcom/yalantis/ucrop/view/CropImageView;.access$000:(Lcom/yalantis/ucrop/view/CropImageView;)Landroid/graphics/RectF;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L1be720.  v0:= v0.`com.yalantis.ucrop.view.CropImageView.mCropRect` @type ^`android.graphics.RectF` @kind object;
+  #L1be724.  return v0 @kind object;
+}
+procedure `float`[] `calculateImageIndents`(`com.yalantis.ucrop.view.CropImageView` v7 @kind this) @signature `Lcom/yalantis/ucrop/view/CropImageView;.calculateImageIndents:()[F` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+
+  #L1be82c.  v0:= v7.`com.yalantis.ucrop.view.CropImageView.mTempMatrix` @type ^`android.graphics.Matrix` @kind object;
+  #L1be830.  call `reset`(v0) @signature `Landroid/graphics/Matrix;.reset:()V` @kind virtual;
+  #L1be836.  v0:= v7.`com.yalantis.ucrop.view.CropImageView.mTempMatrix` @type ^`android.graphics.Matrix` @kind object;
+  #L1be83a.  call temp:= `getCurrentAngle`(v7) @signature `Lcom/yalantis/ucrop/view/TransformImageView;.getCurrentAngle:()F` @kind virtual;
+  #L1be840.  v1:= temp;
+  #L1be842.  v1:= -v1 @kind float;
+  #L1be844.  call `setRotate`(v0, v1) @signature `Landroid/graphics/Matrix;.setRotate:(F)V` @kind virtual;
+  #L1be84a.  v0:= v7.`com.yalantis.ucrop.view.TransformImageView.mCurrentImageCorners` @type ^`float`[] @kind object;
+  #L1be84e.  v1:= length @variable v0;
+  #L1be850.  call temp:= `copyOf`(v0, v1) @signature `Ljava/util/Arrays;.copyOf:([FI)[F` @kind static;
+  #L1be856.  v0:= temp @kind object;
+  #L1be858.  v1:= v7.`com.yalantis.ucrop.view.CropImageView.mCropRect` @type ^`android.graphics.RectF` @kind object;
+  #L1be85c.  call temp:= `getCornersFromRect`(v1) @signature `Lcom/yalantis/ucrop/util/RectUtils;.getCornersFromRect:(Landroid/graphics/RectF;)[F` @kind static;
+  #L1be862.  v1:= temp @kind object;
+  #L1be864.  v2:= v7.`com.yalantis.ucrop.view.CropImageView.mTempMatrix` @type ^`android.graphics.Matrix` @kind object;
+  #L1be868.  call `mapPoints`(v2, v0) @signature `Landroid/graphics/Matrix;.mapPoints:([F)V` @kind virtual;
+  #L1be86e.  v2:= v7.`com.yalantis.ucrop.view.CropImageView.mTempMatrix` @type ^`android.graphics.Matrix` @kind object;
+  #L1be872.  call `mapPoints`(v2, v1) @signature `Landroid/graphics/Matrix;.mapPoints:([F)V` @kind virtual;
+  #L1be878.  call temp:= `trapToRect`(v0) @signature `Lcom/yalantis/ucrop/util/RectUtils;.trapToRect:([F)Landroid/graphics/RectF;` @kind static;
+  #L1be87e.  v0:= temp @kind object;
+  #L1be880.  call temp:= `trapToRect`(v1) @signature `Lcom/yalantis/ucrop/util/RectUtils;.trapToRect:([F)Landroid/graphics/RectF;` @kind static;
+  #L1be886.  v1:= temp @kind object;
+  #L1be888.  v2:= v0.`android.graphics.RectF.left` @type ^`float`;
+  #L1be88c.  v3:= v1.`android.graphics.RectF.left` @type ^`float`;
+  #L1be890.  v2:= v2 - v3 @kind float;
+  #L1be892.  v3:= v0.`android.graphics.RectF.top` @type ^`float`;
+  #L1be896.  v4:= v1.`android.graphics.RectF.top` @type ^`float`;
+  #L1be89a.  v3:= v3 - v4 @kind float;
+  #L1be89c.  v4:= v0.`android.graphics.RectF.right` @type ^`float`;
+  #L1be8a0.  v5:= v1.`android.graphics.RectF.right` @type ^`float`;
+  #L1be8a4.  v4:= v4 - v5 @kind float;
+  #L1be8a6.  v0:= v0.`android.graphics.RectF.bottom` @type ^`float`;
+  #L1be8aa.  v1:= v1.`android.graphics.RectF.bottom` @type ^`float`;
+  #L1be8ae.  v0:= v0 - v1 @kind float;
+  #L1be8b0.  v1:= 4I;
+  #L1be8b2.  v1:= new `float`[v1];
+  #L1be8b6.  v5:= 0I;
+  #L1be8b8.  v6:= fcmpl(v2, v5);
+  #L1be8bc.  if v6 <= 0 then goto L1be8c2;
+  #L1be8c0.  goto L1be8c4;
+  #L1be8c2.  v2:= 0I;
+  #L1be8c4.  v6:= 0I;
+  #L1be8c6.  v1[v6]:= v2;
+  #L1be8ca.  v2:= 1I;
+  #L1be8cc.  v6:= fcmpl(v3, v5);
+  #L1be8d0.  if v6 <= 0 then goto L1be8d6;
+  #L1be8d4.  goto L1be8d8;
+  #L1be8d6.  v3:= 0I;
+  #L1be8d8.  v1[v2]:= v3;
+  #L1be8dc.  v2:= 2I;
+  #L1be8de.  v3:= fcmpg(v4, v5);
+  #L1be8e2.  if v3 >= 0 then goto L1be8e8;
+  #L1be8e6.  goto L1be8ea;
+  #L1be8e8.  v4:= 0I;
+  #L1be8ea.  v1[v2]:= v4;
+  #L1be8ee.  v2:= 3I;
+  #L1be8f0.  v3:= fcmpg(v0, v5);
+  #L1be8f4.  if v3 >= 0 then goto L1be8fa;
+  #L1be8f8.  goto L1be8fc;
+  #L1be8fa.  v0:= 0I;
+  #L1be8fc.  v1[v2]:= v0;
+  #L1be900.  v0:= v7.`com.yalantis.ucrop.view.CropImageView.mTempMatrix` @type ^`android.graphics.Matrix` @kind object;
+  #L1be904.  call `reset`(v0) @signature `Landroid/graphics/Matrix;.reset:()V` @kind virtual;
+  #L1be90a.  v0:= v7.`com.yalantis.ucrop.view.CropImageView.mTempMatrix` @type ^`android.graphics.Matrix` @kind object;
+  #L1be90e.  call temp:= `getCurrentAngle`(v7) @signature `Lcom/yalantis/ucrop/view/TransformImageView;.getCurrentAngle:()F` @kind virtual;
+  #L1be914.  v2:= temp;
+  #L1be916.  call `setRotate`(v0, v2) @signature `Landroid/graphics/Matrix;.setRotate:(F)V` @kind virtual;
+  #L1be91c.  v0:= v7.`com.yalantis.ucrop.view.CropImageView.mTempMatrix` @type ^`android.graphics.Matrix` @kind object;
+  #L1be920.  call `mapPoints`(v0, v1) @signature `Landroid/graphics/Matrix;.mapPoints:([F)V` @kind virtual;
+  #L1be926.  return v1 @kind object;
+}
+procedure `void` `calculateImageScaleBounds`(`com.yalantis.ucrop.view.CropImageView` v2 @kind this) @signature `Lcom/yalantis/ucrop/view/CropImageView;.calculateImageScaleBounds:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+
+  #L1be9c4.  call temp:= `getDrawable`(v2) @signature `Landroid/widget/ImageView;.getDrawable:()Landroid/graphics/drawable/Drawable;` @kind virtual;
+  #L1be9ca.  v0:= temp @kind object;
+  #L1be9cc.  if v0 != 0 then goto L1be9d2;
+  #L1be9d0.  return @kind void;
+  #L1be9d2.  call temp:= `getIntrinsicWidth`(v0) @signature `Landroid/graphics/drawable/Drawable;.getIntrinsicWidth:()I` @kind virtual;
+  #L1be9d8.  v1:= temp;
+  #L1be9da.  v1:= (`float`) v1 @kind i2f;
+  #L1be9dc.  call temp:= `getIntrinsicHeight`(v0) @signature `Landroid/graphics/drawable/Drawable;.getIntrinsicHeight:()I` @kind virtual;
+  #L1be9e2.  v0:= temp;
+  #L1be9e4.  v0:= (`float`) v0 @kind i2f;
+  #L1be9e6.  call `calculateImageScaleBounds`(v2, v1, v0) @signature `Lcom/yalantis/ucrop/view/CropImageView;.calculateImageScaleBounds:(FF)V` @kind direct;
+  #L1be9ec.  return @kind void;
+}
+procedure `void` `calculateImageScaleBounds`(`com.yalantis.ucrop.view.CropImageView` v2 @kind this, `float` v3 , `float` v4 ) @signature `Lcom/yalantis/ucrop/view/CropImageView;.calculateImageScaleBounds:(FF)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+
+  #L1bea00.  v0:= v2.`com.yalantis.ucrop.view.CropImageView.mCropRect` @type ^`android.graphics.RectF` @kind object;
+  #L1bea04.  call temp:= `width`(v0) @signature `Landroid/graphics/RectF;.width:()F` @kind virtual;
+  #L1bea0a.  v0:= temp;
+  #L1bea0c.  v0:= v0 / v3 @kind float;
+  #L1bea0e.  v1:= v2.`com.yalantis.ucrop.view.CropImageView.mCropRect` @type ^`android.graphics.RectF` @kind object;
+  #L1bea12.  call temp:= `width`(v1) @signature `Landroid/graphics/RectF;.width:()F` @kind virtual;
+  #L1bea18.  v1:= temp;
+  #L1bea1a.  v1:= v1 / v4 @kind float;
+  #L1bea1c.  call temp:= `min`(v0, v1) @signature `Ljava/lang/Math;.min:(FF)F` @kind static;
+  #L1bea22.  v0:= temp;
+  #L1bea24.  v1:= v2.`com.yalantis.ucrop.view.CropImageView.mCropRect` @type ^`android.graphics.RectF` @kind object;
+  #L1bea28.  call temp:= `height`(v1) @signature `Landroid/graphics/RectF;.height:()F` @kind virtual;
+  #L1bea2e.  v1:= temp;
+  #L1bea30.  v1:= v1 / v4 @kind float;
+  #L1bea32.  v4:= v2.`com.yalantis.ucrop.view.CropImageView.mCropRect` @type ^`android.graphics.RectF` @kind object;
+  #L1bea36.  call temp:= `height`(v4) @signature `Landroid/graphics/RectF;.height:()F` @kind virtual;
+  #L1bea3c.  v4:= temp;
+  #L1bea3e.  v4:= v4 / v3 @kind float;
+  #L1bea40.  call temp:= `min`(v1, v4) @signature `Ljava/lang/Math;.min:(FF)F` @kind static;
+  #L1bea46.  v3:= temp;
+  #L1bea48.  call temp:= `min`(v0, v3) @signature `Ljava/lang/Math;.min:(FF)F` @kind static;
+  #L1bea4e.  v3:= temp;
+  #L1bea50.  v2.`com.yalantis.ucrop.view.CropImageView.mMinScale` @type ^`float` := v3;
+  #L1bea54.  v3:= v2.`com.yalantis.ucrop.view.CropImageView.mMinScale` @type ^`float`;
+  #L1bea58.  v4:= v2.`com.yalantis.ucrop.view.CropImageView.mMaxScaleMultiplier` @type ^`float`;
+  #L1bea5c.  v3:= v3 * v4 @kind float;
+  #L1bea60.  v2.`com.yalantis.ucrop.view.CropImageView.mMaxScale` @type ^`float` := v3;
+  #L1bea64.  return @kind void;
+}
+procedure `void` `setupInitialImagePosition`(`com.yalantis.ucrop.view.CropImageView` v5 @kind this, `float` v6 , `float` v7 ) @signature `Lcom/yalantis/ucrop/view/CropImageView;.setupInitialImagePosition:(FF)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L1bf044.  v0:= v5.`com.yalantis.ucrop.view.CropImageView.mCropRect` @type ^`android.graphics.RectF` @kind object;
+  #L1bf048.  call temp:= `width`(v0) @signature `Landroid/graphics/RectF;.width:()F` @kind virtual;
+  #L1bf04e.  v0:= temp;
+  #L1bf050.  v1:= v5.`com.yalantis.ucrop.view.CropImageView.mCropRect` @type ^`android.graphics.RectF` @kind object;
+  #L1bf054.  call temp:= `height`(v1) @signature `Landroid/graphics/RectF;.height:()F` @kind virtual;
+  #L1bf05a.  v1:= temp;
+  #L1bf05c.  v2:= v5.`com.yalantis.ucrop.view.CropImageView.mCropRect` @type ^`android.graphics.RectF` @kind object;
+  #L1bf060.  call temp:= `width`(v2) @signature `Landroid/graphics/RectF;.width:()F` @kind virtual;
+  #L1bf066.  v2:= temp;
+  #L1bf068.  v2:= v2 / v6 @kind float;
+  #L1bf06a.  v3:= v5.`com.yalantis.ucrop.view.CropImageView.mCropRect` @type ^`android.graphics.RectF` @kind object;
+  #L1bf06e.  call temp:= `height`(v3) @signature `Landroid/graphics/RectF;.height:()F` @kind virtual;
+  #L1bf074.  v3:= temp;
+  #L1bf076.  v3:= v3 / v7 @kind float;
+  #L1bf078.  call temp:= `max`(v2, v3) @signature `Ljava/lang/Math;.max:(FF)F` @kind static;
+  #L1bf07e.  v2:= temp;
+  #L1bf080.  v6:= v6 * v2 @kind float;
+  #L1bf084.  v0:= v0 - v6 @kind float;
+  #L1bf086.  v6:= 2.0F;
+  #L1bf08a.  v0:= v0 / v6 @kind float;
+  #L1bf08c.  v3:= v5.`com.yalantis.ucrop.view.CropImageView.mCropRect` @type ^`android.graphics.RectF` @kind object;
+  #L1bf090.  v4:= v3.`android.graphics.RectF.left` @type ^`float`;
+  #L1bf094.  v0:= v0 + v4 @kind float;
+  #L1bf096.  v7:= v7 * v2 @kind float;
+  #L1bf09a.  v1:= v1 - v7 @kind float;
+  #L1bf09c.  v1:= v1 / v6 @kind float;
+  #L1bf09e.  v6:= v3.`android.graphics.RectF.top` @type ^`float`;
+  #L1bf0a2.  v1:= v1 + v6 @kind float;
+  #L1bf0a4.  v6:= v5.`com.yalantis.ucrop.view.TransformImageView.mCurrentImageMatrix` @type ^`android.graphics.Matrix` @kind object;
+  #L1bf0a8.  call `reset`(v6) @signature `Landroid/graphics/Matrix;.reset:()V` @kind virtual;
+  #L1bf0ae.  v6:= v5.`com.yalantis.ucrop.view.TransformImageView.mCurrentImageMatrix` @type ^`android.graphics.Matrix` @kind object;
+  #L1bf0b2.  call temp:= `postScale`(v6, v2, v2) @signature `Landroid/graphics/Matrix;.postScale:(FF)Z` @kind virtual;
+  #L1bf0b8.  v6:= v5.`com.yalantis.ucrop.view.TransformImageView.mCurrentImageMatrix` @type ^`android.graphics.Matrix` @kind object;
+  #L1bf0bc.  call temp:= `postTranslate`(v6, v0, v1) @signature `Landroid/graphics/Matrix;.postTranslate:(FF)Z` @kind virtual;
+  #L1bf0c2.  v6:= v5.`com.yalantis.ucrop.view.TransformImageView.mCurrentImageMatrix` @type ^`android.graphics.Matrix` @kind object;
+  #L1bf0c6.  call `setImageMatrix`(v5, v6) @signature `Lcom/yalantis/ucrop/view/TransformImageView;.setImageMatrix:(Landroid/graphics/Matrix;)V` @kind virtual;
+  #L1bf0cc.  return @kind void;
+}
+procedure `void` `cancelAllAnimations`(`com.yalantis.ucrop.view.CropImageView` v1 @kind this) @signature `Lcom/yalantis/ucrop/view/CropImageView;.cancelAllAnimations:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L1bea78.  v0:= v1.`com.yalantis.ucrop.view.CropImageView.mWrapCropBoundsRunnable` @type ^`java.lang.Runnable` @kind object;
+  #L1bea7c.  call temp:= `removeCallbacks`(v1, v0) @signature `Landroid/widget/ImageView;.removeCallbacks:(Ljava/lang/Runnable;)Z` @kind virtual;
+  #L1bea82.  v0:= v1.`com.yalantis.ucrop.view.CropImageView.mZoomImageToPositionRunnable` @type ^`java.lang.Runnable` @kind object;
+  #L1bea86.  call temp:= `removeCallbacks`(v1, v0) @signature `Landroid/widget/ImageView;.removeCallbacks:(Ljava/lang/Runnable;)Z` @kind virtual;
+  #L1bea8c.  return @kind void;
+}
+procedure `void` `cropAndSaveImage`(`com.yalantis.ucrop.view.CropImageView` v15 @kind this, `android.graphics.Bitmap$CompressFormat` v16 @kind object, `int` v17 , `com.yalantis.ucrop.callback.BitmapCropCallback` v18 @kind object) @signature `Lcom/yalantis/ucrop/view/CropImageView;.cropAndSaveImage:(Landroid/graphics/Bitmap$CompressFormat;ILcom/yalantis/ucrop/callback/BitmapCropCallback;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+    v9;
+    v10;
+    v11;
+    v12;
+    v13;
+    v14;
+
+  #L1beaa0.  v0:= v15 @kind object;
+  #L1beaa2.  call `cancelAllAnimations`(v15) @signature `Lcom/yalantis/ucrop/view/CropImageView;.cancelAllAnimations:()V` @kind virtual;
+  #L1beaa8.  v1:= 0I;
+  #L1beaaa.  call `setImageToWrapCropBounds`(v15, v1) @signature `Lcom/yalantis/ucrop/view/CropImageView;.setImageToWrapCropBounds:(Z)V` @kind virtual;
+  #L1beab0.  v5:= new `com.yalantis.ucrop.model.ImageState`;
+  #L1beab4.  v2:= v0.`com.yalantis.ucrop.view.CropImageView.mCropRect` @type ^`android.graphics.RectF` @kind object;
+  #L1beab8.  v3:= v0.`com.yalantis.ucrop.view.TransformImageView.mCurrentImageCorners` @type ^`float`[] @kind object;
+  #L1beabc.  call temp:= `trapToRect`(v3) @signature `Lcom/yalantis/ucrop/util/RectUtils;.trapToRect:([F)Landroid/graphics/RectF;` @kind static;
+  #L1beac2.  v3:= temp @kind object;
+  #L1beac4.  call temp:= `getCurrentScale`(v15) @signature `Lcom/yalantis/ucrop/view/TransformImageView;.getCurrentScale:()F` @kind virtual;
+  #L1beaca.  v4:= temp;
+  #L1beacc.  call temp:= `getCurrentAngle`(v15) @signature `Lcom/yalantis/ucrop/view/TransformImageView;.getCurrentAngle:()F` @kind virtual;
+  #L1bead2.  v6:= temp;
+  #L1bead4.  call `<init>`(v5, v2, v3, v4, v6) @signature `Lcom/yalantis/ucrop/model/ImageState;.<init>:(Landroid/graphics/RectF;Landroid/graphics/RectF;FF)V` @kind direct;
+  #L1beada.  v6:= new `com.yalantis.ucrop.model.CropParameters`;
+  #L1beade.  v8:= v0.`com.yalantis.ucrop.view.CropImageView.mMaxResultImageSizeX` @type ^`int`;
+  #L1beae2.  v9:= v0.`com.yalantis.ucrop.view.CropImageView.mMaxResultImageSizeY` @type ^`int`;
+  #L1beae6.  call temp:= `getImageInputPath`(v15) @signature `Lcom/yalantis/ucrop/view/TransformImageView;.getImageInputPath:()Ljava/lang/String;` @kind virtual;
+  #L1beaec.  v12:= temp @kind object;
+  #L1beaee.  call temp:= `getImageOutputPath`(v15) @signature `Lcom/yalantis/ucrop/view/TransformImageView;.getImageOutputPath:()Ljava/lang/String;` @kind virtual;
+  #L1beaf4.  v13:= temp @kind object;
+  #L1beaf6.  call temp:= `getExifInfo`(v15) @signature `Lcom/yalantis/ucrop/view/TransformImageView;.getExifInfo:()Lcom/yalantis/ucrop/model/ExifInfo;` @kind virtual;
+  #L1beafc.  v14:= temp @kind object;
+  #L1beafe.  v7:= v6 @kind object;
+  #L1beb00.  v10:= v16 @kind object;
+  #L1beb04.  v11:= v17;
+  #L1beb08.  call `<init>`(v7, v8, v9, v10, v11, v12, v13, v14) @signature `Lcom/yalantis/ucrop/model/CropParameters;.<init>:(IILandroid/graphics/Bitmap$CompressFormat;ILjava/lang/String;Ljava/lang/String;Lcom/yalantis/ucrop/model/ExifInfo;)V` @kind direct;
+  #L1beb0e.  v2:= "Cropping" @kind object;
+  #L1beb12.  v3:= "Executing  Cropping" @kind object;
+  #L1beb16.  call temp:= `d`(v2, v3) @signature `Landroid/util/Log;.d:(Ljava/lang/String;Ljava/lang/String;)I` @kind static;
+  #L1beb1c.  v8:= new `com.yalantis.ucrop.task.BitmapCropTask`;
+  #L1beb20.  call temp:= `getContext`(v15) @signature `Landroid/widget/ImageView;.getContext:()Landroid/content/Context;` @kind virtual;
+  #L1beb26.  v3:= temp @kind object;
+  #L1beb28.  call temp:= `getViewBitmap`(v15) @signature `Lcom/yalantis/ucrop/view/TransformImageView;.getViewBitmap:()Landroid/graphics/Bitmap;` @kind virtual;
+  #L1beb2e.  v4:= temp @kind object;
+  #L1beb30.  v2:= v8 @kind object;
+  #L1beb32.  v7:= v18 @kind object;
+  #L1beb36.  call `<init>`(v2, v3, v4, v5, v6, v7) @signature `Lcom/yalantis/ucrop/task/BitmapCropTask;.<init>:(Landroid/content/Context;Landroid/graphics/Bitmap;Lcom/yalantis/ucrop/model/ImageState;Lcom/yalantis/ucrop/model/CropParameters;Lcom/yalantis/ucrop/callback/BitmapCropCallback;)V` @kind direct;
+  #L1beb3c.  v1:= new `java.lang.Void`[v1];
+  #L1beb40.  call temp:= `execute`(v8, v1) @signature `Landroid/os/AsyncTask;.execute:([Ljava/lang/Object;)Landroid/os/AsyncTask;` @kind virtual;
+  #L1beb46.  return @kind void;
+}
+procedure `com.yalantis.ucrop.callback.CropBoundsChangeListener` `getCropBoundsChangeListener`(`com.yalantis.ucrop.view.CropImageView` v1 @kind this) @signature `Lcom/yalantis/ucrop/view/CropImageView;.getCropBoundsChangeListener:()Lcom/yalantis/ucrop/callback/CropBoundsChangeListener;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L1be7cc.  v0:= v1.`com.yalantis.ucrop.view.CropImageView.mCropBoundsChangeListener` @type ^`com.yalantis.ucrop.callback.CropBoundsChangeListener` @kind object;
+  #L1be7d0.  return v0 @kind object;
+}
+procedure `float` `getMaxScale`(`com.yalantis.ucrop.view.CropImageView` v1 @kind this) @signature `Lcom/yalantis/ucrop/view/CropImageView;.getMaxScale:()F` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L1be7e4.  v0:= v1.`com.yalantis.ucrop.view.CropImageView.mMaxScale` @type ^`float`;
+  #L1be7e8.  return v0;
+}
+procedure `float` `getMinScale`(`com.yalantis.ucrop.view.CropImageView` v1 @kind this) @signature `Lcom/yalantis/ucrop/view/CropImageView;.getMinScale:()F` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L1be7fc.  v0:= v1.`com.yalantis.ucrop.view.CropImageView.mMinScale` @type ^`float`;
+  #L1be800.  return v0;
+}
+procedure `float` `getTargetAspectRatio`(`com.yalantis.ucrop.view.CropImageView` v1 @kind this) @signature `Lcom/yalantis/ucrop/view/CropImageView;.getTargetAspectRatio:()F` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L1be814.  v0:= v1.`com.yalantis.ucrop.view.CropImageView.mTargetAspectRatio` @type ^`float`;
+  #L1be818.  return v0;
+}
+procedure `boolean` `isImageWrapCropBounds`(`com.yalantis.ucrop.view.CropImageView` v1 @kind this) @signature `Lcom/yalantis/ucrop/view/CropImageView;.isImageWrapCropBounds:()Z` @AccessFlag PROTECTED {
+    temp;
+    v0;
+
+  #L1be738.  v0:= v1.`com.yalantis.ucrop.view.TransformImageView.mCurrentImageCorners` @type ^`float`[] @kind object;
+  #L1be73c.  call temp:= `isImageWrapCropBounds`(v1, v0) @signature `Lcom/yalantis/ucrop/view/CropImageView;.isImageWrapCropBounds:([F)Z` @kind virtual;
+  #L1be742.  v0:= temp;
+  #L1be744.  return v0;
+}
+procedure `boolean` `isImageWrapCropBounds`(`com.yalantis.ucrop.view.CropImageView` v2 @kind this, `float`[] v3 @kind object) @signature `Lcom/yalantis/ucrop/view/CropImageView;.isImageWrapCropBounds:([F)Z` @AccessFlag PROTECTED {
+    temp;
+    v0;
+    v1;
+
+  #L1be758.  v0:= v2.`com.yalantis.ucrop.view.CropImageView.mTempMatrix` @type ^`android.graphics.Matrix` @kind object;
+  #L1be75c.  call `reset`(v0) @signature `Landroid/graphics/Matrix;.reset:()V` @kind virtual;
+  #L1be762.  v0:= v2.`com.yalantis.ucrop.view.CropImageView.mTempMatrix` @type ^`android.graphics.Matrix` @kind object;
+  #L1be766.  call temp:= `getCurrentAngle`(v2) @signature `Lcom/yalantis/ucrop/view/TransformImageView;.getCurrentAngle:()F` @kind virtual;
+  #L1be76c.  v1:= temp;
+  #L1be76e.  v1:= -v1 @kind float;
+  #L1be770.  call `setRotate`(v0, v1) @signature `Landroid/graphics/Matrix;.setRotate:(F)V` @kind virtual;
+  #L1be776.  v0:= length @variable v3;
+  #L1be778.  call temp:= `copyOf`(v3, v0) @signature `Ljava/util/Arrays;.copyOf:([FI)[F` @kind static;
+  #L1be77e.  v3:= temp @kind object;
+  #L1be780.  v0:= v2.`com.yalantis.ucrop.view.CropImageView.mTempMatrix` @type ^`android.graphics.Matrix` @kind object;
+  #L1be784.  call `mapPoints`(v0, v3) @signature `Landroid/graphics/Matrix;.mapPoints:([F)V` @kind virtual;
+  #L1be78a.  v0:= v2.`com.yalantis.ucrop.view.CropImageView.mCropRect` @type ^`android.graphics.RectF` @kind object;
+  #L1be78e.  call temp:= `getCornersFromRect`(v0) @signature `Lcom/yalantis/ucrop/util/RectUtils;.getCornersFromRect:(Landroid/graphics/RectF;)[F` @kind static;
+  #L1be794.  v0:= temp @kind object;
+  #L1be796.  v1:= v2.`com.yalantis.ucrop.view.CropImageView.mTempMatrix` @type ^`android.graphics.Matrix` @kind object;
+  #L1be79a.  call `mapPoints`(v1, v0) @signature `Landroid/graphics/Matrix;.mapPoints:([F)V` @kind virtual;
+  #L1be7a0.  call temp:= `trapToRect`(v3) @signature `Lcom/yalantis/ucrop/util/RectUtils;.trapToRect:([F)Landroid/graphics/RectF;` @kind static;
+  #L1be7a6.  v3:= temp @kind object;
+  #L1be7a8.  call temp:= `trapToRect`(v0) @signature `Lcom/yalantis/ucrop/util/RectUtils;.trapToRect:([F)Landroid/graphics/RectF;` @kind static;
+  #L1be7ae.  v0:= temp @kind object;
+  #L1be7b0.  call temp:= `contains`(v3, v0) @signature `Landroid/graphics/RectF;.contains:(Landroid/graphics/RectF;)Z` @kind virtual;
+  #L1be7b6.  v3:= temp;
+  #L1be7b8.  return v3;
+}
+procedure `void` `onImageLaidOut`(`com.yalantis.ucrop.view.CropImageView` v8 @kind this) @signature `Lcom/yalantis/ucrop/view/CropImageView;.onImageLaidOut:()V` @AccessFlag PROTECTED {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+
+  #L1beb58.  call `onImageLaidOut`(v8) @signature `Lcom/yalantis/ucrop/view/TransformImageView;.onImageLaidOut:()V` @kind super;
+  #L1beb5e.  call temp:= `getDrawable`(v8) @signature `Landroid/widget/ImageView;.getDrawable:()Landroid/graphics/drawable/Drawable;` @kind virtual;
+  #L1beb64.  v0:= temp @kind object;
+  #L1beb66.  if v0 != 0 then goto L1beb6c;
+  #L1beb6a.  return @kind void;
+  #L1beb6c.  call temp:= `getIntrinsicWidth`(v0) @signature `Landroid/graphics/drawable/Drawable;.getIntrinsicWidth:()I` @kind virtual;
+  #L1beb72.  v1:= temp;
+  #L1beb74.  v1:= (`float`) v1 @kind i2f;
+  #L1beb76.  call temp:= `getIntrinsicHeight`(v0) @signature `Landroid/graphics/drawable/Drawable;.getIntrinsicHeight:()I` @kind virtual;
+  #L1beb7c.  v0:= temp;
+  #L1beb7e.  v0:= (`float`) v0 @kind i2f;
+  #L1beb80.  v2:= v8.`com.yalantis.ucrop.view.CropImageView.mTargetAspectRatio` @type ^`float`;
+  #L1beb84.  v3:= 0I;
+  #L1beb86.  v2:= fcmpl(v2, v3);
+  #L1beb8a.  if v2 != 0 then goto L1beb96;
+  #L1beb8e.  v2:= v1 / v0 @kind float;
+  #L1beb92.  v8.`com.yalantis.ucrop.view.CropImageView.mTargetAspectRatio` @type ^`float` := v2;
+  #L1beb96.  v2:= v8.`com.yalantis.ucrop.view.TransformImageView.mThisWidth` @type ^`int`;
+  #L1beb9a.  v4:= (`float`) v2 @kind i2f;
+  #L1beb9c.  v5:= v8.`com.yalantis.ucrop.view.CropImageView.mTargetAspectRatio` @type ^`float`;
+  #L1beba0.  v4:= v4 / v5 @kind float;
+  #L1beba2.  v4:= (`int`) v4 @kind f2i;
+  #L1beba4.  v6:= v8.`com.yalantis.ucrop.view.TransformImageView.mThisHeight` @type ^`int`;
+  #L1beba8.  if v4 <= v6 then goto L1bebce;
+  #L1bebac.  v4:= (`float`) v6 @kind i2f;
+  #L1bebae.  v4:= v4 * v5 @kind float;
+  #L1bebb2.  v4:= (`int`) v4 @kind f2i;
+  #L1bebb4.  v2:= v2 - v4 @kind int;
+  #L1bebb6.  v2:= v2 / 2;
+  #L1bebba.  v5:= v8.`com.yalantis.ucrop.view.CropImageView.mCropRect` @type ^`android.graphics.RectF` @kind object;
+  #L1bebbe.  v7:= (`float`) v2 @kind i2f;
+  #L1bebc0.  v4:= v4 + v2 @kind int;
+  #L1bebc2.  v2:= (`float`) v4 @kind i2f;
+  #L1bebc4.  v4:= (`float`) v6 @kind i2f;
+  #L1bebc6.  call `set`(v5, v7, v3, v2, v4) @signature `Landroid/graphics/RectF;.set:(FFFF)V` @kind virtual;
+  #L1bebcc.  goto L1bebe6;
+  #L1bebce.  v6:= v6 - v4 @kind int;
+  #L1bebd0.  v6:= v6 / 2;
+  #L1bebd4.  v5:= v8.`com.yalantis.ucrop.view.CropImageView.mCropRect` @type ^`android.graphics.RectF` @kind object;
+  #L1bebd8.  v7:= (`float`) v6 @kind i2f;
+  #L1bebda.  v2:= (`float`) v2 @kind i2f;
+  #L1bebdc.  v4:= v4 + v6 @kind int;
+  #L1bebde.  v4:= (`float`) v4 @kind i2f;
+  #L1bebe0.  call `set`(v5, v3, v7, v2, v4) @signature `Landroid/graphics/RectF;.set:(FFFF)V` @kind virtual;
+  #L1bebe6.  call `calculateImageScaleBounds`(v8, v1, v0) @signature `Lcom/yalantis/ucrop/view/CropImageView;.calculateImageScaleBounds:(FF)V` @kind direct;
+  #L1bebec.  call `setupInitialImagePosition`(v8, v1, v0) @signature `Lcom/yalantis/ucrop/view/CropImageView;.setupInitialImagePosition:(FF)V` @kind direct;
+  #L1bebf2.  v0:= v8.`com.yalantis.ucrop.view.CropImageView.mCropBoundsChangeListener` @type ^`com.yalantis.ucrop.callback.CropBoundsChangeListener` @kind object;
+  #L1bebf6.  if v0 == 0 then goto L1bec04;
+  #L1bebfa.  v1:= v8.`com.yalantis.ucrop.view.CropImageView.mTargetAspectRatio` @type ^`float`;
+  #L1bebfe.  call `onCropAspectRatioChanged`(v0, v1) @signature `Lcom/yalantis/ucrop/callback/CropBoundsChangeListener;.onCropAspectRatioChanged:(F)V` @kind interface;
+  #L1bec04.  v0:= v8.`com.yalantis.ucrop.view.TransformImageView.mTransformImageListener` @type ^`com.yalantis.ucrop.view.TransformImageView$TransformImageListener` @kind object;
+  #L1bec08.  if v0 == 0 then goto L1bec2c;
+  #L1bec0c.  call temp:= `getCurrentScale`(v8) @signature `Lcom/yalantis/ucrop/view/TransformImageView;.getCurrentScale:()F` @kind virtual;
+  #L1bec12.  v1:= temp;
+  #L1bec14.  call `onScale`(v0, v1) @signature `Lcom/yalantis/ucrop/view/TransformImageView$TransformImageListener;.onScale:(F)V` @kind interface;
+  #L1bec1a.  v0:= v8.`com.yalantis.ucrop.view.TransformImageView.mTransformImageListener` @type ^`com.yalantis.ucrop.view.TransformImageView$TransformImageListener` @kind object;
+  #L1bec1e.  call temp:= `getCurrentAngle`(v8) @signature `Lcom/yalantis/ucrop/view/TransformImageView;.getCurrentAngle:()F` @kind virtual;
+  #L1bec24.  v1:= temp;
+  #L1bec26.  call `onRotate`(v0, v1) @signature `Lcom/yalantis/ucrop/view/TransformImageView$TransformImageListener;.onRotate:(F)V` @kind interface;
+  #L1bec2c.  return @kind void;
+}
+procedure `void` `postRotate`(`com.yalantis.ucrop.view.CropImageView` v2 @kind this, `float` v3 ) @signature `Lcom/yalantis/ucrop/view/CropImageView;.postRotate:(F)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L1bec40.  v0:= v2.`com.yalantis.ucrop.view.CropImageView.mCropRect` @type ^`android.graphics.RectF` @kind object;
+  #L1bec44.  call temp:= `centerX`(v0) @signature `Landroid/graphics/RectF;.centerX:()F` @kind virtual;
+  #L1bec4a.  v0:= temp;
+  #L1bec4c.  v1:= v2.`com.yalantis.ucrop.view.CropImageView.mCropRect` @type ^`android.graphics.RectF` @kind object;
+  #L1bec50.  call temp:= `centerY`(v1) @signature `Landroid/graphics/RectF;.centerY:()F` @kind virtual;
+  #L1bec56.  v1:= temp;
+  #L1bec58.  call `postRotate`(v2, v3, v0, v1) @signature `Lcom/yalantis/ucrop/view/TransformImageView;.postRotate:(FFF)V` @kind virtual;
+  #L1bec5e.  return @kind void;
+}
+procedure `void` `postScale`(`com.yalantis.ucrop.view.CropImageView` v3 @kind this, `float` v4 , `float` v5 , `float` v6 ) @signature `Lcom/yalantis/ucrop/view/CropImageView;.postScale:(FFF)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L1bec70.  v0:= 1.0F;
+  #L1bec74.  v1:= fcmpl(v4, v0);
+  #L1bec78.  if v1 <= 0 then goto L1beca0;
+  #L1bec7c.  call temp:= `getCurrentScale`(v3) @signature `Lcom/yalantis/ucrop/view/TransformImageView;.getCurrentScale:()F` @kind virtual;
+  #L1bec82.  v1:= temp;
+  #L1bec84.  v1:= v1 * v4 @kind float;
+  #L1bec88.  call temp:= `getMaxScale`(v3) @signature `Lcom/yalantis/ucrop/view/CropImageView;.getMaxScale:()F` @kind virtual;
+  #L1bec8e.  v2:= temp;
+  #L1bec90.  v1:= fcmpg(v1, v2);
+  #L1bec94.  if v1 > 0 then goto L1beca0;
+  #L1bec98.  call `postScale`(v3, v4, v5, v6) @signature `Lcom/yalantis/ucrop/view/TransformImageView;.postScale:(FFF)V` @kind super;
+  #L1bec9e.  goto L1becca;
+  #L1beca0.  v0:= fcmpg(v4, v0);
+  #L1beca4.  if v0 >= 0 then goto L1becca;
+  #L1beca8.  call temp:= `getCurrentScale`(v3) @signature `Lcom/yalantis/ucrop/view/TransformImageView;.getCurrentScale:()F` @kind virtual;
+  #L1becae.  v0:= temp;
+  #L1becb0.  v0:= v0 * v4 @kind float;
+  #L1becb4.  call temp:= `getMinScale`(v3) @signature `Lcom/yalantis/ucrop/view/CropImageView;.getMinScale:()F` @kind virtual;
+  #L1becba.  v1:= temp;
+  #L1becbc.  v0:= fcmpl(v0, v1);
+  #L1becc0.  if v0 < 0 then goto L1becca;
+  #L1becc4.  call `postScale`(v3, v4, v5, v6) @signature `Lcom/yalantis/ucrop/view/TransformImageView;.postScale:(FFF)V` @kind super;
+  #L1becca.  return @kind void;
+}
+procedure `void` `processStyledAttributes`(`com.yalantis.ucrop.view.CropImageView` v3 @kind this, `android.content.res.TypedArray` v4 @kind object) @signature `Lcom/yalantis/ucrop/view/CropImageView;.processStyledAttributes:(Landroid/content/res/TypedArray;)V` @AccessFlag PROTECTED {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L1becdc.  v0:= `@@com.yalantis.ucrop.R$styleable.ucrop_UCropView_ucrop_aspect_ratio_x` @type ^`int`;
+  #L1bece0.  v1:= 0I;
+  #L1bece2.  call temp:= `getFloat`(v4, v0, v1) @signature `Landroid/content/res/TypedArray;.getFloat:(IF)F` @kind virtual;
+  #L1bece8.  v0:= temp;
+  #L1becea.  call temp:= `abs`(v0) @signature `Ljava/lang/Math;.abs:(F)F` @kind static;
+  #L1becf0.  v0:= temp;
+  #L1becf2.  v2:= `@@com.yalantis.ucrop.R$styleable.ucrop_UCropView_ucrop_aspect_ratio_y` @type ^`int`;
+  #L1becf6.  call temp:= `getFloat`(v4, v2, v1) @signature `Landroid/content/res/TypedArray;.getFloat:(IF)F` @kind virtual;
+  #L1becfc.  v4:= temp;
+  #L1becfe.  call temp:= `abs`(v4) @signature `Ljava/lang/Math;.abs:(F)F` @kind static;
+  #L1bed04.  v4:= temp;
+  #L1bed06.  v2:= fcmpl(v0, v1);
+  #L1bed0a.  if v2 == 0 then goto L1bed20;
+  #L1bed0e.  v2:= fcmpl(v4, v1);
+  #L1bed12.  if v2 != 0 then goto L1bed18;
+  #L1bed16.  goto L1bed20;
+  #L1bed18.  v0:= v0 / v4 @kind float;
+  #L1bed1a.  v3.`com.yalantis.ucrop.view.CropImageView.mTargetAspectRatio` @type ^`float` := v0;
+  #L1bed1e.  goto L1bed24;
+  #L1bed20.  v3.`com.yalantis.ucrop.view.CropImageView.mTargetAspectRatio` @type ^`float` := v1;
+  #L1bed24.  return @kind void;
+}
+procedure `void` `setCropBoundsChangeListener`(`com.yalantis.ucrop.view.CropImageView` v0 @kind this, `com.yalantis.ucrop.callback.CropBoundsChangeListener` v1 @kind object) @signature `Lcom/yalantis/ucrop/view/CropImageView;.setCropBoundsChangeListener:(Lcom/yalantis/ucrop/callback/CropBoundsChangeListener;)V` @AccessFlag PUBLIC {
+    temp;
+
+  #L1bed38.  v0.`com.yalantis.ucrop.view.CropImageView.mCropBoundsChangeListener` @type ^`com.yalantis.ucrop.callback.CropBoundsChangeListener` := v1 @kind object;
+  #L1bed3c.  return @kind void;
+}
+procedure `void` `setCropRect`(`com.yalantis.ucrop.view.CropImageView` v5 @kind this, `android.graphics.RectF` v6 @kind object) @signature `Lcom/yalantis/ucrop/view/CropImageView;.setCropRect:(Landroid/graphics/RectF;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L1bed50.  call temp:= `width`(v6) @signature `Landroid/graphics/RectF;.width:()F` @kind virtual;
+  #L1bed56.  v0:= temp;
+  #L1bed58.  call temp:= `height`(v6) @signature `Landroid/graphics/RectF;.height:()F` @kind virtual;
+  #L1bed5e.  v1:= temp;
+  #L1bed60.  v0:= v0 / v1 @kind float;
+  #L1bed62.  v5.`com.yalantis.ucrop.view.CropImageView.mTargetAspectRatio` @type ^`float` := v0;
+  #L1bed66.  v0:= v5.`com.yalantis.ucrop.view.CropImageView.mCropRect` @type ^`android.graphics.RectF` @kind object;
+  #L1bed6a.  v1:= v6.`android.graphics.RectF.left` @type ^`float`;
+  #L1bed6e.  call temp:= `getPaddingLeft`(v5) @signature `Landroid/widget/ImageView;.getPaddingLeft:()I` @kind virtual;
+  #L1bed74.  v2:= temp;
+  #L1bed76.  v2:= (`float`) v2 @kind i2f;
+  #L1bed78.  v1:= v1 - v2 @kind float;
+  #L1bed7a.  v2:= v6.`android.graphics.RectF.top` @type ^`float`;
+  #L1bed7e.  call temp:= `getPaddingTop`(v5) @signature `Landroid/widget/ImageView;.getPaddingTop:()I` @kind virtual;
+  #L1bed84.  v3:= temp;
+  #L1bed86.  v3:= (`float`) v3 @kind i2f;
+  #L1bed88.  v2:= v2 - v3 @kind float;
+  #L1bed8a.  v3:= v6.`android.graphics.RectF.right` @type ^`float`;
+  #L1bed8e.  call temp:= `getPaddingRight`(v5) @signature `Landroid/widget/ImageView;.getPaddingRight:()I` @kind virtual;
+  #L1bed94.  v4:= temp;
+  #L1bed96.  v4:= (`float`) v4 @kind i2f;
+  #L1bed98.  v3:= v3 - v4 @kind float;
+  #L1bed9a.  v6:= v6.`android.graphics.RectF.bottom` @type ^`float`;
+  #L1bed9e.  call temp:= `getPaddingBottom`(v5) @signature `Landroid/widget/ImageView;.getPaddingBottom:()I` @kind virtual;
+  #L1beda4.  v4:= temp;
+  #L1beda6.  v4:= (`float`) v4 @kind i2f;
+  #L1beda8.  v6:= v6 - v4 @kind float;
+  #L1bedaa.  call `set`(v0, v1, v2, v3, v6) @signature `Landroid/graphics/RectF;.set:(FFFF)V` @kind virtual;
+  #L1bedb0.  call `calculateImageScaleBounds`(v5) @signature `Lcom/yalantis/ucrop/view/CropImageView;.calculateImageScaleBounds:()V` @kind direct;
+  #L1bedb6.  call `setImageToWrapCropBounds`(v5) @signature `Lcom/yalantis/ucrop/view/CropImageView;.setImageToWrapCropBounds:()V` @kind virtual;
+  #L1bedbc.  return @kind void;
+}
+procedure `void` `setImageToWrapCropBounds`(`com.yalantis.ucrop.view.CropImageView` v1 @kind this) @signature `Lcom/yalantis/ucrop/view/CropImageView;.setImageToWrapCropBounds:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L1bedd0.  v0:= 1I;
+  #L1bedd2.  call `setImageToWrapCropBounds`(v1, v0) @signature `Lcom/yalantis/ucrop/view/CropImageView;.setImageToWrapCropBounds:(Z)V` @kind virtual;
+  #L1bedd8.  return @kind void;
+}
+procedure `void` `setImageToWrapCropBounds`(`com.yalantis.ucrop.view.CropImageView` v13 @kind this, `boolean` v14 ) @signature `Lcom/yalantis/ucrop/view/CropImageView;.setImageToWrapCropBounds:(Z)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+    v9;
+    v10;
+    v11;
+    v12;
+
+  #L1bedec.  v0:= v13.`com.yalantis.ucrop.view.TransformImageView.mBitmapLaidOut` @type ^`boolean` @kind boolean;
+  #L1bedf0.  if v0 == 0 then goto L1bef56;
+  #L1bedf4.  call temp:= `isImageWrapCropBounds`(v13) @signature `Lcom/yalantis/ucrop/view/CropImageView;.isImageWrapCropBounds:()Z` @kind virtual;
+  #L1bedfa.  v0:= temp;
+  #L1bedfc.  if v0 != 0 then goto L1bef56;
+  #L1bee00.  v0:= v13.`com.yalantis.ucrop.view.TransformImageView.mCurrentImageCenter` @type ^`float`[] @kind object;
+  #L1bee04.  v1:= 0I;
+  #L1bee06.  v6:= v0[v1];
+  #L1bee0a.  v2:= 1I;
+  #L1bee0c.  v7:= v0[v2];
+  #L1bee10.  call temp:= `getCurrentScale`(v13) @signature `Lcom/yalantis/ucrop/view/TransformImageView;.getCurrentScale:()F` @kind virtual;
+  #L1bee16.  v10:= temp;
+  #L1bee18.  v0:= v13.`com.yalantis.ucrop.view.CropImageView.mCropRect` @type ^`android.graphics.RectF` @kind object;
+  #L1bee1c.  call temp:= `centerX`(v0) @signature `Landroid/graphics/RectF;.centerX:()F` @kind virtual;
+  #L1bee22.  v0:= temp;
+  #L1bee24.  v0:= v0 - v6 @kind float;
+  #L1bee26.  v3:= v13.`com.yalantis.ucrop.view.CropImageView.mCropRect` @type ^`android.graphics.RectF` @kind object;
+  #L1bee2a.  call temp:= `centerY`(v3) @signature `Landroid/graphics/RectF;.centerY:()F` @kind virtual;
+  #L1bee30.  v3:= temp;
+  #L1bee32.  v3:= v3 - v7 @kind float;
+  #L1bee34.  v4:= 0I;
+  #L1bee36.  v5:= v13.`com.yalantis.ucrop.view.CropImageView.mTempMatrix` @type ^`android.graphics.Matrix` @kind object;
+  #L1bee3a.  call `reset`(v5) @signature `Landroid/graphics/Matrix;.reset:()V` @kind virtual;
+  #L1bee40.  v5:= v13.`com.yalantis.ucrop.view.CropImageView.mTempMatrix` @type ^`android.graphics.Matrix` @kind object;
+  #L1bee44.  call `setTranslate`(v5, v0, v3) @signature `Landroid/graphics/Matrix;.setTranslate:(FF)V` @kind virtual;
+  #L1bee4a.  v5:= v13.`com.yalantis.ucrop.view.TransformImageView.mCurrentImageCorners` @type ^`float`[] @kind object;
+  #L1bee4e.  v8:= length @variable v5;
+  #L1bee50.  call temp:= `copyOf`(v5, v8) @signature `Ljava/util/Arrays;.copyOf:([FI)[F` @kind static;
+  #L1bee56.  v5:= temp @kind object;
+  #L1bee58.  v8:= v13.`com.yalantis.ucrop.view.CropImageView.mTempMatrix` @type ^`android.graphics.Matrix` @kind object;
+  #L1bee5c.  call `mapPoints`(v8, v5) @signature `Landroid/graphics/Matrix;.mapPoints:([F)V` @kind virtual;
+  #L1bee62.  call temp:= `isImageWrapCropBounds`(v13, v5) @signature `Lcom/yalantis/ucrop/view/CropImageView;.isImageWrapCropBounds:([F)Z` @kind virtual;
+  #L1bee68.  v12:= temp;
+  #L1bee6a.  if v12 == 0 then goto L1bee9a;
+  #L1bee6e.  call temp:= `calculateImageIndents`(v13) @signature `Lcom/yalantis/ucrop/view/CropImageView;.calculateImageIndents:()[F` @kind direct;
+  #L1bee74.  v0:= temp @kind object;
+  #L1bee76.  v1:= v0[v1];
+  #L1bee7a.  v3:= 2I;
+  #L1bee7c.  v3:= v0[v3];
+  #L1bee80.  v1:= v1 + v3 @kind float;
+  #L1bee82.  v1:= -v1 @kind float;
+  #L1bee84.  v2:= v0[v2];
+  #L1bee88.  v3:= 3I;
+  #L1bee8a.  v0:= v0[v3];
+  #L1bee8e.  v2:= v2 + v0 @kind float;
+  #L1bee90.  v0:= -v2 @kind float;
+  #L1bee92.  v9:= v0;
+  #L1bee94.  v8:= v1;
+  #L1bee96.  v11:= 0I;
+  #L1bee98.  goto L1bef0a;
+  #L1bee9a.  v4:= new `android.graphics.RectF`;
+  #L1bee9e.  v5:= v13.`com.yalantis.ucrop.view.CropImageView.mCropRect` @type ^`android.graphics.RectF` @kind object;
+  #L1beea2.  call `<init>`(v4, v5) @signature `Landroid/graphics/RectF;.<init>:(Landroid/graphics/RectF;)V` @kind direct;
+  #L1beea8.  v5:= v13.`com.yalantis.ucrop.view.CropImageView.mTempMatrix` @type ^`android.graphics.Matrix` @kind object;
+  #L1beeac.  call `reset`(v5) @signature `Landroid/graphics/Matrix;.reset:()V` @kind virtual;
+  #L1beeb2.  v5:= v13.`com.yalantis.ucrop.view.CropImageView.mTempMatrix` @type ^`android.graphics.Matrix` @kind object;
+  #L1beeb6.  call temp:= `getCurrentAngle`(v13) @signature `Lcom/yalantis/ucrop/view/TransformImageView;.getCurrentAngle:()F` @kind virtual;
+  #L1beebc.  v8:= temp;
+  #L1beebe.  call `setRotate`(v5, v8) @signature `Landroid/graphics/Matrix;.setRotate:(F)V` @kind virtual;
+  #L1beec4.  v5:= v13.`com.yalantis.ucrop.view.CropImageView.mTempMatrix` @type ^`android.graphics.Matrix` @kind object;
+  #L1beec8.  call temp:= `mapRect`(v5, v4) @signature `Landroid/graphics/Matrix;.mapRect:(Landroid/graphics/RectF;)Z` @kind virtual;
+  #L1beece.  v5:= v13.`com.yalantis.ucrop.view.TransformImageView.mCurrentImageCorners` @type ^`float`[] @kind object;
+  #L1beed2.  call temp:= `getRectSidesFromCorners`(v5) @signature `Lcom/yalantis/ucrop/util/RectUtils;.getRectSidesFromCorners:([F)[F` @kind static;
+  #L1beed8.  v5:= temp @kind object;
+  #L1beeda.  call temp:= `width`(v4) @signature `Landroid/graphics/RectF;.width:()F` @kind virtual;
+  #L1beee0.  v8:= temp;
+  #L1beee2.  v1:= v5[v1];
+  #L1beee6.  v8:= v8 / v1 @kind float;
+  #L1beee8.  call temp:= `height`(v4) @signature `Landroid/graphics/RectF;.height:()F` @kind virtual;
+  #L1beeee.  v1:= temp;
+  #L1beef0.  v2:= v5[v2];
+  #L1beef4.  v1:= v1 / v2 @kind float;
+  #L1beef6.  call temp:= `max`(v8, v1) @signature `Ljava/lang/Math;.max:(FF)F` @kind static;
+  #L1beefc.  v1:= temp;
+  #L1beefe.  v1:= v1 * v10 @kind float;
+  #L1bef02.  v1:= v1 - v10 @kind float;
+  #L1bef04.  v8:= v0;
+  #L1bef06.  v11:= v1;
+  #L1bef08.  v9:= v3;
+  #L1bef0a.  if v14 == 0 then goto L1bef2c;
+  #L1bef0e.  v14:= new `com.yalantis.ucrop.view.CropImageView$WrapCropBoundsRunnable`;
+  #L1bef12.  v4:= v13.`com.yalantis.ucrop.view.CropImageView.mImageToWrapCropBoundsAnimDuration` @type ^`long` @kind wide;
+  #L1bef16.  v2:= v14 @kind object;
+  #L1bef18.  v3:= v13 @kind object;
+  #L1bef1a.  call `<init>`(v2, v3, v4, v6, v7, v8, v9, v10, v11, v12) @signature `Lcom/yalantis/ucrop/view/CropImageView$WrapCropBoundsRunnable;.<init>:(Lcom/yalantis/ucrop/view/CropImageView;JFFFFFFZ)V` @kind direct;
+  #L1bef20.  v13.`com.yalantis.ucrop.view.CropImageView.mWrapCropBoundsRunnable` @type ^`java.lang.Runnable` := v14 @kind object;
+  #L1bef24.  call temp:= `post`(v13, v14) @signature `Landroid/widget/ImageView;.post:(Ljava/lang/Runnable;)Z` @kind virtual;
+  #L1bef2a.  goto L1bef56;
+  #L1bef2c.  call `postTranslate`(v13, v8, v9) @signature `Lcom/yalantis/ucrop/view/TransformImageView;.postTranslate:(FF)V` @kind virtual;
+  #L1bef32.  if v12 != 0 then goto L1bef56;
+  #L1bef36.  v10:= v10 + v11 @kind float;
+  #L1bef38.  v14:= v13.`com.yalantis.ucrop.view.CropImageView.mCropRect` @type ^`android.graphics.RectF` @kind object;
+  #L1bef3c.  call temp:= `centerX`(v14) @signature `Landroid/graphics/RectF;.centerX:()F` @kind virtual;
+  #L1bef42.  v14:= temp;
+  #L1bef44.  v0:= v13.`com.yalantis.ucrop.view.CropImageView.mCropRect` @type ^`android.graphics.RectF` @kind object;
+  #L1bef48.  call temp:= `centerY`(v0) @signature `Landroid/graphics/RectF;.centerY:()F` @kind virtual;
+  #L1bef4e.  v0:= temp;
+  #L1bef50.  call `zoomInImage`(v13, v10, v14, v0) @signature `Lcom/yalantis/ucrop/view/CropImageView;.zoomInImage:(FFF)V` @kind virtual;
+  #L1bef56.  return @kind void;
+}
+procedure `void` `setImageToWrapCropBoundsAnimDuration`(`com.yalantis.ucrop.view.CropImageView` v3 @kind this, `long` v4 ) @signature `Lcom/yalantis/ucrop/view/CropImageView;.setImageToWrapCropBoundsAnimDuration:(J)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L1bef68.  v0:= 0L;
+  #L1bef6c.  v2:= lcmp(v4, v0);
+  #L1bef70.  if v2 <= 0 then goto L1bef7a;
+  #L1bef74.  v3.`com.yalantis.ucrop.view.CropImageView.mImageToWrapCropBoundsAnimDuration` @type ^`long` := v4 @kind wide;
+  #L1bef78.  return @kind void;
+  #L1bef7a.  v4:= new `java.lang.IllegalArgumentException`;
+  #L1bef7e.  v5:= "Animation duration cannot be negative value." @kind object;
+  #L1bef82.  call `<init>`(v4, v5) @signature `Ljava/lang/IllegalArgumentException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L1bef88.  throw v4;
+}
+procedure `void` `setMaxResultImageSizeX`(`com.yalantis.ucrop.view.CropImageView` v0 @kind this, `int` v1 ) @signature `Lcom/yalantis/ucrop/view/CropImageView;.setMaxResultImageSizeX:(I)V` @AccessFlag PUBLIC {
+    temp;
+
+  #L1bef9c.  v0.`com.yalantis.ucrop.view.CropImageView.mMaxResultImageSizeX` @type ^`int` := v1;
+  #L1befa0.  return @kind void;
+}
+procedure `void` `setMaxResultImageSizeY`(`com.yalantis.ucrop.view.CropImageView` v0 @kind this, `int` v1 ) @signature `Lcom/yalantis/ucrop/view/CropImageView;.setMaxResultImageSizeY:(I)V` @AccessFlag PUBLIC {
+    temp;
+
+  #L1befb4.  v0.`com.yalantis.ucrop.view.CropImageView.mMaxResultImageSizeY` @type ^`int` := v1;
+  #L1befb8.  return @kind void;
+}
+procedure `void` `setMaxScaleMultiplier`(`com.yalantis.ucrop.view.CropImageView` v0 @kind this, `float` v1 ) @signature `Lcom/yalantis/ucrop/view/CropImageView;.setMaxScaleMultiplier:(F)V` @AccessFlag PUBLIC {
+    temp;
+
+  #L1befcc.  v0.`com.yalantis.ucrop.view.CropImageView.mMaxScaleMultiplier` @type ^`float` := v1;
+  #L1befd0.  return @kind void;
+}
+procedure `void` `setTargetAspectRatio`(`com.yalantis.ucrop.view.CropImageView` v2 @kind this, `float` v3 ) @signature `Lcom/yalantis/ucrop/view/CropImageView;.setTargetAspectRatio:(F)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L1befe4.  call temp:= `getDrawable`(v2) @signature `Landroid/widget/ImageView;.getDrawable:()Landroid/graphics/drawable/Drawable;` @kind virtual;
+  #L1befea.  v0:= temp @kind object;
+  #L1befec.  if v0 != 0 then goto L1beff6;
+  #L1beff0.  v2.`com.yalantis.ucrop.view.CropImageView.mTargetAspectRatio` @type ^`float` := v3;
+  #L1beff4.  return @kind void;
+  #L1beff6.  v1:= 0I;
+  #L1beff8.  v1:= fcmpl(v3, v1);
+  #L1beffc.  if v1 != 0 then goto L1bf01c;
+  #L1bf000.  call temp:= `getIntrinsicWidth`(v0) @signature `Landroid/graphics/drawable/Drawable;.getIntrinsicWidth:()I` @kind virtual;
+  #L1bf006.  v3:= temp;
+  #L1bf008.  v3:= (`float`) v3 @kind i2f;
+  #L1bf00a.  call temp:= `getIntrinsicHeight`(v0) @signature `Landroid/graphics/drawable/Drawable;.getIntrinsicHeight:()I` @kind virtual;
+  #L1bf010.  v0:= temp;
+  #L1bf012.  v0:= (`float`) v0 @kind i2f;
+  #L1bf014.  v3:= v3 / v0 @kind float;
+  #L1bf016.  v2.`com.yalantis.ucrop.view.CropImageView.mTargetAspectRatio` @type ^`float` := v3;
+  #L1bf01a.  goto L1bf020;
+  #L1bf01c.  v2.`com.yalantis.ucrop.view.CropImageView.mTargetAspectRatio` @type ^`float` := v3;
+  #L1bf020.  v3:= v2.`com.yalantis.ucrop.view.CropImageView.mCropBoundsChangeListener` @type ^`com.yalantis.ucrop.callback.CropBoundsChangeListener` @kind object;
+  #L1bf024.  if v3 == 0 then goto L1bf032;
+  #L1bf028.  v0:= v2.`com.yalantis.ucrop.view.CropImageView.mTargetAspectRatio` @type ^`float`;
+  #L1bf02c.  call `onCropAspectRatioChanged`(v3, v0) @signature `Lcom/yalantis/ucrop/callback/CropBoundsChangeListener;.onCropAspectRatioChanged:(F)V` @kind interface;
+  #L1bf032.  return @kind void;
+}
+procedure `void` `zoomImageToPosition`(`com.yalantis.ucrop.view.CropImageView` v8 @kind this, `float` v9 , `float` v10 , `float` v11 , `long` v12 ) @signature `Lcom/yalantis/ucrop/view/CropImageView;.zoomImageToPosition:(FFFJ)V` @AccessFlag PROTECTED {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+
+  #L1bf0e0.  call temp:= `getMaxScale`(v8) @signature `Lcom/yalantis/ucrop/view/CropImageView;.getMaxScale:()F` @kind virtual;
+  #L1bf0e6.  v0:= temp;
+  #L1bf0e8.  v0:= fcmpl(v9, v0);
+  #L1bf0ec.  if v0 <= 0 then goto L1bf0f8;
+  #L1bf0f0.  call temp:= `getMaxScale`(v8) @signature `Lcom/yalantis/ucrop/view/CropImageView;.getMaxScale:()F` @kind virtual;
+  #L1bf0f6.  v9:= temp;
+  #L1bf0f8.  call temp:= `getCurrentScale`(v8) @signature `Lcom/yalantis/ucrop/view/TransformImageView;.getCurrentScale:()F` @kind virtual;
+  #L1bf0fe.  v4:= temp;
+  #L1bf100.  v5:= v9 - v4 @kind float;
+  #L1bf104.  v9:= new `com.yalantis.ucrop.view.CropImageView$ZoomImageToPosition`;
+  #L1bf108.  v0:= v9 @kind object;
+  #L1bf10a.  v1:= v8 @kind object;
+  #L1bf10c.  v2:= v12 @kind wide;
+  #L1bf10e.  v6:= v10;
+  #L1bf110.  v7:= v11;
+  #L1bf112.  call `<init>`(v0, v1, v2, v4, v5, v6, v7) @signature `Lcom/yalantis/ucrop/view/CropImageView$ZoomImageToPosition;.<init>:(Lcom/yalantis/ucrop/view/CropImageView;JFFFF)V` @kind direct;
+  #L1bf118.  v8.`com.yalantis.ucrop.view.CropImageView.mZoomImageToPositionRunnable` @type ^`java.lang.Runnable` := v9 @kind object;
+  #L1bf11c.  call temp:= `post`(v8, v9) @signature `Landroid/widget/ImageView;.post:(Ljava/lang/Runnable;)Z` @kind virtual;
+  #L1bf122.  return @kind void;
+}
+procedure `void` `zoomInImage`(`com.yalantis.ucrop.view.CropImageView` v2 @kind this, `float` v3 ) @signature `Lcom/yalantis/ucrop/view/CropImageView;.zoomInImage:(F)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L1bf134.  v0:= v2.`com.yalantis.ucrop.view.CropImageView.mCropRect` @type ^`android.graphics.RectF` @kind object;
+  #L1bf138.  call temp:= `centerX`(v0) @signature `Landroid/graphics/RectF;.centerX:()F` @kind virtual;
+  #L1bf13e.  v0:= temp;
+  #L1bf140.  v1:= v2.`com.yalantis.ucrop.view.CropImageView.mCropRect` @type ^`android.graphics.RectF` @kind object;
+  #L1bf144.  call temp:= `centerY`(v1) @signature `Landroid/graphics/RectF;.centerY:()F` @kind virtual;
+  #L1bf14a.  v1:= temp;
+  #L1bf14c.  call `zoomInImage`(v2, v3, v0, v1) @signature `Lcom/yalantis/ucrop/view/CropImageView;.zoomInImage:(FFF)V` @kind virtual;
+  #L1bf152.  return @kind void;
+}
+procedure `void` `zoomInImage`(`com.yalantis.ucrop.view.CropImageView` v1 @kind this, `float` v2 , `float` v3 , `float` v4 ) @signature `Lcom/yalantis/ucrop/view/CropImageView;.zoomInImage:(FFF)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L1bf164.  call temp:= `getMaxScale`(v1) @signature `Lcom/yalantis/ucrop/view/CropImageView;.getMaxScale:()F` @kind virtual;
+  #L1bf16a.  v0:= temp;
+  #L1bf16c.  v0:= fcmpg(v2, v0);
+  #L1bf170.  if v0 > 0 then goto L1bf184;
+  #L1bf174.  call temp:= `getCurrentScale`(v1) @signature `Lcom/yalantis/ucrop/view/TransformImageView;.getCurrentScale:()F` @kind virtual;
+  #L1bf17a.  v0:= temp;
+  #L1bf17c.  v2:= v2 / v0 @kind float;
+  #L1bf17e.  call `postScale`(v1, v2, v3, v4) @signature `Lcom/yalantis/ucrop/view/CropImageView;.postScale:(FFF)V` @kind virtual;
+  #L1bf184.  return @kind void;
+}
+procedure `void` `zoomOutImage`(`com.yalantis.ucrop.view.CropImageView` v2 @kind this, `float` v3 ) @signature `Lcom/yalantis/ucrop/view/CropImageView;.zoomOutImage:(F)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L1bf198.  v0:= v2.`com.yalantis.ucrop.view.CropImageView.mCropRect` @type ^`android.graphics.RectF` @kind object;
+  #L1bf19c.  call temp:= `centerX`(v0) @signature `Landroid/graphics/RectF;.centerX:()F` @kind virtual;
+  #L1bf1a2.  v0:= temp;
+  #L1bf1a4.  v1:= v2.`com.yalantis.ucrop.view.CropImageView.mCropRect` @type ^`android.graphics.RectF` @kind object;
+  #L1bf1a8.  call temp:= `centerY`(v1) @signature `Landroid/graphics/RectF;.centerY:()F` @kind virtual;
+  #L1bf1ae.  v1:= temp;
+  #L1bf1b0.  call `zoomOutImage`(v2, v3, v0, v1) @signature `Lcom/yalantis/ucrop/view/CropImageView;.zoomOutImage:(FFF)V` @kind virtual;
+  #L1bf1b6.  return @kind void;
+}
+procedure `void` `zoomOutImage`(`com.yalantis.ucrop.view.CropImageView` v1 @kind this, `float` v2 , `float` v3 , `float` v4 ) @signature `Lcom/yalantis/ucrop/view/CropImageView;.zoomOutImage:(FFF)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L1bf1c8.  call temp:= `getMinScale`(v1) @signature `Lcom/yalantis/ucrop/view/CropImageView;.getMinScale:()F` @kind virtual;
+  #L1bf1ce.  v0:= temp;
+  #L1bf1d0.  v0:= fcmpl(v2, v0);
+  #L1bf1d4.  if v0 < 0 then goto L1bf1e8;
+  #L1bf1d8.  call temp:= `getCurrentScale`(v1) @signature `Lcom/yalantis/ucrop/view/TransformImageView;.getCurrentScale:()F` @kind virtual;
+  #L1bf1de.  v0:= temp;
+  #L1bf1e0.  v2:= v2 / v0 @kind float;
+  #L1bf1e2.  call `postScale`(v1, v2, v3, v4) @signature `Lcom/yalantis/ucrop/view/CropImageView;.postScale:(FFF)V` @kind virtual;
+  #L1bf1e8.  return @kind void;
+}

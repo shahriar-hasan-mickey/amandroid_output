@@ -1,0 +1,1985 @@
+record `io.objectbox.BoxStore` @kind class @AccessFlag PUBLIC extends `java.io.Closeable` @kind interface {
+  `java.io.File` `io.objectbox.BoxStore.a` @AccessFlag PRIVATE_FINAL;
+  `java.lang.String` `io.objectbox.BoxStore.b` @AccessFlag PRIVATE_FINAL;
+  `long` `io.objectbox.BoxStore.c` @AccessFlag PRIVATE_FINAL;
+  `java.util.Map` `io.objectbox.BoxStore.d` @AccessFlag PRIVATE_FINAL;
+  `java.util.Map` `io.objectbox.BoxStore.e` @AccessFlag PRIVATE_FINAL;
+  `java.util.Map` `io.objectbox.BoxStore.f` @AccessFlag PRIVATE_FINAL;
+  `org.greenrobot.essentials.collections.LongHashMap` `io.objectbox.BoxStore.g` @AccessFlag PRIVATE_FINAL;
+  `int`[] `io.objectbox.BoxStore.h` @AccessFlag PRIVATE_FINAL;
+  `java.util.Map` `io.objectbox.BoxStore.i` @AccessFlag PRIVATE_FINAL;
+  `java.util.Set` `io.objectbox.BoxStore.j` @AccessFlag PRIVATE_FINAL;
+  `java.util.concurrent.ExecutorService` `io.objectbox.BoxStore.k` @AccessFlag PRIVATE_FINAL;
+  `io.objectbox.f` `io.objectbox.BoxStore.l` @AccessFlag PRIVATE_FINAL;
+  `boolean` `io.objectbox.BoxStore.m` @AccessFlag FINAL;
+  `boolean` `io.objectbox.BoxStore.n` @AccessFlag FINAL;
+  `boolean` `io.objectbox.BoxStore.o` @AccessFlag FINAL;
+  `java.lang.ThreadLocal` `io.objectbox.BoxStore.p` @AccessFlag FINAL;
+  `boolean` `io.objectbox.BoxStore.q` @AccessFlag PRIVATE;
+  `java.lang.Object` `io.objectbox.BoxStore.r` @AccessFlag FINAL;
+  `int` `io.objectbox.BoxStore.s` @AccessFlag VOLATILE;
+  `int` `io.objectbox.BoxStore.t` @AccessFlag PRIVATE;
+  `int` `io.objectbox.BoxStore.u` @AccessFlag PRIVATE_FINAL;
+  `io.objectbox.TxCallback` `io.objectbox.BoxStore.v` @AccessFlag PRIVATE_FINAL;
+  `io.objectbox.sync.SyncClient` `io.objectbox.BoxStore.w` @AccessFlag PRIVATE;
+}
+global `java.util.Set` `@@io.objectbox.BoxStore.A` @AccessFlag PRIVATE_STATIC_FINAL;
+global `java.lang.Thread` `@@io.objectbox.BoxStore.B` @AccessFlag PRIVATE_STATIC_VOLATILE;
+global `java.lang.String` `@@io.objectbox.BoxStore.JNI_VERSION` @AccessFlag PUBLIC_STATIC_FINAL;
+global `java.lang.Object` `@@io.objectbox.BoxStore.x` @AccessFlag PRIVATE_STATIC;
+global `java.lang.Object` `@@io.objectbox.BoxStore.y` @AccessFlag PRIVATE_STATIC;
+global `io.objectbox.BoxStore` `@@io.objectbox.BoxStore.z` @AccessFlag PRIVATE_STATIC;
+procedure `void` `<clinit>`() @signature `Lio/objectbox/BoxStore;.<clinit>:()V` @AccessFlag STATIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L3decd4.  v0:= new `java.util.HashSet`;
+  #L3decd8.  call `<init>`(v0) @signature `Ljava/util/HashSet;.<init>:()V` @kind direct;
+  #L3decde.  `@@io.objectbox.BoxStore.A` @type ^`java.util.Set` := v0 @kind object;
+  #L3dece2.  return @kind void;
+}
+procedure `void` `<init>`(`io.objectbox.BoxStore` v18 @kind this, `io.objectbox.BoxStoreBuilder` v19 @kind object) @signature `Lio/objectbox/BoxStore;.<init>:(Lio/objectbox/BoxStoreBuilder;)V` @AccessFlag CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+    v9;
+    v10;
+    v11;
+    v12;
+    v13;
+    v14;
+    v15;
+    v16;
+    v17;
+
+  #L3decf4.  v1:= v18 @kind object;
+  #L3decf8.  v0:= v19 @kind object;
+  #L3decfc.  call `<init>`(v18) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L3ded02.  v2:= new `java.util.HashMap`;
+  #L3ded06.  call `<init>`(v2) @signature `Ljava/util/HashMap;.<init>:()V` @kind direct;
+  #L3ded0c.  v1.`io.objectbox.BoxStore.d` @type ^`java.util.Map` := v2 @kind object;
+  #L3ded10.  v2:= new `java.util.HashMap`;
+  #L3ded14.  call `<init>`(v2) @signature `Ljava/util/HashMap;.<init>:()V` @kind direct;
+  #L3ded1a.  v1.`io.objectbox.BoxStore.e` @type ^`java.util.Map` := v2 @kind object;
+  #L3ded1e.  v2:= new `java.util.HashMap`;
+  #L3ded22.  call `<init>`(v2) @signature `Ljava/util/HashMap;.<init>:()V` @kind direct;
+  #L3ded28.  v1.`io.objectbox.BoxStore.f` @type ^`java.util.Map` := v2 @kind object;
+  #L3ded2c.  v2:= new `org.greenrobot.essentials.collections.LongHashMap`;
+  #L3ded30.  call `<init>`(v2) @signature `Lorg/greenrobot/essentials/collections/LongHashMap;.<init>:()V` @kind direct;
+  #L3ded36.  v1.`io.objectbox.BoxStore.g` @type ^`org.greenrobot.essentials.collections.LongHashMap` := v2 @kind object;
+  #L3ded3a.  v2:= new `java.util.concurrent.ConcurrentHashMap`;
+  #L3ded3e.  call `<init>`(v2) @signature `Ljava/util/concurrent/ConcurrentHashMap;.<init>:()V` @kind direct;
+  #L3ded44.  v1.`io.objectbox.BoxStore.i` @type ^`java.util.Map` := v2 @kind object;
+  #L3ded48.  v2:= new `java.util.WeakHashMap`;
+  #L3ded4c.  call `<init>`(v2) @signature `Ljava/util/WeakHashMap;.<init>:()V` @kind direct;
+  #L3ded52.  call temp:= `newSetFromMap`(v2) @signature `Ljava/util/Collections;.newSetFromMap:(Ljava/util/Map;)Ljava/util/Set;` @kind static;
+  #L3ded58.  v2:= temp @kind object;
+  #L3ded5a.  v1.`io.objectbox.BoxStore.j` @type ^`java.util.Set` := v2 @kind object;
+  #L3ded5e.  v2:= new `io.objectbox.internal.ObjectBoxThreadPool`;
+  #L3ded62.  call `<init>`(v2, v1) @signature `Lio/objectbox/internal/ObjectBoxThreadPool;.<init>:(Lio/objectbox/BoxStore;)V` @kind direct;
+  #L3ded68.  v1.`io.objectbox.BoxStore.k` @type ^`java.util.concurrent.ExecutorService` := v2 @kind object;
+  #L3ded6c.  v2:= new `java.lang.ThreadLocal`;
+  #L3ded70.  call `<init>`(v2) @signature `Ljava/lang/ThreadLocal;.<init>:()V` @kind direct;
+  #L3ded76.  v1.`io.objectbox.BoxStore.p` @type ^`java.lang.ThreadLocal` := v2 @kind object;
+  #L3ded7a.  v2:= new `java.lang.Object`;
+  #L3ded7e.  call `<init>`(v2) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L3ded84.  v1.`io.objectbox.BoxStore.r` @type ^`java.lang.Object` := v2 @kind object;
+  #L3ded88.  v2:= v0.`io.objectbox.BoxStoreBuilder.f` @type ^`java.lang.Object` @kind object;
+  #L3ded8c.  `@@io.objectbox.BoxStore.x` @type ^`java.lang.Object` := v2 @kind object;
+  #L3ded90.  v2:= v0.`io.objectbox.BoxStoreBuilder.g` @type ^`java.lang.Object` @kind object;
+  #L3ded94.  `@@io.objectbox.BoxStore.y` @type ^`java.lang.Object` := v2 @kind object;
+  #L3ded98.  call `ensureLoaded`() @signature `Lio/objectbox/internal/NativeLibraryLoader;.ensureLoaded:()V` @kind static;
+  #L3ded9e.  v2:= v0.`io.objectbox.BoxStoreBuilder.b` @type ^`java.io.File` @kind object;
+  #L3deda2.  v1.`io.objectbox.BoxStore.a` @type ^`java.io.File` := v2 @kind object;
+  #L3deda6.  call temp:= `g`(v2) @signature `Lio/objectbox/BoxStore;.g:(Ljava/io/File;)Ljava/lang/String;` @kind static;
+  #L3dedac.  v2:= temp @kind object;
+  #L3dedae.  v1.`io.objectbox.BoxStore.b` @type ^`java.lang.String` := v2 @kind object;
+  #L3dedb2.  call `v`(v2) @signature `Lio/objectbox/BoxStore;.v:(Ljava/lang/String;)V` @kind static;
+  #L3dedb8.  call temp:= `b`(v0, v2) @signature `Lio/objectbox/BoxStoreBuilder;.b:(Ljava/lang/String;)[B` @kind virtual;
+  #L3dedbe.  v2:= temp @kind object;
+  #L3dedc0.  v3:= v0.`io.objectbox.BoxStoreBuilder.a` @type ^`byte`[] @kind object;
+  #L3dedc4.  call temp:= `nativeCreateWithFlatOptions`(v2, v3) @signature `Lio/objectbox/BoxStore;.nativeCreateWithFlatOptions:([B[B)J` @kind static;
+  #L3dedca.  v2:= temp @kind wide;
+  #L3dedcc.  v1.`io.objectbox.BoxStore.c` @type ^`long` := v2 @kind wide;
+  #L3dedd0.  v4:= 0L;
+  #L3dedd4.  v6:= lcmp(v2, v4);
+  #L3dedd8.  if v6 == 0 then goto L3defd2;
+  #L3deddc.  v2:= v0.`io.objectbox.BoxStoreBuilder.h` @type ^`int`;
+  #L3dede0.  v3:= 0I;
+  #L3dede2.  v4:= 1I;
+  #L3dede4.  if v2 == 0 then goto L3dee0e;
+  #L3dede8.  v5:= v2 ^& 1;
+  #L3dedec.  if v5 == 0 then goto L3dedf4;
+  #L3dedf0.  v5:= 1I;
+  #L3dedf2.  goto L3dedf6;
+  #L3dedf4.  v5:= 0I;
+  #L3dedf6.  v1.`io.objectbox.BoxStore.m` @type ^`boolean` := v5 @kind boolean;
+  #L3dedfa.  v2:= v2 ^& 2;
+  #L3dedfe.  if v2 == 0 then goto L3dee06;
+  #L3dee02.  v2:= 1I;
+  #L3dee04.  goto L3dee08;
+  #L3dee06.  v2:= 0I;
+  #L3dee08.  v1.`io.objectbox.BoxStore.n` @type ^`boolean` := v2 @kind boolean;
+  #L3dee0c.  goto L3dee16;
+  #L3dee0e.  v1.`io.objectbox.BoxStore.n` @type ^`boolean` := v3 @kind boolean;
+  #L3dee12.  v1.`io.objectbox.BoxStore.m` @type ^`boolean` := v3 @kind boolean;
+  #L3dee16.  v2:= v0.`io.objectbox.BoxStoreBuilder.j` @type ^`boolean` @kind boolean;
+  #L3dee1a.  v1.`io.objectbox.BoxStore.o` @type ^`boolean` := v2 @kind boolean;
+  #L3dee1e.  v2:= v0.`io.objectbox.BoxStoreBuilder.t` @type ^`java.util.List` @kind object;
+  #L3dee22.  call temp:= `iterator`(v2) @signature `Ljava/util/List;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L3dee28.  v2:= temp @kind object;
+  #L3dee2a.  call temp:= `hasNext`(v2) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L3dee30.  v5:= temp;
+  #L3dee32.  if v5 == 0 then goto L3def72;
+  #L3dee36.  call temp:= `next`(v2) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L3dee3c.  v5:= temp @kind object;
+  #L3dee3e.  v5:= (`io.objectbox.EntityInfo`) v5 @kind object;
+  #L3dee42.  v6:= v1.`io.objectbox.BoxStore.d` @type ^`java.util.Map` @kind object;
+  #L3dee46.  call temp:= `getEntityClass`(v5) @signature `Lio/objectbox/EntityInfo;.getEntityClass:()Ljava/lang/Class;` @kind interface;
+  #L3dee4c.  v7:= temp @kind object;
+  #L3dee4e.  call temp:= `getDbName`(v5) @signature `Lio/objectbox/EntityInfo;.getDbName:()Ljava/lang/String;` @kind interface;
+  #L3dee54.  v8:= temp @kind object;
+  #L3dee56.  call temp:= `put`(v6, v7, v8) @signature `Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L3dee5c.  v6:= v1.`io.objectbox.BoxStore.c` @type ^`long` @kind wide;
+  #L3dee60.  call temp:= `getDbName`(v5) @signature `Lio/objectbox/EntityInfo;.getDbName:()Ljava/lang/String;` @kind interface;
+  #L3dee66.  v8:= temp @kind object;
+  #L3dee68.  call temp:= `getEntityClass`(v5) @signature `Lio/objectbox/EntityInfo;.getEntityClass:()Ljava/lang/Class;` @kind interface;
+  #L3dee6e.  v9:= temp @kind object;
+  #L3dee70.  call temp:= `nativeRegisterEntityClass`(v6, v8, v9) @signature `Lio/objectbox/BoxStore;.nativeRegisterEntityClass:(JLjava/lang/String;Ljava/lang/Class;)I` @kind static;
+  #L3dee76.  v6:= temp;
+  #L3dee78.  v7:= v1.`io.objectbox.BoxStore.e` @type ^`java.util.Map` @kind object;
+  #L3dee7c.  call temp:= `getEntityClass`(v5) @signature `Lio/objectbox/EntityInfo;.getEntityClass:()Ljava/lang/Class;` @kind interface;
+  #L3dee82.  v8:= temp @kind object;
+  #L3dee84.  call temp:= `valueOf`(v6) @signature `Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer;` @kind static;
+  #L3dee8a.  v9:= temp @kind object;
+  #L3dee8c.  call temp:= `put`(v7, v8, v9) @signature `Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L3dee92.  v7:= v1.`io.objectbox.BoxStore.g` @type ^`org.greenrobot.essentials.collections.LongHashMap` @kind object;
+  #L3dee96.  v8:= (`long`) v6 @kind i2l;
+  #L3dee98.  call temp:= `getEntityClass`(v5) @signature `Lio/objectbox/EntityInfo;.getEntityClass:()Ljava/lang/Class;` @kind interface;
+  #L3dee9e.  v10:= temp @kind object;
+  #L3deea0.  call temp:= `put`(v7, v8, v10) @signature `Lorg/greenrobot/essentials/collections/LongHashMap;.put:(JLjava/lang/Object;)Ljava/lang/Object;` @kind virtual;
+  #L3deea6.  v7:= v1.`io.objectbox.BoxStore.f` @type ^`java.util.Map` @kind object;
+  #L3deeaa.  call temp:= `getEntityClass`(v5) @signature `Lio/objectbox/EntityInfo;.getEntityClass:()Ljava/lang/Class;` @kind interface;
+  #L3deeb0.  v8:= temp @kind object;
+  #L3deeb2.  call temp:= `put`(v7, v8, v5) @signature `Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L3deeb8.  call temp:= `getAllProperties`(v5) @signature `Lio/objectbox/EntityInfo;.getAllProperties:()[Lio/objectbox/Property;` @kind interface;
+  #L3deebe.  v7:= temp @kind object;
+  #L3deec0.  v8:= length @variable v7;
+  #L3deec2.  v9:= 0I;
+  #L3deec4.  if v9 >= v8 then goto L3dee2a;
+  #L3deec8.  v10:= v7[v9] @kind object;
+  #L3deecc.  v15:= v10.`io.objectbox.Property.customType` @type ^`java.lang.Class` @kind object;
+  #L3deed0.  if v15 == 0 then goto L3def34;
+  #L3deed4.  v14:= v10.`io.objectbox.Property.converterClass` @type ^`java.lang.Class` @kind object;
+  #L3deed8.  if v14 == 0 then goto L3def06;
+  #L3deedc.  v11:= v1.`io.objectbox.BoxStore.c` @type ^`long` @kind wide;
+  #L3deee0.  v13:= 0I;
+  #L3deee2.  v10:= v10.`io.objectbox.Property.dbName` @type ^`java.lang.String` @kind object;
+  #L3deee6.  v16:= v10 @kind object;
+  #L3deeea.  v10:= v11 @kind wide;
+  #L3deeec.  v12:= v6;
+  #L3deeee.  v17:= v14 @kind object;
+  #L3deef2.  v14:= v16 @kind object;
+  #L3deef6.  v16:= v15 @kind object;
+  #L3deefa.  v15:= v17 @kind object;
+  #L3deefe.  call `nativeRegisterCustomType`(v10, v12, v13, v14, v15, v16) @signature `Lio/objectbox/BoxStore;.nativeRegisterCustomType:(JIILjava/lang/String;Ljava/lang/Class;Ljava/lang/Class;)V` @kind static;
+  #L3def04.  goto L3def34;
+  #L3def06.  v0:= new `java.lang.RuntimeException`;
+  #L3def0a.  v2:= new `java.lang.StringBuilder`;
+  #L3def0e.  call `<init>`(v2) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L3def14.  v3:= "No converter class for custom type of " @kind object;
+  #L3def18.  call temp:= `append`(v2, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3def1e.  call temp:= `append`(v2, v10) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3def24.  call temp:= `toString`(v2) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L3def2a.  v2:= temp @kind object;
+  #L3def2c.  call `<init>`(v0, v2) @signature `Ljava/lang/RuntimeException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L3def32.  throw v0;
+  #L3def34.  v9:= v9 + 1;
+  #L3def38.  goto L3deec4;
+  #L3def3a.  v0:= Exception @type ^`java.lang.RuntimeException` @kind object;
+  #L3def3c.  v2:= new `java.lang.RuntimeException`;
+  #L3def40.  v3:= new `java.lang.StringBuilder`;
+  #L3def44.  call `<init>`(v3) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L3def4a.  v4:= "Could not setup up entity " @kind object;
+  #L3def4e.  call temp:= `append`(v3, v4) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3def54.  call temp:= `getEntityClass`(v5) @signature `Lio/objectbox/EntityInfo;.getEntityClass:()Ljava/lang/Class;` @kind interface;
+  #L3def5a.  v4:= temp @kind object;
+  #L3def5c.  call temp:= `append`(v3, v4) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3def62.  call temp:= `toString`(v3) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L3def68.  v3:= temp @kind object;
+  #L3def6a.  call `<init>`(v2, v3, v0) @signature `Ljava/lang/RuntimeException;.<init>:(Ljava/lang/String;Ljava/lang/Throwable;)V` @kind direct;
+  #L3def70.  throw v2;
+  #L3def72.  v2:= v1.`io.objectbox.BoxStore.g` @type ^`org.greenrobot.essentials.collections.LongHashMap` @kind object;
+  #L3def76.  call temp:= `size`(v2) @signature `Lorg/greenrobot/essentials/collections/LongHashMap;.size:()I` @kind virtual;
+  #L3def7c.  v2:= temp;
+  #L3def7e.  v5:= new `int`[v2];
+  #L3def82.  v1.`io.objectbox.BoxStore.h` @type ^`int`[] := v5 @kind object;
+  #L3def86.  v5:= v1.`io.objectbox.BoxStore.g` @type ^`org.greenrobot.essentials.collections.LongHashMap` @kind object;
+  #L3def8a.  call temp:= `keys`(v5) @signature `Lorg/greenrobot/essentials/collections/LongHashMap;.keys:()[J` @kind virtual;
+  #L3def90.  v5:= temp @kind object;
+  #L3def92.  if v3 >= v2 then goto L3defaa;
+  #L3def96.  v6:= v1.`io.objectbox.BoxStore.h` @type ^`int`[] @kind object;
+  #L3def9a.  v7:= v5[v3] @kind wide;
+  #L3def9e.  v8:= (`int`) v7 @kind l2i;
+  #L3defa0.  v6[v3]:= v8;
+  #L3defa4.  v3:= v3 + 1;
+  #L3defa8.  goto L3def92;
+  #L3defaa.  v2:= new `io.objectbox.f`;
+  #L3defae.  call `<init>`(v2, v1) @signature `Lio/objectbox/f;.<init>:(Lio/objectbox/BoxStore;)V` @kind direct;
+  #L3defb4.  v1.`io.objectbox.BoxStore.l` @type ^`io.objectbox.f` := v2 @kind object;
+  #L3defb8.  v2:= v0.`io.objectbox.BoxStoreBuilder.s` @type ^`io.objectbox.TxCallback` @kind object;
+  #L3defbc.  v1.`io.objectbox.BoxStore.v` @type ^`io.objectbox.TxCallback` := v2 @kind object;
+  #L3defc0.  v0:= v0.`io.objectbox.BoxStoreBuilder.m` @type ^`int`;
+  #L3defc4.  call temp:= `max`(v0, v4) @signature `Ljava/lang/Math;.max:(II)I` @kind static;
+  #L3defca.  v0:= temp;
+  #L3defcc.  v1.`io.objectbox.BoxStore.u` @type ^`int` := v0;
+  #L3defd0.  return @kind void;
+  #L3defd2.  v0:= new `io.objectbox.exception.DbException`;
+  #L3defd6.  v2:= "Could not create native store" @kind object;
+  #L3defda.  call `<init>`(v0, v2) @signature `Lio/objectbox/exception/DbException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L3defe0.  throw v0;
+  #L3defe2.  v0:= Exception @type ^`java.lang.RuntimeException` @kind object;
+  #L3defe4.  call `close`(v18) @signature `Lio/objectbox/BoxStore;.close:()V` @kind virtual;
+  #L3defea.  throw v0;
+  catch `java.lang.RuntimeException` @[L3dedb8..L3dee42] goto L3defe2;
+  catch `java.lang.RuntimeException` @[L3dee42..L3def34] goto L3def3a;
+  catch `java.lang.RuntimeException` @[L3def3c..L3defe2] goto L3defe2;
+}
+procedure `void` `a`(`io.objectbox.BoxStore` v0 @kind object, `java.lang.Runnable` v1 @kind object, `io.objectbox.TxCallback` v2 @kind object) @signature `Lio/objectbox/BoxStore;.a:(Lio/objectbox/BoxStore;Ljava/lang/Runnable;Lio/objectbox/TxCallback;)V` @AccessFlag PUBLIC_STATIC_SYNTHETIC {
+    temp;
+
+  #L3dec8c.  call `q`(v0, v1, v2) @signature `Lio/objectbox/BoxStore;.q:(Ljava/lang/Runnable;Lio/objectbox/TxCallback;)V` @kind direct;
+  #L3dec92.  return @kind void;
+}
+procedure `void` `b`(`java.lang.String` v0 @kind object) @signature `Lio/objectbox/BoxStore;.b:(Ljava/lang/String;)V` @AccessFlag PUBLIC_STATIC_SYNTHETIC {
+    temp;
+
+  #L3deca4.  call `p`(v0) @signature `Lio/objectbox/BoxStore;.p:(Ljava/lang/String;)V` @kind static;
+  #L3decaa.  return @kind void;
+}
+procedure `void` `c`(`io.objectbox.BoxStore` v0 @kind object, `java.util.concurrent.Callable` v1 @kind object, `io.objectbox.TxCallback` v2 @kind object) @signature `Lio/objectbox/BoxStore;.c:(Lio/objectbox/BoxStore;Ljava/util/concurrent/Callable;Lio/objectbox/TxCallback;)V` @AccessFlag PUBLIC_STATIC_SYNTHETIC {
+    temp;
+
+  #L3decbc.  call `o`(v0, v1, v2) @signature `Lio/objectbox/BoxStore;.o:(Ljava/util/concurrent/Callable;Lio/objectbox/TxCallback;)V` @kind direct;
+  #L3decc2.  return @kind void;
+}
+procedure `boolean` `clearDefaultStore`() @signature `Lio/objectbox/BoxStore;.clearDefaultStore:()Z` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L3ddc34.  v0:= constclass @type ^`io.objectbox.BoxStore` @kind object;
+  #L3ddc38.  @monitorenter v0
+  #L3ddc3a.  v1:= `@@io.objectbox.BoxStore.z` @type ^`io.objectbox.BoxStore` @kind object;
+  #L3ddc3e.  if v1 == 0 then goto L3ddc46;
+  #L3ddc42.  v1:= 1I;
+  #L3ddc44.  goto L3ddc48;
+  #L3ddc46.  v1:= 0I;
+  #L3ddc48.  v2:= 0I;
+  #L3ddc4a.  `@@io.objectbox.BoxStore.z` @type ^`io.objectbox.BoxStore` := v2 @kind object;
+  #L3ddc4e.  @monitorexit v0
+  #L3ddc50.  return v1;
+  #L3ddc52.  v1:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3ddc54.  @monitorexit v0
+  #L3ddc56.  throw v1;
+  catch `java.lang.Throwable` @[L3ddc3a..L3ddc4e] goto L3ddc52;
+}
+procedure `void` `d`(`io.objectbox.BoxStore` v2 @kind this) @signature `Lio/objectbox/BoxStore;.d:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+
+  #L3df048.  v0:= v2.`io.objectbox.BoxStore.q` @type ^`boolean` @kind boolean;
+  #L3df04c.  if v0 != 0 then goto L3df052;
+  #L3df050.  return @kind void;
+  #L3df052.  v0:= new `java.lang.IllegalStateException`;
+  #L3df056.  v1:= "Store is closed" @kind object;
+  #L3df05a.  call `<init>`(v0, v1) @signature `Ljava/lang/IllegalStateException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L3df060.  throw v0;
+}
+procedure `boolean` `deleteAllFiles`(`java.io.File` v6 @kind object) @signature `Lio/objectbox/BoxStore;.deleteAllFiles:(Ljava/io/File;)Z` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L3ddcac.  call temp:= `exists`(v6) @signature `Ljava/io/File;.exists:()Z` @kind virtual;
+  #L3ddcb2.  v0:= temp;
+  #L3ddcb4.  if v0 != 0 then goto L3ddcbc;
+  #L3ddcb8.  v6:= 1I;
+  #L3ddcba.  return v6;
+  #L3ddcbc.  call temp:= `g`(v6) @signature `Lio/objectbox/BoxStore;.g:(Ljava/io/File;)Ljava/lang/String;` @kind static;
+  #L3ddcc2.  v0:= temp @kind object;
+  #L3ddcc4.  call temp:= `m`(v0) @signature `Lio/objectbox/BoxStore;.m:(Ljava/lang/String;)Z` @kind static;
+  #L3ddcca.  v0:= temp;
+  #L3ddccc.  if v0 != 0 then goto L3ddd16;
+  #L3ddcd0.  call temp:= `listFiles`(v6) @signature `Ljava/io/File;.listFiles:()[Ljava/io/File;` @kind virtual;
+  #L3ddcd6.  v0:= temp @kind object;
+  #L3ddcd8.  v1:= 0I;
+  #L3ddcda.  if v0 != 0 then goto L3ddce0;
+  #L3ddcde.  return v1;
+  #L3ddce0.  v2:= length @variable v0;
+  #L3ddce2.  v3:= 0I;
+  #L3ddce4.  if v3 >= v2 then goto L3ddd0c;
+  #L3ddce8.  v4:= v0[v3] @kind object;
+  #L3ddcec.  call temp:= `delete`(v4) @signature `Ljava/io/File;.delete:()Z` @kind virtual;
+  #L3ddcf2.  v5:= temp;
+  #L3ddcf4.  if v5 != 0 then goto L3ddd06;
+  #L3ddcf8.  call temp:= `exists`(v4) @signature `Ljava/io/File;.exists:()Z` @kind virtual;
+  #L3ddcfe.  v4:= temp;
+  #L3ddd00.  if v4 == 0 then goto L3ddd06;
+  #L3ddd04.  return v1;
+  #L3ddd06.  v3:= v3 + 1;
+  #L3ddd0a.  goto L3ddce4;
+  #L3ddd0c.  call temp:= `delete`(v6) @signature `Ljava/io/File;.delete:()Z` @kind virtual;
+  #L3ddd12.  v6:= temp;
+  #L3ddd14.  return v6;
+  #L3ddd16.  v6:= new `java.lang.IllegalStateException`;
+  #L3ddd1a.  v0:= "Cannot delete files: store is still open" @kind object;
+  #L3ddd1e.  call `<init>`(v6, v0) @signature `Ljava/lang/IllegalStateException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L3ddd24.  throw v6;
+}
+procedure `boolean` `deleteAllFiles`(`java.io.File` v0 @kind object, `java.lang.String` v1 @kind object) @signature `Lio/objectbox/BoxStore;.deleteAllFiles:(Ljava/io/File;Ljava/lang/String;)Z` @AccessFlag PUBLIC_STATIC {
+    temp;
+
+  #L3ddd38.  call temp:= `i`(v0, v1) @signature `Lio/objectbox/BoxStoreBuilder;.i:(Ljava/io/File;Ljava/lang/String;)Ljava/io/File;` @kind static;
+  #L3ddd3e.  v0:= temp @kind object;
+  #L3ddd40.  call temp:= `deleteAllFiles`(v0) @signature `Lio/objectbox/BoxStore;.deleteAllFiles:(Ljava/io/File;)Z` @kind static;
+  #L3ddd46.  v0:= temp;
+  #L3ddd48.  return v0;
+}
+procedure `boolean` `deleteAllFiles`(`java.lang.Object` v0 @kind object, `java.lang.String` v1 @kind object) @signature `Lio/objectbox/BoxStore;.deleteAllFiles:(Ljava/lang/Object;Ljava/lang/String;)Z` @AccessFlag PUBLIC_STATIC {
+    temp;
+
+  #L3ddd5c.  call temp:= `f`(v0, v1) @signature `Lio/objectbox/BoxStoreBuilder;.f:(Ljava/lang/Object;Ljava/lang/String;)Ljava/io/File;` @kind static;
+  #L3ddd62.  v0:= temp @kind object;
+  #L3ddd64.  call temp:= `deleteAllFiles`(v0) @signature `Lio/objectbox/BoxStore;.deleteAllFiles:(Ljava/io/File;)Z` @kind static;
+  #L3ddd6a.  v0:= temp;
+  #L3ddd6c.  return v0;
+}
+procedure `void` `e`(`io.objectbox.BoxStore` v6 @kind this) @signature `Lio/objectbox/BoxStore;.e:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L3df074.  v0:= v6.`io.objectbox.BoxStore.k` @type ^`java.util.concurrent.ExecutorService` @kind object;
+  #L3df078.  v1:= 1L;
+  #L3df07c.  v3:= `@@java.util.concurrent.TimeUnit.SECONDS` @type ^`java.util.concurrent.TimeUnit` @kind object;
+  #L3df080.  call temp:= `awaitTermination`(v0, v1, v3) @signature `Ljava/util/concurrent/ExecutorService;.awaitTermination:(JLjava/util/concurrent/TimeUnit;)Z` @kind interface;
+  #L3df086.  v0:= temp;
+  #L3df088.  if v0 != 0 then goto L3df104;
+  #L3df08c.  call temp:= `activeCount`() @signature `Ljava/lang/Thread;.activeCount:()I` @kind static;
+  #L3df092.  v0:= temp;
+  #L3df094.  v1:= `@@java.lang.System.err` @type ^`java.io.PrintStream` @kind object;
+  #L3df098.  v2:= "Thread pool not terminated in time; printing stack traces..." @kind object;
+  #L3df09c.  call `println`(v1, v2) @signature `Ljava/io/PrintStream;.println:(Ljava/lang/String;)V` @kind virtual;
+  #L3df0a2.  v0:= v0 + 2;
+  #L3df0a6.  v0:= new `java.lang.Thread`[v0];
+  #L3df0aa.  call temp:= `enumerate`(v0) @signature `Ljava/lang/Thread;.enumerate:([Ljava/lang/Thread;)I` @kind static;
+  #L3df0b0.  v1:= temp;
+  #L3df0b2.  v2:= 0I;
+  #L3df0b4.  if v2 >= v1 then goto L3df104;
+  #L3df0b8.  v3:= `@@java.lang.System.err` @type ^`java.io.PrintStream` @kind object;
+  #L3df0bc.  v4:= new `java.lang.StringBuilder`;
+  #L3df0c0.  call `<init>`(v4) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L3df0c6.  v5:= "Thread: " @kind object;
+  #L3df0ca.  call temp:= `append`(v4, v5) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3df0d0.  v5:= v0[v2] @kind object;
+  #L3df0d4.  call temp:= `getName`(v5) @signature `Ljava/lang/Thread;.getName:()Ljava/lang/String;` @kind virtual;
+  #L3df0da.  v5:= temp @kind object;
+  #L3df0dc.  call temp:= `append`(v4, v5) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3df0e2.  call temp:= `toString`(v4) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L3df0e8.  v4:= temp @kind object;
+  #L3df0ea.  call `println`(v3, v4) @signature `Ljava/io/PrintStream;.println:(Ljava/lang/String;)V` @kind virtual;
+  #L3df0f0.  call `dumpStack`() @signature `Ljava/lang/Thread;.dumpStack:()V` @kind static;
+  #L3df0f6.  v2:= v2 + 1;
+  #L3df0fa.  goto L3df0b4;
+  #L3df0fc.  v0:= Exception @type ^`java.lang.InterruptedException` @kind object;
+  #L3df0fe.  call `printStackTrace`(v0) @signature `Ljava/lang/InterruptedException;.printStackTrace:()V` @kind virtual;
+  #L3df104.  return @kind void;
+  catch `java.lang.InterruptedException` @[L3df074..L3df0f6] goto L3df0fc;
+}
+procedure `java.lang.String` `g`(`java.io.File` v3 @kind object) @signature `Lio/objectbox/BoxStore;.g:(Ljava/io/File;)Ljava/lang/String;` @AccessFlag STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L3de918.  call temp:= `exists`(v3) @signature `Ljava/io/File;.exists:()Z` @kind virtual;
+  #L3de91e.  v0:= temp;
+  #L3de920.  if v0 == 0 then goto L3de968;
+  #L3de924.  call temp:= `isDirectory`(v3) @signature `Ljava/io/File;.isDirectory:()Z` @kind virtual;
+  #L3de92a.  v0:= temp;
+  #L3de92c.  if v0 == 0 then goto L3de932;
+  #L3de930.  goto L3de974;
+  #L3de932.  v0:= new `io.objectbox.exception.DbException`;
+  #L3de936.  v1:= new `java.lang.StringBuilder`;
+  #L3de93a.  call `<init>`(v1) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L3de940.  v2:= "Is not a directory: " @kind object;
+  #L3de944.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3de94a.  call temp:= `getAbsolutePath`(v3) @signature `Ljava/io/File;.getAbsolutePath:()Ljava/lang/String;` @kind virtual;
+  #L3de950.  v3:= temp @kind object;
+  #L3de952.  call temp:= `append`(v1, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3de958.  call temp:= `toString`(v1) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L3de95e.  v3:= temp @kind object;
+  #L3de960.  call `<init>`(v0, v3) @signature `Lio/objectbox/exception/DbException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L3de966.  throw v0;
+  #L3de968.  call temp:= `mkdirs`(v3) @signature `Ljava/io/File;.mkdirs:()Z` @kind virtual;
+  #L3de96e.  v0:= temp;
+  #L3de970.  if v0 == 0 then goto L3de990;
+  #L3de974.  call temp:= `getCanonicalPath`(v3) @signature `Ljava/io/File;.getCanonicalPath:()Ljava/lang/String;` @kind virtual;
+  #L3de97a.  v3:= temp @kind object;
+  #L3de97c.  return v3 @kind object;
+  #L3de97e.  v3:= Exception @type ^`java.io.IOException` @kind object;
+  #L3de980.  v0:= new `io.objectbox.exception.DbException`;
+  #L3de984.  v1:= "Could not verify dir" @kind object;
+  #L3de988.  call `<init>`(v0, v1, v3) @signature `Lio/objectbox/exception/DbException;.<init>:(Ljava/lang/String;Ljava/lang/Throwable;)V` @kind direct;
+  #L3de98e.  throw v0;
+  #L3de990.  v0:= new `io.objectbox.exception.DbException`;
+  #L3de994.  v1:= new `java.lang.StringBuilder`;
+  #L3de998.  call `<init>`(v1) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L3de99e.  v2:= "Could not create directory: " @kind object;
+  #L3de9a2.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3de9a8.  call temp:= `getAbsolutePath`(v3) @signature `Ljava/io/File;.getAbsolutePath:()Ljava/lang/String;` @kind virtual;
+  #L3de9ae.  v3:= temp @kind object;
+  #L3de9b0.  call temp:= `append`(v1, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3de9b6.  call temp:= `toString`(v1) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L3de9bc.  v3:= temp @kind object;
+  #L3de9be.  call `<init>`(v0, v3) @signature `Lio/objectbox/exception/DbException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L3de9c4.  throw v0;
+  catch `java.io.IOException` @[L3de974..L3de97c] goto L3de97e;
+}
+procedure `java.lang.Object` `getContext`() @signature `Lio/objectbox/BoxStore;.getContext:()Ljava/lang/Object;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+
+  #L3de898.  v0:= constclass @type ^`io.objectbox.BoxStore` @kind object;
+  #L3de89c.  @monitorenter v0
+  #L3de89e.  v1:= `@@io.objectbox.BoxStore.x` @type ^`java.lang.Object` @kind object;
+  #L3de8a2.  @monitorexit v0
+  #L3de8a4.  return v1 @kind object;
+  #L3de8a6.  v1:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3de8a8.  @monitorexit v0
+  #L3de8aa.  throw v1;
+  catch `java.lang.Throwable` @[L3de89e..L3de8a2] goto L3de8a6;
+}
+procedure `io.objectbox.BoxStore` `getDefault`() @signature `Lio/objectbox/BoxStore;.getDefault:()Lio/objectbox/BoxStore;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L3de2b4.  v0:= constclass @type ^`io.objectbox.BoxStore` @kind object;
+  #L3de2b8.  @monitorenter v0
+  #L3de2ba.  v1:= `@@io.objectbox.BoxStore.z` @type ^`io.objectbox.BoxStore` @kind object;
+  #L3de2be.  if v1 == 0 then goto L3de2c6;
+  #L3de2c2.  @monitorexit v0
+  #L3de2c4.  return v1 @kind object;
+  #L3de2c6.  v1:= new `java.lang.IllegalStateException`;
+  #L3de2ca.  v2:= "Please call buildDefault() before calling this method" @kind object;
+  #L3de2ce.  call `<init>`(v1, v2) @signature `Ljava/lang/IllegalStateException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L3de2d4.  throw v1;
+  #L3de2d6.  v1:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3de2d8.  @monitorexit v0
+  #L3de2da.  throw v1;
+  catch `java.lang.Throwable` @[L3de2ba..L3de2be] goto L3de2d6;
+  catch `java.lang.Throwable` @[L3de2c6..L3de2d6] goto L3de2d6;
+}
+procedure `java.lang.Object` `getRelinker`() @signature `Lio/objectbox/BoxStore;.getRelinker:()Ljava/lang/Object;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+
+  #L3de8c8.  v0:= constclass @type ^`io.objectbox.BoxStore` @kind object;
+  #L3de8cc.  @monitorenter v0
+  #L3de8ce.  v1:= `@@io.objectbox.BoxStore.y` @type ^`java.lang.Object` @kind object;
+  #L3de8d2.  @monitorexit v0
+  #L3de8d4.  return v1 @kind object;
+  #L3de8d6.  v1:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3de8d8.  @monitorexit v0
+  #L3de8da.  throw v1;
+  catch `java.lang.Throwable` @[L3de8ce..L3de8d2] goto L3de8d6;
+}
+procedure `java.lang.String` `getVersion`() @signature `Lio/objectbox/BoxStore;.getVersion:()Ljava/lang/String;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+
+  #L3dea0c.  v0:= "2.9.0-2021-02-16" @kind object;
+  #L3dea10.  return v0 @kind object;
+}
+procedure `java.lang.String` `getVersionNative`() @signature `Lio/objectbox/BoxStore;.getVersionNative:()Ljava/lang/String;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+
+  #L3dea24.  call `ensureLoaded`() @signature `Lio/objectbox/internal/NativeLibraryLoader;.ensureLoaded:()V` @kind static;
+  #L3dea2a.  call temp:= `nativeGetVersion`() @signature `Lio/objectbox/BoxStore;.nativeGetVersion:()Ljava/lang/String;` @kind static;
+  #L3dea30.  v0:= temp @kind object;
+  #L3dea32.  return v0 @kind object;
+}
+procedure `boolean` `isDatabaseOpen`(`java.io.File` v0 @kind object) @signature `Lio/objectbox/BoxStore;.isDatabaseOpen:(Ljava/io/File;)Z` @AccessFlag PUBLIC_STATIC {
+    temp;
+
+  #L3ddd98.  call temp:= `getCanonicalPath`(v0) @signature `Ljava/io/File;.getCanonicalPath:()Ljava/lang/String;` @kind virtual;
+  #L3ddd9e.  v0:= temp @kind object;
+  #L3ddda0.  call temp:= `m`(v0) @signature `Lio/objectbox/BoxStore;.m:(Ljava/lang/String;)Z` @kind static;
+  #L3ddda6.  v0:= temp;
+  #L3ddda8.  return v0;
+}
+procedure `boolean` `isDatabaseOpen`(`java.io.File` v0 @kind object, `java.lang.String` v1 @kind object) @signature `Lio/objectbox/BoxStore;.isDatabaseOpen:(Ljava/io/File;Ljava/lang/String;)Z` @AccessFlag PUBLIC_STATIC {
+    temp;
+
+  #L3dddbc.  call temp:= `i`(v0, v1) @signature `Lio/objectbox/BoxStoreBuilder;.i:(Ljava/io/File;Ljava/lang/String;)Ljava/io/File;` @kind static;
+  #L3dddc2.  v0:= temp @kind object;
+  #L3dddc4.  call temp:= `getCanonicalPath`(v0) @signature `Ljava/io/File;.getCanonicalPath:()Ljava/lang/String;` @kind virtual;
+  #L3dddca.  v0:= temp @kind object;
+  #L3dddcc.  call temp:= `m`(v0) @signature `Lio/objectbox/BoxStore;.m:(Ljava/lang/String;)Z` @kind static;
+  #L3dddd2.  v0:= temp;
+  #L3dddd4.  return v0;
+}
+procedure `boolean` `isDatabaseOpen`(`java.lang.Object` v0 @kind object, `java.lang.String` v1 @kind object) @signature `Lio/objectbox/BoxStore;.isDatabaseOpen:(Ljava/lang/Object;Ljava/lang/String;)Z` @AccessFlag PUBLIC_STATIC {
+    temp;
+
+  #L3ddde8.  call temp:= `f`(v0, v1) @signature `Lio/objectbox/BoxStoreBuilder;.f:(Ljava/lang/Object;Ljava/lang/String;)Ljava/io/File;` @kind static;
+  #L3dddee.  v0:= temp @kind object;
+  #L3dddf0.  call temp:= `getCanonicalPath`(v0) @signature `Ljava/io/File;.getCanonicalPath:()Ljava/lang/String;` @kind virtual;
+  #L3dddf6.  v0:= temp @kind object;
+  #L3dddf8.  call temp:= `m`(v0) @signature `Lio/objectbox/BoxStore;.m:(Ljava/lang/String;)Z` @kind static;
+  #L3dddfe.  v0:= temp;
+  #L3dde00.  return v0;
+}
+procedure `boolean` `isObjectBrowserAvailable`() @signature `Lio/objectbox/BoxStore;.isObjectBrowserAvailable:()Z` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+
+  #L3ddfa0.  call `ensureLoaded`() @signature `Lio/objectbox/internal/NativeLibraryLoader;.ensureLoaded:()V` @kind static;
+  #L3ddfa6.  call temp:= `nativeIsObjectBrowserAvailable`() @signature `Lio/objectbox/BoxStore;.nativeIsObjectBrowserAvailable:()Z` @kind static;
+  #L3ddfac.  v0:= temp;
+  #L3ddfae.  return v0;
+}
+procedure `boolean` `isSyncAvailable`() @signature `Lio/objectbox/BoxStore;.isSyncAvailable:()Z` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+
+  #L3de000.  call temp:= `k`() @signature `Lio/objectbox/BoxStore;.k:()I` @kind static;
+  #L3de006.  v0:= temp;
+  #L3de008.  if v0 == 0 then goto L3de010;
+  #L3de00c.  v0:= 1I;
+  #L3de00e.  goto L3de012;
+  #L3de010.  v0:= 0I;
+  #L3de012.  return v0;
+}
+procedure `boolean` `isSyncServerAvailable`() @signature `Lio/objectbox/BoxStore;.isSyncServerAvailable:()Z` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+
+  #L3de024.  call temp:= `k`() @signature `Lio/objectbox/BoxStore;.k:()I` @kind static;
+  #L3de02a.  v0:= temp;
+  #L3de02c.  v1:= 2I;
+  #L3de02e.  if v0 != v1 then goto L3de036;
+  #L3de032.  v0:= 1I;
+  #L3de034.  goto L3de038;
+  #L3de036.  v0:= 0I;
+  #L3de038.  return v0;
+}
+procedure `int` `k`() @signature `Lio/objectbox/BoxStore;.k:()I` @AccessFlag PRIVATE_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L3de13c.  call `ensureLoaded`() @signature `Lio/objectbox/internal/NativeLibraryLoader;.ensureLoaded:()V` @kind static;
+  #L3de142.  call temp:= `nativeGetSupportedSync`() @signature `Lio/objectbox/BoxStore;.nativeGetSupportedSync:()I` @kind static;
+  #L3de148.  v0:= temp;
+  #L3de14a.  if v0 < 0 then goto L3de156;
+  #L3de14e.  v1:= 2I;
+  #L3de150.  if v0 > v1 then goto L3de156;
+  #L3de154.  return v0;
+  #L3de156.  v1:= new `java.lang.IllegalStateException`;
+  #L3de15a.  v2:= new `java.lang.StringBuilder`;
+  #L3de15e.  call `<init>`(v2) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L3de164.  v3:= "Unexpected sync support: " @kind object;
+  #L3de168.  call temp:= `append`(v2, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3de16e.  call temp:= `append`(v2, v0) @signature `Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3de174.  call temp:= `toString`(v2) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L3de17a.  v0:= temp @kind object;
+  #L3de17c.  call `<init>`(v1, v0) @signature `Ljava/lang/IllegalStateException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L3de182.  throw v1;
+  #L3de184.  v0:= Exception @type ^`java.lang.UnsatisfiedLinkError` @kind object;
+  #L3de186.  v1:= `@@java.lang.System.err` @type ^`java.io.PrintStream` @kind object;
+  #L3de18a.  v2:= new `java.lang.StringBuilder`;
+  #L3de18e.  call `<init>`(v2) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L3de194.  v3:= "Old JNI lib? " @kind object;
+  #L3de198.  call temp:= `append`(v2, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3de19e.  call temp:= `append`(v2, v0) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3de1a4.  call temp:= `toString`(v2) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L3de1aa.  v0:= temp @kind object;
+  #L3de1ac.  call `println`(v1, v0) @signature `Ljava/io/PrintStream;.println:(Ljava/lang/String;)V` @kind virtual;
+  #L3de1b2.  v0:= 0I;
+  #L3de1b4.  return v0;
+  catch `java.lang.UnsatisfiedLinkError` @[L3de142..L3de184] goto L3de184;
+}
+procedure `boolean` `m`(`java.lang.String` v3 @kind object) @signature `Lio/objectbox/BoxStore;.m:(Ljava/lang/String;)Z` @AccessFlag STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L3dde2c.  v0:= `@@io.objectbox.BoxStore.A` @type ^`java.util.Set` @kind object;
+  #L3dde30.  @monitorenter v0
+  #L3dde32.  call temp:= `contains`(v0, v3) @signature `Ljava/util/Set;.contains:(Ljava/lang/Object;)Z` @kind interface;
+  #L3dde38.  v1:= temp;
+  #L3dde3a.  v2:= 0I;
+  #L3dde3c.  if v1 != 0 then goto L3dde44;
+  #L3dde40.  @monitorexit v0
+  #L3dde42.  return v2;
+  #L3dde44.  @monitorexit v0
+  #L3dde46.  v0:= `@@io.objectbox.BoxStore.B` @type ^`java.lang.Thread` @kind object;
+  #L3dde4a.  if v0 == 0 then goto L3dde66;
+  #L3dde4e.  call temp:= `isAlive`(v0) @signature `Ljava/lang/Thread;.isAlive:()Z` @kind virtual;
+  #L3dde54.  v0:= temp;
+  #L3dde56.  if v0 != 0 then goto L3dde5c;
+  #L3dde5a.  goto L3dde66;
+  #L3dde5c.  call temp:= `n`(v3, v2) @signature `Lio/objectbox/BoxStore;.n:(Ljava/lang/String;Z)Z` @kind static;
+  #L3dde62.  v3:= temp;
+  #L3dde64.  return v3;
+  #L3dde66.  v0:= new `java.lang.Thread`;
+  #L3dde6a.  v1:= new `io.objectbox.c`;
+  #L3dde6e.  call `<init>`(v1, v3) @signature `Lio/objectbox/c;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L3dde74.  call `<init>`(v0, v1) @signature `Ljava/lang/Thread;.<init>:(Ljava/lang/Runnable;)V` @kind direct;
+  #L3dde7a.  v1:= 1I;
+  #L3dde7c.  call `setDaemon`(v0, v1) @signature `Ljava/lang/Thread;.setDaemon:(Z)V` @kind virtual;
+  #L3dde82.  `@@io.objectbox.BoxStore.B` @type ^`java.lang.Thread` := v0 @kind object;
+  #L3dde86.  call `start`(v0) @signature `Ljava/lang/Thread;.start:()V` @kind virtual;
+  #L3dde8c.  v1:= 500L;
+  #L3dde90.  call `join`(v0, v1) @signature `Ljava/lang/Thread;.join:(J)V` @kind virtual;
+  #L3dde96.  goto L3ddea0;
+  #L3dde98.  v0:= Exception @type ^`java.lang.InterruptedException` @kind object;
+  #L3dde9a.  call `printStackTrace`(v0) @signature `Ljava/lang/InterruptedException;.printStackTrace:()V` @kind virtual;
+  #L3ddea0.  v1:= `@@io.objectbox.BoxStore.A` @type ^`java.util.Set` @kind object;
+  #L3ddea4.  @monitorenter v1
+  #L3ddea6.  call temp:= `contains`(v1, v3) @signature `Ljava/util/Set;.contains:(Ljava/lang/Object;)Z` @kind interface;
+  #L3ddeac.  v3:= temp;
+  #L3ddeae.  @monitorexit v1
+  #L3ddeb0.  return v3;
+  #L3ddeb2.  v3:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3ddeb4.  @monitorexit v1
+  #L3ddeb6.  throw v3;
+  #L3ddeb8.  v3:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3ddeba.  @monitorexit v0
+  #L3ddebc.  throw v3;
+  catch `java.lang.Throwable` @[L3dde32..L3dde46] goto L3ddeb8;
+  catch `java.lang.InterruptedException` @[L3dde90..L3dde96] goto L3dde98;
+  catch `java.lang.Throwable` @[L3ddea6..L3ddeb6] goto L3ddeb2;
+  catch `java.lang.Throwable` @[L3ddeba..L3ddebc] goto L3ddeb8;
+}
+procedure `boolean` `n`(`java.lang.String` v5 @kind object, `boolean` v6 ) @signature `Lio/objectbox/BoxStore;.n:(Ljava/lang/String;Z)Z` @AccessFlag STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L3ddefc.  v0:= `@@io.objectbox.BoxStore.A` @type ^`java.util.Set` @kind object;
+  #L3ddf00.  @monitorenter v0
+  #L3ddf02.  v1:= 0I;
+  #L3ddf04.  v2:= 5I;
+  #L3ddf06.  if v1 >= v2 then goto L3ddf58;
+  #L3ddf0a.  v2:= `@@io.objectbox.BoxStore.A` @type ^`java.util.Set` @kind object;
+  #L3ddf0e.  call temp:= `contains`(v2, v5) @signature `Ljava/util/Set;.contains:(Ljava/lang/Object;)Z` @kind interface;
+  #L3ddf14.  v3:= temp;
+  #L3ddf16.  if v3 == 0 then goto L3ddf58;
+  #L3ddf1a.  v1:= v1 + 1;
+  #L3ddf1e.  call `gc`() @signature `Ljava/lang/System;.gc:()V` @kind static;
+  #L3ddf24.  v3:= 1I;
+  #L3ddf26.  if v6 == 0 then goto L3ddf34;
+  #L3ddf2a.  if v1 <= v3 then goto L3ddf34;
+  #L3ddf2e.  call `runFinalization`() @signature `Ljava/lang/System;.runFinalization:()V` @kind static;
+  #L3ddf34.  call `gc`() @signature `Ljava/lang/System;.gc:()V` @kind static;
+  #L3ddf3a.  if v6 == 0 then goto L3ddf48;
+  #L3ddf3e.  if v1 <= v3 then goto L3ddf48;
+  #L3ddf42.  call `runFinalization`() @signature `Ljava/lang/System;.runFinalization:()V` @kind static;
+  #L3ddf48.  v3:= 100L;
+  #L3ddf4c.  call `wait`(v2, v3) @signature `Ljava/lang/Object;.wait:(J)V` @kind virtual;
+  #L3ddf52.  goto L3ddf04;
+  #L3ddf54.  
+  #L3ddf56.  goto L3ddf04;
+  #L3ddf58.  v6:= `@@io.objectbox.BoxStore.A` @type ^`java.util.Set` @kind object;
+  #L3ddf5c.  call temp:= `contains`(v6, v5) @signature `Ljava/util/Set;.contains:(Ljava/lang/Object;)Z` @kind interface;
+  #L3ddf62.  v5:= temp;
+  #L3ddf64.  @monitorexit v0
+  #L3ddf66.  return v5;
+  #L3ddf68.  v5:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3ddf6a.  @monitorexit v0
+  #L3ddf6c.  throw v5;
+  catch `java.lang.Throwable` @[L3ddf0a..L3ddf48] goto L3ddf68;
+  catch `java.lang.InterruptedException` @[L3ddf4c..L3ddf52] goto L3ddf54;
+  catch `java.lang.Throwable` @[L3ddf4c..L3ddf52] goto L3ddf68;
+  catch `java.lang.Throwable` @[L3ddf58..L3ddf6c] goto L3ddf68;
+}
+procedure `long` `nativeBeginReadTx`(`long` v0 ) @signature `Lio/objectbox/BoxStore;.nativeBeginReadTx:(J)J` @AccessFlag STATIC_NATIVE {
+
+  # return;
+}
+procedure `long` `nativeBeginTx`(`long` v0 ) @signature `Lio/objectbox/BoxStore;.nativeBeginTx:(J)J` @AccessFlag STATIC_NATIVE {
+
+  # return;
+}
+procedure `int` `nativeCleanStaleReadTransactions`(`long` v0 ) @signature `Lio/objectbox/BoxStore;.nativeCleanStaleReadTransactions:(J)I` @AccessFlag STATIC_NATIVE {
+
+  # return;
+}
+procedure `long` `nativeCreateWithFlatOptions`(`byte`[] v0 @kind object, `byte`[] v1 @kind object) @signature `Lio/objectbox/BoxStore;.nativeCreateWithFlatOptions:([B[B)J` @AccessFlag STATIC_NATIVE {
+
+  # return;
+}
+procedure `void` `nativeDelete`(`long` v0 ) @signature `Lio/objectbox/BoxStore;.nativeDelete:(J)V` @AccessFlag STATIC_NATIVE {
+
+  # return;
+}
+procedure `java.lang.String` `nativeDiagnose`(`long` v0 ) @signature `Lio/objectbox/BoxStore;.nativeDiagnose:(J)Ljava/lang/String;` @AccessFlag STATIC_NATIVE {
+
+  # return;
+}
+procedure `void` `nativeDropAllData`(`long` v0 ) @signature `Lio/objectbox/BoxStore;.nativeDropAllData:(J)V` @AccessFlag STATIC_NATIVE {
+
+  # return;
+}
+procedure `int` `nativeGetSupportedSync`() @signature `Lio/objectbox/BoxStore;.nativeGetSupportedSync:()I` @AccessFlag STATIC_NATIVE {
+
+  # return;
+}
+procedure `java.lang.String` `nativeGetVersion`() @signature `Lio/objectbox/BoxStore;.nativeGetVersion:()Ljava/lang/String;` @AccessFlag STATIC_NATIVE {
+
+  # return;
+}
+procedure `boolean` `nativeIsObjectBrowserAvailable`() @signature `Lio/objectbox/BoxStore;.nativeIsObjectBrowserAvailable:()Z` @AccessFlag STATIC_NATIVE {
+
+  # return;
+}
+procedure `boolean` `nativeIsReadOnly`(`long` v0 ) @signature `Lio/objectbox/BoxStore;.nativeIsReadOnly:(J)Z` @AccessFlag STATIC_NATIVE {
+
+  # return;
+}
+procedure `void` `nativeRegisterCustomType`(`long` v0 , `int` v2 , `int` v3 , `java.lang.String` v4 @kind object, `java.lang.Class` v5 @kind object, `java.lang.Class` v6 @kind object) @signature `Lio/objectbox/BoxStore;.nativeRegisterCustomType:(JIILjava/lang/String;Ljava/lang/Class;Ljava/lang/Class;)V` @AccessFlag STATIC_NATIVE {
+
+  # return;
+}
+procedure `int` `nativeRegisterEntityClass`(`long` v0 , `java.lang.String` v2 @kind object, `java.lang.Class` v3 @kind object) @signature `Lio/objectbox/BoxStore;.nativeRegisterEntityClass:(JLjava/lang/String;Ljava/lang/Class;)I` @AccessFlag STATIC_NATIVE {
+
+  # return;
+}
+procedure `void` `nativeSetDbExceptionListener`(`long` v0 , `io.objectbox.exception.DbExceptionListener` v2 @kind object) @signature `Lio/objectbox/BoxStore;.nativeSetDbExceptionListener:(JLio/objectbox/exception/DbExceptionListener;)V` @AccessFlag STATIC_NATIVE {
+
+  # return;
+}
+procedure `java.lang.String` `nativeStartObjectBrowser`(`long` v0 , `java.lang.String` v2 @kind object, `int` v3 ) @signature `Lio/objectbox/BoxStore;.nativeStartObjectBrowser:(JLjava/lang/String;I)Ljava/lang/String;` @AccessFlag PRIVATE_NATIVE {
+
+  # return;
+}
+procedure `boolean` `nativeStopObjectBrowser`(`long` v0 ) @signature `Lio/objectbox/BoxStore;.nativeStopObjectBrowser:(J)Z` @AccessFlag PRIVATE_NATIVE {
+
+  # return;
+}
+procedure `void` `o`(`io.objectbox.BoxStore` v1 @kind this, `java.util.concurrent.Callable` v2 @kind object, `io.objectbox.TxCallback` v3 @kind object) @signature `Lio/objectbox/BoxStore;.o:(Ljava/util/concurrent/Callable;Lio/objectbox/TxCallback;)V` @AccessFlag PRIVATE_SYNTHETIC {
+    temp;
+    v0;
+
+  #L3df2b8.  v0:= 0I;
+  #L3df2ba.  call temp:= `callInTx`(v1, v2) @signature `Lio/objectbox/BoxStore;.callInTx:(Ljava/util/concurrent/Callable;)Ljava/lang/Object;` @kind virtual;
+  #L3df2c0.  v2:= temp @kind object;
+  #L3df2c2.  if v3 == 0 then goto L3df2da;
+  #L3df2c6.  call `txFinished`(v3, v2, v0) @signature `Lio/objectbox/TxCallback;.txFinished:(Ljava/lang/Object;Ljava/lang/Throwable;)V` @kind interface;
+  #L3df2cc.  goto L3df2da;
+  #L3df2ce.  v2:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3df2d0.  if v3 == 0 then goto L3df2da;
+  #L3df2d4.  call `txFinished`(v3, v0, v2) @signature `Lio/objectbox/TxCallback;.txFinished:(Ljava/lang/Object;Ljava/lang/Throwable;)V` @kind interface;
+  #L3df2da.  return @kind void;
+  catch `java.lang.Throwable` @[L3df2ba..L3df2cc] goto L3df2ce;
+}
+procedure `void` `p`(`java.lang.String` v1 @kind object) @signature `Lio/objectbox/BoxStore;.p:(Ljava/lang/String;)V` @AccessFlag PRIVATE_STATIC_SYNTHETIC {
+    temp;
+    v0;
+
+  #L3df2f8.  v0:= 1I;
+  #L3df2fa.  call temp:= `n`(v1, v0) @signature `Lio/objectbox/BoxStore;.n:(Ljava/lang/String;Z)Z` @kind static;
+  #L3df300.  v1:= 0I;
+  #L3df302.  `@@io.objectbox.BoxStore.B` @type ^`java.lang.Thread` := v1 @kind object;
+  #L3df306.  return @kind void;
+}
+procedure `void` `q`(`io.objectbox.BoxStore` v1 @kind this, `java.lang.Runnable` v2 @kind object, `io.objectbox.TxCallback` v3 @kind object) @signature `Lio/objectbox/BoxStore;.q:(Ljava/lang/Runnable;Lio/objectbox/TxCallback;)V` @AccessFlag PRIVATE_SYNTHETIC {
+    temp;
+    v0;
+
+  #L3df318.  v0:= 0I;
+  #L3df31a.  call `runInTx`(v1, v2) @signature `Lio/objectbox/BoxStore;.runInTx:(Ljava/lang/Runnable;)V` @kind virtual;
+  #L3df320.  if v3 == 0 then goto L3df338;
+  #L3df324.  call `txFinished`(v3, v0, v0) @signature `Lio/objectbox/TxCallback;.txFinished:(Ljava/lang/Object;Ljava/lang/Throwable;)V` @kind interface;
+  #L3df32a.  goto L3df338;
+  #L3df32c.  v2:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3df32e.  if v3 == 0 then goto L3df338;
+  #L3df332.  call `txFinished`(v3, v0, v2) @signature `Lio/objectbox/TxCallback;.txFinished:(Ljava/lang/Object;Ljava/lang/Throwable;)V` @kind interface;
+  #L3df338.  return @kind void;
+  catch `java.lang.Throwable` @[L3df31a..L3df32a] goto L3df32c;
+}
+procedure `void` `s`(`io.objectbox.BoxStore` v2 @kind object) @signature `Lio/objectbox/BoxStore;.s:(Lio/objectbox/BoxStore;)V` @AccessFlag STATIC {
+    temp;
+    v0;
+    v1;
+
+  #L3df530.  v0:= constclass @type ^`io.objectbox.BoxStore` @kind object;
+  #L3df534.  @monitorenter v0
+  #L3df536.  v1:= `@@io.objectbox.BoxStore.z` @type ^`io.objectbox.BoxStore` @kind object;
+  #L3df53a.  if v1 != 0 then goto L3df546;
+  #L3df53e.  `@@io.objectbox.BoxStore.z` @type ^`io.objectbox.BoxStore` := v2 @kind object;
+  #L3df542.  @monitorexit v0
+  #L3df544.  return @kind void;
+  #L3df546.  v2:= new `java.lang.IllegalStateException`;
+  #L3df54a.  v1:= "Default store was already built before. " @kind object;
+  #L3df54e.  call `<init>`(v2, v1) @signature `Ljava/lang/IllegalStateException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L3df554.  throw v2;
+  #L3df556.  v2:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3df558.  @monitorexit v0
+  #L3df55a.  throw v2;
+  catch `java.lang.Throwable` @[L3df536..L3df542] goto L3df556;
+  catch `java.lang.Throwable` @[L3df546..L3df556] goto L3df556;
+}
+procedure `void` `testUnalignedMemoryAccess`() @signature `Lio/objectbox/BoxStore;.testUnalignedMemoryAccess:()V` @AccessFlag PUBLIC_STATIC_NATIVE {
+
+  # return;
+}
+procedure `void` `v`(`java.lang.String` v4 @kind object) @signature `Lio/objectbox/BoxStore;.v:(Ljava/lang/String;)V` @AccessFlag STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L3df6a4.  v0:= `@@io.objectbox.BoxStore.A` @type ^`java.util.Set` @kind object;
+  #L3df6a8.  @monitorenter v0
+  #L3df6aa.  call temp:= `m`(v4) @signature `Lio/objectbox/BoxStore;.m:(Ljava/lang/String;)Z` @kind static;
+  #L3df6b0.  call temp:= `add`(v0, v4) @signature `Ljava/util/Set;.add:(Ljava/lang/Object;)Z` @kind interface;
+  #L3df6b6.  v1:= temp;
+  #L3df6b8.  if v1 == 0 then goto L3df6c0;
+  #L3df6bc.  @monitorexit v0
+  #L3df6be.  return @kind void;
+  #L3df6c0.  v1:= new `io.objectbox.exception.DbException`;
+  #L3df6c4.  v2:= new `java.lang.StringBuilder`;
+  #L3df6c8.  call `<init>`(v2) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L3df6ce.  v3:= "Another BoxStore is still open for this directory: " @kind object;
+  #L3df6d2.  call temp:= `append`(v2, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3df6d8.  call temp:= `append`(v2, v4) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3df6de.  v4:= ". Hint: for most apps it's recommended to keep a BoxStore for the app's life time." @kind object;
+  #L3df6e2.  call temp:= `append`(v2, v4) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3df6e8.  call temp:= `toString`(v2) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L3df6ee.  v4:= temp @kind object;
+  #L3df6f0.  call `<init>`(v1, v4) @signature `Lio/objectbox/exception/DbException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L3df6f6.  throw v1;
+  #L3df6f8.  v4:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3df6fa.  @monitorexit v0
+  #L3df6fc.  throw v4;
+  catch `java.lang.Throwable` @[L3df6aa..L3df6fc] goto L3df6f8;
+}
+procedure `void` `w`(`io.objectbox.BoxStore` v3 @kind this) @signature `Lio/objectbox/BoxStore;.w:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L3df71c.  v0:= v3.`io.objectbox.BoxStore.t` @type ^`int`;
+  #L3df720.  if v0 != 0 then goto L3df726;
+  #L3df724.  return @kind void;
+  #L3df726.  v0:= new `io.objectbox.exception.DbException`;
+  #L3df72a.  v1:= new `java.lang.StringBuilder`;
+  #L3df72e.  call `<init>`(v1) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L3df734.  v2:= "ObjectBrowser is already running at port " @kind object;
+  #L3df738.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3df73e.  v2:= v3.`io.objectbox.BoxStore.t` @type ^`int`;
+  #L3df742.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3df748.  call temp:= `toString`(v1) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L3df74e.  v1:= temp @kind object;
+  #L3df750.  call `<init>`(v0, v1) @signature `Lio/objectbox/exception/DbException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L3df756.  throw v0;
+}
+procedure `io.objectbox.Transaction` `beginReadTx`(`io.objectbox.BoxStore` v6 @kind this) @signature `Lio/objectbox/BoxStore;.beginReadTx:()Lio/objectbox/Transaction;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L3de324.  call `d`(v6) @signature `Lio/objectbox/BoxStore;.d:()V` @kind direct;
+  #L3de32a.  v0:= v6.`io.objectbox.BoxStore.s` @type ^`int`;
+  #L3de32e.  v1:= v6.`io.objectbox.BoxStore.m` @type ^`boolean` @kind boolean;
+  #L3de332.  if v1 == 0 then goto L3de362;
+  #L3de336.  v1:= `@@java.lang.System.out` @type ^`java.io.PrintStream` @kind object;
+  #L3de33a.  v2:= new `java.lang.StringBuilder`;
+  #L3de33e.  call `<init>`(v2) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L3de344.  v3:= "Begin read TX with commit count " @kind object;
+  #L3de348.  call temp:= `append`(v2, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3de34e.  call temp:= `append`(v2, v0) @signature `Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3de354.  call temp:= `toString`(v2) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L3de35a.  v2:= temp @kind object;
+  #L3de35c.  call `println`(v1, v2) @signature `Ljava/io/PrintStream;.println:(Ljava/lang/String;)V` @kind virtual;
+  #L3de362.  v1:= v6.`io.objectbox.BoxStore.c` @type ^`long` @kind wide;
+  #L3de366.  call temp:= `nativeBeginReadTx`(v1) @signature `Lio/objectbox/BoxStore;.nativeBeginReadTx:(J)J` @kind static;
+  #L3de36c.  v1:= temp @kind wide;
+  #L3de36e.  v3:= 0L;
+  #L3de372.  v5:= lcmp(v1, v3);
+  #L3de376.  if v5 == 0 then goto L3de39e;
+  #L3de37a.  v3:= new `io.objectbox.Transaction`;
+  #L3de37e.  call `<init>`(v3, v6, v1, v0) @signature `Lio/objectbox/Transaction;.<init>:(Lio/objectbox/BoxStore;JI)V` @kind direct;
+  #L3de384.  v0:= v6.`io.objectbox.BoxStore.j` @type ^`java.util.Set` @kind object;
+  #L3de388.  @monitorenter v0
+  #L3de38a.  v1:= v6.`io.objectbox.BoxStore.j` @type ^`java.util.Set` @kind object;
+  #L3de38e.  call temp:= `add`(v1, v3) @signature `Ljava/util/Set;.add:(Ljava/lang/Object;)Z` @kind interface;
+  #L3de394.  @monitorexit v0
+  #L3de396.  return v3 @kind object;
+  #L3de398.  v1:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3de39a.  @monitorexit v0
+  #L3de39c.  throw v1;
+  #L3de39e.  v0:= new `io.objectbox.exception.DbException`;
+  #L3de3a2.  v1:= "Could not create native read transaction" @kind object;
+  #L3de3a6.  call `<init>`(v0, v1) @signature `Lio/objectbox/exception/DbException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L3de3ac.  throw v0;
+  catch `java.lang.Throwable` @[L3de38a..L3de39c] goto L3de398;
+}
+procedure `io.objectbox.Transaction` `beginTx`(`io.objectbox.BoxStore` v6 @kind this) @signature `Lio/objectbox/BoxStore;.beginTx:()Lio/objectbox/Transaction;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L3de3cc.  call `d`(v6) @signature `Lio/objectbox/BoxStore;.d:()V` @kind direct;
+  #L3de3d2.  v0:= v6.`io.objectbox.BoxStore.s` @type ^`int`;
+  #L3de3d6.  v1:= v6.`io.objectbox.BoxStore.n` @type ^`boolean` @kind boolean;
+  #L3de3da.  if v1 == 0 then goto L3de40a;
+  #L3de3de.  v1:= `@@java.lang.System.out` @type ^`java.io.PrintStream` @kind object;
+  #L3de3e2.  v2:= new `java.lang.StringBuilder`;
+  #L3de3e6.  call `<init>`(v2) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L3de3ec.  v3:= "Begin TX with commit count " @kind object;
+  #L3de3f0.  call temp:= `append`(v2, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3de3f6.  call temp:= `append`(v2, v0) @signature `Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3de3fc.  call temp:= `toString`(v2) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L3de402.  v2:= temp @kind object;
+  #L3de404.  call `println`(v1, v2) @signature `Ljava/io/PrintStream;.println:(Ljava/lang/String;)V` @kind virtual;
+  #L3de40a.  v1:= v6.`io.objectbox.BoxStore.c` @type ^`long` @kind wide;
+  #L3de40e.  call temp:= `nativeBeginTx`(v1) @signature `Lio/objectbox/BoxStore;.nativeBeginTx:(J)J` @kind static;
+  #L3de414.  v1:= temp @kind wide;
+  #L3de416.  v3:= 0L;
+  #L3de41a.  v5:= lcmp(v1, v3);
+  #L3de41e.  if v5 == 0 then goto L3de446;
+  #L3de422.  v3:= new `io.objectbox.Transaction`;
+  #L3de426.  call `<init>`(v3, v6, v1, v0) @signature `Lio/objectbox/Transaction;.<init>:(Lio/objectbox/BoxStore;JI)V` @kind direct;
+  #L3de42c.  v0:= v6.`io.objectbox.BoxStore.j` @type ^`java.util.Set` @kind object;
+  #L3de430.  @monitorenter v0
+  #L3de432.  v1:= v6.`io.objectbox.BoxStore.j` @type ^`java.util.Set` @kind object;
+  #L3de436.  call temp:= `add`(v1, v3) @signature `Ljava/util/Set;.add:(Ljava/lang/Object;)Z` @kind interface;
+  #L3de43c.  @monitorexit v0
+  #L3de43e.  return v3 @kind object;
+  #L3de440.  v1:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3de442.  @monitorexit v0
+  #L3de444.  throw v1;
+  #L3de446.  v0:= new `io.objectbox.exception.DbException`;
+  #L3de44a.  v1:= "Could not create native transaction" @kind object;
+  #L3de44e.  call `<init>`(v0, v1) @signature `Lio/objectbox/exception/DbException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L3de454.  throw v0;
+  catch `java.lang.Throwable` @[L3de432..L3de444] goto L3de440;
+}
+procedure `io.objectbox.Box` `boxFor`(`io.objectbox.BoxStore` v3 @kind this, `java.lang.Class` v4 @kind object) @signature `Lio/objectbox/BoxStore;.boxFor:(Ljava/lang/Class;)Lio/objectbox/Box;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L3de208.  v0:= v3.`io.objectbox.BoxStore.i` @type ^`java.util.Map` @kind object;
+  #L3de20c.  call temp:= `get`(v0, v4) @signature `Ljava/util/Map;.get:(Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L3de212.  v0:= temp @kind object;
+  #L3de214.  v0:= (`io.objectbox.Box`) v0 @kind object;
+  #L3de218.  if v0 != 0 then goto L3de294;
+  #L3de21c.  v0:= v3.`io.objectbox.BoxStore.d` @type ^`java.util.Map` @kind object;
+  #L3de220.  call temp:= `containsKey`(v0, v4) @signature `Ljava/util/Map;.containsKey:(Ljava/lang/Object;)Z` @kind interface;
+  #L3de226.  v0:= temp;
+  #L3de228.  if v0 == 0 then goto L3de266;
+  #L3de22c.  v0:= v3.`io.objectbox.BoxStore.i` @type ^`java.util.Map` @kind object;
+  #L3de230.  @monitorenter v0
+  #L3de232.  v1:= v3.`io.objectbox.BoxStore.i` @type ^`java.util.Map` @kind object;
+  #L3de236.  call temp:= `get`(v1, v4) @signature `Ljava/util/Map;.get:(Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L3de23c.  v1:= temp @kind object;
+  #L3de23e.  v1:= (`io.objectbox.Box`) v1 @kind object;
+  #L3de242.  if v1 != 0 then goto L3de25a;
+  #L3de246.  v1:= new `io.objectbox.Box`;
+  #L3de24a.  call `<init>`(v1, v3, v4) @signature `Lio/objectbox/Box;.<init>:(Lio/objectbox/BoxStore;Ljava/lang/Class;)V` @kind direct;
+  #L3de250.  v2:= v3.`io.objectbox.BoxStore.i` @type ^`java.util.Map` @kind object;
+  #L3de254.  call temp:= `put`(v2, v4, v1) @signature `Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L3de25a.  @monitorexit v0
+  #L3de25c.  v0:= v1 @kind object;
+  #L3de25e.  goto L3de294;
+  #L3de260.  v4:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3de262.  @monitorexit v0
+  #L3de264.  throw v4;
+  #L3de266.  v0:= new `java.lang.IllegalArgumentException`;
+  #L3de26a.  v1:= new `java.lang.StringBuilder`;
+  #L3de26e.  call `<init>`(v1) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L3de274.  call temp:= `append`(v1, v4) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3de27a.  v4:= " is not a known entity. Please add it and trigger generation again." @kind object;
+  #L3de27e.  call temp:= `append`(v1, v4) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3de284.  call temp:= `toString`(v1) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L3de28a.  v4:= temp @kind object;
+  #L3de28c.  call `<init>`(v0, v4) @signature `Ljava/lang/IllegalArgumentException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L3de292.  throw v0;
+  #L3de294.  return v0 @kind object;
+  catch `java.lang.Throwable` @[L3de232..L3de264] goto L3de260;
+}
+procedure `java.lang.Object` `callInReadTx`(`io.objectbox.BoxStore` v3 @kind this, `java.util.concurrent.Callable` v4 @kind object) @signature `Lio/objectbox/BoxStore;.callInReadTx:(Ljava/util/concurrent/Callable;)Ljava/lang/Object;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L3de548.  v0:= v3.`io.objectbox.BoxStore.p` @type ^`java.lang.ThreadLocal` @kind object;
+  #L3de54c.  call temp:= `get`(v0) @signature `Ljava/lang/ThreadLocal;.get:()Ljava/lang/Object;` @kind virtual;
+  #L3de552.  v0:= temp @kind object;
+  #L3de554.  v0:= (`io.objectbox.Transaction`) v0 @kind object;
+  #L3de558.  v1:= "Callable threw exception" @kind object;
+  #L3de55c.  if v0 != 0 then goto L3de61c;
+  #L3de560.  call temp:= `beginReadTx`(v3) @signature `Lio/objectbox/BoxStore;.beginReadTx:()Lio/objectbox/Transaction;` @kind virtual;
+  #L3de566.  v0:= temp @kind object;
+  #L3de568.  v2:= v3.`io.objectbox.BoxStore.p` @type ^`java.lang.ThreadLocal` @kind object;
+  #L3de56c.  call `set`(v2, v0) @signature `Ljava/lang/ThreadLocal;.set:(Ljava/lang/Object;)V` @kind virtual;
+  #L3de572.  call temp:= `call`(v4) @signature `Ljava/util/concurrent/Callable;.call:()Ljava/lang/Object;` @kind interface;
+  #L3de578.  v4:= temp @kind object;
+  #L3de57a.  v1:= v3.`io.objectbox.BoxStore.p` @type ^`java.lang.ThreadLocal` @kind object;
+  #L3de57e.  call `remove`(v1) @signature `Ljava/lang/ThreadLocal;.remove:()V` @kind virtual;
+  #L3de584.  v1:= v3.`io.objectbox.BoxStore.i` @type ^`java.util.Map` @kind object;
+  #L3de588.  call temp:= `values`(v1) @signature `Ljava/util/Map;.values:()Ljava/util/Collection;` @kind interface;
+  #L3de58e.  v1:= temp @kind object;
+  #L3de590.  call temp:= `iterator`(v1) @signature `Ljava/util/Collection;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L3de596.  v1:= temp @kind object;
+  #L3de598.  call temp:= `hasNext`(v1) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L3de59e.  v2:= temp;
+  #L3de5a0.  if v2 == 0 then goto L3de5b8;
+  #L3de5a4.  call temp:= `next`(v1) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L3de5aa.  v2:= temp @kind object;
+  #L3de5ac.  v2:= (`io.objectbox.Box`) v2 @kind object;
+  #L3de5b0.  call `e`(v2, v0) @signature `Lio/objectbox/Box;.e:(Lio/objectbox/Transaction;)V` @kind virtual;
+  #L3de5b6.  goto L3de598;
+  #L3de5b8.  call `close`(v0) @signature `Lio/objectbox/Transaction;.close:()V` @kind virtual;
+  #L3de5be.  return v4 @kind object;
+  #L3de5c0.  v4:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3de5c2.  goto L3de5d6;
+  #L3de5c4.  v4:= Exception @type ^`java.lang.Exception` @kind object;
+  #L3de5c6.  v2:= new `java.lang.RuntimeException`;
+  #L3de5ca.  call `<init>`(v2, v1, v4) @signature `Ljava/lang/RuntimeException;.<init>:(Ljava/lang/String;Ljava/lang/Throwable;)V` @kind direct;
+  #L3de5d0.  throw v2;
+  #L3de5d2.  v4:= Exception @type ^`java.lang.RuntimeException` @kind object;
+  #L3de5d4.  throw v4;
+  #L3de5d6.  v1:= v3.`io.objectbox.BoxStore.p` @type ^`java.lang.ThreadLocal` @kind object;
+  #L3de5da.  call `remove`(v1) @signature `Ljava/lang/ThreadLocal;.remove:()V` @kind virtual;
+  #L3de5e0.  v1:= v3.`io.objectbox.BoxStore.i` @type ^`java.util.Map` @kind object;
+  #L3de5e4.  call temp:= `values`(v1) @signature `Ljava/util/Map;.values:()Ljava/util/Collection;` @kind interface;
+  #L3de5ea.  v1:= temp @kind object;
+  #L3de5ec.  call temp:= `iterator`(v1) @signature `Ljava/util/Collection;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L3de5f2.  v1:= temp @kind object;
+  #L3de5f4.  call temp:= `hasNext`(v1) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L3de5fa.  v2:= temp;
+  #L3de5fc.  if v2 == 0 then goto L3de614;
+  #L3de600.  call temp:= `next`(v1) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L3de606.  v2:= temp @kind object;
+  #L3de608.  v2:= (`io.objectbox.Box`) v2 @kind object;
+  #L3de60c.  call `e`(v2, v0) @signature `Lio/objectbox/Box;.e:(Lio/objectbox/Transaction;)V` @kind virtual;
+  #L3de612.  goto L3de5f4;
+  #L3de614.  call `close`(v0) @signature `Lio/objectbox/Transaction;.close:()V` @kind virtual;
+  #L3de61a.  throw v4;
+  #L3de61c.  call temp:= `call`(v4) @signature `Ljava/util/concurrent/Callable;.call:()Ljava/lang/Object;` @kind interface;
+  #L3de622.  v4:= temp @kind object;
+  #L3de624.  return v4 @kind object;
+  #L3de626.  v4:= Exception @type ^`java.lang.Exception` @kind object;
+  #L3de628.  v0:= new `java.lang.RuntimeException`;
+  #L3de62c.  call `<init>`(v0, v1, v4) @signature `Ljava/lang/RuntimeException;.<init>:(Ljava/lang/String;Ljava/lang/Throwable;)V` @kind direct;
+  #L3de632.  throw v0;
+  catch `java.lang.RuntimeException` @[L3de572..L3de57a] goto L3de5d2;
+  catch `java.lang.Exception` @[L3de572..L3de57a] goto L3de5c4;
+  catch `java.lang.Throwable` @[L3de572..L3de57a] goto L3de5c0;
+  catch `java.lang.Throwable` @[L3de5c6..L3de5d6] goto L3de5c0;
+  catch `java.lang.Exception` @[L3de61c..L3de624] goto L3de626;
+}
+procedure `java.lang.Object` `callInReadTxWithRetry`(`io.objectbox.BoxStore` v9 @kind this, `java.util.concurrent.Callable` v10 @kind object, `int` v11 , `int` v12 , `boolean` v13 ) @signature `Lio/objectbox/BoxStore;.callInReadTxWithRetry:(Ljava/util/concurrent/Callable;IIZ)Ljava/lang/Object;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+
+  #L3de66c.  v0:= 1I;
+  #L3de66e.  if v11 != v0 then goto L3de67c;
+  #L3de672.  call temp:= `callInReadTx`(v9, v10) @signature `Lio/objectbox/BoxStore;.callInReadTx:(Ljava/util/concurrent/Callable;)Ljava/lang/Object;` @kind virtual;
+  #L3de678.  v10:= temp @kind object;
+  #L3de67a.  return v10 @kind object;
+  #L3de67c.  if v11 < v0 then goto L3de76a;
+  #L3de680.  v1:= (`long`) v12 @kind i2l;
+  #L3de682.  v12:= 0I;
+  #L3de684.  v3:= v12 @kind object;
+  #L3de686.  if v0 > v11 then goto L3de768;
+  #L3de68a.  call temp:= `callInReadTx`(v9, v10) @signature `Lio/objectbox/BoxStore;.callInReadTx:(Ljava/util/concurrent/Callable;)Ljava/lang/Object;` @kind virtual;
+  #L3de690.  v10:= temp @kind object;
+  #L3de692.  return v10 @kind object;
+  #L3de694.  v3:= Exception @type ^`io.objectbox.exception.DbException` @kind object;
+  #L3de696.  call temp:= `diagnose`(v9) @signature `Lio/objectbox/BoxStore;.diagnose:()Ljava/lang/String;` @kind virtual;
+  #L3de69c.  v4:= temp @kind object;
+  #L3de69e.  v5:= new `java.lang.StringBuilder`;
+  #L3de6a2.  call `<init>`(v5) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L3de6a8.  call temp:= `append`(v5, v0) @signature `Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3de6ae.  v6:= " of " @kind object;
+  #L3de6b2.  call temp:= `append`(v5, v6) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3de6b8.  call temp:= `append`(v5, v11) @signature `Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3de6be.  v6:= " attempts of calling a read TX failed:" @kind object;
+  #L3de6c2.  call temp:= `append`(v5, v6) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3de6c8.  call temp:= `toString`(v5) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L3de6ce.  v5:= temp @kind object;
+  #L3de6d0.  if v13 == 0 then goto L3de70a;
+  #L3de6d4.  v6:= `@@java.lang.System.err` @type ^`java.io.PrintStream` @kind object;
+  #L3de6d8.  call `println`(v6, v5) @signature `Ljava/io/PrintStream;.println:(Ljava/lang/String;)V` @kind virtual;
+  #L3de6de.  call `printStackTrace`(v3) @signature `Ljava/lang/RuntimeException;.printStackTrace:()V` @kind virtual;
+  #L3de6e4.  v6:= `@@java.lang.System.err` @type ^`java.io.PrintStream` @kind object;
+  #L3de6e8.  call `println`(v6, v4) @signature `Ljava/io/PrintStream;.println:(Ljava/lang/String;)V` @kind virtual;
+  #L3de6ee.  v6:= `@@java.lang.System.err` @type ^`java.io.PrintStream` @kind object;
+  #L3de6f2.  call `flush`(v6) @signature `Ljava/io/PrintStream;.flush:()V` @kind virtual;
+  #L3de6f8.  call `gc`() @signature `Ljava/lang/System;.gc:()V` @kind static;
+  #L3de6fe.  call `runFinalization`() @signature `Ljava/lang/System;.runFinalization:()V` @kind static;
+  #L3de704.  call temp:= `cleanStaleReadTransactions`(v9) @signature `Lio/objectbox/BoxStore;.cleanStaleReadTransactions:()I` @kind virtual;
+  #L3de70a.  v6:= v9.`io.objectbox.BoxStore.v` @type ^`io.objectbox.TxCallback` @kind object;
+  #L3de70e.  if v6 == 0 then goto L3de74a;
+  #L3de712.  v7:= new `io.objectbox.exception.DbException`;
+  #L3de716.  v8:= new `java.lang.StringBuilder`;
+  #L3de71a.  call `<init>`(v8) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L3de720.  call temp:= `append`(v8, v5) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3de726.  v5:= " \n" @kind object;
+  #L3de72a.  call temp:= `append`(v8, v5) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3de730.  call temp:= `append`(v8, v4) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3de736.  call temp:= `toString`(v8) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L3de73c.  v4:= temp @kind object;
+  #L3de73e.  call `<init>`(v7, v4, v3) @signature `Lio/objectbox/exception/DbException;.<init>:(Ljava/lang/String;Ljava/lang/Throwable;)V` @kind direct;
+  #L3de744.  call `txFinished`(v6, v12, v7) @signature `Lio/objectbox/TxCallback;.txFinished:(Ljava/lang/Object;Ljava/lang/Throwable;)V` @kind interface;
+  #L3de74a.  call `sleep`(v1) @signature `Ljava/lang/Thread;.sleep:(J)V` @kind static;
+  #L3de750.  v4:= 2L;
+  #L3de754.  v1:= v1 * v4 @kind long;
+  #L3de758.  v0:= v0 + 1;
+  #L3de75c.  goto L3de686;
+  #L3de75e.  v10:= Exception @type ^`java.lang.InterruptedException` @kind object;
+  #L3de760.  call `printStackTrace`(v10) @signature `Ljava/lang/InterruptedException;.printStackTrace:()V` @kind virtual;
+  #L3de766.  throw v3;
+  #L3de768.  throw v3;
+  #L3de76a.  v10:= new `java.lang.IllegalArgumentException`;
+  #L3de76e.  v12:= new `java.lang.StringBuilder`;
+  #L3de772.  call `<init>`(v12) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L3de778.  v13:= "Illegal value of attempts: " @kind object;
+  #L3de77c.  call temp:= `append`(v12, v13) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3de782.  call temp:= `append`(v12, v11) @signature `Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3de788.  call temp:= `toString`(v12) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L3de78e.  v11:= temp @kind object;
+  #L3de790.  call `<init>`(v10, v11) @signature `Ljava/lang/IllegalArgumentException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L3de796.  throw v10;
+  catch `io.objectbox.exception.DbException` @[L3de68a..L3de692] goto L3de694;
+  catch `java.lang.InterruptedException` @[L3de74a..L3de750] goto L3de75e;
+}
+procedure `java.lang.Object` `callInTx`(`io.objectbox.BoxStore` v2 @kind this, `java.util.concurrent.Callable` v3 @kind object) @signature `Lio/objectbox/BoxStore;.callInTx:(Ljava/util/concurrent/Callable;)Ljava/lang/Object;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L3de7c4.  v0:= v2.`io.objectbox.BoxStore.p` @type ^`java.lang.ThreadLocal` @kind object;
+  #L3de7c8.  call temp:= `get`(v0) @signature `Ljava/lang/ThreadLocal;.get:()Ljava/lang/Object;` @kind virtual;
+  #L3de7ce.  v0:= temp @kind object;
+  #L3de7d0.  v0:= (`io.objectbox.Transaction`) v0 @kind object;
+  #L3de7d4.  if v0 != 0 then goto L3de81e;
+  #L3de7d8.  call temp:= `beginTx`(v2) @signature `Lio/objectbox/BoxStore;.beginTx:()Lio/objectbox/Transaction;` @kind virtual;
+  #L3de7de.  v0:= temp @kind object;
+  #L3de7e0.  v1:= v2.`io.objectbox.BoxStore.p` @type ^`java.lang.ThreadLocal` @kind object;
+  #L3de7e4.  call `set`(v1, v0) @signature `Ljava/lang/ThreadLocal;.set:(Ljava/lang/Object;)V` @kind virtual;
+  #L3de7ea.  call temp:= `call`(v3) @signature `Ljava/util/concurrent/Callable;.call:()Ljava/lang/Object;` @kind interface;
+  #L3de7f0.  v3:= temp @kind object;
+  #L3de7f2.  call `commit`(v0) @signature `Lio/objectbox/Transaction;.commit:()V` @kind virtual;
+  #L3de7f8.  v1:= v2.`io.objectbox.BoxStore.p` @type ^`java.lang.ThreadLocal` @kind object;
+  #L3de7fc.  call `remove`(v1) @signature `Ljava/lang/ThreadLocal;.remove:()V` @kind virtual;
+  #L3de802.  call `close`(v0) @signature `Lio/objectbox/Transaction;.close:()V` @kind virtual;
+  #L3de808.  return v3 @kind object;
+  #L3de80a.  v3:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3de80c.  v1:= v2.`io.objectbox.BoxStore.p` @type ^`java.lang.ThreadLocal` @kind object;
+  #L3de810.  call `remove`(v1) @signature `Ljava/lang/ThreadLocal;.remove:()V` @kind virtual;
+  #L3de816.  call `close`(v0) @signature `Lio/objectbox/Transaction;.close:()V` @kind virtual;
+  #L3de81c.  throw v3;
+  #L3de81e.  call temp:= `isReadOnly`(v0) @signature `Lio/objectbox/Transaction;.isReadOnly:()Z` @kind virtual;
+  #L3de824.  v0:= temp;
+  #L3de826.  if v0 != 0 then goto L3de834;
+  #L3de82a.  call temp:= `call`(v3) @signature `Ljava/util/concurrent/Callable;.call:()Ljava/lang/Object;` @kind interface;
+  #L3de830.  v3:= temp @kind object;
+  #L3de832.  return v3 @kind object;
+  #L3de834.  v3:= new `java.lang.IllegalStateException`;
+  #L3de838.  v0:= "Cannot start a transaction while a read only transaction is active" @kind object;
+  #L3de83c.  call `<init>`(v3, v0) @signature `Ljava/lang/IllegalStateException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L3de842.  throw v3;
+  catch `java.lang.Throwable` @[L3de7ea..L3de7f8] goto L3de80a;
+}
+procedure `void` `callInTxAsync`(`io.objectbox.BoxStore` v2 @kind this, `java.util.concurrent.Callable` v3 @kind object, `io.objectbox.TxCallback` v4 @kind object) @signature `Lio/objectbox/BoxStore;.callInTxAsync:(Ljava/util/concurrent/Callable;Lio/objectbox/TxCallback;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L3df020.  v0:= v2.`io.objectbox.BoxStore.k` @type ^`java.util.concurrent.ExecutorService` @kind object;
+  #L3df024.  v1:= new `io.objectbox.b`;
+  #L3df028.  call `<init>`(v1, v2, v3, v4) @signature `Lio/objectbox/b;.<init>:(Lio/objectbox/BoxStore;Ljava/util/concurrent/Callable;Lio/objectbox/TxCallback;)V` @kind direct;
+  #L3df02e.  call temp:= `submit`(v0, v1) @signature `Ljava/util/concurrent/ExecutorService;.submit:(Ljava/lang/Runnable;)Ljava/util/concurrent/Future;` @kind interface;
+  #L3df034.  return @kind void;
+}
+procedure `java.lang.Object` `callInTxNoException`(`io.objectbox.BoxStore` v1 @kind this, `java.util.concurrent.Callable` v2 @kind object) @signature `Lio/objectbox/BoxStore;.callInTxNoException:(Ljava/util/concurrent/Callable;)Ljava/lang/Object;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L3de860.  call temp:= `callInTx`(v1, v2) @signature `Lio/objectbox/BoxStore;.callInTx:(Ljava/util/concurrent/Callable;)Ljava/lang/Object;` @kind virtual;
+  #L3de866.  v2:= temp @kind object;
+  #L3de868.  return v2 @kind object;
+  #L3de86a.  v2:= Exception @type ^`java.lang.Exception` @kind object;
+  #L3de86c.  v0:= new `java.lang.RuntimeException`;
+  #L3de870.  call `<init>`(v0, v2) @signature `Ljava/lang/RuntimeException;.<init>:(Ljava/lang/Throwable;)V` @kind direct;
+  #L3de876.  throw v0;
+  catch `java.lang.Exception` @[L3de860..L3de868] goto L3de86a;
+}
+procedure `int` `cleanStaleReadTransactions`(`io.objectbox.BoxStore` v2 @kind this) @signature `Lio/objectbox/BoxStore;.cleanStaleReadTransactions:()I` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L3de0a8.  v0:= v2.`io.objectbox.BoxStore.c` @type ^`long` @kind wide;
+  #L3de0ac.  call temp:= `nativeCleanStaleReadTransactions`(v0) @signature `Lio/objectbox/BoxStore;.nativeCleanStaleReadTransactions:(J)I` @kind static;
+  #L3de0b2.  v0:= temp;
+  #L3de0b4.  return v0;
+}
+procedure `void` `close`(`io.objectbox.BoxStore` v6 @kind this) @signature `Lio/objectbox/BoxStore;.close:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L3df128.  @monitorenter v6
+  #L3df12a.  v0:= v6.`io.objectbox.BoxStore.q` @type ^`boolean` @kind boolean;
+  #L3df12e.  if v0 != 0 then goto L3df1bc;
+  #L3df132.  v1:= v6.`io.objectbox.BoxStore.t` @type ^`int`;
+  #L3df136.  if v1 == 0 then goto L3df14a;
+  #L3df13a.  call temp:= `stopObjectBrowser`(v6) @signature `Lio/objectbox/BoxStore;.stopObjectBrowser:()Z` @kind virtual;
+  #L3df140.  goto L3df14a;
+  #L3df142.  v1:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3df144.  call `printStackTrace`(v1) @signature `Ljava/lang/Throwable;.printStackTrace:()V` @kind virtual;
+  #L3df14a.  v1:= 1I;
+  #L3df14c.  v6.`io.objectbox.BoxStore.q` @type ^`boolean` := v1 @kind boolean;
+  #L3df150.  v1:= v6.`io.objectbox.BoxStore.j` @type ^`java.util.Set` @kind object;
+  #L3df154.  @monitorenter v1
+  #L3df156.  v2:= new `java.util.ArrayList`;
+  #L3df15a.  v3:= v6.`io.objectbox.BoxStore.j` @type ^`java.util.Set` @kind object;
+  #L3df15e.  call `<init>`(v2, v3) @signature `Ljava/util/ArrayList;.<init>:(Ljava/util/Collection;)V` @kind direct;
+  #L3df164.  @monitorexit v1
+  #L3df166.  call temp:= `iterator`(v2) @signature `Ljava/util/List;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L3df16c.  v1:= temp @kind object;
+  #L3df16e.  call temp:= `hasNext`(v1) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L3df174.  v2:= temp;
+  #L3df176.  if v2 == 0 then goto L3df18e;
+  #L3df17a.  call temp:= `next`(v1) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L3df180.  v2:= temp @kind object;
+  #L3df182.  v2:= (`io.objectbox.Transaction`) v2 @kind object;
+  #L3df186.  call `close`(v2) @signature `Lio/objectbox/Transaction;.close:()V` @kind virtual;
+  #L3df18c.  goto L3df16e;
+  #L3df18e.  v1:= v6.`io.objectbox.BoxStore.c` @type ^`long` @kind wide;
+  #L3df192.  v3:= 0L;
+  #L3df196.  v5:= lcmp(v1, v3);
+  #L3df19a.  if v5 == 0 then goto L3df1a4;
+  #L3df19e.  call `nativeDelete`(v1) @signature `Lio/objectbox/BoxStore;.nativeDelete:(J)V` @kind static;
+  #L3df1a4.  v1:= v6.`io.objectbox.BoxStore.k` @type ^`java.util.concurrent.ExecutorService` @kind object;
+  #L3df1a8.  call `shutdown`(v1) @signature `Ljava/util/concurrent/ExecutorService;.shutdown:()V` @kind interface;
+  #L3df1ae.  call `e`(v6) @signature `Lio/objectbox/BoxStore;.e:()V` @kind direct;
+  #L3df1b4.  goto L3df1bc;
+  #L3df1b6.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3df1b8.  @monitorexit v1
+  #L3df1ba.  throw v0;
+  #L3df1bc.  @monitorexit v6
+  #L3df1be.  if v0 != 0 then goto L3df1e2;
+  #L3df1c2.  v0:= `@@io.objectbox.BoxStore.A` @type ^`java.util.Set` @kind object;
+  #L3df1c6.  @monitorenter v0
+  #L3df1c8.  v1:= v6.`io.objectbox.BoxStore.b` @type ^`java.lang.String` @kind object;
+  #L3df1cc.  call temp:= `remove`(v0, v1) @signature `Ljava/util/Set;.remove:(Ljava/lang/Object;)Z` @kind interface;
+  #L3df1d2.  call `notifyAll`(v0) @signature `Ljava/lang/Object;.notifyAll:()V` @kind virtual;
+  #L3df1d8.  @monitorexit v0
+  #L3df1da.  goto L3df1e2;
+  #L3df1dc.  v1:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3df1de.  @monitorexit v0
+  #L3df1e0.  throw v1;
+  #L3df1e2.  return @kind void;
+  #L3df1e4.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3df1e6.  @monitorexit v6
+  #L3df1e8.  throw v0;
+  catch `java.lang.Throwable` @[L3df12a..L3df136] goto L3df1e4;
+  catch `java.lang.Throwable` @[L3df13a..L3df140] goto L3df142;
+  catch `java.lang.Throwable` @[L3df144..L3df156] goto L3df1e4;
+  catch `java.lang.Throwable` @[L3df156..L3df166] goto L3df1b6;
+  catch `java.lang.Throwable` @[L3df166..L3df1b4] goto L3df1e4;
+  catch `java.lang.Throwable` @[L3df1b8..L3df1ba] goto L3df1b6;
+  catch `java.lang.Throwable` @[L3df1ba..L3df1be] goto L3df1e4;
+  catch `java.lang.Throwable` @[L3df1c8..L3df1e0] goto L3df1dc;
+  catch `java.lang.Throwable` @[L3df1e6..L3df1e8] goto L3df1e4;
+}
+procedure `void` `closeThreadResources`(`io.objectbox.BoxStore` v2 @kind this) @signature `Lio/objectbox/BoxStore;.closeThreadResources:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L3df250.  v0:= v2.`io.objectbox.BoxStore.i` @type ^`java.util.Map` @kind object;
+  #L3df254.  call temp:= `values`(v0) @signature `Ljava/util/Map;.values:()Ljava/util/Collection;` @kind interface;
+  #L3df25a.  v0:= temp @kind object;
+  #L3df25c.  call temp:= `iterator`(v0) @signature `Ljava/util/Collection;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L3df262.  v0:= temp @kind object;
+  #L3df264.  call temp:= `hasNext`(v0) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L3df26a.  v1:= temp;
+  #L3df26c.  if v1 == 0 then goto L3df284;
+  #L3df270.  call temp:= `next`(v0) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L3df276.  v1:= temp @kind object;
+  #L3df278.  v1:= (`io.objectbox.Box`) v1 @kind object;
+  #L3df27c.  call `closeThreadResources`(v1) @signature `Lio/objectbox/Box;.closeThreadResources:()V` @kind virtual;
+  #L3df282.  goto L3df264;
+  #L3df284.  return @kind void;
+}
+procedure `boolean` `deleteAllFiles`(`io.objectbox.BoxStore` v2 @kind this) @signature `Lio/objectbox/BoxStore;.deleteAllFiles:()Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L3ddc74.  v0:= v2.`io.objectbox.BoxStore.q` @type ^`boolean` @kind boolean;
+  #L3ddc78.  if v0 == 0 then goto L3ddc8a;
+  #L3ddc7c.  v0:= v2.`io.objectbox.BoxStore.a` @type ^`java.io.File` @kind object;
+  #L3ddc80.  call temp:= `deleteAllFiles`(v0) @signature `Lio/objectbox/BoxStore;.deleteAllFiles:(Ljava/io/File;)Z` @kind static;
+  #L3ddc86.  v0:= temp;
+  #L3ddc88.  return v0;
+  #L3ddc8a.  v0:= new `java.lang.IllegalStateException`;
+  #L3ddc8e.  v1:= "Store must be closed" @kind object;
+  #L3ddc92.  call `<init>`(v0, v1) @signature `Ljava/lang/IllegalStateException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L3ddc98.  throw v0;
+}
+procedure `java.lang.String` `diagnose`(`io.objectbox.BoxStore` v2 @kind this) @signature `Lio/objectbox/BoxStore;.diagnose:()Ljava/lang/String;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L3de8f8.  v0:= v2.`io.objectbox.BoxStore.c` @type ^`long` @kind wide;
+  #L3de8fc.  call temp:= `nativeDiagnose`(v0) @signature `Lio/objectbox/BoxStore;.nativeDiagnose:(J)Ljava/lang/String;` @kind static;
+  #L3de902.  v0:= temp @kind object;
+  #L3de904.  return v0 @kind object;
+}
+procedure `int`[] `f`(`io.objectbox.BoxStore` v1 @kind this) @signature `Lio/objectbox/BoxStore;.f:()[I` @AccessFlag  {
+    temp;
+    v0;
+
+  #L3de1f0.  v0:= v1.`io.objectbox.BoxStore.h` @type ^`int`[] @kind object;
+  #L3de1f4.  return v0 @kind object;
+}
+procedure `void` `finalize`(`io.objectbox.BoxStore` v0 @kind this) @signature `Lio/objectbox/BoxStore;.finalize:()V` @AccessFlag PROTECTED {
+    temp;
+
+  #L3df298.  call `close`(v0) @signature `Lio/objectbox/BoxStore;.close:()V` @kind virtual;
+  #L3df29e.  call `finalize`(v0) @signature `Ljava/lang/Object;.finalize:()V` @kind super;
+  #L3df2a4.  return @kind void;
+}
+procedure `java.util.Collection` `getAllEntityClasses`(`io.objectbox.BoxStore` v1 @kind this) @signature `Lio/objectbox/BoxStore;.getAllEntityClasses:()Ljava/util/Collection;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L3deb68.  v0:= v1.`io.objectbox.BoxStore.d` @type ^`java.util.Map` @kind object;
+  #L3deb6c.  call temp:= `keySet`(v0) @signature `Ljava/util/Map;.keySet:()Ljava/util/Set;` @kind interface;
+  #L3deb72.  v0:= temp @kind object;
+  #L3deb74.  return v0 @kind object;
+}
+procedure `int` `getEntityTypeIdOrThrow`(`io.objectbox.BoxStore` v3 @kind this, `java.lang.Class` v4 @kind object) @signature `Lio/objectbox/BoxStore;.getEntityTypeIdOrThrow:(Ljava/lang/Class;)I` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L3de0c8.  v0:= v3.`io.objectbox.BoxStore.e` @type ^`java.util.Map` @kind object;
+  #L3de0cc.  call temp:= `get`(v0, v4) @signature `Ljava/util/Map;.get:(Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L3de0d2.  v0:= temp @kind object;
+  #L3de0d4.  v0:= (`java.lang.Integer`) v0 @kind object;
+  #L3de0d8.  if v0 == 0 then goto L3de0e6;
+  #L3de0dc.  call temp:= `intValue`(v0) @signature `Ljava/lang/Integer;.intValue:()I` @kind virtual;
+  #L3de0e2.  v4:= temp;
+  #L3de0e4.  return v4;
+  #L3de0e6.  v0:= new `io.objectbox.exception.DbSchemaException`;
+  #L3de0ea.  v1:= new `java.lang.StringBuilder`;
+  #L3de0ee.  call `<init>`(v1) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L3de0f4.  v2:= "No entity registered for " @kind object;
+  #L3de0f8.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3de0fe.  call temp:= `append`(v1, v4) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3de104.  call temp:= `toString`(v1) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L3de10a.  v4:= temp @kind object;
+  #L3de10c.  call `<init>`(v0, v4) @signature `Lio/objectbox/exception/DbSchemaException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L3de112.  throw v0;
+}
+procedure `long` `getNativeStore`(`io.objectbox.BoxStore` v2 @kind this) @signature `Lio/objectbox/BoxStore;.getNativeStore:()J` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L3debc0.  v0:= v2.`io.objectbox.BoxStore.q` @type ^`boolean` @kind boolean;
+  #L3debc4.  if v0 != 0 then goto L3debce;
+  #L3debc8.  v0:= v2.`io.objectbox.BoxStore.c` @type ^`long` @kind wide;
+  #L3debcc.  return v0 @kind wide;
+  #L3debce.  v0:= new `java.lang.IllegalStateException`;
+  #L3debd2.  v1:= "Store must still be open" @kind object;
+  #L3debd6.  call `<init>`(v0, v1) @signature `Ljava/lang/IllegalStateException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L3debdc.  throw v0;
+}
+procedure `int` `getObjectBrowserPort`(`io.objectbox.BoxStore` v1 @kind this) @signature `Lio/objectbox/BoxStore;.getObjectBrowserPort:()I` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L3de124.  v0:= v1.`io.objectbox.BoxStore.t` @type ^`int`;
+  #L3de128.  return v0;
+}
+procedure `io.objectbox.sync.SyncClient` `getSyncClient`(`io.objectbox.BoxStore` v1 @kind this) @signature `Lio/objectbox/BoxStore;.getSyncClient:()Lio/objectbox/sync/SyncClient;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L3de4d8.  v0:= v1.`io.objectbox.BoxStore.w` @type ^`io.objectbox.sync.SyncClient` @kind object;
+  #L3de4dc.  return v0 @kind object;
+}
+procedure `java.lang.String` `h`(`io.objectbox.BoxStore` v1 @kind this, `java.lang.Class` v2 @kind object) @signature `Lio/objectbox/BoxStore;.h:(Ljava/lang/Class;)Ljava/lang/String;` @AccessFlag  {
+    temp;
+    v0;
+
+  #L3de9e8.  v0:= v1.`io.objectbox.BoxStore.d` @type ^`java.util.Map` @kind object;
+  #L3de9ec.  call temp:= `get`(v0, v2) @signature `Ljava/util/Map;.get:(Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L3de9f2.  v2:= temp @kind object;
+  #L3de9f4.  v2:= (`java.lang.String`) v2 @kind object;
+  #L3de9f8.  return v2 @kind object;
+}
+procedure `java.lang.Class` `i`(`io.objectbox.BoxStore` v3 @kind this, `int` v4 ) @signature `Lio/objectbox/BoxStore;.i:(I)Ljava/lang/Class;` @AccessFlag  {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L3de4f0.  v0:= v3.`io.objectbox.BoxStore.g` @type ^`org.greenrobot.essentials.collections.LongHashMap` @kind object;
+  #L3de4f4.  v1:= (`long`) v4 @kind i2l;
+  #L3de4f6.  call temp:= `get`(v0, v1) @signature `Lorg/greenrobot/essentials/collections/LongHashMap;.get:(J)Ljava/lang/Object;` @kind virtual;
+  #L3de4fc.  v0:= temp @kind object;
+  #L3de4fe.  v0:= (`java.lang.Class`) v0 @kind object;
+  #L3de502.  if v0 == 0 then goto L3de508;
+  #L3de506.  return v0 @kind object;
+  #L3de508.  v0:= new `io.objectbox.exception.DbSchemaException`;
+  #L3de50c.  v1:= new `java.lang.StringBuilder`;
+  #L3de510.  call `<init>`(v1) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L3de516.  v2:= "No entity registered for type ID " @kind object;
+  #L3de51a.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3de520.  call temp:= `append`(v1, v4) @signature `Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3de526.  call temp:= `toString`(v1) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L3de52c.  v4:= temp @kind object;
+  #L3de52e.  call `<init>`(v0, v4) @signature `Lio/objectbox/exception/DbSchemaException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L3de534.  throw v0;
+}
+procedure `io.objectbox.TxCallback` `internalFailedReadTxAttemptCallback`(`io.objectbox.BoxStore` v1 @kind this) @signature `Lio/objectbox/BoxStore;.internalFailedReadTxAttemptCallback:()Lio/objectbox/TxCallback;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L3de474.  v0:= v1.`io.objectbox.BoxStore.v` @type ^`io.objectbox.TxCallback` @kind object;
+  #L3de478.  return v0 @kind object;
+}
+procedure `int` `internalQueryAttempts`(`io.objectbox.BoxStore` v1 @kind this) @signature `Lio/objectbox/BoxStore;.internalQueryAttempts:()I` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L3de1d8.  v0:= v1.`io.objectbox.BoxStore.u` @type ^`int`;
+  #L3de1dc.  return v0;
+}
+procedure `java.util.concurrent.Future` `internalScheduleThread`(`io.objectbox.BoxStore` v1 @kind this, `java.lang.Runnable` v2 @kind object) @signature `Lio/objectbox/BoxStore;.internalScheduleThread:(Ljava/lang/Runnable;)Ljava/util/concurrent/Future;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L3deba0.  v0:= v1.`io.objectbox.BoxStore.k` @type ^`java.util.concurrent.ExecutorService` @kind object;
+  #L3deba4.  call temp:= `submit`(v0, v2) @signature `Ljava/util/concurrent/ExecutorService;.submit:(Ljava/lang/Runnable;)Ljava/util/concurrent/Future;` @kind interface;
+  #L3debaa.  v2:= temp @kind object;
+  #L3debac.  return v2 @kind object;
+}
+procedure `java.util.concurrent.ExecutorService` `internalThreadPool`(`io.objectbox.BoxStore` v1 @kind this) @signature `Lio/objectbox/BoxStore;.internalThreadPool:()Ljava/util/concurrent/ExecutorService;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L3deb88.  v0:= v1.`io.objectbox.BoxStore.k` @type ^`java.util.concurrent.ExecutorService` @kind object;
+  #L3deb8c.  return v0 @kind object;
+}
+procedure `boolean` `isClosed`(`io.objectbox.BoxStore` v1 @kind this) @signature `Lio/objectbox/BoxStore;.isClosed:()Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L3ddd80.  v0:= v1.`io.objectbox.BoxStore.q` @type ^`boolean` @kind boolean;
+  #L3ddd84.  return v0;
+}
+procedure `boolean` `isDebugRelations`(`io.objectbox.BoxStore` v1 @kind this) @signature `Lio/objectbox/BoxStore;.isDebugRelations:()Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L3dde14.  v0:= v1.`io.objectbox.BoxStore.o` @type ^`boolean` @kind boolean;
+  #L3dde18.  return v0;
+}
+procedure `boolean` `isObjectBrowserRunning`(`io.objectbox.BoxStore` v1 @kind this) @signature `Lio/objectbox/BoxStore;.isObjectBrowserRunning:()Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L3ddfc0.  v0:= v1.`io.objectbox.BoxStore.t` @type ^`int`;
+  #L3ddfc4.  if v0 == 0 then goto L3ddfcc;
+  #L3ddfc8.  v0:= 1I;
+  #L3ddfca.  goto L3ddfce;
+  #L3ddfcc.  v0:= 0I;
+  #L3ddfce.  return v0;
+}
+procedure `boolean` `isReadOnly`(`io.objectbox.BoxStore` v2 @kind this) @signature `Lio/objectbox/BoxStore;.isReadOnly:()Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L3ddfe0.  v0:= v2.`io.objectbox.BoxStore.c` @type ^`long` @kind wide;
+  #L3ddfe4.  call temp:= `nativeIsReadOnly`(v0) @signature `Lio/objectbox/BoxStore;.nativeIsReadOnly:(J)Z` @kind static;
+  #L3ddfea.  v0:= temp;
+  #L3ddfec.  return v0;
+}
+procedure `io.objectbox.EntityInfo` `j`(`io.objectbox.BoxStore` v1 @kind this, `java.lang.Class` v2 @kind object) @signature `Lio/objectbox/BoxStore;.j:(Ljava/lang/Class;)Lio/objectbox/EntityInfo;` @AccessFlag  {
+    temp;
+    v0;
+
+  #L3de300.  v0:= v1.`io.objectbox.BoxStore.f` @type ^`java.util.Map` @kind object;
+  #L3de304.  call temp:= `get`(v0, v2) @signature `Ljava/util/Map;.get:(Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L3de30a.  v2:= temp @kind object;
+  #L3de30c.  v2:= (`io.objectbox.EntityInfo`) v2 @kind object;
+  #L3de310.  return v2 @kind object;
+}
+procedure `long` `l`(`io.objectbox.BoxStore` v2 @kind this) @signature `Lio/objectbox/BoxStore;.l:()J` @AccessFlag  {
+    temp;
+    v0;
+    v1;
+
+  #L3debf0.  v0:= v2.`io.objectbox.BoxStore.c` @type ^`long` @kind wide;
+  #L3debf4.  return v0 @kind wide;
+}
+procedure `long` `nativePanicModeRemoveAllObjects`(`long` v0 , `int` v2 ) @signature `Lio/objectbox/BoxStore;.nativePanicModeRemoveAllObjects:(JI)J` @AccessFlag NATIVE {
+
+  # return;
+}
+procedure `long` `nativeSizeOnDisk`(`long` v0 ) @signature `Lio/objectbox/BoxStore;.nativeSizeOnDisk:(J)J` @AccessFlag NATIVE {
+
+  # return;
+}
+procedure `long` `nativeValidate`(`long` v0 , `long` v2 , `boolean` v4 ) @signature `Lio/objectbox/BoxStore;.nativeValidate:(JJZ)J` @AccessFlag NATIVE {
+
+  # return;
+}
+procedure `long` `r`(`io.objectbox.BoxStore` v2 @kind this, `int` v3 ) @signature `Lio/objectbox/BoxStore;.r:(I)J` @AccessFlag  {
+    temp;
+    v0;
+    v1;
+
+  #L3dec08.  v0:= v2.`io.objectbox.BoxStore.c` @type ^`long` @kind wide;
+  #L3dec0c.  call temp:= `nativePanicModeRemoveAllObjects`(v2, v0, v3) @signature `Lio/objectbox/BoxStore;.nativePanicModeRemoveAllObjects:(JI)J` @kind virtual;
+  #L3dec12.  v0:= temp @kind wide;
+  #L3dec14.  return v0 @kind wide;
+}
+procedure `void` `removeAllObjects`(`io.objectbox.BoxStore` v2 @kind this) @signature `Lio/objectbox/BoxStore;.removeAllObjects:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L3df358.  v0:= v2.`io.objectbox.BoxStore.c` @type ^`long` @kind wide;
+  #L3df35c.  call `nativeDropAllData`(v0) @signature `Lio/objectbox/BoxStore;.nativeDropAllData:(J)V` @kind static;
+  #L3df362.  return @kind void;
+}
+procedure `void` `runInReadTx`(`io.objectbox.BoxStore` v3 @kind this, `java.lang.Runnable` v4 @kind object) @signature `Lio/objectbox/BoxStore;.runInReadTx:(Ljava/lang/Runnable;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L3df374.  v0:= v3.`io.objectbox.BoxStore.p` @type ^`java.lang.ThreadLocal` @kind object;
+  #L3df378.  call temp:= `get`(v0) @signature `Ljava/lang/ThreadLocal;.get:()Ljava/lang/Object;` @kind virtual;
+  #L3df37e.  v0:= temp @kind object;
+  #L3df380.  v0:= (`io.objectbox.Transaction`) v0 @kind object;
+  #L3df384.  if v0 != 0 then goto L3df42e;
+  #L3df388.  call temp:= `beginReadTx`(v3) @signature `Lio/objectbox/BoxStore;.beginReadTx:()Lio/objectbox/Transaction;` @kind virtual;
+  #L3df38e.  v0:= temp @kind object;
+  #L3df390.  v1:= v3.`io.objectbox.BoxStore.p` @type ^`java.lang.ThreadLocal` @kind object;
+  #L3df394.  call `set`(v1, v0) @signature `Ljava/lang/ThreadLocal;.set:(Ljava/lang/Object;)V` @kind virtual;
+  #L3df39a.  call `run`(v4) @signature `Ljava/lang/Runnable;.run:()V` @kind interface;
+  #L3df3a0.  v4:= v3.`io.objectbox.BoxStore.p` @type ^`java.lang.ThreadLocal` @kind object;
+  #L3df3a4.  call `remove`(v4) @signature `Ljava/lang/ThreadLocal;.remove:()V` @kind virtual;
+  #L3df3aa.  v4:= v3.`io.objectbox.BoxStore.i` @type ^`java.util.Map` @kind object;
+  #L3df3ae.  call temp:= `values`(v4) @signature `Ljava/util/Map;.values:()Ljava/util/Collection;` @kind interface;
+  #L3df3b4.  v4:= temp @kind object;
+  #L3df3b6.  call temp:= `iterator`(v4) @signature `Ljava/util/Collection;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L3df3bc.  v4:= temp @kind object;
+  #L3df3be.  call temp:= `hasNext`(v4) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L3df3c4.  v1:= temp;
+  #L3df3c6.  if v1 == 0 then goto L3df3de;
+  #L3df3ca.  call temp:= `next`(v4) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L3df3d0.  v1:= temp @kind object;
+  #L3df3d2.  v1:= (`io.objectbox.Box`) v1 @kind object;
+  #L3df3d6.  call `e`(v1, v0) @signature `Lio/objectbox/Box;.e:(Lio/objectbox/Transaction;)V` @kind virtual;
+  #L3df3dc.  goto L3df3be;
+  #L3df3de.  call `close`(v0) @signature `Lio/objectbox/Transaction;.close:()V` @kind virtual;
+  #L3df3e4.  goto L3df434;
+  #L3df3e6.  v4:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3df3e8.  v1:= v3.`io.objectbox.BoxStore.p` @type ^`java.lang.ThreadLocal` @kind object;
+  #L3df3ec.  call `remove`(v1) @signature `Ljava/lang/ThreadLocal;.remove:()V` @kind virtual;
+  #L3df3f2.  v1:= v3.`io.objectbox.BoxStore.i` @type ^`java.util.Map` @kind object;
+  #L3df3f6.  call temp:= `values`(v1) @signature `Ljava/util/Map;.values:()Ljava/util/Collection;` @kind interface;
+  #L3df3fc.  v1:= temp @kind object;
+  #L3df3fe.  call temp:= `iterator`(v1) @signature `Ljava/util/Collection;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L3df404.  v1:= temp @kind object;
+  #L3df406.  call temp:= `hasNext`(v1) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L3df40c.  v2:= temp;
+  #L3df40e.  if v2 == 0 then goto L3df426;
+  #L3df412.  call temp:= `next`(v1) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L3df418.  v2:= temp @kind object;
+  #L3df41a.  v2:= (`io.objectbox.Box`) v2 @kind object;
+  #L3df41e.  call `e`(v2, v0) @signature `Lio/objectbox/Box;.e:(Lio/objectbox/Transaction;)V` @kind virtual;
+  #L3df424.  goto L3df406;
+  #L3df426.  call `close`(v0) @signature `Lio/objectbox/Transaction;.close:()V` @kind virtual;
+  #L3df42c.  throw v4;
+  #L3df42e.  call `run`(v4) @signature `Ljava/lang/Runnable;.run:()V` @kind interface;
+  #L3df434.  return @kind void;
+  catch `java.lang.Throwable` @[L3df39a..L3df3a0] goto L3df3e6;
+}
+procedure `void` `runInTx`(`io.objectbox.BoxStore` v2 @kind this, `java.lang.Runnable` v3 @kind object) @signature `Lio/objectbox/BoxStore;.runInTx:(Ljava/lang/Runnable;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L3df454.  v0:= v2.`io.objectbox.BoxStore.p` @type ^`java.lang.ThreadLocal` @kind object;
+  #L3df458.  call temp:= `get`(v0) @signature `Ljava/lang/ThreadLocal;.get:()Ljava/lang/Object;` @kind virtual;
+  #L3df45e.  v0:= temp @kind object;
+  #L3df460.  v0:= (`io.objectbox.Transaction`) v0 @kind object;
+  #L3df464.  if v0 != 0 then goto L3df4ac;
+  #L3df468.  call temp:= `beginTx`(v2) @signature `Lio/objectbox/BoxStore;.beginTx:()Lio/objectbox/Transaction;` @kind virtual;
+  #L3df46e.  v0:= temp @kind object;
+  #L3df470.  v1:= v2.`io.objectbox.BoxStore.p` @type ^`java.lang.ThreadLocal` @kind object;
+  #L3df474.  call `set`(v1, v0) @signature `Ljava/lang/ThreadLocal;.set:(Ljava/lang/Object;)V` @kind virtual;
+  #L3df47a.  call `run`(v3) @signature `Ljava/lang/Runnable;.run:()V` @kind interface;
+  #L3df480.  call `commit`(v0) @signature `Lio/objectbox/Transaction;.commit:()V` @kind virtual;
+  #L3df486.  v3:= v2.`io.objectbox.BoxStore.p` @type ^`java.lang.ThreadLocal` @kind object;
+  #L3df48a.  call `remove`(v3) @signature `Ljava/lang/ThreadLocal;.remove:()V` @kind virtual;
+  #L3df490.  call `close`(v0) @signature `Lio/objectbox/Transaction;.close:()V` @kind virtual;
+  #L3df496.  goto L3df4be;
+  #L3df498.  v3:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3df49a.  v1:= v2.`io.objectbox.BoxStore.p` @type ^`java.lang.ThreadLocal` @kind object;
+  #L3df49e.  call `remove`(v1) @signature `Ljava/lang/ThreadLocal;.remove:()V` @kind virtual;
+  #L3df4a4.  call `close`(v0) @signature `Lio/objectbox/Transaction;.close:()V` @kind virtual;
+  #L3df4aa.  throw v3;
+  #L3df4ac.  call temp:= `isReadOnly`(v0) @signature `Lio/objectbox/Transaction;.isReadOnly:()Z` @kind virtual;
+  #L3df4b2.  v0:= temp;
+  #L3df4b4.  if v0 != 0 then goto L3df4c0;
+  #L3df4b8.  call `run`(v3) @signature `Ljava/lang/Runnable;.run:()V` @kind interface;
+  #L3df4be.  return @kind void;
+  #L3df4c0.  v3:= new `java.lang.IllegalStateException`;
+  #L3df4c4.  v0:= "Cannot start a transaction while a read only transaction is active" @kind object;
+  #L3df4c8.  call `<init>`(v3, v0) @signature `Ljava/lang/IllegalStateException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L3df4ce.  throw v3;
+  catch `java.lang.Throwable` @[L3df47a..L3df486] goto L3df498;
+}
+procedure `void` `runInTxAsync`(`io.objectbox.BoxStore` v2 @kind this, `java.lang.Runnable` v3 @kind object, `io.objectbox.TxCallback` v4 @kind object) @signature `Lio/objectbox/BoxStore;.runInTxAsync:(Ljava/lang/Runnable;Lio/objectbox/TxCallback;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L3df4ec.  v0:= v2.`io.objectbox.BoxStore.k` @type ^`java.util.concurrent.ExecutorService` @kind object;
+  #L3df4f0.  v1:= new `io.objectbox.a`;
+  #L3df4f4.  call `<init>`(v1, v2, v3, v4) @signature `Lio/objectbox/a;.<init>:(Lio/objectbox/BoxStore;Ljava/lang/Runnable;Lio/objectbox/TxCallback;)V` @kind direct;
+  #L3df4fa.  call temp:= `submit`(v0, v1) @signature `Ljava/util/concurrent/ExecutorService;.submit:(Ljava/lang/Runnable;)Ljava/util/concurrent/Future;` @kind interface;
+  #L3df500.  return @kind void;
+}
+procedure `void` `setDbExceptionListener`(`io.objectbox.BoxStore` v2 @kind this, `io.objectbox.exception.DbExceptionListener` v3 @kind object) @signature `Lio/objectbox/BoxStore;.setDbExceptionListener:(Lio/objectbox/exception/DbExceptionListener;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L3df514.  v0:= v2.`io.objectbox.BoxStore.c` @type ^`long` @kind wide;
+  #L3df518.  call `nativeSetDbExceptionListener`(v0, v3) @signature `Lio/objectbox/BoxStore;.nativeSetDbExceptionListener:(JLio/objectbox/exception/DbExceptionListener;)V` @kind static;
+  #L3df51e.  return @kind void;
+}
+procedure `long` `sizeOnDisk`(`io.objectbox.BoxStore` v2 @kind this) @signature `Lio/objectbox/BoxStore;.sizeOnDisk:()J` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L3dec28.  call `d`(v2) @signature `Lio/objectbox/BoxStore;.d:()V` @kind direct;
+  #L3dec2e.  v0:= v2.`io.objectbox.BoxStore.c` @type ^`long` @kind wide;
+  #L3dec32.  call temp:= `nativeSizeOnDisk`(v2, v0) @signature `Lio/objectbox/BoxStore;.nativeSizeOnDisk:(J)J` @kind virtual;
+  #L3dec38.  v0:= temp @kind wide;
+  #L3dec3a.  return v0 @kind wide;
+}
+procedure `java.lang.String` `startObjectBrowser`(`io.objectbox.BoxStore` v4 @kind this) @signature `Lio/objectbox/BoxStore;.startObjectBrowser:()Ljava/lang/String;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L3dea44.  call `w`(v4) @signature `Lio/objectbox/BoxStore;.w:()V` @kind direct;
+  #L3dea4a.  v0:= 8090I;
+  #L3dea4e.  v1:= 8100I;
+  #L3dea52.  if v0 >= v1 then goto L3dea92;
+  #L3dea56.  call temp:= `startObjectBrowser`(v4, v0) @signature `Lio/objectbox/BoxStore;.startObjectBrowser:(I)Ljava/lang/String;` @kind virtual;
+  #L3dea5c.  v1:= temp @kind object;
+  #L3dea5e.  if v1 == 0 then goto L3dea8a;
+  #L3dea62.  return v1 @kind object;
+  #L3dea64.  v1:= Exception @type ^`io.objectbox.exception.DbException` @kind object;
+  #L3dea66.  call temp:= `getMessage`(v1) @signature `Ljava/lang/RuntimeException;.getMessage:()Ljava/lang/String;` @kind virtual;
+  #L3dea6c.  v2:= temp @kind object;
+  #L3dea6e.  if v2 == 0 then goto L3dea90;
+  #L3dea72.  call temp:= `getMessage`(v1) @signature `Ljava/lang/RuntimeException;.getMessage:()Ljava/lang/String;` @kind virtual;
+  #L3dea78.  v2:= temp @kind object;
+  #L3dea7a.  v3:= "port" @kind object;
+  #L3dea7e.  call temp:= `contains`(v2, v3) @signature `Ljava/lang/String;.contains:(Ljava/lang/CharSequence;)Z` @kind virtual;
+  #L3dea84.  v2:= temp;
+  #L3dea86.  if v2 == 0 then goto L3dea90;
+  #L3dea8a.  v0:= v0 + 1;
+  #L3dea8e.  goto L3dea4e;
+  #L3dea90.  throw v1;
+  #L3dea92.  v0:= 0I;
+  #L3dea94.  return v0 @kind object;
+  catch `io.objectbox.exception.DbException` @[L3dea56..L3dea5e] goto L3dea64;
+}
+procedure `java.lang.String` `startObjectBrowser`(`io.objectbox.BoxStore` v3 @kind this, `int` v4 ) @signature `Lio/objectbox/BoxStore;.startObjectBrowser:(I)Ljava/lang/String;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L3deab8.  call `w`(v3) @signature `Lio/objectbox/BoxStore;.w:()V` @kind direct;
+  #L3deabe.  v0:= v3.`io.objectbox.BoxStore.c` @type ^`long` @kind wide;
+  #L3deac2.  v2:= 0I;
+  #L3deac4.  call temp:= `nativeStartObjectBrowser`(v3, v0, v2, v4) @signature `Lio/objectbox/BoxStore;.nativeStartObjectBrowser:(JLjava/lang/String;I)Ljava/lang/String;` @kind direct;
+  #L3deaca.  v0:= temp @kind object;
+  #L3deacc.  if v0 == 0 then goto L3dead4;
+  #L3dead0.  v3.`io.objectbox.BoxStore.t` @type ^`int` := v4;
+  #L3dead4.  return v0 @kind object;
+}
+procedure `java.lang.String` `startObjectBrowser`(`io.objectbox.BoxStore` v4 @kind this, `java.lang.String` v5 @kind object) @signature `Lio/objectbox/BoxStore;.startObjectBrowser:(Ljava/lang/String;)Ljava/lang/String;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L3deae8.  call `w`(v4) @signature `Lio/objectbox/BoxStore;.w:()V` @kind direct;
+  #L3deaee.  v0:= new `java.net.URL`;
+  #L3deaf2.  call `<init>`(v0, v5) @signature `Ljava/net/URL;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L3deaf8.  call temp:= `getPort`(v0) @signature `Ljava/net/URL;.getPort:()I` @kind virtual;
+  #L3deafe.  v0:= temp;
+  #L3deb00.  v1:= v4.`io.objectbox.BoxStore.c` @type ^`long` @kind wide;
+  #L3deb04.  v3:= 0I;
+  #L3deb06.  call temp:= `nativeStartObjectBrowser`(v4, v1, v5, v3) @signature `Lio/objectbox/BoxStore;.nativeStartObjectBrowser:(JLjava/lang/String;I)Ljava/lang/String;` @kind direct;
+  #L3deb0c.  v5:= temp @kind object;
+  #L3deb0e.  if v5 == 0 then goto L3deb16;
+  #L3deb12.  v4.`io.objectbox.BoxStore.t` @type ^`int` := v0;
+  #L3deb16.  return v5 @kind object;
+  #L3deb18.  v0:= Exception @type ^`java.net.MalformedURLException` @kind object;
+  #L3deb1a.  v1:= new `java.lang.RuntimeException`;
+  #L3deb1e.  v2:= new `java.lang.StringBuilder`;
+  #L3deb22.  call `<init>`(v2) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L3deb28.  v3:= "Can not start Object Browser at " @kind object;
+  #L3deb2c.  call temp:= `append`(v2, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3deb32.  call temp:= `append`(v2, v5) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3deb38.  call temp:= `toString`(v2) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L3deb3e.  v5:= temp @kind object;
+  #L3deb40.  call `<init>`(v1, v5, v0) @signature `Ljava/lang/RuntimeException;.<init>:(Ljava/lang/String;Ljava/lang/Throwable;)V` @kind direct;
+  #L3deb46.  throw v1;
+  catch `java.net.MalformedURLException` @[L3deaee..L3deb00] goto L3deb18;
+}
+procedure `boolean` `stopObjectBrowser`(`io.objectbox.BoxStore` v2 @kind this) @signature `Lio/objectbox/BoxStore;.stopObjectBrowser:()Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L3de04c.  @monitorenter v2
+  #L3de04e.  v0:= v2.`io.objectbox.BoxStore.t` @type ^`int`;
+  #L3de052.  if v0 == 0 then goto L3de06c;
+  #L3de056.  v0:= 0I;
+  #L3de058.  v2.`io.objectbox.BoxStore.t` @type ^`int` := v0;
+  #L3de05c.  v0:= v2.`io.objectbox.BoxStore.c` @type ^`long` @kind wide;
+  #L3de060.  call temp:= `nativeStopObjectBrowser`(v2, v0) @signature `Lio/objectbox/BoxStore;.nativeStopObjectBrowser:(J)Z` @kind direct;
+  #L3de066.  v0:= temp;
+  #L3de068.  @monitorexit v2
+  #L3de06a.  return v0;
+  #L3de06c.  v0:= new `java.lang.IllegalStateException`;
+  #L3de070.  v1:= "ObjectBrowser has not been started before" @kind object;
+  #L3de074.  call `<init>`(v0, v1) @signature `Ljava/lang/IllegalStateException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L3de07a.  throw v0;
+  #L3de07c.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3de07e.  @monitorexit v2
+  #L3de080.  throw v0;
+  catch `java.lang.Throwable` @[L3de04e..L3de068] goto L3de07c;
+  catch `java.lang.Throwable` @[L3de06c..L3de07c] goto L3de07c;
+}
+procedure `io.objectbox.reactive.SubscriptionBuilder` `subscribe`(`io.objectbox.BoxStore` v4 @kind this) @signature `Lio/objectbox/BoxStore;.subscribe:()Lio/objectbox/reactive/SubscriptionBuilder;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L3de48c.  v0:= new `io.objectbox.reactive.SubscriptionBuilder`;
+  #L3de490.  v1:= v4.`io.objectbox.BoxStore.l` @type ^`io.objectbox.f` @kind object;
+  #L3de494.  v2:= v4.`io.objectbox.BoxStore.k` @type ^`java.util.concurrent.ExecutorService` @kind object;
+  #L3de498.  v3:= 0I;
+  #L3de49a.  call `<init>`(v0, v1, v3, v2) @signature `Lio/objectbox/reactive/SubscriptionBuilder;.<init>:(Lio/objectbox/reactive/DataPublisher;Ljava/lang/Object;Ljava/util/concurrent/ExecutorService;)V` @kind direct;
+  #L3de4a0.  return v0 @kind object;
+}
+procedure `io.objectbox.reactive.SubscriptionBuilder` `subscribe`(`io.objectbox.BoxStore` v3 @kind this, `java.lang.Class` v4 @kind object) @signature `Lio/objectbox/BoxStore;.subscribe:(Ljava/lang/Class;)Lio/objectbox/reactive/SubscriptionBuilder;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L3de4b4.  v0:= new `io.objectbox.reactive.SubscriptionBuilder`;
+  #L3de4b8.  v1:= v3.`io.objectbox.BoxStore.l` @type ^`io.objectbox.f` @kind object;
+  #L3de4bc.  v2:= v3.`io.objectbox.BoxStore.k` @type ^`java.util.concurrent.ExecutorService` @kind object;
+  #L3de4c0.  call `<init>`(v0, v1, v4, v2) @signature `Lio/objectbox/reactive/SubscriptionBuilder;.<init>:(Lio/objectbox/reactive/DataPublisher;Ljava/lang/Object;Ljava/util/concurrent/ExecutorService;)V` @kind direct;
+  #L3de4c6.  return v0 @kind object;
+}
+procedure `void` `t`(`io.objectbox.BoxStore` v0 @kind this, `io.objectbox.sync.SyncClient` v1 @kind object) @signature `Lio/objectbox/BoxStore;.t:(Lio/objectbox/sync/SyncClient;)V` @AccessFlag  {
+    temp;
+
+  #L3df580.  v0.`io.objectbox.BoxStore.w` @type ^`io.objectbox.sync.SyncClient` := v1 @kind object;
+  #L3df584.  return @kind void;
+}
+procedure `void` `u`(`io.objectbox.BoxStore` v4 @kind this, `io.objectbox.Transaction` v5 @kind object, `int`[] v6 @kind object) @signature `Lio/objectbox/BoxStore;.u:(Lio/objectbox/Transaction;[I)V` @AccessFlag  {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L3df598.  v0:= v4.`io.objectbox.BoxStore.r` @type ^`java.lang.Object` @kind object;
+  #L3df59c.  @monitorenter v0
+  #L3df59e.  v1:= v4.`io.objectbox.BoxStore.s` @type ^`int`;
+  #L3df5a2.  v1:= v1 + 1;
+  #L3df5a6.  v4.`io.objectbox.BoxStore.s` @type ^`int` := v1;
+  #L3df5aa.  v1:= v4.`io.objectbox.BoxStore.n` @type ^`boolean` @kind boolean;
+  #L3df5ae.  if v1 == 0 then goto L3df5fc;
+  #L3df5b2.  v1:= `@@java.lang.System.out` @type ^`java.io.PrintStream` @kind object;
+  #L3df5b6.  v2:= new `java.lang.StringBuilder`;
+  #L3df5ba.  call `<init>`(v2) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L3df5c0.  v3:= "TX committed. New commit count: " @kind object;
+  #L3df5c4.  call temp:= `append`(v2, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3df5ca.  v3:= v4.`io.objectbox.BoxStore.s` @type ^`int`;
+  #L3df5ce.  call temp:= `append`(v2, v3) @signature `Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3df5d4.  v3:= ", entity types affected: " @kind object;
+  #L3df5d8.  call temp:= `append`(v2, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3df5de.  if v6 == 0 then goto L3df5e6;
+  #L3df5e2.  v3:= length @variable v6;
+  #L3df5e4.  goto L3df5e8;
+  #L3df5e6.  v3:= 0I;
+  #L3df5e8.  call temp:= `append`(v2, v3) @signature `Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3df5ee.  call temp:= `toString`(v2) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L3df5f4.  v2:= temp @kind object;
+  #L3df5f6.  call `println`(v1, v2) @signature `Ljava/io/PrintStream;.println:(Ljava/lang/String;)V` @kind virtual;
+  #L3df5fc.  @monitorexit v0
+  #L3df5fe.  v0:= v4.`io.objectbox.BoxStore.i` @type ^`java.util.Map` @kind object;
+  #L3df602.  call temp:= `values`(v0) @signature `Ljava/util/Map;.values:()Ljava/util/Collection;` @kind interface;
+  #L3df608.  v0:= temp @kind object;
+  #L3df60a.  call temp:= `iterator`(v0) @signature `Ljava/util/Collection;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L3df610.  v0:= temp @kind object;
+  #L3df612.  call temp:= `hasNext`(v0) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L3df618.  v1:= temp;
+  #L3df61a.  if v1 == 0 then goto L3df632;
+  #L3df61e.  call temp:= `next`(v0) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L3df624.  v1:= temp @kind object;
+  #L3df626.  v1:= (`io.objectbox.Box`) v1 @kind object;
+  #L3df62a.  call `h`(v1, v5) @signature `Lio/objectbox/Box;.h:(Lio/objectbox/Transaction;)V` @kind virtual;
+  #L3df630.  goto L3df612;
+  #L3df632.  if v6 == 0 then goto L3df640;
+  #L3df636.  v5:= v4.`io.objectbox.BoxStore.l` @type ^`io.objectbox.f` @kind object;
+  #L3df63a.  call `d`(v5, v6) @signature `Lio/objectbox/f;.d:([I)V` @kind virtual;
+  #L3df640.  return @kind void;
+  #L3df642.  v5:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3df644.  @monitorexit v0
+  #L3df646.  throw v5;
+  catch `java.lang.Throwable` @[L3df59e..L3df5fe] goto L3df642;
+  catch `java.lang.Throwable` @[L3df644..L3df646] goto L3df642;
+}
+procedure `void` `unregisterTransaction`(`io.objectbox.BoxStore` v2 @kind this, `io.objectbox.Transaction` v3 @kind object) @signature `Lio/objectbox/BoxStore;.unregisterTransaction:(Lio/objectbox/Transaction;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L3df66c.  v0:= v2.`io.objectbox.BoxStore.j` @type ^`java.util.Set` @kind object;
+  #L3df670.  @monitorenter v0
+  #L3df672.  v1:= v2.`io.objectbox.BoxStore.j` @type ^`java.util.Set` @kind object;
+  #L3df676.  call temp:= `remove`(v1, v3) @signature `Ljava/util/Set;.remove:(Ljava/lang/Object;)Z` @kind interface;
+  #L3df67c.  @monitorexit v0
+  #L3df67e.  return @kind void;
+  #L3df680.  v3:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3df682.  @monitorexit v0
+  #L3df684.  throw v3;
+  catch `java.lang.Throwable` @[L3df672..L3df684] goto L3df680;
+}
+procedure `long` `validate`(`io.objectbox.BoxStore` v9 @kind this, `long` v10 , `boolean` v12 ) @signature `Lio/objectbox/BoxStore;.validate:(JZ)J` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+
+  #L3dec4c.  v0:= 0L;
+  #L3dec50.  v2:= lcmp(v10, v0);
+  #L3dec54.  if v2 < 0 then goto L3dec6c;
+  #L3dec58.  v4:= v9.`io.objectbox.BoxStore.c` @type ^`long` @kind wide;
+  #L3dec5c.  v3:= v9 @kind object;
+  #L3dec5e.  v6:= v10 @kind wide;
+  #L3dec60.  v8:= v12;
+  #L3dec62.  call temp:= `nativeValidate`(v3, v4, v6, v8) @signature `Lio/objectbox/BoxStore;.nativeValidate:(JJZ)J` @kind virtual;
+  #L3dec68.  v10:= temp @kind wide;
+  #L3dec6a.  return v10 @kind wide;
+  #L3dec6c.  v10:= new `java.lang.IllegalArgumentException`;
+  #L3dec70.  v11:= "pageLimit must be zero or positive" @kind object;
+  #L3dec74.  call `<init>`(v10, v11) @signature `Ljava/lang/IllegalArgumentException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L3dec7a.  throw v10;
+}

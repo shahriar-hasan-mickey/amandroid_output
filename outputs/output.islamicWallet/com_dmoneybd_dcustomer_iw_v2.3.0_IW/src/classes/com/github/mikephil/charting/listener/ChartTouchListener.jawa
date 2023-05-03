@@ -1,0 +1,112 @@
+record `com.github.mikephil.charting.listener.ChartTouchListener` @kind class @AccessFlag PUBLIC_ABSTRACT extends `android.view.GestureDetector$SimpleOnGestureListener` @kind class, `android.view.View$OnTouchListener` @kind interface {
+  `com.github.mikephil.charting.charts.Chart` `com.github.mikephil.charting.listener.ChartTouchListener.mChart` @AccessFlag PROTECTED;
+  `android.view.GestureDetector` `com.github.mikephil.charting.listener.ChartTouchListener.mGestureDetector` @AccessFlag PROTECTED;
+  `com.github.mikephil.charting.listener.ChartTouchListener$ChartGesture` `com.github.mikephil.charting.listener.ChartTouchListener.mLastGesture` @AccessFlag PROTECTED;
+  `com.github.mikephil.charting.highlight.Highlight` `com.github.mikephil.charting.listener.ChartTouchListener.mLastHighlighted` @AccessFlag PROTECTED;
+  `int` `com.github.mikephil.charting.listener.ChartTouchListener.mTouchMode` @AccessFlag PROTECTED;
+}
+global `int` `@@com.github.mikephil.charting.listener.ChartTouchListener.DRAG` @AccessFlag PROTECTED_STATIC_FINAL;
+global `int` `@@com.github.mikephil.charting.listener.ChartTouchListener.NONE` @AccessFlag PROTECTED_STATIC_FINAL;
+global `int` `@@com.github.mikephil.charting.listener.ChartTouchListener.PINCH_ZOOM` @AccessFlag PROTECTED_STATIC_FINAL;
+global `int` `@@com.github.mikephil.charting.listener.ChartTouchListener.POST_ZOOM` @AccessFlag PROTECTED_STATIC_FINAL;
+global `int` `@@com.github.mikephil.charting.listener.ChartTouchListener.ROTATE` @AccessFlag PROTECTED_STATIC_FINAL;
+global `int` `@@com.github.mikephil.charting.listener.ChartTouchListener.X_ZOOM` @AccessFlag PROTECTED_STATIC_FINAL;
+global `int` `@@com.github.mikephil.charting.listener.ChartTouchListener.Y_ZOOM` @AccessFlag PROTECTED_STATIC_FINAL;
+procedure `void` `<init>`(`com.github.mikephil.charting.listener.ChartTouchListener` v1 @kind this, `com.github.mikephil.charting.charts.Chart` v2 @kind object) @signature `Lcom/github/mikephil/charting/listener/ChartTouchListener;.<init>:(Lcom/github/mikephil/charting/charts/Chart;)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L397318.  call `<init>`(v1) @signature `Landroid/view/GestureDetector$SimpleOnGestureListener;.<init>:()V` @kind direct;
+  #L39731e.  v0:= `@@com.github.mikephil.charting.listener.ChartTouchListener$ChartGesture.NONE` @type ^`com.github.mikephil.charting.listener.ChartTouchListener$ChartGesture` @kind object;
+  #L397322.  v1.`com.github.mikephil.charting.listener.ChartTouchListener.mLastGesture` @type ^`com.github.mikephil.charting.listener.ChartTouchListener$ChartGesture` := v0 @kind object;
+  #L397326.  v0:= 0I;
+  #L397328.  v1.`com.github.mikephil.charting.listener.ChartTouchListener.mTouchMode` @type ^`int` := v0;
+  #L39732c.  v1.`com.github.mikephil.charting.listener.ChartTouchListener.mChart` @type ^`com.github.mikephil.charting.charts.Chart` := v2 @kind object;
+  #L397330.  v0:= new `android.view.GestureDetector`;
+  #L397334.  call temp:= `getContext`(v2) @signature `Landroid/view/ViewGroup;.getContext:()Landroid/content/Context;` @kind virtual;
+  #L39733a.  v2:= temp @kind object;
+  #L39733c.  call `<init>`(v0, v2, v1) @signature `Landroid/view/GestureDetector;.<init>:(Landroid/content/Context;Landroid/view/GestureDetector$OnGestureListener;)V` @kind direct;
+  #L397342.  v1.`com.github.mikephil.charting.listener.ChartTouchListener.mGestureDetector` @type ^`android.view.GestureDetector` := v0 @kind object;
+  #L397346.  return @kind void;
+}
+procedure `float` `distance`(`float` v0 , `float` v1 , `float` v2 , `float` v3 ) @signature `Lcom/github/mikephil/charting/listener/ChartTouchListener;.distance:(FFFF)F` @AccessFlag PROTECTED_STATIC {
+    temp;
+
+  #L3972d4.  v0:= v0 - v1 @kind float;
+  #L3972d6.  v2:= v2 - v3 @kind float;
+  #L3972d8.  v0:= v0 * v0 @kind float;
+  #L3972dc.  v2:= v2 * v2 @kind float;
+  #L3972e0.  v0:= v0 + v2 @kind float;
+  #L3972e2.  v0:= (`double`) v0 @kind f2d;
+  #L3972e4.  call temp:= `sqrt`(v0) @signature `Ljava/lang/Math;.sqrt:(D)D` @kind static;
+  #L3972ea.  v0:= temp @kind wide;
+  #L3972ec.  v0:= (`float`) v0 @kind d2f;
+  #L3972ee.  return v0;
+}
+procedure `void` `endAction`(`com.github.mikephil.charting.listener.ChartTouchListener` v2 @kind this, `android.view.MotionEvent` v3 @kind object) @signature `Lcom/github/mikephil/charting/listener/ChartTouchListener;.endAction:(Landroid/view/MotionEvent;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L397358.  v0:= v2.`com.github.mikephil.charting.listener.ChartTouchListener.mChart` @type ^`com.github.mikephil.charting.charts.Chart` @kind object;
+  #L39735c.  call temp:= `getOnChartGestureListener`(v0) @signature `Lcom/github/mikephil/charting/charts/Chart;.getOnChartGestureListener:()Lcom/github/mikephil/charting/listener/OnChartGestureListener;` @kind virtual;
+  #L397362.  v0:= temp @kind object;
+  #L397364.  if v0 == 0 then goto L397372;
+  #L397368.  v1:= v2.`com.github.mikephil.charting.listener.ChartTouchListener.mLastGesture` @type ^`com.github.mikephil.charting.listener.ChartTouchListener$ChartGesture` @kind object;
+  #L39736c.  call `onChartGestureEnd`(v0, v3, v1) @signature `Lcom/github/mikephil/charting/listener/OnChartGestureListener;.onChartGestureEnd:(Landroid/view/MotionEvent;Lcom/github/mikephil/charting/listener/ChartTouchListener$ChartGesture;)V` @kind interface;
+  #L397372.  return @kind void;
+}
+procedure `com.github.mikephil.charting.listener.ChartTouchListener$ChartGesture` `getLastGesture`(`com.github.mikephil.charting.listener.ChartTouchListener` v1 @kind this) @signature `Lcom/github/mikephil/charting/listener/ChartTouchListener;.getLastGesture:()Lcom/github/mikephil/charting/listener/ChartTouchListener$ChartGesture;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L3972bc.  v0:= v1.`com.github.mikephil.charting.listener.ChartTouchListener.mLastGesture` @type ^`com.github.mikephil.charting.listener.ChartTouchListener$ChartGesture` @kind object;
+  #L3972c0.  return v0 @kind object;
+}
+procedure `int` `getTouchMode`(`com.github.mikephil.charting.listener.ChartTouchListener` v1 @kind this) @signature `Lcom/github/mikephil/charting/listener/ChartTouchListener;.getTouchMode:()I` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L397300.  v0:= v1.`com.github.mikephil.charting.listener.ChartTouchListener.mTouchMode` @type ^`int`;
+  #L397304.  return v0;
+}
+procedure `void` `performHighlight`(`com.github.mikephil.charting.listener.ChartTouchListener` v1 @kind this, `com.github.mikephil.charting.highlight.Highlight` v2 @kind object, `android.view.MotionEvent` v3 @kind object) @signature `Lcom/github/mikephil/charting/listener/ChartTouchListener;.performHighlight:(Lcom/github/mikephil/charting/highlight/Highlight;Landroid/view/MotionEvent;)V` @AccessFlag PROTECTED {
+    temp;
+    v0;
+
+  #L397384.  v3:= 1I;
+  #L397386.  if v2 == 0 then goto L3973ac;
+  #L39738a.  v0:= v1.`com.github.mikephil.charting.listener.ChartTouchListener.mLastHighlighted` @type ^`com.github.mikephil.charting.highlight.Highlight` @kind object;
+  #L39738e.  call temp:= `equalTo`(v2, v0) @signature `Lcom/github/mikephil/charting/highlight/Highlight;.equalTo:(Lcom/github/mikephil/charting/highlight/Highlight;)Z` @kind virtual;
+  #L397394.  v0:= temp;
+  #L397396.  if v0 == 0 then goto L39739c;
+  #L39739a.  goto L3973ac;
+  #L39739c.  v0:= v1.`com.github.mikephil.charting.listener.ChartTouchListener.mChart` @type ^`com.github.mikephil.charting.charts.Chart` @kind object;
+  #L3973a0.  call `highlightValue`(v0, v2, v3) @signature `Lcom/github/mikephil/charting/charts/Chart;.highlightValue:(Lcom/github/mikephil/charting/highlight/Highlight;Z)V` @kind virtual;
+  #L3973a6.  v1.`com.github.mikephil.charting.listener.ChartTouchListener.mLastHighlighted` @type ^`com.github.mikephil.charting.highlight.Highlight` := v2 @kind object;
+  #L3973aa.  goto L3973bc;
+  #L3973ac.  v2:= v1.`com.github.mikephil.charting.listener.ChartTouchListener.mChart` @type ^`com.github.mikephil.charting.charts.Chart` @kind object;
+  #L3973b0.  v0:= 0I;
+  #L3973b2.  call `highlightValue`(v2, v0, v3) @signature `Lcom/github/mikephil/charting/charts/Chart;.highlightValue:(Lcom/github/mikephil/charting/highlight/Highlight;Z)V` @kind virtual;
+  #L3973b8.  v1.`com.github.mikephil.charting.listener.ChartTouchListener.mLastHighlighted` @type ^`com.github.mikephil.charting.highlight.Highlight` := v0 @kind object;
+  #L3973bc.  return @kind void;
+}
+procedure `void` `setLastHighlighted`(`com.github.mikephil.charting.listener.ChartTouchListener` v0 @kind this, `com.github.mikephil.charting.highlight.Highlight` v1 @kind object) @signature `Lcom/github/mikephil/charting/listener/ChartTouchListener;.setLastHighlighted:(Lcom/github/mikephil/charting/highlight/Highlight;)V` @AccessFlag PUBLIC {
+    temp;
+
+  #L3973d0.  v0.`com.github.mikephil.charting.listener.ChartTouchListener.mLastHighlighted` @type ^`com.github.mikephil.charting.highlight.Highlight` := v1 @kind object;
+  #L3973d4.  return @kind void;
+}
+procedure `void` `startAction`(`com.github.mikephil.charting.listener.ChartTouchListener` v2 @kind this, `android.view.MotionEvent` v3 @kind object) @signature `Lcom/github/mikephil/charting/listener/ChartTouchListener;.startAction:(Landroid/view/MotionEvent;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L3973e8.  v0:= v2.`com.github.mikephil.charting.listener.ChartTouchListener.mChart` @type ^`com.github.mikephil.charting.charts.Chart` @kind object;
+  #L3973ec.  call temp:= `getOnChartGestureListener`(v0) @signature `Lcom/github/mikephil/charting/charts/Chart;.getOnChartGestureListener:()Lcom/github/mikephil/charting/listener/OnChartGestureListener;` @kind virtual;
+  #L3973f2.  v0:= temp @kind object;
+  #L3973f4.  if v0 == 0 then goto L397402;
+  #L3973f8.  v1:= v2.`com.github.mikephil.charting.listener.ChartTouchListener.mLastGesture` @type ^`com.github.mikephil.charting.listener.ChartTouchListener$ChartGesture` @kind object;
+  #L3973fc.  call `onChartGestureStart`(v0, v3, v1) @signature `Lcom/github/mikephil/charting/listener/OnChartGestureListener;.onChartGestureStart:(Landroid/view/MotionEvent;Lcom/github/mikephil/charting/listener/ChartTouchListener$ChartGesture;)V` @kind interface;
+  #L397402.  return @kind void;
+}

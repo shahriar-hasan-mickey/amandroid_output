@@ -1,0 +1,88 @@
+record `kotlin.time.DurationJvmKt` @kind class @AccessFlag PUBLIC_FINAL {
+}
+global `boolean` `@@kotlin.time.DurationJvmKt.durationAssertionsEnabled` @AccessFlag PRIVATE_STATIC_FINAL;
+global `java.lang.ThreadLocal`[] `@@kotlin.time.DurationJvmKt.precisionFormats` @AccessFlag PRIVATE_STATIC_FINAL;
+procedure `void` `<clinit>`() @signature `Lkotlin/time/DurationJvmKt;.<clinit>:()V` @AccessFlag STATIC_CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L2c8a8c.  v0:= constclass @type ^`kotlin.time.Duration` @kind object;
+  #L2c8a90.  v0:= 0I;
+  #L2c8a92.  `@@kotlin.time.DurationJvmKt.durationAssertionsEnabled` @type ^`boolean` := v0 @kind boolean;
+  #L2c8a96.  v1:= 4I;
+  #L2c8a98.  v2:= new `java.lang.ThreadLocal`[v1];
+  #L2c8a9c.  if v0 >= v1 then goto L2c8ab4;
+  #L2c8aa0.  v3:= new `java.lang.ThreadLocal`;
+  #L2c8aa4.  call `<init>`(v3) @signature `Ljava/lang/ThreadLocal;.<init>:()V` @kind direct;
+  #L2c8aaa.  v2[v0]:= v3 @kind object;
+  #L2c8aae.  v0:= v0 + 1;
+  #L2c8ab2.  goto L2c8a9c;
+  #L2c8ab4.  `@@kotlin.time.DurationJvmKt.precisionFormats` @type ^`java.lang.ThreadLocal`[] := v2 @kind object;
+  #L2c8ab8.  return @kind void;
+}
+procedure `java.text.DecimalFormat` `createFormatForDecimals`(`int` v2 ) @signature `Lkotlin/time/DurationJvmKt;.createFormatForDecimals:(I)Ljava/text/DecimalFormat;` @AccessFlag PRIVATE_STATIC_FINAL {
+    temp;
+    v0;
+    v1;
+
+  #L2c8a58.  v0:= new `java.text.DecimalFormat`;
+  #L2c8a5c.  v1:= "0" @kind object;
+  #L2c8a60.  call `<init>`(v0, v1) @signature `Ljava/text/DecimalFormat;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L2c8a66.  if v2 <= 0 then goto L2c8a70;
+  #L2c8a6a.  call `setMinimumFractionDigits`(v0, v2) @signature `Ljava/text/DecimalFormat;.setMinimumFractionDigits:(I)V` @kind virtual;
+  #L2c8a70.  v2:= `@@java.math.RoundingMode.HALF_UP` @type ^`java.math.RoundingMode` @kind object;
+  #L2c8a74.  call `setRoundingMode`(v0, v2) @signature `Ljava/text/DecimalFormat;.setRoundingMode:(Ljava/math/RoundingMode;)V` @kind virtual;
+  #L2c8a7a.  return v0 @kind object;
+}
+procedure `java.lang.String` `formatToExactDecimals`(`double` v2 , `int` v4 ) @signature `Lkotlin/time/DurationJvmKt;.formatToExactDecimals:(DI)Ljava/lang/String;` @AccessFlag PUBLIC_STATIC_FINAL {
+    temp;
+    v0;
+    v1;
+
+  #L2c89bc.  v0:= `@@kotlin.time.DurationJvmKt.precisionFormats` @type ^`java.lang.ThreadLocal`[] @kind object;
+  #L2c89c0.  v1:= length @variable v0;
+  #L2c89c2.  if v4 >= v1 then goto L2c89f6;
+  #L2c89c6.  v0:= v0[v4] @kind object;
+  #L2c89ca.  call temp:= `get`(v0) @signature `Ljava/lang/ThreadLocal;.get:()Ljava/lang/Object;` @kind virtual;
+  #L2c89d0.  v1:= temp @kind object;
+  #L2c89d2.  if v1 != 0 then goto L2c89e6;
+  #L2c89d6.  call temp:= `createFormatForDecimals`(v4) @signature `Lkotlin/time/DurationJvmKt;.createFormatForDecimals:(I)Ljava/text/DecimalFormat;` @kind static;
+  #L2c89dc.  v1:= temp @kind object;
+  #L2c89de.  call `set`(v0, v1) @signature `Ljava/lang/ThreadLocal;.set:(Ljava/lang/Object;)V` @kind virtual;
+  #L2c89e4.  goto L2c89f0;
+  #L2c89e6.  v4:= "get() ?: default().also(this::set)" @kind object;
+  #L2c89ea.  call `checkNotNullExpressionValue`(v1, v4) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V` @kind static;
+  #L2c89f0.  v1:= (`java.text.DecimalFormat`) v1 @kind object;
+  #L2c89f4.  goto L2c89fe;
+  #L2c89f6.  call temp:= `createFormatForDecimals`(v4) @signature `Lkotlin/time/DurationJvmKt;.createFormatForDecimals:(I)Ljava/text/DecimalFormat;` @kind static;
+  #L2c89fc.  v1:= temp @kind object;
+  #L2c89fe.  call temp:= `format`(v1, v2) @signature `Ljava/text/DecimalFormat;.format:(D)Ljava/lang/String;` @kind virtual;
+  #L2c8a04.  v2:= temp @kind object;
+  #L2c8a06.  v3:= "format.format(value)" @kind object;
+  #L2c8a0a.  call `checkNotNullExpressionValue`(v2, v3) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V` @kind static;
+  #L2c8a10.  return v2 @kind object;
+}
+procedure `java.lang.String` `formatUpToDecimals`(`double` v1 , `int` v3 ) @signature `Lkotlin/time/DurationJvmKt;.formatUpToDecimals:(DI)Ljava/lang/String;` @AccessFlag PUBLIC_STATIC_FINAL {
+    temp;
+    v0;
+
+  #L2c8a24.  v0:= 0I;
+  #L2c8a26.  call temp:= `createFormatForDecimals`(v0) @signature `Lkotlin/time/DurationJvmKt;.createFormatForDecimals:(I)Ljava/text/DecimalFormat;` @kind static;
+  #L2c8a2c.  v0:= temp @kind object;
+  #L2c8a2e.  call `setMaximumFractionDigits`(v0, v3) @signature `Ljava/text/DecimalFormat;.setMaximumFractionDigits:(I)V` @kind virtual;
+  #L2c8a34.  call temp:= `format`(v0, v1) @signature `Ljava/text/DecimalFormat;.format:(D)Ljava/lang/String;` @kind virtual;
+  #L2c8a3a.  v1:= temp @kind object;
+  #L2c8a3c.  v2:= "createFormatForDecimals(… }\n        .format(value)" @kind object;
+  #L2c8a40.  call `checkNotNullExpressionValue`(v1, v2) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V` @kind static;
+  #L2c8a46.  return v1 @kind object;
+}
+procedure `boolean` `getDurationAssertionsEnabled`() @signature `Lkotlin/time/DurationJvmKt;.getDurationAssertionsEnabled:()Z` @AccessFlag PUBLIC_STATIC_FINAL {
+    temp;
+    v0;
+
+  #L2c89a4.  v0:= `@@kotlin.time.DurationJvmKt.durationAssertionsEnabled` @type ^`boolean` @kind boolean;
+  #L2c89a8.  return v0;
+}

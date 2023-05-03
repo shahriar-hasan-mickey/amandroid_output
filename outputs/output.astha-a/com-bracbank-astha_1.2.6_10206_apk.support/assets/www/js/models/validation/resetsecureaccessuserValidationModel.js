@@ -1,0 +1,1 @@
+define(["underscore","Backbone"],function(n,e){var r=Backbone.Model.extend({url:function(){return this.instanceUrl},validation:{atmCardNumber:{required:!0,msg:"validation.forgotusername.atmcardnumbernotnull"},atmPinNumber:{required:!0,msg:"validation.forgotusername.atmpinnumbernotnull"}},initialize:function(n){this.url=n.url}});return r});

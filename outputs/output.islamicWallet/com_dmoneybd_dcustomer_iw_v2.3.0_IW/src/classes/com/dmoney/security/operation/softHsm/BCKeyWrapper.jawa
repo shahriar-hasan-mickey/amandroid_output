@@ -1,0 +1,96 @@
+record `com.dmoney.security.operation.softHsm.BCKeyWrapper` @kind class @AccessFlag PUBLIC extends `com.dmoney.security.operation.interfaces.IKeyWrapper` @kind interface {
+}
+procedure `void` `<init>`(`com.dmoney.security.operation.softHsm.BCKeyWrapper` v0 @kind this) @signature `Lcom/dmoney/security/operation/softHsm/BCKeyWrapper;.<init>:()V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+
+  #L2c9488.  call `<init>`(v0) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L2c948e.  return @kind void;
+}
+procedure `byte`[] `Operate`(`com.dmoney.security.operation.softHsm.BCKeyWrapper` v3 @kind this, `java.lang.String` v4 @kind object, `byte`[] v5 @kind object, `boolean` v6 ) @signature `Lcom/dmoney/security/operation/softHsm/BCKeyWrapper;.Operate:(Ljava/lang/String;[BZ)[B` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L2c93b8.  call temp:= `GetDerivedKey`(v3, v4) @signature `Lcom/dmoney/security/operation/softHsm/BCKeyWrapper;.GetDerivedKey:(Ljava/lang/String;)[B` @kind virtual;
+  #L2c93be.  v4:= temp @kind object;
+  #L2c93c0.  v0:= 16I;
+  #L2c93c4.  v0:= new `byte`[v0];
+  #L2c93c8.  goto L2c9428;
+  #L2c93ce.  v1:= new `javax.crypto.spec.SecretKeySpec`;
+  #L2c93d2.  call temp:= `getInstance`() @signature `Lcom/dmoney/security/config/Configuration;.getInstance:()Lcom/dmoney/security/config/Configuration;` @kind static;
+  #L2c93d8.  v2:= temp @kind object;
+  #L2c93da.  call temp:= `getSymetricKeyAlgo`(v2) @signature `Lcom/dmoney/security/config/Configuration;.getSymetricKeyAlgo:()Ljava/lang/String;` @kind virtual;
+  #L2c93e0.  v2:= temp @kind object;
+  #L2c93e2.  call `<init>`(v1, v4, v2) @signature `Ljavax/crypto/spec/SecretKeySpec;.<init>:([BLjava/lang/String;)V` @kind direct;
+  #L2c93e8.  v4:= new `javax.crypto.spec.IvParameterSpec`;
+  #L2c93ec.  call `<init>`(v4, v0) @signature `Ljavax/crypto/spec/IvParameterSpec;.<init>:([B)V` @kind direct;
+  #L2c93f2.  call temp:= `getInstance`() @signature `Lcom/dmoney/security/config/Configuration;.getInstance:()Lcom/dmoney/security/config/Configuration;` @kind static;
+  #L2c93f8.  v0:= temp @kind object;
+  #L2c93fa.  call temp:= `getSymmetricMechanism`(v0) @signature `Lcom/dmoney/security/config/Configuration;.getSymmetricMechanism:()Ljava/lang/String;` @kind virtual;
+  #L2c9400.  v0:= temp @kind object;
+  #L2c9402.  v2:= `@@com.dmoney.security.config.Configuration.PROVIDER` @type ^`java.lang.String` @kind object;
+  #L2c9406.  call temp:= `getInstance`(v0, v2) @signature `Ljavax/crypto/Cipher;.getInstance:(Ljava/lang/String;Ljava/lang/String;)Ljavax/crypto/Cipher;` @kind static;
+  #L2c940c.  v0:= temp @kind object;
+  #L2c940e.  if v6 == 0 then goto L2c9416;
+  #L2c9412.  v6:= 1I;
+  #L2c9414.  goto L2c9418;
+  #L2c9416.  v6:= 2I;
+  #L2c9418.  call `init`(v0, v6, v1, v4) @signature `Ljavax/crypto/Cipher;.init:(ILjava/security/Key;Ljava/security/spec/AlgorithmParameterSpec;)V` @kind virtual;
+  #L2c941e.  call temp:= `doFinal`(v0, v5) @signature `Ljavax/crypto/Cipher;.doFinal:([B)[B` @kind virtual;
+  #L2c9424.  v4:= temp @kind object;
+  #L2c9426.  return v4 @kind object;
+  #L2c9428.  v0:= (0I, 0I, 0I, 0I, 0I, 0I, 0I, 0I, 0I, 0I, 0I, 0I, 0I, 0I, 0I, 0I) @kind object;
+  #L2c943f.  goto L2c93ce;
+}
+procedure `byte`[] `GetDerivedKey`(`com.dmoney.security.operation.softHsm.BCKeyWrapper` v4 @kind this, `java.lang.String` v5 @kind object) @signature `Lcom/dmoney/security/operation/softHsm/BCKeyWrapper;.GetDerivedKey:(Ljava/lang/String;)[B` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L2c933c.  v0:= 8I;
+  #L2c9340.  v1:= new `byte`[v0];
+  #L2c9344.  goto L2c9398;
+  #L2c934a.  v2:= new `javax.crypto.spec.PBEKeySpec`;
+  #L2c934e.  call temp:= `toCharArray`(v5) @signature `Ljava/lang/String;.toCharArray:()[C` @kind virtual;
+  #L2c9354.  v5:= temp @kind object;
+  #L2c9356.  call temp:= `getInstance`() @signature `Lcom/dmoney/security/config/Configuration;.getInstance:()Lcom/dmoney/security/config/Configuration;` @kind static;
+  #L2c935c.  v3:= temp @kind object;
+  #L2c935e.  call temp:= `getSymetricKeyLength`(v3) @signature `Lcom/dmoney/security/config/Configuration;.getSymetricKeyLength:()I` @kind virtual;
+  #L2c9364.  v3:= temp;
+  #L2c9366.  v3:= v3 * 8;
+  #L2c936a.  v0:= 300I;
+  #L2c936e.  call `<init>`(v2, v5, v1, v0, v3) @signature `Ljavax/crypto/spec/PBEKeySpec;.<init>:([C[BII)V` @kind direct;
+  #L2c9374.  v5:= "PBKDF2WithHmacSHA1" @kind object;
+  #L2c9378.  v0:= "BC" @kind object;
+  #L2c937c.  call temp:= `getInstance`(v5, v0) @signature `Ljavax/crypto/SecretKeyFactory;.getInstance:(Ljava/lang/String;Ljava/lang/String;)Ljavax/crypto/SecretKeyFactory;` @kind static;
+  #L2c9382.  v5:= temp @kind object;
+  #L2c9384.  call temp:= `generateSecret`(v5, v2) @signature `Ljavax/crypto/SecretKeyFactory;.generateSecret:(Ljava/security/spec/KeySpec;)Ljavax/crypto/SecretKey;` @kind virtual;
+  #L2c938a.  v5:= temp @kind object;
+  #L2c938c.  call temp:= `getEncoded`(v5) @signature `Ljavax/crypto/SecretKey;.getEncoded:()[B` @kind interface;
+  #L2c9392.  v5:= temp @kind object;
+  #L2c9394.  return v5 @kind object;
+  #L2c9396.  
+  #L2c9398.  v1:= (10I, 20I, 30I, 40I, 50I, 60I, 70I, 80I) @kind object;
+  #L2c93a7.  goto L2c934a;
+}
+procedure `byte`[] `UnWrapKey`(`com.dmoney.security.operation.softHsm.BCKeyWrapper` v1 @kind this, `java.lang.String` v2 @kind object, `byte`[] v3 @kind object) @signature `Lcom/dmoney/security/operation/softHsm/BCKeyWrapper;.UnWrapKey:(Ljava/lang/String;[B)[B` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L2c9450.  v0:= 0I;
+  #L2c9452.  call temp:= `Operate`(v1, v2, v3, v0) @signature `Lcom/dmoney/security/operation/softHsm/BCKeyWrapper;.Operate:(Ljava/lang/String;[BZ)[B` @kind direct;
+  #L2c9458.  v2:= temp @kind object;
+  #L2c945a.  return v2 @kind object;
+}
+procedure `byte`[] `WrapKey`(`com.dmoney.security.operation.softHsm.BCKeyWrapper` v1 @kind this, `java.lang.String` v2 @kind object, `byte`[] v3 @kind object) @signature `Lcom/dmoney/security/operation/softHsm/BCKeyWrapper;.WrapKey:(Ljava/lang/String;[B)[B` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L2c946c.  v0:= 1I;
+  #L2c946e.  call temp:= `Operate`(v1, v2, v3, v0) @signature `Lcom/dmoney/security/operation/softHsm/BCKeyWrapper;.Operate:(Ljava/lang/String;[BZ)[B` @kind direct;
+  #L2c9474.  v2:= temp @kind object;
+  #L2c9476.  return v2 @kind object;
+}

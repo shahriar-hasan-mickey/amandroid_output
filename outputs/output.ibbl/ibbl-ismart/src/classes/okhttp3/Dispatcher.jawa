@@ -1,0 +1,506 @@
+record `okhttp3.Dispatcher` @kind class @AccessFlag PUBLIC_FINAL {
+  `java.util.concurrent.ExecutorService` `okhttp3.Dispatcher.executorService` @AccessFlag PRIVATE;
+  `java.lang.Runnable` `okhttp3.Dispatcher.idleCallback` @AccessFlag PRIVATE;
+  `int` `okhttp3.Dispatcher.maxRequests` @AccessFlag PRIVATE;
+  `int` `okhttp3.Dispatcher.maxRequestsPerHost` @AccessFlag PRIVATE;
+  `java.util.Deque` `okhttp3.Dispatcher.readyAsyncCalls` @AccessFlag PRIVATE_FINAL;
+  `java.util.Deque` `okhttp3.Dispatcher.runningAsyncCalls` @AccessFlag PRIVATE_FINAL;
+  `java.util.Deque` `okhttp3.Dispatcher.runningSyncCalls` @AccessFlag PRIVATE_FINAL;
+}
+procedure `void` `<init>`(`okhttp3.Dispatcher` v1 @kind this) @signature `Lokhttp3/Dispatcher;.<init>:()V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L22b1b8.  call `<init>`(v1) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L22b1be.  v0:= 64I;
+  #L22b1c2.  v1.`okhttp3.Dispatcher.maxRequests` @type ^`int` := v0;
+  #L22b1c6.  v0:= 5I;
+  #L22b1c8.  v1.`okhttp3.Dispatcher.maxRequestsPerHost` @type ^`int` := v0;
+  #L22b1cc.  v0:= new `java.util.ArrayDeque`;
+  #L22b1d0.  call `<init>`(v0) @signature `Ljava/util/ArrayDeque;.<init>:()V` @kind direct;
+  #L22b1d6.  v1.`okhttp3.Dispatcher.readyAsyncCalls` @type ^`java.util.Deque` := v0 @kind object;
+  #L22b1da.  v0:= new `java.util.ArrayDeque`;
+  #L22b1de.  call `<init>`(v0) @signature `Ljava/util/ArrayDeque;.<init>:()V` @kind direct;
+  #L22b1e4.  v1.`okhttp3.Dispatcher.runningAsyncCalls` @type ^`java.util.Deque` := v0 @kind object;
+  #L22b1e8.  v0:= new `java.util.ArrayDeque`;
+  #L22b1ec.  call `<init>`(v0) @signature `Ljava/util/ArrayDeque;.<init>:()V` @kind direct;
+  #L22b1f2.  v1.`okhttp3.Dispatcher.runningSyncCalls` @type ^`java.util.Deque` := v0 @kind object;
+  #L22b1f6.  return @kind void;
+}
+procedure `void` `<init>`(`okhttp3.Dispatcher` v1 @kind this, `java.util.concurrent.ExecutorService` v2 @kind object) @signature `Lokhttp3/Dispatcher;.<init>:(Ljava/util/concurrent/ExecutorService;)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L22b208.  call `<init>`(v1) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L22b20e.  v0:= 64I;
+  #L22b212.  v1.`okhttp3.Dispatcher.maxRequests` @type ^`int` := v0;
+  #L22b216.  v0:= 5I;
+  #L22b218.  v1.`okhttp3.Dispatcher.maxRequestsPerHost` @type ^`int` := v0;
+  #L22b21c.  v0:= new `java.util.ArrayDeque`;
+  #L22b220.  call `<init>`(v0) @signature `Ljava/util/ArrayDeque;.<init>:()V` @kind direct;
+  #L22b226.  v1.`okhttp3.Dispatcher.readyAsyncCalls` @type ^`java.util.Deque` := v0 @kind object;
+  #L22b22a.  v0:= new `java.util.ArrayDeque`;
+  #L22b22e.  call `<init>`(v0) @signature `Ljava/util/ArrayDeque;.<init>:()V` @kind direct;
+  #L22b234.  v1.`okhttp3.Dispatcher.runningAsyncCalls` @type ^`java.util.Deque` := v0 @kind object;
+  #L22b238.  v0:= new `java.util.ArrayDeque`;
+  #L22b23c.  call `<init>`(v0) @signature `Ljava/util/ArrayDeque;.<init>:()V` @kind direct;
+  #L22b242.  v1.`okhttp3.Dispatcher.runningSyncCalls` @type ^`java.util.Deque` := v0 @kind object;
+  #L22b246.  v1.`okhttp3.Dispatcher.executorService` @type ^`java.util.concurrent.ExecutorService` := v2 @kind object;
+  #L22b24a.  return @kind void;
+}
+procedure `void` `finished`(`okhttp3.Dispatcher` v0 @kind this, `java.util.Deque` v1 @kind object, `java.lang.Object` v2 @kind object, `boolean` v3 ) @signature `Lokhttp3/Dispatcher;.finished:(Ljava/util/Deque;Ljava/lang/Object;Z)V` @AccessFlag PRIVATE {
+    temp;
+
+  #L22b3c0.  @monitorenter v0
+  #L22b3c2.  call temp:= `remove`(v1, v2) @signature `Ljava/util/Deque;.remove:(Ljava/lang/Object;)Z` @kind interface;
+  #L22b3c8.  v1:= temp;
+  #L22b3ca.  if v1 == 0 then goto L22b3f6;
+  #L22b3ce.  if v3 == 0 then goto L22b3d8;
+  #L22b3d2.  call `promoteCalls`(v0) @signature `Lokhttp3/Dispatcher;.promoteCalls:()V` @kind direct;
+  #L22b3d8.  call temp:= `runningCallsCount`(v0) @signature `Lokhttp3/Dispatcher;.runningCallsCount:()I` @kind virtual;
+  #L22b3de.  v1:= temp;
+  #L22b3e0.  v2:= v0.`okhttp3.Dispatcher.idleCallback` @type ^`java.lang.Runnable` @kind object;
+  #L22b3e4.  @monitorexit v0
+  #L22b3e6.  if v1 != 0 then goto L22b3f4;
+  #L22b3ea.  if v2 == 0 then goto L22b3f4;
+  #L22b3ee.  call `run`(v2) @signature `Ljava/lang/Runnable;.run:()V` @kind interface;
+  #L22b3f4.  return @kind void;
+  #L22b3f6.  v1:= new `java.lang.AssertionError`;
+  #L22b3fa.  v2:= "Call wasn't in-flight!" @kind object;
+  #L22b3fe.  call `<init>`(v1, v2) @signature `Ljava/lang/AssertionError;.<init>:(Ljava/lang/Object;)V` @kind direct;
+  #L22b404.  throw v1;
+  #L22b406.  v1:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L22b408.  @monitorexit v0
+  #L22b40a.  throw v1;
+  catch `java.lang.Throwable` @[L22b3c2..L22b3e6] goto L22b406;
+  catch `java.lang.Throwable` @[L22b3f6..L22b40a] goto L22b406;
+}
+procedure `void` `promoteCalls`(`okhttp3.Dispatcher` v4 @kind this) @signature `Lokhttp3/Dispatcher;.promoteCalls:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L22b470.  v0:= v4.`okhttp3.Dispatcher.runningAsyncCalls` @type ^`java.util.Deque` @kind object;
+  #L22b474.  call temp:= `size`(v0) @signature `Ljava/util/Deque;.size:()I` @kind interface;
+  #L22b47a.  v0:= temp;
+  #L22b47c.  v1:= v4.`okhttp3.Dispatcher.maxRequests` @type ^`int`;
+  #L22b480.  if v0 < v1 then goto L22b486;
+  #L22b484.  return @kind void;
+  #L22b486.  v0:= v4.`okhttp3.Dispatcher.readyAsyncCalls` @type ^`java.util.Deque` @kind object;
+  #L22b48a.  call temp:= `isEmpty`(v0) @signature `Ljava/util/Deque;.isEmpty:()Z` @kind interface;
+  #L22b490.  v0:= temp;
+  #L22b492.  if v0 == 0 then goto L22b498;
+  #L22b496.  return @kind void;
+  #L22b498.  v0:= v4.`okhttp3.Dispatcher.readyAsyncCalls` @type ^`java.util.Deque` @kind object;
+  #L22b49c.  call temp:= `iterator`(v0) @signature `Ljava/util/Deque;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L22b4a2.  v0:= temp @kind object;
+  #L22b4a4.  call temp:= `hasNext`(v0) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L22b4aa.  v1:= temp;
+  #L22b4ac.  if v1 == 0 then goto L22b500;
+  #L22b4b0.  call temp:= `next`(v0) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L22b4b6.  v1:= temp @kind object;
+  #L22b4b8.  v1:= (`okhttp3.RealCall$AsyncCall`) v1 @kind object;
+  #L22b4bc.  call temp:= `runningCallsForHost`(v4, v1) @signature `Lokhttp3/Dispatcher;.runningCallsForHost:(Lokhttp3/RealCall$AsyncCall;)I` @kind direct;
+  #L22b4c2.  v2:= temp;
+  #L22b4c4.  v3:= v4.`okhttp3.Dispatcher.maxRequestsPerHost` @type ^`int`;
+  #L22b4c8.  if v2 >= v3 then goto L22b4ea;
+  #L22b4cc.  call `remove`(v0) @signature `Ljava/util/Iterator;.remove:()V` @kind interface;
+  #L22b4d2.  v2:= v4.`okhttp3.Dispatcher.runningAsyncCalls` @type ^`java.util.Deque` @kind object;
+  #L22b4d6.  call temp:= `add`(v2, v1) @signature `Ljava/util/Deque;.add:(Ljava/lang/Object;)Z` @kind interface;
+  #L22b4dc.  call temp:= `executorService`(v4) @signature `Lokhttp3/Dispatcher;.executorService:()Ljava/util/concurrent/ExecutorService;` @kind virtual;
+  #L22b4e2.  v2:= temp @kind object;
+  #L22b4e4.  call `execute`(v2, v1) @signature `Ljava/util/concurrent/ExecutorService;.execute:(Ljava/lang/Runnable;)V` @kind interface;
+  #L22b4ea.  v1:= v4.`okhttp3.Dispatcher.runningAsyncCalls` @type ^`java.util.Deque` @kind object;
+  #L22b4ee.  call temp:= `size`(v1) @signature `Ljava/util/Deque;.size:()I` @kind interface;
+  #L22b4f4.  v1:= temp;
+  #L22b4f6.  v2:= v4.`okhttp3.Dispatcher.maxRequests` @type ^`int`;
+  #L22b4fa.  if v1 < v2 then goto L22b4a4;
+  #L22b4fe.  return @kind void;
+  #L22b500.  return @kind void;
+}
+procedure `int` `runningCallsForHost`(`okhttp3.Dispatcher` v4 @kind this, `okhttp3.RealCall$AsyncCall` v5 @kind object) @signature `Lokhttp3/Dispatcher;.runningCallsForHost:(Lokhttp3/RealCall$AsyncCall;)I` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L22aff4.  v0:= v4.`okhttp3.Dispatcher.runningAsyncCalls` @type ^`java.util.Deque` @kind object;
+  #L22aff8.  call temp:= `iterator`(v0) @signature `Ljava/util/Deque;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L22affe.  v0:= temp @kind object;
+  #L22b000.  v1:= 0I;
+  #L22b002.  call temp:= `hasNext`(v0) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L22b008.  v2:= temp;
+  #L22b00a.  if v2 == 0 then goto L22b04e;
+  #L22b00e.  call temp:= `next`(v0) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L22b014.  v2:= temp @kind object;
+  #L22b016.  v2:= (`okhttp3.RealCall$AsyncCall`) v2 @kind object;
+  #L22b01a.  call temp:= `get`(v2) @signature `Lokhttp3/RealCall$AsyncCall;.get:()Lokhttp3/RealCall;` @kind virtual;
+  #L22b020.  v3:= temp @kind object;
+  #L22b022.  v3:= v3.`okhttp3.RealCall.forWebSocket` @type ^`boolean` @kind boolean;
+  #L22b026.  if v3 == 0 then goto L22b02c;
+  #L22b02a.  goto L22b002;
+  #L22b02c.  call temp:= `host`(v2) @signature `Lokhttp3/RealCall$AsyncCall;.host:()Ljava/lang/String;` @kind virtual;
+  #L22b032.  v2:= temp @kind object;
+  #L22b034.  call temp:= `host`(v5) @signature `Lokhttp3/RealCall$AsyncCall;.host:()Ljava/lang/String;` @kind virtual;
+  #L22b03a.  v3:= temp @kind object;
+  #L22b03c.  call temp:= `equals`(v2, v3) @signature `Ljava/lang/String;.equals:(Ljava/lang/Object;)Z` @kind virtual;
+  #L22b042.  v2:= temp;
+  #L22b044.  if v2 == 0 then goto L22b002;
+  #L22b048.  v1:= v1 + 1;
+  #L22b04c.  goto L22b002;
+  #L22b04e.  return v1;
+}
+procedure `void` `cancelAll`(`okhttp3.Dispatcher` v2 @kind this) @signature `Lokhttp3/Dispatcher;.cancelAll:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L22b25c.  @monitorenter v2
+  #L22b25e.  v0:= v2.`okhttp3.Dispatcher.readyAsyncCalls` @type ^`java.util.Deque` @kind object;
+  #L22b262.  call temp:= `iterator`(v0) @signature `Ljava/util/Deque;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L22b268.  v0:= temp @kind object;
+  #L22b26a.  call temp:= `hasNext`(v0) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L22b270.  v1:= temp;
+  #L22b272.  if v1 == 0 then goto L22b292;
+  #L22b276.  call temp:= `next`(v0) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L22b27c.  v1:= temp @kind object;
+  #L22b27e.  v1:= (`okhttp3.RealCall$AsyncCall`) v1 @kind object;
+  #L22b282.  call temp:= `get`(v1) @signature `Lokhttp3/RealCall$AsyncCall;.get:()Lokhttp3/RealCall;` @kind virtual;
+  #L22b288.  v1:= temp @kind object;
+  #L22b28a.  call `cancel`(v1) @signature `Lokhttp3/RealCall;.cancel:()V` @kind virtual;
+  #L22b290.  goto L22b26a;
+  #L22b292.  v0:= v2.`okhttp3.Dispatcher.runningAsyncCalls` @type ^`java.util.Deque` @kind object;
+  #L22b296.  call temp:= `iterator`(v0) @signature `Ljava/util/Deque;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L22b29c.  v0:= temp @kind object;
+  #L22b29e.  call temp:= `hasNext`(v0) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L22b2a4.  v1:= temp;
+  #L22b2a6.  if v1 == 0 then goto L22b2c6;
+  #L22b2aa.  call temp:= `next`(v0) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L22b2b0.  v1:= temp @kind object;
+  #L22b2b2.  v1:= (`okhttp3.RealCall$AsyncCall`) v1 @kind object;
+  #L22b2b6.  call temp:= `get`(v1) @signature `Lokhttp3/RealCall$AsyncCall;.get:()Lokhttp3/RealCall;` @kind virtual;
+  #L22b2bc.  v1:= temp @kind object;
+  #L22b2be.  call `cancel`(v1) @signature `Lokhttp3/RealCall;.cancel:()V` @kind virtual;
+  #L22b2c4.  goto L22b29e;
+  #L22b2c6.  v0:= v2.`okhttp3.Dispatcher.runningSyncCalls` @type ^`java.util.Deque` @kind object;
+  #L22b2ca.  call temp:= `iterator`(v0) @signature `Ljava/util/Deque;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L22b2d0.  v0:= temp @kind object;
+  #L22b2d2.  call temp:= `hasNext`(v0) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L22b2d8.  v1:= temp;
+  #L22b2da.  if v1 == 0 then goto L22b2f2;
+  #L22b2de.  call temp:= `next`(v0) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L22b2e4.  v1:= temp @kind object;
+  #L22b2e6.  v1:= (`okhttp3.RealCall`) v1 @kind object;
+  #L22b2ea.  call `cancel`(v1) @signature `Lokhttp3/RealCall;.cancel:()V` @kind virtual;
+  #L22b2f0.  goto L22b2d2;
+  #L22b2f2.  @monitorexit v2
+  #L22b2f4.  return @kind void;
+  #L22b2f6.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L22b2f8.  @monitorexit v2
+  #L22b2fa.  throw v0;
+  #L22b2fc.  return @kind void;
+  catch `java.lang.Throwable` @[L22b25e..L22b2f0] goto L22b2f6;
+}
+procedure `void` `enqueue`(`okhttp3.Dispatcher` v2 @kind this, `okhttp3.RealCall$AsyncCall` v3 @kind object) @signature `Lokhttp3/Dispatcher;.enqueue:(Lokhttp3/RealCall$AsyncCall;)V` @AccessFlag  {
+    temp;
+    v0;
+    v1;
+
+  #L22b31c.  @monitorenter v2
+  #L22b31e.  v0:= v2.`okhttp3.Dispatcher.runningAsyncCalls` @type ^`java.util.Deque` @kind object;
+  #L22b322.  call temp:= `size`(v0) @signature `Ljava/util/Deque;.size:()I` @kind interface;
+  #L22b328.  v0:= temp;
+  #L22b32a.  v1:= v2.`okhttp3.Dispatcher.maxRequests` @type ^`int`;
+  #L22b32e.  if v0 >= v1 then goto L22b35c;
+  #L22b332.  call temp:= `runningCallsForHost`(v2, v3) @signature `Lokhttp3/Dispatcher;.runningCallsForHost:(Lokhttp3/RealCall$AsyncCall;)I` @kind direct;
+  #L22b338.  v0:= temp;
+  #L22b33a.  v1:= v2.`okhttp3.Dispatcher.maxRequestsPerHost` @type ^`int`;
+  #L22b33e.  if v0 >= v1 then goto L22b35c;
+  #L22b342.  v0:= v2.`okhttp3.Dispatcher.runningAsyncCalls` @type ^`java.util.Deque` @kind object;
+  #L22b346.  call temp:= `add`(v0, v3) @signature `Ljava/util/Deque;.add:(Ljava/lang/Object;)Z` @kind interface;
+  #L22b34c.  call temp:= `executorService`(v2) @signature `Lokhttp3/Dispatcher;.executorService:()Ljava/util/concurrent/ExecutorService;` @kind virtual;
+  #L22b352.  v0:= temp @kind object;
+  #L22b354.  call `execute`(v0, v3) @signature `Ljava/util/concurrent/ExecutorService;.execute:(Ljava/lang/Runnable;)V` @kind interface;
+  #L22b35a.  goto L22b366;
+  #L22b35c.  v0:= v2.`okhttp3.Dispatcher.readyAsyncCalls` @type ^`java.util.Deque` @kind object;
+  #L22b360.  call temp:= `add`(v0, v3) @signature `Ljava/util/Deque;.add:(Ljava/lang/Object;)Z` @kind interface;
+  #L22b366.  @monitorexit v2
+  #L22b368.  return @kind void;
+  #L22b36a.  v3:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L22b36c.  @monitorexit v2
+  #L22b36e.  throw v3;
+  catch `java.lang.Throwable` @[L22b31e..L22b366] goto L22b36a;
+}
+procedure `void` `executed`(`okhttp3.Dispatcher` v1 @kind this, `okhttp3.RealCall` v2 @kind object) @signature `Lokhttp3/Dispatcher;.executed:(Lokhttp3/RealCall;)V` @AccessFlag  {
+    temp;
+    v0;
+
+  #L22b38c.  @monitorenter v1
+  #L22b38e.  v0:= v1.`okhttp3.Dispatcher.runningSyncCalls` @type ^`java.util.Deque` @kind object;
+  #L22b392.  call temp:= `add`(v0, v2) @signature `Ljava/util/Deque;.add:(Ljava/lang/Object;)Z` @kind interface;
+  #L22b398.  @monitorexit v1
+  #L22b39a.  return @kind void;
+  #L22b39c.  v2:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L22b39e.  @monitorexit v1
+  #L22b3a0.  throw v2;
+  catch `java.lang.Throwable` @[L22b38e..L22b398] goto L22b39c;
+}
+procedure `java.util.concurrent.ExecutorService` `executorService`(`okhttp3.Dispatcher` v9 @kind this) @signature `Lokhttp3/Dispatcher;.executorService:()Ljava/util/concurrent/ExecutorService;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+
+  #L22b14c.  @monitorenter v9
+  #L22b14e.  v0:= v9.`okhttp3.Dispatcher.executorService` @type ^`java.util.concurrent.ExecutorService` @kind object;
+  #L22b152.  if v0 != 0 then goto L22b18e;
+  #L22b156.  v0:= new `java.util.concurrent.ThreadPoolExecutor`;
+  #L22b15a.  v2:= 0I;
+  #L22b15c.  v3:= 2147483647I;
+  #L22b162.  v4:= 60L;
+  #L22b166.  v6:= `@@java.util.concurrent.TimeUnit.SECONDS` @type ^`java.util.concurrent.TimeUnit` @kind object;
+  #L22b16a.  v7:= new `java.util.concurrent.SynchronousQueue`;
+  #L22b16e.  call `<init>`(v7) @signature `Ljava/util/concurrent/SynchronousQueue;.<init>:()V` @kind direct;
+  #L22b174.  v1:= "OkHttp Dispatcher" @kind object;
+  #L22b178.  v8:= 0I;
+  #L22b17a.  call temp:= `threadFactory`(v1, v8) @signature `Lokhttp3/internal/Util;.threadFactory:(Ljava/lang/String;Z)Ljava/util/concurrent/ThreadFactory;` @kind static;
+  #L22b180.  v8:= temp @kind object;
+  #L22b182.  v1:= v0 @kind object;
+  #L22b184.  call `<init>`(v1, v2, v3, v4, v6, v7, v8) @signature `Ljava/util/concurrent/ThreadPoolExecutor;.<init>:(IIJLjava/util/concurrent/TimeUnit;Ljava/util/concurrent/BlockingQueue;Ljava/util/concurrent/ThreadFactory;)V` @kind direct;
+  #L22b18a.  v9.`okhttp3.Dispatcher.executorService` @type ^`java.util.concurrent.ExecutorService` := v0 @kind object;
+  #L22b18e.  v0:= v9.`okhttp3.Dispatcher.executorService` @type ^`java.util.concurrent.ExecutorService` @kind object;
+  #L22b192.  @monitorexit v9
+  #L22b194.  return v0 @kind object;
+  #L22b196.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L22b198.  @monitorexit v9
+  #L22b19a.  throw v0;
+  catch `java.lang.Throwable` @[L22b14e..L22b192] goto L22b196;
+}
+procedure `void` `finished`(`okhttp3.Dispatcher` v2 @kind this, `okhttp3.RealCall$AsyncCall` v3 @kind object) @signature `Lokhttp3/Dispatcher;.finished:(Lokhttp3/RealCall$AsyncCall;)V` @AccessFlag  {
+    temp;
+    v0;
+    v1;
+
+  #L22b430.  v0:= v2.`okhttp3.Dispatcher.runningAsyncCalls` @type ^`java.util.Deque` @kind object;
+  #L22b434.  v1:= 1I;
+  #L22b436.  call `finished`(v2, v0, v3, v1) @signature `Lokhttp3/Dispatcher;.finished:(Ljava/util/Deque;Ljava/lang/Object;Z)V` @kind direct;
+  #L22b43c.  return @kind void;
+}
+procedure `void` `finished`(`okhttp3.Dispatcher` v2 @kind this, `okhttp3.RealCall` v3 @kind object) @signature `Lokhttp3/Dispatcher;.finished:(Lokhttp3/RealCall;)V` @AccessFlag  {
+    temp;
+    v0;
+    v1;
+
+  #L22b450.  v0:= v2.`okhttp3.Dispatcher.runningSyncCalls` @type ^`java.util.Deque` @kind object;
+  #L22b454.  v1:= 0I;
+  #L22b456.  call `finished`(v2, v0, v3, v1) @signature `Lokhttp3/Dispatcher;.finished:(Ljava/util/Deque;Ljava/lang/Object;Z)V` @kind direct;
+  #L22b45c.  return @kind void;
+}
+procedure `int` `getMaxRequests`(`okhttp3.Dispatcher` v1 @kind this) @signature `Lokhttp3/Dispatcher;.getMaxRequests:()I` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L22af24.  @monitorenter v1
+  #L22af26.  v0:= v1.`okhttp3.Dispatcher.maxRequests` @type ^`int`;
+  #L22af2a.  @monitorexit v1
+  #L22af2c.  return v0;
+  #L22af2e.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L22af30.  @monitorexit v1
+  #L22af32.  throw v0;
+  catch `java.lang.Throwable` @[L22af26..L22af2a] goto L22af2e;
+}
+procedure `int` `getMaxRequestsPerHost`(`okhttp3.Dispatcher` v1 @kind this) @signature `Lokhttp3/Dispatcher;.getMaxRequestsPerHost:()I` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L22af50.  @monitorenter v1
+  #L22af52.  v0:= v1.`okhttp3.Dispatcher.maxRequestsPerHost` @type ^`int`;
+  #L22af56.  @monitorexit v1
+  #L22af58.  return v0;
+  #L22af5a.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L22af5c.  @monitorexit v1
+  #L22af5e.  throw v0;
+  catch `java.lang.Throwable` @[L22af52..L22af56] goto L22af5a;
+}
+procedure `java.util.List` `queuedCalls`(`okhttp3.Dispatcher` v3 @kind this) @signature `Lokhttp3/Dispatcher;.queuedCalls:()Ljava/util/List;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L22b060.  @monitorenter v3
+  #L22b062.  v0:= new `java.util.ArrayList`;
+  #L22b066.  call `<init>`(v0) @signature `Ljava/util/ArrayList;.<init>:()V` @kind direct;
+  #L22b06c.  v1:= v3.`okhttp3.Dispatcher.readyAsyncCalls` @type ^`java.util.Deque` @kind object;
+  #L22b070.  call temp:= `iterator`(v1) @signature `Ljava/util/Deque;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L22b076.  v1:= temp @kind object;
+  #L22b078.  call temp:= `hasNext`(v1) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L22b07e.  v2:= temp;
+  #L22b080.  if v2 == 0 then goto L22b0a0;
+  #L22b084.  call temp:= `next`(v1) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L22b08a.  v2:= temp @kind object;
+  #L22b08c.  v2:= (`okhttp3.RealCall$AsyncCall`) v2 @kind object;
+  #L22b090.  call temp:= `get`(v2) @signature `Lokhttp3/RealCall$AsyncCall;.get:()Lokhttp3/RealCall;` @kind virtual;
+  #L22b096.  v2:= temp @kind object;
+  #L22b098.  call temp:= `add`(v0, v2) @signature `Ljava/util/List;.add:(Ljava/lang/Object;)Z` @kind interface;
+  #L22b09e.  goto L22b078;
+  #L22b0a0.  call temp:= `unmodifiableList`(v0) @signature `Ljava/util/Collections;.unmodifiableList:(Ljava/util/List;)Ljava/util/List;` @kind static;
+  #L22b0a6.  v0:= temp @kind object;
+  #L22b0a8.  @monitorexit v3
+  #L22b0aa.  return v0 @kind object;
+  #L22b0ac.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L22b0ae.  @monitorexit v3
+  #L22b0b0.  throw v0;
+  #L22b0b2.  return @kind void;
+  catch `java.lang.Throwable` @[L22b062..L22b0a8] goto L22b0ac;
+}
+procedure `int` `queuedCallsCount`(`okhttp3.Dispatcher` v1 @kind this) @signature `Lokhttp3/Dispatcher;.queuedCallsCount:()I` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L22af7c.  @monitorenter v1
+  #L22af7e.  v0:= v1.`okhttp3.Dispatcher.readyAsyncCalls` @type ^`java.util.Deque` @kind object;
+  #L22af82.  call temp:= `size`(v0) @signature `Ljava/util/Deque;.size:()I` @kind interface;
+  #L22af88.  v0:= temp;
+  #L22af8a.  @monitorexit v1
+  #L22af8c.  return v0;
+  #L22af8e.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L22af90.  @monitorexit v1
+  #L22af92.  throw v0;
+  catch `java.lang.Throwable` @[L22af7e..L22af8a] goto L22af8e;
+}
+procedure `java.util.List` `runningCalls`(`okhttp3.Dispatcher` v3 @kind this) @signature `Lokhttp3/Dispatcher;.runningCalls:()Ljava/util/List;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L22b0d0.  @monitorenter v3
+  #L22b0d2.  v0:= new `java.util.ArrayList`;
+  #L22b0d6.  call `<init>`(v0) @signature `Ljava/util/ArrayList;.<init>:()V` @kind direct;
+  #L22b0dc.  v1:= v3.`okhttp3.Dispatcher.runningSyncCalls` @type ^`java.util.Deque` @kind object;
+  #L22b0e0.  call temp:= `addAll`(v0, v1) @signature `Ljava/util/List;.addAll:(Ljava/util/Collection;)Z` @kind interface;
+  #L22b0e6.  v1:= v3.`okhttp3.Dispatcher.runningAsyncCalls` @type ^`java.util.Deque` @kind object;
+  #L22b0ea.  call temp:= `iterator`(v1) @signature `Ljava/util/Deque;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L22b0f0.  v1:= temp @kind object;
+  #L22b0f2.  call temp:= `hasNext`(v1) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L22b0f8.  v2:= temp;
+  #L22b0fa.  if v2 == 0 then goto L22b11a;
+  #L22b0fe.  call temp:= `next`(v1) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L22b104.  v2:= temp @kind object;
+  #L22b106.  v2:= (`okhttp3.RealCall$AsyncCall`) v2 @kind object;
+  #L22b10a.  call temp:= `get`(v2) @signature `Lokhttp3/RealCall$AsyncCall;.get:()Lokhttp3/RealCall;` @kind virtual;
+  #L22b110.  v2:= temp @kind object;
+  #L22b112.  call temp:= `add`(v0, v2) @signature `Ljava/util/List;.add:(Ljava/lang/Object;)Z` @kind interface;
+  #L22b118.  goto L22b0f2;
+  #L22b11a.  call temp:= `unmodifiableList`(v0) @signature `Ljava/util/Collections;.unmodifiableList:(Ljava/util/List;)Ljava/util/List;` @kind static;
+  #L22b120.  v0:= temp @kind object;
+  #L22b122.  @monitorexit v3
+  #L22b124.  return v0 @kind object;
+  #L22b126.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L22b128.  @monitorexit v3
+  #L22b12a.  throw v0;
+  #L22b12c.  return @kind void;
+  catch `java.lang.Throwable` @[L22b0d2..L22b122] goto L22b126;
+}
+procedure `int` `runningCallsCount`(`okhttp3.Dispatcher` v2 @kind this) @signature `Lokhttp3/Dispatcher;.runningCallsCount:()I` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L22afb0.  @monitorenter v2
+  #L22afb2.  v0:= v2.`okhttp3.Dispatcher.runningAsyncCalls` @type ^`java.util.Deque` @kind object;
+  #L22afb6.  call temp:= `size`(v0) @signature `Ljava/util/Deque;.size:()I` @kind interface;
+  #L22afbc.  v0:= temp;
+  #L22afbe.  v1:= v2.`okhttp3.Dispatcher.runningSyncCalls` @type ^`java.util.Deque` @kind object;
+  #L22afc2.  call temp:= `size`(v1) @signature `Ljava/util/Deque;.size:()I` @kind interface;
+  #L22afc8.  v1:= temp;
+  #L22afca.  v0:= v0 + v1 @kind int;
+  #L22afcc.  @monitorexit v2
+  #L22afce.  return v0;
+  #L22afd0.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L22afd2.  @monitorexit v2
+  #L22afd4.  throw v0;
+  catch `java.lang.Throwable` @[L22afb2..L22afca] goto L22afd0;
+}
+procedure `void` `setIdleCallback`(`okhttp3.Dispatcher` v0 @kind this, `java.lang.Runnable` v1 @kind object) @signature `Lokhttp3/Dispatcher;.setIdleCallback:(Ljava/lang/Runnable;)V` @AccessFlag PUBLIC {
+    temp;
+
+  #L22b514.  @monitorenter v0
+  #L22b516.  v0.`okhttp3.Dispatcher.idleCallback` @type ^`java.lang.Runnable` := v1 @kind object;
+  #L22b51a.  @monitorexit v0
+  #L22b51c.  return @kind void;
+  #L22b51e.  v1:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L22b520.  @monitorexit v0
+  #L22b522.  throw v1;
+  catch `java.lang.Throwable` @[L22b516..L22b51a] goto L22b51e;
+}
+procedure `void` `setMaxRequests`(`okhttp3.Dispatcher` v3 @kind this, `int` v4 ) @signature `Lokhttp3/Dispatcher;.setMaxRequests:(I)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L22b540.  @monitorenter v3
+  #L22b542.  v0:= 1I;
+  #L22b544.  if v4 < v0 then goto L22b55a;
+  #L22b548.  v3.`okhttp3.Dispatcher.maxRequests` @type ^`int` := v4;
+  #L22b54c.  call `promoteCalls`(v3) @signature `Lokhttp3/Dispatcher;.promoteCalls:()V` @kind direct;
+  #L22b552.  @monitorexit v3
+  #L22b554.  return @kind void;
+  #L22b556.  v4:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L22b558.  goto L22b588;
+  #L22b55a.  v0:= new `java.lang.IllegalArgumentException`;
+  #L22b55e.  v1:= new `java.lang.StringBuilder`;
+  #L22b562.  call `<init>`(v1) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L22b568.  v2:= "max < 1: " @kind object;
+  #L22b56c.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L22b572.  call temp:= `append`(v1, v4) @signature `Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder;` @kind virtual;
+  #L22b578.  call temp:= `toString`(v1) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L22b57e.  v4:= temp @kind object;
+  #L22b580.  call `<init>`(v0, v4) @signature `Ljava/lang/IllegalArgumentException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L22b586.  throw v0;
+  #L22b588.  @monitorexit v3
+  #L22b58a.  throw v4;
+  catch `java.lang.Throwable` @[L22b548..L22b552] goto L22b556;
+  catch `java.lang.Throwable` @[L22b55a..L22b588] goto L22b556;
+}
+procedure `void` `setMaxRequestsPerHost`(`okhttp3.Dispatcher` v3 @kind this, `int` v4 ) @signature `Lokhttp3/Dispatcher;.setMaxRequestsPerHost:(I)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L22b5b0.  @monitorenter v3
+  #L22b5b2.  v0:= 1I;
+  #L22b5b4.  if v4 < v0 then goto L22b5ca;
+  #L22b5b8.  v3.`okhttp3.Dispatcher.maxRequestsPerHost` @type ^`int` := v4;
+  #L22b5bc.  call `promoteCalls`(v3) @signature `Lokhttp3/Dispatcher;.promoteCalls:()V` @kind direct;
+  #L22b5c2.  @monitorexit v3
+  #L22b5c4.  return @kind void;
+  #L22b5c6.  v4:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L22b5c8.  goto L22b5f8;
+  #L22b5ca.  v0:= new `java.lang.IllegalArgumentException`;
+  #L22b5ce.  v1:= new `java.lang.StringBuilder`;
+  #L22b5d2.  call `<init>`(v1) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L22b5d8.  v2:= "max < 1: " @kind object;
+  #L22b5dc.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L22b5e2.  call temp:= `append`(v1, v4) @signature `Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder;` @kind virtual;
+  #L22b5e8.  call temp:= `toString`(v1) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L22b5ee.  v4:= temp @kind object;
+  #L22b5f0.  call `<init>`(v0, v4) @signature `Ljava/lang/IllegalArgumentException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L22b5f6.  throw v0;
+  #L22b5f8.  @monitorexit v3
+  #L22b5fa.  throw v4;
+  catch `java.lang.Throwable` @[L22b5b8..L22b5c2] goto L22b5c6;
+  catch `java.lang.Throwable` @[L22b5ca..L22b5f8] goto L22b5c6;
+}

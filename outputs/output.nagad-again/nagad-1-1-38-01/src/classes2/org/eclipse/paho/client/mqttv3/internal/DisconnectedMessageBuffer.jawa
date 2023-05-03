@@ -1,0 +1,169 @@
+record `org.eclipse.paho.client.mqttv3.internal.DisconnectedMessageBuffer` @kind class @AccessFlag PUBLIC extends `java.lang.Runnable` @kind interface {
+  `java.lang.Object` `org.eclipse.paho.client.mqttv3.internal.DisconnectedMessageBuffer.bufLock` @AccessFlag PRIVATE;
+  `java.util.ArrayList` `org.eclipse.paho.client.mqttv3.internal.DisconnectedMessageBuffer.buffer` @AccessFlag PRIVATE;
+  `org.eclipse.paho.client.mqttv3.DisconnectedBufferOptions` `org.eclipse.paho.client.mqttv3.internal.DisconnectedMessageBuffer.bufferOpts` @AccessFlag PRIVATE;
+  `org.eclipse.paho.client.mqttv3.internal.IDisconnectedBufferCallback` `org.eclipse.paho.client.mqttv3.internal.DisconnectedMessageBuffer.callback` @AccessFlag PRIVATE;
+}
+global `java.lang.String` `@@org.eclipse.paho.client.mqttv3.internal.DisconnectedMessageBuffer.CLASS_NAME` @AccessFlag PRIVATE_STATIC_FINAL;
+global `org.eclipse.paho.client.mqttv3.logging.Logger` `@@org.eclipse.paho.client.mqttv3.internal.DisconnectedMessageBuffer.log` @AccessFlag PRIVATE_STATIC_FINAL;
+procedure `void` `<clinit>`() @signature `Lorg/eclipse/paho/client/mqttv3/internal/DisconnectedMessageBuffer;.<clinit>:()V` @AccessFlag STATIC_CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+
+  #L231354.  v0:= "org.eclipse.paho.client.mqttv3.internal.nls.logcat" @kind object;
+  #L231358.  v1:= "DisconnectedMessageBuffer" @kind object;
+  #L23135c.  call temp:= `getLogger`(v0, v1) @signature `Lorg/eclipse/paho/client/mqttv3/logging/LoggerFactory;.getLogger:(Ljava/lang/String;Ljava/lang/String;)Lorg/eclipse/paho/client/mqttv3/logging/Logger;` @kind static;
+  #L231362.  v0:= temp @kind object;
+  #L231364.  `@@org.eclipse.paho.client.mqttv3.internal.DisconnectedMessageBuffer.log` @type ^`org.eclipse.paho.client.mqttv3.logging.Logger` := v0 @kind object;
+  #L231368.  return @kind void;
+}
+procedure `void` `<init>`(`org.eclipse.paho.client.mqttv3.internal.DisconnectedMessageBuffer` v1 @kind this, `org.eclipse.paho.client.mqttv3.DisconnectedBufferOptions` v2 @kind object) @signature `Lorg/eclipse/paho/client/mqttv3/internal/DisconnectedMessageBuffer;.<init>:(Lorg/eclipse/paho/client/mqttv3/DisconnectedBufferOptions;)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L23137c.  call `<init>`(v1) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L231382.  v0:= new `java.lang.Object`;
+  #L231386.  call `<init>`(v0) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L23138c.  v1.`org.eclipse.paho.client.mqttv3.internal.DisconnectedMessageBuffer.bufLock` @type ^`java.lang.Object` := v0 @kind object;
+  #L231390.  v1.`org.eclipse.paho.client.mqttv3.internal.DisconnectedMessageBuffer.bufferOpts` @type ^`org.eclipse.paho.client.mqttv3.DisconnectedBufferOptions` := v2 @kind object;
+  #L231394.  v2:= new `java.util.ArrayList`;
+  #L231398.  call `<init>`(v2) @signature `Ljava/util/ArrayList;.<init>:()V` @kind direct;
+  #L23139e.  v1.`org.eclipse.paho.client.mqttv3.internal.DisconnectedMessageBuffer.buffer` @type ^`java.util.ArrayList` := v2 @kind object;
+  #L2313a2.  return @kind void;
+}
+procedure `void` `deleteMessage`(`org.eclipse.paho.client.mqttv3.internal.DisconnectedMessageBuffer` v2 @kind this, `int` v3 ) @signature `Lorg/eclipse/paho/client/mqttv3/internal/DisconnectedMessageBuffer;.deleteMessage:(I)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L2313b4.  v0:= v2.`org.eclipse.paho.client.mqttv3.internal.DisconnectedMessageBuffer.bufLock` @type ^`java.lang.Object` @kind object;
+  #L2313b8.  @monitorenter v0
+  #L2313ba.  v1:= v2.`org.eclipse.paho.client.mqttv3.internal.DisconnectedMessageBuffer.buffer` @type ^`java.util.ArrayList` @kind object;
+  #L2313be.  call temp:= `remove`(v1, v3) @signature `Ljava/util/ArrayList;.remove:(I)Ljava/lang/Object;` @kind virtual;
+  #L2313c4.  @monitorexit v0
+  #L2313c6.  return @kind void;
+  #L2313c8.  v3:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L2313ca.  @monitorexit v0
+  #L2313cc.  throw v3;
+  catch `java.lang.Throwable` @[L2313ba..L2313cc] goto L2313c8;
+}
+procedure `org.eclipse.paho.client.mqttv3.BufferedMessage` `getMessage`(`org.eclipse.paho.client.mqttv3.internal.DisconnectedMessageBuffer` v2 @kind this, `int` v3 ) @signature `Lorg/eclipse/paho/client/mqttv3/internal/DisconnectedMessageBuffer;.getMessage:(I)Lorg/eclipse/paho/client/mqttv3/BufferedMessage;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L231318.  v0:= v2.`org.eclipse.paho.client.mqttv3.internal.DisconnectedMessageBuffer.bufLock` @type ^`java.lang.Object` @kind object;
+  #L23131c.  @monitorenter v0
+  #L23131e.  v1:= v2.`org.eclipse.paho.client.mqttv3.internal.DisconnectedMessageBuffer.buffer` @type ^`java.util.ArrayList` @kind object;
+  #L231322.  call temp:= `get`(v1, v3) @signature `Ljava/util/ArrayList;.get:(I)Ljava/lang/Object;` @kind virtual;
+  #L231328.  v3:= temp @kind object;
+  #L23132a.  v3:= (`org.eclipse.paho.client.mqttv3.BufferedMessage`) v3 @kind object;
+  #L23132e.  @monitorexit v0
+  #L231330.  return v3 @kind object;
+  #L231332.  v3:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L231334.  @monitorexit v0
+  #L231336.  throw v3;
+  catch `java.lang.Throwable` @[L23131e..L231336] goto L231332;
+}
+procedure `int` `getMessageCount`(`org.eclipse.paho.client.mqttv3.internal.DisconnectedMessageBuffer` v2 @kind this) @signature `Lorg/eclipse/paho/client/mqttv3/internal/DisconnectedMessageBuffer;.getMessageCount:()I` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L2312e0.  v0:= v2.`org.eclipse.paho.client.mqttv3.internal.DisconnectedMessageBuffer.bufLock` @type ^`java.lang.Object` @kind object;
+  #L2312e4.  @monitorenter v0
+  #L2312e6.  v1:= v2.`org.eclipse.paho.client.mqttv3.internal.DisconnectedMessageBuffer.buffer` @type ^`java.util.ArrayList` @kind object;
+  #L2312ea.  call temp:= `size`(v1) @signature `Ljava/util/ArrayList;.size:()I` @kind virtual;
+  #L2312f0.  v1:= temp;
+  #L2312f2.  @monitorexit v0
+  #L2312f4.  return v1;
+  #L2312f6.  v1:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L2312f8.  @monitorexit v0
+  #L2312fa.  throw v1;
+  catch `java.lang.Throwable` @[L2312e6..L2312fa] goto L2312f6;
+}
+procedure `boolean` `isPersistBuffer`(`org.eclipse.paho.client.mqttv3.internal.DisconnectedMessageBuffer` v1 @kind this) @signature `Lorg/eclipse/paho/client/mqttv3/internal/DisconnectedMessageBuffer;.isPersistBuffer:()Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L2312c0.  v0:= v1.`org.eclipse.paho.client.mqttv3.internal.DisconnectedMessageBuffer.bufferOpts` @type ^`org.eclipse.paho.client.mqttv3.DisconnectedBufferOptions` @kind object;
+  #L2312c4.  call temp:= `isPersistBuffer`(v0) @signature `Lorg/eclipse/paho/client/mqttv3/DisconnectedBufferOptions;.isPersistBuffer:()Z` @kind virtual;
+  #L2312ca.  v0:= temp;
+  #L2312cc.  return v0;
+}
+procedure `void` `putMessage`(`org.eclipse.paho.client.mqttv3.internal.DisconnectedMessageBuffer` v2 @kind this, `org.eclipse.paho.client.mqttv3.internal.wire.MqttWireMessage` v3 @kind object, `org.eclipse.paho.client.mqttv3.MqttToken` v4 @kind object) @signature `Lorg/eclipse/paho/client/mqttv3/internal/DisconnectedMessageBuffer;.putMessage:(Lorg/eclipse/paho/client/mqttv3/internal/wire/MqttWireMessage;Lorg/eclipse/paho/client/mqttv3/MqttToken;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L2313ec.  v0:= new `org.eclipse.paho.client.mqttv3.BufferedMessage`;
+  #L2313f0.  call `<init>`(v0, v3, v4) @signature `Lorg/eclipse/paho/client/mqttv3/BufferedMessage;.<init>:(Lorg/eclipse/paho/client/mqttv3/internal/wire/MqttWireMessage;Lorg/eclipse/paho/client/mqttv3/MqttToken;)V` @kind direct;
+  #L2313f6.  v3:= v2.`org.eclipse.paho.client.mqttv3.internal.DisconnectedMessageBuffer.bufLock` @type ^`java.lang.Object` @kind object;
+  #L2313fa.  @monitorenter v3
+  #L2313fc.  v4:= v2.`org.eclipse.paho.client.mqttv3.internal.DisconnectedMessageBuffer.buffer` @type ^`java.util.ArrayList` @kind object;
+  #L231400.  call temp:= `size`(v4) @signature `Ljava/util/ArrayList;.size:()I` @kind virtual;
+  #L231406.  v4:= temp;
+  #L231408.  v1:= v2.`org.eclipse.paho.client.mqttv3.internal.DisconnectedMessageBuffer.bufferOpts` @type ^`org.eclipse.paho.client.mqttv3.DisconnectedBufferOptions` @kind object;
+  #L23140c.  call temp:= `getBufferSize`(v1) @signature `Lorg/eclipse/paho/client/mqttv3/DisconnectedBufferOptions;.getBufferSize:()I` @kind virtual;
+  #L231412.  v1:= temp;
+  #L231414.  if v4 >= v1 then goto L231424;
+  #L231418.  v4:= v2.`org.eclipse.paho.client.mqttv3.internal.DisconnectedMessageBuffer.buffer` @type ^`java.util.ArrayList` @kind object;
+  #L23141c.  call temp:= `add`(v4, v0) @signature `Ljava/util/ArrayList;.add:(Ljava/lang/Object;)Z` @kind virtual;
+  #L231422.  goto L23144a;
+  #L231424.  v4:= v2.`org.eclipse.paho.client.mqttv3.internal.DisconnectedMessageBuffer.bufferOpts` @type ^`org.eclipse.paho.client.mqttv3.DisconnectedBufferOptions` @kind object;
+  #L231428.  call temp:= `isDeleteOldestMessages`(v4) @signature `Lorg/eclipse/paho/client/mqttv3/DisconnectedBufferOptions;.isDeleteOldestMessages:()Z` @kind virtual;
+  #L23142e.  v4:= temp;
+  #L231430.  if v4 == 0 then goto L23144e;
+  #L231434.  v4:= v2.`org.eclipse.paho.client.mqttv3.internal.DisconnectedMessageBuffer.buffer` @type ^`java.util.ArrayList` @kind object;
+  #L231438.  v1:= 0I;
+  #L23143a.  call temp:= `remove`(v4, v1) @signature `Ljava/util/ArrayList;.remove:(I)Ljava/lang/Object;` @kind virtual;
+  #L231440.  v4:= v2.`org.eclipse.paho.client.mqttv3.internal.DisconnectedMessageBuffer.buffer` @type ^`java.util.ArrayList` @kind object;
+  #L231444.  call temp:= `add`(v4, v0) @signature `Ljava/util/ArrayList;.add:(Ljava/lang/Object;)Z` @kind virtual;
+  #L23144a.  @monitorexit v3
+  #L23144c.  return @kind void;
+  #L23144e.  v4:= new `org.eclipse.paho.client.mqttv3.MqttException`;
+  #L231452.  v0:= 32203I;
+  #L231456.  call `<init>`(v4, v0) @signature `Lorg/eclipse/paho/client/mqttv3/MqttException;.<init>:(I)V` @kind direct;
+  #L23145c.  throw v4;
+  #L23145e.  v4:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L231460.  @monitorexit v3
+  #L231462.  throw v4;
+  catch `java.lang.Throwable` @[L2313fc..L231462] goto L23145e;
+}
+procedure `void` `run`(`org.eclipse.paho.client.mqttv3.internal.DisconnectedMessageBuffer` v5 @kind this) @signature `Lorg/eclipse/paho/client/mqttv3/internal/DisconnectedMessageBuffer;.run:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L231480.  v0:= `@@org.eclipse.paho.client.mqttv3.internal.DisconnectedMessageBuffer.log` @type ^`org.eclipse.paho.client.mqttv3.logging.Logger` @kind object;
+  #L231484.  v1:= "run" @kind object;
+  #L231488.  v2:= "DisconnectedMessageBuffer" @kind object;
+  #L23148c.  v3:= "516" @kind object;
+  #L231490.  call `fine`(v0, v2, v1, v3) @signature `Lorg/eclipse/paho/client/mqttv3/logging/Logger;.fine:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V` @kind interface;
+  #L231496.  call temp:= `getMessageCount`(v5) @signature `Lorg/eclipse/paho/client/mqttv3/internal/DisconnectedMessageBuffer;.getMessageCount:()I` @kind virtual;
+  #L23149c.  v0:= temp;
+  #L23149e.  if v0 > 0 then goto L2314a4;
+  #L2314a2.  goto L2314ce;
+  #L2314a4.  v0:= 0I;
+  #L2314a6.  call temp:= `getMessage`(v5, v0) @signature `Lorg/eclipse/paho/client/mqttv3/internal/DisconnectedMessageBuffer;.getMessage:(I)Lorg/eclipse/paho/client/mqttv3/BufferedMessage;` @kind virtual;
+  #L2314ac.  v3:= temp @kind object;
+  #L2314ae.  v4:= v5.`org.eclipse.paho.client.mqttv3.internal.DisconnectedMessageBuffer.callback` @type ^`org.eclipse.paho.client.mqttv3.internal.IDisconnectedBufferCallback` @kind object;
+  #L2314b2.  call `publishBufferedMessage`(v4, v3) @signature `Lorg/eclipse/paho/client/mqttv3/internal/IDisconnectedBufferCallback;.publishBufferedMessage:(Lorg/eclipse/paho/client/mqttv3/BufferedMessage;)V` @kind interface;
+  #L2314b8.  call `deleteMessage`(v5, v0) @signature `Lorg/eclipse/paho/client/mqttv3/internal/DisconnectedMessageBuffer;.deleteMessage:(I)V` @kind virtual;
+  #L2314be.  goto L231496;
+  #L2314c0.  v0:= `@@org.eclipse.paho.client.mqttv3.internal.DisconnectedMessageBuffer.log` @type ^`org.eclipse.paho.client.mqttv3.logging.Logger` @kind object;
+  #L2314c4.  v3:= "517" @kind object;
+  #L2314c8.  call `warning`(v0, v2, v1, v3) @signature `Lorg/eclipse/paho/client/mqttv3/logging/Logger;.warning:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V` @kind interface;
+  #L2314ce.  return @kind void;
+  catch `org.eclipse.paho.client.mqttv3.MqttException` @[L2314a6..L2314be] goto L2314c0;
+}
+procedure `void` `setPublishCallback`(`org.eclipse.paho.client.mqttv3.internal.DisconnectedMessageBuffer` v0 @kind this, `org.eclipse.paho.client.mqttv3.internal.IDisconnectedBufferCallback` v1 @kind object) @signature `Lorg/eclipse/paho/client/mqttv3/internal/DisconnectedMessageBuffer;.setPublishCallback:(Lorg/eclipse/paho/client/mqttv3/internal/IDisconnectedBufferCallback;)V` @AccessFlag PUBLIC {
+    temp;
+
+  #L2314f0.  v0.`org.eclipse.paho.client.mqttv3.internal.DisconnectedMessageBuffer.callback` @type ^`org.eclipse.paho.client.mqttv3.internal.IDisconnectedBufferCallback` := v1 @kind object;
+  #L2314f4.  return @kind void;
+}

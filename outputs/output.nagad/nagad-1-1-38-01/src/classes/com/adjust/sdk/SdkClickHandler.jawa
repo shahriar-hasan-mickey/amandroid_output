@@ -1,0 +1,500 @@
+record `com.adjust.sdk.SdkClickHandler` @kind class @AccessFlag PUBLIC extends `com.adjust.sdk.ISdkClickHandler` @kind interface {
+  `java.lang.ref.WeakReference` `com.adjust.sdk.SdkClickHandler.activityHandlerWeakRef` @AccessFlag PRIVATE;
+  `com.adjust.sdk.network.IActivityPackageSender` `com.adjust.sdk.SdkClickHandler.activityPackageSender` @AccessFlag PRIVATE;
+  `com.adjust.sdk.BackoffStrategy` `com.adjust.sdk.SdkClickHandler.backoffStrategy` @AccessFlag PRIVATE;
+  `com.adjust.sdk.ILogger` `com.adjust.sdk.SdkClickHandler.logger` @AccessFlag PRIVATE;
+  `java.util.List` `com.adjust.sdk.SdkClickHandler.packageQueue` @AccessFlag PRIVATE;
+  `boolean` `com.adjust.sdk.SdkClickHandler.paused` @AccessFlag PRIVATE;
+  `com.adjust.sdk.scheduler.ThreadScheduler` `com.adjust.sdk.SdkClickHandler.scheduler` @AccessFlag PRIVATE;
+}
+global `double` `@@com.adjust.sdk.SdkClickHandler.MILLISECONDS_TO_SECONDS_DIVISOR` @AccessFlag PRIVATE_STATIC_FINAL;
+global `java.lang.String` `@@com.adjust.sdk.SdkClickHandler.SCHEDULED_EXECUTOR_SOURCE` @AccessFlag PRIVATE_STATIC_FINAL;
+global `java.lang.String` `@@com.adjust.sdk.SdkClickHandler.SOURCE_INSTALL_REFERRER` @AccessFlag PRIVATE_STATIC_FINAL;
+global `java.lang.String` `@@com.adjust.sdk.SdkClickHandler.SOURCE_REFTAG` @AccessFlag PRIVATE_STATIC_FINAL;
+procedure `void` `<init>`(`com.adjust.sdk.SdkClickHandler` v0 @kind this, `com.adjust.sdk.IActivityHandler` v1 @kind object, `boolean` v2 , `com.adjust.sdk.network.IActivityPackageSender` v3 @kind object) @signature `Lcom/adjust/sdk/SdkClickHandler;.<init>:(Lcom/adjust/sdk/IActivityHandler;ZLcom/adjust/sdk/network/IActivityPackageSender;)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+
+  #L275f00.  call `<init>`(v0) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L275f06.  call `init`(v0, v1, v2, v3) @signature `Lcom/adjust/sdk/SdkClickHandler;.init:(Lcom/adjust/sdk/IActivityHandler;ZLcom/adjust/sdk/network/IActivityPackageSender;)V` @kind virtual;
+  #L275f0c.  call temp:= `getLogger`() @signature `Lcom/adjust/sdk/AdjustFactory;.getLogger:()Lcom/adjust/sdk/ILogger;` @kind static;
+  #L275f12.  v1:= temp @kind object;
+  #L275f14.  v0.`com.adjust.sdk.SdkClickHandler.logger` @type ^`com.adjust.sdk.ILogger` := v1 @kind object;
+  #L275f18.  call temp:= `getSdkClickBackoffStrategy`() @signature `Lcom/adjust/sdk/AdjustFactory;.getSdkClickBackoffStrategy:()Lcom/adjust/sdk/BackoffStrategy;` @kind static;
+  #L275f1e.  v1:= temp @kind object;
+  #L275f20.  v0.`com.adjust.sdk.SdkClickHandler.backoffStrategy` @type ^`com.adjust.sdk.BackoffStrategy` := v1 @kind object;
+  #L275f24.  v1:= new `com.adjust.sdk.scheduler.SingleThreadCachedScheduler`;
+  #L275f28.  v2:= "SdkClickHandler" @kind object;
+  #L275f2c.  call `<init>`(v1, v2) @signature `Lcom/adjust/sdk/scheduler/SingleThreadCachedScheduler;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L275f32.  v0.`com.adjust.sdk.SdkClickHandler.scheduler` @type ^`com.adjust.sdk.scheduler.ThreadScheduler` := v1 @kind object;
+  #L275f36.  return @kind void;
+}
+procedure `java.util.List` `access$000`(`com.adjust.sdk.SdkClickHandler` v0 @kind object) @signature `Lcom/adjust/sdk/SdkClickHandler;.access$000:(Lcom/adjust/sdk/SdkClickHandler;)Ljava/util/List;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L275e84.  v0:= v0.`com.adjust.sdk.SdkClickHandler.packageQueue` @type ^`java.util.List` @kind object;
+  #L275e88.  return v0 @kind object;
+}
+procedure `com.adjust.sdk.ILogger` `access$100`(`com.adjust.sdk.SdkClickHandler` v0 @kind object) @signature `Lcom/adjust/sdk/SdkClickHandler;.access$100:(Lcom/adjust/sdk/SdkClickHandler;)Lcom/adjust/sdk/ILogger;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L275e54.  v0:= v0.`com.adjust.sdk.SdkClickHandler.logger` @type ^`com.adjust.sdk.ILogger` @kind object;
+  #L275e58.  return v0 @kind object;
+}
+procedure `void` `access$200`(`com.adjust.sdk.SdkClickHandler` v0 @kind object) @signature `Lcom/adjust/sdk/SdkClickHandler;.access$200:(Lcom/adjust/sdk/SdkClickHandler;)V` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L275f48.  call `sendNextSdkClick`(v0) @signature `Lcom/adjust/sdk/SdkClickHandler;.sendNextSdkClick:()V` @kind direct;
+  #L275f4e.  return @kind void;
+}
+procedure `java.lang.ref.WeakReference` `access$300`(`com.adjust.sdk.SdkClickHandler` v0 @kind object) @signature `Lcom/adjust/sdk/SdkClickHandler;.access$300:(Lcom/adjust/sdk/SdkClickHandler;)Ljava/lang/ref/WeakReference;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L275e6c.  v0:= v0.`com.adjust.sdk.SdkClickHandler.activityHandlerWeakRef` @type ^`java.lang.ref.WeakReference` @kind object;
+  #L275e70.  return v0 @kind object;
+}
+procedure `void` `access$400`(`com.adjust.sdk.SdkClickHandler` v0 @kind object) @signature `Lcom/adjust/sdk/SdkClickHandler;.access$400:(Lcom/adjust/sdk/SdkClickHandler;)V` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L275f60.  call `sendNextSdkClickI`(v0) @signature `Lcom/adjust/sdk/SdkClickHandler;.sendNextSdkClickI:()V` @kind direct;
+  #L275f66.  return @kind void;
+}
+procedure `void` `access$500`(`com.adjust.sdk.SdkClickHandler` v0 @kind object, `com.adjust.sdk.ActivityPackage` v1 @kind object) @signature `Lcom/adjust/sdk/SdkClickHandler;.access$500:(Lcom/adjust/sdk/SdkClickHandler;Lcom/adjust/sdk/ActivityPackage;)V` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L275f78.  call `sendSdkClickI`(v0, v1) @signature `Lcom/adjust/sdk/SdkClickHandler;.sendSdkClickI:(Lcom/adjust/sdk/ActivityPackage;)V` @kind direct;
+  #L275f7e.  return @kind void;
+}
+procedure `java.util.Map` `generateSendingParametersI`(`com.adjust.sdk.SdkClickHandler` v4 @kind this) @signature `Lcom/adjust/sdk/SdkClickHandler;.generateSendingParametersI:()Ljava/util/Map;` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L275e9c.  v0:= new `java.util.HashMap`;
+  #L275ea0.  call `<init>`(v0) @signature `Ljava/util/HashMap;.<init>:()V` @kind direct;
+  #L275ea6.  call temp:= `currentTimeMillis`() @signature `Ljava/lang/System;.currentTimeMillis:()J` @kind static;
+  #L275eac.  v1:= temp @kind wide;
+  #L275eae.  v3:= `@@com.adjust.sdk.Util.dateFormatter` @type ^`java.text.SimpleDateFormat` @kind object;
+  #L275eb2.  call temp:= `valueOf`(v1) @signature `Ljava/lang/Long;.valueOf:(J)Ljava/lang/Long;` @kind static;
+  #L275eb8.  v1:= temp @kind object;
+  #L275eba.  call temp:= `format`(v3, v1) @signature `Ljava/text/SimpleDateFormat;.format:(Ljava/lang/Object;)Ljava/lang/String;` @kind virtual;
+  #L275ec0.  v1:= temp @kind object;
+  #L275ec2.  v2:= "sent_at" @kind object;
+  #L275ec6.  call `addString`(v0, v2, v1) @signature `Lcom/adjust/sdk/PackageBuilder;.addString:(Ljava/util/Map;Ljava/lang/String;Ljava/lang/String;)V` @kind static;
+  #L275ecc.  v1:= v4.`com.adjust.sdk.SdkClickHandler.packageQueue` @type ^`java.util.List` @kind object;
+  #L275ed0.  call temp:= `size`(v1) @signature `Ljava/util/List;.size:()I` @kind interface;
+  #L275ed6.  v1:= temp;
+  #L275ed8.  v1:= v1 + -1;
+  #L275edc.  if v1 <= 0 then goto L275eec;
+  #L275ee0.  v1:= (`long`) v1 @kind i2l;
+  #L275ee2.  v3:= "queue_size" @kind object;
+  #L275ee6.  call `addLong`(v0, v3, v1) @signature `Lcom/adjust/sdk/PackageBuilder;.addLong:(Ljava/util/Map;Ljava/lang/String;J)V` @kind static;
+  #L275eec.  return v0 @kind object;
+}
+procedure `void` `logErrorMessageI`(`com.adjust.sdk.SdkClickHandler` v1 @kind this, `com.adjust.sdk.ActivityPackage` v2 @kind object, `java.lang.String` v3 @kind object, `java.lang.Throwable` v4 @kind object) @signature `Lcom/adjust/sdk/SdkClickHandler;.logErrorMessageI:(Lcom/adjust/sdk/ActivityPackage;Ljava/lang/String;Ljava/lang/Throwable;)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+
+  #L275fcc.  call temp:= `getFailureMessage`(v2) @signature `Lcom/adjust/sdk/ActivityPackage;.getFailureMessage:()Ljava/lang/String;` @kind virtual;
+  #L275fd2.  v2:= temp @kind object;
+  #L275fd4.  call temp:= `getReasonString`(v3, v4) @signature `Lcom/adjust/sdk/Util;.getReasonString:(Ljava/lang/String;Ljava/lang/Throwable;)Ljava/lang/String;` @kind static;
+  #L275fda.  v3:= temp @kind object;
+  #L275fdc.  v4:= 2I;
+  #L275fde.  v4:= new `java.lang.Object`[v4];
+  #L275fe2.  v0:= 0I;
+  #L275fe4.  v4[v0]:= v2 @kind object;
+  #L275fe8.  v2:= 1I;
+  #L275fea.  v4[v2]:= v3 @kind object;
+  #L275fee.  v2:= "%s. (%s)" @kind object;
+  #L275ff2.  call temp:= `formatString`(v2, v4) @signature `Lcom/adjust/sdk/Util;.formatString:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;` @kind static;
+  #L275ff8.  v2:= temp @kind object;
+  #L275ffa.  v3:= v1.`com.adjust.sdk.SdkClickHandler.logger` @type ^`com.adjust.sdk.ILogger` @kind object;
+  #L275ffe.  v4:= new `java.lang.Object`[v0];
+  #L276002.  call `error`(v3, v2, v4) @signature `Lcom/adjust/sdk/ILogger;.error:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L276008.  return @kind void;
+}
+procedure `void` `retrySendingI`(`com.adjust.sdk.SdkClickHandler` v4 @kind this, `com.adjust.sdk.ActivityPackage` v5 @kind object) @signature `Lcom/adjust/sdk/SdkClickHandler;.retrySendingI:(Lcom/adjust/sdk/ActivityPackage;)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L276054.  call temp:= `increaseRetries`(v5) @signature `Lcom/adjust/sdk/ActivityPackage;.increaseRetries:()I` @kind virtual;
+  #L27605a.  v0:= temp;
+  #L27605c.  v1:= v4.`com.adjust.sdk.SdkClickHandler.logger` @type ^`com.adjust.sdk.ILogger` @kind object;
+  #L276060.  v2:= 1I;
+  #L276062.  v2:= new `java.lang.Object`[v2];
+  #L276066.  call temp:= `valueOf`(v0) @signature `Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer;` @kind static;
+  #L27606c.  v0:= temp @kind object;
+  #L27606e.  v3:= 0I;
+  #L276070.  v2[v3]:= v0 @kind object;
+  #L276074.  v0:= "Retrying sdk_click package for the %d time" @kind object;
+  #L276078.  call `error`(v1, v0, v2) @signature `Lcom/adjust/sdk/ILogger;.error:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L27607e.  call `sendSdkClick`(v4, v5) @signature `Lcom/adjust/sdk/SdkClickHandler;.sendSdkClick:(Lcom/adjust/sdk/ActivityPackage;)V` @kind virtual;
+  #L276084.  return @kind void;
+}
+procedure `void` `sendNextSdkClick`(`com.adjust.sdk.SdkClickHandler` v2 @kind this) @signature `Lcom/adjust/sdk/SdkClickHandler;.sendNextSdkClick:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+
+  #L276098.  v0:= v2.`com.adjust.sdk.SdkClickHandler.scheduler` @type ^`com.adjust.sdk.scheduler.ThreadScheduler` @kind object;
+  #L27609c.  v1:= new `com.adjust.sdk.SdkClickHandler$4`;
+  #L2760a0.  call `<init>`(v1, v2) @signature `Lcom/adjust/sdk/SdkClickHandler$4;.<init>:(Lcom/adjust/sdk/SdkClickHandler;)V` @kind direct;
+  #L2760a6.  call `submit`(v0, v1) @signature `Lcom/adjust/sdk/scheduler/ThreadExecutor;.submit:(Ljava/lang/Runnable;)V` @kind interface;
+  #L2760ac.  return @kind void;
+}
+procedure `void` `sendNextSdkClickI`(`com.adjust.sdk.SdkClickHandler` v10 @kind this) @signature `Lcom/adjust/sdk/SdkClickHandler;.sendNextSdkClickI:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+    v9;
+
+  #L2760c0.  v0:= v10.`com.adjust.sdk.SdkClickHandler.activityHandlerWeakRef` @type ^`java.lang.ref.WeakReference` @kind object;
+  #L2760c4.  call temp:= `get`(v0) @signature `Ljava/lang/ref/WeakReference;.get:()Ljava/lang/Object;` @kind virtual;
+  #L2760ca.  v0:= temp @kind object;
+  #L2760cc.  v0:= (`com.adjust.sdk.IActivityHandler`) v0 @kind object;
+  #L2760d0.  call temp:= `getActivityState`(v0) @signature `Lcom/adjust/sdk/IActivityHandler;.getActivityState:()Lcom/adjust/sdk/ActivityState;` @kind interface;
+  #L2760d6.  v1:= temp @kind object;
+  #L2760d8.  if v1 != 0 then goto L2760de;
+  #L2760dc.  return @kind void;
+  #L2760de.  call temp:= `getActivityState`(v0) @signature `Lcom/adjust/sdk/IActivityHandler;.getActivityState:()Lcom/adjust/sdk/ActivityState;` @kind interface;
+  #L2760e4.  v0:= temp @kind object;
+  #L2760e6.  v0:= v0.`com.adjust.sdk.ActivityState.isGdprForgotten` @type ^`boolean` @kind boolean;
+  #L2760ea.  if v0 == 0 then goto L2760f0;
+  #L2760ee.  return @kind void;
+  #L2760f0.  v0:= v10.`com.adjust.sdk.SdkClickHandler.paused` @type ^`boolean` @kind boolean;
+  #L2760f4.  if v0 == 0 then goto L2760fa;
+  #L2760f8.  return @kind void;
+  #L2760fa.  v0:= v10.`com.adjust.sdk.SdkClickHandler.packageQueue` @type ^`java.util.List` @kind object;
+  #L2760fe.  call temp:= `isEmpty`(v0) @signature `Ljava/util/List;.isEmpty:()Z` @kind interface;
+  #L276104.  v0:= temp;
+  #L276106.  if v0 == 0 then goto L27610c;
+  #L27610a.  return @kind void;
+  #L27610c.  v0:= v10.`com.adjust.sdk.SdkClickHandler.packageQueue` @type ^`java.util.List` @kind object;
+  #L276110.  v1:= 0I;
+  #L276112.  call temp:= `remove`(v0, v1) @signature `Ljava/util/List;.remove:(I)Ljava/lang/Object;` @kind interface;
+  #L276118.  v0:= temp @kind object;
+  #L27611a.  v0:= (`com.adjust.sdk.ActivityPackage`) v0 @kind object;
+  #L27611e.  call temp:= `getRetries`(v0) @signature `Lcom/adjust/sdk/ActivityPackage;.getRetries:()I` @kind virtual;
+  #L276124.  v2:= temp;
+  #L276126.  v3:= new `com.adjust.sdk.SdkClickHandler$5`;
+  #L27612a.  call `<init>`(v3, v10, v0) @signature `Lcom/adjust/sdk/SdkClickHandler$5;.<init>:(Lcom/adjust/sdk/SdkClickHandler;Lcom/adjust/sdk/ActivityPackage;)V` @kind direct;
+  #L276130.  if v2 > 0 then goto L27613c;
+  #L276134.  call `run`(v3) @signature `Ljava/lang/Runnable;.run:()V` @kind interface;
+  #L27613a.  return @kind void;
+  #L27613c.  v0:= v10.`com.adjust.sdk.SdkClickHandler.backoffStrategy` @type ^`com.adjust.sdk.BackoffStrategy` @kind object;
+  #L276140.  call temp:= `getWaitingTime`(v2, v0) @signature `Lcom/adjust/sdk/Util;.getWaitingTime:(ILcom/adjust/sdk/BackoffStrategy;)J` @kind static;
+  #L276146.  v4:= temp @kind wide;
+  #L276148.  v6:= (`double`) v4 @kind l2d;
+  #L27614a.  v8:= 1000.0D;
+  #L276154.  v6:= v6 / v8 @kind double;
+  #L276156.  v0:= `@@com.adjust.sdk.Util.SecondsDisplayFormat` @type ^`java.text.DecimalFormat` @kind object;
+  #L27615a.  call temp:= `format`(v0, v6) @signature `Ljava/text/DecimalFormat;.format:(D)Ljava/lang/String;` @kind virtual;
+  #L276160.  v0:= temp @kind object;
+  #L276162.  v6:= v10.`com.adjust.sdk.SdkClickHandler.logger` @type ^`com.adjust.sdk.ILogger` @kind object;
+  #L276166.  v7:= 2I;
+  #L276168.  v7:= new `java.lang.Object`[v7];
+  #L27616c.  v7[v1]:= v0 @kind object;
+  #L276170.  v0:= 1I;
+  #L276172.  call temp:= `valueOf`(v2) @signature `Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer;` @kind static;
+  #L276178.  v1:= temp @kind object;
+  #L27617a.  v7[v0]:= v1 @kind object;
+  #L27617e.  v0:= "Waiting for %s seconds before retrying sdk_click for the %d time" @kind object;
+  #L276182.  call `verbose`(v6, v0, v7) @signature `Lcom/adjust/sdk/ILogger;.verbose:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L276188.  v0:= v10.`com.adjust.sdk.SdkClickHandler.scheduler` @type ^`com.adjust.sdk.scheduler.ThreadScheduler` @kind object;
+  #L27618c.  call `schedule`(v0, v3, v4) @signature `Lcom/adjust/sdk/scheduler/ThreadScheduler;.schedule:(Ljava/lang/Runnable;J)V` @kind interface;
+  #L276192.  return @kind void;
+}
+procedure `void` `sendSdkClickI`(`com.adjust.sdk.SdkClickHandler` v22 @kind this, `com.adjust.sdk.ActivityPackage` v23 @kind object) @signature `Lcom/adjust/sdk/SdkClickHandler;.sendSdkClickI:(Lcom/adjust/sdk/ActivityPackage;)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+    v9;
+    v10;
+    v11;
+    v12;
+    v13;
+    v14;
+    v15;
+    v16;
+    v17;
+    v18;
+    v19;
+    v20;
+    v21;
+
+  #L27621c.  v0:= v22 @kind object;
+  #L276220.  v1:= v0.`com.adjust.sdk.SdkClickHandler.activityHandlerWeakRef` @type ^`java.lang.ref.WeakReference` @kind object;
+  #L276224.  call temp:= `get`(v1) @signature `Ljava/lang/ref/WeakReference;.get:()Ljava/lang/Object;` @kind virtual;
+  #L27622a.  v1:= temp @kind object;
+  #L27622c.  v1:= (`com.adjust.sdk.IActivityHandler`) v1 @kind object;
+  #L276230.  call temp:= `getParameters`(v23) @signature `Lcom/adjust/sdk/ActivityPackage;.getParameters:()Ljava/util/Map;` @kind virtual;
+  #L276236.  v2:= temp @kind object;
+  #L276238.  v3:= "source" @kind object;
+  #L27623c.  call temp:= `get`(v2, v3) @signature `Ljava/util/Map;.get:(Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L276242.  v2:= temp @kind object;
+  #L276244.  v2:= (`java.lang.String`) v2 @kind object;
+  #L276248.  if v2 == 0 then goto L276260;
+  #L27624c.  v5:= "reftag" @kind object;
+  #L276250.  call temp:= `equals`(v2, v5) @signature `Ljava/lang/String;.equals:(Ljava/lang/Object;)Z` @kind virtual;
+  #L276256.  v5:= temp;
+  #L276258.  if v5 == 0 then goto L276260;
+  #L27625c.  v5:= 1I;
+  #L27625e.  goto L276262;
+  #L276260.  v5:= 0I;
+  #L276262.  call temp:= `getParameters`(v23) @signature `Lcom/adjust/sdk/ActivityPackage;.getParameters:()Ljava/util/Map;` @kind virtual;
+  #L276268.  v6:= temp @kind object;
+  #L27626a.  v7:= "raw_referrer" @kind object;
+  #L27626e.  call temp:= `get`(v6, v7) @signature `Ljava/util/Map;.get:(Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L276274.  v6:= temp @kind object;
+  #L276276.  v6:= (`java.lang.String`) v6 @kind object;
+  #L27627a.  if v5 == 0 then goto L2762a6;
+  #L27627e.  v7:= new `com.adjust.sdk.SharedPreferencesManager`;
+  #L276282.  call temp:= `getContext`(v1) @signature `Lcom/adjust/sdk/IActivityHandler;.getContext:()Landroid/content/Context;` @kind interface;
+  #L276288.  v8:= temp @kind object;
+  #L27628a.  call `<init>`(v7, v8) @signature `Lcom/adjust/sdk/SharedPreferencesManager;.<init>:(Landroid/content/Context;)V` @kind direct;
+  #L276290.  call temp:= `getClickTimeInMilliseconds`(v23) @signature `Lcom/adjust/sdk/ActivityPackage;.getClickTimeInMilliseconds:()J` @kind virtual;
+  #L276296.  v8:= temp @kind wide;
+  #L276298.  call temp:= `getRawReferrer`(v7, v6, v8) @signature `Lcom/adjust/sdk/SharedPreferencesManager;.getRawReferrer:(Ljava/lang/String;J)Lorg/json/JSONArray;` @kind virtual;
+  #L27629e.  v7:= temp @kind object;
+  #L2762a0.  if v7 != 0 then goto L2762a6;
+  #L2762a4.  return @kind void;
+  #L2762a6.  if v2 == 0 then goto L2762be;
+  #L2762aa.  v7:= "install_referrer" @kind object;
+  #L2762ae.  call temp:= `equals`(v2, v7) @signature `Ljava/lang/String;.equals:(Ljava/lang/Object;)Z` @kind virtual;
+  #L2762b4.  v7:= temp;
+  #L2762b6.  if v7 == 0 then goto L2762be;
+  #L2762ba.  v7:= 1I;
+  #L2762bc.  goto L2762c0;
+  #L2762be.  v7:= 0I;
+  #L2762c0.  v8:= 0I;
+  #L2762c2.  v9:= -1L;
+  #L2762c6.  if v7 == 0 then goto L27633a;
+  #L2762ca.  call temp:= `getClickTimeInSeconds`(v23) @signature `Lcom/adjust/sdk/ActivityPackage;.getClickTimeInSeconds:()J` @kind virtual;
+  #L2762d0.  v9:= temp @kind wide;
+  #L2762d2.  call temp:= `getInstallBeginTimeInSeconds`(v23) @signature `Lcom/adjust/sdk/ActivityPackage;.getInstallBeginTimeInSeconds:()J` @kind virtual;
+  #L2762d8.  v11:= temp @kind wide;
+  #L2762da.  call temp:= `getParameters`(v23) @signature `Lcom/adjust/sdk/ActivityPackage;.getParameters:()Ljava/util/Map;` @kind virtual;
+  #L2762e0.  v8:= temp @kind object;
+  #L2762e2.  v13:= "referrer" @kind object;
+  #L2762e6.  call temp:= `get`(v8, v13) @signature `Ljava/util/Map;.get:(Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L2762ec.  v8:= temp @kind object;
+  #L2762ee.  v8:= (`java.lang.String`) v8 @kind object;
+  #L2762f2.  call temp:= `getClickTimeServerInSeconds`(v23) @signature `Lcom/adjust/sdk/ActivityPackage;.getClickTimeServerInSeconds:()J` @kind virtual;
+  #L2762f8.  v13:= temp @kind wide;
+  #L2762fa.  call temp:= `getInstallBeginTimeServerInSeconds`(v23) @signature `Lcom/adjust/sdk/ActivityPackage;.getInstallBeginTimeServerInSeconds:()J` @kind virtual;
+  #L276300.  v15:= temp @kind wide;
+  #L276302.  call temp:= `getInstallVersion`(v23) @signature `Lcom/adjust/sdk/ActivityPackage;.getInstallVersion:()Ljava/lang/String;` @kind virtual;
+  #L276308.  v17:= temp @kind object;
+  #L27630a.  call temp:= `getGooglePlayInstant`(v23) @signature `Lcom/adjust/sdk/ActivityPackage;.getGooglePlayInstant:()Ljava/lang/Boolean;` @kind virtual;
+  #L276310.  v18:= temp @kind object;
+  #L276312.  call temp:= `getParameters`(v23) @signature `Lcom/adjust/sdk/ActivityPackage;.getParameters:()Ljava/util/Map;` @kind virtual;
+  #L276318.  v3:= temp @kind object;
+  #L27631a.  v4:= "referrer_api" @kind object;
+  #L27631e.  call temp:= `get`(v3, v4) @signature `Ljava/util/Map;.get:(Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L276324.  v3:= temp @kind object;
+  #L276326.  v3:= (`java.lang.String`) v3 @kind object;
+  #L27632a.  v21:= v3 @kind object;
+  #L27632e.  v3:= v15 @kind wide;
+  #L276330.  v15:= v17 @kind object;
+  #L276334.  v20:= v18 @kind object;
+  #L276338.  goto L27634a;
+  #L27633a.  v15:= v8 @kind object;
+  #L27633c.  v20:= v15 @kind object;
+  #L276340.  v21:= v20 @kind object;
+  #L276344.  v3:= v9 @kind wide;
+  #L276346.  v11:= v3 @kind wide;
+  #L276348.  v13:= v11 @kind wide;
+  #L27634a.  v16:= v15 @kind object;
+  #L27634e.  if v2 == 0 then goto L276368;
+  #L276352.  v15:= "preinstall" @kind object;
+  #L276356.  call temp:= `equals`(v2, v15) @signature `Ljava/lang/String;.equals:(Ljava/lang/Object;)Z` @kind virtual;
+  #L27635c.  v2:= temp;
+  #L27635e.  if v2 == 0 then goto L276368;
+  #L276362.  v19:= 1I;
+  #L276366.  goto L27636c;
+  #L276368.  v19:= 0I;
+  #L27636c.  call temp:= `generateSendingParametersI`(v22) @signature `Lcom/adjust/sdk/SdkClickHandler;.generateSendingParametersI:()Ljava/util/Map;` @kind direct;
+  #L276372.  v2:= temp @kind object;
+  #L276374.  v15:= v0.`com.adjust.sdk.SdkClickHandler.activityPackageSender` @type ^`com.adjust.sdk.network.IActivityPackageSender` @kind object;
+  #L276378.  v0:= v23 @kind object;
+  #L27637c.  call temp:= `sendActivityPackageSync`(v15, v0, v2) @signature `Lcom/adjust/sdk/network/IActivityPackageSender;.sendActivityPackageSync:(Lcom/adjust/sdk/ActivityPackage;Ljava/util/Map;)Lcom/adjust/sdk/ResponseData;` @kind interface;
+  #L276382.  v2:= temp @kind object;
+  #L276384.  v15:= instanceof @variable v2 @type ^`com.adjust.sdk.SdkClickResponseData` @kind boolean;
+  #L276388.  if v15 != 0 then goto L27638e;
+  #L27638c.  return @kind void;
+  #L27638e.  v2:= (`com.adjust.sdk.SdkClickResponseData`) v2 @kind object;
+  #L276392.  v15:= v2.`com.adjust.sdk.ResponseData.willRetry` @type ^`boolean` @kind boolean;
+  #L276396.  if v15 == 0 then goto L2763a2;
+  #L27639a.  call `retrySendingI`(v22, v23) @signature `Lcom/adjust/sdk/SdkClickHandler;.retrySendingI:(Lcom/adjust/sdk/ActivityPackage;)V` @kind direct;
+  #L2763a0.  return @kind void;
+  #L2763a2.  if v1 != 0 then goto L2763a8;
+  #L2763a6.  return @kind void;
+  #L2763a8.  v15:= v2.`com.adjust.sdk.ResponseData.trackingState` @type ^`com.adjust.sdk.TrackingState` @kind object;
+  #L2763ac.  v0:= `@@com.adjust.sdk.TrackingState.OPTED_OUT` @type ^`com.adjust.sdk.TrackingState` @kind object;
+  #L2763b0.  if v15 != v0 then goto L2763bc;
+  #L2763b4.  call `gotOptOutResponse`(v1) @signature `Lcom/adjust/sdk/IActivityHandler;.gotOptOutResponse:()V` @kind interface;
+  #L2763ba.  return @kind void;
+  #L2763bc.  if v5 == 0 then goto L2763e6;
+  #L2763c0.  v0:= new `com.adjust.sdk.SharedPreferencesManager`;
+  #L2763c4.  call temp:= `getContext`(v1) @signature `Lcom/adjust/sdk/IActivityHandler;.getContext:()Landroid/content/Context;` @kind interface;
+  #L2763ca.  v5:= temp @kind object;
+  #L2763cc.  call `<init>`(v0, v5) @signature `Lcom/adjust/sdk/SharedPreferencesManager;.<init>:(Landroid/content/Context;)V` @kind direct;
+  #L2763d2.  v17:= v3 @kind wide;
+  #L2763d6.  call temp:= `getClickTimeInMilliseconds`(v23) @signature `Lcom/adjust/sdk/ActivityPackage;.getClickTimeInMilliseconds:()J` @kind virtual;
+  #L2763dc.  v3:= temp @kind wide;
+  #L2763de.  call `removeRawReferrer`(v0, v6, v3) @signature `Lcom/adjust/sdk/SharedPreferencesManager;.removeRawReferrer:(Ljava/lang/String;J)V` @kind virtual;
+  #L2763e4.  goto L2763ea;
+  #L2763e6.  v17:= v3 @kind wide;
+  #L2763ea.  if v7 == 0 then goto L276424;
+  #L2763ee.  v2.`com.adjust.sdk.SdkClickResponseData.clickTime` @type ^`long` := v9 @kind wide;
+  #L2763f2.  v2.`com.adjust.sdk.SdkClickResponseData.installBegin` @type ^`long` := v11 @kind wide;
+  #L2763f6.  v2.`com.adjust.sdk.SdkClickResponseData.installReferrer` @type ^`java.lang.String` := v8 @kind object;
+  #L2763fa.  v2.`com.adjust.sdk.SdkClickResponseData.clickTimeServer` @type ^`long` := v13 @kind wide;
+  #L2763fe.  v9:= v17 @kind wide;
+  #L276402.  v2.`com.adjust.sdk.SdkClickResponseData.installBeginServer` @type ^`long` := v9 @kind wide;
+  #L276406.  v8:= v16 @kind object;
+  #L27640a.  v2.`com.adjust.sdk.SdkClickResponseData.installVersion` @type ^`java.lang.String` := v8 @kind object;
+  #L27640e.  v8:= v20 @kind object;
+  #L276412.  v2.`com.adjust.sdk.SdkClickResponseData.googlePlayInstant` @type ^`java.lang.Boolean` := v8 @kind object;
+  #L276416.  v3:= v21 @kind object;
+  #L27641a.  v2.`com.adjust.sdk.SdkClickResponseData.referrerApi` @type ^`java.lang.String` := v3 @kind object;
+  #L27641e.  v0:= 1I;
+  #L276420.  v2.`com.adjust.sdk.SdkClickResponseData.isInstallReferrer` @type ^`boolean` := v0 @kind boolean;
+  #L276424.  if v19 == 0 then goto L276490;
+  #L276428.  call temp:= `getParameters`(v23) @signature `Lcom/adjust/sdk/ActivityPackage;.getParameters:()Ljava/util/Map;` @kind virtual;
+  #L27642e.  v0:= temp @kind object;
+  #L276430.  v3:= "found_location" @kind object;
+  #L276434.  call temp:= `get`(v0, v3) @signature `Ljava/util/Map;.get:(Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L27643a.  v0:= temp @kind object;
+  #L27643c.  v0:= (`java.lang.String`) v0 @kind object;
+  #L276440.  if v0 == 0 then goto L276490;
+  #L276444.  call temp:= `isEmpty`(v0) @signature `Ljava/lang/String;.isEmpty:()Z` @kind virtual;
+  #L27644a.  v3:= temp;
+  #L27644c.  if v3 != 0 then goto L276490;
+  #L276450.  v3:= new `com.adjust.sdk.SharedPreferencesManager`;
+  #L276454.  call temp:= `getContext`(v1) @signature `Lcom/adjust/sdk/IActivityHandler;.getContext:()Landroid/content/Context;` @kind interface;
+  #L27645a.  v4:= temp @kind object;
+  #L27645c.  call `<init>`(v3, v4) @signature `Lcom/adjust/sdk/SharedPreferencesManager;.<init>:(Landroid/content/Context;)V` @kind direct;
+  #L276462.  v4:= "system_installer_referrer" @kind object;
+  #L276466.  call temp:= `equalsIgnoreCase`(v4, v0) @signature `Ljava/lang/String;.equalsIgnoreCase:(Ljava/lang/String;)Z` @kind virtual;
+  #L27646c.  v4:= temp;
+  #L27646e.  if v4 == 0 then goto L27647a;
+  #L276472.  call `removePreinstallReferrer`(v3) @signature `Lcom/adjust/sdk/SharedPreferencesManager;.removePreinstallReferrer:()V` @kind virtual;
+  #L276478.  goto L276490;
+  #L27647a.  call temp:= `getPreinstallPayloadReadStatus`(v3) @signature `Lcom/adjust/sdk/SharedPreferencesManager;.getPreinstallPayloadReadStatus:()J` @kind virtual;
+  #L276480.  v4:= temp @kind wide;
+  #L276482.  call temp:= `markAsRead`(v0, v4) @signature `Lcom/adjust/sdk/PreinstallUtil;.markAsRead:(Ljava/lang/String;J)J` @kind static;
+  #L276488.  v4:= temp @kind wide;
+  #L27648a.  call `setPreinstallPayloadReadStatus`(v3, v4) @signature `Lcom/adjust/sdk/SharedPreferencesManager;.setPreinstallPayloadReadStatus:(J)V` @kind virtual;
+  #L276490.  call `finishedTrackingActivity`(v1, v2) @signature `Lcom/adjust/sdk/IActivityHandler;.finishedTrackingActivity:(Lcom/adjust/sdk/ResponseData;)V` @kind interface;
+  #L276496.  return @kind void;
+}
+procedure `void` `init`(`com.adjust.sdk.SdkClickHandler` v0 @kind this, `com.adjust.sdk.IActivityHandler` v1 @kind object, `boolean` v2 , `com.adjust.sdk.network.IActivityPackageSender` v3 @kind object) @signature `Lcom/adjust/sdk/SdkClickHandler;.init:(Lcom/adjust/sdk/IActivityHandler;ZLcom/adjust/sdk/network/IActivityPackageSender;)V` @AccessFlag PUBLIC {
+    temp;
+
+  #L275f90.  v2:= v2 ^~ 1;
+  #L275f94.  v0.`com.adjust.sdk.SdkClickHandler.paused` @type ^`boolean` := v2 @kind boolean;
+  #L275f98.  v2:= new `java.util.ArrayList`;
+  #L275f9c.  call `<init>`(v2) @signature `Ljava/util/ArrayList;.<init>:()V` @kind direct;
+  #L275fa2.  v0.`com.adjust.sdk.SdkClickHandler.packageQueue` @type ^`java.util.List` := v2 @kind object;
+  #L275fa6.  v2:= new `java.lang.ref.WeakReference`;
+  #L275faa.  call `<init>`(v2, v1) @signature `Ljava/lang/ref/WeakReference;.<init>:(Ljava/lang/Object;)V` @kind direct;
+  #L275fb0.  v0.`com.adjust.sdk.SdkClickHandler.activityHandlerWeakRef` @type ^`java.lang.ref.WeakReference` := v2 @kind object;
+  #L275fb4.  v0.`com.adjust.sdk.SdkClickHandler.activityPackageSender` @type ^`com.adjust.sdk.network.IActivityPackageSender` := v3 @kind object;
+  #L275fb8.  return @kind void;
+}
+procedure `void` `pauseSending`(`com.adjust.sdk.SdkClickHandler` v1 @kind this) @signature `Lcom/adjust/sdk/SdkClickHandler;.pauseSending:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L27601c.  v0:= 1I;
+  #L27601e.  v1.`com.adjust.sdk.SdkClickHandler.paused` @type ^`boolean` := v0 @kind boolean;
+  #L276022.  return @kind void;
+}
+procedure `void` `resumeSending`(`com.adjust.sdk.SdkClickHandler` v1 @kind this) @signature `Lcom/adjust/sdk/SdkClickHandler;.resumeSending:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L276034.  v0:= 0I;
+  #L276036.  v1.`com.adjust.sdk.SdkClickHandler.paused` @type ^`boolean` := v0 @kind boolean;
+  #L27603a.  call `sendNextSdkClick`(v1) @signature `Lcom/adjust/sdk/SdkClickHandler;.sendNextSdkClick:()V` @kind direct;
+  #L276040.  return @kind void;
+}
+procedure `void` `sendPreinstallPayload`(`com.adjust.sdk.SdkClickHandler` v2 @kind this, `java.lang.String` v3 @kind object, `java.lang.String` v4 @kind object) @signature `Lcom/adjust/sdk/SdkClickHandler;.sendPreinstallPayload:(Ljava/lang/String;Ljava/lang/String;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L2761a4.  v0:= v2.`com.adjust.sdk.SdkClickHandler.scheduler` @type ^`com.adjust.sdk.scheduler.ThreadScheduler` @kind object;
+  #L2761a8.  v1:= new `com.adjust.sdk.SdkClickHandler$3`;
+  #L2761ac.  call `<init>`(v1, v2, v3, v4) @signature `Lcom/adjust/sdk/SdkClickHandler$3;.<init>:(Lcom/adjust/sdk/SdkClickHandler;Ljava/lang/String;Ljava/lang/String;)V` @kind direct;
+  #L2761b2.  call `submit`(v0, v1) @signature `Lcom/adjust/sdk/scheduler/ThreadExecutor;.submit:(Ljava/lang/Runnable;)V` @kind interface;
+  #L2761b8.  return @kind void;
+}
+procedure `void` `sendReftagReferrers`(`com.adjust.sdk.SdkClickHandler` v2 @kind this) @signature `Lcom/adjust/sdk/SdkClickHandler;.sendReftagReferrers:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L2761cc.  v0:= v2.`com.adjust.sdk.SdkClickHandler.scheduler` @type ^`com.adjust.sdk.scheduler.ThreadScheduler` @kind object;
+  #L2761d0.  v1:= new `com.adjust.sdk.SdkClickHandler$2`;
+  #L2761d4.  call `<init>`(v1, v2) @signature `Lcom/adjust/sdk/SdkClickHandler$2;.<init>:(Lcom/adjust/sdk/SdkClickHandler;)V` @kind direct;
+  #L2761da.  call `submit`(v0, v1) @signature `Lcom/adjust/sdk/scheduler/ThreadExecutor;.submit:(Ljava/lang/Runnable;)V` @kind interface;
+  #L2761e0.  return @kind void;
+}
+procedure `void` `sendSdkClick`(`com.adjust.sdk.SdkClickHandler` v2 @kind this, `com.adjust.sdk.ActivityPackage` v3 @kind object) @signature `Lcom/adjust/sdk/SdkClickHandler;.sendSdkClick:(Lcom/adjust/sdk/ActivityPackage;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L2761f4.  v0:= v2.`com.adjust.sdk.SdkClickHandler.scheduler` @type ^`com.adjust.sdk.scheduler.ThreadScheduler` @kind object;
+  #L2761f8.  v1:= new `com.adjust.sdk.SdkClickHandler$1`;
+  #L2761fc.  call `<init>`(v1, v2, v3) @signature `Lcom/adjust/sdk/SdkClickHandler$1;.<init>:(Lcom/adjust/sdk/SdkClickHandler;Lcom/adjust/sdk/ActivityPackage;)V` @kind direct;
+  #L276202.  call `submit`(v0, v1) @signature `Lcom/adjust/sdk/scheduler/ThreadExecutor;.submit:(Ljava/lang/Runnable;)V` @kind interface;
+  #L276208.  return @kind void;
+}
+procedure `void` `teardown`(`com.adjust.sdk.SdkClickHandler` v3 @kind this) @signature `Lcom/adjust/sdk/SdkClickHandler;.teardown:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L2764a8.  v0:= v3.`com.adjust.sdk.SdkClickHandler.logger` @type ^`com.adjust.sdk.ILogger` @kind object;
+  #L2764ac.  v1:= 0I;
+  #L2764ae.  v1:= new `java.lang.Object`[v1];
+  #L2764b2.  v2:= "SdkClickHandler teardown" @kind object;
+  #L2764b6.  call `verbose`(v0, v2, v1) @signature `Lcom/adjust/sdk/ILogger;.verbose:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L2764bc.  v0:= v3.`com.adjust.sdk.SdkClickHandler.scheduler` @type ^`com.adjust.sdk.scheduler.ThreadScheduler` @kind object;
+  #L2764c0.  if v0 == 0 then goto L2764ca;
+  #L2764c4.  call `teardown`(v0) @signature `Lcom/adjust/sdk/scheduler/ThreadExecutor;.teardown:()V` @kind interface;
+  #L2764ca.  v0:= v3.`com.adjust.sdk.SdkClickHandler.packageQueue` @type ^`java.util.List` @kind object;
+  #L2764ce.  if v0 == 0 then goto L2764d8;
+  #L2764d2.  call `clear`(v0) @signature `Ljava/util/List;.clear:()V` @kind interface;
+  #L2764d8.  v0:= v3.`com.adjust.sdk.SdkClickHandler.activityHandlerWeakRef` @type ^`java.lang.ref.WeakReference` @kind object;
+  #L2764dc.  if v0 == 0 then goto L2764e6;
+  #L2764e0.  call `clear`(v0) @signature `Ljava/lang/ref/WeakReference;.clear:()V` @kind virtual;
+  #L2764e6.  v0:= 0I;
+  #L2764e8.  v3.`com.adjust.sdk.SdkClickHandler.logger` @type ^`com.adjust.sdk.ILogger` := v0 @kind object;
+  #L2764ec.  v3.`com.adjust.sdk.SdkClickHandler.packageQueue` @type ^`java.util.List` := v0 @kind object;
+  #L2764f0.  v3.`com.adjust.sdk.SdkClickHandler.backoffStrategy` @type ^`com.adjust.sdk.BackoffStrategy` := v0 @kind object;
+  #L2764f4.  v3.`com.adjust.sdk.SdkClickHandler.scheduler` @type ^`com.adjust.sdk.scheduler.ThreadScheduler` := v0 @kind object;
+  #L2764f8.  return @kind void;
+}

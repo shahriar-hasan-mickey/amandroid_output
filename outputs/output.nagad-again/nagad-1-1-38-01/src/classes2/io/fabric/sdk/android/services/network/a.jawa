@@ -1,0 +1,82 @@
+record `io.fabric.sdk.android.services.network.a` @kind class @AccessFlag FINAL {
+}
+procedure `boolean` `a`(`java.security.cert.X509Certificate` v2 @kind object, `java.security.cert.X509Certificate` v3 @kind object) @signature `Lio/fabric/sdk/android/services/network/a;.a:(Ljava/security/cert/X509Certificate;Ljava/security/cert/X509Certificate;)Z` @AccessFlag PRIVATE_STATIC {
+    temp;
+    v0;
+    v1;
+
+  #L1ca6ec.  call temp:= `getSubjectX500Principal`(v2) @signature `Ljava/security/cert/X509Certificate;.getSubjectX500Principal:()Ljavax/security/auth/x500/X500Principal;` @kind virtual;
+  #L1ca6f2.  v0:= temp @kind object;
+  #L1ca6f4.  call temp:= `getIssuerX500Principal`(v3) @signature `Ljava/security/cert/X509Certificate;.getIssuerX500Principal:()Ljavax/security/auth/x500/X500Principal;` @kind virtual;
+  #L1ca6fa.  v1:= temp @kind object;
+  #L1ca6fc.  call temp:= `equals`(v0, v1) @signature `Ljavax/security/auth/x500/X500Principal;.equals:(Ljava/lang/Object;)Z` @kind virtual;
+  #L1ca702.  v0:= temp;
+  #L1ca704.  v1:= 0I;
+  #L1ca706.  if v0 != 0 then goto L1ca70c;
+  #L1ca70a.  return v1;
+  #L1ca70c.  call temp:= `getPublicKey`(v2) @signature `Ljava/security/cert/X509Certificate;.getPublicKey:()Ljava/security/PublicKey;` @kind virtual;
+  #L1ca712.  v2:= temp @kind object;
+  #L1ca714.  call `verify`(v3, v2) @signature `Ljava/security/cert/X509Certificate;.verify:(Ljava/security/PublicKey;)V` @kind virtual;
+  #L1ca71a.  v2:= 1I;
+  #L1ca71c.  return v2;
+  #L1ca71e.  return v1;
+  catch `java.security.GeneralSecurityException` @[L1ca70c..L1ca71a] goto L1ca71e;
+}
+procedure `java.security.cert.X509Certificate`[] `getCleanChain`(`java.security.cert.X509Certificate`[] v6 @kind object, `io.fabric.sdk.android.services.network.h` v7 @kind object) @signature `Lio/fabric/sdk/android/services/network/a;.getCleanChain:([Ljava/security/cert/X509Certificate;Lio/fabric/sdk/android/services/network/h;)[Ljava/security/cert/X509Certificate;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L1ca740.  v0:= new `java.util.LinkedList`;
+  #L1ca744.  call `<init>`(v0) @signature `Ljava/util/LinkedList;.<init>:()V` @kind direct;
+  #L1ca74a.  v1:= 0I;
+  #L1ca74c.  v2:= v6[v1] @kind object;
+  #L1ca750.  call temp:= `isTrustRoot`(v7, v2) @signature `Lio/fabric/sdk/android/services/network/h;.isTrustRoot:(Ljava/security/cert/X509Certificate;)Z` @kind virtual;
+  #L1ca756.  v2:= temp;
+  #L1ca758.  v1:= v6[v1] @kind object;
+  #L1ca75c.  call temp:= `add`(v0, v1) @signature `Ljava/util/LinkedList;.add:(Ljava/lang/Object;)Z` @kind virtual;
+  #L1ca762.  v1:= 1I;
+  #L1ca764.  v3:= v2;
+  #L1ca766.  v2:= 1I;
+  #L1ca768.  v4:= length @variable v6;
+  #L1ca76a.  if v2 >= v4 then goto L1ca7a8;
+  #L1ca76e.  v4:= v6[v2] @kind object;
+  #L1ca772.  call temp:= `isTrustRoot`(v7, v4) @signature `Lio/fabric/sdk/android/services/network/h;.isTrustRoot:(Ljava/security/cert/X509Certificate;)Z` @kind virtual;
+  #L1ca778.  v4:= temp;
+  #L1ca77a.  if v4 == 0 then goto L1ca780;
+  #L1ca77e.  v3:= 1I;
+  #L1ca780.  v4:= v6[v2] @kind object;
+  #L1ca784.  v5:= v2 + -1;
+  #L1ca788.  v5:= v6[v5] @kind object;
+  #L1ca78c.  call temp:= `a`(v4, v5) @signature `Lio/fabric/sdk/android/services/network/a;.a:(Ljava/security/cert/X509Certificate;Ljava/security/cert/X509Certificate;)Z` @kind static;
+  #L1ca792.  v4:= temp;
+  #L1ca794.  if v4 == 0 then goto L1ca7a8;
+  #L1ca798.  v4:= v6[v2] @kind object;
+  #L1ca79c.  call temp:= `add`(v0, v4) @signature `Ljava/util/LinkedList;.add:(Ljava/lang/Object;)Z` @kind virtual;
+  #L1ca7a2.  v2:= v2 + 1;
+  #L1ca7a6.  goto L1ca768;
+  #L1ca7a8.  v2:= v2 - v1 @kind int;
+  #L1ca7aa.  v6:= v6[v2] @kind object;
+  #L1ca7ae.  call temp:= `getTrustRootFor`(v7, v6) @signature `Lio/fabric/sdk/android/services/network/h;.getTrustRootFor:(Ljava/security/cert/X509Certificate;)Ljava/security/cert/X509Certificate;` @kind virtual;
+  #L1ca7b4.  v6:= temp @kind object;
+  #L1ca7b6.  if v6 == 0 then goto L1ca7c2;
+  #L1ca7ba.  call temp:= `add`(v0, v6) @signature `Ljava/util/LinkedList;.add:(Ljava/lang/Object;)Z` @kind virtual;
+  #L1ca7c0.  goto L1ca7c4;
+  #L1ca7c2.  v1:= v3;
+  #L1ca7c4.  if v1 == 0 then goto L1ca7e2;
+  #L1ca7c8.  call temp:= `size`(v0) @signature `Ljava/util/LinkedList;.size:()I` @kind virtual;
+  #L1ca7ce.  v6:= temp;
+  #L1ca7d0.  v6:= new `java.security.cert.X509Certificate`[v6];
+  #L1ca7d4.  call temp:= `toArray`(v0, v6) @signature `Ljava/util/LinkedList;.toArray:([Ljava/lang/Object;)[Ljava/lang/Object;` @kind virtual;
+  #L1ca7da.  v6:= temp @kind object;
+  #L1ca7dc.  v6:= (`java.security.cert.X509Certificate`[]) v6 @kind object;
+  #L1ca7e0.  return v6 @kind object;
+  #L1ca7e2.  v6:= new `java.security.cert.CertificateException`;
+  #L1ca7e6.  v7:= "Didn't find a trust anchor in chain cleanup!" @kind object;
+  #L1ca7ea.  call `<init>`(v6, v7) @signature `Ljava/security/cert/CertificateException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L1ca7f0.  throw v6;
+}

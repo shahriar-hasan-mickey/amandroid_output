@@ -1,0 +1,130 @@
+record `com.android.volley.CacheDispatcher` @kind class @AccessFlag PUBLIC extends `java.lang.Thread` @kind class {
+  `com.android.volley.Cache` `com.android.volley.CacheDispatcher.mCache` @AccessFlag PRIVATE_FINAL;
+  `java.util.concurrent.BlockingQueue` `com.android.volley.CacheDispatcher.mCacheQueue` @AccessFlag PRIVATE_FINAL;
+  `com.android.volley.ResponseDelivery` `com.android.volley.CacheDispatcher.mDelivery` @AccessFlag PRIVATE_FINAL;
+  `java.util.concurrent.BlockingQueue` `com.android.volley.CacheDispatcher.mNetworkQueue` @AccessFlag PRIVATE_FINAL;
+  `boolean` `com.android.volley.CacheDispatcher.mQuit` @AccessFlag PRIVATE_VOLATILE;
+}
+global `boolean` `@@com.android.volley.CacheDispatcher.DEBUG` @AccessFlag PRIVATE_STATIC_FINAL;
+procedure `void` `<clinit>`() @signature `Lcom/android/volley/CacheDispatcher;.<clinit>:()V` @AccessFlag STATIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L1c6bd0.  v0:= `@@com.android.volley.VolleyLog.DEBUG` @type ^`boolean` @kind boolean;
+  #L1c6bd4.  `@@com.android.volley.CacheDispatcher.DEBUG` @type ^`boolean` := v0 @kind boolean;
+  #L1c6bd8.  return @kind void;
+}
+procedure `void` `<init>`(`com.android.volley.CacheDispatcher` v1 @kind this, `java.util.concurrent.BlockingQueue` v2 @kind object, `java.util.concurrent.BlockingQueue` v3 @kind object, `com.android.volley.Cache` v4 @kind object @name `cache`, `com.android.volley.ResponseDelivery` v5 @kind object @name `delivery`) @signature `Lcom/android/volley/CacheDispatcher;.<init>:(Ljava/util/concurrent/BlockingQueue;Ljava/util/concurrent/BlockingQueue;Lcom/android/volley/Cache;Lcom/android/volley/ResponseDelivery;)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L1c6bec.  call `<init>`(v1) @signature `Ljava/lang/Thread;.<init>:()V` @kind direct;
+  #L1c6bf2.  v0:= 0I;
+  #L1c6bf4.  v1.`com.android.volley.CacheDispatcher.mQuit` @type ^`boolean` := v0 @kind boolean;
+  #L1c6bf8.  v1.`com.android.volley.CacheDispatcher.mCacheQueue` @type ^`java.util.concurrent.BlockingQueue` := v2 @kind object;
+  #L1c6bfc.  v1.`com.android.volley.CacheDispatcher.mNetworkQueue` @type ^`java.util.concurrent.BlockingQueue` := v3 @kind object;
+  #L1c6c00.  v1.`com.android.volley.CacheDispatcher.mCache` @type ^`com.android.volley.Cache` := v4 @kind object;
+  #L1c6c04.  v1.`com.android.volley.CacheDispatcher.mDelivery` @type ^`com.android.volley.ResponseDelivery` := v5 @kind object;
+  #L1c6c08.  return @kind void;
+}
+procedure `java.util.concurrent.BlockingQueue` `access$000`(`com.android.volley.CacheDispatcher` v1 @kind object @name `x0`) @signature `Lcom/android/volley/CacheDispatcher;.access$000:(Lcom/android/volley/CacheDispatcher;)Ljava/util/concurrent/BlockingQueue;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+    v0;
+
+  #L1c6c1c.  v0:= v1.`com.android.volley.CacheDispatcher.mNetworkQueue` @type ^`java.util.concurrent.BlockingQueue` @kind object;
+  #L1c6c20.  return v0 @kind object;
+}
+procedure `void` `quit`(`com.android.volley.CacheDispatcher` v1 @kind this) @signature `Lcom/android/volley/CacheDispatcher;.quit:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L1c6c34.  v0:= 1I;
+  #L1c6c36.  v1.`com.android.volley.CacheDispatcher.mQuit` @type ^`boolean` := v0 @kind boolean;
+  #L1c6c3a.  call `interrupt`(v1) @signature `Lcom/android/volley/CacheDispatcher;.interrupt:()V` @kind virtual;
+  #L1c6c40.  return @kind void;
+}
+procedure `void` `run`(`com.android.volley.CacheDispatcher` v7 @kind this) @signature `Lcom/android/volley/CacheDispatcher;.run:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+
+  #L1c6c54.  v4:= `@@com.android.volley.CacheDispatcher.DEBUG` @type ^`boolean` @kind boolean;
+  #L1c6c58.  if v4 == 0 then goto L1c6c6c;
+  #L1c6c5c.  v4:= "start new dispatcher" @kind object;
+  #L1c6c60.  v5:= 0I;
+  #L1c6c62.  v5:= new `java.lang.Object`[v5];
+  #L1c6c66.  call `v`(v4, v5) @signature `Lcom/android/volley/VolleyLog;.v:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind static;
+  #L1c6c6c.  v4:= 10I;
+  #L1c6c70.  call `setThreadPriority`(v4) @signature `Landroid/os/Process;.setThreadPriority:(I)V` @kind static;
+  #L1c6c76.  v4:= v7.`com.android.volley.CacheDispatcher.mCache` @type ^`com.android.volley.Cache` @kind object;
+  #L1c6c7a.  call `initialize`(v4) @signature `Lcom/android/volley/Cache;.initialize:()V` @kind interface;
+  #L1c6c80.  v4:= v7.`com.android.volley.CacheDispatcher.mCacheQueue` @type ^`java.util.concurrent.BlockingQueue` @kind object;
+  #L1c6c84.  call temp:= `take`(v4) @signature `Ljava/util/concurrent/BlockingQueue;.take:()Ljava/lang/Object;` @kind interface;
+  #L1c6c8a.  v2:= temp @kind object;
+  #L1c6c8c.  v2:= (`com.android.volley.Request`) v2 @kind object;
+  #L1c6c90.  v4:= "cache-queue-take" @kind object;
+  #L1c6c94.  call `addMarker`(v2, v4) @signature `Lcom/android/volley/Request;.addMarker:(Ljava/lang/String;)V` @kind virtual;
+  #L1c6c9a.  call temp:= `isCanceled`(v2) @signature `Lcom/android/volley/Request;.isCanceled:()Z` @kind virtual;
+  #L1c6ca0.  v4:= temp;
+  #L1c6ca2.  if v4 == 0 then goto L1c6cbe;
+  #L1c6ca6.  v4:= "cache-discard-canceled" @kind object;
+  #L1c6caa.  call `finish`(v2, v4) @signature `Lcom/android/volley/Request;.finish:(Ljava/lang/String;)V` @kind virtual;
+  #L1c6cb0.  goto L1c6c80;
+  #L1c6cb2.  v0:= Exception @type ^`java.lang.InterruptedException` @kind object;
+  #L1c6cb4.  v4:= v7.`com.android.volley.CacheDispatcher.mQuit` @type ^`boolean` @kind boolean;
+  #L1c6cb8.  if v4 == 0 then goto L1c6c80;
+  #L1c6cbc.  return @kind void;
+  #L1c6cbe.  v4:= v7.`com.android.volley.CacheDispatcher.mCache` @type ^`com.android.volley.Cache` @kind object;
+  #L1c6cc2.  call temp:= `getCacheKey`(v2) @signature `Lcom/android/volley/Request;.getCacheKey:()Ljava/lang/String;` @kind virtual;
+  #L1c6cc8.  v5:= temp @kind object;
+  #L1c6cca.  call temp:= `get`(v4, v5) @signature `Lcom/android/volley/Cache;.get:(Ljava/lang/String;)Lcom/android/volley/Cache$Entry;` @kind interface;
+  #L1c6cd0.  v1:= temp @kind object;
+  #L1c6cd2.  if v1 != 0 then goto L1c6cec;
+  #L1c6cd6.  v4:= "cache-miss" @kind object;
+  #L1c6cda.  call `addMarker`(v2, v4) @signature `Lcom/android/volley/Request;.addMarker:(Ljava/lang/String;)V` @kind virtual;
+  #L1c6ce0.  v4:= v7.`com.android.volley.CacheDispatcher.mNetworkQueue` @type ^`java.util.concurrent.BlockingQueue` @kind object;
+  #L1c6ce4.  call `put`(v4, v2) @signature `Ljava/util/concurrent/BlockingQueue;.put:(Ljava/lang/Object;)V` @kind interface;
+  #L1c6cea.  goto L1c6c80;
+  #L1c6cec.  call temp:= `isExpired`(v1) @signature `Lcom/android/volley/Cache$Entry;.isExpired:()Z` @kind virtual;
+  #L1c6cf2.  v4:= temp;
+  #L1c6cf4.  if v4 == 0 then goto L1c6d14;
+  #L1c6cf8.  v4:= "cache-hit-expired" @kind object;
+  #L1c6cfc.  call `addMarker`(v2, v4) @signature `Lcom/android/volley/Request;.addMarker:(Ljava/lang/String;)V` @kind virtual;
+  #L1c6d02.  call temp:= `setCacheEntry`(v2, v1) @signature `Lcom/android/volley/Request;.setCacheEntry:(Lcom/android/volley/Cache$Entry;)Lcom/android/volley/Request;` @kind virtual;
+  #L1c6d08.  v4:= v7.`com.android.volley.CacheDispatcher.mNetworkQueue` @type ^`java.util.concurrent.BlockingQueue` @kind object;
+  #L1c6d0c.  call `put`(v4, v2) @signature `Ljava/util/concurrent/BlockingQueue;.put:(Ljava/lang/Object;)V` @kind interface;
+  #L1c6d12.  goto L1c6c80;
+  #L1c6d14.  v4:= "cache-hit" @kind object;
+  #L1c6d18.  call `addMarker`(v2, v4) @signature `Lcom/android/volley/Request;.addMarker:(Ljava/lang/String;)V` @kind virtual;
+  #L1c6d1e.  v4:= new `com.android.volley.NetworkResponse`;
+  #L1c6d22.  v5:= v1.`com.android.volley.Cache$Entry.data` @type ^`byte`[] @kind object;
+  #L1c6d26.  v6:= v1.`com.android.volley.Cache$Entry.responseHeaders` @type ^`java.util.Map` @kind object;
+  #L1c6d2a.  call `<init>`(v4, v5, v6) @signature `Lcom/android/volley/NetworkResponse;.<init>:([BLjava/util/Map;)V` @kind direct;
+  #L1c6d30.  call temp:= `parseNetworkResponse`(v2, v4) @signature `Lcom/android/volley/Request;.parseNetworkResponse:(Lcom/android/volley/NetworkResponse;)Lcom/android/volley/Response;` @kind virtual;
+  #L1c6d36.  v3:= temp @kind object;
+  #L1c6d38.  v4:= "cache-hit-parsed" @kind object;
+  #L1c6d3c.  call `addMarker`(v2, v4) @signature `Lcom/android/volley/Request;.addMarker:(Ljava/lang/String;)V` @kind virtual;
+  #L1c6d42.  call temp:= `refreshNeeded`(v1) @signature `Lcom/android/volley/Cache$Entry;.refreshNeeded:()Z` @kind virtual;
+  #L1c6d48.  v4:= temp;
+  #L1c6d4a.  if v4 != 0 then goto L1c6d5a;
+  #L1c6d4e.  v4:= v7.`com.android.volley.CacheDispatcher.mDelivery` @type ^`com.android.volley.ResponseDelivery` @kind object;
+  #L1c6d52.  call `postResponse`(v4, v2, v3) @signature `Lcom/android/volley/ResponseDelivery;.postResponse:(Lcom/android/volley/Request;Lcom/android/volley/Response;)V` @kind interface;
+  #L1c6d58.  goto L1c6c80;
+  #L1c6d5a.  v4:= "cache-hit-refresh-needed" @kind object;
+  #L1c6d5e.  call `addMarker`(v2, v4) @signature `Lcom/android/volley/Request;.addMarker:(Ljava/lang/String;)V` @kind virtual;
+  #L1c6d64.  call temp:= `setCacheEntry`(v2, v1) @signature `Lcom/android/volley/Request;.setCacheEntry:(Lcom/android/volley/Cache$Entry;)Lcom/android/volley/Request;` @kind virtual;
+  #L1c6d6a.  v4:= 1I;
+  #L1c6d6c.  v3.`com.android.volley.Response.intermediate` @type ^`boolean` := v4 @kind boolean;
+  #L1c6d70.  v4:= v7.`com.android.volley.CacheDispatcher.mDelivery` @type ^`com.android.volley.ResponseDelivery` @kind object;
+  #L1c6d74.  v5:= new `com.android.volley.CacheDispatcher$1`;
+  #L1c6d78.  call `<init>`(v5, v7, v2) @signature `Lcom/android/volley/CacheDispatcher$1;.<init>:(Lcom/android/volley/CacheDispatcher;Lcom/android/volley/Request;)V` @kind direct;
+  #L1c6d7e.  call `postResponse`(v4, v2, v3, v5) @signature `Lcom/android/volley/ResponseDelivery;.postResponse:(Lcom/android/volley/Request;Lcom/android/volley/Response;Ljava/lang/Runnable;)V` @kind interface;
+  #L1c6d84.  goto L1c6c80;
+  catch `java.lang.InterruptedException` @[L1c6c80..L1c6cb0] goto L1c6cb2;
+  catch `java.lang.InterruptedException` @[L1c6cbe..L1c6d84] goto L1c6cb2;
+}

@@ -1,0 +1,1013 @@
+record `plugin.google.maps.PluginMarkerCluster` @kind class @AccessFlag PUBLIC extends `plugin.google.maps.PluginMarker` @kind class {
+  `java.lang.Thread` `plugin.google.maps.PluginMarkerCluster.deleteThread` @AccessFlag PRIVATE;
+  `java.lang.Object` `plugin.google.maps.PluginMarkerCluster.deleteThreadLock` @AccessFlag PRIVATE_FINAL;
+  `java.lang.Runnable` `plugin.google.maps.PluginMarkerCluster.removeOverlaysOnUiThread` @AccessFlag PRIVATE;
+  `java.lang.Object` `plugin.google.maps.PluginMarkerCluster.semaphore` @AccessFlag PRIVATE_FINAL;
+  `boolean` `plugin.google.maps.PluginMarkerCluster.stopFlag` @AccessFlag PRIVATE;
+}
+global `java.lang.String` `@@plugin.google.maps.PluginMarkerCluster.GEOCELL_ALPHABET` @AccessFlag PUBLIC_STATIC_FINAL;
+global `int` `@@plugin.google.maps.PluginMarkerCluster.GEOCELL_GRID_SIZE` @AccessFlag PRIVATE_STATIC_FINAL;
+global `java.util.Map` `@@plugin.google.maps.PluginMarkerCluster.debugFlags` @AccessFlag PRIVATE_STATIC_FINAL;
+global `java.util.ArrayList` `@@plugin.google.maps.PluginMarkerCluster.deleteMarkers` @AccessFlag PRIVATE_STATIC_FINAL;
+global `java.util.Map` `@@plugin.google.maps.PluginMarkerCluster.pluginMarkers` @AccessFlag PRIVATE_STATIC_FINAL;
+global `java.util.Map` `@@plugin.google.maps.PluginMarkerCluster.waitCntManager` @AccessFlag PRIVATE_STATIC_FINAL;
+procedure `void` `<clinit>`() @signature `Lplugin/google/maps/PluginMarkerCluster;.<clinit>:()V` @AccessFlag STATIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L282f68.  v0:= new `java.util.concurrent.ConcurrentHashMap`;
+  #L282f6c.  call `<init>`(v0) @signature `Ljava/util/concurrent/ConcurrentHashMap;.<init>:()V` @kind direct;
+  #L282f72.  `@@plugin.google.maps.PluginMarkerCluster.pluginMarkers` @type ^`java.util.Map` := v0 @kind object;
+  #L282f76.  v0:= new `java.util.concurrent.ConcurrentHashMap`;
+  #L282f7a.  call `<init>`(v0) @signature `Ljava/util/concurrent/ConcurrentHashMap;.<init>:()V` @kind direct;
+  #L282f80.  `@@plugin.google.maps.PluginMarkerCluster.waitCntManager` @type ^`java.util.Map` := v0 @kind object;
+  #L282f84.  v0:= new `java.util.concurrent.ConcurrentHashMap`;
+  #L282f88.  call `<init>`(v0) @signature `Ljava/util/concurrent/ConcurrentHashMap;.<init>:()V` @kind direct;
+  #L282f8e.  `@@plugin.google.maps.PluginMarkerCluster.debugFlags` @type ^`java.util.Map` := v0 @kind object;
+  #L282f92.  v0:= new `java.util.ArrayList`;
+  #L282f96.  call `<init>`(v0) @signature `Ljava/util/ArrayList;.<init>:()V` @kind direct;
+  #L282f9c.  `@@plugin.google.maps.PluginMarkerCluster.deleteMarkers` @type ^`java.util.ArrayList` := v0 @kind object;
+  #L282fa0.  return @kind void;
+}
+procedure `void` `<init>`(`plugin.google.maps.PluginMarkerCluster` v2 @kind this) @signature `Lplugin/google/maps/PluginMarkerCluster;.<init>:()V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+
+  #L282fb4.  call `<init>`(v2) @signature `Lplugin/google/maps/PluginMarker;.<init>:()V` @kind direct;
+  #L282fba.  v0:= new `java.lang.Object`;
+  #L282fbe.  call `<init>`(v0) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L282fc4.  v2.`plugin.google.maps.PluginMarkerCluster.semaphore` @type ^`java.lang.Object` := v0 @kind object;
+  #L282fc8.  v0:= 0I;
+  #L282fca.  v2.`plugin.google.maps.PluginMarkerCluster.stopFlag` @type ^`boolean` := v0 @kind boolean;
+  #L282fce.  v0:= new `java.lang.Object`;
+  #L282fd2.  call `<init>`(v0) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L282fd8.  v2.`plugin.google.maps.PluginMarkerCluster.deleteThreadLock` @type ^`java.lang.Object` := v0 @kind object;
+  #L282fdc.  v0:= new `java.lang.Thread`;
+  #L282fe0.  v1:= new `plugin.google.maps.PluginMarkerCluster$1`;
+  #L282fe4.  call `<init>`(v1, v2) @signature `Lplugin/google/maps/PluginMarkerCluster$1;.<init>:(Lplugin/google/maps/PluginMarkerCluster;)V` @kind direct;
+  #L282fea.  call `<init>`(v0, v1) @signature `Ljava/lang/Thread;.<init>:(Ljava/lang/Runnable;)V` @kind direct;
+  #L282ff0.  v2.`plugin.google.maps.PluginMarkerCluster.deleteThread` @type ^`java.lang.Thread` := v0 @kind object;
+  #L282ff4.  v0:= new `plugin.google.maps.PluginMarkerCluster$2`;
+  #L282ff8.  call `<init>`(v0, v2) @signature `Lplugin/google/maps/PluginMarkerCluster$2;.<init>:(Lplugin/google/maps/PluginMarkerCluster;)V` @kind direct;
+  #L282ffe.  v2.`plugin.google.maps.PluginMarkerCluster.removeOverlaysOnUiThread` @type ^`java.lang.Runnable` := v0 @kind object;
+  #L283002.  return @kind void;
+}
+procedure `char` `_subdiv_char`(`plugin.google.maps.PluginMarkerCluster` v3 @kind this, `int` v4 , `int` v5 ) @signature `Lplugin/google/maps/PluginMarkerCluster;._subdiv_char:(II)C` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L282c08.  v0:= "0123456789abcdef" @kind object;
+  #L282c0c.  v1:= v5 ^& 2;
+  #L282c10.  v1:= v1 ^< 2;
+  #L282c14.  v2:= v4 ^& 2;
+  #L282c18.  v2:= v2 ^< 1;
+  #L282c1c.  v1:= v1 ^| v2 @kind int;
+  #L282c1e.  v5:= v5 ^& 1;
+  #L282c22.  v5:= v5 ^< 1;
+  #L282c26.  v5:= v5 ^| v1 @kind int;
+  #L282c28.  v4:= v4 ^& 1;
+  #L282c2c.  v4:= v4 ^< 0;
+  #L282c30.  v4:= v4 ^| v5 @kind int;
+  #L282c32.  call temp:= `charAt`(v0, v4) @signature `Ljava/lang/String;.charAt:(I)C` @kind virtual;
+  #L282c38.  v4:= temp;
+  #L282c3a.  return v4;
+}
+procedure `double`[] `_subdiv_xy`(`plugin.google.maps.PluginMarkerCluster` v10 @kind this, `char` v11 ) @signature `Lplugin/google/maps/PluginMarkerCluster;._subdiv_xy:(C)[D` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+    v9;
+
+  #L282d9c.  v0:= "0123456789abcdef" @kind object;
+  #L282da0.  call temp:= `indexOf`(v0, v11) @signature `Ljava/lang/String;.indexOf:(I)I` @kind virtual;
+  #L282da6.  v11:= temp;
+  #L282da8.  v0:= 2I;
+  #L282daa.  v1:= new `double`[v0];
+  #L282dae.  v2:= v11 ^& 4;
+  #L282db2.  v3:= 1I;
+  #L282db4.  v2:= v2 ^> v3 @kind int;
+  #L282db6.  v4:= v11 ^& 1;
+  #L282dba.  v5:= 0I;
+  #L282dbc.  v4:= v4 ^> v5 @kind int;
+  #L282dbe.  v2:= v2 ^| v4 @kind int;
+  #L282dc0.  v6:= (`double`) v2 @kind i2d;
+  #L282dc2.  v8:= 0L;
+  #L282dc6.  call temp:= `isNaN`(v6) @signature `Ljava/lang/Double;.isNaN:(D)Z` @kind static;
+  #L282dcc.  v6:= v6 + v8 @kind double;
+  #L282dce.  v1[v5]:= v6 @kind wide;
+  #L282dd2.  v2:= v11 ^& 8;
+  #L282dd6.  v2:= v2 ^> v0 @kind int;
+  #L282dd8.  v11:= v11 ^& v0 @kind int;
+  #L282dda.  v11:= v11 ^> v3 @kind int;
+  #L282ddc.  v11:= v11 ^| v2 @kind int;
+  #L282dde.  v4:= (`double`) v11 @kind i2d;
+  #L282de0.  call temp:= `isNaN`(v4) @signature `Ljava/lang/Double;.isNaN:(D)Z` @kind static;
+  #L282de6.  v4:= v4 + v8 @kind double;
+  #L282de8.  v1[v3]:= v4 @kind wide;
+  #L282dec.  return v1 @kind object;
+}
+procedure `boolean` `access$000`(`plugin.google.maps.PluginMarkerCluster` v0 @kind object) @signature `Lplugin/google/maps/PluginMarkerCluster;.access$000:(Lplugin/google/maps/PluginMarkerCluster;)Z` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L282bf0.  v0:= v0.`plugin.google.maps.PluginMarkerCluster.stopFlag` @type ^`boolean` @kind boolean;
+  #L282bf4.  return v0;
+}
+procedure `java.lang.Object` `access$100`(`plugin.google.maps.PluginMarkerCluster` v0 @kind object) @signature `Lplugin/google/maps/PluginMarkerCluster;.access$100:(Lplugin/google/maps/PluginMarkerCluster;)Ljava/lang/Object;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L282e00.  v0:= v0.`plugin.google.maps.PluginMarkerCluster.deleteThreadLock` @type ^`java.lang.Object` @kind object;
+  #L282e04.  return v0 @kind object;
+}
+procedure `java.util.ArrayList` `access$200`() @signature `Lplugin/google/maps/PluginMarkerCluster;.access$200:()Ljava/util/ArrayList;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+    v0;
+
+  #L282f20.  v0:= `@@plugin.google.maps.PluginMarkerCluster.deleteMarkers` @type ^`java.util.ArrayList` @kind object;
+  #L282f24.  return v0 @kind object;
+}
+procedure `java.lang.Runnable` `access$300`(`plugin.google.maps.PluginMarkerCluster` v0 @kind object) @signature `Lplugin/google/maps/PluginMarkerCluster;.access$300:(Lplugin/google/maps/PluginMarkerCluster;)Ljava/lang/Runnable;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L282e18.  v0:= v0.`plugin.google.maps.PluginMarkerCluster.removeOverlaysOnUiThread` @type ^`java.lang.Runnable` @kind object;
+  #L282e1c.  return v0 @kind object;
+}
+procedure `java.util.Map` `access$400`() @signature `Lplugin/google/maps/PluginMarkerCluster;.access$400:()Ljava/util/Map;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+    v0;
+
+  #L282f38.  v0:= `@@plugin.google.maps.PluginMarkerCluster.pluginMarkers` @type ^`java.util.Map` @kind object;
+  #L282f3c.  return v0 @kind object;
+}
+procedure `java.util.Map` `access$500`() @signature `Lplugin/google/maps/PluginMarkerCluster;.access$500:()Ljava/util/Map;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+    v0;
+
+  #L282f50.  v0:= `@@plugin.google.maps.PluginMarkerCluster.waitCntManager` @type ^`java.util.Map` @kind object;
+  #L282f54.  return v0 @kind object;
+}
+procedure `void` `access$600`(`plugin.google.maps.PluginMarkerCluster` v0 @kind object, `java.lang.String` v1 @kind object) @signature `Lplugin/google/maps/PluginMarkerCluster;.access$600:(Lplugin/google/maps/PluginMarkerCluster;Ljava/lang/String;)V` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L283014.  call `decreaseWaitCnt`(v0, v1) @signature `Lplugin/google/maps/PluginMarkerCluster;.decreaseWaitCnt:(Ljava/lang/String;)V` @kind direct;
+  #L28301a.  return @kind void;
+}
+procedure `void` `access$700`(`plugin.google.maps.PluginMarkerCluster` v0 @kind object, `java.lang.String` v1 @kind object, `com.google.android.gms.maps.model.Marker` v2 @kind object, `android.os.Bundle` v3 @kind object, `plugin.google.maps.PluginAsyncInterface` v4 @kind object) @signature `Lplugin/google/maps/PluginMarkerCluster;.access$700:(Lplugin/google/maps/PluginMarkerCluster;Ljava/lang/String;Lcom/google/android/gms/maps/model/Marker;Landroid/os/Bundle;Lplugin/google/maps/PluginAsyncInterface;)V` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L28302c.  call `setIconToClusterMarker`(v0, v1, v2, v3, v4) @signature `Lplugin/google/maps/PluginMarkerCluster;.setIconToClusterMarker:(Ljava/lang/String;Lcom/google/android/gms/maps/model/Marker;Landroid/os/Bundle;Lplugin/google/maps/PluginAsyncInterface;)V` @kind direct;
+  #L283032.  return @kind void;
+}
+procedure `void` `access$801`(`plugin.google.maps.PluginMarkerCluster` v0 @kind object, `com.google.android.gms.maps.model.Marker` v1 @kind object, `android.os.Bundle` v2 @kind object, `plugin.google.maps.PluginAsyncInterface` v3 @kind object) @signature `Lplugin/google/maps/PluginMarkerCluster;.access$801:(Lplugin/google/maps/PluginMarkerCluster;Lcom/google/android/gms/maps/model/Marker;Landroid/os/Bundle;Lplugin/google/maps/PluginAsyncInterface;)V` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L283044.  call `setIcon_`(v0, v1, v2, v3) @signature `Lplugin/google/maps/PluginMarker;.setIcon_:(Lcom/google/android/gms/maps/model/Marker;Landroid/os/Bundle;Lplugin/google/maps/PluginAsyncInterface;)V` @kind super;
+  #L28304a.  return @kind void;
+}
+procedure `com.google.android.gms.maps.model.LatLngBounds` `computeBox`(`plugin.google.maps.PluginMarkerCluster` v21 @kind this, `java.lang.String` v22 @kind object) @signature `Lplugin/google/maps/PluginMarkerCluster;.computeBox:(Ljava/lang/String;)Lcom/google/android/gms/maps/model/LatLngBounds;` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+    v9;
+    v10;
+    v11;
+    v12;
+    v13;
+    v14;
+    v15;
+    v16;
+    v17;
+    v18;
+    v19;
+    v20;
+
+  #L282c4c.  v10:= new `plugin.google.maps.PluginMarkerCluster$BoundBox`;
+  #L282c50.  v2:= 90.0D;
+  #L282c5a.  v4:= 180.0D;
+  #L282c64.  v6:= -90.0D;
+  #L282c6e.  v8:= -180.0D;
+  #L282c78.  v0:= v10 @kind object;
+  #L282c7a.  v1:= v21 @kind object;
+  #L282c7e.  call `<init>`(v0, v1, v2, v4, v6, v8) @signature `Lplugin/google/maps/PluginMarkerCluster$BoundBox;.<init>:(Lplugin/google/maps/PluginMarkerCluster;DDDD)V` @kind direct;
+  #L282c84.  v0:= v22 @kind object;
+  #L282c88.  call temp:= `length`(v0) @signature `Ljava/lang/String;.length:()I` @kind virtual;
+  #L282c8e.  v1:= temp;
+  #L282c90.  if v1 <= 0 then goto L282d46;
+  #L282c94.  call temp:= `getEast`(v10) @signature `Lplugin/google/maps/PluginMarkerCluster$BoundBox;.getEast:()D` @kind virtual;
+  #L282c9a.  v1:= temp @kind wide;
+  #L282c9c.  call temp:= `getWest`(v10) @signature `Lplugin/google/maps/PluginMarkerCluster$BoundBox;.getWest:()D` @kind virtual;
+  #L282ca2.  v3:= temp @kind wide;
+  #L282ca4.  v1:= v1 - v3 @kind double;
+  #L282ca6.  v3:= 4.0D;
+  #L282caa.  v1:= v1 / v3 @kind double;
+  #L282cac.  call temp:= `getNorth`(v10) @signature `Lplugin/google/maps/PluginMarkerCluster$BoundBox;.getNorth:()D` @kind virtual;
+  #L282cb2.  v5:= temp @kind wide;
+  #L282cb4.  call temp:= `getSouth`(v10) @signature `Lplugin/google/maps/PluginMarkerCluster$BoundBox;.getSouth:()D` @kind virtual;
+  #L282cba.  v7:= temp @kind wide;
+  #L282cbc.  v5:= v5 - v7 @kind double;
+  #L282cbe.  v5:= v5 / v3 @kind double;
+  #L282cc0.  v3:= 0I;
+  #L282cc2.  call temp:= `charAt`(v0, v3) @signature `Ljava/lang/String;.charAt:(I)C` @kind virtual;
+  #L282cc8.  v4:= temp;
+  #L282cca.  v7:= v21 @kind object;
+  #L282cce.  call temp:= `_subdiv_xy`(v7, v4) @signature `Lplugin/google/maps/PluginMarkerCluster;._subdiv_xy:(C)[D` @kind direct;
+  #L282cd4.  v4:= temp @kind object;
+  #L282cd6.  v8:= v4[v3] @kind wide;
+  #L282cda.  v3:= 1I;
+  #L282cdc.  v11:= v4[v3] @kind wide;
+  #L282ce0.  v4:= new `plugin.google.maps.PluginMarkerCluster$BoundBox`;
+  #L282ce4.  call temp:= `getSouth`(v10) @signature `Lplugin/google/maps/PluginMarkerCluster$BoundBox;.getSouth:()D` @kind virtual;
+  #L282cea.  v13:= temp @kind wide;
+  #L282cec.  v15:= 1.0D;
+  #L282cf0.  v17:= v11 + v15 @kind double;
+  #L282cf4.  v17:= v17 * v5 @kind double;
+  #L282cf8.  v13:= v13 + v17 @kind double;
+  #L282cfc.  call temp:= `getWest`(v10) @signature `Lplugin/google/maps/PluginMarkerCluster$BoundBox;.getWest:()D` @kind virtual;
+  #L282d02.  v17:= temp @kind wide;
+  #L282d04.  v15:= v15 + v8 @kind double;
+  #L282d06.  v15:= v15 * v1 @kind double;
+  #L282d0a.  v15:= v17 + v15 @kind double;
+  #L282d0e.  call temp:= `getSouth`(v10) @signature `Lplugin/google/maps/PluginMarkerCluster$BoundBox;.getSouth:()D` @kind virtual;
+  #L282d14.  v17:= temp @kind wide;
+  #L282d16.  v5:= v5 * v11 @kind double;
+  #L282d1a.  v17:= v17 + v5 @kind double;
+  #L282d1e.  call temp:= `getWest`(v10) @signature `Lplugin/google/maps/PluginMarkerCluster$BoundBox;.getWest:()D` @kind virtual;
+  #L282d24.  v5:= temp @kind wide;
+  #L282d26.  v1:= v1 * v8 @kind double;
+  #L282d2a.  v19:= v5 + v1 @kind double;
+  #L282d2e.  v11:= v4 @kind object;
+  #L282d30.  v12:= v21 @kind object;
+  #L282d34.  call `<init>`(v11, v12, v13, v15, v17, v19) @signature `Lplugin/google/maps/PluginMarkerCluster$BoundBox;.<init>:(Lplugin/google/maps/PluginMarkerCluster;DDDD)V` @kind direct;
+  #L282d3a.  call temp:= `substring`(v0, v3) @signature `Ljava/lang/String;.substring:(I)Ljava/lang/String;` @kind virtual;
+  #L282d40.  v0:= temp @kind object;
+  #L282d42.  v10:= v4 @kind object;
+  #L282d44.  goto L282c88;
+  #L282d46.  v7:= v21 @kind object;
+  #L282d4a.  v0:= new `com.google.android.gms.maps.model.LatLng`;
+  #L282d4e.  call temp:= `getSouth`(v10) @signature `Lplugin/google/maps/PluginMarkerCluster$BoundBox;.getSouth:()D` @kind virtual;
+  #L282d54.  v1:= temp @kind wide;
+  #L282d56.  call temp:= `getWest`(v10) @signature `Lplugin/google/maps/PluginMarkerCluster$BoundBox;.getWest:()D` @kind virtual;
+  #L282d5c.  v3:= temp @kind wide;
+  #L282d5e.  call `<init>`(v0, v1, v3) @signature `Lcom/google/android/gms/maps/model/LatLng;.<init>:(DD)V` @kind direct;
+  #L282d64.  v1:= new `com.google.android.gms.maps.model.LatLng`;
+  #L282d68.  call temp:= `getNorth`(v10) @signature `Lplugin/google/maps/PluginMarkerCluster$BoundBox;.getNorth:()D` @kind virtual;
+  #L282d6e.  v2:= temp @kind wide;
+  #L282d70.  call temp:= `getEast`(v10) @signature `Lplugin/google/maps/PluginMarkerCluster$BoundBox;.getEast:()D` @kind virtual;
+  #L282d76.  v4:= temp @kind wide;
+  #L282d78.  call `<init>`(v1, v2, v4) @signature `Lcom/google/android/gms/maps/model/LatLng;.<init>:(DD)V` @kind direct;
+  #L282d7e.  v2:= new `com.google.android.gms.maps.model.LatLngBounds`;
+  #L282d82.  call `<init>`(v2, v0, v1) @signature `Lcom/google/android/gms/maps/model/LatLngBounds;.<init>:(Lcom/google/android/gms/maps/model/LatLng;Lcom/google/android/gms/maps/model/LatLng;)V` @kind direct;
+  #L282d88.  return v2 @kind object;
+}
+procedure `void` `decreaseWaitCnt`(`plugin.google.maps.PluginMarkerCluster` v4 @kind this, `java.lang.String` v5 @kind object) @signature `Lplugin/google/maps/PluginMarkerCluster;.decreaseWaitCnt:(Ljava/lang/String;)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L283258.  v0:= `@@plugin.google.maps.PluginMarkerCluster.waitCntManager` @type ^`java.util.Map` @kind object;
+  #L28325c.  @monitorenter v0
+  #L28325e.  v1:= `@@plugin.google.maps.PluginMarkerCluster.waitCntManager` @type ^`java.util.Map` @kind object;
+  #L283262.  call temp:= `get`(v1, v5) @signature `Ljava/util/Map;.get:(Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L283268.  v1:= temp @kind object;
+  #L28326a.  v1:= (`java.lang.Integer`) v1 @kind object;
+  #L28326e.  call temp:= `intValue`(v1) @signature `Ljava/lang/Integer;.intValue:()I` @kind virtual;
+  #L283274.  v1:= temp;
+  #L283276.  v1:= v1 + -1;
+  #L28327a.  if v1 != 0 then goto L283298;
+  #L28327e.  v2:= v4.`plugin.google.maps.PluginMarkerCluster.semaphore` @type ^`java.lang.Object` @kind object;
+  #L283282.  @monitorenter v2
+  #L283284.  v3:= v4.`plugin.google.maps.PluginMarkerCluster.semaphore` @type ^`java.lang.Object` @kind object;
+  #L283288.  call `notify`(v3) @signature `Ljava/lang/Object;.notify:()V` @kind virtual;
+  #L28328e.  @monitorexit v2
+  #L283290.  goto L283298;
+  #L283292.  v5:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L283294.  @monitorexit v2
+  #L283296.  throw v5;
+  #L283298.  v2:= `@@plugin.google.maps.PluginMarkerCluster.waitCntManager` @type ^`java.util.Map` @kind object;
+  #L28329c.  call temp:= `valueOf`(v1) @signature `Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer;` @kind static;
+  #L2832a2.  v1:= temp @kind object;
+  #L2832a4.  call temp:= `put`(v2, v5, v1) @signature `Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L2832aa.  @monitorexit v0
+  #L2832ac.  return @kind void;
+  #L2832ae.  v5:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L2832b0.  @monitorexit v0
+  #L2832b2.  throw v5;
+  catch `java.lang.Throwable` @[L28325e..L283284] goto L2832ae;
+  catch `java.lang.Throwable` @[L283284..L283296] goto L283292;
+  catch `java.lang.Throwable` @[L283296..L2832b2] goto L2832ae;
+}
+procedure `void` `deleteProcess`(`plugin.google.maps.PluginMarkerCluster` v2 @kind this, `java.lang.String` v3 @kind object, `org.json.JSONObject` v4 @kind object) @signature `Lplugin/google/maps/PluginMarkerCluster;.deleteProcess:(Ljava/lang/String;Lorg/json/JSONObject;)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+
+  #L2832e4.  v0:= "delete" @kind object;
+  #L2832e8.  call temp:= `has`(v4, v0) @signature `Lorg/json/JSONObject;.has:(Ljava/lang/String;)Z` @kind virtual;
+  #L2832ee.  v0:= temp;
+  #L2832f0.  if v0 != 0 then goto L2832f6;
+  #L2832f4.  return @kind void;
+  #L2832f6.  v0:= v2.`plugin.google.maps.PluginMarkerCluster.cordova` @type ^`org.apache.cordova.CordovaInterface` @kind object;
+  #L2832fa.  call temp:= `getThreadPool`(v0) @signature `Lorg/apache/cordova/CordovaInterface;.getThreadPool:()Ljava/util/concurrent/ExecutorService;` @kind interface;
+  #L283300.  v0:= temp @kind object;
+  #L283302.  v1:= new `plugin.google.maps.PluginMarkerCluster$4`;
+  #L283306.  call `<init>`(v1, v2, v4, v3) @signature `Lplugin/google/maps/PluginMarkerCluster$4;.<init>:(Lplugin/google/maps/PluginMarkerCluster;Lorg/json/JSONObject;Ljava/lang/String;)V` @kind direct;
+  #L28330c.  call temp:= `submit`(v0, v1) @signature `Ljava/util/concurrent/ExecutorService;.submit:(Ljava/lang/Runnable;)Ljava/util/concurrent/Future;` @kind interface;
+  #L283312.  return @kind void;
+}
+procedure `java.lang.String` `getGeocell`(`plugin.google.maps.PluginMarkerCluster` v19 @kind this, `double` v20 , `double` v22 , `int` v24 ) @signature `Lplugin/google/maps/PluginMarkerCluster;.getGeocell:(DDI)Ljava/lang/String;` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+    v9;
+    v10;
+    v11;
+    v12;
+    v13;
+    v14;
+    v15;
+    v16;
+    v17;
+    v18;
+
+  #L282e30.  v0:= new `java.lang.StringBuilder`;
+  #L282e34.  call `<init>`(v0) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L282e3a.  v1:= 90.0D;
+  #L282e44.  v3:= -90.0D;
+  #L282e4e.  v5:= 180.0D;
+  #L282e58.  v7:= -180.0D;
+  #L282e62.  call temp:= `length`(v0) @signature `Ljava/lang/StringBuilder;.length:()I` @kind virtual;
+  #L282e68.  v9:= temp;
+  #L282e6a.  v10:= v24 + 1;
+  #L282e6e.  if v9 >= v10 then goto L282f02;
+  #L282e72.  v5:= v5 - v7 @kind double;
+  #L282e74.  v9:= 4.0D;
+  #L282e78.  v11:= v5 / v9 @kind double;
+  #L282e7c.  v1:= v1 - v3 @kind double;
+  #L282e7e.  v13:= v1 / v9 @kind double;
+  #L282e82.  v15:= v22 - v7 @kind double;
+  #L282e86.  v15:= v15 * v9 @kind double;
+  #L282e8a.  v15:= v15 / v5 @kind double;
+  #L282e8c.  call temp:= `floor`(v15) @signature `Ljava/lang/Math;.floor:(D)D` @kind static;
+  #L282e92.  v5:= temp @kind wide;
+  #L282e94.  v9:= 3.0D;
+  #L282e98.  call temp:= `min`(v5, v9) @signature `Ljava/lang/Math;.min:(DD)D` @kind static;
+  #L282e9e.  v5:= temp @kind wide;
+  #L282ea0.  v5:= (`int`) v5 @kind d2i;
+  #L282ea2.  v5:= (`byte`) v5 @kind i2b;
+  #L282ea4.  v17:= v20 - v3 @kind double;
+  #L282ea8.  v15:= 4.0D;
+  #L282eac.  v17:= v17 * v15 @kind double;
+  #L282eb0.  v17:= v17 / v1 @kind double;
+  #L282eb4.  call temp:= `floor`(v17) @signature `Ljava/lang/Math;.floor:(D)D` @kind static;
+  #L282eba.  v1:= temp @kind wide;
+  #L282ebc.  call temp:= `min`(v1, v9) @signature `Ljava/lang/Math;.min:(DD)D` @kind static;
+  #L282ec2.  v1:= temp @kind wide;
+  #L282ec4.  v1:= (`int`) v1 @kind d2i;
+  #L282ec6.  v1:= (`byte`) v1 @kind i2b;
+  #L282ec8.  v2:= v19 @kind object;
+  #L282ecc.  call temp:= `_subdiv_char`(v2, v5, v1) @signature `Lplugin/google/maps/PluginMarkerCluster;._subdiv_char:(II)C` @kind direct;
+  #L282ed2.  v6:= temp;
+  #L282ed4.  call temp:= `append`(v0, v6) @signature `Ljava/lang/StringBuilder;.append:(C)Ljava/lang/StringBuilder;` @kind virtual;
+  #L282eda.  v9:= (`double`) v1 @kind i2d;
+  #L282edc.  call temp:= `isNaN`(v9) @signature `Ljava/lang/Double;.isNaN:(D)Z` @kind static;
+  #L282ee2.  v9:= v9 * v13 @kind double;
+  #L282ee6.  v3:= v3 + v9 @kind double;
+  #L282ee8.  v9:= v3 + v13 @kind double;
+  #L282eec.  v5:= (`double`) v5 @kind i2d;
+  #L282eee.  call temp:= `isNaN`(v5) @signature `Ljava/lang/Double;.isNaN:(D)Z` @kind static;
+  #L282ef4.  v5:= v5 * v11 @kind double;
+  #L282ef8.  v7:= v7 + v5 @kind double;
+  #L282efa.  v5:= v7 + v11 @kind double;
+  #L282efe.  v1:= v9 @kind wide;
+  #L282f00.  goto L282e62;
+  #L282f02.  v2:= v19 @kind object;
+  #L282f06.  call temp:= `toString`(v0) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L282f0c.  v0:= temp @kind object;
+  #L282f0e.  return v0 @kind object;
+}
+procedure `void` `setIconToClusterMarker`(`plugin.google.maps.PluginMarkerCluster` v3 @kind this, `java.lang.String` v4 @kind object, `com.google.android.gms.maps.model.Marker` v5 @kind object, `android.os.Bundle` v6 @kind object, `plugin.google.maps.PluginAsyncInterface` v7 @kind object) @signature `Lplugin/google/maps/PluginMarkerCluster;.setIconToClusterMarker:(Ljava/lang/String;Lcom/google/android/gms/maps/model/Marker;Landroid/os/Bundle;Lplugin/google/maps/PluginAsyncInterface;)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L283944.  v0:= `@@plugin.google.maps.PluginMarkerCluster.pluginMarkers` @type ^`java.util.Map` @kind object;
+  #L283948.  @monitorenter v0
+  #L28394a.  v1:= `@@plugin.google.maps.PluginMarkerCluster$STATUS.DELETED` @type ^`plugin.google.maps.PluginMarkerCluster$STATUS` @kind object;
+  #L28394e.  v2:= `@@plugin.google.maps.PluginMarkerCluster.pluginMarkers` @type ^`java.util.Map` @kind object;
+  #L283952.  call temp:= `get`(v2, v4) @signature `Ljava/util/Map;.get:(Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L283958.  v2:= temp @kind object;
+  #L28395a.  call temp:= `equals`(v1, v2) @signature `Lplugin/google/maps/PluginMarkerCluster$STATUS;.equals:(Ljava/lang/Object;)Z` @kind virtual;
+  #L283960.  v1:= temp;
+  #L283962.  if v1 == 0 then goto L2839d4;
+  #L283966.  v6:= v3.`plugin.google.maps.PluginMarkerCluster.pluginMap` @type ^`plugin.google.maps.PluginMap` @kind object;
+  #L28396a.  v6:= v6.`plugin.google.maps.PluginMap.objects` @type ^`plugin.google.maps.ObjectCache` @kind object;
+  #L28396e.  @monitorenter v6
+  #L283970.  call `_removeMarker`(v3, v5) @signature `Lplugin/google/maps/PluginMarkerCluster;._removeMarker:(Lcom/google/android/gms/maps/model/Marker;)V` @kind virtual;
+  #L283976.  v5:= v3.`plugin.google.maps.PluginMarkerCluster.pluginMap` @type ^`plugin.google.maps.PluginMap` @kind object;
+  #L28397a.  v5:= v5.`plugin.google.maps.PluginMap.objects` @type ^`plugin.google.maps.ObjectCache` @kind object;
+  #L28397e.  call temp:= `remove`(v5, v4) @signature `Lplugin/google/maps/ObjectCache;.remove:(Ljava/lang/String;)Ljava/lang/Object;` @kind virtual;
+  #L283984.  v5:= v3.`plugin.google.maps.PluginMarkerCluster.pluginMap` @type ^`plugin.google.maps.PluginMap` @kind object;
+  #L283988.  v5:= v5.`plugin.google.maps.PluginMap.objects` @type ^`plugin.google.maps.ObjectCache` @kind object;
+  #L28398c.  v1:= new `java.lang.StringBuilder`;
+  #L283990.  call `<init>`(v1) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L283996.  v2:= "marker_property_" @kind object;
+  #L28399a.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2839a0.  call temp:= `append`(v1, v4) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2839a6.  call temp:= `toString`(v1) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L2839ac.  v1:= temp @kind object;
+  #L2839ae.  call temp:= `remove`(v5, v1) @signature `Lplugin/google/maps/ObjectCache;.remove:(Ljava/lang/String;)Ljava/lang/Object;` @kind virtual;
+  #L2839b4.  @monitorexit v6
+  #L2839b6.  v5:= `@@plugin.google.maps.PluginMarkerCluster.pluginMarkers` @type ^`java.util.Map` @kind object;
+  #L2839ba.  call temp:= `remove`(v5, v4) @signature `Ljava/util/Map;.remove:(Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L2839c0.  v4:= "marker has been removed" @kind object;
+  #L2839c4.  call `onError`(v7, v4) @signature `Lplugin/google/maps/PluginAsyncInterface;.onError:(Ljava/lang/String;)V` @kind interface;
+  #L2839ca.  @monitorexit v0
+  #L2839cc.  return @kind void;
+  #L2839ce.  v4:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L2839d0.  @monitorexit v6
+  #L2839d2.  throw v4;
+  #L2839d4.  @monitorexit v0
+  #L2839d6.  v0:= new `plugin.google.maps.PluginMarkerCluster$5`;
+  #L2839da.  call `<init>`(v0, v3, v4, v7, v5) @signature `Lplugin/google/maps/PluginMarkerCluster$5;.<init>:(Lplugin/google/maps/PluginMarkerCluster;Ljava/lang/String;Lplugin/google/maps/PluginAsyncInterface;Lcom/google/android/gms/maps/model/Marker;)V` @kind direct;
+  #L2839e0.  call `access$801`(v3, v5, v6, v0) @signature `Lplugin/google/maps/PluginMarkerCluster;.access$801:(Lplugin/google/maps/PluginMarkerCluster;Lcom/google/android/gms/maps/model/Marker;Landroid/os/Bundle;Lplugin/google/maps/PluginAsyncInterface;)V` @kind static;
+  #L2839e6.  return @kind void;
+  #L2839e8.  v4:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L2839ea.  @monitorexit v0
+  #L2839ec.  throw v4;
+  catch `java.lang.Throwable` @[L28394a..L283970] goto L2839e8;
+  catch `java.lang.Throwable` @[L283970..L2839b6] goto L2839ce;
+  catch `java.lang.Throwable` @[L2839b6..L2839cc] goto L2839e8;
+  catch `java.lang.Throwable` @[L2839d0..L2839d2] goto L2839ce;
+  catch `java.lang.Throwable` @[L2839d2..L2839d6] goto L2839e8;
+  catch `java.lang.Throwable` @[L2839ea..L2839ec] goto L2839e8;
+}
+procedure `void` `clear`(`plugin.google.maps.PluginMarkerCluster` v8 @kind this) @signature `Lplugin/google/maps/PluginMarkerCluster;.clear:()V` @AccessFlag PROTECTED {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+
+  #L28305c.  call `clear`(v8) @signature `Lplugin/google/maps/PluginMarker;.clear:()V` @kind super;
+  #L283062.  v0:= v8.`plugin.google.maps.PluginMarkerCluster.semaphore` @type ^`java.lang.Object` @kind object;
+  #L283066.  @monitorenter v0
+  #L283068.  v1:= `@@plugin.google.maps.PluginMarkerCluster.pluginMarkers` @type ^`java.util.Map` @kind object;
+  #L28306c.  @monitorenter v1
+  #L28306e.  v2:= `@@plugin.google.maps.PluginMarkerCluster.deleteMarkers` @type ^`java.util.ArrayList` @kind object;
+  #L283072.  @monitorenter v2
+  #L283074.  v3:= `@@plugin.google.maps.PluginMarkerCluster.pluginMarkers` @type ^`java.util.Map` @kind object;
+  #L283078.  call temp:= `size`(v3) @signature `Ljava/util/Map;.size:()I` @kind interface;
+  #L28307e.  v3:= temp;
+  #L283080.  if v3 <= 0 then goto L2830d6;
+  #L283084.  v3:= `@@plugin.google.maps.PluginMarkerCluster.pluginMarkers` @type ^`java.util.Map` @kind object;
+  #L283088.  call temp:= `keySet`(v3) @signature `Ljava/util/Map;.keySet:()Ljava/util/Set;` @kind interface;
+  #L28308e.  v3:= temp @kind object;
+  #L283090.  v4:= `@@plugin.google.maps.PluginMarkerCluster.pluginMarkers` @type ^`java.util.Map` @kind object;
+  #L283094.  call temp:= `size`(v4) @signature `Ljava/util/Map;.size:()I` @kind interface;
+  #L28309a.  v4:= temp;
+  #L28309c.  v4:= new `java.lang.String`[v4];
+  #L2830a0.  call temp:= `toArray`(v3, v4) @signature `Ljava/util/Set;.toArray:([Ljava/lang/Object;)[Ljava/lang/Object;` @kind interface;
+  #L2830a6.  v3:= temp @kind object;
+  #L2830a8.  v3:= (`java.lang.String`[]) v3 @kind object;
+  #L2830ac.  v4:= 0I;
+  #L2830ae.  v5:= length @variable v3;
+  #L2830b0.  if v4 >= v5 then goto L2830d6;
+  #L2830b4.  v5:= v3[v4] @kind object;
+  #L2830b8.  v6:= `@@plugin.google.maps.PluginMarkerCluster.pluginMarkers` @type ^`java.util.Map` @kind object;
+  #L2830bc.  v7:= `@@plugin.google.maps.PluginMarkerCluster$STATUS.DELETED` @type ^`plugin.google.maps.PluginMarkerCluster$STATUS` @kind object;
+  #L2830c0.  call temp:= `put`(v6, v5, v7) @signature `Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L2830c6.  v6:= `@@plugin.google.maps.PluginMarkerCluster.deleteMarkers` @type ^`java.util.ArrayList` @kind object;
+  #L2830ca.  call temp:= `add`(v6, v5) @signature `Ljava/util/ArrayList;.add:(Ljava/lang/Object;)Z` @kind virtual;
+  #L2830d0.  v4:= v4 + 1;
+  #L2830d4.  goto L2830ae;
+  #L2830d6.  @monitorexit v2
+  #L2830d8.  @monitorexit v1
+  #L2830da.  @monitorexit v0
+  #L2830dc.  return @kind void;
+  #L2830de.  v3:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L2830e0.  @monitorexit v2
+  #L2830e2.  throw v3;
+  #L2830e4.  v2:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L2830e6.  @monitorexit v1
+  #L2830e8.  throw v2;
+  #L2830ea.  v1:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L2830ec.  @monitorexit v0
+  #L2830ee.  throw v1;
+  #L2830f0.  return @kind void;
+  catch `java.lang.Throwable` @[L283068..L28306e] goto L2830ea;
+  catch `java.lang.Throwable` @[L28306e..L283074] goto L2830e4;
+  catch `java.lang.Throwable` @[L283074..L2830d8] goto L2830de;
+  catch `java.lang.Throwable` @[L2830d8..L2830da] goto L2830e4;
+  catch `java.lang.Throwable` @[L2830da..L2830dc] goto L2830ea;
+  catch `java.lang.Throwable` @[L2830e0..L2830e2] goto L2830de;
+  catch `java.lang.Throwable` @[L2830e2..L2830e8] goto L2830e4;
+  catch `java.lang.Throwable` @[L2830e8..L2830ee] goto L2830ea;
+}
+procedure `void` `create`(`plugin.google.maps.PluginMarkerCluster` v12 @kind this, `org.json.JSONArray` v13 @kind object, `org.apache.cordova.CallbackContext` v14 @kind object) @signature `Lplugin/google/maps/PluginMarkerCluster;.create:(Lorg/json/JSONArray;Lorg/apache/cordova/CallbackContext;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+    v9;
+    v10;
+    v11;
+
+  #L28314c.  v0:= 1I;
+  #L28314e.  call temp:= `getJSONObject`(v13, v0) @signature `Lorg/json/JSONArray;.getJSONObject:(I)Lorg/json/JSONObject;` @kind virtual;
+  #L283154.  v0:= temp @kind object;
+  #L283156.  v1:= 2I;
+  #L283158.  call temp:= `getString`(v13, v1) @signature `Lorg/json/JSONArray;.getString:(I)Ljava/lang/String;` @kind virtual;
+  #L28315e.  v13:= temp @kind object;
+  #L283160.  v1:= "positionList" @kind object;
+  #L283164.  call temp:= `getJSONArray`(v0, v1) @signature `Lorg/json/JSONObject;.getJSONArray:(Ljava/lang/String;)Lorg/json/JSONArray;` @kind virtual;
+  #L28316a.  v1:= temp @kind object;
+  #L28316c.  v2:= new `org.json.JSONArray`;
+  #L283170.  call `<init>`(v2) @signature `Lorg/json/JSONArray;.<init>:()V` @kind direct;
+  #L283176.  v3:= 0I;
+  #L283178.  call temp:= `length`(v1) @signature `Lorg/json/JSONArray;.length:()I` @kind virtual;
+  #L28317e.  v4:= temp;
+  #L283180.  if v3 >= v4 then goto L2831be;
+  #L283184.  call temp:= `getJSONObject`(v1, v3) @signature `Lorg/json/JSONArray;.getJSONObject:(I)Lorg/json/JSONObject;` @kind virtual;
+  #L28318a.  v4:= temp @kind object;
+  #L28318c.  v5:= "lat" @kind object;
+  #L283190.  call temp:= `getDouble`(v4, v5) @signature `Lorg/json/JSONObject;.getDouble:(Ljava/lang/String;)D` @kind virtual;
+  #L283196.  v7:= temp @kind wide;
+  #L283198.  v5:= "lng" @kind object;
+  #L28319c.  call temp:= `getDouble`(v4, v5) @signature `Lorg/json/JSONObject;.getDouble:(Ljava/lang/String;)D` @kind virtual;
+  #L2831a2.  v9:= temp @kind wide;
+  #L2831a4.  v11:= 12I;
+  #L2831a8.  v6:= v12 @kind object;
+  #L2831aa.  call temp:= `getGeocell`(v6, v7, v9, v11) @signature `Lplugin/google/maps/PluginMarkerCluster;.getGeocell:(DDI)Ljava/lang/String;` @kind direct;
+  #L2831b0.  v4:= temp @kind object;
+  #L2831b2.  call temp:= `put`(v2, v4) @signature `Lorg/json/JSONArray;.put:(Ljava/lang/Object;)Lorg/json/JSONArray;` @kind virtual;
+  #L2831b8.  v3:= v3 + 1;
+  #L2831bc.  goto L283178;
+  #L2831be.  v1:= new `java.lang.StringBuilder`;
+  #L2831c2.  call `<init>`(v1) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L2831c8.  v3:= "markercluster_" @kind object;
+  #L2831cc.  call temp:= `append`(v1, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2831d2.  call temp:= `append`(v1, v13) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2831d8.  call temp:= `toString`(v1) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L2831de.  v1:= temp @kind object;
+  #L2831e0.  v3:= `@@plugin.google.maps.PluginMarkerCluster.debugFlags` @type ^`java.util.Map` @kind object;
+  #L2831e4.  v4:= "debug" @kind object;
+  #L2831e8.  call temp:= `getBoolean`(v0, v4) @signature `Lorg/json/JSONObject;.getBoolean:(Ljava/lang/String;)Z` @kind virtual;
+  #L2831ee.  v0:= temp;
+  #L2831f0.  call temp:= `valueOf`(v0) @signature `Ljava/lang/Boolean;.valueOf:(Z)Ljava/lang/Boolean;` @kind static;
+  #L2831f6.  v0:= temp @kind object;
+  #L2831f8.  call temp:= `put`(v3, v1, v0) @signature `Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L2831fe.  v0:= new `org.json.JSONObject`;
+  #L283202.  call `<init>`(v0) @signature `Lorg/json/JSONObject;.<init>:()V` @kind direct;
+  #L283208.  v3:= "geocellList" @kind object;
+  #L28320c.  call temp:= `put`(v0, v3, v2) @signature `Lorg/json/JSONObject;.put:(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;` @kind virtual;
+  #L283212.  v2:= "hashCode" @kind object;
+  #L283216.  call temp:= `put`(v0, v2, v13) @signature `Lorg/json/JSONObject;.put:(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;` @kind virtual;
+  #L28321c.  v13:= "__pgmId" @kind object;
+  #L283220.  call temp:= `put`(v0, v13, v1) @signature `Lorg/json/JSONObject;.put:(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;` @kind virtual;
+  #L283226.  goto L283230;
+  #L283228.  v13:= Exception @type ^`org.json.JSONException` @kind object;
+  #L28322a.  call `printStackTrace`(v13) @signature `Lorg/json/JSONException;.printStackTrace:()V` @kind virtual;
+  #L283230.  call `success`(v14, v0) @signature `Lorg/apache/cordova/CallbackContext;.success:(Lorg/json/JSONObject;)V` @kind virtual;
+  #L283236.  return @kind void;
+  catch `org.json.JSONException` @[L283208..L283226] goto L283228;
+}
+procedure `void` `initialize`(`plugin.google.maps.PluginMarkerCluster` v0 @kind this, `org.apache.cordova.CordovaInterface` v1 @kind object, `org.apache.cordova.CordovaWebView` v2 @kind object) @signature `Lplugin/google/maps/PluginMarkerCluster;.initialize:(Lorg/apache/cordova/CordovaInterface;Lorg/apache/cordova/CordovaWebView;)V` @AccessFlag PUBLIC {
+    temp;
+
+  #L283324.  call `initialize`(v0, v1, v2) @signature `Lplugin/google/maps/PluginMarker;.initialize:(Lorg/apache/cordova/CordovaInterface;Lorg/apache/cordova/CordovaWebView;)V` @kind super;
+  #L28332a.  v1:= v0.`plugin.google.maps.PluginMarkerCluster.deleteThread` @type ^`java.lang.Thread` @kind object;
+  #L28332e.  call temp:= `isAlive`(v1) @signature `Ljava/lang/Thread;.isAlive:()Z` @kind virtual;
+  #L283334.  v1:= temp;
+  #L283336.  if v1 != 0 then goto L283344;
+  #L28333a.  v1:= v0.`plugin.google.maps.PluginMarkerCluster.deleteThread` @type ^`java.lang.Thread` @kind object;
+  #L28333e.  call `start`(v1) @signature `Ljava/lang/Thread;.start:()V` @kind virtual;
+  #L283344.  return @kind void;
+}
+procedure `void` `onDestroy`(`plugin.google.maps.PluginMarkerCluster` v1 @kind this) @signature `Lplugin/google/maps/PluginMarkerCluster;.onDestroy:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L283358.  call `onDestroy`(v1) @signature `Lplugin/google/maps/PluginMarker;.onDestroy:()V` @kind super;
+  #L28335e.  v0:= 1I;
+  #L283360.  v1.`plugin.google.maps.PluginMarkerCluster.stopFlag` @type ^`boolean` := v0 @kind boolean;
+  #L283364.  return @kind void;
+}
+procedure `void` `redrawClusters`(`plugin.google.maps.PluginMarkerCluster` v19 @kind this, `org.json.JSONArray` v20 @kind object, `org.apache.cordova.CallbackContext` v21 @kind object) @signature `Lplugin/google/maps/PluginMarkerCluster;.redrawClusters:(Lorg/json/JSONArray;Lorg/apache/cordova/CallbackContext;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+    v9;
+    v10;
+    v11;
+    v12;
+    v13;
+    v14;
+    v15;
+    v16;
+    v17;
+    v18;
+
+  #L283378.  v7:= v19 @kind object;
+  #L28337c.  v0:= v20 @kind object;
+  #L283380.  v3:= new `java.util.HashSet`;
+  #L283384.  call `<init>`(v3) @signature `Ljava/util/HashSet;.<init>:()V` @kind direct;
+  #L28338a.  v5:= new `java.util.HashMap`;
+  #L28338e.  call `<init>`(v5) @signature `Ljava/util/HashMap;.<init>:()V` @kind direct;
+  #L283394.  v1:= 0I;
+  #L283396.  call temp:= `getString`(v0, v1) @signature `Lorg/json/JSONArray;.getString:(I)Ljava/lang/String;` @kind virtual;
+  #L28339c.  v8:= temp @kind object;
+  #L28339e.  v2:= `@@plugin.google.maps.PluginMarkerCluster.debugFlags` @type ^`java.util.Map` @kind object;
+  #L2833a2.  call temp:= `get`(v2, v8) @signature `Ljava/util/Map;.get:(Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L2833a8.  v2:= temp @kind object;
+  #L2833aa.  v2:= (`java.lang.Boolean`) v2 @kind object;
+  #L2833ae.  call temp:= `booleanValue`(v2) @signature `Ljava/lang/Boolean;.booleanValue:()Z` @kind virtual;
+  #L2833b4.  v2:= temp;
+  #L2833b6.  v4:= 1I;
+  #L2833b8.  call temp:= `getJSONObject`(v0, v4) @signature `Lorg/json/JSONArray;.getJSONObject:(I)Lorg/json/JSONObject;` @kind virtual;
+  #L2833be.  v0:= temp @kind object;
+  #L2833c0.  v6:= "new_or_update" @kind object;
+  #L2833c4.  call temp:= `has`(v0, v6) @signature `Lorg/json/JSONObject;.has:(Ljava/lang/String;)Z` @kind virtual;
+  #L2833ca.  v6:= temp;
+  #L2833cc.  if v6 == 0 then goto L2833de;
+  #L2833d0.  v6:= "new_or_update" @kind object;
+  #L2833d4.  call temp:= `getJSONArray`(v0, v6) @signature `Lorg/json/JSONObject;.getJSONArray:(Ljava/lang/String;)Lorg/json/JSONArray;` @kind virtual;
+  #L2833da.  v6:= temp @kind object;
+  #L2833dc.  goto L2833e0;
+  #L2833de.  v6:= 0I;
+  #L2833e0.  if v6 == 0 then goto L2833ee;
+  #L2833e4.  call temp:= `length`(v6) @signature `Lorg/json/JSONArray;.length:()I` @kind virtual;
+  #L2833ea.  v9:= temp;
+  #L2833ec.  goto L2833f0;
+  #L2833ee.  v9:= 0I;
+  #L2833f0.  v10:= 0I;
+  #L2833f2.  if v10 >= v9 then goto L283778;
+  #L2833f6.  call temp:= `getJSONObject`(v6, v10) @signature `Lorg/json/JSONArray;.getJSONObject:(I)Lorg/json/JSONObject;` @kind virtual;
+  #L2833fc.  v11:= temp @kind object;
+  #L2833fe.  v12:= "position" @kind object;
+  #L283402.  call temp:= `getJSONObject`(v11, v12) @signature `Lorg/json/JSONObject;.getJSONObject:(Ljava/lang/String;)Lorg/json/JSONObject;` @kind virtual;
+  #L283408.  v12:= temp @kind object;
+  #L28340a.  v13:= "__pgmId" @kind object;
+  #L28340e.  call temp:= `getString`(v11, v13) @signature `Lorg/json/JSONObject;.getString:(Ljava/lang/String;)Ljava/lang/String;` @kind virtual;
+  #L283414.  v13:= temp @kind object;
+  #L283416.  v14:= new `java.lang.StringBuilder`;
+  #L28341a.  call `<init>`(v14) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L283420.  call temp:= `append`(v14, v8) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L283426.  v15:= "-" @kind object;
+  #L28342a.  call temp:= `append`(v14, v15) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L283430.  call temp:= `append`(v14, v13) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L283436.  call temp:= `toString`(v14) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L28343c.  v14:= temp @kind object;
+  #L28343e.  v15:= v7.`plugin.google.maps.PluginMarkerCluster.pluginMap` @type ^`plugin.google.maps.PluginMap` @kind object;
+  #L283442.  v15:= v15.`plugin.google.maps.PluginMap.objects` @type ^`plugin.google.maps.ObjectCache` @kind object;
+  #L283446.  v1:= new `java.lang.StringBuilder`;
+  #L28344a.  call `<init>`(v1) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L283450.  v4:= "marker_property_" @kind object;
+  #L283454.  call temp:= `append`(v1, v4) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L28345a.  call temp:= `append`(v1, v14) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L283460.  call temp:= `toString`(v1) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L283466.  v1:= temp @kind object;
+  #L283468.  call `put`(v15, v1, v11) @signature `Lplugin/google/maps/ObjectCache;.put:(Ljava/lang/String;Ljava/lang/Object;)V` @kind virtual;
+  #L28346e.  v1:= `@@plugin.google.maps.PluginMarkerCluster.pluginMarkers` @type ^`java.util.Map` @kind object;
+  #L283472.  @monitorenter v1
+  #L283474.  v4:= `@@plugin.google.maps.PluginMarkerCluster.pluginMarkers` @type ^`java.util.Map` @kind object;
+  #L283478.  v15:= `@@plugin.google.maps.PluginMarkerCluster$STATUS.WORKING` @type ^`plugin.google.maps.PluginMarkerCluster$STATUS` @kind object;
+  #L28347c.  call temp:= `put`(v4, v14, v15) @signature `Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L283482.  @monitorexit v1
+  #L283484.  call temp:= `add`(v3, v14) @signature `Ljava/util/HashSet;.add:(Ljava/lang/Object;)Z` @kind virtual;
+  #L28348a.  v1:= new `android.os.Bundle`;
+  #L28348e.  call `<init>`(v1) @signature `Landroid/os/Bundle;.<init>:()V` @kind direct;
+  #L283494.  v4:= "lat" @kind object;
+  #L283498.  v15:= "lat" @kind object;
+  #L28349c.  v20:= v6 @kind object;
+  #L2834a0.  call temp:= `getDouble`(v12, v15) @signature `Lorg/json/JSONObject;.getDouble:(Ljava/lang/String;)D` @kind virtual;
+  #L2834a6.  v6:= temp @kind wide;
+  #L2834a8.  call `putDouble`(v1, v4, v6) @signature `Landroid/os/Bundle;.putDouble:(Ljava/lang/String;D)V` @kind virtual;
+  #L2834ae.  v4:= "lng" @kind object;
+  #L2834b2.  v6:= "lng" @kind object;
+  #L2834b6.  call temp:= `getDouble`(v12, v6) @signature `Lorg/json/JSONObject;.getDouble:(Ljava/lang/String;)D` @kind virtual;
+  #L2834bc.  v6:= temp @kind wide;
+  #L2834be.  call `putDouble`(v1, v4, v6) @signature `Landroid/os/Bundle;.putDouble:(Ljava/lang/String;D)V` @kind virtual;
+  #L2834c4.  v4:= "title" @kind object;
+  #L2834c8.  call temp:= `has`(v11, v4) @signature `Lorg/json/JSONObject;.has:(Ljava/lang/String;)Z` @kind virtual;
+  #L2834ce.  v4:= temp;
+  #L2834d0.  if v4 == 0 then goto L2834ea;
+  #L2834d4.  v4:= "title" @kind object;
+  #L2834d8.  v6:= "title" @kind object;
+  #L2834dc.  call temp:= `getString`(v11, v6) @signature `Lorg/json/JSONObject;.getString:(Ljava/lang/String;)Ljava/lang/String;` @kind virtual;
+  #L2834e2.  v6:= temp @kind object;
+  #L2834e4.  call `putString`(v1, v4, v6) @signature `Landroid/os/Bundle;.putString:(Ljava/lang/String;Ljava/lang/String;)V` @kind virtual;
+  #L2834ea.  v4:= "__pgmId" @kind object;
+  #L2834ee.  call `putString`(v1, v4, v14) @signature `Landroid/os/Bundle;.putString:(Ljava/lang/String;Ljava/lang/String;)V` @kind virtual;
+  #L2834f4.  v4:= "icon" @kind object;
+  #L2834f8.  call temp:= `has`(v11, v4) @signature `Lorg/json/JSONObject;.has:(Ljava/lang/String;)Z` @kind virtual;
+  #L2834fe.  v4:= temp;
+  #L283500.  if v4 == 0 then goto L283754;
+  #L283504.  v4:= "icon" @kind object;
+  #L283508.  call temp:= `get`(v11, v4) @signature `Lorg/json/JSONObject;.get:(Ljava/lang/String;)Ljava/lang/Object;` @kind virtual;
+  #L28350e.  v4:= temp @kind object;
+  #L283510.  v6:= instanceof @variable v4 @type ^`java.lang.String` @kind boolean;
+  #L283514.  if v6 == 0 then goto L28353e;
+  #L283518.  v6:= new `android.os.Bundle`;
+  #L28351c.  call `<init>`(v6) @signature `Landroid/os/Bundle;.<init>:()V` @kind direct;
+  #L283522.  v7:= "url" @kind object;
+  #L283526.  v4:= (`java.lang.String`) v4 @kind object;
+  #L28352a.  call `putString`(v6, v7, v4) @signature `Landroid/os/Bundle;.putString:(Ljava/lang/String;Ljava/lang/String;)V` @kind virtual;
+  #L283530.  v4:= "icon" @kind object;
+  #L283534.  call `putBundle`(v1, v4, v6) @signature `Landroid/os/Bundle;.putBundle:(Ljava/lang/String;Landroid/os/Bundle;)V` @kind virtual;
+  #L28353a.  goto L28374e;
+  #L28353e.  v4:= instanceof @variable v4 @type ^`org.json.JSONObject` @kind boolean;
+  #L283542.  if v4 == 0 then goto L28374e;
+  #L283546.  v4:= "icon" @kind object;
+  #L28354a.  call temp:= `getJSONObject`(v11, v4) @signature `Lorg/json/JSONObject;.getJSONObject:(Ljava/lang/String;)Lorg/json/JSONObject;` @kind virtual;
+  #L283550.  v4:= temp @kind object;
+  #L283552.  call temp:= `Json2Bundle`(v4) @signature `Lplugin/google/maps/PluginUtil;.Json2Bundle:(Lorg/json/JSONObject;)Landroid/os/Bundle;` @kind static;
+  #L283558.  v6:= temp @kind object;
+  #L28355a.  v7:= "isClusterIcon" @kind object;
+  #L28355e.  call temp:= `has`(v11, v7) @signature `Lorg/json/JSONObject;.has:(Ljava/lang/String;)Z` @kind virtual;
+  #L283564.  v7:= temp;
+  #L283566.  if v7 == 0 then goto L283696;
+  #L28356a.  v7:= "isClusterIcon" @kind object;
+  #L28356e.  call temp:= `getBoolean`(v11, v7) @signature `Lorg/json/JSONObject;.getBoolean:(Ljava/lang/String;)Z` @kind virtual;
+  #L283574.  v7:= temp;
+  #L283576.  if v7 == 0 then goto L283696;
+  #L28357a.  v7:= "label" @kind object;
+  #L28357e.  call temp:= `has`(v4, v7) @signature `Lorg/json/JSONObject;.has:(Ljava/lang/String;)Z` @kind virtual;
+  #L283584.  v7:= temp;
+  #L283586.  if v7 == 0 then goto L283620;
+  #L28358a.  v7:= "label" @kind object;
+  #L28358e.  call temp:= `getJSONObject`(v4, v7) @signature `Lorg/json/JSONObject;.getJSONObject:(Ljava/lang/String;)Lorg/json/JSONObject;` @kind virtual;
+  #L283594.  v7:= temp @kind object;
+  #L283596.  if v2 == 0 then goto L2835a6;
+  #L28359a.  v11:= "text" @kind object;
+  #L28359e.  call temp:= `put`(v7, v11, v13) @signature `Lorg/json/JSONObject;.put:(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;` @kind virtual;
+  #L2835a4.  goto L2835de;
+  #L2835a6.  v12:= "text" @kind object;
+  #L2835aa.  v13:= new `java.lang.StringBuilder`;
+  #L2835ae.  call `<init>`(v13) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L2835b4.  v15:= "count" @kind object;
+  #L2835b8.  call temp:= `getInt`(v11, v15) @signature `Lorg/json/JSONObject;.getInt:(Ljava/lang/String;)I` @kind virtual;
+  #L2835be.  v11:= temp;
+  #L2835c0.  call temp:= `append`(v13, v11) @signature `Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2835c6.  v11:= "" @kind object;
+  #L2835ca.  call temp:= `append`(v13, v11) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2835d0.  call temp:= `toString`(v13) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L2835d6.  v11:= temp @kind object;
+  #L2835d8.  call temp:= `put`(v7, v12, v11) @signature `Lorg/json/JSONObject;.put:(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;` @kind virtual;
+  #L2835de.  v11:= "color" @kind object;
+  #L2835e2.  call temp:= `has`(v7, v11) @signature `Lorg/json/JSONObject;.has:(Ljava/lang/String;)Z` @kind virtual;
+  #L2835e8.  v11:= temp;
+  #L2835ea.  if v11 == 0 then goto L28360c;
+  #L2835ee.  v11:= "color" @kind object;
+  #L2835f2.  v12:= "color" @kind object;
+  #L2835f6.  call temp:= `getJSONArray`(v7, v12) @signature `Lorg/json/JSONObject;.getJSONArray:(Ljava/lang/String;)Lorg/json/JSONArray;` @kind virtual;
+  #L2835fc.  v12:= temp @kind object;
+  #L2835fe.  call temp:= `parsePluginColor`(v12) @signature `Lplugin/google/maps/PluginUtil;.parsePluginColor:(Lorg/json/JSONArray;)I` @kind static;
+  #L283604.  v12:= temp;
+  #L283606.  call temp:= `put`(v7, v11, v12) @signature `Lorg/json/JSONObject;.put:(Ljava/lang/String;I)Lorg/json/JSONObject;` @kind virtual;
+  #L28360c.  v11:= "label" @kind object;
+  #L283610.  call temp:= `Json2Bundle`(v7) @signature `Lplugin/google/maps/PluginUtil;.Json2Bundle:(Lorg/json/JSONObject;)Landroid/os/Bundle;` @kind static;
+  #L283616.  v7:= temp @kind object;
+  #L283618.  call `putBundle`(v6, v11, v7) @signature `Landroid/os/Bundle;.putBundle:(Ljava/lang/String;Landroid/os/Bundle;)V` @kind virtual;
+  #L28361e.  goto L283696;
+  #L283620.  v7:= new `android.os.Bundle`;
+  #L283624.  call `<init>`(v7) @signature `Landroid/os/Bundle;.<init>:()V` @kind direct;
+  #L28362a.  if v2 == 0 then goto L28363a;
+  #L28362e.  v11:= "text" @kind object;
+  #L283632.  call `putString`(v7, v11, v13) @signature `Landroid/os/Bundle;.putString:(Ljava/lang/String;Ljava/lang/String;)V` @kind virtual;
+  #L283638.  goto L28368c;
+  #L28363a.  v12:= "fontSize" @kind object;
+  #L28363e.  v13:= 15I;
+  #L283642.  call `putInt`(v7, v12, v13) @signature `Landroid/os/Bundle;.putInt:(Ljava/lang/String;I)V` @kind virtual;
+  #L283648.  v12:= "bold" @kind object;
+  #L28364c.  v13:= 1I;
+  #L28364e.  call `putBoolean`(v7, v12, v13) @signature `Landroid/os/Bundle;.putBoolean:(Ljava/lang/String;Z)V` @kind virtual;
+  #L283654.  v12:= "text" @kind object;
+  #L283658.  v13:= new `java.lang.StringBuilder`;
+  #L28365c.  call `<init>`(v13) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L283662.  v15:= "count" @kind object;
+  #L283666.  call temp:= `getInt`(v11, v15) @signature `Lorg/json/JSONObject;.getInt:(Ljava/lang/String;)I` @kind virtual;
+  #L28366c.  v11:= temp;
+  #L28366e.  call temp:= `append`(v13, v11) @signature `Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder;` @kind virtual;
+  #L283674.  v11:= "" @kind object;
+  #L283678.  call temp:= `append`(v13, v11) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L28367e.  call temp:= `toString`(v13) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L283684.  v11:= temp @kind object;
+  #L283686.  call `putString`(v7, v12, v11) @signature `Landroid/os/Bundle;.putString:(Ljava/lang/String;Ljava/lang/String;)V` @kind virtual;
+  #L28368c.  v11:= "label" @kind object;
+  #L283690.  call `putBundle`(v6, v11, v7) @signature `Landroid/os/Bundle;.putBundle:(Ljava/lang/String;Landroid/os/Bundle;)V` @kind virtual;
+  #L283696.  v7:= "anchor" @kind object;
+  #L28369a.  call temp:= `has`(v4, v7) @signature `Lorg/json/JSONObject;.has:(Ljava/lang/String;)Z` @kind virtual;
+  #L2836a0.  v7:= temp;
+  #L2836a2.  v11:= 2I;
+  #L2836a4.  if v7 == 0 then goto L2836ea;
+  #L2836a8.  v7:= new `double`[v11];
+  #L2836ac.  v12:= "anchor" @kind object;
+  #L2836b0.  call temp:= `getJSONArray`(v4, v12) @signature `Lorg/json/JSONObject;.getJSONArray:(Ljava/lang/String;)Lorg/json/JSONArray;` @kind virtual;
+  #L2836b6.  v12:= temp @kind object;
+  #L2836b8.  v13:= 0I;
+  #L2836ba.  call temp:= `getDouble`(v12, v13) @signature `Lorg/json/JSONArray;.getDouble:(I)D` @kind virtual;
+  #L2836c0.  v15:= temp @kind wide;
+  #L2836c2.  v7[v13]:= v15 @kind wide;
+  #L2836c6.  v12:= "anchor" @kind object;
+  #L2836ca.  call temp:= `getJSONArray`(v4, v12) @signature `Lorg/json/JSONObject;.getJSONArray:(Ljava/lang/String;)Lorg/json/JSONArray;` @kind virtual;
+  #L2836d0.  v12:= temp @kind object;
+  #L2836d2.  v13:= 1I;
+  #L2836d4.  call temp:= `getDouble`(v12, v13) @signature `Lorg/json/JSONArray;.getDouble:(I)D` @kind virtual;
+  #L2836da.  v17:= temp @kind wide;
+  #L2836dc.  v7[v13]:= v17 @kind wide;
+  #L2836e0.  v12:= "anchor" @kind object;
+  #L2836e4.  call `putDoubleArray`(v6, v12, v7) @signature `Landroid/os/Bundle;.putDoubleArray:(Ljava/lang/String;[D)V` @kind virtual;
+  #L2836ea.  v7:= "infoWindowAnchor" @kind object;
+  #L2836ee.  call temp:= `has`(v4, v7) @signature `Lorg/json/JSONObject;.has:(Ljava/lang/String;)Z` @kind virtual;
+  #L2836f4.  v7:= temp;
+  #L2836f6.  if v7 == 0 then goto L28373e;
+  #L2836fa.  v7:= new `double`[v11];
+  #L2836fe.  v11:= "infoWindowAnchor" @kind object;
+  #L283702.  call temp:= `getJSONArray`(v4, v11) @signature `Lorg/json/JSONObject;.getJSONArray:(Ljava/lang/String;)Lorg/json/JSONArray;` @kind virtual;
+  #L283708.  v11:= temp @kind object;
+  #L28370a.  v12:= 0I;
+  #L28370c.  call temp:= `getDouble`(v11, v12) @signature `Lorg/json/JSONArray;.getDouble:(I)D` @kind virtual;
+  #L283712.  v15:= temp @kind wide;
+  #L283714.  v7[v12]:= v15 @kind wide;
+  #L283718.  v11:= "infoWindowAnchor" @kind object;
+  #L28371c.  call temp:= `getJSONArray`(v4, v11) @signature `Lorg/json/JSONObject;.getJSONArray:(Ljava/lang/String;)Lorg/json/JSONArray;` @kind virtual;
+  #L283722.  v4:= temp @kind object;
+  #L283724.  v11:= 1I;
+  #L283726.  call temp:= `getDouble`(v4, v11) @signature `Lorg/json/JSONArray;.getDouble:(I)D` @kind virtual;
+  #L28372c.  v15:= temp @kind wide;
+  #L28372e.  v7[v11]:= v15 @kind wide;
+  #L283732.  v4:= "infoWindowAnchor" @kind object;
+  #L283736.  call `putDoubleArray`(v6, v4, v7) @signature `Landroid/os/Bundle;.putDoubleArray:(Ljava/lang/String;[D)V` @kind virtual;
+  #L28373c.  goto L283742;
+  #L28373e.  v11:= 1I;
+  #L283740.  v12:= 0I;
+  #L283742.  v4:= "icon" @kind object;
+  #L283746.  call `putBundle`(v1, v4, v6) @signature `Landroid/os/Bundle;.putBundle:(Ljava/lang/String;Landroid/os/Bundle;)V` @kind virtual;
+  #L28374c.  goto L283758;
+  #L28374e.  v11:= 1I;
+  #L283750.  v12:= 0I;
+  #L283752.  goto L283758;
+  #L283754.  v11:= 1I;
+  #L283756.  v12:= 0I;
+  #L283758.  call temp:= `put`(v5, v14, v1) @signature `Ljava/util/HashMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;` @kind virtual;
+  #L28375e.  v10:= v10 + 1;
+  #L283762.  v6:= v20 @kind object;
+  #L283766.  v1:= 0I;
+  #L283768.  v4:= 1I;
+  #L28376a.  v7:= v19 @kind object;
+  #L28376e.  goto L2833f2;
+  #L283772.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L283774.  @monitorexit v1
+  #L283776.  throw v0;
+  #L283778.  call temp:= `size`(v3) @signature `Ljava/util/HashSet;.size:()I` @kind virtual;
+  #L28377e.  v1:= temp;
+  #L283780.  if v1 != 0 then goto L283796;
+  #L283784.  v7:= v19 @kind object;
+  #L283788.  call `deleteProcess`(v7, v8, v0) @signature `Lplugin/google/maps/PluginMarkerCluster;.deleteProcess:(Ljava/lang/String;Lorg/json/JSONObject;)V` @kind direct;
+  #L28378e.  call `success`(v21) @signature `Lorg/apache/cordova/CallbackContext;.success:()V` @kind virtual;
+  #L283794.  return @kind void;
+  #L283796.  v7:= v19 @kind object;
+  #L28379a.  v9:= new `org.json.JSONObject`;
+  #L28379e.  call `<init>`(v9) @signature `Lorg/json/JSONObject;.<init>:()V` @kind direct;
+  #L2837a4.  v1:= v7.`plugin.google.maps.PluginMarkerCluster.cordova` @type ^`org.apache.cordova.CordovaInterface` @kind object;
+  #L2837a8.  call temp:= `getActivity`(v1) @signature `Lorg/apache/cordova/CordovaInterface;.getActivity:()Landroid/app/Activity;` @kind interface;
+  #L2837ae.  v10:= temp @kind object;
+  #L2837b0.  v11:= new `plugin.google.maps.PluginMarkerCluster$3`;
+  #L2837b4.  v1:= v11 @kind object;
+  #L2837b6.  v2:= v19 @kind object;
+  #L2837ba.  v4:= v8 @kind object;
+  #L2837bc.  v6:= v9 @kind object;
+  #L2837be.  call `<init>`(v1, v2, v3, v4, v5, v6) @signature `Lplugin/google/maps/PluginMarkerCluster$3;.<init>:(Lplugin/google/maps/PluginMarkerCluster;Ljava/util/HashSet;Ljava/lang/String;Ljava/util/HashMap;Lorg/json/JSONObject;)V` @kind direct;
+  #L2837c4.  call `runOnUiThread`(v10, v11) @signature `Landroid/app/Activity;.runOnUiThread:(Ljava/lang/Runnable;)V` @kind virtual;
+  #L2837ca.  v1:= v7.`plugin.google.maps.PluginMarkerCluster.semaphore` @type ^`java.lang.Object` @kind object;
+  #L2837ce.  @monitorenter v1
+  #L2837d0.  v2:= v7.`plugin.google.maps.PluginMarkerCluster.semaphore` @type ^`java.lang.Object` @kind object;
+  #L2837d4.  call `wait`(v2) @signature `Ljava/lang/Object;.wait:()V` @kind virtual;
+  #L2837da.  call `deleteProcess`(v7, v8, v0) @signature `Lplugin/google/maps/PluginMarkerCluster;.deleteProcess:(Ljava/lang/String;Lorg/json/JSONObject;)V` @kind direct;
+  #L2837e0.  goto L2837ee;
+  #L2837e2.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L2837e4.  goto L2837fc;
+  #L2837e6.  v0:= Exception @type ^`java.lang.InterruptedException` @kind object;
+  #L2837e8.  call `printStackTrace`(v0) @signature `Ljava/lang/InterruptedException;.printStackTrace:()V` @kind virtual;
+  #L2837ee.  @monitorexit v1
+  #L2837f0.  v1:= v21 @kind object;
+  #L2837f4.  call `success`(v1, v9) @signature `Lorg/apache/cordova/CallbackContext;.success:(Lorg/json/JSONObject;)V` @kind virtual;
+  #L2837fa.  return @kind void;
+  #L2837fc.  @monitorexit v1
+  #L2837fe.  throw v0;
+  #L283800.  return @kind void;
+  catch `java.lang.Throwable` @[L283474..L283484] goto L283772;
+  catch `java.lang.Throwable` @[L283774..L283776] goto L283772;
+  catch `java.lang.InterruptedException` @[L2837d0..L2837e0] goto L2837e6;
+  catch `java.lang.Throwable` @[L2837d0..L2837e0] goto L2837e2;
+  catch `java.lang.Throwable` @[L2837e8..L2837f0] goto L2837e2;
+  catch `java.lang.Throwable` @[L2837fc..L2837fe] goto L2837e2;
+}
+procedure `void` `remove`(`plugin.google.maps.PluginMarkerCluster` v5 @kind this, `org.json.JSONArray` v6 @kind object, `org.apache.cordova.CallbackContext` v7 @kind object) @signature `Lplugin/google/maps/PluginMarkerCluster;.remove:(Lorg/json/JSONArray;Lorg/apache/cordova/CallbackContext;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L28384c.  v0:= 0I;
+  #L28384e.  call temp:= `getString`(v6, v0) @signature `Lorg/json/JSONArray;.getString:(I)Ljava/lang/String;` @kind virtual;
+  #L283854.  v6:= temp @kind object;
+  #L283856.  v0:= `@@plugin.google.maps.PluginMarkerCluster.debugFlags` @type ^`java.util.Map` @kind object;
+  #L28385a.  @monitorenter v0
+  #L28385c.  v1:= `@@plugin.google.maps.PluginMarkerCluster.debugFlags` @type ^`java.util.Map` @kind object;
+  #L283860.  call temp:= `remove`(v1, v6) @signature `Ljava/util/Map;.remove:(Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L283866.  v1:= `@@plugin.google.maps.PluginMarkerCluster.waitCntManager` @type ^`java.util.Map` @kind object;
+  #L28386a.  call temp:= `remove`(v1, v6) @signature `Ljava/util/Map;.remove:(Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L283870.  @monitorexit v0
+  #L283872.  v1:= `@@plugin.google.maps.PluginMarkerCluster.pluginMarkers` @type ^`java.util.Map` @kind object;
+  #L283876.  @monitorenter v1
+  #L283878.  v0:= `@@plugin.google.maps.PluginMarkerCluster.pluginMarkers` @type ^`java.util.Map` @kind object;
+  #L28387c.  call temp:= `keySet`(v0) @signature `Ljava/util/Map;.keySet:()Ljava/util/Set;` @kind interface;
+  #L283882.  v0:= temp @kind object;
+  #L283884.  call temp:= `iterator`(v0) @signature `Ljava/util/Set;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L28388a.  v0:= temp @kind object;
+  #L28388c.  call temp:= `hasNext`(v0) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L283892.  v2:= temp;
+  #L283894.  if v2 == 0 then goto L2838ca;
+  #L283898.  call temp:= `next`(v0) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L28389e.  v2:= temp @kind object;
+  #L2838a0.  v2:= (`java.lang.String`) v2 @kind object;
+  #L2838a4.  call temp:= `startsWith`(v2, v6) @signature `Ljava/lang/String;.startsWith:(Ljava/lang/String;)Z` @kind virtual;
+  #L2838aa.  v3:= temp;
+  #L2838ac.  if v3 == 0 then goto L28388c;
+  #L2838b0.  v3:= `@@plugin.google.maps.PluginMarkerCluster.pluginMarkers` @type ^`java.util.Map` @kind object;
+  #L2838b4.  v4:= `@@plugin.google.maps.PluginMarkerCluster$STATUS.CREATED` @type ^`plugin.google.maps.PluginMarkerCluster$STATUS` @kind object;
+  #L2838b8.  call temp:= `put`(v3, v2, v4) @signature `Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L2838be.  v3:= `@@plugin.google.maps.PluginMarkerCluster.deleteMarkers` @type ^`java.util.ArrayList` @kind object;
+  #L2838c2.  call temp:= `add`(v3, v2) @signature `Ljava/util/ArrayList;.add:(Ljava/lang/Object;)Z` @kind virtual;
+  #L2838c8.  goto L28388c;
+  #L2838ca.  @monitorexit v1
+  #L2838cc.  v6:= v5.`plugin.google.maps.PluginMarkerCluster.deleteThreadLock` @type ^`java.lang.Object` @kind object;
+  #L2838d0.  @monitorenter v6
+  #L2838d2.  v0:= v5.`plugin.google.maps.PluginMarkerCluster.deleteThreadLock` @type ^`java.lang.Object` @kind object;
+  #L2838d6.  call `notify`(v0) @signature `Ljava/lang/Object;.notify:()V` @kind virtual;
+  #L2838dc.  @monitorexit v6
+  #L2838de.  call `success`(v7) @signature `Lorg/apache/cordova/CallbackContext;.success:()V` @kind virtual;
+  #L2838e4.  return @kind void;
+  #L2838e6.  v7:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L2838e8.  @monitorexit v6
+  #L2838ea.  throw v7;
+  #L2838ec.  v6:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L2838ee.  @monitorexit v1
+  #L2838f0.  throw v6;
+  #L2838f2.  v6:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L2838f4.  @monitorexit v0
+  #L2838f6.  throw v6;
+  #L2838f8.  return @kind void;
+  catch `java.lang.Throwable` @[L28385c..L283872] goto L2838f2;
+  catch `java.lang.Throwable` @[L283878..L2838cc] goto L2838ec;
+  catch `java.lang.Throwable` @[L2838d2..L2838de] goto L2838e6;
+  catch `java.lang.Throwable` @[L2838e8..L2838ea] goto L2838e6;
+  catch `java.lang.Throwable` @[L2838ee..L2838f0] goto L2838ec;
+  catch `java.lang.Throwable` @[L2838f4..L2838f6] goto L2838f2;
+}

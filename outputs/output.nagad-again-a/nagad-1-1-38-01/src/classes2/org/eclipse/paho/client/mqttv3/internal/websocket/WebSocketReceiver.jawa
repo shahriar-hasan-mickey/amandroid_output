@@ -1,0 +1,213 @@
+record `org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver` @kind class @AccessFlag PUBLIC extends `java.lang.Runnable` @kind interface {
+  `java.io.InputStream` `org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver.input` @AccessFlag PRIVATE;
+  `java.lang.Object` `org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver.lifecycle` @AccessFlag PRIVATE;
+  `java.io.PipedOutputStream` `org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver.pipedOutputStream` @AccessFlag PRIVATE;
+  `java.lang.Thread` `org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver.receiverThread` @AccessFlag PRIVATE;
+  `boolean` `org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver.receiving` @AccessFlag PRIVATE_VOLATILE;
+  `boolean` `org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver.running` @AccessFlag PRIVATE;
+  `boolean` `org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver.stopping` @AccessFlag PRIVATE;
+}
+global `java.lang.String` `@@org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver.CLASS_NAME` @AccessFlag PRIVATE_STATIC_FINAL;
+global `org.eclipse.paho.client.mqttv3.logging.Logger` `@@org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver.log` @AccessFlag PRIVATE_STATIC_FINAL;
+procedure `void` `<clinit>`() @signature `Lorg/eclipse/paho/client/mqttv3/internal/websocket/WebSocketReceiver;.<clinit>:()V` @AccessFlag STATIC_CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+
+  #L2348cc.  v0:= constclass @type ^`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver` @kind object;
+  #L2348d0.  call temp:= `getName`(v0) @signature `Ljava/lang/Class;.getName:()Ljava/lang/String;` @kind virtual;
+  #L2348d6.  v0:= temp @kind object;
+  #L2348d8.  `@@org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver.CLASS_NAME` @type ^`java.lang.String` := v0 @kind object;
+  #L2348dc.  v0:= `@@org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver.CLASS_NAME` @type ^`java.lang.String` @kind object;
+  #L2348e0.  v1:= "org.eclipse.paho.client.mqttv3.internal.nls.logcat" @kind object;
+  #L2348e4.  call temp:= `getLogger`(v1, v0) @signature `Lorg/eclipse/paho/client/mqttv3/logging/LoggerFactory;.getLogger:(Ljava/lang/String;Ljava/lang/String;)Lorg/eclipse/paho/client/mqttv3/logging/Logger;` @kind static;
+  #L2348ea.  v0:= temp @kind object;
+  #L2348ec.  `@@org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver.log` @type ^`org.eclipse.paho.client.mqttv3.logging.Logger` := v0 @kind object;
+  #L2348f0.  return @kind void;
+}
+procedure `void` `<init>`(`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver` v1 @kind this, `java.io.InputStream` v2 @kind object, `java.io.PipedInputStream` v3 @kind object) @signature `Lorg/eclipse/paho/client/mqttv3/internal/websocket/WebSocketReceiver;.<init>:(Ljava/io/InputStream;Ljava/io/PipedInputStream;)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L234904.  call `<init>`(v1) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L23490a.  v0:= 0I;
+  #L23490c.  v1.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver.running` @type ^`boolean` := v0 @kind boolean;
+  #L234910.  v1.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver.stopping` @type ^`boolean` := v0 @kind boolean;
+  #L234914.  v0:= new `java.lang.Object`;
+  #L234918.  call `<init>`(v0) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L23491e.  v1.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver.lifecycle` @type ^`java.lang.Object` := v0 @kind object;
+  #L234922.  v0:= 0I;
+  #L234924.  v1.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver.receiverThread` @type ^`java.lang.Thread` := v0 @kind object;
+  #L234928.  v1.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver.input` @type ^`java.io.InputStream` := v2 @kind object;
+  #L23492c.  v2:= new `java.io.PipedOutputStream`;
+  #L234930.  call `<init>`(v2) @signature `Ljava/io/PipedOutputStream;.<init>:()V` @kind direct;
+  #L234936.  v1.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver.pipedOutputStream` @type ^`java.io.PipedOutputStream` := v2 @kind object;
+  #L23493a.  v2:= v1.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver.pipedOutputStream` @type ^`java.io.PipedOutputStream` @kind object;
+  #L23493e.  call `connect`(v3, v2) @signature `Ljava/io/PipedInputStream;.connect:(Ljava/io/PipedOutputStream;)V` @kind virtual;
+  #L234944.  return @kind void;
+}
+procedure `void` `closeOutputStream`(`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver` v1 @kind this) @signature `Lorg/eclipse/paho/client/mqttv3/internal/websocket/WebSocketReceiver;.closeOutputStream:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+
+  #L234958.  v0:= v1.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver.pipedOutputStream` @type ^`java.io.PipedOutputStream` @kind object;
+  #L23495c.  call `close`(v0) @signature `Ljava/io/PipedOutputStream;.close:()V` @kind virtual;
+  #L234962.  return @kind void;
+  catch `java.io.IOException` @[L234958..L234962] goto L234962;
+}
+procedure `boolean` `isReceiving`(`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver` v1 @kind this) @signature `Lorg/eclipse/paho/client/mqttv3/internal/websocket/WebSocketReceiver;.isReceiving:()Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L23489c.  v0:= v1.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver.receiving` @type ^`boolean` @kind boolean;
+  #L2348a0.  return v0;
+}
+procedure `boolean` `isRunning`(`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver` v1 @kind this) @signature `Lorg/eclipse/paho/client/mqttv3/internal/websocket/WebSocketReceiver;.isRunning:()Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L2348b4.  v0:= v1.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver.running` @type ^`boolean` @kind boolean;
+  #L2348b8.  return v0;
+}
+procedure `void` `run`(`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver` v5 @kind this) @signature `Lorg/eclipse/paho/client/mqttv3/internal/websocket/WebSocketReceiver;.run:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L234984.  v0:= v5.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver.running` @type ^`boolean` @kind boolean;
+  #L234988.  if v0 == 0 then goto L234a40;
+  #L23498c.  v0:= v5.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver.input` @type ^`java.io.InputStream` @kind object;
+  #L234990.  if v0 != 0 then goto L234996;
+  #L234994.  goto L234a40;
+  #L234996.  v0:= `@@org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver.log` @type ^`org.eclipse.paho.client.mqttv3.logging.Logger` @kind object;
+  #L23499a.  v1:= `@@org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver.CLASS_NAME` @type ^`java.lang.String` @kind object;
+  #L23499e.  v2:= "run" @kind object;
+  #L2349a2.  v3:= "852" @kind object;
+  #L2349a6.  call `fine`(v0, v1, v2, v3) @signature `Lorg/eclipse/paho/client/mqttv3/logging/Logger;.fine:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V` @kind interface;
+  #L2349ac.  v0:= v5.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver.input` @type ^`java.io.InputStream` @kind object;
+  #L2349b0.  call temp:= `available`(v0) @signature `Ljava/io/InputStream;.available:()I` @kind virtual;
+  #L2349b6.  v0:= temp;
+  #L2349b8.  v1:= 0I;
+  #L2349ba.  if v0 <= 0 then goto L2349c2;
+  #L2349be.  v0:= 1I;
+  #L2349c0.  goto L2349c4;
+  #L2349c2.  v0:= 0I;
+  #L2349c4.  v5.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver.receiving` @type ^`boolean` := v0 @kind boolean;
+  #L2349c8.  v0:= new `org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketFrame`;
+  #L2349cc.  v2:= v5.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver.input` @type ^`java.io.InputStream` @kind object;
+  #L2349d0.  call `<init>`(v0, v2) @signature `Lorg/eclipse/paho/client/mqttv3/internal/websocket/WebSocketFrame;.<init>:(Ljava/io/InputStream;)V` @kind direct;
+  #L2349d6.  call temp:= `isCloseFlag`(v0) @signature `Lorg/eclipse/paho/client/mqttv3/internal/websocket/WebSocketFrame;.isCloseFlag:()Z` @kind virtual;
+  #L2349dc.  v2:= temp;
+  #L2349de.  if v2 != 0 then goto L234a1a;
+  #L2349e2.  v2:= 0I;
+  #L2349e4.  call temp:= `getPayload`(v0) @signature `Lorg/eclipse/paho/client/mqttv3/internal/websocket/WebSocketFrame;.getPayload:()[B` @kind virtual;
+  #L2349ea.  v3:= temp @kind object;
+  #L2349ec.  v3:= length @variable v3;
+  #L2349ee.  if v2 < v3 then goto L2349fe;
+  #L2349f2.  v0:= v5.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver.pipedOutputStream` @type ^`java.io.PipedOutputStream` @kind object;
+  #L2349f6.  call `flush`(v0) @signature `Ljava/io/PipedOutputStream;.flush:()V` @kind virtual;
+  #L2349fc.  goto L234a22;
+  #L2349fe.  v3:= v5.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver.pipedOutputStream` @type ^`java.io.PipedOutputStream` @kind object;
+  #L234a02.  call temp:= `getPayload`(v0) @signature `Lorg/eclipse/paho/client/mqttv3/internal/websocket/WebSocketFrame;.getPayload:()[B` @kind virtual;
+  #L234a08.  v4:= temp @kind object;
+  #L234a0a.  v4:= v4[v2] @kind byte;
+  #L234a0e.  call `write`(v3, v4) @signature `Ljava/io/PipedOutputStream;.write:(I)V` @kind virtual;
+  #L234a14.  v2:= v2 + 1;
+  #L234a18.  goto L2349e4;
+  #L234a1a.  v0:= v5.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver.stopping` @type ^`boolean` @kind boolean;
+  #L234a1e.  if v0 == 0 then goto L234a28;
+  #L234a22.  v5.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver.receiving` @type ^`boolean` := v1 @kind boolean;
+  #L234a26.  goto L234984;
+  #L234a28.  v0:= new `java.io.IOException`;
+  #L234a2c.  v1:= "Server sent a WebSocket Frame with the Stop OpCode" @kind object;
+  #L234a30.  call `<init>`(v0, v1) @signature `Ljava/io/IOException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L234a36.  throw v0;
+  #L234a38.  call `stop`(v5) @signature `Lorg/eclipse/paho/client/mqttv3/internal/websocket/WebSocketReceiver;.stop:()V` @kind virtual;
+  #L234a3e.  goto L234984;
+  #L234a40.  return @kind void;
+  catch `java.io.IOException` @[L234996..L234a38] goto L234a38;
+}
+procedure `void` `start`(`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver` v4 @kind this, `java.lang.String` v5 @kind object) @signature `Lorg/eclipse/paho/client/mqttv3/internal/websocket/WebSocketReceiver;.start:(Ljava/lang/String;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L234a64.  v0:= `@@org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver.log` @type ^`org.eclipse.paho.client.mqttv3.logging.Logger` @kind object;
+  #L234a68.  v1:= `@@org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver.CLASS_NAME` @type ^`java.lang.String` @kind object;
+  #L234a6c.  v2:= "start" @kind object;
+  #L234a70.  v3:= "855" @kind object;
+  #L234a74.  call `fine`(v0, v1, v2, v3) @signature `Lorg/eclipse/paho/client/mqttv3/logging/Logger;.fine:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V` @kind interface;
+  #L234a7a.  v0:= v4.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver.lifecycle` @type ^`java.lang.Object` @kind object;
+  #L234a7e.  @monitorenter v0
+  #L234a80.  v1:= v4.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver.running` @type ^`boolean` @kind boolean;
+  #L234a84.  if v1 != 0 then goto L234aa6;
+  #L234a88.  v1:= 1I;
+  #L234a8a.  v4.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver.running` @type ^`boolean` := v1 @kind boolean;
+  #L234a8e.  v1:= new `java.lang.Thread`;
+  #L234a92.  call `<init>`(v1, v4, v5) @signature `Ljava/lang/Thread;.<init>:(Ljava/lang/Runnable;Ljava/lang/String;)V` @kind direct;
+  #L234a98.  v4.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver.receiverThread` @type ^`java.lang.Thread` := v1 @kind object;
+  #L234a9c.  v5:= v4.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver.receiverThread` @type ^`java.lang.Thread` @kind object;
+  #L234aa0.  call `start`(v5) @signature `Ljava/lang/Thread;.start:()V` @kind virtual;
+  #L234aa6.  @monitorexit v0
+  #L234aa8.  return @kind void;
+  #L234aaa.  v5:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L234aac.  @monitorexit v0
+  #L234aae.  throw v5;
+  catch `java.lang.Throwable` @[L234a80..L234aae] goto L234aaa;
+}
+procedure `void` `stop`(`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver` v6 @kind this) @signature `Lorg/eclipse/paho/client/mqttv3/internal/websocket/WebSocketReceiver;.stop:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L234acc.  v0:= 1I;
+  #L234ace.  v6.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver.stopping` @type ^`boolean` := v0 @kind boolean;
+  #L234ad2.  v1:= v6.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver.lifecycle` @type ^`java.lang.Object` @kind object;
+  #L234ad6.  @monitorenter v1
+  #L234ad8.  v2:= `@@org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver.log` @type ^`org.eclipse.paho.client.mqttv3.logging.Logger` @kind object;
+  #L234adc.  v3:= `@@org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver.CLASS_NAME` @type ^`java.lang.String` @kind object;
+  #L234ae0.  v4:= "stop" @kind object;
+  #L234ae4.  v5:= "850" @kind object;
+  #L234ae8.  call `fine`(v2, v3, v4, v5) @signature `Lorg/eclipse/paho/client/mqttv3/logging/Logger;.fine:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V` @kind interface;
+  #L234aee.  v2:= v6.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver.running` @type ^`boolean` @kind boolean;
+  #L234af2.  v3:= 0I;
+  #L234af4.  if v2 == 0 then goto L234b08;
+  #L234af8.  v6.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver.running` @type ^`boolean` := v3 @kind boolean;
+  #L234afc.  v6.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver.receiving` @type ^`boolean` := v3 @kind boolean;
+  #L234b00.  call `closeOutputStream`(v6) @signature `Lorg/eclipse/paho/client/mqttv3/internal/websocket/WebSocketReceiver;.closeOutputStream:()V` @kind direct;
+  #L234b06.  goto L234b0a;
+  #L234b08.  v0:= 0I;
+  #L234b0a.  @monitorexit v1
+  #L234b0c.  if v0 == 0 then goto L234b32;
+  #L234b10.  call temp:= `currentThread`() @signature `Ljava/lang/Thread;.currentThread:()Ljava/lang/Thread;` @kind static;
+  #L234b16.  v0:= temp @kind object;
+  #L234b18.  v1:= v6.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver.receiverThread` @type ^`java.lang.Thread` @kind object;
+  #L234b1c.  call temp:= `equals`(v0, v1) @signature `Ljava/lang/Object;.equals:(Ljava/lang/Object;)Z` @kind virtual;
+  #L234b22.  v0:= temp;
+  #L234b24.  if v0 != 0 then goto L234b32;
+  #L234b28.  v0:= v6.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver.receiverThread` @type ^`java.lang.Thread` @kind object;
+  #L234b2c.  call `join`(v0) @signature `Ljava/lang/Thread;.join:()V` @kind virtual;
+  #L234b32.  v0:= 0I;
+  #L234b34.  v6.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver.receiverThread` @type ^`java.lang.Thread` := v0 @kind object;
+  #L234b38.  v0:= `@@org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver.log` @type ^`org.eclipse.paho.client.mqttv3.logging.Logger` @kind object;
+  #L234b3c.  v1:= `@@org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver.CLASS_NAME` @type ^`java.lang.String` @kind object;
+  #L234b40.  v2:= "stop" @kind object;
+  #L234b44.  v3:= "851" @kind object;
+  #L234b48.  call `fine`(v0, v1, v2, v3) @signature `Lorg/eclipse/paho/client/mqttv3/logging/Logger;.fine:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V` @kind interface;
+  #L234b4e.  return @kind void;
+  #L234b50.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L234b52.  @monitorexit v1
+  #L234b54.  throw v0;
+  catch `java.lang.Throwable` @[L234ad8..L234b0c] goto L234b50;
+  catch `java.lang.InterruptedException` @[L234b28..L234b32] goto L234b32;
+  catch `java.lang.Throwable` @[L234b52..L234b54] goto L234b50;
+}

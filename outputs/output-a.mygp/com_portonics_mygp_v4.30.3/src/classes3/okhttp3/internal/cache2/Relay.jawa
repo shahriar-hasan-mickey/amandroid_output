@@ -1,0 +1,292 @@
+record `okhttp3.internal.cache2.Relay` @kind class @AccessFlag FINAL {
+  `okio.k` `okhttp3.internal.cache2.Relay.buffer` @AccessFlag FINAL;
+  `long` `okhttp3.internal.cache2.Relay.bufferMaxSize` @AccessFlag FINAL;
+  `boolean` `okhttp3.internal.cache2.Relay.complete` @AccessFlag ;
+  `java.io.RandomAccessFile` `okhttp3.internal.cache2.Relay.file` @AccessFlag ;
+  `okio.ByteString` `okhttp3.internal.cache2.Relay.metadata` @AccessFlag PRIVATE_FINAL;
+  `int` `okhttp3.internal.cache2.Relay.sourceCount` @AccessFlag ;
+  `okio.i0` `okhttp3.internal.cache2.Relay.upstream` @AccessFlag ;
+  `okio.k` `okhttp3.internal.cache2.Relay.upstreamBuffer` @AccessFlag FINAL;
+  `long` `okhttp3.internal.cache2.Relay.upstreamPos` @AccessFlag ;
+  `java.lang.Thread` `okhttp3.internal.cache2.Relay.upstreamReader` @AccessFlag ;
+}
+global `long` `@@okhttp3.internal.cache2.Relay.FILE_HEADER_SIZE` @AccessFlag PRIVATE_STATIC_FINAL;
+global `okio.ByteString` `@@okhttp3.internal.cache2.Relay.PREFIX_CLEAN` @AccessFlag STATIC_FINAL;
+global `okio.ByteString` `@@okhttp3.internal.cache2.Relay.PREFIX_DIRTY` @AccessFlag STATIC_FINAL;
+global `int` `@@okhttp3.internal.cache2.Relay.SOURCE_FILE` @AccessFlag PRIVATE_STATIC_FINAL;
+global `int` `@@okhttp3.internal.cache2.Relay.SOURCE_UPSTREAM` @AccessFlag PRIVATE_STATIC_FINAL;
+procedure `void` `<clinit>`() @signature `Lokhttp3/internal/cache2/Relay;.<clinit>:()V` @AccessFlag STATIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L304d00.  v0:= "OkHttp cache v1\n" @kind object;
+  #L304d04.  call temp:= `encodeUtf8`(v0) @signature `Lokio/ByteString;.encodeUtf8:(Ljava/lang/String;)Lokio/ByteString;` @kind static;
+  #L304d0a.  v0:= temp @kind object;
+  #L304d0c.  `@@okhttp3.internal.cache2.Relay.PREFIX_CLEAN` @type ^`okio.ByteString` := v0 @kind object;
+  #L304d10.  v0:= "OkHttp DIRTY :(\n" @kind object;
+  #L304d14.  call temp:= `encodeUtf8`(v0) @signature `Lokio/ByteString;.encodeUtf8:(Ljava/lang/String;)Lokio/ByteString;` @kind static;
+  #L304d1a.  v0:= temp @kind object;
+  #L304d1c.  `@@okhttp3.internal.cache2.Relay.PREFIX_DIRTY` @type ^`okio.ByteString` := v0 @kind object;
+  #L304d20.  return @kind void;
+}
+procedure `void` `<init>`(`okhttp3.internal.cache2.Relay` v1 @kind this, `java.io.RandomAccessFile` v2 @kind object, `okio.i0` v3 @kind object, `long` v4 , `okio.ByteString` v6 @kind object, `long` v7 ) @signature `Lokhttp3/internal/cache2/Relay;.<init>:(Ljava/io/RandomAccessFile;Lokio/i0;JLokio/ByteString;J)V` @AccessFlag PRIVATE_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L304d34.  call `<init>`(v1) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L304d3a.  v0:= new `okio.k`;
+  #L304d3e.  call `<init>`(v0) @signature `Lokio/k;.<init>:()V` @kind direct;
+  #L304d44.  v1.`okhttp3.internal.cache2.Relay.upstreamBuffer` @type ^`okio.k` := v0 @kind object;
+  #L304d48.  v0:= new `okio.k`;
+  #L304d4c.  call `<init>`(v0) @signature `Lokio/k;.<init>:()V` @kind direct;
+  #L304d52.  v1.`okhttp3.internal.cache2.Relay.buffer` @type ^`okio.k` := v0 @kind object;
+  #L304d56.  v1.`okhttp3.internal.cache2.Relay.file` @type ^`java.io.RandomAccessFile` := v2 @kind object;
+  #L304d5a.  v1.`okhttp3.internal.cache2.Relay.upstream` @type ^`okio.i0` := v3 @kind object;
+  #L304d5e.  if v3 != 0 then goto L304d66;
+  #L304d62.  v2:= 1I;
+  #L304d64.  goto L304d68;
+  #L304d66.  v2:= 0I;
+  #L304d68.  v1.`okhttp3.internal.cache2.Relay.complete` @type ^`boolean` := v2 @kind boolean;
+  #L304d6c.  v1.`okhttp3.internal.cache2.Relay.upstreamPos` @type ^`long` := v4 @kind wide;
+  #L304d70.  v1.`okhttp3.internal.cache2.Relay.metadata` @type ^`okio.ByteString` := v6 @kind object;
+  #L304d74.  v1.`okhttp3.internal.cache2.Relay.bufferMaxSize` @type ^`long` := v7 @kind wide;
+  #L304d78.  return @kind void;
+}
+procedure `okhttp3.internal.cache2.Relay` `edit`(`java.io.File` v9 @kind object, `okio.i0` v10 @kind object, `okio.ByteString` v11 @kind object, `long` v12 ) @signature `Lokhttp3/internal/cache2/Relay;.edit:(Ljava/io/File;Lokio/i0;Lokio/ByteString;J)Lokhttp3/internal/cache2/Relay;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+
+  #L304b70.  v8:= new `java.io.RandomAccessFile`;
+  #L304b74.  v0:= "rw" @kind object;
+  #L304b78.  call `<init>`(v8, v9, v0) @signature `Ljava/io/RandomAccessFile;.<init>:(Ljava/io/File;Ljava/lang/String;)V` @kind direct;
+  #L304b7e.  v9:= new `okhttp3.internal.cache2.Relay`;
+  #L304b82.  v3:= 0L;
+  #L304b86.  v0:= v9 @kind object;
+  #L304b88.  v1:= v8 @kind object;
+  #L304b8a.  v2:= v10 @kind object;
+  #L304b8c.  v5:= v11 @kind object;
+  #L304b8e.  v6:= v12 @kind wide;
+  #L304b90.  call `<init>`(v0, v1, v2, v3, v5, v6) @signature `Lokhttp3/internal/cache2/Relay;.<init>:(Ljava/io/RandomAccessFile;Lokio/i0;JLokio/ByteString;J)V` @kind direct;
+  #L304b96.  v10:= 0L;
+  #L304b9a.  call `setLength`(v8, v10) @signature `Ljava/io/RandomAccessFile;.setLength:(J)V` @kind virtual;
+  #L304ba0.  v2:= `@@okhttp3.internal.cache2.Relay.PREFIX_DIRTY` @type ^`okio.ByteString` @kind object;
+  #L304ba4.  v3:= -1L;
+  #L304ba8.  v5:= -1L;
+  #L304bac.  v1:= v9 @kind object;
+  #L304bae.  call `writeHeader`(v1, v2, v3, v5) @signature `Lokhttp3/internal/cache2/Relay;.writeHeader:(Lokio/ByteString;JJ)V` @kind direct;
+  #L304bb4.  return v9 @kind object;
+}
+procedure `okhttp3.internal.cache2.Relay` `read`(`java.io.File` v10 @kind object) @signature `Lokhttp3/internal/cache2/Relay;.read:(Ljava/io/File;)Lokhttp3/internal/cache2/Relay;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+    v9;
+
+  #L304bc8.  v1:= new `java.io.RandomAccessFile`;
+  #L304bcc.  v0:= "rw" @kind object;
+  #L304bd0.  call `<init>`(v1, v10, v0) @signature `Ljava/io/RandomAccessFile;.<init>:(Ljava/io/File;Ljava/lang/String;)V` @kind direct;
+  #L304bd6.  v10:= new `okhttp3.internal.cache2.FileOperator`;
+  #L304bda.  call temp:= `getChannel`(v1) @signature `Ljava/io/RandomAccessFile;.getChannel:()Ljava/nio/channels/FileChannel;` @kind virtual;
+  #L304be0.  v0:= temp @kind object;
+  #L304be2.  call `<init>`(v10, v0) @signature `Lokhttp3/internal/cache2/FileOperator;.<init>:(Ljava/nio/channels/FileChannel;)V` @kind direct;
+  #L304be8.  v0:= new `okio.k`;
+  #L304bec.  call `<init>`(v0) @signature `Lokio/k;.<init>:()V` @kind direct;
+  #L304bf2.  v3:= 0L;
+  #L304bf6.  v6:= 32L;
+  #L304bfa.  v2:= v10 @kind object;
+  #L304bfc.  v5:= v0 @kind object;
+  #L304bfe.  call `read`(v2, v3, v5, v6) @signature `Lokhttp3/internal/cache2/FileOperator;.read:(JLokio/k;J)V` @kind virtual;
+  #L304c04.  v2:= `@@okhttp3.internal.cache2.Relay.PREFIX_CLEAN` @type ^`okio.ByteString` @kind object;
+  #L304c08.  call temp:= `size`(v2) @signature `Lokio/ByteString;.size:()I` @kind virtual;
+  #L304c0e.  v3:= temp;
+  #L304c10.  v3:= (`long`) v3 @kind i2l;
+  #L304c12.  call temp:= `g`(v0, v3) @signature `Lokio/k;.g:(J)Lokio/ByteString;` @kind virtual;
+  #L304c18.  v3:= temp @kind object;
+  #L304c1a.  call temp:= `equals`(v3, v2) @signature `Lokio/ByteString;.equals:(Ljava/lang/Object;)Z` @kind virtual;
+  #L304c20.  v2:= temp;
+  #L304c22.  if v2 == 0 then goto L304c72;
+  #L304c26.  call temp:= `readLong`(v0) @signature `Lokio/k;.readLong:()J` @kind virtual;
+  #L304c2c.  v8:= temp @kind wide;
+  #L304c2e.  call temp:= `readLong`(v0) @signature `Lokio/k;.readLong:()J` @kind virtual;
+  #L304c34.  v6:= temp @kind wide;
+  #L304c36.  v0:= new `okio.k`;
+  #L304c3a.  call `<init>`(v0) @signature `Lokio/k;.<init>:()V` @kind direct;
+  #L304c40.  v2:= 32L;
+  #L304c44.  v4:= v8 + v2 @kind long;
+  #L304c48.  v2:= v10 @kind object;
+  #L304c4a.  v3:= v4 @kind wide;
+  #L304c4c.  v5:= v0 @kind object;
+  #L304c4e.  call `read`(v2, v3, v5, v6) @signature `Lokhttp3/internal/cache2/FileOperator;.read:(JLokio/k;J)V` @kind virtual;
+  #L304c54.  call temp:= `U0`(v0) @signature `Lokio/k;.U0:()Lokio/ByteString;` @kind virtual;
+  #L304c5a.  v5:= temp @kind object;
+  #L304c5c.  v10:= new `okhttp3.internal.cache2.Relay`;
+  #L304c60.  v2:= 0I;
+  #L304c62.  v6:= 0L;
+  #L304c66.  v0:= v10 @kind object;
+  #L304c68.  v3:= v8 @kind wide;
+  #L304c6a.  call `<init>`(v0, v1, v2, v3, v5, v6) @signature `Lokhttp3/internal/cache2/Relay;.<init>:(Ljava/io/RandomAccessFile;Lokio/i0;JLokio/ByteString;J)V` @kind direct;
+  #L304c70.  return v10 @kind object;
+  #L304c72.  v10:= new `java.io.IOException`;
+  #L304c76.  v0:= "unreadable cache file" @kind object;
+  #L304c7a.  call `<init>`(v10, v0) @signature `Ljava/io/IOException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L304c80.  throw v10;
+}
+procedure `void` `writeHeader`(`okhttp3.internal.cache2.Relay` v6 @kind this, `okio.ByteString` v7 @kind object, `long` v8 , `long` v10 ) @signature `Lokhttp3/internal/cache2/Relay;.writeHeader:(Lokio/ByteString;JJ)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L304e1c.  v3:= new `okio.k`;
+  #L304e20.  call `<init>`(v3) @signature `Lokio/k;.<init>:()V` @kind direct;
+  #L304e26.  call temp:= `j1`(v3, v7) @signature `Lokio/k;.j1:(Lokio/ByteString;)Lokio/k;` @kind virtual;
+  #L304e2c.  call temp:= `r1`(v3, v8) @signature `Lokio/k;.r1:(J)Lokio/k;` @kind virtual;
+  #L304e32.  call temp:= `r1`(v3, v10) @signature `Lokio/k;.r1:(J)Lokio/k;` @kind virtual;
+  #L304e38.  call temp:= `f1`(v3) @signature `Lokio/k;.f1:()J` @kind virtual;
+  #L304e3e.  v7:= temp @kind wide;
+  #L304e40.  v9:= 32L;
+  #L304e44.  v11:= lcmp(v7, v9);
+  #L304e48.  if v11 != 0 then goto L304e72;
+  #L304e4c.  v0:= new `okhttp3.internal.cache2.FileOperator`;
+  #L304e50.  v7:= v6.`okhttp3.internal.cache2.Relay.file` @type ^`java.io.RandomAccessFile` @kind object;
+  #L304e54.  call temp:= `getChannel`(v7) @signature `Ljava/io/RandomAccessFile;.getChannel:()Ljava/nio/channels/FileChannel;` @kind virtual;
+  #L304e5a.  v7:= temp @kind object;
+  #L304e5c.  call `<init>`(v0, v7) @signature `Lokhttp3/internal/cache2/FileOperator;.<init>:(Ljava/nio/channels/FileChannel;)V` @kind direct;
+  #L304e62.  v1:= 0L;
+  #L304e66.  v4:= 32L;
+  #L304e6a.  call `write`(v0, v1, v3, v4) @signature `Lokhttp3/internal/cache2/FileOperator;.write:(JLokio/k;J)V` @kind virtual;
+  #L304e70.  return @kind void;
+  #L304e72.  v7:= new `java.lang.IllegalArgumentException`;
+  #L304e76.  call `<init>`(v7) @signature `Ljava/lang/IllegalArgumentException;.<init>:()V` @kind direct;
+  #L304e7c.  throw v7;
+}
+procedure `void` `writeMetadata`(`okhttp3.internal.cache2.Relay` v6 @kind this, `long` v7 ) @signature `Lokhttp3/internal/cache2/Relay;.writeMetadata:(J)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L304e90.  v3:= new `okio.k`;
+  #L304e94.  call `<init>`(v3) @signature `Lokio/k;.<init>:()V` @kind direct;
+  #L304e9a.  v0:= v6.`okhttp3.internal.cache2.Relay.metadata` @type ^`okio.ByteString` @kind object;
+  #L304e9e.  call temp:= `j1`(v3, v0) @signature `Lokio/k;.j1:(Lokio/ByteString;)Lokio/k;` @kind virtual;
+  #L304ea4.  v0:= new `okhttp3.internal.cache2.FileOperator`;
+  #L304ea8.  v1:= v6.`okhttp3.internal.cache2.Relay.file` @type ^`java.io.RandomAccessFile` @kind object;
+  #L304eac.  call temp:= `getChannel`(v1) @signature `Ljava/io/RandomAccessFile;.getChannel:()Ljava/nio/channels/FileChannel;` @kind virtual;
+  #L304eb2.  v1:= temp @kind object;
+  #L304eb4.  call `<init>`(v0, v1) @signature `Lokhttp3/internal/cache2/FileOperator;.<init>:(Ljava/nio/channels/FileChannel;)V` @kind direct;
+  #L304eba.  v1:= 32L;
+  #L304ebe.  v1:= v1 + v7 @kind long;
+  #L304ec0.  v7:= v6.`okhttp3.internal.cache2.Relay.metadata` @type ^`okio.ByteString` @kind object;
+  #L304ec4.  call temp:= `size`(v7) @signature `Lokio/ByteString;.size:()I` @kind virtual;
+  #L304eca.  v7:= temp;
+  #L304ecc.  v4:= (`long`) v7 @kind i2l;
+  #L304ece.  call `write`(v0, v1, v3, v4) @signature `Lokhttp3/internal/cache2/FileOperator;.write:(JLokio/k;J)V` @kind virtual;
+  #L304ed4.  return @kind void;
+}
+procedure `void` `commit`(`okhttp3.internal.cache2.Relay` v8 @kind this, `long` v9 ) @signature `Lokhttp3/internal/cache2/Relay;.commit:(J)V` @AccessFlag  {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+
+  #L304d8c.  call `writeMetadata`(v8, v9) @signature `Lokhttp3/internal/cache2/Relay;.writeMetadata:(J)V` @kind direct;
+  #L304d92.  v0:= v8.`okhttp3.internal.cache2.Relay.file` @type ^`java.io.RandomAccessFile` @kind object;
+  #L304d96.  call temp:= `getChannel`(v0) @signature `Ljava/io/RandomAccessFile;.getChannel:()Ljava/nio/channels/FileChannel;` @kind virtual;
+  #L304d9c.  v0:= temp @kind object;
+  #L304d9e.  v1:= 0I;
+  #L304da0.  call `force`(v0, v1) @signature `Ljava/nio/channels/FileChannel;.force:(Z)V` @kind virtual;
+  #L304da6.  v3:= `@@okhttp3.internal.cache2.Relay.PREFIX_CLEAN` @type ^`okio.ByteString` @kind object;
+  #L304daa.  v0:= v8.`okhttp3.internal.cache2.Relay.metadata` @type ^`okio.ByteString` @kind object;
+  #L304dae.  call temp:= `size`(v0) @signature `Lokio/ByteString;.size:()I` @kind virtual;
+  #L304db4.  v0:= temp;
+  #L304db6.  v6:= (`long`) v0 @kind i2l;
+  #L304db8.  v2:= v8 @kind object;
+  #L304dba.  v4:= v9 @kind wide;
+  #L304dbc.  call `writeHeader`(v2, v3, v4, v6) @signature `Lokhttp3/internal/cache2/Relay;.writeHeader:(Lokio/ByteString;JJ)V` @kind direct;
+  #L304dc2.  v9:= v8.`okhttp3.internal.cache2.Relay.file` @type ^`java.io.RandomAccessFile` @kind object;
+  #L304dc6.  call temp:= `getChannel`(v9) @signature `Ljava/io/RandomAccessFile;.getChannel:()Ljava/nio/channels/FileChannel;` @kind virtual;
+  #L304dcc.  v9:= temp @kind object;
+  #L304dce.  call `force`(v9, v1) @signature `Ljava/nio/channels/FileChannel;.force:(Z)V` @kind virtual;
+  #L304dd4.  @monitorenter v8
+  #L304dd6.  v9:= 1I;
+  #L304dd8.  v8.`okhttp3.internal.cache2.Relay.complete` @type ^`boolean` := v9 @kind boolean;
+  #L304ddc.  @monitorexit v8
+  #L304dde.  v9:= v8.`okhttp3.internal.cache2.Relay.upstream` @type ^`okio.i0` @kind object;
+  #L304de2.  call `closeQuietly`(v9) @signature `Lokhttp3/internal/Util;.closeQuietly:(Ljava/io/Closeable;)V` @kind static;
+  #L304de8.  v9:= 0I;
+  #L304dea.  v8.`okhttp3.internal.cache2.Relay.upstream` @type ^`okio.i0` := v9 @kind object;
+  #L304dee.  return @kind void;
+  #L304df0.  v9:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L304df2.  @monitorexit v8
+  #L304df4.  throw v9;
+  catch `java.lang.Throwable` @[L304dd8..L304dde] goto L304df0;
+  catch `java.lang.Throwable` @[L304df2..L304df4] goto L304df0;
+}
+procedure `boolean` `isClosed`(`okhttp3.internal.cache2.Relay` v1 @kind this) @signature `Lokhttp3/internal/cache2/Relay;.isClosed:()Z` @AccessFlag  {
+    temp;
+    v0;
+
+  #L304b50.  v0:= v1.`okhttp3.internal.cache2.Relay.file` @type ^`java.io.RandomAccessFile` @kind object;
+  #L304b54.  if v0 != 0 then goto L304b5c;
+  #L304b58.  v0:= 1I;
+  #L304b5a.  goto L304b5e;
+  #L304b5c.  v0:= 0I;
+  #L304b5e.  return v0;
+}
+procedure `okio.ByteString` `metadata`(`okhttp3.internal.cache2.Relay` v1 @kind this) @signature `Lokhttp3/internal/cache2/Relay;.metadata:()Lokio/ByteString;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L304c94.  v0:= v1.`okhttp3.internal.cache2.Relay.metadata` @type ^`okio.ByteString` @kind object;
+  #L304c98.  return v0 @kind object;
+}
+procedure `okio.i0` `newSource`(`okhttp3.internal.cache2.Relay` v1 @kind this) @signature `Lokhttp3/internal/cache2/Relay;.newSource:()Lokio/i0;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L304cac.  @monitorenter v1
+  #L304cae.  v0:= v1.`okhttp3.internal.cache2.Relay.file` @type ^`java.io.RandomAccessFile` @kind object;
+  #L304cb2.  if v0 != 0 then goto L304cbc;
+  #L304cb6.  v0:= 0I;
+  #L304cb8.  @monitorexit v1
+  #L304cba.  return v0 @kind object;
+  #L304cbc.  v0:= v1.`okhttp3.internal.cache2.Relay.sourceCount` @type ^`int`;
+  #L304cc0.  v0:= v0 + 1;
+  #L304cc4.  v1.`okhttp3.internal.cache2.Relay.sourceCount` @type ^`int` := v0;
+  #L304cc8.  @monitorexit v1
+  #L304cca.  v0:= new `okhttp3.internal.cache2.Relay$RelaySource`;
+  #L304cce.  call `<init>`(v0, v1) @signature `Lokhttp3/internal/cache2/Relay$RelaySource;.<init>:(Lokhttp3/internal/cache2/Relay;)V` @kind direct;
+  #L304cd4.  return v0 @kind object;
+  #L304cd6.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L304cd8.  @monitorexit v1
+  #L304cda.  throw v0;
+  catch `java.lang.Throwable` @[L304cae..L304cca] goto L304cd6;
+  catch `java.lang.Throwable` @[L304cd8..L304cda] goto L304cd6;
+}

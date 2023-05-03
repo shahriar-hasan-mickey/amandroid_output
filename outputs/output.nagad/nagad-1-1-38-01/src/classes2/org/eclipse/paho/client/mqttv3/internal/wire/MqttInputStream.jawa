@@ -1,0 +1,202 @@
+record `org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream` @kind class @AccessFlag PUBLIC extends `java.io.InputStream` @kind class {
+  `java.io.ByteArrayOutputStream` `org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.bais` @AccessFlag PRIVATE;
+  `org.eclipse.paho.client.mqttv3.internal.ClientState` `org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.clientState` @AccessFlag PRIVATE;
+  `java.io.DataInputStream` `org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.in` @AccessFlag PRIVATE;
+  `byte`[] `org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.packet` @AccessFlag PRIVATE;
+  `long` `org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.packetLen` @AccessFlag PRIVATE;
+  `long` `org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.remLen` @AccessFlag PRIVATE;
+}
+global `java.lang.String` `@@org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.CLASS_NAME` @AccessFlag PRIVATE_STATIC_FINAL;
+global `org.eclipse.paho.client.mqttv3.logging.Logger` `@@org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.log` @AccessFlag PRIVATE_STATIC_FINAL;
+procedure `void` `<clinit>`() @signature `Lorg/eclipse/paho/client/mqttv3/internal/wire/MqttInputStream;.<clinit>:()V` @AccessFlag STATIC_CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+
+  #L2354b4.  v0:= constclass @type ^`org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream` @kind object;
+  #L2354b8.  call temp:= `getName`(v0) @signature `Ljava/lang/Class;.getName:()Ljava/lang/String;` @kind virtual;
+  #L2354be.  v0:= temp @kind object;
+  #L2354c0.  `@@org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.CLASS_NAME` @type ^`java.lang.String` := v0 @kind object;
+  #L2354c4.  v0:= `@@org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.CLASS_NAME` @type ^`java.lang.String` @kind object;
+  #L2354c8.  v1:= "org.eclipse.paho.client.mqttv3.internal.nls.logcat" @kind object;
+  #L2354cc.  call temp:= `getLogger`(v1, v0) @signature `Lorg/eclipse/paho/client/mqttv3/logging/LoggerFactory;.getLogger:(Ljava/lang/String;Ljava/lang/String;)Lorg/eclipse/paho/client/mqttv3/logging/Logger;` @kind static;
+  #L2354d2.  v0:= temp @kind object;
+  #L2354d4.  `@@org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.log` @type ^`org.eclipse.paho.client.mqttv3.logging.Logger` := v0 @kind object;
+  #L2354d8.  return @kind void;
+}
+procedure `void` `<init>`(`org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream` v1 @kind this, `org.eclipse.paho.client.mqttv3.internal.ClientState` v2 @kind object, `java.io.InputStream` v3 @kind object) @signature `Lorg/eclipse/paho/client/mqttv3/internal/wire/MqttInputStream;.<init>:(Lorg/eclipse/paho/client/mqttv3/internal/ClientState;Ljava/io/InputStream;)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L2354ec.  call `<init>`(v1) @signature `Ljava/io/InputStream;.<init>:()V` @kind direct;
+  #L2354f2.  v0:= 0I;
+  #L2354f4.  v1.`org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.clientState` @type ^`org.eclipse.paho.client.mqttv3.internal.ClientState` := v0 @kind object;
+  #L2354f8.  v1.`org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.clientState` @type ^`org.eclipse.paho.client.mqttv3.internal.ClientState` := v2 @kind object;
+  #L2354fc.  v2:= new `java.io.DataInputStream`;
+  #L235500.  call `<init>`(v2, v3) @signature `Ljava/io/DataInputStream;.<init>:(Ljava/io/InputStream;)V` @kind direct;
+  #L235506.  v1.`org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.in` @type ^`java.io.DataInputStream` := v2 @kind object;
+  #L23550a.  v2:= new `java.io.ByteArrayOutputStream`;
+  #L23550e.  call `<init>`(v2) @signature `Ljava/io/ByteArrayOutputStream;.<init>:()V` @kind direct;
+  #L235514.  v1.`org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.bais` @type ^`java.io.ByteArrayOutputStream` := v2 @kind object;
+  #L235518.  v2:= -1L;
+  #L23551c.  v1.`org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.remLen` @type ^`long` := v2 @kind wide;
+  #L235520.  return @kind void;
+}
+procedure `void` `readFully`(`org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream` v7 @kind this) @signature `Lorg/eclipse/paho/client/mqttv3/internal/wire/MqttInputStream;.readFully:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+
+  #L235550.  v0:= v7.`org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.bais` @type ^`java.io.ByteArrayOutputStream` @kind object;
+  #L235554.  call temp:= `size`(v0) @signature `Ljava/io/ByteArrayOutputStream;.size:()I` @kind virtual;
+  #L23555a.  v0:= temp;
+  #L23555c.  v1:= v7.`org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.packetLen` @type ^`long` @kind wide;
+  #L235560.  v3:= (`int`) v1 @kind l2i;
+  #L235562.  v0:= v0 + v3 @kind int;
+  #L235564.  v3:= v7.`org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.remLen` @type ^`long` @kind wide;
+  #L235568.  v3:= v3 - v1 @kind long;
+  #L23556a.  v1:= (`int`) v3 @kind l2i;
+  #L23556c.  if v1 < 0 then goto L2355be;
+  #L235570.  v2:= 0I;
+  #L235572.  if v2 < v1 then goto L235578;
+  #L235576.  return @kind void;
+  #L235578.  v3:= v7.`org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.in` @type ^`java.io.DataInputStream` @kind object;
+  #L23557c.  v4:= v7.`org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.packet` @type ^`byte`[] @kind object;
+  #L235580.  v5:= v0 + v2 @kind int;
+  #L235584.  v6:= v1 - v2 @kind int;
+  #L235588.  call temp:= `read`(v3, v4, v5, v6) @signature `Ljava/io/DataInputStream;.read:([BII)I` @kind virtual;
+  #L23558e.  v3:= temp;
+  #L235590.  v4:= v7.`org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.clientState` @type ^`org.eclipse.paho.client.mqttv3.internal.ClientState` @kind object;
+  #L235594.  call `notifyReceivedBytes`(v4, v3) @signature `Lorg/eclipse/paho/client/mqttv3/internal/ClientState;.notifyReceivedBytes:(I)V` @kind virtual;
+  #L23559a.  if v3 < 0 then goto L2355a2;
+  #L23559e.  v2:= v2 + v3 @kind int;
+  #L2355a0.  goto L235572;
+  #L2355a2.  v0:= new `java.io.EOFException`;
+  #L2355a6.  call `<init>`(v0) @signature `Ljava/io/EOFException;.<init>:()V` @kind direct;
+  #L2355ac.  throw v0;
+  #L2355ae.  v0:= Exception @type ^`java.net.SocketTimeoutException` @kind object;
+  #L2355b0.  v3:= v7.`org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.packetLen` @type ^`long` @kind wide;
+  #L2355b4.  v1:= (`long`) v2 @kind i2l;
+  #L2355b6.  v3:= v3 + v1 @kind long;
+  #L2355b8.  v7.`org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.packetLen` @type ^`long` := v3 @kind wide;
+  #L2355bc.  throw v0;
+  #L2355be.  v0:= new `java.lang.IndexOutOfBoundsException`;
+  #L2355c2.  call `<init>`(v0) @signature `Ljava/lang/IndexOutOfBoundsException;.<init>:()V` @kind direct;
+  #L2355c8.  throw v0;
+  catch `java.net.SocketTimeoutException` @[L235578..L235590] goto L2355ae;
+}
+procedure `int` `available`(`org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream` v1 @kind this) @signature `Lorg/eclipse/paho/client/mqttv3/internal/wire/MqttInputStream;.available:()I` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L235340.  v0:= v1.`org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.in` @type ^`java.io.DataInputStream` @kind object;
+  #L235344.  call temp:= `available`(v0) @signature `Ljava/io/DataInputStream;.available:()I` @kind virtual;
+  #L23534a.  v0:= temp;
+  #L23534c.  return v0;
+}
+procedure `void` `close`(`org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream` v1 @kind this) @signature `Lorg/eclipse/paho/client/mqttv3/internal/wire/MqttInputStream;.close:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L235534.  v0:= v1.`org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.in` @type ^`java.io.DataInputStream` @kind object;
+  #L235538.  call `close`(v0) @signature `Ljava/io/DataInputStream;.close:()V` @kind virtual;
+  #L23553e.  return @kind void;
+}
+procedure `int` `read`(`org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream` v1 @kind this) @signature `Lorg/eclipse/paho/client/mqttv3/internal/wire/MqttInputStream;.read:()I` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L235360.  v0:= v1.`org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.in` @type ^`java.io.DataInputStream` @kind object;
+  #L235364.  call temp:= `read`(v0) @signature `Ljava/io/DataInputStream;.read:()I` @kind virtual;
+  #L23536a.  v0:= temp;
+  #L23536c.  return v0;
+}
+procedure `org.eclipse.paho.client.mqttv3.internal.wire.MqttWireMessage` `readMqttWireMessage`(`org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream` v8 @kind this) @signature `Lorg/eclipse/paho/client/mqttv3/internal/wire/MqttInputStream;.readMqttWireMessage:()Lorg/eclipse/paho/client/mqttv3/internal/wire/MqttWireMessage;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+
+  #L235380.  v0:= 0I;
+  #L235382.  v1:= v8.`org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.remLen` @type ^`long` @kind wide;
+  #L235386.  v3:= 1I;
+  #L235388.  v4:= 0L;
+  #L23538c.  v6:= lcmp(v1, v4);
+  #L235390.  if v6 >= 0 then goto L235434;
+  #L235394.  v1:= v8.`org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.bais` @type ^`java.io.ByteArrayOutputStream` @kind object;
+  #L235398.  call `reset`(v1) @signature `Ljava/io/ByteArrayOutputStream;.reset:()V` @kind virtual;
+  #L23539e.  v1:= v8.`org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.in` @type ^`java.io.DataInputStream` @kind object;
+  #L2353a2.  call temp:= `readByte`(v1) @signature `Ljava/io/DataInputStream;.readByte:()B` @kind virtual;
+  #L2353a8.  v1:= temp;
+  #L2353aa.  v2:= v8.`org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.clientState` @type ^`org.eclipse.paho.client.mqttv3.internal.ClientState` @kind object;
+  #L2353ae.  call `notifyReceivedBytes`(v2, v3) @signature `Lorg/eclipse/paho/client/mqttv3/internal/ClientState;.notifyReceivedBytes:(I)V` @kind virtual;
+  #L2353b4.  v2:= v1 ^>> 4;
+  #L2353b8.  v2:= v2 ^& 15;
+  #L2353bc.  v2:= (`byte`) v2 @kind i2b;
+  #L2353be.  if v2 < v3 then goto L235426;
+  #L2353c2.  v6:= 14I;
+  #L2353c6.  if v2 > v6 then goto L235426;
+  #L2353ca.  v2:= v8.`org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.in` @type ^`java.io.DataInputStream` @kind object;
+  #L2353ce.  call temp:= `readMBI`(v2) @signature `Lorg/eclipse/paho/client/mqttv3/internal/wire/MqttWireMessage;.readMBI:(Ljava/io/DataInputStream;)Lorg/eclipse/paho/client/mqttv3/internal/wire/MultiByteInteger;` @kind static;
+  #L2353d4.  v2:= temp @kind object;
+  #L2353d6.  call temp:= `getValue`(v2) @signature `Lorg/eclipse/paho/client/mqttv3/internal/wire/MultiByteInteger;.getValue:()J` @kind virtual;
+  #L2353dc.  v6:= temp @kind wide;
+  #L2353de.  v8.`org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.remLen` @type ^`long` := v6 @kind wide;
+  #L2353e2.  v2:= v8.`org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.bais` @type ^`java.io.ByteArrayOutputStream` @kind object;
+  #L2353e6.  call `write`(v2, v1) @signature `Ljava/io/ByteArrayOutputStream;.write:(I)V` @kind virtual;
+  #L2353ec.  v1:= v8.`org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.bais` @type ^`java.io.ByteArrayOutputStream` @kind object;
+  #L2353f0.  v6:= v8.`org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.remLen` @type ^`long` @kind wide;
+  #L2353f4.  call temp:= `encodeMBI`(v6) @signature `Lorg/eclipse/paho/client/mqttv3/internal/wire/MqttWireMessage;.encodeMBI:(J)[B` @kind static;
+  #L2353fa.  v2:= temp @kind object;
+  #L2353fc.  call `write`(v1, v2) @signature `Ljava/io/ByteArrayOutputStream;.write:([B)V` @kind virtual;
+  #L235402.  v1:= v8.`org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.bais` @type ^`java.io.ByteArrayOutputStream` @kind object;
+  #L235406.  call temp:= `size`(v1) @signature `Ljava/io/ByteArrayOutputStream;.size:()I` @kind virtual;
+  #L23540c.  v1:= temp;
+  #L23540e.  v1:= (`long`) v1 @kind i2l;
+  #L235410.  v6:= v8.`org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.remLen` @type ^`long` @kind wide;
+  #L235414.  v1:= v1 + v6 @kind long;
+  #L235416.  v2:= (`int`) v1 @kind l2i;
+  #L235418.  v1:= new `byte`[v2];
+  #L23541c.  v8.`org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.packet` @type ^`byte`[] := v1 @kind object;
+  #L235420.  v8.`org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.packetLen` @type ^`long` := v4 @kind wide;
+  #L235424.  goto L235434;
+  #L235426.  v1:= 32108I;
+  #L23542a.  call temp:= `createMqttException`(v1) @signature `Lorg/eclipse/paho/client/mqttv3/internal/ExceptionHelper;.createMqttException:(I)Lorg/eclipse/paho/client/mqttv3/MqttException;` @kind static;
+  #L235430.  v1:= temp @kind object;
+  #L235432.  throw v1;
+  #L235434.  v1:= v8.`org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.remLen` @type ^`long` @kind wide;
+  #L235438.  v6:= lcmp(v1, v4);
+  #L23543c.  if v6 < 0 then goto L235492;
+  #L235440.  call `readFully`(v8) @signature `Lorg/eclipse/paho/client/mqttv3/internal/wire/MqttInputStream;.readFully:()V` @kind direct;
+  #L235446.  v1:= -1L;
+  #L23544a.  v8.`org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.remLen` @type ^`long` := v1 @kind wide;
+  #L23544e.  v1:= v8.`org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.bais` @type ^`java.io.ByteArrayOutputStream` @kind object;
+  #L235452.  call temp:= `toByteArray`(v1) @signature `Ljava/io/ByteArrayOutputStream;.toByteArray:()[B` @kind virtual;
+  #L235458.  v1:= temp @kind object;
+  #L23545a.  v2:= v8.`org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.packet` @type ^`byte`[] @kind object;
+  #L23545e.  v4:= length @variable v1;
+  #L235460.  v5:= 0I;
+  #L235462.  call `arraycopy`(v1, v5, v2, v5, v4) @signature `Ljava/lang/System;.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V` @kind static;
+  #L235468.  v1:= v8.`org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.packet` @type ^`byte`[] @kind object;
+  #L23546c.  call temp:= `createWireMessage`(v1) @signature `Lorg/eclipse/paho/client/mqttv3/internal/wire/MqttWireMessage;.createWireMessage:([B)Lorg/eclipse/paho/client/mqttv3/internal/wire/MqttWireMessage;` @kind static;
+  #L235472.  v0:= temp @kind object;
+  #L235474.  v1:= `@@org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.log` @type ^`org.eclipse.paho.client.mqttv3.logging.Logger` @kind object;
+  #L235478.  v2:= `@@org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.CLASS_NAME` @type ^`java.lang.String` @kind object;
+  #L23547c.  v4:= "readMqttWireMessage" @kind object;
+  #L235480.  v6:= "501" @kind object;
+  #L235484.  v3:= new `java.lang.Object`[v3];
+  #L235488.  v3[v5]:= v0 @kind object;
+  #L23548c.  call `fine`(v1, v2, v4, v6, v3) @signature `Lorg/eclipse/paho/client/mqttv3/logging/Logger;.fine:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L235492.  return v0 @kind object;
+  catch `java.net.SocketTimeoutException` @[L235382..L235492] goto L235492;
+}

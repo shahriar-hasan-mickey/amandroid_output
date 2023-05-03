@@ -1,0 +1,175 @@
+record `com.karumi.dexter.Dexter` @kind class @AccessFlag PUBLIC_FINAL extends `com.karumi.dexter.DexterBuilder` @kind interface, `com.karumi.dexter.DexterBuilder$Permission` @kind interface, `com.karumi.dexter.DexterBuilder$SinglePermissionListener` @kind interface, `com.karumi.dexter.DexterBuilder$MultiPermissionListener` @kind interface {
+  `com.karumi.dexter.listener.PermissionRequestErrorListener` `com.karumi.dexter.Dexter.errorListener` @AccessFlag PRIVATE;
+  `com.karumi.dexter.listener.multi.MultiplePermissionsListener` `com.karumi.dexter.Dexter.listener` @AccessFlag PRIVATE;
+  `java.util.Collection` `com.karumi.dexter.Dexter.permissions` @AccessFlag PRIVATE;
+  `boolean` `com.karumi.dexter.Dexter.shouldExecuteOnSameThread` @AccessFlag PRIVATE;
+}
+global `com.karumi.dexter.DexterInstance` `@@com.karumi.dexter.Dexter.instance` @AccessFlag PRIVATE_STATIC;
+procedure `void` `<init>`(`com.karumi.dexter.Dexter` v1 @kind this, `android.content.Context` v2 @kind object) @signature `Lcom/karumi/dexter/Dexter;.<init>:(Landroid/content/Context;)V` @AccessFlag PRIVATE_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L45bd60.  call `<init>`(v1) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L45bd66.  v0:= new `com.karumi.dexter.listener.multi.BaseMultiplePermissionsListener`;
+  #L45bd6a.  call `<init>`(v0) @signature `Lcom/karumi/dexter/listener/multi/BaseMultiplePermissionsListener;.<init>:()V` @kind direct;
+  #L45bd70.  v1.`com.karumi.dexter.Dexter.listener` @type ^`com.karumi.dexter.listener.multi.MultiplePermissionsListener` := v0 @kind object;
+  #L45bd74.  v0:= new `com.karumi.dexter.listener.EmptyPermissionRequestErrorListener`;
+  #L45bd78.  call `<init>`(v0) @signature `Lcom/karumi/dexter/listener/EmptyPermissionRequestErrorListener;.<init>:()V` @kind direct;
+  #L45bd7e.  v1.`com.karumi.dexter.Dexter.errorListener` @type ^`com.karumi.dexter.listener.PermissionRequestErrorListener` := v0 @kind object;
+  #L45bd82.  v0:= 0I;
+  #L45bd84.  v1.`com.karumi.dexter.Dexter.shouldExecuteOnSameThread` @type ^`boolean` := v0 @kind boolean;
+  #L45bd88.  call `initialize`(v2) @signature `Lcom/karumi/dexter/Dexter;.initialize:(Landroid/content/Context;)V` @kind static;
+  #L45bd8e.  return @kind void;
+}
+procedure `com.karumi.dexter.Thread` `getThread`(`com.karumi.dexter.Dexter` v1 @kind this) @signature `Lcom/karumi/dexter/Dexter;.getThread:()Lcom/karumi/dexter/Thread;` @AccessFlag PRIVATE {
+    temp;
+    v0;
+
+  #L45bd34.  v0:= v1.`com.karumi.dexter.Dexter.shouldExecuteOnSameThread` @type ^`boolean` @kind boolean;
+  #L45bd38.  if v0 == 0 then goto L45bd46;
+  #L45bd3c.  call temp:= `makeSameThread`() @signature `Lcom/karumi/dexter/ThreadFactory;.makeSameThread:()Lcom/karumi/dexter/Thread;` @kind static;
+  #L45bd42.  v0:= temp @kind object;
+  #L45bd44.  goto L45bd4e;
+  #L45bd46.  call temp:= `makeMainThread`() @signature `Lcom/karumi/dexter/ThreadFactory;.makeMainThread:()Lcom/karumi/dexter/Thread;` @kind static;
+  #L45bd4c.  v0:= temp @kind object;
+  #L45bd4e.  return v0 @kind object;
+}
+procedure `void` `initialize`(`android.content.Context` v3 @kind object) @signature `Lcom/karumi/dexter/Dexter;.initialize:(Landroid/content/Context;)V` @AccessFlag PRIVATE_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L45bdf0.  v0:= `@@com.karumi.dexter.Dexter.instance` @type ^`com.karumi.dexter.DexterInstance` @kind object;
+  #L45bdf4.  if v0 != 0 then goto L45be1c;
+  #L45bdf8.  v0:= new `com.karumi.dexter.AndroidPermissionService`;
+  #L45bdfc.  call `<init>`(v0) @signature `Lcom/karumi/dexter/AndroidPermissionService;.<init>:()V` @kind direct;
+  #L45be02.  v1:= new `com.karumi.dexter.IntentProvider`;
+  #L45be06.  call `<init>`(v1) @signature `Lcom/karumi/dexter/IntentProvider;.<init>:()V` @kind direct;
+  #L45be0c.  v2:= new `com.karumi.dexter.DexterInstance`;
+  #L45be10.  call `<init>`(v2, v3, v0, v1) @signature `Lcom/karumi/dexter/DexterInstance;.<init>:(Landroid/content/Context;Lcom/karumi/dexter/AndroidPermissionService;Lcom/karumi/dexter/IntentProvider;)V` @kind direct;
+  #L45be16.  `@@com.karumi.dexter.Dexter.instance` @type ^`com.karumi.dexter.DexterInstance` := v2 @kind object;
+  #L45be1a.  goto L45be22;
+  #L45be1c.  call `setContext`(v0, v3) @signature `Lcom/karumi/dexter/DexterInstance;.setContext:(Landroid/content/Context;)V` @kind virtual;
+  #L45be22.  return @kind void;
+}
+procedure `void` `onActivityDestroyed`() @signature `Lcom/karumi/dexter/Dexter;.onActivityDestroyed:()V` @AccessFlag STATIC {
+    temp;
+    v0;
+
+  #L45be34.  v0:= `@@com.karumi.dexter.Dexter.instance` @type ^`com.karumi.dexter.DexterInstance` @kind object;
+  #L45be38.  if v0 == 0 then goto L45be42;
+  #L45be3c.  call `onActivityDestroyed`(v0) @signature `Lcom/karumi/dexter/DexterInstance;.onActivityDestroyed:()V` @kind virtual;
+  #L45be42.  return @kind void;
+}
+procedure `void` `onActivityReady`(`android.app.Activity` v1 @kind object) @signature `Lcom/karumi/dexter/Dexter;.onActivityReady:(Landroid/app/Activity;)V` @AccessFlag STATIC {
+    temp;
+    v0;
+
+  #L45be54.  v0:= `@@com.karumi.dexter.Dexter.instance` @type ^`com.karumi.dexter.DexterInstance` @kind object;
+  #L45be58.  if v0 == 0 then goto L45be62;
+  #L45be5c.  call `onActivityReady`(v0, v1) @signature `Lcom/karumi/dexter/DexterInstance;.onActivityReady:(Landroid/app/Activity;)V` @kind virtual;
+  #L45be62.  return @kind void;
+}
+procedure `void` `onPermissionsRequested`(`java.util.Collection` v1 @kind object, `java.util.Collection` v2 @kind object) @signature `Lcom/karumi/dexter/Dexter;.onPermissionsRequested:(Ljava/util/Collection;Ljava/util/Collection;)V` @AccessFlag STATIC {
+    temp;
+    v0;
+
+  #L45be74.  v0:= `@@com.karumi.dexter.Dexter.instance` @type ^`com.karumi.dexter.DexterInstance` @kind object;
+  #L45be78.  if v0 == 0 then goto L45be8c;
+  #L45be7c.  call `onPermissionRequestGranted`(v0, v1) @signature `Lcom/karumi/dexter/DexterInstance;.onPermissionRequestGranted:(Ljava/util/Collection;)V` @kind virtual;
+  #L45be82.  v1:= `@@com.karumi.dexter.Dexter.instance` @type ^`com.karumi.dexter.DexterInstance` @kind object;
+  #L45be86.  call `onPermissionRequestDenied`(v1, v2) @signature `Lcom/karumi/dexter/DexterInstance;.onPermissionRequestDenied:(Ljava/util/Collection;)V` @kind virtual;
+  #L45be8c.  return @kind void;
+}
+procedure `com.karumi.dexter.DexterBuilder$Permission` `withActivity`(`android.app.Activity` v1 @kind object) @signature `Lcom/karumi/dexter/Dexter;.withActivity:(Landroid/app/Activity;)Lcom/karumi/dexter/DexterBuilder$Permission;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+
+  #L45bcdc.  v0:= new `com.karumi.dexter.Dexter`;
+  #L45bce0.  call `<init>`(v0, v1) @signature `Lcom/karumi/dexter/Dexter;.<init>:(Landroid/content/Context;)V` @kind direct;
+  #L45bce6.  return v0 @kind object;
+}
+procedure `com.karumi.dexter.DexterBuilder$Permission` `withContext`(`android.content.Context` v1 @kind object) @signature `Lcom/karumi/dexter/Dexter;.withContext:(Landroid/content/Context;)Lcom/karumi/dexter/DexterBuilder$Permission;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+
+  #L45bcf8.  v0:= new `com.karumi.dexter.Dexter`;
+  #L45bcfc.  call `<init>`(v0, v1) @signature `Lcom/karumi/dexter/Dexter;.<init>:(Landroid/content/Context;)V` @kind direct;
+  #L45bd02.  return v0 @kind object;
+}
+procedure `void` `check`(`com.karumi.dexter.Dexter` v4 @kind this) @signature `Lcom/karumi/dexter/Dexter;.check:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L45bda0.  call temp:= `getThread`(v4) @signature `Lcom/karumi/dexter/Dexter;.getThread:()Lcom/karumi/dexter/Thread;` @kind direct;
+  #L45bda6.  v0:= temp @kind object;
+  #L45bda8.  v1:= `@@com.karumi.dexter.Dexter.instance` @type ^`com.karumi.dexter.DexterInstance` @kind object;
+  #L45bdac.  v2:= v4.`com.karumi.dexter.Dexter.listener` @type ^`com.karumi.dexter.listener.multi.MultiplePermissionsListener` @kind object;
+  #L45bdb0.  v3:= v4.`com.karumi.dexter.Dexter.permissions` @type ^`java.util.Collection` @kind object;
+  #L45bdb4.  call `checkPermissions`(v1, v2, v3, v0) @signature `Lcom/karumi/dexter/DexterInstance;.checkPermissions:(Lcom/karumi/dexter/listener/multi/MultiplePermissionsListener;Ljava/util/Collection;Lcom/karumi/dexter/Thread;)V` @kind virtual;
+  #L45bdba.  goto L45bdcc;
+  #L45bdbc.  v0:= Exception @type ^`com.karumi.dexter.DexterException` @kind object;
+  #L45bdbe.  v1:= v4.`com.karumi.dexter.Dexter.errorListener` @type ^`com.karumi.dexter.listener.PermissionRequestErrorListener` @kind object;
+  #L45bdc2.  v0:= v0.`com.karumi.dexter.DexterException.error` @type ^`com.karumi.dexter.listener.DexterError` @kind object;
+  #L45bdc6.  call `onError`(v1, v0) @signature `Lcom/karumi/dexter/listener/PermissionRequestErrorListener;.onError:(Lcom/karumi/dexter/listener/DexterError;)V` @kind interface;
+  #L45bdcc.  return @kind void;
+  catch `com.karumi.dexter.DexterException` @[L45bda0..L45bdba] goto L45bdbc;
+}
+procedure `com.karumi.dexter.DexterBuilder` `onSameThread`(`com.karumi.dexter.Dexter` v1 @kind this) @signature `Lcom/karumi/dexter/Dexter;.onSameThread:()Lcom/karumi/dexter/DexterBuilder;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L45bc34.  v0:= 1I;
+  #L45bc36.  v1.`com.karumi.dexter.Dexter.shouldExecuteOnSameThread` @type ^`boolean` := v0 @kind boolean;
+  #L45bc3a.  return v1 @kind object;
+}
+procedure `com.karumi.dexter.DexterBuilder` `withErrorListener`(`com.karumi.dexter.Dexter` v0 @kind this, `com.karumi.dexter.listener.PermissionRequestErrorListener` v1 @kind object) @signature `Lcom/karumi/dexter/Dexter;.withErrorListener:(Lcom/karumi/dexter/listener/PermissionRequestErrorListener;)Lcom/karumi/dexter/DexterBuilder;` @AccessFlag PUBLIC {
+    temp;
+
+  #L45bc4c.  v0.`com.karumi.dexter.Dexter.errorListener` @type ^`com.karumi.dexter.listener.PermissionRequestErrorListener` := v1 @kind object;
+  #L45bc50.  return v0 @kind object;
+}
+procedure `com.karumi.dexter.DexterBuilder` `withListener`(`com.karumi.dexter.Dexter` v0 @kind this, `com.karumi.dexter.listener.multi.MultiplePermissionsListener` v1 @kind object) @signature `Lcom/karumi/dexter/Dexter;.withListener:(Lcom/karumi/dexter/listener/multi/MultiplePermissionsListener;)Lcom/karumi/dexter/DexterBuilder;` @AccessFlag PUBLIC {
+    temp;
+
+  #L45bc64.  v0.`com.karumi.dexter.Dexter.listener` @type ^`com.karumi.dexter.listener.multi.MultiplePermissionsListener` := v1 @kind object;
+  #L45bc68.  return v0 @kind object;
+}
+procedure `com.karumi.dexter.DexterBuilder` `withListener`(`com.karumi.dexter.Dexter` v1 @kind this, `com.karumi.dexter.listener.single.PermissionListener` v2 @kind object) @signature `Lcom/karumi/dexter/Dexter;.withListener:(Lcom/karumi/dexter/listener/single/PermissionListener;)Lcom/karumi/dexter/DexterBuilder;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L45bc7c.  v0:= new `com.karumi.dexter.MultiplePermissionsListenerToPermissionListenerAdapter`;
+  #L45bc80.  call `<init>`(v0, v2) @signature `Lcom/karumi/dexter/MultiplePermissionsListenerToPermissionListenerAdapter;.<init>:(Lcom/karumi/dexter/listener/single/PermissionListener;)V` @kind direct;
+  #L45bc86.  v1.`com.karumi.dexter.Dexter.listener` @type ^`com.karumi.dexter.listener.multi.MultiplePermissionsListener` := v0 @kind object;
+  #L45bc8a.  return v1 @kind object;
+}
+procedure `com.karumi.dexter.DexterBuilder$SinglePermissionListener` `withPermission`(`com.karumi.dexter.Dexter` v0 @kind this, `java.lang.String` v1 @kind object) @signature `Lcom/karumi/dexter/Dexter;.withPermission:(Ljava/lang/String;)Lcom/karumi/dexter/DexterBuilder$SinglePermissionListener;` @AccessFlag PUBLIC {
+    temp;
+
+  #L45bd14.  call temp:= `singletonList`(v1) @signature `Ljava/util/Collections;.singletonList:(Ljava/lang/Object;)Ljava/util/List;` @kind static;
+  #L45bd1a.  v1:= temp @kind object;
+  #L45bd1c.  v0.`com.karumi.dexter.Dexter.permissions` @type ^`java.util.Collection` := v1 @kind object;
+  #L45bd20.  return v0 @kind object;
+}
+procedure `com.karumi.dexter.DexterBuilder$MultiPermissionListener` `withPermissions`(`com.karumi.dexter.Dexter` v1 @kind this, `java.util.Collection` v2 @kind object) @signature `Lcom/karumi/dexter/Dexter;.withPermissions:(Ljava/util/Collection;)Lcom/karumi/dexter/DexterBuilder$MultiPermissionListener;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L45bcbc.  v0:= new `java.util.ArrayList`;
+  #L45bcc0.  call `<init>`(v0, v2) @signature `Ljava/util/ArrayList;.<init>:(Ljava/util/Collection;)V` @kind direct;
+  #L45bcc6.  v1.`com.karumi.dexter.Dexter.permissions` @type ^`java.util.Collection` := v0 @kind object;
+  #L45bcca.  return v1 @kind object;
+}
+procedure `com.karumi.dexter.DexterBuilder$MultiPermissionListener` `withPermissions`(`com.karumi.dexter.Dexter` v0 @kind this, `java.lang.String`[] v1 @kind object) @signature `Lcom/karumi/dexter/Dexter;.withPermissions:([Ljava/lang/String;)Lcom/karumi/dexter/DexterBuilder$MultiPermissionListener;` @AccessFlag PUBLIC {
+    temp;
+
+  #L45bc9c.  call temp:= `asList`(v1) @signature `Ljava/util/Arrays;.asList:([Ljava/lang/Object;)Ljava/util/List;` @kind static;
+  #L45bca2.  v1:= temp @kind object;
+  #L45bca4.  v0.`com.karumi.dexter.Dexter.permissions` @type ^`java.util.Collection` := v1 @kind object;
+  #L45bca8.  return v0 @kind object;
+}

@@ -1,0 +1,1 @@
+define(["underscore","Backbone"],function(n,t){var i=Backbone.Model.extend({url:function(){return this.instanceUrl},validation:{otpValue:[{required:!0,msg:"validation.transfer.paynowotpisnotnull"},{pattern:"digits",msg:"validation.transfer.validotp"},{length:4,msg:"validation.transfer.validotp"}]},initialize:function(n){this.url=n.url}});return i});

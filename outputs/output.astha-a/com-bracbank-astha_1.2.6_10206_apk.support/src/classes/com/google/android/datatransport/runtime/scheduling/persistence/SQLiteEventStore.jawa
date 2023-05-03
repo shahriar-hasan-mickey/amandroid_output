@@ -1,0 +1,2020 @@
+record `com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore` @kind class @AccessFlag PUBLIC extends `com.google.android.datatransport.runtime.scheduling.persistence.EventStore` @kind interface, `com.google.android.datatransport.runtime.synchronization.SynchronizationGuard` @kind interface, `com.google.android.datatransport.runtime.scheduling.persistence.ClientHealthMetricsStore` @kind interface {
+  `com.google.android.datatransport.runtime.scheduling.persistence.EventStoreConfig` `com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore.config` @AccessFlag PRIVATE_FINAL;
+  `com.google.android.datatransport.runtime.time.Clock` `com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore.monotonicClock` @AccessFlag PRIVATE_FINAL;
+  `o2.a` `com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore.packageName` @AccessFlag PRIVATE_FINAL;
+  `com.google.android.datatransport.runtime.scheduling.persistence.SchemaManager` `com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore.schemaManager` @AccessFlag PRIVATE_FINAL;
+  `com.google.android.datatransport.runtime.time.Clock` `com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore.wallClock` @AccessFlag PRIVATE_FINAL;
+}
+global `int` `@@com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore.LOCK_RETRY_BACK_OFF_MILLIS` @AccessFlag PRIVATE_STATIC_FINAL;
+global `java.lang.String` `@@com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore.LOG_TAG` @AccessFlag PRIVATE_STATIC_FINAL;
+global `int` `@@com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore.MAX_RETRIES` @AccessFlag STATIC_FINAL;
+global `com.google.android.datatransport.Encoding` `@@com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore.PROTOBUF_ENCODING` @AccessFlag PRIVATE_STATIC_FINAL;
+procedure `void` `<clinit>`() @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.<clinit>:()V` @AccessFlag STATIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L23bdc8.  v0:= "proto" @kind object;
+  #L23bdcc.  call temp:= `of`(v0) @signature `Lcom/google/android/datatransport/Encoding;.of:(Ljava/lang/String;)Lcom/google/android/datatransport/Encoding;` @kind static;
+  #L23bdd2.  v0:= temp @kind object;
+  #L23bdd4.  `@@com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore.PROTOBUF_ENCODING` @type ^`com.google.android.datatransport.Encoding` := v0 @kind object;
+  #L23bdd8.  return @kind void;
+}
+procedure `void` `<init>`(`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore` v0 @kind this, `com.google.android.datatransport.runtime.time.Clock` v1 @kind object, `com.google.android.datatransport.runtime.time.Clock` v2 @kind object, `com.google.android.datatransport.runtime.scheduling.persistence.EventStoreConfig` v3 @kind object, `com.google.android.datatransport.runtime.scheduling.persistence.SchemaManager` v4 @kind object, `o2.a` v5 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.<init>:(Lcom/google/android/datatransport/runtime/time/Clock;Lcom/google/android/datatransport/runtime/time/Clock;Lcom/google/android/datatransport/runtime/scheduling/persistence/EventStoreConfig;Lcom/google/android/datatransport/runtime/scheduling/persistence/SchemaManager;Lo2/a;)V` @AccessFlag CONSTRUCTOR {
+    temp;
+
+  #L23bdec.  call `<init>`(v0) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L23bdf2.  v0.`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore.schemaManager` @type ^`com.google.android.datatransport.runtime.scheduling.persistence.SchemaManager` := v4 @kind object;
+  #L23bdf6.  v0.`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore.wallClock` @type ^`com.google.android.datatransport.runtime.time.Clock` := v1 @kind object;
+  #L23bdfa.  v0.`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore.monotonicClock` @type ^`com.google.android.datatransport.runtime.time.Clock` := v2 @kind object;
+  #L23bdfe.  v0.`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore.config` @type ^`com.google.android.datatransport.runtime.scheduling.persistence.EventStoreConfig` := v3 @kind object;
+  #L23be02.  v0.`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore.packageName` @type ^`o2.a` := v5 @kind object;
+  #L23be06.  return @kind void;
+}
+procedure `java.util.List` `K`(`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore` v0 @kind object, `com.google.android.datatransport.runtime.TransportContext` v1 @kind object, `android.database.sqlite.SQLiteDatabase` v2 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.K:(Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;Lcom/google/android/datatransport/runtime/TransportContext;Landroid/database/sqlite/SQLiteDatabase;)Ljava/util/List;` @AccessFlag PUBLIC_STATIC_SYNTHETIC {
+    temp;
+
+  #L23b848.  call temp:= `lambda$loadBatch$8`(v0, v1, v2) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.lambda$loadBatch$8:(Lcom/google/android/datatransport/runtime/TransportContext;Landroid/database/sqlite/SQLiteDatabase;)Ljava/util/List;` @kind direct;
+  #L23b84e.  v0:= temp @kind object;
+  #L23b850.  return v0 @kind object;
+}
+procedure `java.lang.Object` `R`(`android.database.sqlite.SQLiteDatabase` v0 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.R:(Landroid/database/sqlite/SQLiteDatabase;)Ljava/lang/Object;` @AccessFlag PUBLIC_STATIC_SYNTHETIC {
+    temp;
+
+  #L23b094.  call temp:= `lambda$ensureBeginTransaction$24`(v0) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.lambda$ensureBeginTransaction$24:(Landroid/database/sqlite/SQLiteDatabase;)Ljava/lang/Object;` @kind static;
+  #L23b09a.  v0:= temp @kind object;
+  #L23b09c.  return v0 @kind object;
+}
+procedure `java.lang.Object` `T`(`long` v0 , `com.google.android.datatransport.runtime.TransportContext` v2 @kind object, `android.database.sqlite.SQLiteDatabase` v3 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.T:(JLcom/google/android/datatransport/runtime/TransportContext;Landroid/database/sqlite/SQLiteDatabase;)Ljava/lang/Object;` @AccessFlag PUBLIC_STATIC_SYNTHETIC {
+    temp;
+
+  #L23b0b0.  call temp:= `lambda$recordNextCallTime$7`(v0, v2, v3) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.lambda$recordNextCallTime$7:(JLcom/google/android/datatransport/runtime/TransportContext;Landroid/database/sqlite/SQLiteDatabase;)Ljava/lang/Object;` @kind static;
+  #L23b0b6.  v0:= temp @kind object;
+  #L23b0b8.  return v0 @kind object;
+}
+procedure `byte`[] `U`(`android.database.Cursor` v0 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.U:(Landroid/database/Cursor;)[B` @AccessFlag PUBLIC_STATIC_SYNTHETIC {
+    temp;
+
+  #L23a560.  call temp:= `lambda$readPayload$15`(v0) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.lambda$readPayload$15:(Landroid/database/Cursor;)[B` @kind static;
+  #L23a566.  v0:= temp @kind object;
+  #L23a568.  return v0 @kind object;
+}
+procedure `java.lang.Object` `V`(`android.database.sqlite.SQLiteDatabase` v0 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.V:(Landroid/database/sqlite/SQLiteDatabase;)Ljava/lang/Object;` @AccessFlag PUBLIC_STATIC_SYNTHETIC {
+    temp;
+
+  #L23b0cc.  call temp:= `lambda$clearDb$13`(v0) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.lambda$clearDb$13:(Landroid/database/sqlite/SQLiteDatabase;)Ljava/lang/Object;` @kind static;
+  #L23b0d2.  v0:= temp @kind object;
+  #L23b0d4.  return v0 @kind object;
+}
+procedure `java.util.List` `W`(`android.database.Cursor` v0 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.W:(Landroid/database/Cursor;)Ljava/util/List;` @AccessFlag PUBLIC_STATIC_SYNTHETIC {
+    temp;
+
+  #L23b864.  call temp:= `lambda$loadActiveContexts$9`(v0) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.lambda$loadActiveContexts$9:(Landroid/database/Cursor;)Ljava/util/List;` @kind static;
+  #L23b86a.  v0:= temp @kind object;
+  #L23b86c.  return v0 @kind object;
+}
+procedure `java.lang.Object` `X`(`java.lang.String` v0 @kind object, `com.google.android.datatransport.runtime.firebase.transport.LogEventDropped$Reason` v1 @kind object, `long` v2 , `android.database.sqlite.SQLiteDatabase` v4 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.X:(Ljava/lang/String;Lcom/google/android/datatransport/runtime/firebase/transport/LogEventDropped$Reason;JLandroid/database/sqlite/SQLiteDatabase;)Ljava/lang/Object;` @AccessFlag PUBLIC_STATIC_SYNTHETIC {
+    temp;
+
+  #L23b0e8.  call temp:= `lambda$recordLogEventDropped$18`(v0, v1, v2, v4) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.lambda$recordLogEventDropped$18:(Ljava/lang/String;Lcom/google/android/datatransport/runtime/firebase/transport/LogEventDropped$Reason;JLandroid/database/sqlite/SQLiteDatabase;)Ljava/lang/Object;` @kind static;
+  #L23b0ee.  v0:= temp @kind object;
+  #L23b0f0.  return v0 @kind object;
+}
+procedure `java.lang.Object` `Y`(`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore` v0 @kind object, `android.database.Cursor` v1 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.Y:(Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;Landroid/database/Cursor;)Ljava/lang/Object;` @AccessFlag PUBLIC_STATIC_SYNTHETIC {
+    temp;
+
+  #L23b104.  call temp:= `lambda$cleanUp$11`(v0, v1) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.lambda$cleanUp$11:(Landroid/database/Cursor;)Ljava/lang/Object;` @kind direct;
+  #L23b10a.  v0:= temp @kind object;
+  #L23b10c.  return v0 @kind object;
+}
+procedure `java.lang.Boolean` `Z`(`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore` v0 @kind object, `com.google.android.datatransport.runtime.TransportContext` v1 @kind object, `android.database.sqlite.SQLiteDatabase` v2 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.Z:(Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;Lcom/google/android/datatransport/runtime/TransportContext;Landroid/database/sqlite/SQLiteDatabase;)Ljava/lang/Boolean;` @AccessFlag PUBLIC_STATIC_SYNTHETIC {
+    temp;
+
+  #L23aae8.  call temp:= `lambda$hasPendingEventsFor$6`(v0, v1, v2) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.lambda$hasPendingEventsFor$6:(Lcom/google/android/datatransport/runtime/TransportContext;Landroid/database/sqlite/SQLiteDatabase;)Ljava/lang/Boolean;` @kind direct;
+  #L23aaee.  v0:= temp @kind object;
+  #L23aaf0.  return v0 @kind object;
+}
+procedure `com.google.android.datatransport.runtime.firebase.transport.TimeWindow` `a0`(`long` v0 , `android.database.sqlite.SQLiteDatabase` v2 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.a0:(JLandroid/database/sqlite/SQLiteDatabase;)Lcom/google/android/datatransport/runtime/firebase/transport/TimeWindow;` @AccessFlag PUBLIC_STATIC_SYNTHETIC {
+    temp;
+
+  #L23a944.  call temp:= `lambda$getTimeWindow$22`(v0, v2) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.lambda$getTimeWindow$22:(JLandroid/database/sqlite/SQLiteDatabase;)Lcom/google/android/datatransport/runtime/firebase/transport/TimeWindow;` @kind static;
+  #L23a94a.  v0:= temp @kind object;
+  #L23a94c.  return v0 @kind object;
+}
+procedure `java.lang.Long` `b0`(`android.database.Cursor` v0 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.b0:(Landroid/database/Cursor;)Ljava/lang/Long;` @AccessFlag PUBLIC_STATIC_SYNTHETIC {
+    temp;
+
+  #L23ac6c.  call temp:= `lambda$getNextCallTime$5`(v0) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.lambda$getNextCallTime$5:(Landroid/database/Cursor;)Ljava/lang/Long;` @kind static;
+  #L23ac72.  v0:= temp @kind object;
+  #L23ac74.  return v0 @kind object;
+}
+procedure `com.google.android.datatransport.runtime.firebase.transport.ClientMetrics` `c0`(`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore` v0 @kind object, `java.lang.String` v1 @kind object, `java.util.Map` v2 @kind object, `com.google.android.datatransport.runtime.firebase.transport.ClientMetrics$Builder` v3 @kind object, `android.database.sqlite.SQLiteDatabase` v4 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.c0:(Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;Ljava/lang/String;Ljava/util/Map;Lcom/google/android/datatransport/runtime/firebase/transport/ClientMetrics$Builder;Landroid/database/sqlite/SQLiteDatabase;)Lcom/google/android/datatransport/runtime/firebase/transport/ClientMetrics;` @AccessFlag PUBLIC_STATIC_SYNTHETIC {
+    temp;
+
+  #L23a69c.  call temp:= `lambda$loadClientMetrics$20`(v0, v1, v2, v3, v4) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.lambda$loadClientMetrics$20:(Ljava/lang/String;Ljava/util/Map;Lcom/google/android/datatransport/runtime/firebase/transport/ClientMetrics$Builder;Landroid/database/sqlite/SQLiteDatabase;)Lcom/google/android/datatransport/runtime/firebase/transport/ClientMetrics;` @kind direct;
+  #L23a6a2.  v0:= temp @kind object;
+  #L23a6a4.  return v0 @kind object;
+}
+procedure `com.google.android.datatransport.runtime.firebase.transport.LogEventDropped$Reason` `convertToReason`(`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore` v3 @kind this, `int` v4 ) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.convertToReason:(I)Lcom/google/android/datatransport/runtime/firebase/transport/LogEventDropped$Reason;` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L23a880.  v0:= `@@com.google.android.datatransport.runtime.firebase.transport.LogEventDropped$Reason.REASON_UNKNOWN` @type ^`com.google.android.datatransport.runtime.firebase.transport.LogEventDropped$Reason` @kind object;
+  #L23a884.  call temp:= `getNumber`(v0) @signature `Lcom/google/android/datatransport/runtime/firebase/transport/LogEventDropped$Reason;.getNumber:()I` @kind virtual;
+  #L23a88a.  v1:= temp;
+  #L23a88c.  if v4 != v1 then goto L23a892;
+  #L23a890.  return v0 @kind object;
+  #L23a892.  v1:= `@@com.google.android.datatransport.runtime.firebase.transport.LogEventDropped$Reason.MESSAGE_TOO_OLD` @type ^`com.google.android.datatransport.runtime.firebase.transport.LogEventDropped$Reason` @kind object;
+  #L23a896.  call temp:= `getNumber`(v1) @signature `Lcom/google/android/datatransport/runtime/firebase/transport/LogEventDropped$Reason;.getNumber:()I` @kind virtual;
+  #L23a89c.  v2:= temp;
+  #L23a89e.  if v4 != v2 then goto L23a8a4;
+  #L23a8a2.  return v1 @kind object;
+  #L23a8a4.  v1:= `@@com.google.android.datatransport.runtime.firebase.transport.LogEventDropped$Reason.CACHE_FULL` @type ^`com.google.android.datatransport.runtime.firebase.transport.LogEventDropped$Reason` @kind object;
+  #L23a8a8.  call temp:= `getNumber`(v1) @signature `Lcom/google/android/datatransport/runtime/firebase/transport/LogEventDropped$Reason;.getNumber:()I` @kind virtual;
+  #L23a8ae.  v2:= temp;
+  #L23a8b0.  if v4 != v2 then goto L23a8b6;
+  #L23a8b4.  return v1 @kind object;
+  #L23a8b6.  v1:= `@@com.google.android.datatransport.runtime.firebase.transport.LogEventDropped$Reason.PAYLOAD_TOO_BIG` @type ^`com.google.android.datatransport.runtime.firebase.transport.LogEventDropped$Reason` @kind object;
+  #L23a8ba.  call temp:= `getNumber`(v1) @signature `Lcom/google/android/datatransport/runtime/firebase/transport/LogEventDropped$Reason;.getNumber:()I` @kind virtual;
+  #L23a8c0.  v2:= temp;
+  #L23a8c2.  if v4 != v2 then goto L23a8c8;
+  #L23a8c6.  return v1 @kind object;
+  #L23a8c8.  v1:= `@@com.google.android.datatransport.runtime.firebase.transport.LogEventDropped$Reason.MAX_RETRIES_REACHED` @type ^`com.google.android.datatransport.runtime.firebase.transport.LogEventDropped$Reason` @kind object;
+  #L23a8cc.  call temp:= `getNumber`(v1) @signature `Lcom/google/android/datatransport/runtime/firebase/transport/LogEventDropped$Reason;.getNumber:()I` @kind virtual;
+  #L23a8d2.  v2:= temp;
+  #L23a8d4.  if v4 != v2 then goto L23a8da;
+  #L23a8d8.  return v1 @kind object;
+  #L23a8da.  v1:= `@@com.google.android.datatransport.runtime.firebase.transport.LogEventDropped$Reason.INVALID_PAYLOD` @type ^`com.google.android.datatransport.runtime.firebase.transport.LogEventDropped$Reason` @kind object;
+  #L23a8de.  call temp:= `getNumber`(v1) @signature `Lcom/google/android/datatransport/runtime/firebase/transport/LogEventDropped$Reason;.getNumber:()I` @kind virtual;
+  #L23a8e4.  v2:= temp;
+  #L23a8e6.  if v4 != v2 then goto L23a8ec;
+  #L23a8ea.  return v1 @kind object;
+  #L23a8ec.  v1:= `@@com.google.android.datatransport.runtime.firebase.transport.LogEventDropped$Reason.SERVER_ERROR` @type ^`com.google.android.datatransport.runtime.firebase.transport.LogEventDropped$Reason` @kind object;
+  #L23a8f0.  call temp:= `getNumber`(v1) @signature `Lcom/google/android/datatransport/runtime/firebase/transport/LogEventDropped$Reason;.getNumber:()I` @kind virtual;
+  #L23a8f6.  v2:= temp;
+  #L23a8f8.  if v4 != v2 then goto L23a8fe;
+  #L23a8fc.  return v1 @kind object;
+  #L23a8fe.  call temp:= `valueOf`(v4) @signature `Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer;` @kind static;
+  #L23a904.  v4:= temp @kind object;
+  #L23a906.  v1:= "SQLiteEventStore" @kind object;
+  #L23a90a.  v2:= "%n is not valid. No matched LogEventDropped-Reason found. Treated it as REASON_UNKNOWN" @kind object;
+  #L23a90e.  call `d`(v1, v2, v4) @signature `Lcom/google/android/datatransport/runtime/logging/Logging;.d:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Object;)V` @kind static;
+  #L23a914.  return v0 @kind object;
+}
+procedure `java.lang.Object` `d0`(`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore` v0 @kind object, `java.util.List` v1 @kind object, `com.google.android.datatransport.runtime.TransportContext` v2 @kind object, `android.database.Cursor` v3 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.d0:(Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;Ljava/util/List;Lcom/google/android/datatransport/runtime/TransportContext;Landroid/database/Cursor;)Ljava/lang/Object;` @AccessFlag PUBLIC_STATIC_SYNTHETIC {
+    temp;
+
+  #L23b120.  call temp:= `lambda$loadEvents$14`(v0, v1, v2, v3) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.lambda$loadEvents$14:(Ljava/util/List;Lcom/google/android/datatransport/runtime/TransportContext;Landroid/database/Cursor;)Ljava/lang/Object;` @kind direct;
+  #L23b126.  v0:= temp @kind object;
+  #L23b128.  return v0 @kind object;
+}
+procedure `java.lang.Object` `e0`(`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore` v0 @kind object, `android.database.sqlite.SQLiteDatabase` v1 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.e0:(Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;Landroid/database/sqlite/SQLiteDatabase;)Ljava/lang/Object;` @AccessFlag PUBLIC_STATIC_SYNTHETIC {
+    temp;
+
+  #L23b13c.  call temp:= `lambda$resetClientMetrics$23`(v0, v1) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.lambda$resetClientMetrics$23:(Landroid/database/sqlite/SQLiteDatabase;)Ljava/lang/Object;` @kind direct;
+  #L23b142.  v0:= temp @kind object;
+  #L23b144.  return v0 @kind object;
+}
+procedure `void` `ensureBeginTransaction`(`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore` v1 @kind this, `android.database.sqlite.SQLiteDatabase` v2 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.ensureBeginTransaction:(Landroid/database/sqlite/SQLiteDatabase;)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+
+  #L23be50.  v0:= new `com.google.android.datatransport.runtime.scheduling.persistence.s`;
+  #L23be54.  call `<init>`(v0, v2) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/s;.<init>:(Landroid/database/sqlite/SQLiteDatabase;)V` @kind direct;
+  #L23be5a.  v2:= `@@com.google.android.datatransport.runtime.scheduling.persistence.r.a` @type ^`com.google.android.datatransport.runtime.scheduling.persistence.r` @kind object;
+  #L23be5e.  call temp:= `retryIfDbLocked`(v1, v0, v2) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.retryIfDbLocked:(Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore$Producer;Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore$Function;)Ljava/lang/Object;` @kind direct;
+  #L23be64.  return @kind void;
+}
+procedure `long` `ensureTransportContext`(`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore` v4 @kind this, `android.database.sqlite.SQLiteDatabase` v5 @kind object, `com.google.android.datatransport.runtime.TransportContext` v6 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.ensureTransportContext:(Landroid/database/sqlite/SQLiteDatabase;Lcom/google/android/datatransport/runtime/TransportContext;)J` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L23bc20.  call temp:= `getTransportContextId`(v4, v5, v6) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.getTransportContextId:(Landroid/database/sqlite/SQLiteDatabase;Lcom/google/android/datatransport/runtime/TransportContext;)Ljava/lang/Long;` @kind direct;
+  #L23bc26.  v0:= temp @kind object;
+  #L23bc28.  if v0 == 0 then goto L23bc36;
+  #L23bc2c.  call temp:= `longValue`(v0) @signature `Ljava/lang/Long;.longValue:()J` @kind virtual;
+  #L23bc32.  v5:= temp @kind wide;
+  #L23bc34.  return v5 @kind wide;
+  #L23bc36.  v0:= new `android.content.ContentValues`;
+  #L23bc3a.  call `<init>`(v0) @signature `Landroid/content/ContentValues;.<init>:()V` @kind direct;
+  #L23bc40.  call temp:= `getBackendName`(v6) @signature `Lcom/google/android/datatransport/runtime/TransportContext;.getBackendName:()Ljava/lang/String;` @kind virtual;
+  #L23bc46.  v1:= temp @kind object;
+  #L23bc48.  v2:= "backend_name" @kind object;
+  #L23bc4c.  call `put`(v0, v2, v1) @signature `Landroid/content/ContentValues;.put:(Ljava/lang/String;Ljava/lang/String;)V` @kind virtual;
+  #L23bc52.  call temp:= `getPriority`(v6) @signature `Lcom/google/android/datatransport/runtime/TransportContext;.getPriority:()Lcom/google/android/datatransport/Priority;` @kind virtual;
+  #L23bc58.  v1:= temp @kind object;
+  #L23bc5a.  call temp:= `toInt`(v1) @signature `Lcom/google/android/datatransport/runtime/util/PriorityMapping;.toInt:(Lcom/google/android/datatransport/Priority;)I` @kind static;
+  #L23bc60.  v1:= temp;
+  #L23bc62.  call temp:= `valueOf`(v1) @signature `Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer;` @kind static;
+  #L23bc68.  v1:= temp @kind object;
+  #L23bc6a.  v2:= "priority" @kind object;
+  #L23bc6e.  call `put`(v0, v2, v1) @signature `Landroid/content/ContentValues;.put:(Ljava/lang/String;Ljava/lang/Integer;)V` @kind virtual;
+  #L23bc74.  v1:= 0I;
+  #L23bc76.  call temp:= `valueOf`(v1) @signature `Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer;` @kind static;
+  #L23bc7c.  v2:= temp @kind object;
+  #L23bc7e.  v3:= "next_request_ms" @kind object;
+  #L23bc82.  call `put`(v0, v3, v2) @signature `Landroid/content/ContentValues;.put:(Ljava/lang/String;Ljava/lang/Integer;)V` @kind virtual;
+  #L23bc88.  call temp:= `getExtras`(v6) @signature `Lcom/google/android/datatransport/runtime/TransportContext;.getExtras:()[B` @kind virtual;
+  #L23bc8e.  v2:= temp @kind object;
+  #L23bc90.  if v2 == 0 then goto L23bcae;
+  #L23bc94.  call temp:= `getExtras`(v6) @signature `Lcom/google/android/datatransport/runtime/TransportContext;.getExtras:()[B` @kind virtual;
+  #L23bc9a.  v6:= temp @kind object;
+  #L23bc9c.  call temp:= `encodeToString`(v6, v1) @signature `Landroid/util/Base64;.encodeToString:([BI)Ljava/lang/String;` @kind static;
+  #L23bca2.  v6:= temp @kind object;
+  #L23bca4.  v1:= "extras" @kind object;
+  #L23bca8.  call `put`(v0, v1, v6) @signature `Landroid/content/ContentValues;.put:(Ljava/lang/String;Ljava/lang/String;)V` @kind virtual;
+  #L23bcae.  v6:= 0I;
+  #L23bcb0.  v1:= "transport_contexts" @kind object;
+  #L23bcb4.  call temp:= `insert`(v5, v1, v6, v0) @signature `Landroid/database/sqlite/SQLiteDatabase;.insert:(Ljava/lang/String;Ljava/lang/String;Landroid/content/ContentValues;)J` @kind virtual;
+  #L23bcba.  v5:= temp @kind wide;
+  #L23bcbc.  return v5 @kind wide;
+}
+procedure `java.lang.Long` `f0`(`android.database.Cursor` v0 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.f0:(Landroid/database/Cursor;)Ljava/lang/Long;` @AccessFlag PUBLIC_STATIC_SYNTHETIC {
+    temp;
+
+  #L23ac88.  call temp:= `lambda$getTransportContextId$2`(v0) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.lambda$getTransportContextId$2:(Landroid/database/Cursor;)Ljava/lang/Long;` @kind static;
+  #L23ac8e.  v0:= temp @kind object;
+  #L23ac90.  return v0 @kind object;
+}
+procedure `android.database.sqlite.SQLiteDatabase` `g`(`java.lang.Throwable` v0 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.g:(Ljava/lang/Throwable;)Landroid/database/sqlite/SQLiteDatabase;` @AccessFlag PUBLIC_STATIC_SYNTHETIC {
+    temp;
+
+  #L23a47c.  call temp:= `lambda$getDb$0`(v0) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.lambda$getDb$0:(Ljava/lang/Throwable;)Landroid/database/sqlite/SQLiteDatabase;` @kind static;
+  #L23a482.  v0:= temp @kind object;
+  #L23a484.  return v0 @kind object;
+}
+procedure `java.lang.Object` `g0`(`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore` v0 @kind object, `java.lang.String` v1 @kind object, `java.lang.String` v2 @kind object, `android.database.sqlite.SQLiteDatabase` v3 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.g0:(Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;Ljava/lang/String;Ljava/lang/String;Landroid/database/sqlite/SQLiteDatabase;)Ljava/lang/Object;` @AccessFlag PUBLIC_STATIC_SYNTHETIC {
+    temp;
+
+  #L23b158.  call temp:= `lambda$recordFailure$4`(v0, v1, v2, v3) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.lambda$recordFailure$4:(Ljava/lang/String;Ljava/lang/String;Landroid/database/sqlite/SQLiteDatabase;)Ljava/lang/Object;` @kind direct;
+  #L23b15e.  v0:= temp @kind object;
+  #L23b160.  return v0 @kind object;
+}
+procedure `com.google.android.datatransport.runtime.firebase.transport.GlobalMetrics` `getGlobalMetrics`(`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore` v4 @kind this) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.getGlobalMetrics:()Lcom/google/android/datatransport/runtime/firebase/transport/GlobalMetrics;` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L23a820.  call temp:= `newBuilder`() @signature `Lcom/google/android/datatransport/runtime/firebase/transport/GlobalMetrics;.newBuilder:()Lcom/google/android/datatransport/runtime/firebase/transport/GlobalMetrics$Builder;` @kind static;
+  #L23a826.  v0:= temp @kind object;
+  #L23a828.  call temp:= `newBuilder`() @signature `Lcom/google/android/datatransport/runtime/firebase/transport/StorageMetrics;.newBuilder:()Lcom/google/android/datatransport/runtime/firebase/transport/StorageMetrics$Builder;` @kind static;
+  #L23a82e.  v1:= temp @kind object;
+  #L23a830.  call temp:= `getByteSize`(v4) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.getByteSize:()J` @kind virtual;
+  #L23a836.  v2:= temp @kind wide;
+  #L23a838.  call temp:= `setCurrentCacheSizeBytes`(v1, v2) @signature `Lcom/google/android/datatransport/runtime/firebase/transport/StorageMetrics$Builder;.setCurrentCacheSizeBytes:(J)Lcom/google/android/datatransport/runtime/firebase/transport/StorageMetrics$Builder;` @kind virtual;
+  #L23a83e.  v1:= temp @kind object;
+  #L23a840.  v2:= `@@com.google.android.datatransport.runtime.scheduling.persistence.EventStoreConfig.DEFAULT` @type ^`com.google.android.datatransport.runtime.scheduling.persistence.EventStoreConfig` @kind object;
+  #L23a844.  call temp:= `getMaxStorageSizeInBytes`(v2) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/EventStoreConfig;.getMaxStorageSizeInBytes:()J` @kind virtual;
+  #L23a84a.  v2:= temp @kind wide;
+  #L23a84c.  call temp:= `setMaxCacheSizeBytes`(v1, v2) @signature `Lcom/google/android/datatransport/runtime/firebase/transport/StorageMetrics$Builder;.setMaxCacheSizeBytes:(J)Lcom/google/android/datatransport/runtime/firebase/transport/StorageMetrics$Builder;` @kind virtual;
+  #L23a852.  v1:= temp @kind object;
+  #L23a854.  call temp:= `build`(v1) @signature `Lcom/google/android/datatransport/runtime/firebase/transport/StorageMetrics$Builder;.build:()Lcom/google/android/datatransport/runtime/firebase/transport/StorageMetrics;` @kind virtual;
+  #L23a85a.  v1:= temp @kind object;
+  #L23a85c.  call temp:= `setStorageMetrics`(v0, v1) @signature `Lcom/google/android/datatransport/runtime/firebase/transport/GlobalMetrics$Builder;.setStorageMetrics:(Lcom/google/android/datatransport/runtime/firebase/transport/StorageMetrics;)Lcom/google/android/datatransport/runtime/firebase/transport/GlobalMetrics$Builder;` @kind virtual;
+  #L23a862.  v0:= temp @kind object;
+  #L23a864.  call temp:= `build`(v0) @signature `Lcom/google/android/datatransport/runtime/firebase/transport/GlobalMetrics$Builder;.build:()Lcom/google/android/datatransport/runtime/firebase/transport/GlobalMetrics;` @kind virtual;
+  #L23a86a.  v0:= temp @kind object;
+  #L23a86c.  return v0 @kind object;
+}
+procedure `long` `getPageCount`(`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore` v2 @kind this) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.getPageCount:()J` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+
+  #L23bd68.  call temp:= `getDb`(v2) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.getDb:()Landroid/database/sqlite/SQLiteDatabase;` @kind virtual;
+  #L23bd6e.  v0:= temp @kind object;
+  #L23bd70.  v1:= "PRAGMA page_count" @kind object;
+  #L23bd74.  call temp:= `compileStatement`(v0, v1) @signature `Landroid/database/sqlite/SQLiteDatabase;.compileStatement:(Ljava/lang/String;)Landroid/database/sqlite/SQLiteStatement;` @kind virtual;
+  #L23bd7a.  v0:= temp @kind object;
+  #L23bd7c.  call temp:= `simpleQueryForLong`(v0) @signature `Landroid/database/sqlite/SQLiteStatement;.simpleQueryForLong:()J` @kind virtual;
+  #L23bd82.  v0:= temp @kind wide;
+  #L23bd84.  return v0 @kind wide;
+}
+procedure `long` `getPageSize`(`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore` v2 @kind this) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.getPageSize:()J` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+
+  #L23bd98.  call temp:= `getDb`(v2) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.getDb:()Landroid/database/sqlite/SQLiteDatabase;` @kind virtual;
+  #L23bd9e.  v0:= temp @kind object;
+  #L23bda0.  v1:= "PRAGMA page_size" @kind object;
+  #L23bda4.  call temp:= `compileStatement`(v0, v1) @signature `Landroid/database/sqlite/SQLiteDatabase;.compileStatement:(Ljava/lang/String;)Landroid/database/sqlite/SQLiteStatement;` @kind virtual;
+  #L23bdaa.  v0:= temp @kind object;
+  #L23bdac.  call temp:= `simpleQueryForLong`(v0) @signature `Landroid/database/sqlite/SQLiteStatement;.simpleQueryForLong:()J` @kind virtual;
+  #L23bdb2.  v0:= temp @kind wide;
+  #L23bdb4.  return v0 @kind wide;
+}
+procedure `com.google.android.datatransport.runtime.firebase.transport.TimeWindow` `getTimeWindow`(`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore` v3 @kind this) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.getTimeWindow:()Lcom/google/android/datatransport/runtime/firebase/transport/TimeWindow;` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L23a960.  v0:= v3.`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore.wallClock` @type ^`com.google.android.datatransport.runtime.time.Clock` @kind object;
+  #L23a964.  call temp:= `getTime`(v0) @signature `Lcom/google/android/datatransport/runtime/time/Clock;.getTime:()J` @kind interface;
+  #L23a96a.  v0:= temp @kind wide;
+  #L23a96c.  v2:= new `com.google.android.datatransport.runtime.scheduling.persistence.l`;
+  #L23a970.  call `<init>`(v2, v0) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/l;.<init>:(J)V` @kind direct;
+  #L23a976.  call temp:= `inTransaction`(v3, v2) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.inTransaction:(Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore$Function;)Ljava/lang/Object;` @kind virtual;
+  #L23a97c.  v0:= temp @kind object;
+  #L23a97e.  v0:= (`com.google.android.datatransport.runtime.firebase.transport.TimeWindow`) v0 @kind object;
+  #L23a982.  return v0 @kind object;
+}
+procedure `java.lang.Long` `getTransportContextId`(`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore` v13 @kind this, `android.database.sqlite.SQLiteDatabase` v14 @kind object, `com.google.android.datatransport.runtime.TransportContext` v15 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.getTransportContextId:(Landroid/database/sqlite/SQLiteDatabase;Lcom/google/android/datatransport/runtime/TransportContext;)Ljava/lang/Long;` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+    v9;
+    v10;
+    v11;
+    v12;
+
+  #L23acc0.  v0:= new `java.lang.StringBuilder`;
+  #L23acc4.  v1:= "backend_name = ? and priority = ?" @kind object;
+  #L23acc8.  call `<init>`(v0, v1) @signature `Ljava/lang/StringBuilder;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L23acce.  v1:= new `java.util.ArrayList`;
+  #L23acd2.  v2:= 2I;
+  #L23acd4.  v2:= new `java.lang.String`[v2];
+  #L23acd8.  call temp:= `getBackendName`(v15) @signature `Lcom/google/android/datatransport/runtime/TransportContext;.getBackendName:()Ljava/lang/String;` @kind virtual;
+  #L23acde.  v3:= temp @kind object;
+  #L23ace0.  v4:= 0I;
+  #L23ace2.  v2[v4]:= v3 @kind object;
+  #L23ace6.  call temp:= `getPriority`(v15) @signature `Lcom/google/android/datatransport/runtime/TransportContext;.getPriority:()Lcom/google/android/datatransport/Priority;` @kind virtual;
+  #L23acec.  v3:= temp @kind object;
+  #L23acee.  call temp:= `toInt`(v3) @signature `Lcom/google/android/datatransport/runtime/util/PriorityMapping;.toInt:(Lcom/google/android/datatransport/Priority;)I` @kind static;
+  #L23acf4.  v3:= temp;
+  #L23acf6.  call temp:= `valueOf`(v3) @signature `Ljava/lang/String;.valueOf:(I)Ljava/lang/String;` @kind static;
+  #L23acfc.  v3:= temp @kind object;
+  #L23acfe.  v5:= 1I;
+  #L23ad00.  v2[v5]:= v3 @kind object;
+  #L23ad04.  call temp:= `asList`(v2) @signature `Ljava/util/Arrays;.asList:([Ljava/lang/Object;)Ljava/util/List;` @kind static;
+  #L23ad0a.  v2:= temp @kind object;
+  #L23ad0c.  call `<init>`(v1, v2) @signature `Ljava/util/ArrayList;.<init>:(Ljava/util/Collection;)V` @kind direct;
+  #L23ad12.  call temp:= `getExtras`(v15) @signature `Lcom/google/android/datatransport/runtime/TransportContext;.getExtras:()[B` @kind virtual;
+  #L23ad18.  v2:= temp @kind object;
+  #L23ad1a.  if v2 == 0 then goto L23ad40;
+  #L23ad1e.  v2:= " and extras = ?" @kind object;
+  #L23ad22.  call temp:= `append`(v0, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L23ad28.  call temp:= `getExtras`(v15) @signature `Lcom/google/android/datatransport/runtime/TransportContext;.getExtras:()[B` @kind virtual;
+  #L23ad2e.  v15:= temp @kind object;
+  #L23ad30.  call temp:= `encodeToString`(v15, v4) @signature `Landroid/util/Base64;.encodeToString:([BI)Ljava/lang/String;` @kind static;
+  #L23ad36.  v15:= temp @kind object;
+  #L23ad38.  call temp:= `add`(v1, v15) @signature `Ljava/util/ArrayList;.add:(Ljava/lang/Object;)Z` @kind virtual;
+  #L23ad3e.  goto L23ad4a;
+  #L23ad40.  v15:= " and extras is null" @kind object;
+  #L23ad44.  call temp:= `append`(v0, v15) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L23ad4a.  v15:= "_id" @kind object;
+  #L23ad4e.  temp:= new `java.lang.String`[v15];
+  #L23ad54.  v7:= temp @kind object;
+  #L23ad56.  call temp:= `toString`(v0) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L23ad5c.  v8:= temp @kind object;
+  #L23ad5e.  v15:= new `java.lang.String`[v4];
+  #L23ad62.  call temp:= `toArray`(v1, v15) @signature `Ljava/util/ArrayList;.toArray:([Ljava/lang/Object;)[Ljava/lang/Object;` @kind virtual;
+  #L23ad68.  v15:= temp @kind object;
+  #L23ad6a.  v9:= v15 @kind object;
+  #L23ad6c.  v9:= (`java.lang.String`[]) v9 @kind object;
+  #L23ad70.  v10:= 0I;
+  #L23ad72.  v11:= 0I;
+  #L23ad74.  v12:= 0I;
+  #L23ad76.  v6:= "transport_contexts" @kind object;
+  #L23ad7a.  v5:= v14 @kind object;
+  #L23ad7c.  call temp:= `query`(v5, v6, v7, v8, v9, v10, v11, v12) @signature `Landroid/database/sqlite/SQLiteDatabase;.query:(Ljava/lang/String;[Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Landroid/database/Cursor;` @kind virtual;
+  #L23ad82.  v14:= temp @kind object;
+  #L23ad84.  v15:= `@@com.google.android.datatransport.runtime.scheduling.persistence.k.a` @type ^`com.google.android.datatransport.runtime.scheduling.persistence.k` @kind object;
+  #L23ad88.  call temp:= `tryWithCursor`(v14, v15) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.tryWithCursor:(Landroid/database/Cursor;Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore$Function;)Ljava/lang/Object;` @kind static;
+  #L23ad8e.  v14:= temp @kind object;
+  #L23ad90.  v14:= (`java.lang.Long`) v14 @kind object;
+  #L23ad94.  return v14 @kind object;
+}
+procedure `java.lang.Object` `h`(`java.lang.Throwable` v0 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.h:(Ljava/lang/Throwable;)Ljava/lang/Object;` @AccessFlag PUBLIC_STATIC_SYNTHETIC {
+    temp;
+
+  #L23b078.  call temp:= `lambda$ensureBeginTransaction$25`(v0) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.lambda$ensureBeginTransaction$25:(Ljava/lang/Throwable;)Ljava/lang/Object;` @kind static;
+  #L23b07e.  v0:= temp @kind object;
+  #L23b080.  return v0 @kind object;
+}
+procedure `java.lang.Long` `h0`(`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore` v0 @kind object, `com.google.android.datatransport.runtime.EventInternal` v1 @kind object, `com.google.android.datatransport.runtime.TransportContext` v2 @kind object, `android.database.sqlite.SQLiteDatabase` v3 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.h0:(Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;Lcom/google/android/datatransport/runtime/EventInternal;Lcom/google/android/datatransport/runtime/TransportContext;Landroid/database/sqlite/SQLiteDatabase;)Ljava/lang/Long;` @AccessFlag PUBLIC_STATIC_SYNTHETIC {
+    temp;
+
+  #L23aca4.  call temp:= `lambda$persist$1`(v0, v1, v2, v3) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.lambda$persist$1:(Lcom/google/android/datatransport/runtime/EventInternal;Lcom/google/android/datatransport/runtime/TransportContext;Landroid/database/sqlite/SQLiteDatabase;)Ljava/lang/Long;` @kind direct;
+  #L23acaa.  v0:= temp @kind object;
+  #L23acac.  return v0 @kind object;
+}
+procedure `java.lang.Object` `i0`(`java.util.Map` v0 @kind object, `android.database.Cursor` v1 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.i0:(Ljava/util/Map;Landroid/database/Cursor;)Ljava/lang/Object;` @AccessFlag PUBLIC_STATIC_SYNTHETIC {
+    temp;
+
+  #L23b174.  call temp:= `lambda$loadMetadata$16`(v0, v1) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.lambda$loadMetadata$16:(Ljava/util/Map;Landroid/database/Cursor;)Ljava/lang/Object;` @kind static;
+  #L23b17a.  v0:= temp @kind object;
+  #L23b17c.  return v0 @kind object;
+}
+procedure `boolean` `isStorageAtLimit`(`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore` v5 @kind this) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.isStorageAtLimit:()Z` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L23a520.  call temp:= `getPageCount`(v5) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.getPageCount:()J` @kind direct;
+  #L23a526.  v0:= temp @kind wide;
+  #L23a528.  call temp:= `getPageSize`(v5) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.getPageSize:()J` @kind direct;
+  #L23a52e.  v2:= temp @kind wide;
+  #L23a530.  v0:= v0 * v2 @kind long;
+  #L23a534.  v2:= v5.`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore.config` @type ^`com.google.android.datatransport.runtime.scheduling.persistence.EventStoreConfig` @kind object;
+  #L23a538.  call temp:= `getMaxStorageSizeInBytes`(v2) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/EventStoreConfig;.getMaxStorageSizeInBytes:()J` @kind virtual;
+  #L23a53e.  v2:= temp @kind wide;
+  #L23a540.  v4:= lcmp(v0, v2);
+  #L23a544.  if v4 < 0 then goto L23a54c;
+  #L23a548.  v0:= 1I;
+  #L23a54a.  goto L23a54e;
+  #L23a54c.  v0:= 0I;
+  #L23a54e.  return v0;
+}
+procedure `com.google.android.datatransport.runtime.firebase.transport.ClientMetrics` `j0`(`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore` v0 @kind object, `java.util.Map` v1 @kind object, `com.google.android.datatransport.runtime.firebase.transport.ClientMetrics$Builder` v2 @kind object, `android.database.Cursor` v3 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.j0:(Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;Ljava/util/Map;Lcom/google/android/datatransport/runtime/firebase/transport/ClientMetrics$Builder;Landroid/database/Cursor;)Lcom/google/android/datatransport/runtime/firebase/transport/ClientMetrics;` @AccessFlag PUBLIC_STATIC_SYNTHETIC {
+    temp;
+
+  #L23a6b8.  call temp:= `lambda$loadClientMetrics$19`(v0, v1, v2, v3) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.lambda$loadClientMetrics$19:(Ljava/util/Map;Lcom/google/android/datatransport/runtime/firebase/transport/ClientMetrics$Builder;Landroid/database/Cursor;)Lcom/google/android/datatransport/runtime/firebase/transport/ClientMetrics;` @kind direct;
+  #L23a6be.  v0:= temp @kind object;
+  #L23a6c0.  return v0 @kind object;
+}
+procedure `java.util.List` `join`(`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore` v6 @kind this, `java.util.List` v7 @kind object, `java.util.Map` v8 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.join:(Ljava/util/List;Ljava/util/Map;)Ljava/util/List;` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L23b89c.  call temp:= `listIterator`(v7) @signature `Ljava/util/List;.listIterator:()Ljava/util/ListIterator;` @kind interface;
+  #L23b8a2.  v0:= temp @kind object;
+  #L23b8a4.  call temp:= `hasNext`(v0) @signature `Ljava/util/ListIterator;.hasNext:()Z` @kind interface;
+  #L23b8aa.  v1:= temp;
+  #L23b8ac.  if v1 == 0 then goto L23b95e;
+  #L23b8b0.  call temp:= `next`(v0) @signature `Ljava/util/ListIterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L23b8b6.  v1:= temp @kind object;
+  #L23b8b8.  v1:= (`com.google.android.datatransport.runtime.scheduling.persistence.PersistedEvent`) v1 @kind object;
+  #L23b8bc.  call temp:= `getId`(v1) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/PersistedEvent;.getId:()J` @kind virtual;
+  #L23b8c2.  v2:= temp @kind wide;
+  #L23b8c4.  call temp:= `valueOf`(v2) @signature `Ljava/lang/Long;.valueOf:(J)Ljava/lang/Long;` @kind static;
+  #L23b8ca.  v2:= temp @kind object;
+  #L23b8cc.  call temp:= `containsKey`(v8, v2) @signature `Ljava/util/Map;.containsKey:(Ljava/lang/Object;)Z` @kind interface;
+  #L23b8d2.  v2:= temp;
+  #L23b8d4.  if v2 != 0 then goto L23b8da;
+  #L23b8d8.  goto L23b8a4;
+  #L23b8da.  call temp:= `getEvent`(v1) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/PersistedEvent;.getEvent:()Lcom/google/android/datatransport/runtime/EventInternal;` @kind virtual;
+  #L23b8e0.  v2:= temp @kind object;
+  #L23b8e2.  call temp:= `toBuilder`(v2) @signature `Lcom/google/android/datatransport/runtime/EventInternal;.toBuilder:()Lcom/google/android/datatransport/runtime/EventInternal$Builder;` @kind virtual;
+  #L23b8e8.  v2:= temp @kind object;
+  #L23b8ea.  call temp:= `getId`(v1) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/PersistedEvent;.getId:()J` @kind virtual;
+  #L23b8f0.  v3:= temp @kind wide;
+  #L23b8f2.  call temp:= `valueOf`(v3) @signature `Ljava/lang/Long;.valueOf:(J)Ljava/lang/Long;` @kind static;
+  #L23b8f8.  v3:= temp @kind object;
+  #L23b8fa.  call temp:= `get`(v8, v3) @signature `Ljava/util/Map;.get:(Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L23b900.  v3:= temp @kind object;
+  #L23b902.  v3:= (`java.util.Set`) v3 @kind object;
+  #L23b906.  call temp:= `iterator`(v3) @signature `Ljava/util/Set;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L23b90c.  v3:= temp @kind object;
+  #L23b90e.  call temp:= `hasNext`(v3) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L23b914.  v4:= temp;
+  #L23b916.  if v4 == 0 then goto L23b936;
+  #L23b91a.  call temp:= `next`(v3) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L23b920.  v4:= temp @kind object;
+  #L23b922.  v4:= (`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore$Metadata`) v4 @kind object;
+  #L23b926.  v5:= v4.`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore$Metadata.key` @type ^`java.lang.String` @kind object;
+  #L23b92a.  v4:= v4.`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore$Metadata.value` @type ^`java.lang.String` @kind object;
+  #L23b92e.  call temp:= `addMetadata`(v2, v5, v4) @signature `Lcom/google/android/datatransport/runtime/EventInternal$Builder;.addMetadata:(Ljava/lang/String;Ljava/lang/String;)Lcom/google/android/datatransport/runtime/EventInternal$Builder;` @kind virtual;
+  #L23b934.  goto L23b90e;
+  #L23b936.  call temp:= `getId`(v1) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/PersistedEvent;.getId:()J` @kind virtual;
+  #L23b93c.  v3:= temp @kind wide;
+  #L23b93e.  call temp:= `getTransportContext`(v1) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/PersistedEvent;.getTransportContext:()Lcom/google/android/datatransport/runtime/TransportContext;` @kind virtual;
+  #L23b944.  v1:= temp @kind object;
+  #L23b946.  call temp:= `build`(v2) @signature `Lcom/google/android/datatransport/runtime/EventInternal$Builder;.build:()Lcom/google/android/datatransport/runtime/EventInternal;` @kind virtual;
+  #L23b94c.  v2:= temp @kind object;
+  #L23b94e.  call temp:= `create`(v3, v1, v2) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/PersistedEvent;.create:(JLcom/google/android/datatransport/runtime/TransportContext;Lcom/google/android/datatransport/runtime/EventInternal;)Lcom/google/android/datatransport/runtime/scheduling/persistence/PersistedEvent;` @kind static;
+  #L23b954.  v1:= temp @kind object;
+  #L23b956.  call `set`(v0, v1) @signature `Ljava/util/ListIterator;.set:(Ljava/lang/Object;)V` @kind interface;
+  #L23b95c.  goto L23b8a4;
+  #L23b95e.  return v7 @kind object;
+}
+procedure `java.lang.Object` `k0`(`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore` v0 @kind object, `android.database.Cursor` v1 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.k0:(Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;Landroid/database/Cursor;)Ljava/lang/Object;` @AccessFlag PUBLIC_STATIC_SYNTHETIC {
+    temp;
+
+  #L23b190.  call temp:= `lambda$recordFailure$3`(v0, v1) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.lambda$recordFailure$3:(Landroid/database/Cursor;)Ljava/lang/Object;` @kind direct;
+  #L23b196.  v0:= temp @kind object;
+  #L23b198.  return v0 @kind object;
+}
+procedure `java.lang.Integer` `l0`(`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore` v0 @kind object, `long` v1 , `android.database.sqlite.SQLiteDatabase` v3 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.l0:(Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;JLandroid/database/sqlite/SQLiteDatabase;)Ljava/lang/Integer;` @AccessFlag PUBLIC_STATIC_SYNTHETIC {
+    temp;
+
+  #L23aba8.  call temp:= `lambda$cleanUp$12`(v0, v1, v3) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.lambda$cleanUp$12:(JLandroid/database/sqlite/SQLiteDatabase;)Ljava/lang/Integer;` @kind direct;
+  #L23abae.  v0:= temp @kind object;
+  #L23abb0.  return v0 @kind object;
+}
+procedure `java.lang.Object` `lambda$cleanUp$11`(`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore` v4 @kind this, `android.database.Cursor` v5 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.lambda$cleanUp$11:(Landroid/database/Cursor;)Ljava/lang/Object;` @AccessFlag PRIVATE_SYNTHETIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L23b1f8.  call temp:= `moveToNext`(v5) @signature `Landroid/database/Cursor;.moveToNext:()Z` @kind interface;
+  #L23b1fe.  v0:= temp;
+  #L23b200.  if v0 == 0 then goto L23b226;
+  #L23b204.  v0:= 0I;
+  #L23b206.  call temp:= `getInt`(v5, v0) @signature `Landroid/database/Cursor;.getInt:(I)I` @kind interface;
+  #L23b20c.  v0:= temp;
+  #L23b20e.  v1:= 1I;
+  #L23b210.  call temp:= `getString`(v5, v1) @signature `Landroid/database/Cursor;.getString:(I)Ljava/lang/String;` @kind interface;
+  #L23b216.  v1:= temp @kind object;
+  #L23b218.  v2:= (`long`) v0 @kind i2l;
+  #L23b21a.  v0:= `@@com.google.android.datatransport.runtime.firebase.transport.LogEventDropped$Reason.MESSAGE_TOO_OLD` @type ^`com.google.android.datatransport.runtime.firebase.transport.LogEventDropped$Reason` @kind object;
+  #L23b21e.  call `recordLogEventDropped`(v4, v2, v0, v1) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.recordLogEventDropped:(JLcom/google/android/datatransport/runtime/firebase/transport/LogEventDropped$Reason;Ljava/lang/String;)V` @kind virtual;
+  #L23b224.  goto L23b1f8;
+  #L23b226.  v5:= 0I;
+  #L23b228.  return v5 @kind object;
+}
+procedure `java.lang.Integer` `lambda$cleanUp$12`(`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore` v1 @kind this, `long` v2 , `android.database.sqlite.SQLiteDatabase` v4 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.lambda$cleanUp$12:(JLandroid/database/sqlite/SQLiteDatabase;)Ljava/lang/Integer;` @AccessFlag PRIVATE_SYNTHETIC {
+    temp;
+    v0;
+
+  #L23abc4.  v0:= 1I;
+  #L23abc6.  v0:= new `java.lang.String`[v0];
+  #L23abca.  call temp:= `valueOf`(v2) @signature `Ljava/lang/String;.valueOf:(J)Ljava/lang/String;` @kind static;
+  #L23abd0.  v2:= temp @kind object;
+  #L23abd2.  v3:= 0I;
+  #L23abd4.  v0[v3]:= v2 @kind object;
+  #L23abd8.  v2:= "SELECT COUNT(*), transport_name FROM events WHERE timestamp_ms < ? GROUP BY transport_name" @kind object;
+  #L23abdc.  call temp:= `rawQuery`(v4, v2, v0) @signature `Landroid/database/sqlite/SQLiteDatabase;.rawQuery:(Ljava/lang/String;[Ljava/lang/String;)Landroid/database/Cursor;` @kind virtual;
+  #L23abe2.  v2:= temp @kind object;
+  #L23abe4.  v3:= new `com.google.android.datatransport.runtime.scheduling.persistence.v`;
+  #L23abe8.  call `<init>`(v3, v1) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/v;.<init>:(Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;)V` @kind direct;
+  #L23abee.  call temp:= `tryWithCursor`(v2, v3) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.tryWithCursor:(Landroid/database/Cursor;Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore$Function;)Ljava/lang/Object;` @kind static;
+  #L23abf4.  v2:= "events" @kind object;
+  #L23abf8.  v3:= "timestamp_ms < ?" @kind object;
+  #L23abfc.  call temp:= `delete`(v4, v2, v3, v0) @signature `Landroid/database/sqlite/SQLiteDatabase;.delete:(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I` @kind virtual;
+  #L23ac02.  v2:= temp;
+  #L23ac04.  call temp:= `valueOf`(v2) @signature `Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer;` @kind static;
+  #L23ac0a.  v2:= temp @kind object;
+  #L23ac0c.  return v2 @kind object;
+}
+procedure `java.lang.Object` `lambda$clearDb$13`(`android.database.sqlite.SQLiteDatabase` v4 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.lambda$clearDb$13:(Landroid/database/sqlite/SQLiteDatabase;)Ljava/lang/Object;` @AccessFlag PRIVATE_STATIC_SYNTHETIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L23b23c.  v0:= 0I;
+  #L23b23e.  v1:= new `java.lang.String`[v0];
+  #L23b242.  v2:= "events" @kind object;
+  #L23b246.  v3:= 0I;
+  #L23b248.  call temp:= `delete`(v4, v2, v3, v1) @signature `Landroid/database/sqlite/SQLiteDatabase;.delete:(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I` @kind virtual;
+  #L23b24e.  v0:= new `java.lang.String`[v0];
+  #L23b252.  v1:= "transport_contexts" @kind object;
+  #L23b256.  call temp:= `delete`(v4, v1, v3, v0) @signature `Landroid/database/sqlite/SQLiteDatabase;.delete:(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)I` @kind virtual;
+  #L23b25c.  return v3 @kind object;
+}
+procedure `java.lang.Object` `lambda$ensureBeginTransaction$24`(`android.database.sqlite.SQLiteDatabase` v0 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.lambda$ensureBeginTransaction$24:(Landroid/database/sqlite/SQLiteDatabase;)Ljava/lang/Object;` @AccessFlag PRIVATE_STATIC_SYNTHETIC {
+    temp;
+
+  #L23b270.  call `beginTransaction`(v0) @signature `Landroid/database/sqlite/SQLiteDatabase;.beginTransaction:()V` @kind virtual;
+  #L23b276.  v0:= 0I;
+  #L23b278.  return v0 @kind object;
+}
+procedure `java.lang.Object` `lambda$ensureBeginTransaction$25`(`java.lang.Throwable` v2 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.lambda$ensureBeginTransaction$25:(Ljava/lang/Throwable;)Ljava/lang/Object;` @AccessFlag PRIVATE_STATIC_SYNTHETIC {
+    temp;
+    v0;
+    v1;
+
+  #L23b28c.  v0:= new `com.google.android.datatransport.runtime.synchronization.SynchronizationException`;
+  #L23b290.  v1:= "Timed out while trying to acquire the lock." @kind object;
+  #L23b294.  call `<init>`(v0, v1, v2) @signature `Lcom/google/android/datatransport/runtime/synchronization/SynchronizationException;.<init>:(Ljava/lang/String;Ljava/lang/Throwable;)V` @kind direct;
+  #L23b29a.  throw v0;
+}
+procedure `android.database.sqlite.SQLiteDatabase` `lambda$getDb$0`(`java.lang.Throwable` v2 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.lambda$getDb$0:(Ljava/lang/Throwable;)Landroid/database/sqlite/SQLiteDatabase;` @AccessFlag PRIVATE_STATIC_SYNTHETIC {
+    temp;
+    v0;
+    v1;
+
+  #L23a4d0.  v0:= new `com.google.android.datatransport.runtime.synchronization.SynchronizationException`;
+  #L23a4d4.  v1:= "Timed out while trying to open db." @kind object;
+  #L23a4d8.  call `<init>`(v0, v1, v2) @signature `Lcom/google/android/datatransport/runtime/synchronization/SynchronizationException;.<init>:(Ljava/lang/String;Ljava/lang/Throwable;)V` @kind direct;
+  #L23a4de.  throw v0;
+}
+procedure `java.lang.Long` `lambda$getNextCallTime$5`(`android.database.Cursor` v2 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.lambda$getNextCallTime$5:(Landroid/database/Cursor;)Ljava/lang/Long;` @AccessFlag PRIVATE_STATIC_SYNTHETIC {
+    temp;
+    v0;
+    v1;
+
+  #L23ada8.  call temp:= `moveToNext`(v2) @signature `Landroid/database/Cursor;.moveToNext:()Z` @kind interface;
+  #L23adae.  v0:= temp;
+  #L23adb0.  if v0 == 0 then goto L23adc8;
+  #L23adb4.  v0:= 0I;
+  #L23adb6.  call temp:= `getLong`(v2, v0) @signature `Landroid/database/Cursor;.getLong:(I)J` @kind interface;
+  #L23adbc.  v0:= temp @kind wide;
+  #L23adbe.  call temp:= `valueOf`(v0) @signature `Ljava/lang/Long;.valueOf:(J)Ljava/lang/Long;` @kind static;
+  #L23adc4.  v2:= temp @kind object;
+  #L23adc6.  return v2 @kind object;
+  #L23adc8.  v0:= 0L;
+  #L23adcc.  call temp:= `valueOf`(v0) @signature `Ljava/lang/Long;.valueOf:(J)Ljava/lang/Long;` @kind static;
+  #L23add2.  v2:= temp @kind object;
+  #L23add4.  return v2 @kind object;
+}
+procedure `com.google.android.datatransport.runtime.firebase.transport.TimeWindow` `lambda$getTimeWindow$21`(`long` v2 , `android.database.Cursor` v4 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.lambda$getTimeWindow$21:(JLandroid/database/Cursor;)Lcom/google/android/datatransport/runtime/firebase/transport/TimeWindow;` @AccessFlag PRIVATE_STATIC_SYNTHETIC {
+    temp;
+    v0;
+    v1;
+
+  #L23a994.  call temp:= `moveToNext`(v4) @signature `Landroid/database/Cursor;.moveToNext:()Z` @kind interface;
+  #L23a99a.  v0:= 0I;
+  #L23a99c.  call temp:= `getLong`(v4, v0) @signature `Landroid/database/Cursor;.getLong:(I)J` @kind interface;
+  #L23a9a2.  v0:= temp @kind wide;
+  #L23a9a4.  call temp:= `newBuilder`() @signature `Lcom/google/android/datatransport/runtime/firebase/transport/TimeWindow;.newBuilder:()Lcom/google/android/datatransport/runtime/firebase/transport/TimeWindow$Builder;` @kind static;
+  #L23a9aa.  v4:= temp @kind object;
+  #L23a9ac.  call temp:= `setStartMs`(v4, v0) @signature `Lcom/google/android/datatransport/runtime/firebase/transport/TimeWindow$Builder;.setStartMs:(J)Lcom/google/android/datatransport/runtime/firebase/transport/TimeWindow$Builder;` @kind virtual;
+  #L23a9b2.  v4:= temp @kind object;
+  #L23a9b4.  call temp:= `setEndMs`(v4, v2) @signature `Lcom/google/android/datatransport/runtime/firebase/transport/TimeWindow$Builder;.setEndMs:(J)Lcom/google/android/datatransport/runtime/firebase/transport/TimeWindow$Builder;` @kind virtual;
+  #L23a9ba.  v2:= temp @kind object;
+  #L23a9bc.  call temp:= `build`(v2) @signature `Lcom/google/android/datatransport/runtime/firebase/transport/TimeWindow$Builder;.build:()Lcom/google/android/datatransport/runtime/firebase/transport/TimeWindow;` @kind virtual;
+  #L23a9c2.  v2:= temp @kind object;
+  #L23a9c4.  return v2 @kind object;
+}
+procedure `com.google.android.datatransport.runtime.firebase.transport.TimeWindow` `lambda$getTimeWindow$22`(`long` v2 , `android.database.sqlite.SQLiteDatabase` v4 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.lambda$getTimeWindow$22:(JLandroid/database/sqlite/SQLiteDatabase;)Lcom/google/android/datatransport/runtime/firebase/transport/TimeWindow;` @AccessFlag PRIVATE_STATIC_SYNTHETIC {
+    temp;
+    v0;
+    v1;
+
+  #L23a9d8.  v0:= 0I;
+  #L23a9da.  v0:= new `java.lang.String`[v0];
+  #L23a9de.  v1:= "SELECT last_metrics_upload_ms FROM global_log_event_state LIMIT 1" @kind object;
+  #L23a9e2.  call temp:= `rawQuery`(v4, v1, v0) @signature `Landroid/database/sqlite/SQLiteDatabase;.rawQuery:(Ljava/lang/String;[Ljava/lang/String;)Landroid/database/Cursor;` @kind virtual;
+  #L23a9e8.  v4:= temp @kind object;
+  #L23a9ea.  v0:= new `com.google.android.datatransport.runtime.scheduling.persistence.a`;
+  #L23a9ee.  call `<init>`(v0, v2) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/a;.<init>:(J)V` @kind direct;
+  #L23a9f4.  call temp:= `tryWithCursor`(v4, v0) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.tryWithCursor:(Landroid/database/Cursor;Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore$Function;)Ljava/lang/Object;` @kind static;
+  #L23a9fa.  v2:= temp @kind object;
+  #L23a9fc.  v2:= (`com.google.android.datatransport.runtime.firebase.transport.TimeWindow`) v2 @kind object;
+  #L23aa00.  return v2 @kind object;
+}
+procedure `java.lang.Long` `lambda$getTransportContextId$2`(`android.database.Cursor` v2 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.lambda$getTransportContextId$2:(Landroid/database/Cursor;)Ljava/lang/Long;` @AccessFlag PRIVATE_STATIC_SYNTHETIC {
+    temp;
+    v0;
+    v1;
+
+  #L23ade8.  call temp:= `moveToNext`(v2) @signature `Landroid/database/Cursor;.moveToNext:()Z` @kind interface;
+  #L23adee.  v0:= temp;
+  #L23adf0.  if v0 != 0 then goto L23adf8;
+  #L23adf4.  v2:= 0I;
+  #L23adf6.  return v2 @kind object;
+  #L23adf8.  v0:= 0I;
+  #L23adfa.  call temp:= `getLong`(v2, v0) @signature `Landroid/database/Cursor;.getLong:(I)J` @kind interface;
+  #L23ae00.  v0:= temp @kind wide;
+  #L23ae02.  call temp:= `valueOf`(v0) @signature `Ljava/lang/Long;.valueOf:(J)Ljava/lang/Long;` @kind static;
+  #L23ae08.  v2:= temp @kind object;
+  #L23ae0a.  return v2 @kind object;
+}
+procedure `java.lang.Boolean` `lambda$hasPendingEventsFor$6`(`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore` v2 @kind this, `com.google.android.datatransport.runtime.TransportContext` v3 @kind object, `android.database.sqlite.SQLiteDatabase` v4 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.lambda$hasPendingEventsFor$6:(Lcom/google/android/datatransport/runtime/TransportContext;Landroid/database/sqlite/SQLiteDatabase;)Ljava/lang/Boolean;` @AccessFlag PRIVATE_SYNTHETIC {
+    temp;
+    v0;
+    v1;
+
+  #L23ab20.  call temp:= `getTransportContextId`(v2, v4, v3) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.getTransportContextId:(Landroid/database/sqlite/SQLiteDatabase;Lcom/google/android/datatransport/runtime/TransportContext;)Ljava/lang/Long;` @kind direct;
+  #L23ab26.  v3:= temp @kind object;
+  #L23ab28.  if v3 != 0 then goto L23ab32;
+  #L23ab2c.  v3:= `@@java.lang.Boolean.FALSE` @type ^`java.lang.Boolean` @kind object;
+  #L23ab30.  return v3 @kind object;
+  #L23ab32.  call temp:= `getDb`(v2) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.getDb:()Landroid/database/sqlite/SQLiteDatabase;` @kind virtual;
+  #L23ab38.  v4:= temp @kind object;
+  #L23ab3a.  v0:= 1I;
+  #L23ab3c.  v0:= new `java.lang.String`[v0];
+  #L23ab40.  v1:= 0I;
+  #L23ab42.  call temp:= `toString`(v3) @signature `Ljava/lang/Long;.toString:()Ljava/lang/String;` @kind virtual;
+  #L23ab48.  v3:= temp @kind object;
+  #L23ab4a.  v0[v1]:= v3 @kind object;
+  #L23ab4e.  v3:= "SELECT 1 FROM events WHERE context_id = ? LIMIT 1" @kind object;
+  #L23ab52.  call temp:= `rawQuery`(v4, v3, v0) @signature `Landroid/database/sqlite/SQLiteDatabase;.rawQuery:(Ljava/lang/String;[Ljava/lang/String;)Landroid/database/Cursor;` @kind virtual;
+  #L23ab58.  v3:= temp @kind object;
+  #L23ab5a.  v4:= `@@com.google.android.datatransport.runtime.scheduling.persistence.n.a` @type ^`com.google.android.datatransport.runtime.scheduling.persistence.n` @kind object;
+  #L23ab5e.  call temp:= `tryWithCursor`(v3, v4) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.tryWithCursor:(Landroid/database/Cursor;Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore$Function;)Ljava/lang/Object;` @kind static;
+  #L23ab64.  v3:= temp @kind object;
+  #L23ab66.  v3:= (`java.lang.Boolean`) v3 @kind object;
+  #L23ab6a.  return v3 @kind object;
+}
+procedure `java.util.List` `lambda$loadActiveContexts$10`(`android.database.sqlite.SQLiteDatabase` v2 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.lambda$loadActiveContexts$10:(Landroid/database/sqlite/SQLiteDatabase;)Ljava/util/List;` @AccessFlag PRIVATE_STATIC_SYNTHETIC {
+    temp;
+    v0;
+    v1;
+
+  #L23b970.  v0:= 0I;
+  #L23b972.  v0:= new `java.lang.String`[v0];
+  #L23b976.  v1:= "SELECT distinct t._id, t.backend_name, t.priority, t.extras FROM transport_contexts AS t, events AS e WHERE e.context_id = t._id" @kind object;
+  #L23b97a.  call temp:= `rawQuery`(v2, v1, v0) @signature `Landroid/database/sqlite/SQLiteDatabase;.rawQuery:(Ljava/lang/String;[Ljava/lang/String;)Landroid/database/Cursor;` @kind virtual;
+  #L23b980.  v2:= temp @kind object;
+  #L23b982.  v0:= `@@com.google.android.datatransport.runtime.scheduling.persistence.i.a` @type ^`com.google.android.datatransport.runtime.scheduling.persistence.i` @kind object;
+  #L23b986.  call temp:= `tryWithCursor`(v2, v0) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.tryWithCursor:(Landroid/database/Cursor;Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore$Function;)Ljava/lang/Object;` @kind static;
+  #L23b98c.  v2:= temp @kind object;
+  #L23b98e.  v2:= (`java.util.List`) v2 @kind object;
+  #L23b992.  return v2 @kind object;
+}
+procedure `java.util.List` `lambda$loadActiveContexts$9`(`android.database.Cursor` v3 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.lambda$loadActiveContexts$9:(Landroid/database/Cursor;)Ljava/util/List;` @AccessFlag PRIVATE_STATIC_SYNTHETIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L23b9a4.  v0:= new `java.util.ArrayList`;
+  #L23b9a8.  call `<init>`(v0) @signature `Ljava/util/ArrayList;.<init>:()V` @kind direct;
+  #L23b9ae.  call temp:= `moveToNext`(v3) @signature `Landroid/database/Cursor;.moveToNext:()Z` @kind interface;
+  #L23b9b4.  v1:= temp;
+  #L23b9b6.  if v1 == 0 then goto L23ba18;
+  #L23b9ba.  call temp:= `builder`() @signature `Lcom/google/android/datatransport/runtime/TransportContext;.builder:()Lcom/google/android/datatransport/runtime/TransportContext$Builder;` @kind static;
+  #L23b9c0.  v1:= temp @kind object;
+  #L23b9c2.  v2:= 1I;
+  #L23b9c4.  call temp:= `getString`(v3, v2) @signature `Landroid/database/Cursor;.getString:(I)Ljava/lang/String;` @kind interface;
+  #L23b9ca.  v2:= temp @kind object;
+  #L23b9cc.  call temp:= `setBackendName`(v1, v2) @signature `Lcom/google/android/datatransport/runtime/TransportContext$Builder;.setBackendName:(Ljava/lang/String;)Lcom/google/android/datatransport/runtime/TransportContext$Builder;` @kind virtual;
+  #L23b9d2.  v1:= temp @kind object;
+  #L23b9d4.  v2:= 2I;
+  #L23b9d6.  call temp:= `getInt`(v3, v2) @signature `Landroid/database/Cursor;.getInt:(I)I` @kind interface;
+  #L23b9dc.  v2:= temp;
+  #L23b9de.  call temp:= `valueOf`(v2) @signature `Lcom/google/android/datatransport/runtime/util/PriorityMapping;.valueOf:(I)Lcom/google/android/datatransport/Priority;` @kind static;
+  #L23b9e4.  v2:= temp @kind object;
+  #L23b9e6.  call temp:= `setPriority`(v1, v2) @signature `Lcom/google/android/datatransport/runtime/TransportContext$Builder;.setPriority:(Lcom/google/android/datatransport/Priority;)Lcom/google/android/datatransport/runtime/TransportContext$Builder;` @kind virtual;
+  #L23b9ec.  v1:= temp @kind object;
+  #L23b9ee.  v2:= 3I;
+  #L23b9f0.  call temp:= `getString`(v3, v2) @signature `Landroid/database/Cursor;.getString:(I)Ljava/lang/String;` @kind interface;
+  #L23b9f6.  v2:= temp @kind object;
+  #L23b9f8.  call temp:= `maybeBase64Decode`(v2) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.maybeBase64Decode:(Ljava/lang/String;)[B` @kind static;
+  #L23b9fe.  v2:= temp @kind object;
+  #L23ba00.  call temp:= `setExtras`(v1, v2) @signature `Lcom/google/android/datatransport/runtime/TransportContext$Builder;.setExtras:([B)Lcom/google/android/datatransport/runtime/TransportContext$Builder;` @kind virtual;
+  #L23ba06.  v1:= temp @kind object;
+  #L23ba08.  call temp:= `build`(v1) @signature `Lcom/google/android/datatransport/runtime/TransportContext$Builder;.build:()Lcom/google/android/datatransport/runtime/TransportContext;` @kind virtual;
+  #L23ba0e.  v1:= temp @kind object;
+  #L23ba10.  call temp:= `add`(v0, v1) @signature `Ljava/util/List;.add:(Ljava/lang/Object;)Z` @kind interface;
+  #L23ba16.  goto L23b9ae;
+  #L23ba18.  return v0 @kind object;
+}
+procedure `java.util.List` `lambda$loadBatch$8`(`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore` v7 @kind this, `com.google.android.datatransport.runtime.TransportContext` v8 @kind object, `android.database.sqlite.SQLiteDatabase` v9 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.lambda$loadBatch$8:(Lcom/google/android/datatransport/runtime/TransportContext;Landroid/database/sqlite/SQLiteDatabase;)Ljava/util/List;` @AccessFlag PRIVATE_SYNTHETIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+
+  #L23ba2c.  v0:= v7.`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore.config` @type ^`com.google.android.datatransport.runtime.scheduling.persistence.EventStoreConfig` @kind object;
+  #L23ba30.  call temp:= `getLoadBatchSize`(v0) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/EventStoreConfig;.getLoadBatchSize:()I` @kind virtual;
+  #L23ba36.  v0:= temp;
+  #L23ba38.  call temp:= `loadEvents`(v7, v9, v8, v0) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.loadEvents:(Landroid/database/sqlite/SQLiteDatabase;Lcom/google/android/datatransport/runtime/TransportContext;I)Ljava/util/List;` @kind direct;
+  #L23ba3e.  v0:= temp @kind object;
+  #L23ba40.  call temp:= `values`() @signature `Lcom/google/android/datatransport/Priority;.values:()[Lcom/google/android/datatransport/Priority;` @kind static;
+  #L23ba46.  v1:= temp @kind object;
+  #L23ba48.  v2:= length @variable v1;
+  #L23ba4a.  v3:= 0I;
+  #L23ba4c.  if v3 >= v2 then goto L23ba9a;
+  #L23ba50.  v4:= v1[v3] @kind object;
+  #L23ba54.  call temp:= `getPriority`(v8) @signature `Lcom/google/android/datatransport/runtime/TransportContext;.getPriority:()Lcom/google/android/datatransport/Priority;` @kind virtual;
+  #L23ba5a.  v5:= temp @kind object;
+  #L23ba5c.  if v4 != v5 then goto L23ba62;
+  #L23ba60.  goto L23ba94;
+  #L23ba62.  v5:= v7.`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore.config` @type ^`com.google.android.datatransport.runtime.scheduling.persistence.EventStoreConfig` @kind object;
+  #L23ba66.  call temp:= `getLoadBatchSize`(v5) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/EventStoreConfig;.getLoadBatchSize:()I` @kind virtual;
+  #L23ba6c.  v5:= temp;
+  #L23ba6e.  call temp:= `size`(v0) @signature `Ljava/util/List;.size:()I` @kind interface;
+  #L23ba74.  v6:= temp;
+  #L23ba76.  v5:= v5 - v6 @kind int;
+  #L23ba78.  if v5 > 0 then goto L23ba7e;
+  #L23ba7c.  goto L23ba9a;
+  #L23ba7e.  call temp:= `withPriority`(v8, v4) @signature `Lcom/google/android/datatransport/runtime/TransportContext;.withPriority:(Lcom/google/android/datatransport/Priority;)Lcom/google/android/datatransport/runtime/TransportContext;` @kind virtual;
+  #L23ba84.  v4:= temp @kind object;
+  #L23ba86.  call temp:= `loadEvents`(v7, v9, v4, v5) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.loadEvents:(Landroid/database/sqlite/SQLiteDatabase;Lcom/google/android/datatransport/runtime/TransportContext;I)Ljava/util/List;` @kind direct;
+  #L23ba8c.  v4:= temp @kind object;
+  #L23ba8e.  call temp:= `addAll`(v0, v4) @signature `Ljava/util/List;.addAll:(Ljava/util/Collection;)Z` @kind interface;
+  #L23ba94.  v3:= v3 + 1;
+  #L23ba98.  goto L23ba4c;
+  #L23ba9a.  call temp:= `loadMetadata`(v7, v9, v0) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.loadMetadata:(Landroid/database/sqlite/SQLiteDatabase;Ljava/util/List;)Ljava/util/Map;` @kind direct;
+  #L23baa0.  v8:= temp @kind object;
+  #L23baa2.  call temp:= `join`(v7, v0, v8) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.join:(Ljava/util/List;Ljava/util/Map;)Ljava/util/List;` @kind direct;
+  #L23baa8.  v8:= temp @kind object;
+  #L23baaa.  return v8 @kind object;
+}
+procedure `com.google.android.datatransport.runtime.firebase.transport.ClientMetrics` `lambda$loadClientMetrics$19`(`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore` v5 @kind this, `java.util.Map` v6 @kind object, `com.google.android.datatransport.runtime.firebase.transport.ClientMetrics$Builder` v7 @kind object, `android.database.Cursor` v8 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.lambda$loadClientMetrics$19:(Ljava/util/Map;Lcom/google/android/datatransport/runtime/firebase/transport/ClientMetrics$Builder;Landroid/database/Cursor;)Lcom/google/android/datatransport/runtime/firebase/transport/ClientMetrics;` @AccessFlag PRIVATE_SYNTHETIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L23a6d4.  call temp:= `moveToNext`(v8) @signature `Landroid/database/Cursor;.moveToNext:()Z` @kind interface;
+  #L23a6da.  v0:= temp;
+  #L23a6dc.  if v0 == 0 then goto L23a756;
+  #L23a6e0.  v0:= 0I;
+  #L23a6e2.  call temp:= `getString`(v8, v0) @signature `Landroid/database/Cursor;.getString:(I)Ljava/lang/String;` @kind interface;
+  #L23a6e8.  v0:= temp @kind object;
+  #L23a6ea.  v1:= 1I;
+  #L23a6ec.  call temp:= `getInt`(v8, v1) @signature `Landroid/database/Cursor;.getInt:(I)I` @kind interface;
+  #L23a6f2.  v1:= temp;
+  #L23a6f4.  call temp:= `convertToReason`(v5, v1) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.convertToReason:(I)Lcom/google/android/datatransport/runtime/firebase/transport/LogEventDropped$Reason;` @kind direct;
+  #L23a6fa.  v1:= temp @kind object;
+  #L23a6fc.  v2:= 2I;
+  #L23a6fe.  call temp:= `getLong`(v8, v2) @signature `Landroid/database/Cursor;.getLong:(I)J` @kind interface;
+  #L23a704.  v2:= temp @kind wide;
+  #L23a706.  call temp:= `containsKey`(v6, v0) @signature `Ljava/util/Map;.containsKey:(Ljava/lang/Object;)Z` @kind interface;
+  #L23a70c.  v4:= temp;
+  #L23a70e.  if v4 != 0 then goto L23a722;
+  #L23a712.  v4:= new `java.util.ArrayList`;
+  #L23a716.  call `<init>`(v4) @signature `Ljava/util/ArrayList;.<init>:()V` @kind direct;
+  #L23a71c.  call temp:= `put`(v6, v0, v4) @signature `Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L23a722.  call temp:= `get`(v6, v0) @signature `Ljava/util/Map;.get:(Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L23a728.  v0:= temp @kind object;
+  #L23a72a.  v0:= (`java.util.List`) v0 @kind object;
+  #L23a72e.  call temp:= `newBuilder`() @signature `Lcom/google/android/datatransport/runtime/firebase/transport/LogEventDropped;.newBuilder:()Lcom/google/android/datatransport/runtime/firebase/transport/LogEventDropped$Builder;` @kind static;
+  #L23a734.  v4:= temp @kind object;
+  #L23a736.  call temp:= `setReason`(v4, v1) @signature `Lcom/google/android/datatransport/runtime/firebase/transport/LogEventDropped$Builder;.setReason:(Lcom/google/android/datatransport/runtime/firebase/transport/LogEventDropped$Reason;)Lcom/google/android/datatransport/runtime/firebase/transport/LogEventDropped$Builder;` @kind virtual;
+  #L23a73c.  v1:= temp @kind object;
+  #L23a73e.  call temp:= `setEventsDroppedCount`(v1, v2) @signature `Lcom/google/android/datatransport/runtime/firebase/transport/LogEventDropped$Builder;.setEventsDroppedCount:(J)Lcom/google/android/datatransport/runtime/firebase/transport/LogEventDropped$Builder;` @kind virtual;
+  #L23a744.  v1:= temp @kind object;
+  #L23a746.  call temp:= `build`(v1) @signature `Lcom/google/android/datatransport/runtime/firebase/transport/LogEventDropped$Builder;.build:()Lcom/google/android/datatransport/runtime/firebase/transport/LogEventDropped;` @kind virtual;
+  #L23a74c.  v1:= temp @kind object;
+  #L23a74e.  call temp:= `add`(v0, v1) @signature `Ljava/util/List;.add:(Ljava/lang/Object;)Z` @kind interface;
+  #L23a754.  goto L23a6d4;
+  #L23a756.  call `populateLogSourcesMetrics`(v5, v7, v6) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.populateLogSourcesMetrics:(Lcom/google/android/datatransport/runtime/firebase/transport/ClientMetrics$Builder;Ljava/util/Map;)V` @kind direct;
+  #L23a75c.  call temp:= `getTimeWindow`(v5) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.getTimeWindow:()Lcom/google/android/datatransport/runtime/firebase/transport/TimeWindow;` @kind direct;
+  #L23a762.  v6:= temp @kind object;
+  #L23a764.  call temp:= `setWindow`(v7, v6) @signature `Lcom/google/android/datatransport/runtime/firebase/transport/ClientMetrics$Builder;.setWindow:(Lcom/google/android/datatransport/runtime/firebase/transport/TimeWindow;)Lcom/google/android/datatransport/runtime/firebase/transport/ClientMetrics$Builder;` @kind virtual;
+  #L23a76a.  call temp:= `getGlobalMetrics`(v5) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.getGlobalMetrics:()Lcom/google/android/datatransport/runtime/firebase/transport/GlobalMetrics;` @kind direct;
+  #L23a770.  v6:= temp @kind object;
+  #L23a772.  call temp:= `setGlobalMetrics`(v7, v6) @signature `Lcom/google/android/datatransport/runtime/firebase/transport/ClientMetrics$Builder;.setGlobalMetrics:(Lcom/google/android/datatransport/runtime/firebase/transport/GlobalMetrics;)Lcom/google/android/datatransport/runtime/firebase/transport/ClientMetrics$Builder;` @kind virtual;
+  #L23a778.  v6:= v5.`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore.packageName` @type ^`o2.a` @kind object;
+  #L23a77c.  call temp:= `get`(v6) @signature `Lo2/a;.get:()Ljava/lang/Object;` @kind interface;
+  #L23a782.  v6:= temp @kind object;
+  #L23a784.  v6:= (`java.lang.String`) v6 @kind object;
+  #L23a788.  call temp:= `setAppNamespace`(v7, v6) @signature `Lcom/google/android/datatransport/runtime/firebase/transport/ClientMetrics$Builder;.setAppNamespace:(Ljava/lang/String;)Lcom/google/android/datatransport/runtime/firebase/transport/ClientMetrics$Builder;` @kind virtual;
+  #L23a78e.  call temp:= `build`(v7) @signature `Lcom/google/android/datatransport/runtime/firebase/transport/ClientMetrics$Builder;.build:()Lcom/google/android/datatransport/runtime/firebase/transport/ClientMetrics;` @kind virtual;
+  #L23a794.  v6:= temp @kind object;
+  #L23a796.  return v6 @kind object;
+}
+procedure `com.google.android.datatransport.runtime.firebase.transport.ClientMetrics` `lambda$loadClientMetrics$20`(`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore` v1 @kind this, `java.lang.String` v2 @kind object, `java.util.Map` v3 @kind object, `com.google.android.datatransport.runtime.firebase.transport.ClientMetrics$Builder` v4 @kind object, `android.database.sqlite.SQLiteDatabase` v5 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.lambda$loadClientMetrics$20:(Ljava/lang/String;Ljava/util/Map;Lcom/google/android/datatransport/runtime/firebase/transport/ClientMetrics$Builder;Landroid/database/sqlite/SQLiteDatabase;)Lcom/google/android/datatransport/runtime/firebase/transport/ClientMetrics;` @AccessFlag PRIVATE_SYNTHETIC {
+    temp;
+    v0;
+
+  #L23a7a8.  v0:= 0I;
+  #L23a7aa.  v0:= new `java.lang.String`[v0];
+  #L23a7ae.  call temp:= `rawQuery`(v5, v2, v0) @signature `Landroid/database/sqlite/SQLiteDatabase;.rawQuery:(Ljava/lang/String;[Ljava/lang/String;)Landroid/database/Cursor;` @kind virtual;
+  #L23a7b4.  v2:= temp @kind object;
+  #L23a7b6.  v5:= new `com.google.android.datatransport.runtime.scheduling.persistence.e`;
+  #L23a7ba.  call `<init>`(v5, v1, v3, v4) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/e;.<init>:(Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;Ljava/util/Map;Lcom/google/android/datatransport/runtime/firebase/transport/ClientMetrics$Builder;)V` @kind direct;
+  #L23a7c0.  call temp:= `tryWithCursor`(v2, v5) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.tryWithCursor:(Landroid/database/Cursor;Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore$Function;)Ljava/lang/Object;` @kind static;
+  #L23a7c6.  v2:= temp @kind object;
+  #L23a7c8.  v2:= (`com.google.android.datatransport.runtime.firebase.transport.ClientMetrics`) v2 @kind object;
+  #L23a7cc.  return v2 @kind object;
+}
+procedure `java.lang.Object` `lambda$loadEvents$14`(`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore` v6 @kind this, `java.util.List` v7 @kind object, `com.google.android.datatransport.runtime.TransportContext` v8 @kind object, `android.database.Cursor` v9 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.lambda$loadEvents$14:(Ljava/util/List;Lcom/google/android/datatransport/runtime/TransportContext;Landroid/database/Cursor;)Ljava/lang/Object;` @AccessFlag PRIVATE_SYNTHETIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L23b2ac.  call temp:= `moveToNext`(v9) @signature `Landroid/database/Cursor;.moveToNext:()Z` @kind interface;
+  #L23b2b2.  v0:= temp;
+  #L23b2b4.  if v0 == 0 then goto L23b3a6;
+  #L23b2b8.  v0:= 0I;
+  #L23b2ba.  call temp:= `getLong`(v9, v0) @signature `Landroid/database/Cursor;.getLong:(I)J` @kind interface;
+  #L23b2c0.  v1:= temp @kind wide;
+  #L23b2c2.  v3:= 7I;
+  #L23b2c4.  call temp:= `getInt`(v9, v3) @signature `Landroid/database/Cursor;.getInt:(I)I` @kind interface;
+  #L23b2ca.  v3:= temp;
+  #L23b2cc.  v4:= 1I;
+  #L23b2ce.  if v3 == 0 then goto L23b2d4;
+  #L23b2d2.  v0:= 1I;
+  #L23b2d4.  call temp:= `builder`() @signature `Lcom/google/android/datatransport/runtime/EventInternal;.builder:()Lcom/google/android/datatransport/runtime/EventInternal$Builder;` @kind static;
+  #L23b2da.  v3:= temp @kind object;
+  #L23b2dc.  call temp:= `getString`(v9, v4) @signature `Landroid/database/Cursor;.getString:(I)Ljava/lang/String;` @kind interface;
+  #L23b2e2.  v4:= temp @kind object;
+  #L23b2e4.  call temp:= `setTransportName`(v3, v4) @signature `Lcom/google/android/datatransport/runtime/EventInternal$Builder;.setTransportName:(Ljava/lang/String;)Lcom/google/android/datatransport/runtime/EventInternal$Builder;` @kind virtual;
+  #L23b2ea.  v3:= temp @kind object;
+  #L23b2ec.  v4:= 2I;
+  #L23b2ee.  call temp:= `getLong`(v9, v4) @signature `Landroid/database/Cursor;.getLong:(I)J` @kind interface;
+  #L23b2f4.  v4:= temp @kind wide;
+  #L23b2f6.  call temp:= `setEventMillis`(v3, v4) @signature `Lcom/google/android/datatransport/runtime/EventInternal$Builder;.setEventMillis:(J)Lcom/google/android/datatransport/runtime/EventInternal$Builder;` @kind virtual;
+  #L23b2fc.  v3:= temp @kind object;
+  #L23b2fe.  v4:= 3I;
+  #L23b300.  call temp:= `getLong`(v9, v4) @signature `Landroid/database/Cursor;.getLong:(I)J` @kind interface;
+  #L23b306.  v4:= temp @kind wide;
+  #L23b308.  call temp:= `setUptimeMillis`(v3, v4) @signature `Lcom/google/android/datatransport/runtime/EventInternal$Builder;.setUptimeMillis:(J)Lcom/google/android/datatransport/runtime/EventInternal$Builder;` @kind virtual;
+  #L23b30e.  v3:= temp @kind object;
+  #L23b310.  v4:= 4I;
+  #L23b312.  if v0 == 0 then goto L23b342;
+  #L23b316.  v0:= new `com.google.android.datatransport.runtime.EncodedPayload`;
+  #L23b31a.  call temp:= `getString`(v9, v4) @signature `Landroid/database/Cursor;.getString:(I)Ljava/lang/String;` @kind interface;
+  #L23b320.  v4:= temp @kind object;
+  #L23b322.  call temp:= `toEncoding`(v4) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.toEncoding:(Ljava/lang/String;)Lcom/google/android/datatransport/Encoding;` @kind static;
+  #L23b328.  v4:= temp @kind object;
+  #L23b32a.  v5:= 5I;
+  #L23b32c.  call temp:= `getBlob`(v9, v5) @signature `Landroid/database/Cursor;.getBlob:(I)[B` @kind interface;
+  #L23b332.  v5:= temp @kind object;
+  #L23b334.  call `<init>`(v0, v4, v5) @signature `Lcom/google/android/datatransport/runtime/EncodedPayload;.<init>:(Lcom/google/android/datatransport/Encoding;[B)V` @kind direct;
+  #L23b33a.  call temp:= `setEncodedPayload`(v3, v0) @signature `Lcom/google/android/datatransport/runtime/EventInternal$Builder;.setEncodedPayload:(Lcom/google/android/datatransport/runtime/EncodedPayload;)Lcom/google/android/datatransport/runtime/EventInternal$Builder;` @kind virtual;
+  #L23b340.  goto L23b36a;
+  #L23b342.  v0:= new `com.google.android.datatransport.runtime.EncodedPayload`;
+  #L23b346.  call temp:= `getString`(v9, v4) @signature `Landroid/database/Cursor;.getString:(I)Ljava/lang/String;` @kind interface;
+  #L23b34c.  v4:= temp @kind object;
+  #L23b34e.  call temp:= `toEncoding`(v4) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.toEncoding:(Ljava/lang/String;)Lcom/google/android/datatransport/Encoding;` @kind static;
+  #L23b354.  v4:= temp @kind object;
+  #L23b356.  call temp:= `readPayload`(v6, v1) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.readPayload:(J)[B` @kind direct;
+  #L23b35c.  v5:= temp @kind object;
+  #L23b35e.  call `<init>`(v0, v4, v5) @signature `Lcom/google/android/datatransport/runtime/EncodedPayload;.<init>:(Lcom/google/android/datatransport/Encoding;[B)V` @kind direct;
+  #L23b364.  call temp:= `setEncodedPayload`(v3, v0) @signature `Lcom/google/android/datatransport/runtime/EventInternal$Builder;.setEncodedPayload:(Lcom/google/android/datatransport/runtime/EncodedPayload;)Lcom/google/android/datatransport/runtime/EventInternal$Builder;` @kind virtual;
+  #L23b36a.  v0:= 6I;
+  #L23b36c.  call temp:= `isNull`(v9, v0) @signature `Landroid/database/Cursor;.isNull:(I)Z` @kind interface;
+  #L23b372.  v4:= temp;
+  #L23b374.  if v4 != 0 then goto L23b38e;
+  #L23b378.  call temp:= `getInt`(v9, v0) @signature `Landroid/database/Cursor;.getInt:(I)I` @kind interface;
+  #L23b37e.  v0:= temp;
+  #L23b380.  call temp:= `valueOf`(v0) @signature `Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer;` @kind static;
+  #L23b386.  v0:= temp @kind object;
+  #L23b388.  call temp:= `setCode`(v3, v0) @signature `Lcom/google/android/datatransport/runtime/EventInternal$Builder;.setCode:(Ljava/lang/Integer;)Lcom/google/android/datatransport/runtime/EventInternal$Builder;` @kind virtual;
+  #L23b38e.  call temp:= `build`(v3) @signature `Lcom/google/android/datatransport/runtime/EventInternal$Builder;.build:()Lcom/google/android/datatransport/runtime/EventInternal;` @kind virtual;
+  #L23b394.  v0:= temp @kind object;
+  #L23b396.  call temp:= `create`(v1, v8, v0) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/PersistedEvent;.create:(JLcom/google/android/datatransport/runtime/TransportContext;Lcom/google/android/datatransport/runtime/EventInternal;)Lcom/google/android/datatransport/runtime/scheduling/persistence/PersistedEvent;` @kind static;
+  #L23b39c.  v0:= temp @kind object;
+  #L23b39e.  call temp:= `add`(v7, v0) @signature `Ljava/util/List;.add:(Ljava/lang/Object;)Z` @kind interface;
+  #L23b3a4.  goto L23b2ac;
+  #L23b3a6.  v7:= 0I;
+  #L23b3a8.  return v7 @kind object;
+}
+procedure `java.lang.Object` `lambda$loadMetadata$16`(`java.util.Map` v5 @kind object, `android.database.Cursor` v6 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.lambda$loadMetadata$16:(Ljava/util/Map;Landroid/database/Cursor;)Ljava/lang/Object;` @AccessFlag PRIVATE_STATIC_SYNTHETIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L23b3bc.  call temp:= `moveToNext`(v6) @signature `Landroid/database/Cursor;.moveToNext:()Z` @kind interface;
+  #L23b3c2.  v0:= temp;
+  #L23b3c4.  v1:= 0I;
+  #L23b3c6.  if v0 == 0 then goto L23b42a;
+  #L23b3ca.  v0:= 0I;
+  #L23b3cc.  call temp:= `getLong`(v6, v0) @signature `Landroid/database/Cursor;.getLong:(I)J` @kind interface;
+  #L23b3d2.  v2:= temp @kind wide;
+  #L23b3d4.  call temp:= `valueOf`(v2) @signature `Ljava/lang/Long;.valueOf:(J)Ljava/lang/Long;` @kind static;
+  #L23b3da.  v0:= temp @kind object;
+  #L23b3dc.  call temp:= `get`(v5, v0) @signature `Ljava/util/Map;.get:(Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L23b3e2.  v0:= temp @kind object;
+  #L23b3e4.  v0:= (`java.util.Set`) v0 @kind object;
+  #L23b3e8.  if v0 != 0 then goto L23b404;
+  #L23b3ec.  v0:= new `java.util.HashSet`;
+  #L23b3f0.  call `<init>`(v0) @signature `Ljava/util/HashSet;.<init>:()V` @kind direct;
+  #L23b3f6.  call temp:= `valueOf`(v2) @signature `Ljava/lang/Long;.valueOf:(J)Ljava/lang/Long;` @kind static;
+  #L23b3fc.  v2:= temp @kind object;
+  #L23b3fe.  call temp:= `put`(v5, v2, v0) @signature `Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L23b404.  v2:= new `com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore$Metadata`;
+  #L23b408.  v3:= 1I;
+  #L23b40a.  call temp:= `getString`(v6, v3) @signature `Landroid/database/Cursor;.getString:(I)Ljava/lang/String;` @kind interface;
+  #L23b410.  v3:= temp @kind object;
+  #L23b412.  v4:= 2I;
+  #L23b414.  call temp:= `getString`(v6, v4) @signature `Landroid/database/Cursor;.getString:(I)Ljava/lang/String;` @kind interface;
+  #L23b41a.  v4:= temp @kind object;
+  #L23b41c.  call `<init>`(v2, v3, v4, v1) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore$Metadata;.<init>:(Ljava/lang/String;Ljava/lang/String;Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore$1;)V` @kind direct;
+  #L23b422.  call temp:= `add`(v0, v2) @signature `Ljava/util/Set;.add:(Ljava/lang/Object;)Z` @kind interface;
+  #L23b428.  goto L23b3bc;
+  #L23b42a.  return v1 @kind object;
+}
+procedure `java.lang.Long` `lambda$persist$1`(`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore` v11 @kind this, `com.google.android.datatransport.runtime.EventInternal` v12 @kind object, `com.google.android.datatransport.runtime.TransportContext` v13 @kind object, `android.database.sqlite.SQLiteDatabase` v14 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.lambda$persist$1:(Lcom/google/android/datatransport/runtime/EventInternal;Lcom/google/android/datatransport/runtime/TransportContext;Landroid/database/sqlite/SQLiteDatabase;)Ljava/lang/Long;` @AccessFlag PRIVATE_SYNTHETIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+    v9;
+    v10;
+
+  #L23ae1c.  call temp:= `isStorageAtLimit`(v11) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.isStorageAtLimit:()Z` @kind direct;
+  #L23ae22.  v0:= temp;
+  #L23ae24.  if v0 == 0 then goto L23ae4c;
+  #L23ae28.  v13:= 1L;
+  #L23ae2c.  v0:= `@@com.google.android.datatransport.runtime.firebase.transport.LogEventDropped$Reason.CACHE_FULL` @type ^`com.google.android.datatransport.runtime.firebase.transport.LogEventDropped$Reason` @kind object;
+  #L23ae30.  call temp:= `getTransportName`(v12) @signature `Lcom/google/android/datatransport/runtime/EventInternal;.getTransportName:()Ljava/lang/String;` @kind virtual;
+  #L23ae36.  v12:= temp @kind object;
+  #L23ae38.  call `recordLogEventDropped`(v11, v13, v0, v12) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.recordLogEventDropped:(JLcom/google/android/datatransport/runtime/firebase/transport/LogEventDropped$Reason;Ljava/lang/String;)V` @kind virtual;
+  #L23ae3e.  v12:= -1L;
+  #L23ae42.  call temp:= `valueOf`(v12) @signature `Ljava/lang/Long;.valueOf:(J)Ljava/lang/Long;` @kind static;
+  #L23ae48.  v12:= temp @kind object;
+  #L23ae4a.  return v12 @kind object;
+  #L23ae4c.  call temp:= `ensureTransportContext`(v11, v14, v13) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.ensureTransportContext:(Landroid/database/sqlite/SQLiteDatabase;Lcom/google/android/datatransport/runtime/TransportContext;)J` @kind direct;
+  #L23ae52.  v0:= temp @kind wide;
+  #L23ae54.  v13:= v11.`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore.config` @type ^`com.google.android.datatransport.runtime.scheduling.persistence.EventStoreConfig` @kind object;
+  #L23ae58.  call temp:= `getMaxBlobByteSizePerRow`(v13) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/EventStoreConfig;.getMaxBlobByteSizePerRow:()I` @kind virtual;
+  #L23ae5e.  v13:= temp;
+  #L23ae60.  call temp:= `getEncodedPayload`(v12) @signature `Lcom/google/android/datatransport/runtime/EventInternal;.getEncodedPayload:()Lcom/google/android/datatransport/runtime/EncodedPayload;` @kind virtual;
+  #L23ae66.  v2:= temp @kind object;
+  #L23ae68.  call temp:= `getBytes`(v2) @signature `Lcom/google/android/datatransport/runtime/EncodedPayload;.getBytes:()[B` @kind virtual;
+  #L23ae6e.  v2:= temp @kind object;
+  #L23ae70.  v3:= length @variable v2;
+  #L23ae72.  v4:= 0I;
+  #L23ae74.  v5:= 1I;
+  #L23ae76.  if v3 > v13 then goto L23ae7e;
+  #L23ae7a.  v3:= 1I;
+  #L23ae7c.  goto L23ae80;
+  #L23ae7e.  v3:= 0I;
+  #L23ae80.  v6:= new `android.content.ContentValues`;
+  #L23ae84.  call `<init>`(v6) @signature `Landroid/content/ContentValues;.<init>:()V` @kind direct;
+  #L23ae8a.  call temp:= `valueOf`(v0) @signature `Ljava/lang/Long;.valueOf:(J)Ljava/lang/Long;` @kind static;
+  #L23ae90.  v0:= temp @kind object;
+  #L23ae92.  v1:= "context_id" @kind object;
+  #L23ae96.  call `put`(v6, v1, v0) @signature `Landroid/content/ContentValues;.put:(Ljava/lang/String;Ljava/lang/Long;)V` @kind virtual;
+  #L23ae9c.  call temp:= `getTransportName`(v12) @signature `Lcom/google/android/datatransport/runtime/EventInternal;.getTransportName:()Ljava/lang/String;` @kind virtual;
+  #L23aea2.  v0:= temp @kind object;
+  #L23aea4.  v1:= "transport_name" @kind object;
+  #L23aea8.  call `put`(v6, v1, v0) @signature `Landroid/content/ContentValues;.put:(Ljava/lang/String;Ljava/lang/String;)V` @kind virtual;
+  #L23aeae.  call temp:= `getEventMillis`(v12) @signature `Lcom/google/android/datatransport/runtime/EventInternal;.getEventMillis:()J` @kind virtual;
+  #L23aeb4.  v0:= temp @kind wide;
+  #L23aeb6.  call temp:= `valueOf`(v0) @signature `Ljava/lang/Long;.valueOf:(J)Ljava/lang/Long;` @kind static;
+  #L23aebc.  v0:= temp @kind object;
+  #L23aebe.  v1:= "timestamp_ms" @kind object;
+  #L23aec2.  call `put`(v6, v1, v0) @signature `Landroid/content/ContentValues;.put:(Ljava/lang/String;Ljava/lang/Long;)V` @kind virtual;
+  #L23aec8.  call temp:= `getUptimeMillis`(v12) @signature `Lcom/google/android/datatransport/runtime/EventInternal;.getUptimeMillis:()J` @kind virtual;
+  #L23aece.  v0:= temp @kind wide;
+  #L23aed0.  call temp:= `valueOf`(v0) @signature `Ljava/lang/Long;.valueOf:(J)Ljava/lang/Long;` @kind static;
+  #L23aed6.  v0:= temp @kind object;
+  #L23aed8.  v1:= "uptime_ms" @kind object;
+  #L23aedc.  call `put`(v6, v1, v0) @signature `Landroid/content/ContentValues;.put:(Ljava/lang/String;Ljava/lang/Long;)V` @kind virtual;
+  #L23aee2.  call temp:= `getEncodedPayload`(v12) @signature `Lcom/google/android/datatransport/runtime/EventInternal;.getEncodedPayload:()Lcom/google/android/datatransport/runtime/EncodedPayload;` @kind virtual;
+  #L23aee8.  v0:= temp @kind object;
+  #L23aeea.  call temp:= `getEncoding`(v0) @signature `Lcom/google/android/datatransport/runtime/EncodedPayload;.getEncoding:()Lcom/google/android/datatransport/Encoding;` @kind virtual;
+  #L23aef0.  v0:= temp @kind object;
+  #L23aef2.  call temp:= `getName`(v0) @signature `Lcom/google/android/datatransport/Encoding;.getName:()Ljava/lang/String;` @kind virtual;
+  #L23aef8.  v0:= temp @kind object;
+  #L23aefa.  v1:= "payload_encoding" @kind object;
+  #L23aefe.  call `put`(v6, v1, v0) @signature `Landroid/content/ContentValues;.put:(Ljava/lang/String;Ljava/lang/String;)V` @kind virtual;
+  #L23af04.  call temp:= `getCode`(v12) @signature `Lcom/google/android/datatransport/runtime/EventInternal;.getCode:()Ljava/lang/Integer;` @kind virtual;
+  #L23af0a.  v0:= temp @kind object;
+  #L23af0c.  v1:= "code" @kind object;
+  #L23af10.  call `put`(v6, v1, v0) @signature `Landroid/content/ContentValues;.put:(Ljava/lang/String;Ljava/lang/Integer;)V` @kind virtual;
+  #L23af16.  call temp:= `valueOf`(v4) @signature `Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer;` @kind static;
+  #L23af1c.  v0:= temp @kind object;
+  #L23af1e.  v1:= "num_attempts" @kind object;
+  #L23af22.  call `put`(v6, v1, v0) @signature `Landroid/content/ContentValues;.put:(Ljava/lang/String;Ljava/lang/Integer;)V` @kind virtual;
+  #L23af28.  call temp:= `valueOf`(v3) @signature `Ljava/lang/Boolean;.valueOf:(Z)Ljava/lang/Boolean;` @kind static;
+  #L23af2e.  v0:= temp @kind object;
+  #L23af30.  v1:= "inline" @kind object;
+  #L23af34.  call `put`(v6, v1, v0) @signature `Landroid/content/ContentValues;.put:(Ljava/lang/String;Ljava/lang/Boolean;)V` @kind virtual;
+  #L23af3a.  if v3 == 0 then goto L23af42;
+  #L23af3e.  v0:= v2 @kind object;
+  #L23af40.  goto L23af46;
+  #L23af42.  v0:= new `byte`[v4];
+  #L23af46.  v1:= "payload" @kind object;
+  #L23af4a.  call `put`(v6, v1, v0) @signature `Landroid/content/ContentValues;.put:(Ljava/lang/String;[B)V` @kind virtual;
+  #L23af50.  v0:= "events" @kind object;
+  #L23af54.  v1:= 0I;
+  #L23af56.  call temp:= `insert`(v14, v0, v1, v6) @signature `Landroid/database/sqlite/SQLiteDatabase;.insert:(Ljava/lang/String;Ljava/lang/String;Landroid/content/ContentValues;)J` @kind virtual;
+  #L23af5c.  v6:= temp @kind wide;
+  #L23af5e.  v0:= "event_id" @kind object;
+  #L23af62.  if v3 != 0 then goto L23afde;
+  #L23af66.  v3:= length @variable v2;
+  #L23af68.  v3:= (`double`) v3 @kind i2d;
+  #L23af6a.  v8:= (`double`) v13 @kind i2d;
+  #L23af6c.  v3:= v3 / v8 @kind double;
+  #L23af6e.  call temp:= `ceil`(v3) @signature `Ljava/lang/Math;.ceil:(D)D` @kind static;
+  #L23af74.  v3:= temp @kind wide;
+  #L23af76.  v3:= (`int`) v3 @kind d2i;
+  #L23af78.  if v5 > v3 then goto L23afde;
+  #L23af7c.  v4:= v5 + -1;
+  #L23af80.  v4:= v4 * v13 @kind int;
+  #L23af84.  v8:= v5 * v13 @kind int;
+  #L23af88.  v9:= length @variable v2;
+  #L23af8a.  call temp:= `min`(v8, v9) @signature `Ljava/lang/Math;.min:(II)I` @kind static;
+  #L23af90.  v8:= temp;
+  #L23af92.  call temp:= `copyOfRange`(v2, v4, v8) @signature `Ljava/util/Arrays;.copyOfRange:([BII)[B` @kind static;
+  #L23af98.  v4:= temp @kind object;
+  #L23af9a.  v8:= new `android.content.ContentValues`;
+  #L23af9e.  call `<init>`(v8) @signature `Landroid/content/ContentValues;.<init>:()V` @kind direct;
+  #L23afa4.  call temp:= `valueOf`(v6) @signature `Ljava/lang/Long;.valueOf:(J)Ljava/lang/Long;` @kind static;
+  #L23afaa.  v9:= temp @kind object;
+  #L23afac.  call `put`(v8, v0, v9) @signature `Landroid/content/ContentValues;.put:(Ljava/lang/String;Ljava/lang/Long;)V` @kind virtual;
+  #L23afb2.  call temp:= `valueOf`(v5) @signature `Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer;` @kind static;
+  #L23afb8.  v9:= temp @kind object;
+  #L23afba.  v10:= "sequence_num" @kind object;
+  #L23afbe.  call `put`(v8, v10, v9) @signature `Landroid/content/ContentValues;.put:(Ljava/lang/String;Ljava/lang/Integer;)V` @kind virtual;
+  #L23afc4.  v9:= "bytes" @kind object;
+  #L23afc8.  call `put`(v8, v9, v4) @signature `Landroid/content/ContentValues;.put:(Ljava/lang/String;[B)V` @kind virtual;
+  #L23afce.  v4:= "event_payloads" @kind object;
+  #L23afd2.  call temp:= `insert`(v14, v4, v1, v8) @signature `Landroid/database/sqlite/SQLiteDatabase;.insert:(Ljava/lang/String;Ljava/lang/String;Landroid/content/ContentValues;)J` @kind virtual;
+  #L23afd8.  v5:= v5 + 1;
+  #L23afdc.  goto L23af78;
+  #L23afde.  call temp:= `getMetadata`(v12) @signature `Lcom/google/android/datatransport/runtime/EventInternal;.getMetadata:()Ljava/util/Map;` @kind virtual;
+  #L23afe4.  v12:= temp @kind object;
+  #L23afe6.  call temp:= `entrySet`(v12) @signature `Ljava/util/Map;.entrySet:()Ljava/util/Set;` @kind interface;
+  #L23afec.  v12:= temp @kind object;
+  #L23afee.  call temp:= `iterator`(v12) @signature `Ljava/util/Set;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L23aff4.  v12:= temp @kind object;
+  #L23aff6.  call temp:= `hasNext`(v12) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L23affc.  v13:= temp;
+  #L23affe.  if v13 == 0 then goto L23b05e;
+  #L23b002.  call temp:= `next`(v12) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L23b008.  v13:= temp @kind object;
+  #L23b00a.  v13:= (`java.util.Map$Entry`) v13 @kind object;
+  #L23b00e.  v2:= new `android.content.ContentValues`;
+  #L23b012.  call `<init>`(v2) @signature `Landroid/content/ContentValues;.<init>:()V` @kind direct;
+  #L23b018.  call temp:= `valueOf`(v6) @signature `Ljava/lang/Long;.valueOf:(J)Ljava/lang/Long;` @kind static;
+  #L23b01e.  v3:= temp @kind object;
+  #L23b020.  call `put`(v2, v0, v3) @signature `Landroid/content/ContentValues;.put:(Ljava/lang/String;Ljava/lang/Long;)V` @kind virtual;
+  #L23b026.  call temp:= `getKey`(v13) @signature `Ljava/util/Map$Entry;.getKey:()Ljava/lang/Object;` @kind interface;
+  #L23b02c.  v3:= temp @kind object;
+  #L23b02e.  v3:= (`java.lang.String`) v3 @kind object;
+  #L23b032.  v4:= "name" @kind object;
+  #L23b036.  call `put`(v2, v4, v3) @signature `Landroid/content/ContentValues;.put:(Ljava/lang/String;Ljava/lang/String;)V` @kind virtual;
+  #L23b03c.  call temp:= `getValue`(v13) @signature `Ljava/util/Map$Entry;.getValue:()Ljava/lang/Object;` @kind interface;
+  #L23b042.  v13:= temp @kind object;
+  #L23b044.  v13:= (`java.lang.String`) v13 @kind object;
+  #L23b048.  v3:= "value" @kind object;
+  #L23b04c.  call `put`(v2, v3, v13) @signature `Landroid/content/ContentValues;.put:(Ljava/lang/String;Ljava/lang/String;)V` @kind virtual;
+  #L23b052.  v13:= "event_metadata" @kind object;
+  #L23b056.  call temp:= `insert`(v14, v13, v1, v2) @signature `Landroid/database/sqlite/SQLiteDatabase;.insert:(Ljava/lang/String;Ljava/lang/String;Landroid/content/ContentValues;)J` @kind virtual;
+  #L23b05c.  goto L23aff6;
+  #L23b05e.  call temp:= `valueOf`(v6) @signature `Ljava/lang/Long;.valueOf:(J)Ljava/lang/Long;` @kind static;
+  #L23b064.  v12:= temp @kind object;
+  #L23b066.  return v12 @kind object;
+}
+procedure `byte`[] `lambda$readPayload$15`(`android.database.Cursor` v6 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.lambda$readPayload$15:(Landroid/database/Cursor;)[B` @AccessFlag PRIVATE_STATIC_SYNTHETIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L23a57c.  v0:= new `java.util.ArrayList`;
+  #L23a580.  call `<init>`(v0) @signature `Ljava/util/ArrayList;.<init>:()V` @kind direct;
+  #L23a586.  v1:= 0I;
+  #L23a588.  v2:= 0I;
+  #L23a58a.  call temp:= `moveToNext`(v6) @signature `Landroid/database/Cursor;.moveToNext:()Z` @kind interface;
+  #L23a590.  v3:= temp;
+  #L23a592.  if v3 == 0 then goto L23a5aa;
+  #L23a596.  call temp:= `getBlob`(v6, v1) @signature `Landroid/database/Cursor;.getBlob:(I)[B` @kind interface;
+  #L23a59c.  v3:= temp @kind object;
+  #L23a59e.  call temp:= `add`(v0, v3) @signature `Ljava/util/List;.add:(Ljava/lang/Object;)Z` @kind interface;
+  #L23a5a4.  v3:= length @variable v3;
+  #L23a5a6.  v2:= v2 + v3 @kind int;
+  #L23a5a8.  goto L23a58a;
+  #L23a5aa.  v6:= new `byte`[v2];
+  #L23a5ae.  v2:= 0I;
+  #L23a5b0.  v3:= 0I;
+  #L23a5b2.  call temp:= `size`(v0) @signature `Ljava/util/List;.size:()I` @kind interface;
+  #L23a5b8.  v4:= temp;
+  #L23a5ba.  if v2 >= v4 then goto L23a5dc;
+  #L23a5be.  call temp:= `get`(v0, v2) @signature `Ljava/util/List;.get:(I)Ljava/lang/Object;` @kind interface;
+  #L23a5c4.  v4:= temp @kind object;
+  #L23a5c6.  v4:= (`byte`[]) v4 @kind object;
+  #L23a5ca.  v5:= length @variable v4;
+  #L23a5cc.  call `arraycopy`(v4, v1, v6, v3, v5) @signature `Ljava/lang/System;.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V` @kind static;
+  #L23a5d2.  v4:= length @variable v4;
+  #L23a5d4.  v3:= v3 + v4 @kind int;
+  #L23a5d6.  v2:= v2 + 1;
+  #L23a5da.  goto L23a5b2;
+  #L23a5dc.  return v6 @kind object;
+}
+procedure `java.lang.Object` `lambda$recordFailure$3`(`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore` v4 @kind this, `android.database.Cursor` v5 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.lambda$recordFailure$3:(Landroid/database/Cursor;)Ljava/lang/Object;` @AccessFlag PRIVATE_SYNTHETIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L23b43c.  call temp:= `moveToNext`(v5) @signature `Landroid/database/Cursor;.moveToNext:()Z` @kind interface;
+  #L23b442.  v0:= temp;
+  #L23b444.  if v0 == 0 then goto L23b46a;
+  #L23b448.  v0:= 0I;
+  #L23b44a.  call temp:= `getInt`(v5, v0) @signature `Landroid/database/Cursor;.getInt:(I)I` @kind interface;
+  #L23b450.  v0:= temp;
+  #L23b452.  v1:= 1I;
+  #L23b454.  call temp:= `getString`(v5, v1) @signature `Landroid/database/Cursor;.getString:(I)Ljava/lang/String;` @kind interface;
+  #L23b45a.  v1:= temp @kind object;
+  #L23b45c.  v2:= (`long`) v0 @kind i2l;
+  #L23b45e.  v0:= `@@com.google.android.datatransport.runtime.firebase.transport.LogEventDropped$Reason.MAX_RETRIES_REACHED` @type ^`com.google.android.datatransport.runtime.firebase.transport.LogEventDropped$Reason` @kind object;
+  #L23b462.  call `recordLogEventDropped`(v4, v2, v0, v1) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.recordLogEventDropped:(JLcom/google/android/datatransport/runtime/firebase/transport/LogEventDropped$Reason;Ljava/lang/String;)V` @kind virtual;
+  #L23b468.  goto L23b43c;
+  #L23b46a.  v5:= 0I;
+  #L23b46c.  return v5 @kind object;
+}
+procedure `java.lang.Object` `lambda$recordFailure$4`(`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore` v1 @kind this, `java.lang.String` v2 @kind object, `java.lang.String` v3 @kind object, `android.database.sqlite.SQLiteDatabase` v4 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.lambda$recordFailure$4:(Ljava/lang/String;Ljava/lang/String;Landroid/database/sqlite/SQLiteDatabase;)Ljava/lang/Object;` @AccessFlag PRIVATE_SYNTHETIC {
+    temp;
+    v0;
+
+  #L23b480.  call temp:= `compileStatement`(v4, v2) @signature `Landroid/database/sqlite/SQLiteDatabase;.compileStatement:(Ljava/lang/String;)Landroid/database/sqlite/SQLiteStatement;` @kind virtual;
+  #L23b486.  v2:= temp @kind object;
+  #L23b488.  call `execute`(v2) @signature `Landroid/database/sqlite/SQLiteStatement;.execute:()V` @kind virtual;
+  #L23b48e.  v2:= 0I;
+  #L23b490.  call temp:= `rawQuery`(v4, v3, v2) @signature `Landroid/database/sqlite/SQLiteDatabase;.rawQuery:(Ljava/lang/String;[Ljava/lang/String;)Landroid/database/Cursor;` @kind virtual;
+  #L23b496.  v3:= temp @kind object;
+  #L23b498.  v0:= new `com.google.android.datatransport.runtime.scheduling.persistence.w`;
+  #L23b49c.  call `<init>`(v0, v1) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/w;.<init>:(Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;)V` @kind direct;
+  #L23b4a2.  call temp:= `tryWithCursor`(v3, v0) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.tryWithCursor:(Landroid/database/Cursor;Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore$Function;)Ljava/lang/Object;` @kind static;
+  #L23b4a8.  v3:= "DELETE FROM events WHERE num_attempts >= 16" @kind object;
+  #L23b4ac.  call temp:= `compileStatement`(v4, v3) @signature `Landroid/database/sqlite/SQLiteDatabase;.compileStatement:(Ljava/lang/String;)Landroid/database/sqlite/SQLiteStatement;` @kind virtual;
+  #L23b4b2.  v3:= temp @kind object;
+  #L23b4b4.  call `execute`(v3) @signature `Landroid/database/sqlite/SQLiteStatement;.execute:()V` @kind virtual;
+  #L23b4ba.  return v2 @kind object;
+}
+procedure `java.lang.Boolean` `lambda$recordLogEventDropped$17`(`android.database.Cursor` v0 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.lambda$recordLogEventDropped$17:(Landroid/database/Cursor;)Ljava/lang/Boolean;` @AccessFlag PRIVATE_STATIC_SYNTHETIC {
+    temp;
+
+  #L23ab7c.  call temp:= `getCount`(v0) @signature `Landroid/database/Cursor;.getCount:()I` @kind interface;
+  #L23ab82.  v0:= temp;
+  #L23ab84.  if v0 <= 0 then goto L23ab8c;
+  #L23ab88.  v0:= 1I;
+  #L23ab8a.  goto L23ab8e;
+  #L23ab8c.  v0:= 0I;
+  #L23ab8e.  call temp:= `valueOf`(v0) @signature `Ljava/lang/Boolean;.valueOf:(Z)Ljava/lang/Boolean;` @kind static;
+  #L23ab94.  v0:= temp @kind object;
+  #L23ab96.  return v0 @kind object;
+}
+procedure `java.lang.Object` `lambda$recordLogEventDropped$18`(`java.lang.String` v6 @kind object, `com.google.android.datatransport.runtime.firebase.transport.LogEventDropped$Reason` v7 @kind object, `long` v8 , `android.database.sqlite.SQLiteDatabase` v10 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.lambda$recordLogEventDropped$18:(Ljava/lang/String;Lcom/google/android/datatransport/runtime/firebase/transport/LogEventDropped$Reason;JLandroid/database/sqlite/SQLiteDatabase;)Ljava/lang/Object;` @AccessFlag PRIVATE_STATIC_SYNTHETIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L23b4cc.  v0:= 2I;
+  #L23b4ce.  v1:= new `java.lang.String`[v0];
+  #L23b4d2.  v2:= 0I;
+  #L23b4d4.  v1[v2]:= v6 @kind object;
+  #L23b4d8.  call temp:= `getNumber`(v7) @signature `Lcom/google/android/datatransport/runtime/firebase/transport/LogEventDropped$Reason;.getNumber:()I` @kind virtual;
+  #L23b4de.  v3:= temp;
+  #L23b4e0.  call temp:= `toString`(v3) @signature `Ljava/lang/Integer;.toString:(I)Ljava/lang/String;` @kind static;
+  #L23b4e6.  v3:= temp @kind object;
+  #L23b4e8.  v4:= 1I;
+  #L23b4ea.  v1[v4]:= v3 @kind object;
+  #L23b4ee.  v3:= "SELECT 1 FROM log_event_dropped WHERE log_source = ? AND reason = ?" @kind object;
+  #L23b4f2.  call temp:= `rawQuery`(v10, v3, v1) @signature `Landroid/database/sqlite/SQLiteDatabase;.rawQuery:(Ljava/lang/String;[Ljava/lang/String;)Landroid/database/Cursor;` @kind virtual;
+  #L23b4f8.  v1:= temp @kind object;
+  #L23b4fa.  v3:= `@@com.google.android.datatransport.runtime.scheduling.persistence.m.a` @type ^`com.google.android.datatransport.runtime.scheduling.persistence.m` @kind object;
+  #L23b4fe.  call temp:= `tryWithCursor`(v1, v3) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.tryWithCursor:(Landroid/database/Cursor;Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore$Function;)Ljava/lang/Object;` @kind static;
+  #L23b504.  v1:= temp @kind object;
+  #L23b506.  v1:= (`java.lang.Boolean`) v1 @kind object;
+  #L23b50a.  call temp:= `booleanValue`(v1) @signature `Ljava/lang/Boolean;.booleanValue:()Z` @kind virtual;
+  #L23b510.  v1:= temp;
+  #L23b512.  v3:= 0I;
+  #L23b514.  if v1 != 0 then goto L23b564;
+  #L23b518.  v0:= new `android.content.ContentValues`;
+  #L23b51c.  call `<init>`(v0) @signature `Landroid/content/ContentValues;.<init>:()V` @kind direct;
+  #L23b522.  v1:= "log_source" @kind object;
+  #L23b526.  call `put`(v0, v1, v6) @signature `Landroid/content/ContentValues;.put:(Ljava/lang/String;Ljava/lang/String;)V` @kind virtual;
+  #L23b52c.  call temp:= `getNumber`(v7) @signature `Lcom/google/android/datatransport/runtime/firebase/transport/LogEventDropped$Reason;.getNumber:()I` @kind virtual;
+  #L23b532.  v6:= temp;
+  #L23b534.  call temp:= `valueOf`(v6) @signature `Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer;` @kind static;
+  #L23b53a.  v6:= temp @kind object;
+  #L23b53c.  v7:= "reason" @kind object;
+  #L23b540.  call `put`(v0, v7, v6) @signature `Landroid/content/ContentValues;.put:(Ljava/lang/String;Ljava/lang/Integer;)V` @kind virtual;
+  #L23b546.  call temp:= `valueOf`(v8) @signature `Ljava/lang/Long;.valueOf:(J)Ljava/lang/Long;` @kind static;
+  #L23b54c.  v6:= temp @kind object;
+  #L23b54e.  v7:= "events_dropped_count" @kind object;
+  #L23b552.  call `put`(v0, v7, v6) @signature `Landroid/content/ContentValues;.put:(Ljava/lang/String;Ljava/lang/Long;)V` @kind virtual;
+  #L23b558.  v6:= "log_event_dropped" @kind object;
+  #L23b55c.  call temp:= `insert`(v10, v6, v3, v0) @signature `Landroid/database/sqlite/SQLiteDatabase;.insert:(Ljava/lang/String;Ljava/lang/String;Landroid/content/ContentValues;)J` @kind virtual;
+  #L23b562.  goto L23b5b2;
+  #L23b564.  v1:= new `java.lang.StringBuilder`;
+  #L23b568.  call `<init>`(v1) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L23b56e.  v5:= "UPDATE log_event_dropped SET events_dropped_count = events_dropped_count + " @kind object;
+  #L23b572.  call temp:= `append`(v1, v5) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L23b578.  call temp:= `append`(v1, v8) @signature `Ljava/lang/StringBuilder;.append:(J)Ljava/lang/StringBuilder;` @kind virtual;
+  #L23b57e.  v8:= " WHERE log_source = ? AND reason = ?" @kind object;
+  #L23b582.  call temp:= `append`(v1, v8) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L23b588.  call temp:= `toString`(v1) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L23b58e.  v8:= temp @kind object;
+  #L23b590.  v9:= new `java.lang.String`[v0];
+  #L23b594.  v9[v2]:= v6 @kind object;
+  #L23b598.  call temp:= `getNumber`(v7) @signature `Lcom/google/android/datatransport/runtime/firebase/transport/LogEventDropped$Reason;.getNumber:()I` @kind virtual;
+  #L23b59e.  v6:= temp;
+  #L23b5a0.  call temp:= `toString`(v6) @signature `Ljava/lang/Integer;.toString:(I)Ljava/lang/String;` @kind static;
+  #L23b5a6.  v6:= temp @kind object;
+  #L23b5a8.  v9[v4]:= v6 @kind object;
+  #L23b5ac.  call `execSQL`(v10, v8, v9) @signature `Landroid/database/sqlite/SQLiteDatabase;.execSQL:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind virtual;
+  #L23b5b2.  return v3 @kind object;
+}
+procedure `java.lang.Object` `lambda$recordNextCallTime$7`(`long` v3 , `com.google.android.datatransport.runtime.TransportContext` v5 @kind object, `android.database.sqlite.SQLiteDatabase` v6 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.lambda$recordNextCallTime$7:(JLcom/google/android/datatransport/runtime/TransportContext;Landroid/database/sqlite/SQLiteDatabase;)Ljava/lang/Object;` @AccessFlag PRIVATE_STATIC_SYNTHETIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L23b5c4.  v0:= new `android.content.ContentValues`;
+  #L23b5c8.  call `<init>`(v0) @signature `Landroid/content/ContentValues;.<init>:()V` @kind direct;
+  #L23b5ce.  call temp:= `valueOf`(v3) @signature `Ljava/lang/Long;.valueOf:(J)Ljava/lang/Long;` @kind static;
+  #L23b5d4.  v3:= temp @kind object;
+  #L23b5d6.  v4:= "next_request_ms" @kind object;
+  #L23b5da.  call `put`(v0, v4, v3) @signature `Landroid/content/ContentValues;.put:(Ljava/lang/String;Ljava/lang/Long;)V` @kind virtual;
+  #L23b5e0.  v3:= 2I;
+  #L23b5e2.  v3:= new `java.lang.String`[v3];
+  #L23b5e6.  call temp:= `getBackendName`(v5) @signature `Lcom/google/android/datatransport/runtime/TransportContext;.getBackendName:()Ljava/lang/String;` @kind virtual;
+  #L23b5ec.  v4:= temp @kind object;
+  #L23b5ee.  v1:= 0I;
+  #L23b5f0.  v3[v1]:= v4 @kind object;
+  #L23b5f4.  call temp:= `getPriority`(v5) @signature `Lcom/google/android/datatransport/runtime/TransportContext;.getPriority:()Lcom/google/android/datatransport/Priority;` @kind virtual;
+  #L23b5fa.  v4:= temp @kind object;
+  #L23b5fc.  call temp:= `toInt`(v4) @signature `Lcom/google/android/datatransport/runtime/util/PriorityMapping;.toInt:(Lcom/google/android/datatransport/Priority;)I` @kind static;
+  #L23b602.  v4:= temp;
+  #L23b604.  call temp:= `valueOf`(v4) @signature `Ljava/lang/String;.valueOf:(I)Ljava/lang/String;` @kind static;
+  #L23b60a.  v4:= temp @kind object;
+  #L23b60c.  v1:= 1I;
+  #L23b60e.  v3[v1]:= v4 @kind object;
+  #L23b612.  v4:= "transport_contexts" @kind object;
+  #L23b616.  v2:= "backend_name = ? and priority = ?" @kind object;
+  #L23b61a.  call temp:= `update`(v6, v4, v0, v2, v3) @signature `Landroid/database/sqlite/SQLiteDatabase;.update:(Ljava/lang/String;Landroid/content/ContentValues;Ljava/lang/String;[Ljava/lang/String;)I` @kind virtual;
+  #L23b620.  v3:= temp;
+  #L23b622.  v2:= 0I;
+  #L23b624.  if v3 >= v1 then goto L23b662;
+  #L23b628.  call temp:= `getBackendName`(v5) @signature `Lcom/google/android/datatransport/runtime/TransportContext;.getBackendName:()Ljava/lang/String;` @kind virtual;
+  #L23b62e.  v3:= temp @kind object;
+  #L23b630.  v1:= "backend_name" @kind object;
+  #L23b634.  call `put`(v0, v1, v3) @signature `Landroid/content/ContentValues;.put:(Ljava/lang/String;Ljava/lang/String;)V` @kind virtual;
+  #L23b63a.  call temp:= `getPriority`(v5) @signature `Lcom/google/android/datatransport/runtime/TransportContext;.getPriority:()Lcom/google/android/datatransport/Priority;` @kind virtual;
+  #L23b640.  v3:= temp @kind object;
+  #L23b642.  call temp:= `toInt`(v3) @signature `Lcom/google/android/datatransport/runtime/util/PriorityMapping;.toInt:(Lcom/google/android/datatransport/Priority;)I` @kind static;
+  #L23b648.  v3:= temp;
+  #L23b64a.  call temp:= `valueOf`(v3) @signature `Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer;` @kind static;
+  #L23b650.  v3:= temp @kind object;
+  #L23b652.  v5:= "priority" @kind object;
+  #L23b656.  call `put`(v0, v5, v3) @signature `Landroid/content/ContentValues;.put:(Ljava/lang/String;Ljava/lang/Integer;)V` @kind virtual;
+  #L23b65c.  call temp:= `insert`(v6, v4, v2, v0) @signature `Landroid/database/sqlite/SQLiteDatabase;.insert:(Ljava/lang/String;Ljava/lang/String;Landroid/content/ContentValues;)J` @kind virtual;
+  #L23b662.  return v2 @kind object;
+}
+procedure `java.lang.Object` `lambda$resetClientMetrics$23`(`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore` v3 @kind this, `android.database.sqlite.SQLiteDatabase` v4 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.lambda$resetClientMetrics$23:(Landroid/database/sqlite/SQLiteDatabase;)Ljava/lang/Object;` @AccessFlag PRIVATE_SYNTHETIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L23b674.  v0:= "DELETE FROM log_event_dropped" @kind object;
+  #L23b678.  call temp:= `compileStatement`(v4, v0) @signature `Landroid/database/sqlite/SQLiteDatabase;.compileStatement:(Ljava/lang/String;)Landroid/database/sqlite/SQLiteStatement;` @kind virtual;
+  #L23b67e.  v0:= temp @kind object;
+  #L23b680.  call `execute`(v0) @signature `Landroid/database/sqlite/SQLiteStatement;.execute:()V` @kind virtual;
+  #L23b686.  v0:= new `java.lang.StringBuilder`;
+  #L23b68a.  call `<init>`(v0) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L23b690.  v1:= "UPDATE global_log_event_state SET last_metrics_upload_ms=" @kind object;
+  #L23b694.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L23b69a.  v1:= v3.`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore.wallClock` @type ^`com.google.android.datatransport.runtime.time.Clock` @kind object;
+  #L23b69e.  call temp:= `getTime`(v1) @signature `Lcom/google/android/datatransport/runtime/time/Clock;.getTime:()J` @kind interface;
+  #L23b6a4.  v1:= temp @kind wide;
+  #L23b6a6.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(J)Ljava/lang/StringBuilder;` @kind virtual;
+  #L23b6ac.  call temp:= `toString`(v0) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L23b6b2.  v0:= temp @kind object;
+  #L23b6b4.  call temp:= `compileStatement`(v4, v0) @signature `Landroid/database/sqlite/SQLiteDatabase;.compileStatement:(Ljava/lang/String;)Landroid/database/sqlite/SQLiteStatement;` @kind virtual;
+  #L23b6ba.  v4:= temp @kind object;
+  #L23b6bc.  call `execute`(v4) @signature `Landroid/database/sqlite/SQLiteStatement;.execute:()V` @kind virtual;
+  #L23b6c2.  v4:= 0I;
+  #L23b6c4.  return v4 @kind object;
+}
+procedure `java.util.List` `loadEvents`(`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore` v19 @kind this, `android.database.sqlite.SQLiteDatabase` v20 @kind object, `com.google.android.datatransport.runtime.TransportContext` v21 @kind object, `int` v22 ) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.loadEvents:(Landroid/database/sqlite/SQLiteDatabase;Lcom/google/android/datatransport/runtime/TransportContext;I)Ljava/util/List;` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+    v9;
+    v10;
+    v11;
+    v12;
+    v13;
+    v14;
+    v15;
+    v16;
+    v17;
+    v18;
+
+  #L23babc.  v0:= new `java.util.ArrayList`;
+  #L23bac0.  call `<init>`(v0) @signature `Ljava/util/ArrayList;.<init>:()V` @kind direct;
+  #L23bac6.  call temp:= `getTransportContextId`(v19, v20, v21) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.getTransportContextId:(Landroid/database/sqlite/SQLiteDatabase;Lcom/google/android/datatransport/runtime/TransportContext;)Ljava/lang/Long;` @kind direct;
+  #L23bacc.  v1:= temp @kind object;
+  #L23bace.  if v1 != 0 then goto L23bad4;
+  #L23bad2.  return v0 @kind object;
+  #L23bad4.  v2:= "_id" @kind object;
+  #L23bad8.  v3:= "transport_name" @kind object;
+  #L23badc.  v4:= "timestamp_ms" @kind object;
+  #L23bae0.  v5:= "uptime_ms" @kind object;
+  #L23bae4.  v6:= "payload_encoding" @kind object;
+  #L23bae8.  v7:= "payload" @kind object;
+  #L23baec.  v8:= "code" @kind object;
+  #L23baf0.  v9:= "inline" @kind object;
+  #L23baf4.  temp:= new `java.lang.String`[v2, v3, v4, v5, v6, v7, v8, v9];
+  #L23bafa.  v12:= temp @kind object;
+  #L23bafc.  v2:= 1I;
+  #L23bafe.  v14:= new `java.lang.String`[v2];
+  #L23bb02.  v2:= 0I;
+  #L23bb04.  call temp:= `toString`(v1) @signature `Ljava/lang/Long;.toString:()Ljava/lang/String;` @kind virtual;
+  #L23bb0a.  v1:= temp @kind object;
+  #L23bb0c.  v14[v2]:= v1 @kind object;
+  #L23bb10.  v15:= 0I;
+  #L23bb12.  v16:= 0I;
+  #L23bb16.  v17:= 0I;
+  #L23bb1a.  call temp:= `valueOf`(v22) @signature `Ljava/lang/String;.valueOf:(I)Ljava/lang/String;` @kind static;
+  #L23bb20.  v18:= temp @kind object;
+  #L23bb22.  v11:= "events" @kind object;
+  #L23bb26.  v13:= "context_id = ?" @kind object;
+  #L23bb2a.  v10:= v20 @kind object;
+  #L23bb2e.  call temp:= `query`(v10, v11, v12, v13, v14, v15, v16, v17, v18) @signature `Landroid/database/sqlite/SQLiteDatabase;.query:(Ljava/lang/String;[Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Landroid/database/Cursor;` @kind virtual;
+  #L23bb34.  v1:= temp @kind object;
+  #L23bb36.  v2:= new `com.google.android.datatransport.runtime.scheduling.persistence.d`;
+  #L23bb3a.  v3:= v19 @kind object;
+  #L23bb3e.  v4:= v21 @kind object;
+  #L23bb42.  call `<init>`(v2, v3, v0, v4) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/d;.<init>:(Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;Ljava/util/List;Lcom/google/android/datatransport/runtime/TransportContext;)V` @kind direct;
+  #L23bb48.  call temp:= `tryWithCursor`(v1, v2) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.tryWithCursor:(Landroid/database/Cursor;Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore$Function;)Ljava/lang/Object;` @kind static;
+  #L23bb4e.  return v0 @kind object;
+}
+procedure `java.util.Map` `loadMetadata`(`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore` v12 @kind this, `android.database.sqlite.SQLiteDatabase` v13 @kind object, `java.util.List` v14 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.loadMetadata:(Landroid/database/sqlite/SQLiteDatabase;Ljava/util/List;)Ljava/util/Map;` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+    v9;
+    v10;
+    v11;
+
+  #L23bb60.  v0:= new `java.util.HashMap`;
+  #L23bb64.  call `<init>`(v0) @signature `Ljava/util/HashMap;.<init>:()V` @kind direct;
+  #L23bb6a.  v1:= new `java.lang.StringBuilder`;
+  #L23bb6e.  v2:= "event_id IN (" @kind object;
+  #L23bb72.  call `<init>`(v1, v2) @signature `Ljava/lang/StringBuilder;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L23bb78.  v2:= 0I;
+  #L23bb7a.  call temp:= `size`(v14) @signature `Ljava/util/List;.size:()I` @kind interface;
+  #L23bb80.  v3:= temp;
+  #L23bb82.  if v2 >= v3 then goto L23bbc0;
+  #L23bb86.  call temp:= `get`(v14, v2) @signature `Ljava/util/List;.get:(I)Ljava/lang/Object;` @kind interface;
+  #L23bb8c.  v3:= temp @kind object;
+  #L23bb8e.  v3:= (`com.google.android.datatransport.runtime.scheduling.persistence.PersistedEvent`) v3 @kind object;
+  #L23bb92.  call temp:= `getId`(v3) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/PersistedEvent;.getId:()J` @kind virtual;
+  #L23bb98.  v3:= temp @kind wide;
+  #L23bb9a.  call temp:= `append`(v1, v3) @signature `Ljava/lang/StringBuilder;.append:(J)Ljava/lang/StringBuilder;` @kind virtual;
+  #L23bba0.  call temp:= `size`(v14) @signature `Ljava/util/List;.size:()I` @kind interface;
+  #L23bba6.  v3:= temp;
+  #L23bba8.  v3:= v3 + -1;
+  #L23bbac.  if v2 >= v3 then goto L23bbba;
+  #L23bbb0.  v3:= 44I;
+  #L23bbb4.  call temp:= `append`(v1, v3) @signature `Ljava/lang/StringBuilder;.append:(C)Ljava/lang/StringBuilder;` @kind virtual;
+  #L23bbba.  v2:= v2 + 1;
+  #L23bbbe.  goto L23bb7a;
+  #L23bbc0.  v14:= 41I;
+  #L23bbc4.  call temp:= `append`(v1, v14) @signature `Ljava/lang/StringBuilder;.append:(C)Ljava/lang/StringBuilder;` @kind virtual;
+  #L23bbca.  v14:= "event_id" @kind object;
+  #L23bbce.  v2:= "name" @kind object;
+  #L23bbd2.  v3:= "value" @kind object;
+  #L23bbd6.  temp:= new `java.lang.String`[v14, v2, v3];
+  #L23bbdc.  v6:= temp @kind object;
+  #L23bbde.  call temp:= `toString`(v1) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L23bbe4.  v7:= temp @kind object;
+  #L23bbe6.  v8:= 0I;
+  #L23bbe8.  v9:= 0I;
+  #L23bbea.  v10:= 0I;
+  #L23bbec.  v11:= 0I;
+  #L23bbee.  v5:= "event_metadata" @kind object;
+  #L23bbf2.  v4:= v13 @kind object;
+  #L23bbf4.  call temp:= `query`(v4, v5, v6, v7, v8, v9, v10, v11) @signature `Landroid/database/sqlite/SQLiteDatabase;.query:(Ljava/lang/String;[Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Landroid/database/Cursor;` @kind virtual;
+  #L23bbfa.  v13:= temp @kind object;
+  #L23bbfc.  v14:= new `com.google.android.datatransport.runtime.scheduling.persistence.g`;
+  #L23bc00.  call `<init>`(v14, v0) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/g;.<init>:(Ljava/util/Map;)V` @kind direct;
+  #L23bc06.  call temp:= `tryWithCursor`(v13, v14) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.tryWithCursor:(Landroid/database/Cursor;Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore$Function;)Ljava/lang/Object;` @kind static;
+  #L23bc0c.  return v0 @kind object;
+}
+procedure `java.util.List` `m0`(`android.database.sqlite.SQLiteDatabase` v0 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.m0:(Landroid/database/sqlite/SQLiteDatabase;)Ljava/util/List;` @AccessFlag PUBLIC_STATIC_SYNTHETIC {
+    temp;
+
+  #L23b880.  call temp:= `lambda$loadActiveContexts$10`(v0) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.lambda$loadActiveContexts$10:(Landroid/database/sqlite/SQLiteDatabase;)Ljava/util/List;` @kind static;
+  #L23b886.  v0:= temp @kind object;
+  #L23b888.  return v0 @kind object;
+}
+procedure `byte`[] `maybeBase64Decode`(`java.lang.String` v1 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.maybeBase64Decode:(Ljava/lang/String;)[B` @AccessFlag PRIVATE_STATIC {
+    temp;
+    v0;
+
+  #L23a5f0.  if v1 != 0 then goto L23a5f8;
+  #L23a5f4.  v1:= 0I;
+  #L23a5f6.  return v1 @kind object;
+  #L23a5f8.  v0:= 0I;
+  #L23a5fa.  call temp:= `decode`(v1, v0) @signature `Landroid/util/Base64;.decode:(Ljava/lang/String;I)[B` @kind static;
+  #L23a600.  v1:= temp @kind object;
+  #L23a602.  return v1 @kind object;
+}
+procedure `java.lang.Boolean` `n0`(`android.database.Cursor` v0 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.n0:(Landroid/database/Cursor;)Ljava/lang/Boolean;` @AccessFlag PUBLIC_STATIC_SYNTHETIC {
+    temp;
+
+  #L23ab04.  call temp:= `lambda$recordLogEventDropped$17`(v0) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.lambda$recordLogEventDropped$17:(Landroid/database/Cursor;)Ljava/lang/Boolean;` @kind static;
+  #L23ab0a.  v0:= temp @kind object;
+  #L23ab0c.  return v0 @kind object;
+}
+procedure `void` `populateLogSourcesMetrics`(`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore` v3 @kind this, `com.google.android.datatransport.runtime.firebase.transport.ClientMetrics$Builder` v4 @kind object, `java.util.Map` v5 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.populateLogSourcesMetrics:(Lcom/google/android/datatransport/runtime/firebase/transport/ClientMetrics$Builder;Ljava/util/Map;)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L23be78.  call temp:= `entrySet`(v5) @signature `Ljava/util/Map;.entrySet:()Ljava/util/Set;` @kind interface;
+  #L23be7e.  v5:= temp @kind object;
+  #L23be80.  call temp:= `iterator`(v5) @signature `Ljava/util/Set;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L23be86.  v5:= temp @kind object;
+  #L23be88.  call temp:= `hasNext`(v5) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L23be8e.  v0:= temp;
+  #L23be90.  if v0 == 0 then goto L23bee0;
+  #L23be94.  call temp:= `next`(v5) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L23be9a.  v0:= temp @kind object;
+  #L23be9c.  v0:= (`java.util.Map$Entry`) v0 @kind object;
+  #L23bea0.  call temp:= `newBuilder`() @signature `Lcom/google/android/datatransport/runtime/firebase/transport/LogSourceMetrics;.newBuilder:()Lcom/google/android/datatransport/runtime/firebase/transport/LogSourceMetrics$Builder;` @kind static;
+  #L23bea6.  v1:= temp @kind object;
+  #L23bea8.  call temp:= `getKey`(v0) @signature `Ljava/util/Map$Entry;.getKey:()Ljava/lang/Object;` @kind interface;
+  #L23beae.  v2:= temp @kind object;
+  #L23beb0.  v2:= (`java.lang.String`) v2 @kind object;
+  #L23beb4.  call temp:= `setLogSource`(v1, v2) @signature `Lcom/google/android/datatransport/runtime/firebase/transport/LogSourceMetrics$Builder;.setLogSource:(Ljava/lang/String;)Lcom/google/android/datatransport/runtime/firebase/transport/LogSourceMetrics$Builder;` @kind virtual;
+  #L23beba.  v1:= temp @kind object;
+  #L23bebc.  call temp:= `getValue`(v0) @signature `Ljava/util/Map$Entry;.getValue:()Ljava/lang/Object;` @kind interface;
+  #L23bec2.  v0:= temp @kind object;
+  #L23bec4.  v0:= (`java.util.List`) v0 @kind object;
+  #L23bec8.  call temp:= `setLogEventDroppedList`(v1, v0) @signature `Lcom/google/android/datatransport/runtime/firebase/transport/LogSourceMetrics$Builder;.setLogEventDroppedList:(Ljava/util/List;)Lcom/google/android/datatransport/runtime/firebase/transport/LogSourceMetrics$Builder;` @kind virtual;
+  #L23bece.  v0:= temp @kind object;
+  #L23bed0.  call temp:= `build`(v0) @signature `Lcom/google/android/datatransport/runtime/firebase/transport/LogSourceMetrics$Builder;.build:()Lcom/google/android/datatransport/runtime/firebase/transport/LogSourceMetrics;` @kind virtual;
+  #L23bed6.  v0:= temp @kind object;
+  #L23bed8.  call temp:= `addLogSourceMetrics`(v4, v0) @signature `Lcom/google/android/datatransport/runtime/firebase/transport/ClientMetrics$Builder;.addLogSourceMetrics:(Lcom/google/android/datatransport/runtime/firebase/transport/LogSourceMetrics;)Lcom/google/android/datatransport/runtime/firebase/transport/ClientMetrics$Builder;` @kind virtual;
+  #L23bede.  goto L23be88;
+  #L23bee0.  return @kind void;
+}
+procedure `byte`[] `readPayload`(`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore` v8 @kind this, `long` v9 ) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.readPayload:(J)[B` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+
+  #L23a614.  call temp:= `getDb`(v8) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.getDb:()Landroid/database/sqlite/SQLiteDatabase;` @kind virtual;
+  #L23a61a.  v0:= temp @kind object;
+  #L23a61c.  v1:= "bytes" @kind object;
+  #L23a620.  temp:= new `java.lang.String`[v1];
+  #L23a626.  v2:= temp @kind object;
+  #L23a628.  v1:= 1I;
+  #L23a62a.  v4:= new `java.lang.String`[v1];
+  #L23a62e.  call temp:= `valueOf`(v9) @signature `Ljava/lang/String;.valueOf:(J)Ljava/lang/String;` @kind static;
+  #L23a634.  v9:= temp @kind object;
+  #L23a636.  v10:= 0I;
+  #L23a638.  v4[v10]:= v9 @kind object;
+  #L23a63c.  v1:= "event_payloads" @kind object;
+  #L23a640.  v3:= "event_id = ?" @kind object;
+  #L23a644.  v5:= 0I;
+  #L23a646.  v6:= 0I;
+  #L23a648.  v7:= "sequence_num" @kind object;
+  #L23a64c.  call temp:= `query`(v0, v1, v2, v3, v4, v5, v6, v7) @signature `Landroid/database/sqlite/SQLiteDatabase;.query:(Ljava/lang/String;[Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Landroid/database/Cursor;` @kind virtual;
+  #L23a652.  v9:= temp @kind object;
+  #L23a654.  v10:= `@@com.google.android.datatransport.runtime.scheduling.persistence.h.a` @type ^`com.google.android.datatransport.runtime.scheduling.persistence.h` @kind object;
+  #L23a658.  call temp:= `tryWithCursor`(v9, v10) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.tryWithCursor:(Landroid/database/Cursor;Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore$Function;)Ljava/lang/Object;` @kind static;
+  #L23a65e.  v9:= temp @kind object;
+  #L23a660.  v9:= (`byte`[]) v9 @kind object;
+  #L23a664.  return v9 @kind object;
+}
+procedure `java.lang.Object` `retryIfDbLocked`(`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore` v8 @kind this, `com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore$Producer` v9 @kind object, `com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore$Function` v10 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.retryIfDbLocked:(Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore$Producer;Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore$Function;)Ljava/lang/Object;` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+
+  #L23b6d8.  v0:= v8.`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore.monotonicClock` @type ^`com.google.android.datatransport.runtime.time.Clock` @kind object;
+  #L23b6dc.  call temp:= `getTime`(v0) @signature `Lcom/google/android/datatransport/runtime/time/Clock;.getTime:()J` @kind interface;
+  #L23b6e2.  v0:= temp @kind wide;
+  #L23b6e4.  call temp:= `produce`(v9) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore$Producer;.produce:()Ljava/lang/Object;` @kind interface;
+  #L23b6ea.  v9:= temp @kind object;
+  #L23b6ec.  return v9 @kind object;
+  #L23b6ee.  v2:= Exception @type ^`android.database.sqlite.SQLiteDatabaseLockedException` @kind object;
+  #L23b6f0.  v3:= v8.`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore.monotonicClock` @type ^`com.google.android.datatransport.runtime.time.Clock` @kind object;
+  #L23b6f4.  call temp:= `getTime`(v3) @signature `Lcom/google/android/datatransport/runtime/time/Clock;.getTime:()J` @kind interface;
+  #L23b6fa.  v3:= temp @kind wide;
+  #L23b6fc.  v5:= v8.`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore.config` @type ^`com.google.android.datatransport.runtime.scheduling.persistence.EventStoreConfig` @kind object;
+  #L23b700.  call temp:= `getCriticalSectionEnterTimeoutMs`(v5) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/EventStoreConfig;.getCriticalSectionEnterTimeoutMs:()I` @kind virtual;
+  #L23b706.  v5:= temp;
+  #L23b708.  v5:= (`long`) v5 @kind i2l;
+  #L23b70a.  v5:= v5 + v0 @kind long;
+  #L23b70c.  v7:= lcmp(v3, v5);
+  #L23b710.  if v7 < 0 then goto L23b71e;
+  #L23b714.  call temp:= `apply`(v10, v2) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore$Function;.apply:(Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L23b71a.  v9:= temp @kind object;
+  #L23b71c.  return v9 @kind object;
+  #L23b71e.  v2:= 50L;
+  #L23b722.  call `sleep`(v2) @signature `Landroid/os/SystemClock;.sleep:(J)V` @kind static;
+  #L23b728.  goto L23b6e4;
+  catch `android.database.sqlite.SQLiteDatabaseLockedException` @[L23b6e4..L23b6ec] goto L23b6ee;
+}
+procedure `com.google.android.datatransport.runtime.firebase.transport.TimeWindow` `s`(`long` v0 , `android.database.Cursor` v2 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.s:(JLandroid/database/Cursor;)Lcom/google/android/datatransport/runtime/firebase/transport/TimeWindow;` @AccessFlag PUBLIC_STATIC_SYNTHETIC {
+    temp;
+
+  #L23a928.  call temp:= `lambda$getTimeWindow$21`(v0, v2) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.lambda$getTimeWindow$21:(JLandroid/database/Cursor;)Lcom/google/android/datatransport/runtime/firebase/transport/TimeWindow;` @kind static;
+  #L23a92e.  v0:= temp @kind object;
+  #L23a930.  return v0 @kind object;
+}
+procedure `com.google.android.datatransport.Encoding` `toEncoding`(`java.lang.String` v0 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.toEncoding:(Ljava/lang/String;)Lcom/google/android/datatransport/Encoding;` @AccessFlag PRIVATE_STATIC {
+    temp;
+
+  #L23a678.  if v0 != 0 then goto L23a682;
+  #L23a67c.  v0:= `@@com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore.PROTOBUF_ENCODING` @type ^`com.google.android.datatransport.Encoding` @kind object;
+  #L23a680.  return v0 @kind object;
+  #L23a682.  call temp:= `of`(v0) @signature `Lcom/google/android/datatransport/Encoding;.of:(Ljava/lang/String;)Lcom/google/android/datatransport/Encoding;` @kind static;
+  #L23a688.  v0:= temp @kind object;
+  #L23a68a.  return v0 @kind object;
+}
+procedure `java.lang.String` `toIdList`(`java.lang.Iterable` v3 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.toIdList:(Ljava/lang/Iterable;)Ljava/lang/String;` @AccessFlag PRIVATE_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L23b7d0.  v0:= new `java.lang.StringBuilder`;
+  #L23b7d4.  v1:= "(" @kind object;
+  #L23b7d8.  call `<init>`(v0, v1) @signature `Ljava/lang/StringBuilder;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L23b7de.  call temp:= `iterator`(v3) @signature `Ljava/lang/Iterable;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L23b7e4.  v3:= temp @kind object;
+  #L23b7e6.  call temp:= `hasNext`(v3) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L23b7ec.  v1:= temp;
+  #L23b7ee.  if v1 == 0 then goto L23b824;
+  #L23b7f2.  call temp:= `next`(v3) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L23b7f8.  v1:= temp @kind object;
+  #L23b7fa.  v1:= (`com.google.android.datatransport.runtime.scheduling.persistence.PersistedEvent`) v1 @kind object;
+  #L23b7fe.  call temp:= `getId`(v1) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/PersistedEvent;.getId:()J` @kind virtual;
+  #L23b804.  v1:= temp @kind wide;
+  #L23b806.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(J)Ljava/lang/StringBuilder;` @kind virtual;
+  #L23b80c.  call temp:= `hasNext`(v3) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L23b812.  v1:= temp;
+  #L23b814.  if v1 == 0 then goto L23b7e6;
+  #L23b818.  v1:= 44I;
+  #L23b81c.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(C)Ljava/lang/StringBuilder;` @kind virtual;
+  #L23b822.  goto L23b7e6;
+  #L23b824.  v3:= 41I;
+  #L23b828.  call temp:= `append`(v0, v3) @signature `Ljava/lang/StringBuilder;.append:(C)Ljava/lang/StringBuilder;` @kind virtual;
+  #L23b82e.  call temp:= `toString`(v0) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L23b834.  v3:= temp @kind object;
+  #L23b836.  return v3 @kind object;
+}
+procedure `java.lang.Object` `tryWithCursor`(`android.database.Cursor` v0 @kind object, `com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore$Function` v1 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.tryWithCursor:(Landroid/database/Cursor;Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore$Function;)Ljava/lang/Object;` @AccessFlag STATIC {
+    temp;
+
+  #L23b798.  call temp:= `apply`(v1, v0) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore$Function;.apply:(Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L23b79e.  v1:= temp @kind object;
+  #L23b7a0.  call `close`(v0) @signature `Landroid/database/Cursor;.close:()V` @kind interface;
+  #L23b7a6.  return v1 @kind object;
+  #L23b7a8.  v1:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L23b7aa.  call `close`(v0) @signature `Landroid/database/Cursor;.close:()V` @kind interface;
+  #L23b7b0.  throw v1;
+  catch `java.lang.Throwable` @[L23b798..L23b7a0] goto L23b7a8;
+}
+procedure `int` `cleanUp`(`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore` v4 @kind this) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.cleanUp:()I` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L23aa9c.  v0:= v4.`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore.wallClock` @type ^`com.google.android.datatransport.runtime.time.Clock` @kind object;
+  #L23aaa0.  call temp:= `getTime`(v0) @signature `Lcom/google/android/datatransport/runtime/time/Clock;.getTime:()J` @kind interface;
+  #L23aaa6.  v0:= temp @kind wide;
+  #L23aaa8.  v2:= v4.`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore.config` @type ^`com.google.android.datatransport.runtime.scheduling.persistence.EventStoreConfig` @kind object;
+  #L23aaac.  call temp:= `getEventCleanUpAge`(v2) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/EventStoreConfig;.getEventCleanUpAge:()J` @kind virtual;
+  #L23aab2.  v2:= temp @kind wide;
+  #L23aab4.  v0:= v0 - v2 @kind long;
+  #L23aab6.  v2:= new `com.google.android.datatransport.runtime.scheduling.persistence.y`;
+  #L23aaba.  call `<init>`(v2, v4, v0) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/y;.<init>:(Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;J)V` @kind direct;
+  #L23aac0.  call temp:= `inTransaction`(v4, v2) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.inTransaction:(Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore$Function;)Ljava/lang/Object;` @kind virtual;
+  #L23aac6.  v0:= temp @kind object;
+  #L23aac8.  v0:= (`java.lang.Integer`) v0 @kind object;
+  #L23aacc.  call temp:= `intValue`(v0) @signature `Ljava/lang/Integer;.intValue:()I` @kind virtual;
+  #L23aad2.  v0:= temp;
+  #L23aad4.  return v0;
+}
+procedure `void` `clearDb`(`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore` v1 @kind this) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.clearDb:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L23be18.  v0:= `@@com.google.android.datatransport.runtime.scheduling.persistence.o.a` @type ^`com.google.android.datatransport.runtime.scheduling.persistence.o` @kind object;
+  #L23be1c.  call temp:= `inTransaction`(v1, v0) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.inTransaction:(Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore$Function;)Ljava/lang/Object;` @kind virtual;
+  #L23be22.  return @kind void;
+}
+procedure `void` `close`(`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore` v1 @kind this) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.close:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L23be34.  v0:= v1.`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore.schemaManager` @type ^`com.google.android.datatransport.runtime.scheduling.persistence.SchemaManager` @kind object;
+  #L23be38.  call `close`(v0) @signature `Landroid/database/sqlite/SQLiteOpenHelper;.close:()V` @kind virtual;
+  #L23be3e.  return @kind void;
+}
+procedure `long` `getByteSize`(`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore` v4 @kind this) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.getByteSize:()J` @AccessFlag  {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L23bcd0.  call temp:= `getPageCount`(v4) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.getPageCount:()J` @kind direct;
+  #L23bcd6.  v0:= temp @kind wide;
+  #L23bcd8.  call temp:= `getPageSize`(v4) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.getPageSize:()J` @kind direct;
+  #L23bcde.  v2:= temp @kind wide;
+  #L23bce0.  v0:= v0 * v2 @kind long;
+  #L23bce4.  return v0 @kind wide;
+}
+procedure `android.database.sqlite.SQLiteDatabase` `getDb`(`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore` v2 @kind this) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.getDb:()Landroid/database/sqlite/SQLiteDatabase;` @AccessFlag  {
+    temp;
+    v0;
+    v1;
+
+  #L23a498.  v0:= v2.`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore.schemaManager` @type ^`com.google.android.datatransport.runtime.scheduling.persistence.SchemaManager` @kind object;
+  #L23a49c.  call temp:= `requireNonNull`(v0) @signature `Ljava/util/Objects;.requireNonNull:(Ljava/lang/Object;)Ljava/lang/Object;` @kind static;
+  #L23a4a2.  v1:= new `com.google.android.datatransport.runtime.scheduling.persistence.t`;
+  #L23a4a6.  call `<init>`(v1, v0) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/t;.<init>:(Lcom/google/android/datatransport/runtime/scheduling/persistence/SchemaManager;)V` @kind direct;
+  #L23a4ac.  v0:= `@@com.google.android.datatransport.runtime.scheduling.persistence.q.a` @type ^`com.google.android.datatransport.runtime.scheduling.persistence.q` @kind object;
+  #L23a4b0.  call temp:= `retryIfDbLocked`(v2, v1, v0) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.retryIfDbLocked:(Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore$Producer;Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore$Function;)Ljava/lang/Object;` @kind direct;
+  #L23a4b6.  v0:= temp @kind object;
+  #L23a4b8.  v0:= (`android.database.sqlite.SQLiteDatabase`) v0 @kind object;
+  #L23a4bc.  return v0 @kind object;
+}
+procedure `long` `getNextCallTime`(`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore` v4 @kind this, `com.google.android.datatransport.runtime.TransportContext` v5 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.getNextCallTime:(Lcom/google/android/datatransport/runtime/TransportContext;)J` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L23bcf8.  call temp:= `getDb`(v4) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.getDb:()Landroid/database/sqlite/SQLiteDatabase;` @kind virtual;
+  #L23bcfe.  v0:= temp @kind object;
+  #L23bd00.  v1:= 2I;
+  #L23bd02.  v1:= new `java.lang.String`[v1];
+  #L23bd06.  call temp:= `getBackendName`(v5) @signature `Lcom/google/android/datatransport/runtime/TransportContext;.getBackendName:()Ljava/lang/String;` @kind virtual;
+  #L23bd0c.  v2:= temp @kind object;
+  #L23bd0e.  v3:= 0I;
+  #L23bd10.  v1[v3]:= v2 @kind object;
+  #L23bd14.  call temp:= `getPriority`(v5) @signature `Lcom/google/android/datatransport/runtime/TransportContext;.getPriority:()Lcom/google/android/datatransport/Priority;` @kind virtual;
+  #L23bd1a.  v5:= temp @kind object;
+  #L23bd1c.  call temp:= `toInt`(v5) @signature `Lcom/google/android/datatransport/runtime/util/PriorityMapping;.toInt:(Lcom/google/android/datatransport/Priority;)I` @kind static;
+  #L23bd22.  v5:= temp;
+  #L23bd24.  call temp:= `valueOf`(v5) @signature `Ljava/lang/String;.valueOf:(I)Ljava/lang/String;` @kind static;
+  #L23bd2a.  v5:= temp @kind object;
+  #L23bd2c.  v2:= 1I;
+  #L23bd2e.  v1[v2]:= v5 @kind object;
+  #L23bd32.  v5:= "SELECT next_request_ms FROM transport_contexts WHERE backend_name = ? and priority = ?" @kind object;
+  #L23bd36.  call temp:= `rawQuery`(v0, v5, v1) @signature `Landroid/database/sqlite/SQLiteDatabase;.rawQuery:(Ljava/lang/String;[Ljava/lang/String;)Landroid/database/Cursor;` @kind virtual;
+  #L23bd3c.  v5:= temp @kind object;
+  #L23bd3e.  v0:= `@@com.google.android.datatransport.runtime.scheduling.persistence.j.a` @type ^`com.google.android.datatransport.runtime.scheduling.persistence.j` @kind object;
+  #L23bd42.  call temp:= `tryWithCursor`(v5, v0) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.tryWithCursor:(Landroid/database/Cursor;Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore$Function;)Ljava/lang/Object;` @kind static;
+  #L23bd48.  v5:= temp @kind object;
+  #L23bd4a.  v5:= (`java.lang.Long`) v5 @kind object;
+  #L23bd4e.  call temp:= `longValue`(v5) @signature `Ljava/lang/Long;.longValue:()J` @kind virtual;
+  #L23bd54.  v0:= temp @kind wide;
+  #L23bd56.  return v0 @kind wide;
+}
+procedure `boolean` `hasPendingEventsFor`(`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore` v1 @kind this, `com.google.android.datatransport.runtime.TransportContext` v2 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.hasPendingEventsFor:(Lcom/google/android/datatransport/runtime/TransportContext;)Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L23a4f0.  v0:= new `com.google.android.datatransport.runtime.scheduling.persistence.b0`;
+  #L23a4f4.  call `<init>`(v0, v1, v2) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/b0;.<init>:(Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;Lcom/google/android/datatransport/runtime/TransportContext;)V` @kind direct;
+  #L23a4fa.  call temp:= `inTransaction`(v1, v0) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.inTransaction:(Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore$Function;)Ljava/lang/Object;` @kind virtual;
+  #L23a500.  v2:= temp @kind object;
+  #L23a502.  v2:= (`java.lang.Boolean`) v2 @kind object;
+  #L23a506.  call temp:= `booleanValue`(v2) @signature `Ljava/lang/Boolean;.booleanValue:()Z` @kind virtual;
+  #L23a50c.  v2:= temp;
+  #L23a50e.  return v2;
+}
+procedure `java.lang.Object` `inTransaction`(`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore` v1 @kind this, `com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore$Function` v2 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.inTransaction:(Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore$Function;)Ljava/lang/Object;` @AccessFlag  {
+    temp;
+    v0;
+
+  #L23b1ac.  call temp:= `getDb`(v1) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.getDb:()Landroid/database/sqlite/SQLiteDatabase;` @kind virtual;
+  #L23b1b2.  v0:= temp @kind object;
+  #L23b1b4.  call `beginTransaction`(v0) @signature `Landroid/database/sqlite/SQLiteDatabase;.beginTransaction:()V` @kind virtual;
+  #L23b1ba.  call temp:= `apply`(v2, v0) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore$Function;.apply:(Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L23b1c0.  v2:= temp @kind object;
+  #L23b1c2.  call `setTransactionSuccessful`(v0) @signature `Landroid/database/sqlite/SQLiteDatabase;.setTransactionSuccessful:()V` @kind virtual;
+  #L23b1c8.  call `endTransaction`(v0) @signature `Landroid/database/sqlite/SQLiteDatabase;.endTransaction:()V` @kind virtual;
+  #L23b1ce.  return v2 @kind object;
+  #L23b1d0.  v2:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L23b1d2.  call `endTransaction`(v0) @signature `Landroid/database/sqlite/SQLiteDatabase;.endTransaction:()V` @kind virtual;
+  #L23b1d8.  throw v2;
+  catch `java.lang.Throwable` @[L23b1ba..L23b1c8] goto L23b1d0;
+}
+procedure `java.lang.Iterable` `loadActiveContexts`(`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore` v1 @kind this) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.loadActiveContexts:()Ljava/lang/Iterable;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L23ac20.  v0:= `@@com.google.android.datatransport.runtime.scheduling.persistence.p.a` @type ^`com.google.android.datatransport.runtime.scheduling.persistence.p` @kind object;
+  #L23ac24.  call temp:= `inTransaction`(v1, v0) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.inTransaction:(Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore$Function;)Ljava/lang/Object;` @kind virtual;
+  #L23ac2a.  v0:= temp @kind object;
+  #L23ac2c.  v0:= (`java.lang.Iterable`) v0 @kind object;
+  #L23ac30.  return v0 @kind object;
+}
+procedure `java.lang.Iterable` `loadBatch`(`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore` v1 @kind this, `com.google.android.datatransport.runtime.TransportContext` v2 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.loadBatch:(Lcom/google/android/datatransport/runtime/TransportContext;)Ljava/lang/Iterable;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L23ac44.  v0:= new `com.google.android.datatransport.runtime.scheduling.persistence.a0`;
+  #L23ac48.  call `<init>`(v0, v1, v2) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/a0;.<init>:(Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;Lcom/google/android/datatransport/runtime/TransportContext;)V` @kind direct;
+  #L23ac4e.  call temp:= `inTransaction`(v1, v0) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.inTransaction:(Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore$Function;)Ljava/lang/Object;` @kind virtual;
+  #L23ac54.  v2:= temp @kind object;
+  #L23ac56.  v2:= (`java.lang.Iterable`) v2 @kind object;
+  #L23ac5a.  return v2 @kind object;
+}
+procedure `com.google.android.datatransport.runtime.firebase.transport.ClientMetrics` `loadClientMetrics`(`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore` v4 @kind this) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.loadClientMetrics:()Lcom/google/android/datatransport/runtime/firebase/transport/ClientMetrics;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L23a7e0.  call temp:= `newBuilder`() @signature `Lcom/google/android/datatransport/runtime/firebase/transport/ClientMetrics;.newBuilder:()Lcom/google/android/datatransport/runtime/firebase/transport/ClientMetrics$Builder;` @kind static;
+  #L23a7e6.  v0:= temp @kind object;
+  #L23a7e8.  v1:= new `java.util.HashMap`;
+  #L23a7ec.  call `<init>`(v1) @signature `Ljava/util/HashMap;.<init>:()V` @kind direct;
+  #L23a7f2.  v2:= new `com.google.android.datatransport.runtime.scheduling.persistence.c`;
+  #L23a7f6.  v3:= "SELECT log_source, reason, events_dropped_count FROM log_event_dropped" @kind object;
+  #L23a7fa.  call `<init>`(v2, v4, v3, v1, v0) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/c;.<init>:(Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;Ljava/lang/String;Ljava/util/Map;Lcom/google/android/datatransport/runtime/firebase/transport/ClientMetrics$Builder;)V` @kind direct;
+  #L23a800.  call temp:= `inTransaction`(v4, v2) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.inTransaction:(Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore$Function;)Ljava/lang/Object;` @kind virtual;
+  #L23a806.  v0:= temp @kind object;
+  #L23a808.  v0:= (`com.google.android.datatransport.runtime.firebase.transport.ClientMetrics`) v0 @kind object;
+  #L23a80c.  return v0 @kind object;
+}
+procedure `com.google.android.datatransport.runtime.scheduling.persistence.PersistedEvent` `persist`(`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore` v5 @kind this, `com.google.android.datatransport.runtime.TransportContext` v6 @kind object, `com.google.android.datatransport.runtime.EventInternal` v7 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.persist:(Lcom/google/android/datatransport/runtime/TransportContext;Lcom/google/android/datatransport/runtime/EventInternal;)Lcom/google/android/datatransport/runtime/scheduling/persistence/PersistedEvent;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L23aa14.  v0:= 3I;
+  #L23aa16.  v0:= new `java.lang.Object`[v0];
+  #L23aa1a.  call temp:= `getPriority`(v6) @signature `Lcom/google/android/datatransport/runtime/TransportContext;.getPriority:()Lcom/google/android/datatransport/Priority;` @kind virtual;
+  #L23aa20.  v1:= temp @kind object;
+  #L23aa22.  v2:= 0I;
+  #L23aa24.  v0[v2]:= v1 @kind object;
+  #L23aa28.  call temp:= `getTransportName`(v7) @signature `Lcom/google/android/datatransport/runtime/EventInternal;.getTransportName:()Ljava/lang/String;` @kind virtual;
+  #L23aa2e.  v1:= temp @kind object;
+  #L23aa30.  v2:= 1I;
+  #L23aa32.  v0[v2]:= v1 @kind object;
+  #L23aa36.  call temp:= `getBackendName`(v6) @signature `Lcom/google/android/datatransport/runtime/TransportContext;.getBackendName:()Ljava/lang/String;` @kind virtual;
+  #L23aa3c.  v1:= temp @kind object;
+  #L23aa3e.  v2:= 2I;
+  #L23aa40.  v0[v2]:= v1 @kind object;
+  #L23aa44.  v1:= "SQLiteEventStore" @kind object;
+  #L23aa48.  v2:= "Storing event with priority=%s, name=%s for destination %s" @kind object;
+  #L23aa4c.  call `d`(v1, v2, v0) @signature `Lcom/google/android/datatransport/runtime/logging/Logging;.d:(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V` @kind static;
+  #L23aa52.  v0:= new `com.google.android.datatransport.runtime.scheduling.persistence.z`;
+  #L23aa56.  call `<init>`(v0, v5, v7, v6) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/z;.<init>:(Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;Lcom/google/android/datatransport/runtime/EventInternal;Lcom/google/android/datatransport/runtime/TransportContext;)V` @kind direct;
+  #L23aa5c.  call temp:= `inTransaction`(v5, v0) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.inTransaction:(Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore$Function;)Ljava/lang/Object;` @kind virtual;
+  #L23aa62.  v0:= temp @kind object;
+  #L23aa64.  v0:= (`java.lang.Long`) v0 @kind object;
+  #L23aa68.  call temp:= `longValue`(v0) @signature `Ljava/lang/Long;.longValue:()J` @kind virtual;
+  #L23aa6e.  v0:= temp @kind wide;
+  #L23aa70.  v2:= 1L;
+  #L23aa74.  v4:= lcmp(v0, v2);
+  #L23aa78.  if v4 >= 0 then goto L23aa80;
+  #L23aa7c.  v6:= 0I;
+  #L23aa7e.  return v6 @kind object;
+  #L23aa80.  call temp:= `create`(v0, v6, v7) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/PersistedEvent;.create:(JLcom/google/android/datatransport/runtime/TransportContext;Lcom/google/android/datatransport/runtime/EventInternal;)Lcom/google/android/datatransport/runtime/scheduling/persistence/PersistedEvent;` @kind static;
+  #L23aa86.  v6:= temp @kind object;
+  #L23aa88.  return v6 @kind object;
+}
+procedure `void` `recordFailure`(`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore` v2 @kind this, `java.lang.Iterable` v3 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.recordFailure:(Ljava/lang/Iterable;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L23bef4.  call temp:= `iterator`(v3) @signature `Ljava/lang/Iterable;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L23befa.  v0:= temp @kind object;
+  #L23befc.  call temp:= `hasNext`(v0) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L23bf02.  v0:= temp;
+  #L23bf04.  if v0 != 0 then goto L23bf0a;
+  #L23bf08.  return @kind void;
+  #L23bf0a.  v0:= new `java.lang.StringBuilder`;
+  #L23bf0e.  call `<init>`(v0) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L23bf14.  v1:= "UPDATE events SET num_attempts = num_attempts + 1 WHERE _id in " @kind object;
+  #L23bf18.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L23bf1e.  call temp:= `toIdList`(v3) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.toIdList:(Ljava/lang/Iterable;)Ljava/lang/String;` @kind static;
+  #L23bf24.  v3:= temp @kind object;
+  #L23bf26.  call temp:= `append`(v0, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L23bf2c.  call temp:= `toString`(v0) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L23bf32.  v3:= temp @kind object;
+  #L23bf34.  v0:= new `com.google.android.datatransport.runtime.scheduling.persistence.b`;
+  #L23bf38.  v1:= "SELECT COUNT(*), transport_name FROM events WHERE num_attempts >= 16 GROUP BY transport_name" @kind object;
+  #L23bf3c.  call `<init>`(v0, v2, v3, v1) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/b;.<init>:(Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;Ljava/lang/String;Ljava/lang/String;)V` @kind direct;
+  #L23bf42.  call temp:= `inTransaction`(v2, v0) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.inTransaction:(Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore$Function;)Ljava/lang/Object;` @kind virtual;
+  #L23bf48.  return @kind void;
+}
+procedure `void` `recordLogEventDropped`(`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore` v1 @kind this, `long` v2 , `com.google.android.datatransport.runtime.firebase.transport.LogEventDropped$Reason` v4 @kind object, `java.lang.String` v5 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.recordLogEventDropped:(JLcom/google/android/datatransport/runtime/firebase/transport/LogEventDropped$Reason;Ljava/lang/String;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L23bf5c.  v0:= new `com.google.android.datatransport.runtime.scheduling.persistence.f`;
+  #L23bf60.  call `<init>`(v0, v5, v4, v2) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/f;.<init>:(Ljava/lang/String;Lcom/google/android/datatransport/runtime/firebase/transport/LogEventDropped$Reason;J)V` @kind direct;
+  #L23bf66.  call temp:= `inTransaction`(v1, v0) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.inTransaction:(Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore$Function;)Ljava/lang/Object;` @kind virtual;
+  #L23bf6c.  return @kind void;
+}
+procedure `void` `recordNextCallTime`(`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore` v1 @kind this, `com.google.android.datatransport.runtime.TransportContext` v2 @kind object, `long` v3 ) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.recordNextCallTime:(Lcom/google/android/datatransport/runtime/TransportContext;J)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L23bf80.  v0:= new `com.google.android.datatransport.runtime.scheduling.persistence.u`;
+  #L23bf84.  call `<init>`(v0, v3, v2) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/u;.<init>:(JLcom/google/android/datatransport/runtime/TransportContext;)V` @kind direct;
+  #L23bf8a.  call temp:= `inTransaction`(v1, v0) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.inTransaction:(Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore$Function;)Ljava/lang/Object;` @kind virtual;
+  #L23bf90.  return @kind void;
+}
+procedure `void` `recordSuccess`(`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore` v2 @kind this, `java.lang.Iterable` v3 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.recordSuccess:(Ljava/lang/Iterable;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L23bfa4.  call temp:= `iterator`(v3) @signature `Ljava/lang/Iterable;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L23bfaa.  v0:= temp @kind object;
+  #L23bfac.  call temp:= `hasNext`(v0) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L23bfb2.  v0:= temp;
+  #L23bfb4.  if v0 != 0 then goto L23bfba;
+  #L23bfb8.  return @kind void;
+  #L23bfba.  v0:= new `java.lang.StringBuilder`;
+  #L23bfbe.  call `<init>`(v0) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L23bfc4.  v1:= "DELETE FROM events WHERE _id in " @kind object;
+  #L23bfc8.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L23bfce.  call temp:= `toIdList`(v3) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.toIdList:(Ljava/lang/Iterable;)Ljava/lang/String;` @kind static;
+  #L23bfd4.  v3:= temp @kind object;
+  #L23bfd6.  call temp:= `append`(v0, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L23bfdc.  call temp:= `toString`(v0) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L23bfe2.  v3:= temp @kind object;
+  #L23bfe4.  call temp:= `getDb`(v2) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.getDb:()Landroid/database/sqlite/SQLiteDatabase;` @kind virtual;
+  #L23bfea.  v0:= temp @kind object;
+  #L23bfec.  call temp:= `compileStatement`(v0, v3) @signature `Landroid/database/sqlite/SQLiteDatabase;.compileStatement:(Ljava/lang/String;)Landroid/database/sqlite/SQLiteStatement;` @kind virtual;
+  #L23bff2.  v3:= temp @kind object;
+  #L23bff4.  call `execute`(v3) @signature `Landroid/database/sqlite/SQLiteStatement;.execute:()V` @kind virtual;
+  #L23bffa.  return @kind void;
+}
+procedure `void` `resetClientMetrics`(`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore` v1 @kind this) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.resetClientMetrics:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L23c00c.  v0:= new `com.google.android.datatransport.runtime.scheduling.persistence.x`;
+  #L23c010.  call `<init>`(v0, v1) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/x;.<init>:(Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;)V` @kind direct;
+  #L23c016.  call temp:= `inTransaction`(v1, v0) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.inTransaction:(Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore$Function;)Ljava/lang/Object;` @kind virtual;
+  #L23c01c.  return @kind void;
+}
+procedure `java.lang.Object` `runCriticalSection`(`com.google.android.datatransport.runtime.scheduling.persistence.SQLiteEventStore` v1 @kind this, `com.google.android.datatransport.runtime.synchronization.SynchronizationGuard$CriticalSection` v2 @kind object) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.runCriticalSection:(Lcom/google/android/datatransport/runtime/synchronization/SynchronizationGuard$CriticalSection;)Ljava/lang/Object;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L23b74c.  call temp:= `getDb`(v1) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.getDb:()Landroid/database/sqlite/SQLiteDatabase;` @kind virtual;
+  #L23b752.  v0:= temp @kind object;
+  #L23b754.  call `ensureBeginTransaction`(v1, v0) @signature `Lcom/google/android/datatransport/runtime/scheduling/persistence/SQLiteEventStore;.ensureBeginTransaction:(Landroid/database/sqlite/SQLiteDatabase;)V` @kind direct;
+  #L23b75a.  call temp:= `execute`(v2) @signature `Lcom/google/android/datatransport/runtime/synchronization/SynchronizationGuard$CriticalSection;.execute:()Ljava/lang/Object;` @kind interface;
+  #L23b760.  v2:= temp @kind object;
+  #L23b762.  call `setTransactionSuccessful`(v0) @signature `Landroid/database/sqlite/SQLiteDatabase;.setTransactionSuccessful:()V` @kind virtual;
+  #L23b768.  call `endTransaction`(v0) @signature `Landroid/database/sqlite/SQLiteDatabase;.endTransaction:()V` @kind virtual;
+  #L23b76e.  return v2 @kind object;
+  #L23b770.  v2:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L23b772.  call `endTransaction`(v0) @signature `Landroid/database/sqlite/SQLiteDatabase;.endTransaction:()V` @kind virtual;
+  #L23b778.  throw v2;
+  catch `java.lang.Throwable` @[L23b75a..L23b768] goto L23b770;
+}

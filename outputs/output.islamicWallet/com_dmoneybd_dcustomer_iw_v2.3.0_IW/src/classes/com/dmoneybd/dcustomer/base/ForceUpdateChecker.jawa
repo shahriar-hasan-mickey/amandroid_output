@@ -1,0 +1,57 @@
+record `com.dmoneybd.dcustomer.base.ForceUpdateChecker` @kind class @AccessFlag PUBLIC {
+  `android.content.Context` `com.dmoneybd.dcustomer.base.ForceUpdateChecker.context` @AccessFlag PRIVATE;
+  `com.dmoneybd.dcustomer.base.ForceUpdateChecker$OnUpdateNeededListener` `com.dmoneybd.dcustomer.base.ForceUpdateChecker.onUpdateNeededListener` @AccessFlag PRIVATE;
+}
+global `java.lang.String` `@@com.dmoneybd.dcustomer.base.ForceUpdateChecker.KEY_CURRENT_VERSION` @AccessFlag PUBLIC_STATIC_FINAL;
+global `java.lang.String` `@@com.dmoneybd.dcustomer.base.ForceUpdateChecker.KEY_UPDATE_REQUIRED` @AccessFlag PUBLIC_STATIC_FINAL;
+global `java.lang.String` `@@com.dmoneybd.dcustomer.base.ForceUpdateChecker.TAG` @AccessFlag PRIVATE_STATIC_FINAL;
+procedure `void` `<clinit>`() @signature `Lcom/dmoneybd/dcustomer/base/ForceUpdateChecker;.<clinit>:()V` @AccessFlag STATIC_CONSTRUCTOR {
+    temp;
+
+  #L2daf48.  return @kind void;
+}
+procedure `void` `<init>`(`com.dmoneybd.dcustomer.base.ForceUpdateChecker` v0 @kind this, `android.content.Context` v1 @kind object, `com.dmoneybd.dcustomer.base.ForceUpdateChecker$OnUpdateNeededListener` v2 @kind object) @signature `Lcom/dmoneybd/dcustomer/base/ForceUpdateChecker;.<init>:(Landroid/content/Context;Lcom/dmoneybd/dcustomer/base/ForceUpdateChecker$OnUpdateNeededListener;)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+
+  #L2daf5c.  call `<init>`(v0) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L2daf62.  v0.`com.dmoneybd.dcustomer.base.ForceUpdateChecker.context` @type ^`android.content.Context` := v1 @kind object;
+  #L2daf66.  v0.`com.dmoneybd.dcustomer.base.ForceUpdateChecker.onUpdateNeededListener` @type ^`com.dmoneybd.dcustomer.base.ForceUpdateChecker$OnUpdateNeededListener` := v2 @kind object;
+  #L2daf6a.  return @kind void;
+}
+procedure `com.dmoneybd.dcustomer.base.ForceUpdateChecker$Builder` `with`(`android.content.Context` v1 @kind object) @signature `Lcom/dmoneybd/dcustomer/base/ForceUpdateChecker;.with:(Landroid/content/Context;)Lcom/dmoneybd/dcustomer/base/ForceUpdateChecker$Builder;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+
+  #L2daf2c.  v0:= new `com.dmoneybd.dcustomer.base.ForceUpdateChecker$Builder`;
+  #L2daf30.  call `<init>`(v0, v1) @signature `Lcom/dmoneybd/dcustomer/base/ForceUpdateChecker$Builder;.<init>:(Landroid/content/Context;)V` @kind direct;
+  #L2daf36.  return v0 @kind object;
+}
+procedure `void` `check`(`com.dmoneybd.dcustomer.base.ForceUpdateChecker` v2 @kind this) @signature `Lcom/dmoneybd/dcustomer/base/ForceUpdateChecker;.check:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L2daf7c.  call temp:= `getInstance`() @signature `Lcom/google/firebase/remoteconfig/FirebaseRemoteConfig;.getInstance:()Lcom/google/firebase/remoteconfig/FirebaseRemoteConfig;` @kind static;
+  #L2daf82.  v0:= temp @kind object;
+  #L2daf84.  v1:= "force_update_required" @kind object;
+  #L2daf88.  call temp:= `getBoolean`(v0, v1) @signature `Lcom/google/firebase/remoteconfig/FirebaseRemoteConfig;.getBoolean:(Ljava/lang/String;)Z` @kind virtual;
+  #L2daf8e.  v1:= temp;
+  #L2daf90.  if v1 == 0 then goto L2dafd0;
+  #L2daf94.  v1:= "force_update_current_version" @kind object;
+  #L2daf98.  call temp:= `getString`(v0, v1) @signature `Lcom/google/firebase/remoteconfig/FirebaseRemoteConfig;.getString:(Ljava/lang/String;)Ljava/lang/String;` @kind virtual;
+  #L2daf9e.  v0:= temp @kind object;
+  #L2dafa0.  v1:= v2.`com.dmoneybd.dcustomer.base.ForceUpdateChecker.context` @type ^`android.content.Context` @kind object;
+  #L2dafa4.  call temp:= `getAppVersionCode`(v1) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.getAppVersionCode:(Landroid/content/Context;)I` @kind static;
+  #L2dafaa.  v1:= temp;
+  #L2dafac.  call temp:= `parseInt`(v0) @signature `Ljava/lang/Integer;.parseInt:(Ljava/lang/String;)I` @kind static;
+  #L2dafb2.  v0:= temp;
+  #L2dafb4.  if v0 <= v1 then goto L2dafd0;
+  #L2dafb8.  v0:= v2.`com.dmoneybd.dcustomer.base.ForceUpdateChecker.onUpdateNeededListener` @type ^`com.dmoneybd.dcustomer.base.ForceUpdateChecker$OnUpdateNeededListener` @kind object;
+  #L2dafbc.  if v0 == 0 then goto L2dafd0;
+  #L2dafc0.  call `onUpdateNeeded`(v0) @signature `Lcom/dmoneybd/dcustomer/base/ForceUpdateChecker$OnUpdateNeededListener;.onUpdateNeeded:()V` @kind interface;
+  #L2dafc6.  goto L2dafd0;
+  #L2dafc8.  v0:= Exception @type ^`java.lang.NumberFormatException` @kind object;
+  #L2dafca.  call `printStackTrace`(v0) @signature `Ljava/lang/NumberFormatException;.printStackTrace:()V` @kind virtual;
+  #L2dafd0.  return @kind void;
+  catch `java.lang.NumberFormatException` @[L2daf84..L2dafc6] goto L2dafc8;
+}

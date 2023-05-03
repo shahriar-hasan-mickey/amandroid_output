@@ -1,0 +1,75 @@
+record `io.reactivex.internal.subscribers.BlockingBaseSubscriber` @kind class @AccessFlag PUBLIC_ABSTRACT extends `java.util.concurrent.CountDownLatch` @kind class, `io.reactivex.FlowableSubscriber` @kind interface {
+  `java.lang.Object` `io.reactivex.internal.subscribers.BlockingBaseSubscriber.a` @AccessFlag ;
+  `java.lang.Throwable` `io.reactivex.internal.subscribers.BlockingBaseSubscriber.b` @AccessFlag ;
+  `org.reactivestreams.Subscription` `io.reactivex.internal.subscribers.BlockingBaseSubscriber.c` @AccessFlag ;
+  `boolean` `io.reactivex.internal.subscribers.BlockingBaseSubscriber.d` @AccessFlag VOLATILE;
+}
+procedure `void` `<init>`(`io.reactivex.internal.subscribers.BlockingBaseSubscriber` v1 @kind this) @signature `Lio/reactivex/internal/subscribers/BlockingBaseSubscriber;.<init>:()V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L4565d4.  v0:= 1I;
+  #L4565d6.  call `<init>`(v1, v0) @signature `Ljava/util/concurrent/CountDownLatch;.<init>:(I)V` @kind direct;
+  #L4565dc.  return @kind void;
+}
+procedure `java.lang.Object` `blockingGet`(`io.reactivex.internal.subscribers.BlockingBaseSubscriber` v5 @kind this) @signature `Lio/reactivex/internal/subscribers/BlockingBaseSubscriber;.blockingGet:()Ljava/lang/Object;` @AccessFlag PUBLIC_FINAL {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L456558.  call temp:= `getCount`(v5) @signature `Ljava/util/concurrent/CountDownLatch;.getCount:()J` @kind virtual;
+  #L45655e.  v0:= temp @kind wide;
+  #L456560.  v2:= 0L;
+  #L456564.  v4:= lcmp(v0, v2);
+  #L456568.  if v4 == 0 then goto L45659c;
+  #L45656c.  call `verifyNonBlocking`() @signature `Lio/reactivex/internal/util/BlockingHelper;.verifyNonBlocking:()V` @kind static;
+  #L456572.  call `await`(v5) @signature `Ljava/util/concurrent/CountDownLatch;.await:()V` @kind virtual;
+  #L456578.  goto L45659c;
+  #L45657a.  v0:= Exception @type ^`java.lang.InterruptedException` @kind object;
+  #L45657c.  v1:= v5.`io.reactivex.internal.subscribers.BlockingBaseSubscriber.c` @type ^`org.reactivestreams.Subscription` @kind object;
+  #L456580.  v2:= `@@io.reactivex.internal.subscriptions.SubscriptionHelper.CANCELLED` @type ^`io.reactivex.internal.subscriptions.SubscriptionHelper` @kind object;
+  #L456584.  v5.`io.reactivex.internal.subscribers.BlockingBaseSubscriber.c` @type ^`org.reactivestreams.Subscription` := v2 @kind object;
+  #L456588.  if v1 == 0 then goto L456592;
+  #L45658c.  call `cancel`(v1) @signature `Lorg/reactivestreams/Subscription;.cancel:()V` @kind interface;
+  #L456592.  call temp:= `wrapOrThrow`(v0) @signature `Lio/reactivex/internal/util/ExceptionHelper;.wrapOrThrow:(Ljava/lang/Throwable;)Ljava/lang/RuntimeException;` @kind static;
+  #L456598.  v0:= temp @kind object;
+  #L45659a.  throw v0;
+  #L45659c.  v0:= v5.`io.reactivex.internal.subscribers.BlockingBaseSubscriber.b` @type ^`java.lang.Throwable` @kind object;
+  #L4565a0.  if v0 != 0 then goto L4565aa;
+  #L4565a4.  v0:= v5.`io.reactivex.internal.subscribers.BlockingBaseSubscriber.a` @type ^`java.lang.Object` @kind object;
+  #L4565a8.  return v0 @kind object;
+  #L4565aa.  call temp:= `wrapOrThrow`(v0) @signature `Lio/reactivex/internal/util/ExceptionHelper;.wrapOrThrow:(Ljava/lang/Throwable;)Ljava/lang/RuntimeException;` @kind static;
+  #L4565b0.  v0:= temp @kind object;
+  #L4565b2.  throw v0;
+  catch `java.lang.InterruptedException` @[L45656c..L456578] goto L45657a;
+}
+procedure `void` `onComplete`(`io.reactivex.internal.subscribers.BlockingBaseSubscriber` v0 @kind this) @signature `Lio/reactivex/internal/subscribers/BlockingBaseSubscriber;.onComplete:()V` @AccessFlag PUBLIC_FINAL {
+    temp;
+
+  #L4565f0.  call `countDown`(v0) @signature `Ljava/util/concurrent/CountDownLatch;.countDown:()V` @kind virtual;
+  #L4565f6.  return @kind void;
+}
+procedure `void` `onSubscribe`(`io.reactivex.internal.subscribers.BlockingBaseSubscriber` v2 @kind this, `org.reactivestreams.Subscription` v3 @kind object) @signature `Lio/reactivex/internal/subscribers/BlockingBaseSubscriber;.onSubscribe:(Lorg/reactivestreams/Subscription;)V` @AccessFlag PUBLIC_FINAL {
+    temp;
+    v0;
+    v1;
+
+  #L456608.  v0:= v2.`io.reactivex.internal.subscribers.BlockingBaseSubscriber.c` @type ^`org.reactivestreams.Subscription` @kind object;
+  #L45660c.  call temp:= `validate`(v0, v3) @signature `Lio/reactivex/internal/subscriptions/SubscriptionHelper;.validate:(Lorg/reactivestreams/Subscription;Lorg/reactivestreams/Subscription;)Z` @kind static;
+  #L456612.  v0:= temp;
+  #L456614.  if v0 == 0 then goto L45664a;
+  #L456618.  v2.`io.reactivex.internal.subscribers.BlockingBaseSubscriber.c` @type ^`org.reactivestreams.Subscription` := v3 @kind object;
+  #L45661c.  v0:= v2.`io.reactivex.internal.subscribers.BlockingBaseSubscriber.d` @type ^`boolean` @kind boolean;
+  #L456620.  if v0 != 0 then goto L45664a;
+  #L456624.  v0:= 9223372036854775807L;
+  #L45662e.  call `request`(v3, v0) @signature `Lorg/reactivestreams/Subscription;.request:(J)V` @kind interface;
+  #L456634.  v0:= v2.`io.reactivex.internal.subscribers.BlockingBaseSubscriber.d` @type ^`boolean` @kind boolean;
+  #L456638.  if v0 == 0 then goto L45664a;
+  #L45663c.  v0:= `@@io.reactivex.internal.subscriptions.SubscriptionHelper.CANCELLED` @type ^`io.reactivex.internal.subscriptions.SubscriptionHelper` @kind object;
+  #L456640.  v2.`io.reactivex.internal.subscribers.BlockingBaseSubscriber.c` @type ^`org.reactivestreams.Subscription` := v0 @kind object;
+  #L456644.  call `cancel`(v3) @signature `Lorg/reactivestreams/Subscription;.cancel:()V` @kind interface;
+  #L45664a.  return @kind void;
+}

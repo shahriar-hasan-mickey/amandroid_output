@@ -1,0 +1,1 @@
+define(["underscore","Backbone"],function(n,i){var r=i.Model.extend({url:function(){return this.instanceUrl},validation:{DD:{required:!0,msg:"validation.transfer.amountisnotnull"},MM:{required:!0,msg:"validation.transfer.amountisnotnull"},YYYY:{required:!0,msg:"validation.transfer.amountisnotnull"}},initialize:function(n){this.url=n.url}});return r});

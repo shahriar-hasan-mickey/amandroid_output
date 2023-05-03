@@ -1,0 +1,217 @@
+record `io.reactivex.internal.operators.flowable.BlockingFlowableIterable$BlockingFlowableIterator` @kind class @AccessFlag FINAL extends `java.util.concurrent.atomic.AtomicReference` @kind class, `io.reactivex.h` @kind interface, `java.util.Iterator` @kind interface, `java.lang.Runnable` @kind interface, `io.reactivex.disposables.b` @kind interface {
+  `long` `io.reactivex.internal.operators.flowable.BlockingFlowableIterable$BlockingFlowableIterator.batchSize` @AccessFlag FINAL;
+  `java.util.concurrent.locks.Condition` `io.reactivex.internal.operators.flowable.BlockingFlowableIterable$BlockingFlowableIterator.condition` @AccessFlag FINAL;
+  `boolean` `io.reactivex.internal.operators.flowable.BlockingFlowableIterable$BlockingFlowableIterator.done` @AccessFlag VOLATILE;
+  `java.lang.Throwable` `io.reactivex.internal.operators.flowable.BlockingFlowableIterable$BlockingFlowableIterator.error` @AccessFlag ;
+  `long` `io.reactivex.internal.operators.flowable.BlockingFlowableIterable$BlockingFlowableIterator.limit` @AccessFlag FINAL;
+  `java.util.concurrent.locks.Lock` `io.reactivex.internal.operators.flowable.BlockingFlowableIterable$BlockingFlowableIterator.lock` @AccessFlag FINAL;
+  `long` `io.reactivex.internal.operators.flowable.BlockingFlowableIterable$BlockingFlowableIterator.produced` @AccessFlag ;
+  `io.reactivex.internal.queue.SpscArrayQueue` `io.reactivex.internal.operators.flowable.BlockingFlowableIterable$BlockingFlowableIterator.queue` @AccessFlag FINAL;
+}
+global `long` `@@io.reactivex.internal.operators.flowable.BlockingFlowableIterable$BlockingFlowableIterator.serialVersionUID` @AccessFlag PRIVATE_STATIC_FINAL;
+procedure `void` `<init>`(`io.reactivex.internal.operators.flowable.BlockingFlowableIterable$BlockingFlowableIterator` v2 @kind this, `int` v3 ) @signature `Lio/reactivex/internal/operators/flowable/BlockingFlowableIterable$BlockingFlowableIterator;.<init>:(I)V` @AccessFlag CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+
+  #L24cc70.  call `<init>`(v2) @signature `Ljava/util/concurrent/atomic/AtomicReference;.<init>:()V` @kind direct;
+  #L24cc76.  v0:= new `io.reactivex.internal.queue.SpscArrayQueue`;
+  #L24cc7a.  call `<init>`(v0, v3) @signature `Lio/reactivex/internal/queue/SpscArrayQueue;.<init>:(I)V` @kind direct;
+  #L24cc80.  v2.`io.reactivex.internal.operators.flowable.BlockingFlowableIterable$BlockingFlowableIterator.queue` @type ^`io.reactivex.internal.queue.SpscArrayQueue` := v0 @kind object;
+  #L24cc84.  v0:= (`long`) v3 @kind i2l;
+  #L24cc86.  v2.`io.reactivex.internal.operators.flowable.BlockingFlowableIterable$BlockingFlowableIterator.batchSize` @type ^`long` := v0 @kind wide;
+  #L24cc8a.  v0:= v3 ^> 2;
+  #L24cc8e.  v3:= v3 - v0 @kind int;
+  #L24cc90.  v0:= (`long`) v3 @kind i2l;
+  #L24cc92.  v2.`io.reactivex.internal.operators.flowable.BlockingFlowableIterable$BlockingFlowableIterator.limit` @type ^`long` := v0 @kind wide;
+  #L24cc96.  v3:= new `java.util.concurrent.locks.ReentrantLock`;
+  #L24cc9a.  call `<init>`(v3) @signature `Ljava/util/concurrent/locks/ReentrantLock;.<init>:()V` @kind direct;
+  #L24cca0.  v2.`io.reactivex.internal.operators.flowable.BlockingFlowableIterable$BlockingFlowableIterator.lock` @type ^`java.util.concurrent.locks.Lock` := v3 @kind object;
+  #L24cca4.  call temp:= `newCondition`(v3) @signature `Ljava/util/concurrent/locks/Lock;.newCondition:()Ljava/util/concurrent/locks/Condition;` @kind interface;
+  #L24ccaa.  v3:= temp @kind object;
+  #L24ccac.  v2.`io.reactivex.internal.operators.flowable.BlockingFlowableIterable$BlockingFlowableIterator.condition` @type ^`java.util.concurrent.locks.Condition` := v3 @kind object;
+  #L24ccb0.  return @kind void;
+}
+procedure `void` `dispose`(`io.reactivex.internal.operators.flowable.BlockingFlowableIterable$BlockingFlowableIterator` v0 @kind this) @signature `Lio/reactivex/internal/operators/flowable/BlockingFlowableIterable$BlockingFlowableIterator;.dispose:()V` @AccessFlag PUBLIC {
+    temp;
+
+  #L24ccc4.  call temp:= `cancel`(v0) @signature `Lio/reactivex/internal/subscriptions/SubscriptionHelper;.cancel:(Ljava/util/concurrent/atomic/AtomicReference;)Z` @kind static;
+  #L24ccca.  return @kind void;
+}
+procedure `boolean` `hasNext`(`io.reactivex.internal.operators.flowable.BlockingFlowableIterable$BlockingFlowableIterator` v2 @kind this) @signature `Lio/reactivex/internal/operators/flowable/BlockingFlowableIterable$BlockingFlowableIterator;.hasNext:()Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L24cb1c.  v0:= v2.`io.reactivex.internal.operators.flowable.BlockingFlowableIterable$BlockingFlowableIterator.done` @type ^`boolean` @kind boolean;
+  #L24cb20.  v1:= v2.`io.reactivex.internal.operators.flowable.BlockingFlowableIterable$BlockingFlowableIterator.queue` @type ^`io.reactivex.internal.queue.SpscArrayQueue` @kind object;
+  #L24cb24.  call temp:= `isEmpty`(v1) @signature `Lio/reactivex/internal/queue/SpscArrayQueue;.isEmpty:()Z` @kind virtual;
+  #L24cb2a.  v1:= temp;
+  #L24cb2c.  if v0 == 0 then goto L24cb4a;
+  #L24cb30.  v0:= v2.`io.reactivex.internal.operators.flowable.BlockingFlowableIterable$BlockingFlowableIterator.error` @type ^`java.lang.Throwable` @kind object;
+  #L24cb34.  if v0 != 0 then goto L24cb40;
+  #L24cb38.  if v1 == 0 then goto L24cb4a;
+  #L24cb3c.  v0:= 0I;
+  #L24cb3e.  return v0;
+  #L24cb40.  call temp:= `e`(v0) @signature `Lio/reactivex/internal/util/ExceptionHelper;.e:(Ljava/lang/Throwable;)Ljava/lang/RuntimeException;` @kind static;
+  #L24cb46.  v0:= temp @kind object;
+  #L24cb48.  throw v0;
+  #L24cb4a.  if v1 == 0 then goto L24cbb0;
+  #L24cb4e.  call `b`() @signature `Lio/reactivex/internal/util/c;.b:()V` @kind static;
+  #L24cb54.  v0:= v2.`io.reactivex.internal.operators.flowable.BlockingFlowableIterable$BlockingFlowableIterator.lock` @type ^`java.util.concurrent.locks.Lock` @kind object;
+  #L24cb58.  call `lock`(v0) @signature `Ljava/util/concurrent/locks/Lock;.lock:()V` @kind interface;
+  #L24cb5e.  v0:= v2.`io.reactivex.internal.operators.flowable.BlockingFlowableIterable$BlockingFlowableIterator.done` @type ^`boolean` @kind boolean;
+  #L24cb62.  if v0 != 0 then goto L24cb82;
+  #L24cb66.  v0:= v2.`io.reactivex.internal.operators.flowable.BlockingFlowableIterable$BlockingFlowableIterator.queue` @type ^`io.reactivex.internal.queue.SpscArrayQueue` @kind object;
+  #L24cb6a.  call temp:= `isEmpty`(v0) @signature `Lio/reactivex/internal/queue/SpscArrayQueue;.isEmpty:()Z` @kind virtual;
+  #L24cb70.  v0:= temp;
+  #L24cb72.  if v0 == 0 then goto L24cb82;
+  #L24cb76.  v0:= v2.`io.reactivex.internal.operators.flowable.BlockingFlowableIterable$BlockingFlowableIterator.condition` @type ^`java.util.concurrent.locks.Condition` @kind object;
+  #L24cb7a.  call `await`(v0) @signature `Ljava/util/concurrent/locks/Condition;.await:()V` @kind interface;
+  #L24cb80.  goto L24cb5e;
+  #L24cb82.  v0:= v2.`io.reactivex.internal.operators.flowable.BlockingFlowableIterable$BlockingFlowableIterator.lock` @type ^`java.util.concurrent.locks.Lock` @kind object;
+  #L24cb86.  call `unlock`(v0) @signature `Ljava/util/concurrent/locks/Lock;.unlock:()V` @kind interface;
+  #L24cb8c.  goto L24cb1c;
+  #L24cb8e.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L24cb90.  goto L24cba4;
+  #L24cb92.  v0:= Exception @type ^`java.lang.InterruptedException` @kind object;
+  #L24cb94.  call `run`(v2) @signature `Lio/reactivex/internal/operators/flowable/BlockingFlowableIterable$BlockingFlowableIterator;.run:()V` @kind virtual;
+  #L24cb9a.  call temp:= `e`(v0) @signature `Lio/reactivex/internal/util/ExceptionHelper;.e:(Ljava/lang/Throwable;)Ljava/lang/RuntimeException;` @kind static;
+  #L24cba0.  v0:= temp @kind object;
+  #L24cba2.  throw v0;
+  #L24cba4.  v1:= v2.`io.reactivex.internal.operators.flowable.BlockingFlowableIterable$BlockingFlowableIterator.lock` @type ^`java.util.concurrent.locks.Lock` @kind object;
+  #L24cba8.  call `unlock`(v1) @signature `Ljava/util/concurrent/locks/Lock;.unlock:()V` @kind interface;
+  #L24cbae.  throw v0;
+  #L24cbb0.  v0:= 1I;
+  #L24cbb2.  return v0;
+  catch `java.lang.InterruptedException` @[L24cb5e..L24cb80] goto L24cb92;
+  catch `java.lang.Throwable` @[L24cb5e..L24cb80] goto L24cb8e;
+  catch `java.lang.Throwable` @[L24cb94..L24cba4] goto L24cb8e;
+}
+procedure `boolean` `isDisposed`(`io.reactivex.internal.operators.flowable.BlockingFlowableIterable$BlockingFlowableIterator` v2 @kind this) @signature `Lio/reactivex/internal/operators/flowable/BlockingFlowableIterable$BlockingFlowableIterator;.isDisposed:()Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L24cbdc.  call temp:= `get`(v2) @signature `Ljava/util/concurrent/atomic/AtomicReference;.get:()Ljava/lang/Object;` @kind virtual;
+  #L24cbe2.  v0:= temp @kind object;
+  #L24cbe4.  v1:= `@@io.reactivex.internal.subscriptions.SubscriptionHelper.CANCELLED` @type ^`io.reactivex.internal.subscriptions.SubscriptionHelper` @kind object;
+  #L24cbe8.  if v0 != v1 then goto L24cbf0;
+  #L24cbec.  v0:= 1I;
+  #L24cbee.  goto L24cbf2;
+  #L24cbf0.  v0:= 0I;
+  #L24cbf2.  return v0;
+}
+procedure `java.lang.Object` `next`(`io.reactivex.internal.operators.flowable.BlockingFlowableIterable$BlockingFlowableIterator` v6 @kind this) @signature `Lio/reactivex/internal/operators/flowable/BlockingFlowableIterable$BlockingFlowableIterator;.next:()Ljava/lang/Object;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L24cc04.  call temp:= `hasNext`(v6) @signature `Lio/reactivex/internal/operators/flowable/BlockingFlowableIterable$BlockingFlowableIterator;.hasNext:()Z` @kind virtual;
+  #L24cc0a.  v0:= temp;
+  #L24cc0c.  if v0 == 0 then goto L24cc54;
+  #L24cc10.  v0:= v6.`io.reactivex.internal.operators.flowable.BlockingFlowableIterable$BlockingFlowableIterator.queue` @type ^`io.reactivex.internal.queue.SpscArrayQueue` @kind object;
+  #L24cc14.  call temp:= `poll`(v0) @signature `Lio/reactivex/internal/queue/SpscArrayQueue;.poll:()Ljava/lang/Object;` @kind virtual;
+  #L24cc1a.  v0:= temp @kind object;
+  #L24cc1c.  v1:= v6.`io.reactivex.internal.operators.flowable.BlockingFlowableIterable$BlockingFlowableIterator.produced` @type ^`long` @kind wide;
+  #L24cc20.  v3:= 1L;
+  #L24cc24.  v1:= v1 + v3 @kind long;
+  #L24cc26.  v3:= v6.`io.reactivex.internal.operators.flowable.BlockingFlowableIterable$BlockingFlowableIterator.limit` @type ^`long` @kind wide;
+  #L24cc2a.  v5:= lcmp(v1, v3);
+  #L24cc2e.  if v5 != 0 then goto L24cc4e;
+  #L24cc32.  v3:= 0L;
+  #L24cc36.  v6.`io.reactivex.internal.operators.flowable.BlockingFlowableIterable$BlockingFlowableIterator.produced` @type ^`long` := v3 @kind wide;
+  #L24cc3a.  call temp:= `get`(v6) @signature `Ljava/util/concurrent/atomic/AtomicReference;.get:()Ljava/lang/Object;` @kind virtual;
+  #L24cc40.  v3:= temp @kind object;
+  #L24cc42.  v3:= (`n.b.d`) v3 @kind object;
+  #L24cc46.  call `request`(v3, v1) @signature `Ln/b/d;.request:(J)V` @kind interface;
+  #L24cc4c.  goto L24cc52;
+  #L24cc4e.  v6.`io.reactivex.internal.operators.flowable.BlockingFlowableIterable$BlockingFlowableIterator.produced` @type ^`long` := v1 @kind wide;
+  #L24cc52.  return v0 @kind object;
+  #L24cc54.  v0:= new `java.util.NoSuchElementException`;
+  #L24cc58.  call `<init>`(v0) @signature `Ljava/util/NoSuchElementException;.<init>:()V` @kind direct;
+  #L24cc5e.  throw v0;
+}
+procedure `void` `onComplete`(`io.reactivex.internal.operators.flowable.BlockingFlowableIterable$BlockingFlowableIterator` v1 @kind this) @signature `Lio/reactivex/internal/operators/flowable/BlockingFlowableIterable$BlockingFlowableIterator;.onComplete:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L24ccdc.  v0:= 1I;
+  #L24ccde.  v1.`io.reactivex.internal.operators.flowable.BlockingFlowableIterable$BlockingFlowableIterator.done` @type ^`boolean` := v0 @kind boolean;
+  #L24cce2.  call `signalConsumer`(v1) @signature `Lio/reactivex/internal/operators/flowable/BlockingFlowableIterable$BlockingFlowableIterator;.signalConsumer:()V` @kind virtual;
+  #L24cce8.  return @kind void;
+}
+procedure `void` `onError`(`io.reactivex.internal.operators.flowable.BlockingFlowableIterable$BlockingFlowableIterator` v0 @kind this, `java.lang.Throwable` v1 @kind object) @signature `Lio/reactivex/internal/operators/flowable/BlockingFlowableIterable$BlockingFlowableIterator;.onError:(Ljava/lang/Throwable;)V` @AccessFlag PUBLIC {
+    temp;
+
+  #L24ccfc.  v0.`io.reactivex.internal.operators.flowable.BlockingFlowableIterable$BlockingFlowableIterator.error` @type ^`java.lang.Throwable` := v1 @kind object;
+  #L24cd00.  v1:= 1I;
+  #L24cd02.  v0.`io.reactivex.internal.operators.flowable.BlockingFlowableIterable$BlockingFlowableIterator.done` @type ^`boolean` := v1 @kind boolean;
+  #L24cd06.  call `signalConsumer`(v0) @signature `Lio/reactivex/internal/operators/flowable/BlockingFlowableIterable$BlockingFlowableIterator;.signalConsumer:()V` @kind virtual;
+  #L24cd0c.  return @kind void;
+}
+procedure `void` `onNext`(`io.reactivex.internal.operators.flowable.BlockingFlowableIterable$BlockingFlowableIterator` v1 @kind this, `java.lang.Object` v2 @kind object) @signature `Lio/reactivex/internal/operators/flowable/BlockingFlowableIterable$BlockingFlowableIterator;.onNext:(Ljava/lang/Object;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L24cd20.  v0:= v1.`io.reactivex.internal.operators.flowable.BlockingFlowableIterable$BlockingFlowableIterator.queue` @type ^`io.reactivex.internal.queue.SpscArrayQueue` @kind object;
+  #L24cd24.  call temp:= `offer`(v0, v2) @signature `Lio/reactivex/internal/queue/SpscArrayQueue;.offer:(Ljava/lang/Object;)Z` @kind virtual;
+  #L24cd2a.  v2:= temp;
+  #L24cd2c.  if v2 != 0 then goto L24cd4c;
+  #L24cd30.  call temp:= `cancel`(v1) @signature `Lio/reactivex/internal/subscriptions/SubscriptionHelper;.cancel:(Ljava/util/concurrent/atomic/AtomicReference;)Z` @kind static;
+  #L24cd36.  v2:= new `io.reactivex.exceptions.MissingBackpressureException`;
+  #L24cd3a.  v0:= "Queue full?!" @kind object;
+  #L24cd3e.  call `<init>`(v2, v0) @signature `Lio/reactivex/exceptions/MissingBackpressureException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L24cd44.  call `onError`(v1, v2) @signature `Lio/reactivex/internal/operators/flowable/BlockingFlowableIterable$BlockingFlowableIterator;.onError:(Ljava/lang/Throwable;)V` @kind virtual;
+  #L24cd4a.  goto L24cd52;
+  #L24cd4c.  call `signalConsumer`(v1) @signature `Lio/reactivex/internal/operators/flowable/BlockingFlowableIterable$BlockingFlowableIterator;.signalConsumer:()V` @kind virtual;
+  #L24cd52.  return @kind void;
+}
+procedure `void` `onSubscribe`(`io.reactivex.internal.operators.flowable.BlockingFlowableIterable$BlockingFlowableIterator` v2 @kind this, `n.b.d` v3 @kind object) @signature `Lio/reactivex/internal/operators/flowable/BlockingFlowableIterable$BlockingFlowableIterator;.onSubscribe:(Ln/b/d;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L24cd64.  v0:= v2.`io.reactivex.internal.operators.flowable.BlockingFlowableIterable$BlockingFlowableIterator.batchSize` @type ^`long` @kind wide;
+  #L24cd68.  call temp:= `setOnce`(v2, v3, v0) @signature `Lio/reactivex/internal/subscriptions/SubscriptionHelper;.setOnce:(Ljava/util/concurrent/atomic/AtomicReference;Ln/b/d;J)Z` @kind static;
+  #L24cd6e.  return @kind void;
+}
+procedure `void` `remove`(`io.reactivex.internal.operators.flowable.BlockingFlowableIterable$BlockingFlowableIterator` v2 @kind this) @signature `Lio/reactivex/internal/operators/flowable/BlockingFlowableIterable$BlockingFlowableIterator;.remove:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L24cd80.  v0:= new `java.lang.UnsupportedOperationException`;
+  #L24cd84.  v1:= "remove" @kind object;
+  #L24cd88.  call `<init>`(v0, v1) @signature `Ljava/lang/UnsupportedOperationException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L24cd8e.  throw v0;
+}
+procedure `void` `run`(`io.reactivex.internal.operators.flowable.BlockingFlowableIterable$BlockingFlowableIterator` v0 @kind this) @signature `Lio/reactivex/internal/operators/flowable/BlockingFlowableIterable$BlockingFlowableIterator;.run:()V` @AccessFlag PUBLIC {
+    temp;
+
+  #L24cda0.  call temp:= `cancel`(v0) @signature `Lio/reactivex/internal/subscriptions/SubscriptionHelper;.cancel:(Ljava/util/concurrent/atomic/AtomicReference;)Z` @kind static;
+  #L24cda6.  call `signalConsumer`(v0) @signature `Lio/reactivex/internal/operators/flowable/BlockingFlowableIterable$BlockingFlowableIterator;.signalConsumer:()V` @kind virtual;
+  #L24cdac.  return @kind void;
+}
+procedure `void` `signalConsumer`(`io.reactivex.internal.operators.flowable.BlockingFlowableIterable$BlockingFlowableIterator` v2 @kind this) @signature `Lio/reactivex/internal/operators/flowable/BlockingFlowableIterable$BlockingFlowableIterator;.signalConsumer:()V` @AccessFlag  {
+    temp;
+    v0;
+    v1;
+
+  #L24cdc0.  v0:= v2.`io.reactivex.internal.operators.flowable.BlockingFlowableIterable$BlockingFlowableIterator.lock` @type ^`java.util.concurrent.locks.Lock` @kind object;
+  #L24cdc4.  call `lock`(v0) @signature `Ljava/util/concurrent/locks/Lock;.lock:()V` @kind interface;
+  #L24cdca.  v0:= v2.`io.reactivex.internal.operators.flowable.BlockingFlowableIterable$BlockingFlowableIterator.condition` @type ^`java.util.concurrent.locks.Condition` @kind object;
+  #L24cdce.  call `signalAll`(v0) @signature `Ljava/util/concurrent/locks/Condition;.signalAll:()V` @kind interface;
+  #L24cdd4.  v0:= v2.`io.reactivex.internal.operators.flowable.BlockingFlowableIterable$BlockingFlowableIterator.lock` @type ^`java.util.concurrent.locks.Lock` @kind object;
+  #L24cdd8.  call `unlock`(v0) @signature `Ljava/util/concurrent/locks/Lock;.unlock:()V` @kind interface;
+  #L24cdde.  return @kind void;
+  #L24cde0.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L24cde2.  v1:= v2.`io.reactivex.internal.operators.flowable.BlockingFlowableIterable$BlockingFlowableIterator.lock` @type ^`java.util.concurrent.locks.Lock` @kind object;
+  #L24cde6.  call `unlock`(v1) @signature `Ljava/util/concurrent/locks/Lock;.unlock:()V` @kind interface;
+  #L24cdec.  throw v0;
+  catch `java.lang.Throwable` @[L24cdca..L24cdd4] goto L24cde0;
+}

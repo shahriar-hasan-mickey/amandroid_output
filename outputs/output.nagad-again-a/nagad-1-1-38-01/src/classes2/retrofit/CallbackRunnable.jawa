@@ -1,0 +1,54 @@
+record `retrofit.CallbackRunnable` @kind class @AccessFlag ABSTRACT extends `java.lang.Runnable` @kind interface {
+  `retrofit.Callback` `retrofit.CallbackRunnable.callback` @AccessFlag PRIVATE_FINAL;
+  `java.util.concurrent.Executor` `retrofit.CallbackRunnable.callbackExecutor` @AccessFlag PRIVATE_FINAL;
+  `retrofit.ErrorHandler` `retrofit.CallbackRunnable.errorHandler` @AccessFlag PRIVATE_FINAL;
+}
+procedure `void` `<init>`(`retrofit.CallbackRunnable` v0 @kind this, `retrofit.Callback` v1 @kind object, `java.util.concurrent.Executor` v2 @kind object, `retrofit.ErrorHandler` v3 @kind object) @signature `Lretrofit/CallbackRunnable;.<init>:(Lretrofit/Callback;Ljava/util/concurrent/Executor;Lretrofit/ErrorHandler;)V` @AccessFlag CONSTRUCTOR {
+    temp;
+
+  #L24be6c.  call `<init>`(v0) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L24be72.  v0.`retrofit.CallbackRunnable.callback` @type ^`retrofit.Callback` := v1 @kind object;
+  #L24be76.  v0.`retrofit.CallbackRunnable.callbackExecutor` @type ^`java.util.concurrent.Executor` := v2 @kind object;
+  #L24be7a.  v0.`retrofit.CallbackRunnable.errorHandler` @type ^`retrofit.ErrorHandler` := v3 @kind object;
+  #L24be7e.  return @kind void;
+}
+procedure `retrofit.Callback` `access$000`(`retrofit.CallbackRunnable` v0 @kind object) @signature `Lretrofit/CallbackRunnable;.access$000:(Lretrofit/CallbackRunnable;)Lretrofit/Callback;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L24be54.  v0:= v0.`retrofit.CallbackRunnable.callback` @type ^`retrofit.Callback` @kind object;
+  #L24be58.  return v0 @kind object;
+}
+procedure `retrofit.ResponseWrapper` `obtainResponse`() @signature `Lretrofit/CallbackRunnable;.obtainResponse:()Lretrofit/ResponseWrapper;` @AccessFlag PUBLIC_ABSTRACT {
+
+  # return;
+}
+procedure `void` `run`(`retrofit.CallbackRunnable` v3 @kind this) @signature `Lretrofit/CallbackRunnable;.run:()V` @AccessFlag PUBLIC_FINAL {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L24be90.  call temp:= `obtainResponse`(v3) @signature `Lretrofit/CallbackRunnable;.obtainResponse:()Lretrofit/ResponseWrapper;` @kind virtual;
+  #L24be96.  v0:= temp @kind object;
+  #L24be98.  v1:= v3.`retrofit.CallbackRunnable.callbackExecutor` @type ^`java.util.concurrent.Executor` @kind object;
+  #L24be9c.  v2:= new `retrofit.CallbackRunnable$1`;
+  #L24bea0.  call `<init>`(v2, v3, v0) @signature `Lretrofit/CallbackRunnable$1;.<init>:(Lretrofit/CallbackRunnable;Lretrofit/ResponseWrapper;)V` @kind direct;
+  #L24bea6.  call `execute`(v1, v2) @signature `Ljava/util/concurrent/Executor;.execute:(Ljava/lang/Runnable;)V` @kind interface;
+  #L24beac.  goto L24bee6;
+  #L24beae.  v0:= Exception @type ^`retrofit.RetrofitError` @kind object;
+  #L24beb0.  v1:= v3.`retrofit.CallbackRunnable.errorHandler` @type ^`retrofit.ErrorHandler` @kind object;
+  #L24beb4.  call temp:= `handleError`(v1, v0) @signature `Lretrofit/ErrorHandler;.handleError:(Lretrofit/RetrofitError;)Ljava/lang/Throwable;` @kind interface;
+  #L24beba.  v1:= temp @kind object;
+  #L24bebc.  if v1 != v0 then goto L24bec2;
+  #L24bec0.  goto L24bed2;
+  #L24bec2.  call temp:= `getUrl`(v0) @signature `Lretrofit/RetrofitError;.getUrl:()Ljava/lang/String;` @kind virtual;
+  #L24bec8.  v0:= temp @kind object;
+  #L24beca.  call temp:= `unexpectedError`(v0, v1) @signature `Lretrofit/RetrofitError;.unexpectedError:(Ljava/lang/String;Ljava/lang/Throwable;)Lretrofit/RetrofitError;` @kind static;
+  #L24bed0.  v0:= temp @kind object;
+  #L24bed2.  v1:= v3.`retrofit.CallbackRunnable.callbackExecutor` @type ^`java.util.concurrent.Executor` @kind object;
+  #L24bed6.  v2:= new `retrofit.CallbackRunnable$2`;
+  #L24beda.  call `<init>`(v2, v3, v0) @signature `Lretrofit/CallbackRunnable$2;.<init>:(Lretrofit/CallbackRunnable;Lretrofit/RetrofitError;)V` @kind direct;
+  #L24bee0.  call `execute`(v1, v2) @signature `Ljava/util/concurrent/Executor;.execute:(Ljava/lang/Runnable;)V` @kind interface;
+  #L24bee6.  return @kind void;
+  catch `retrofit.RetrofitError` @[L24be90..L24beac] goto L24beae;
+}

@@ -1,0 +1,662 @@
+record `plugin.google.maps.CordovaGoogleMaps` @kind class @AccessFlag PUBLIC extends `org.apache.cordova.CordovaPlugin` @kind class, `android.view.ViewTreeObserver$OnScrollChangedListener` @kind interface {
+  `java.lang.String` `plugin.google.maps.CordovaGoogleMaps.TAG` @AccessFlag PRIVATE_FINAL;
+  `android.app.Activity` `plugin.google.maps.CordovaGoogleMaps.activity` @AccessFlag PRIVATE;
+  `boolean` `plugin.google.maps.CordovaGoogleMaps.initialized` @AccessFlag PUBLIC;
+  `plugin.google.maps.MyPluginLayout` `plugin.google.maps.CordovaGoogleMaps.mPluginLayout` @AccessFlag PUBLIC;
+  `org.apache.cordova.PluginManager` `plugin.google.maps.CordovaGoogleMaps.pluginManager` @AccessFlag PUBLIC;
+  `android.view.ViewGroup` `plugin.google.maps.CordovaGoogleMaps.root` @AccessFlag PUBLIC;
+}
+global `java.lang.Object` `@@plugin.google.maps.CordovaGoogleMaps.timerLock` @AccessFlag PRIVATE_STATIC_FINAL;
+procedure `void` `<clinit>`() @signature `Lplugin/google/maps/CordovaGoogleMaps;.<clinit>:()V` @AccessFlag STATIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L271c3c.  v0:= new `java.lang.Object`;
+  #L271c40.  call `<init>`(v0) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L271c46.  `@@plugin.google.maps.CordovaGoogleMaps.timerLock` @type ^`java.lang.Object` := v0 @kind object;
+  #L271c4a.  return @kind void;
+}
+procedure `void` `<init>`(`plugin.google.maps.CordovaGoogleMaps` v1 @kind this) @signature `Lplugin/google/maps/CordovaGoogleMaps;.<init>:()V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L271c5c.  call `<init>`(v1) @signature `Lorg/apache/cordova/CordovaPlugin;.<init>:()V` @kind direct;
+  #L271c62.  v0:= "GoogleMapsPlugin" @kind object;
+  #L271c66.  v1.`plugin.google.maps.CordovaGoogleMaps.TAG` @type ^`java.lang.String` := v0 @kind object;
+  #L271c6a.  v0:= 0I;
+  #L271c6c.  v1.`plugin.google.maps.CordovaGoogleMaps.mPluginLayout` @type ^`plugin.google.maps.MyPluginLayout` := v0 @kind object;
+  #L271c70.  v0:= 0I;
+  #L271c72.  v1.`plugin.google.maps.CordovaGoogleMaps.initialized` @type ^`boolean` := v0 @kind boolean;
+  #L271c76.  return @kind void;
+}
+procedure `android.app.Activity` `access$000`(`plugin.google.maps.CordovaGoogleMaps` v0 @kind object) @signature `Lplugin/google/maps/CordovaGoogleMaps;.access$000:(Lplugin/google/maps/CordovaGoogleMaps;)Landroid/app/Activity;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L271bd4.  v0:= v0.`plugin.google.maps.CordovaGoogleMaps.activity` @type ^`android.app.Activity` @kind object;
+  #L271bd8.  return v0 @kind object;
+}
+procedure `void` `backHistory`(`plugin.google.maps.CordovaGoogleMaps` v0 @kind this, `org.json.JSONArray` v1 @kind object, `org.apache.cordova.CallbackContext` v2 @kind object) @signature `Lplugin/google/maps/CordovaGoogleMaps;.backHistory:(Lorg/json/JSONArray;Lorg/apache/cordova/CallbackContext;)V` @AccessFlag PUBLIC {
+    temp;
+
+  #L271c88.  v1:= v0.`plugin.google.maps.CordovaGoogleMaps.cordova` @type ^`org.apache.cordova.CordovaInterface` @kind object;
+  #L271c8c.  call temp:= `getActivity`(v1) @signature `Lorg/apache/cordova/CordovaInterface;.getActivity:()Landroid/app/Activity;` @kind interface;
+  #L271c92.  v1:= temp @kind object;
+  #L271c94.  v2:= new `plugin.google.maps.CordovaGoogleMaps$3`;
+  #L271c98.  call `<init>`(v2, v0) @signature `Lplugin/google/maps/CordovaGoogleMaps$3;.<init>:(Lplugin/google/maps/CordovaGoogleMaps;)V` @kind direct;
+  #L271c9e.  call `runOnUiThread`(v1, v2) @signature `Landroid/app/Activity;.runOnUiThread:(Ljava/lang/Runnable;)V` @kind virtual;
+  #L271ca4.  return @kind void;
+}
+procedure `void` `clearHtmlElements`(`plugin.google.maps.CordovaGoogleMaps` v0 @kind this, `org.json.JSONArray` v1 @kind object, `org.apache.cordova.CallbackContext` v2 @kind object) @signature `Lplugin/google/maps/CordovaGoogleMaps;.clearHtmlElements:(Lorg/json/JSONArray;Lorg/apache/cordova/CallbackContext;)V` @AccessFlag PUBLIC {
+    temp;
+
+  #L271cb8.  v1:= v0.`plugin.google.maps.CordovaGoogleMaps.mPluginLayout` @type ^`plugin.google.maps.MyPluginLayout` @kind object;
+  #L271cbc.  if v1 != 0 then goto L271cc8;
+  #L271cc0.  call `success`(v2) @signature `Lorg/apache/cordova/CallbackContext;.success:()V` @kind virtual;
+  #L271cc6.  return @kind void;
+  #L271cc8.  call `clearHtmlElements`(v1) @signature `Lplugin/google/maps/MyPluginLayout;.clearHtmlElements:()V` @kind virtual;
+  #L271cce.  call `success`(v2) @signature `Lorg/apache/cordova/CallbackContext;.success:()V` @kind virtual;
+  #L271cd4.  return @kind void;
+}
+procedure `boolean` `execute`(`plugin.google.maps.CordovaGoogleMaps` v2 @kind this, `java.lang.String` v3 @kind object, `org.json.JSONArray` v4 @kind object, `org.apache.cordova.CallbackContext` v5 @kind object) @signature `Lplugin/google/maps/CordovaGoogleMaps;.execute:(Ljava/lang/String;Lorg/json/JSONArray;Lorg/apache/cordova/CallbackContext;)Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L271bec.  v0:= v2.`plugin.google.maps.CordovaGoogleMaps.cordova` @type ^`org.apache.cordova.CordovaInterface` @kind object;
+  #L271bf0.  call temp:= `getThreadPool`(v0) @signature `Lorg/apache/cordova/CordovaInterface;.getThreadPool:()Ljava/util/concurrent/ExecutorService;` @kind interface;
+  #L271bf6.  v0:= temp @kind object;
+  #L271bf8.  v1:= new `plugin.google.maps.CordovaGoogleMaps$2`;
+  #L271bfc.  call `<init>`(v1, v2, v3, v4, v5) @signature `Lplugin/google/maps/CordovaGoogleMaps$2;.<init>:(Lplugin/google/maps/CordovaGoogleMaps;Ljava/lang/String;Lorg/json/JSONArray;Lorg/apache/cordova/CallbackContext;)V` @kind direct;
+  #L271c02.  call temp:= `submit`(v0, v1) @signature `Ljava/util/concurrent/ExecutorService;.submit:(Ljava/lang/Runnable;)Ljava/util/concurrent/Future;` @kind interface;
+  #L271c08.  v3:= 1I;
+  #L271c0a.  return v3;
+}
+procedure `void` `getMap`(`plugin.google.maps.CordovaGoogleMaps` v5 @kind this, `org.json.JSONArray` v6 @kind object, `org.apache.cordova.CallbackContext` v7 @kind object) @signature `Lplugin/google/maps/CordovaGoogleMaps;.getMap:(Lorg/json/JSONArray;Lorg/apache/cordova/CallbackContext;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L271ce8.  v0:= 0I;
+  #L271cea.  call temp:= `getJSONObject`(v6, v0) @signature `Lorg/json/JSONArray;.getJSONObject:(I)Lorg/json/JSONObject;` @kind virtual;
+  #L271cf0.  v0:= temp @kind object;
+  #L271cf2.  v1:= "__pgmId" @kind object;
+  #L271cf6.  call temp:= `getString`(v0, v1) @signature `Lorg/json/JSONObject;.getString:(Ljava/lang/String;)Ljava/lang/String;` @kind virtual;
+  #L271cfc.  v0:= temp @kind object;
+  #L271cfe.  v1:= new `plugin.google.maps.PluginMap`;
+  #L271d02.  call `<init>`(v1) @signature `Lplugin/google/maps/PluginMap;.<init>:()V` @kind direct;
+  #L271d08.  v2:= v5.`plugin.google.maps.CordovaGoogleMaps.cordova` @type ^`org.apache.cordova.CordovaInterface` @kind object;
+  #L271d0c.  v3:= v5.`plugin.google.maps.CordovaGoogleMaps.webView` @type ^`org.apache.cordova.CordovaWebView` @kind object;
+  #L271d10.  v4:= 0I;
+  #L271d12.  call `privateInitialize`(v1, v0, v2, v3, v4) @signature `Lplugin/google/maps/PluginMap;.privateInitialize:(Ljava/lang/String;Lorg/apache/cordova/CordovaInterface;Lorg/apache/cordova/CordovaWebView;Lorg/apache/cordova/CordovaPreferences;)V` @kind virtual;
+  #L271d18.  v2:= v5.`plugin.google.maps.CordovaGoogleMaps.cordova` @type ^`org.apache.cordova.CordovaInterface` @kind object;
+  #L271d1c.  v3:= v5.`plugin.google.maps.CordovaGoogleMaps.webView` @type ^`org.apache.cordova.CordovaWebView` @kind object;
+  #L271d20.  call `initialize`(v1, v2, v3) @signature `Lplugin/google/maps/PluginMap;.initialize:(Lorg/apache/cordova/CordovaInterface;Lorg/apache/cordova/CordovaWebView;)V` @kind virtual;
+  #L271d26.  v1.`plugin.google.maps.PluginMap.mapCtrl` @type ^`plugin.google.maps.CordovaGoogleMaps` := v5 @kind object;
+  #L271d2a.  v1.`plugin.google.maps.PluginMap.self` @type ^`plugin.google.maps.MyPlugin` := v1 @kind object;
+  #L271d2e.  v2:= new `org.apache.cordova.PluginEntry`;
+  #L271d32.  call `<init>`(v2, v0, v1) @signature `Lorg/apache/cordova/PluginEntry;.<init>:(Ljava/lang/String;Lorg/apache/cordova/CordovaPlugin;)V` @kind direct;
+  #L271d38.  v0:= v5.`plugin.google.maps.CordovaGoogleMaps.pluginManager` @type ^`org.apache.cordova.PluginManager` @kind object;
+  #L271d3c.  call `addService`(v0, v2) @signature `Lorg/apache/cordova/PluginManager;.addService:(Lorg/apache/cordova/PluginEntry;)V` @kind virtual;
+  #L271d42.  call `getMap`(v1, v6, v7) @signature `Lplugin/google/maps/PluginMap;.getMap:(Lorg/json/JSONArray;Lorg/apache/cordova/CallbackContext;)V` @kind virtual;
+  #L271d48.  return @kind void;
+}
+procedure `void` `getPanorama`(`plugin.google.maps.CordovaGoogleMaps` v5 @kind this, `org.json.JSONArray` v6 @kind object, `org.apache.cordova.CallbackContext` v7 @kind object) @signature `Lplugin/google/maps/CordovaGoogleMaps;.getPanorama:(Lorg/json/JSONArray;Lorg/apache/cordova/CallbackContext;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L271d5c.  v0:= 0I;
+  #L271d5e.  call temp:= `getJSONObject`(v6, v0) @signature `Lorg/json/JSONArray;.getJSONObject:(I)Lorg/json/JSONObject;` @kind virtual;
+  #L271d64.  v0:= temp @kind object;
+  #L271d66.  v1:= "__pgmId" @kind object;
+  #L271d6a.  call temp:= `getString`(v0, v1) @signature `Lorg/json/JSONObject;.getString:(Ljava/lang/String;)Ljava/lang/String;` @kind virtual;
+  #L271d70.  v0:= temp @kind object;
+  #L271d72.  v1:= "GoogleMapsPlugin" @kind object;
+  #L271d76.  v2:= new `java.lang.StringBuilder`;
+  #L271d7a.  call `<init>`(v2) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L271d80.  v3:= "---> mapId = " @kind object;
+  #L271d84.  call temp:= `append`(v2, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L271d8a.  call temp:= `append`(v2, v0) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L271d90.  call temp:= `toString`(v2) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L271d96.  v2:= temp @kind object;
+  #L271d98.  call temp:= `d`(v1, v2) @signature `Landroid/util/Log;.d:(Ljava/lang/String;Ljava/lang/String;)I` @kind static;
+  #L271d9e.  v1:= new `plugin.google.maps.PluginStreetViewPanorama`;
+  #L271da2.  call `<init>`(v1) @signature `Lplugin/google/maps/PluginStreetViewPanorama;.<init>:()V` @kind direct;
+  #L271da8.  v2:= v5.`plugin.google.maps.CordovaGoogleMaps.cordova` @type ^`org.apache.cordova.CordovaInterface` @kind object;
+  #L271dac.  v3:= v5.`plugin.google.maps.CordovaGoogleMaps.webView` @type ^`org.apache.cordova.CordovaWebView` @kind object;
+  #L271db0.  v4:= 0I;
+  #L271db2.  call `privateInitialize`(v1, v0, v2, v3, v4) @signature `Lplugin/google/maps/PluginStreetViewPanorama;.privateInitialize:(Ljava/lang/String;Lorg/apache/cordova/CordovaInterface;Lorg/apache/cordova/CordovaWebView;Lorg/apache/cordova/CordovaPreferences;)V` @kind virtual;
+  #L271db8.  v2:= v5.`plugin.google.maps.CordovaGoogleMaps.cordova` @type ^`org.apache.cordova.CordovaInterface` @kind object;
+  #L271dbc.  v3:= v5.`plugin.google.maps.CordovaGoogleMaps.webView` @type ^`org.apache.cordova.CordovaWebView` @kind object;
+  #L271dc0.  call `initialize`(v1, v2, v3) @signature `Lplugin/google/maps/PluginStreetViewPanorama;.initialize:(Lorg/apache/cordova/CordovaInterface;Lorg/apache/cordova/CordovaWebView;)V` @kind virtual;
+  #L271dc6.  v1.`plugin.google.maps.PluginStreetViewPanorama.mapCtrl` @type ^`plugin.google.maps.CordovaGoogleMaps` := v5 @kind object;
+  #L271dca.  v1.`plugin.google.maps.PluginStreetViewPanorama.self` @type ^`plugin.google.maps.MyPlugin` := v1 @kind object;
+  #L271dce.  v2:= new `org.apache.cordova.PluginEntry`;
+  #L271dd2.  call `<init>`(v2, v0, v1) @signature `Lorg/apache/cordova/PluginEntry;.<init>:(Ljava/lang/String;Lorg/apache/cordova/CordovaPlugin;)V` @kind direct;
+  #L271dd8.  v0:= v5.`plugin.google.maps.CordovaGoogleMaps.pluginManager` @type ^`org.apache.cordova.PluginManager` @kind object;
+  #L271ddc.  call `addService`(v0, v2) @signature `Lorg/apache/cordova/PluginManager;.addService:(Lorg/apache/cordova/PluginEntry;)V` @kind virtual;
+  #L271de2.  call `getPanorama`(v1, v6, v7) @signature `Lplugin/google/maps/PluginStreetViewPanorama;.getPanorama:(Lorg/json/JSONArray;Lorg/apache/cordova/CallbackContext;)V` @kind virtual;
+  #L271de8.  return @kind void;
+}
+procedure `void` `initialize`(`plugin.google.maps.CordovaGoogleMaps` v2 @kind this, `org.apache.cordova.CordovaInterface` v3 @kind object, `org.apache.cordova.CordovaWebView` v4 @kind object) @signature `Lplugin/google/maps/CordovaGoogleMaps;.initialize:(Lorg/apache/cordova/CordovaInterface;Lorg/apache/cordova/CordovaWebView;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L271dfc.  call `initialize`(v2, v3, v4) @signature `Lorg/apache/cordova/CordovaPlugin;.initialize:(Lorg/apache/cordova/CordovaInterface;Lorg/apache/cordova/CordovaWebView;)V` @kind super;
+  #L271e02.  v0:= v2.`plugin.google.maps.CordovaGoogleMaps.root` @type ^`android.view.ViewGroup` @kind object;
+  #L271e06.  if v0 == 0 then goto L271e0c;
+  #L271e0a.  return @kind void;
+  #L271e0c.  v0:= 6I;
+  #L271e0e.  call `setLogLevel`(v0) @signature `Lorg/apache/cordova/LOG;.setLogLevel:(I)V` @kind static;
+  #L271e14.  call temp:= `getActivity`(v3) @signature `Lorg/apache/cordova/CordovaInterface;.getActivity:()Landroid/app/Activity;` @kind interface;
+  #L271e1a.  v0:= temp @kind object;
+  #L271e1c.  v2.`plugin.google.maps.CordovaGoogleMaps.activity` @type ^`android.app.Activity` := v0 @kind object;
+  #L271e20.  call temp:= `getView`(v4) @signature `Lorg/apache/cordova/CordovaWebView;.getView:()Landroid/view/View;` @kind interface;
+  #L271e26.  v0:= temp @kind object;
+  #L271e28.  call temp:= `getViewTreeObserver`(v0) @signature `Landroid/view/View;.getViewTreeObserver:()Landroid/view/ViewTreeObserver;` @kind virtual;
+  #L271e2e.  v1:= temp @kind object;
+  #L271e30.  call `addOnScrollChangedListener`(v1, v2) @signature `Landroid/view/ViewTreeObserver;.addOnScrollChangedListener:(Landroid/view/ViewTreeObserver$OnScrollChangedListener;)V` @kind virtual;
+  #L271e36.  call temp:= `getParent`(v0) @signature `Landroid/view/View;.getParent:()Landroid/view/ViewParent;` @kind virtual;
+  #L271e3c.  v0:= temp @kind object;
+  #L271e3e.  v0:= (`android.view.ViewGroup`) v0 @kind object;
+  #L271e42.  v2.`plugin.google.maps.CordovaGoogleMaps.root` @type ^`android.view.ViewGroup` := v0 @kind object;
+  #L271e46.  call temp:= `getPluginManager`(v4) @signature `Lorg/apache/cordova/CordovaWebView;.getPluginManager:()Lorg/apache/cordova/PluginManager;` @kind interface;
+  #L271e4c.  v0:= temp @kind object;
+  #L271e4e.  v2.`plugin.google.maps.CordovaGoogleMaps.pluginManager` @type ^`org.apache.cordova.PluginManager` := v0 @kind object;
+  #L271e52.  call temp:= `getActivity`(v3) @signature `Lorg/apache/cordova/CordovaInterface;.getActivity:()Landroid/app/Activity;` @kind interface;
+  #L271e58.  v0:= temp @kind object;
+  #L271e5a.  v1:= new `plugin.google.maps.CordovaGoogleMaps$1`;
+  #L271e5e.  call `<init>`(v1, v2, v4, v3) @signature `Lplugin/google/maps/CordovaGoogleMaps$1;.<init>:(Lplugin/google/maps/CordovaGoogleMaps;Lorg/apache/cordova/CordovaWebView;Lorg/apache/cordova/CordovaInterface;)V` @kind direct;
+  #L271e64.  call `runOnUiThread`(v0, v1) @signature `Landroid/app/Activity;.runOnUiThread:(Ljava/lang/Runnable;)V` @kind virtual;
+  #L271e6a.  return @kind void;
+}
+procedure `void` `onConfigurationChanged`(`plugin.google.maps.CordovaGoogleMaps` v3 @kind this, `android.content.res.Configuration` v4 @kind object) @signature `Lplugin/google/maps/CordovaGoogleMaps;.onConfigurationChanged:(Landroid/content/res/Configuration;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L271e7c.  call `onConfigurationChanged`(v3, v4) @signature `Lorg/apache/cordova/CordovaPlugin;.onConfigurationChanged:(Landroid/content/res/Configuration;)V` @kind super;
+  #L271e82.  v4:= new `android.os.Handler`;
+  #L271e86.  call `<init>`(v4) @signature `Landroid/os/Handler;.<init>:()V` @kind direct;
+  #L271e8c.  v0:= new `plugin.google.maps.CordovaGoogleMaps$5`;
+  #L271e90.  call `<init>`(v0, v3) @signature `Lplugin/google/maps/CordovaGoogleMaps$5;.<init>:(Lplugin/google/maps/CordovaGoogleMaps;)V` @kind direct;
+  #L271e96.  v1:= 500L;
+  #L271e9a.  call temp:= `postDelayed`(v4, v0, v1) @signature `Landroid/os/Handler;.postDelayed:(Ljava/lang/Runnable;J)Z` @kind virtual;
+  #L271ea0.  return @kind void;
+}
+procedure `void` `onDestroy`(`plugin.google.maps.CordovaGoogleMaps` v4 @kind this) @signature `Lplugin/google/maps/CordovaGoogleMaps;.onDestroy:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L271eb4.  call `onDestroy`(v4) @signature `Lorg/apache/cordova/CordovaPlugin;.onDestroy:()V` @kind super;
+  #L271eba.  v0:= v4.`plugin.google.maps.CordovaGoogleMaps.pluginManager` @type ^`org.apache.cordova.PluginManager` @kind object;
+  #L271ebe.  call temp:= `getPluginEntries`(v0) @signature `Lorg/apache/cordova/PluginManager;.getPluginEntries:()Ljava/util/Collection;` @kind virtual;
+  #L271ec4.  v0:= temp @kind object;
+  #L271ec6.  call temp:= `iterator`(v0) @signature `Ljava/util/Collection;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L271ecc.  v0:= temp @kind object;
+  #L271ece.  call temp:= `hasNext`(v0) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L271ed4.  v1:= temp;
+  #L271ed6.  if v1 == 0 then goto L271f06;
+  #L271eda.  call temp:= `next`(v0) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L271ee0.  v1:= temp @kind object;
+  #L271ee2.  v1:= (`org.apache.cordova.PluginEntry`) v1 @kind object;
+  #L271ee6.  v2:= v1.`org.apache.cordova.PluginEntry.service` @type ^`java.lang.String` @kind object;
+  #L271eea.  v3:= "map_" @kind object;
+  #L271eee.  call temp:= `startsWith`(v2, v3) @signature `Ljava/lang/String;.startsWith:(Ljava/lang/String;)Z` @kind virtual;
+  #L271ef4.  v2:= temp;
+  #L271ef6.  if v2 == 0 then goto L271ece;
+  #L271efa.  v1:= v1.`org.apache.cordova.PluginEntry.plugin` @type ^`org.apache.cordova.CordovaPlugin` @kind object;
+  #L271efe.  call `onDestroy`(v1) @signature `Lorg/apache/cordova/CordovaPlugin;.onDestroy:()V` @kind virtual;
+  #L271f04.  goto L271ece;
+  #L271f06.  return @kind void;
+}
+procedure `boolean` `onOverrideUrlLoading`(`plugin.google.maps.CordovaGoogleMaps` v0 @kind this, `java.lang.String` v1 @kind object) @signature `Lplugin/google/maps/CordovaGoogleMaps;.onOverrideUrlLoading:(Ljava/lang/String;)Z` @AccessFlag PUBLIC {
+    temp;
+
+  #L271c1c.  v1:= v0.`plugin.google.maps.CordovaGoogleMaps.mPluginLayout` @type ^`plugin.google.maps.MyPluginLayout` @kind object;
+  #L271c20.  call `stopTimer`(v1) @signature `Lplugin/google/maps/MyPluginLayout;.stopTimer:()V` @kind virtual;
+  #L271c26.  v1:= 0I;
+  #L271c28.  return v1;
+}
+procedure `void` `onPause`(`plugin.google.maps.CordovaGoogleMaps` v4 @kind this, `boolean` v5 ) @signature `Lplugin/google/maps/CordovaGoogleMaps;.onPause:(Z)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L271f18.  call `onPause`(v4, v5) @signature `Lorg/apache/cordova/CordovaPlugin;.onPause:(Z)V` @kind super;
+  #L271f1e.  v0:= v4.`plugin.google.maps.CordovaGoogleMaps.mPluginLayout` @type ^`plugin.google.maps.MyPluginLayout` @kind object;
+  #L271f22.  if v0 == 0 then goto L271f2c;
+  #L271f26.  call `stopTimer`(v0) @signature `Lplugin/google/maps/MyPluginLayout;.stopTimer:()V` @kind virtual;
+  #L271f2c.  v0:= v4.`plugin.google.maps.CordovaGoogleMaps.pluginManager` @type ^`org.apache.cordova.PluginManager` @kind object;
+  #L271f30.  call temp:= `getPluginEntries`(v0) @signature `Lorg/apache/cordova/PluginManager;.getPluginEntries:()Ljava/util/Collection;` @kind virtual;
+  #L271f36.  v0:= temp @kind object;
+  #L271f38.  call temp:= `iterator`(v0) @signature `Ljava/util/Collection;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L271f3e.  v0:= temp @kind object;
+  #L271f40.  call temp:= `hasNext`(v0) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L271f46.  v1:= temp;
+  #L271f48.  if v1 == 0 then goto L271f78;
+  #L271f4c.  call temp:= `next`(v0) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L271f52.  v1:= temp @kind object;
+  #L271f54.  v1:= (`org.apache.cordova.PluginEntry`) v1 @kind object;
+  #L271f58.  v2:= v1.`org.apache.cordova.PluginEntry.service` @type ^`java.lang.String` @kind object;
+  #L271f5c.  v3:= "map_" @kind object;
+  #L271f60.  call temp:= `startsWith`(v2, v3) @signature `Ljava/lang/String;.startsWith:(Ljava/lang/String;)Z` @kind virtual;
+  #L271f66.  v2:= temp;
+  #L271f68.  if v2 == 0 then goto L271f40;
+  #L271f6c.  v1:= v1.`org.apache.cordova.PluginEntry.plugin` @type ^`org.apache.cordova.CordovaPlugin` @kind object;
+  #L271f70.  call `onPause`(v1, v5) @signature `Lorg/apache/cordova/CordovaPlugin;.onPause:(Z)V` @kind virtual;
+  #L271f76.  goto L271f40;
+  #L271f78.  return @kind void;
+}
+procedure `void` `onReset`(`plugin.google.maps.CordovaGoogleMaps` v2 @kind this) @signature `Lplugin/google/maps/CordovaGoogleMaps;.onReset:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L271f8c.  call `onReset`(v2) @signature `Lorg/apache/cordova/CordovaPlugin;.onReset:()V` @kind super;
+  #L271f92.  v0:= v2.`plugin.google.maps.CordovaGoogleMaps.mPluginLayout` @type ^`plugin.google.maps.MyPluginLayout` @kind object;
+  #L271f96.  if v0 == 0 then goto L271fc2;
+  #L271f9a.  v0:= v0.`plugin.google.maps.MyPluginLayout.pluginOverlays` @type ^`java.util.Map` @kind object;
+  #L271f9e.  if v0 != 0 then goto L271fa4;
+  #L271fa2.  goto L271fc2;
+  #L271fa4.  v0:= v2.`plugin.google.maps.CordovaGoogleMaps.cordova` @type ^`org.apache.cordova.CordovaInterface` @kind object;
+  #L271fa8.  call temp:= `getActivity`(v0) @signature `Lorg/apache/cordova/CordovaInterface;.getActivity:()Landroid/app/Activity;` @kind interface;
+  #L271fae.  v0:= temp @kind object;
+  #L271fb0.  v1:= new `plugin.google.maps.CordovaGoogleMaps$4`;
+  #L271fb4.  call `<init>`(v1, v2) @signature `Lplugin/google/maps/CordovaGoogleMaps$4;.<init>:(Lplugin/google/maps/CordovaGoogleMaps;)V` @kind direct;
+  #L271fba.  call `runOnUiThread`(v0, v1) @signature `Landroid/app/Activity;.runOnUiThread:(Ljava/lang/Runnable;)V` @kind virtual;
+  #L271fc0.  return @kind void;
+  #L271fc2.  return @kind void;
+}
+procedure `void` `onResume`(`plugin.google.maps.CordovaGoogleMaps` v4 @kind this, `boolean` v5 ) @signature `Lplugin/google/maps/CordovaGoogleMaps;.onResume:(Z)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L271fd4.  v0:= v4.`plugin.google.maps.CordovaGoogleMaps.pluginManager` @type ^`org.apache.cordova.PluginManager` @kind object;
+  #L271fd8.  call temp:= `getPluginEntries`(v0) @signature `Lorg/apache/cordova/PluginManager;.getPluginEntries:()Ljava/util/Collection;` @kind virtual;
+  #L271fde.  v0:= temp @kind object;
+  #L271fe0.  call temp:= `iterator`(v0) @signature `Ljava/util/Collection;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L271fe6.  v0:= temp @kind object;
+  #L271fe8.  call temp:= `hasNext`(v0) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L271fee.  v1:= temp;
+  #L271ff0.  if v1 == 0 then goto L272020;
+  #L271ff4.  call temp:= `next`(v0) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L271ffa.  v1:= temp @kind object;
+  #L271ffc.  v1:= (`org.apache.cordova.PluginEntry`) v1 @kind object;
+  #L272000.  v2:= v1.`org.apache.cordova.PluginEntry.service` @type ^`java.lang.String` @kind object;
+  #L272004.  v3:= "map_" @kind object;
+  #L272008.  call temp:= `startsWith`(v2, v3) @signature `Ljava/lang/String;.startsWith:(Ljava/lang/String;)Z` @kind virtual;
+  #L27200e.  v2:= temp;
+  #L272010.  if v2 == 0 then goto L271fe8;
+  #L272014.  v1:= v1.`org.apache.cordova.PluginEntry.plugin` @type ^`org.apache.cordova.CordovaPlugin` @kind object;
+  #L272018.  call `onResume`(v1, v5) @signature `Lorg/apache/cordova/CordovaPlugin;.onResume:(Z)V` @kind virtual;
+  #L27201e.  goto L271fe8;
+  #L272020.  return @kind void;
+}
+procedure `void` `onScrollChanged`(`plugin.google.maps.CordovaGoogleMaps` v3 @kind this) @signature `Lplugin/google/maps/CordovaGoogleMaps;.onScrollChanged:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L272034.  v0:= v3.`plugin.google.maps.CordovaGoogleMaps.mPluginLayout` @type ^`plugin.google.maps.MyPluginLayout` @kind object;
+  #L272038.  if v0 != 0 then goto L27203e;
+  #L27203c.  return @kind void;
+  #L27203e.  v0:= v3.`plugin.google.maps.CordovaGoogleMaps.webView` @type ^`org.apache.cordova.CordovaWebView` @kind object;
+  #L272042.  call temp:= `getView`(v0) @signature `Lorg/apache/cordova/CordovaWebView;.getView:()Landroid/view/View;` @kind interface;
+  #L272048.  v0:= temp @kind object;
+  #L27204a.  call temp:= `getScrollX`(v0) @signature `Landroid/view/View;.getScrollX:()I` @kind virtual;
+  #L272050.  v1:= temp;
+  #L272052.  call temp:= `getScrollY`(v0) @signature `Landroid/view/View;.getScrollY:()I` @kind virtual;
+  #L272058.  v0:= temp;
+  #L27205a.  v2:= v3.`plugin.google.maps.CordovaGoogleMaps.mPluginLayout` @type ^`plugin.google.maps.MyPluginLayout` @kind object;
+  #L27205e.  call `scrollTo`(v2, v1, v0) @signature `Lplugin/google/maps/MyPluginLayout;.scrollTo:(II)V` @kind virtual;
+  #L272064.  return @kind void;
+}
+procedure `void` `onStart`(`plugin.google.maps.CordovaGoogleMaps` v4 @kind this) @signature `Lplugin/google/maps/CordovaGoogleMaps;.onStart:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L272078.  call `onStart`(v4) @signature `Lorg/apache/cordova/CordovaPlugin;.onStart:()V` @kind super;
+  #L27207e.  v0:= v4.`plugin.google.maps.CordovaGoogleMaps.pluginManager` @type ^`org.apache.cordova.PluginManager` @kind object;
+  #L272082.  call temp:= `getPluginEntries`(v0) @signature `Lorg/apache/cordova/PluginManager;.getPluginEntries:()Ljava/util/Collection;` @kind virtual;
+  #L272088.  v0:= temp @kind object;
+  #L27208a.  call temp:= `iterator`(v0) @signature `Ljava/util/Collection;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L272090.  v0:= temp @kind object;
+  #L272092.  call temp:= `hasNext`(v0) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L272098.  v1:= temp;
+  #L27209a.  if v1 == 0 then goto L2720ca;
+  #L27209e.  call temp:= `next`(v0) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L2720a4.  v1:= temp @kind object;
+  #L2720a6.  v1:= (`org.apache.cordova.PluginEntry`) v1 @kind object;
+  #L2720aa.  v2:= v1.`org.apache.cordova.PluginEntry.service` @type ^`java.lang.String` @kind object;
+  #L2720ae.  v3:= "map_" @kind object;
+  #L2720b2.  call temp:= `startsWith`(v2, v3) @signature `Ljava/lang/String;.startsWith:(Ljava/lang/String;)Z` @kind virtual;
+  #L2720b8.  v2:= temp;
+  #L2720ba.  if v2 == 0 then goto L272092;
+  #L2720be.  v1:= v1.`org.apache.cordova.PluginEntry.plugin` @type ^`org.apache.cordova.CordovaPlugin` @kind object;
+  #L2720c2.  call `onStart`(v1) @signature `Lorg/apache/cordova/CordovaPlugin;.onStart:()V` @kind virtual;
+  #L2720c8.  goto L272092;
+  #L2720ca.  return @kind void;
+}
+procedure `void` `onStop`(`plugin.google.maps.CordovaGoogleMaps` v4 @kind this) @signature `Lplugin/google/maps/CordovaGoogleMaps;.onStop:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L2720dc.  call `onStop`(v4) @signature `Lorg/apache/cordova/CordovaPlugin;.onStop:()V` @kind super;
+  #L2720e2.  v0:= v4.`plugin.google.maps.CordovaGoogleMaps.pluginManager` @type ^`org.apache.cordova.PluginManager` @kind object;
+  #L2720e6.  call temp:= `getPluginEntries`(v0) @signature `Lorg/apache/cordova/PluginManager;.getPluginEntries:()Ljava/util/Collection;` @kind virtual;
+  #L2720ec.  v0:= temp @kind object;
+  #L2720ee.  call temp:= `iterator`(v0) @signature `Ljava/util/Collection;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L2720f4.  v0:= temp @kind object;
+  #L2720f6.  call temp:= `hasNext`(v0) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L2720fc.  v1:= temp;
+  #L2720fe.  if v1 == 0 then goto L27212e;
+  #L272102.  call temp:= `next`(v0) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L272108.  v1:= temp @kind object;
+  #L27210a.  v1:= (`org.apache.cordova.PluginEntry`) v1 @kind object;
+  #L27210e.  v2:= v1.`org.apache.cordova.PluginEntry.service` @type ^`java.lang.String` @kind object;
+  #L272112.  v3:= "map_" @kind object;
+  #L272116.  call temp:= `startsWith`(v2, v3) @signature `Ljava/lang/String;.startsWith:(Ljava/lang/String;)Z` @kind virtual;
+  #L27211c.  v2:= temp;
+  #L27211e.  if v2 == 0 then goto L2720f6;
+  #L272122.  v1:= v1.`org.apache.cordova.PluginEntry.plugin` @type ^`org.apache.cordova.CordovaPlugin` @kind object;
+  #L272126.  call `onStop`(v1) @signature `Lorg/apache/cordova/CordovaPlugin;.onStop:()V` @kind virtual;
+  #L27212c.  goto L2720f6;
+  #L27212e.  return @kind void;
+}
+procedure `void` `pause`(`plugin.google.maps.CordovaGoogleMaps` v1 @kind this, `org.json.JSONArray` v2 @kind object, `org.apache.cordova.CallbackContext` v3 @kind object) @signature `Lplugin/google/maps/CordovaGoogleMaps;.pause:(Lorg/json/JSONArray;Lorg/apache/cordova/CallbackContext;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L272140.  @monitorenter v1
+  #L272142.  v2:= `@@plugin.google.maps.CordovaGoogleMaps.timerLock` @type ^`java.lang.Object` @kind object;
+  #L272146.  @monitorenter v2
+  #L272148.  v0:= v1.`plugin.google.maps.CordovaGoogleMaps.mPluginLayout` @type ^`plugin.google.maps.MyPluginLayout` @kind object;
+  #L27214c.  if v0 != 0 then goto L27215c;
+  #L272150.  call `success`(v3) @signature `Lorg/apache/cordova/CallbackContext;.success:()V` @kind virtual;
+  #L272156.  @monitorexit v2
+  #L272158.  @monitorexit v1
+  #L27215a.  return @kind void;
+  #L27215c.  v0:= v1.`plugin.google.maps.CordovaGoogleMaps.mPluginLayout` @type ^`plugin.google.maps.MyPluginLayout` @kind object;
+  #L272160.  call `stopTimer`(v0) @signature `Lplugin/google/maps/MyPluginLayout;.stopTimer:()V` @kind virtual;
+  #L272166.  call `success`(v3) @signature `Lorg/apache/cordova/CallbackContext;.success:()V` @kind virtual;
+  #L27216c.  @monitorexit v2
+  #L27216e.  @monitorexit v1
+  #L272170.  return @kind void;
+  #L272172.  v3:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L272174.  @monitorexit v2
+  #L272176.  throw v3;
+  #L272178.  v2:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L27217a.  @monitorexit v1
+  #L27217c.  throw v2;
+  catch `java.lang.Throwable` @[L272142..L272148] goto L272178;
+  catch `java.lang.Throwable` @[L272148..L272158] goto L272172;
+  catch `java.lang.Throwable` @[L27215c..L27216e] goto L272172;
+  catch `java.lang.Throwable` @[L272174..L272176] goto L272172;
+  catch `java.lang.Throwable` @[L272176..L272178] goto L272178;
+}
+procedure `void` `putHtmlElements`(`plugin.google.maps.CordovaGoogleMaps` v1 @kind this, `org.json.JSONArray` v2 @kind object, `org.apache.cordova.CallbackContext` v3 @kind object) @signature `Lplugin/google/maps/CordovaGoogleMaps;.putHtmlElements:(Lorg/json/JSONArray;Lorg/apache/cordova/CallbackContext;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L2721c0.  v0:= 0I;
+  #L2721c2.  call temp:= `getJSONObject`(v2, v0) @signature `Lorg/json/JSONArray;.getJSONObject:(I)Lorg/json/JSONObject;` @kind virtual;
+  #L2721c8.  v2:= temp @kind object;
+  #L2721ca.  v0:= v1.`plugin.google.maps.CordovaGoogleMaps.mPluginLayout` @type ^`plugin.google.maps.MyPluginLayout` @kind object;
+  #L2721ce.  if v0 != 0 then goto L2721da;
+  #L2721d2.  call `success`(v3) @signature `Lorg/apache/cordova/CallbackContext;.success:()V` @kind virtual;
+  #L2721d8.  return @kind void;
+  #L2721da.  v0:= v0.`plugin.google.maps.MyPluginLayout.stopFlag` @type ^`boolean` @kind boolean;
+  #L2721de.  if v0 == 0 then goto L2721ee;
+  #L2721e2.  v0:= v1.`plugin.google.maps.CordovaGoogleMaps.mPluginLayout` @type ^`plugin.google.maps.MyPluginLayout` @kind object;
+  #L2721e6.  v0:= v0.`plugin.google.maps.MyPluginLayout.needUpdatePosition` @type ^`boolean` @kind boolean;
+  #L2721ea.  if v0 == 0 then goto L2721f8;
+  #L2721ee.  v0:= v1.`plugin.google.maps.CordovaGoogleMaps.mPluginLayout` @type ^`plugin.google.maps.MyPluginLayout` @kind object;
+  #L2721f2.  call `putHTMLElements`(v0, v2) @signature `Lplugin/google/maps/MyPluginLayout;.putHTMLElements:(Lorg/json/JSONObject;)V` @kind virtual;
+  #L2721f8.  call `success`(v3) @signature `Lorg/apache/cordova/CallbackContext;.success:()V` @kind virtual;
+  #L2721fe.  return @kind void;
+}
+procedure `void` `removeMap`(`plugin.google.maps.CordovaGoogleMaps` v3 @kind this, `org.json.JSONArray` v4 @kind object, `org.apache.cordova.CallbackContext` v5 @kind object) @signature `Lplugin/google/maps/CordovaGoogleMaps;.removeMap:(Lorg/json/JSONArray;Lorg/apache/cordova/CallbackContext;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L272210.  v0:= 0I;
+  #L272212.  call temp:= `getString`(v4, v0) @signature `Lorg/json/JSONArray;.getString:(I)Ljava/lang/String;` @kind virtual;
+  #L272218.  v4:= temp @kind object;
+  #L27221a.  v0:= v3.`plugin.google.maps.CordovaGoogleMaps.mPluginLayout` @type ^`plugin.google.maps.MyPluginLayout` @kind object;
+  #L27221e.  v0:= v0.`plugin.google.maps.MyPluginLayout.pluginOverlays` @type ^`java.util.Map` @kind object;
+  #L272222.  call temp:= `containsKey`(v0, v4) @signature `Ljava/util/Map;.containsKey:(Ljava/lang/Object;)Z` @kind interface;
+  #L272228.  v0:= temp;
+  #L27222a.  if v0 == 0 then goto L2722ce;
+  #L27222e.  v0:= v3.`plugin.google.maps.CordovaGoogleMaps.mPluginLayout` @type ^`plugin.google.maps.MyPluginLayout` @kind object;
+  #L272232.  call temp:= `removePluginOverlay`(v0, v4) @signature `Lplugin/google/maps/MyPluginLayout;.removePluginOverlay:(Ljava/lang/String;)Lplugin/google/maps/IPluginView;` @kind virtual;
+  #L272238.  v0:= temp @kind object;
+  #L27223a.  if v0 == 0 then goto L27225a;
+  #L27223e.  v1:= 0I;
+  #L272240.  call `remove`(v0, v1, v1) @signature `Lplugin/google/maps/IPluginView;.remove:(Lorg/json/JSONArray;Lorg/apache/cordova/CallbackContext;)V` @kind interface;
+  #L272246.  call `onDestroy`(v0) @signature `Lplugin/google/maps/IPluginView;.onDestroy:()V` @kind interface;
+  #L27224c.  v0:= v3.`plugin.google.maps.CordovaGoogleMaps.mPluginLayout` @type ^`plugin.google.maps.MyPluginLayout` @kind object;
+  #L272250.  v0:= v0.`plugin.google.maps.MyPluginLayout.HTMLNodes` @type ^`java.util.Map` @kind object;
+  #L272254.  call temp:= `remove`(v0, v4) @signature `Ljava/util/Map;.remove:(Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L27225a.  v0:= v3.`plugin.google.maps.CordovaGoogleMaps.pluginManager` @type ^`org.apache.cordova.PluginManager` @kind object;
+  #L27225e.  call temp:= `getClass`(v0) @signature `Ljava/lang/Object;.getClass:()Ljava/lang/Class;` @kind virtual;
+  #L272264.  v0:= temp @kind object;
+  #L272266.  v1:= "pluginMap" @kind object;
+  #L27226a.  call temp:= `getDeclaredField`(v0, v1) @signature `Ljava/lang/Class;.getDeclaredField:(Ljava/lang/String;)Ljava/lang/reflect/Field;` @kind virtual;
+  #L272270.  v0:= temp @kind object;
+  #L272272.  v1:= 1I;
+  #L272274.  call `setAccessible`(v0, v1) @signature `Ljava/lang/reflect/Field;.setAccessible:(Z)V` @kind virtual;
+  #L27227a.  v2:= v3.`plugin.google.maps.CordovaGoogleMaps.pluginManager` @type ^`org.apache.cordova.PluginManager` @kind object;
+  #L27227e.  call temp:= `get`(v0, v2) @signature `Ljava/lang/reflect/Field;.get:(Ljava/lang/Object;)Ljava/lang/Object;` @kind virtual;
+  #L272284.  v0:= temp @kind object;
+  #L272286.  v0:= (`java.util.LinkedHashMap`) v0 @kind object;
+  #L27228a.  call temp:= `remove`(v0, v4) @signature `Ljava/util/LinkedHashMap;.remove:(Ljava/lang/Object;)Ljava/lang/Object;` @kind virtual;
+  #L272290.  v0:= v3.`plugin.google.maps.CordovaGoogleMaps.pluginManager` @type ^`org.apache.cordova.PluginManager` @kind object;
+  #L272294.  call temp:= `getClass`(v0) @signature `Ljava/lang/Object;.getClass:()Ljava/lang/Class;` @kind virtual;
+  #L27229a.  v0:= temp @kind object;
+  #L27229c.  v2:= "entryMap" @kind object;
+  #L2722a0.  call temp:= `getDeclaredField`(v0, v2) @signature `Ljava/lang/Class;.getDeclaredField:(Ljava/lang/String;)Ljava/lang/reflect/Field;` @kind virtual;
+  #L2722a6.  v0:= temp @kind object;
+  #L2722a8.  call `setAccessible`(v0, v1) @signature `Ljava/lang/reflect/Field;.setAccessible:(Z)V` @kind virtual;
+  #L2722ae.  v1:= v3.`plugin.google.maps.CordovaGoogleMaps.pluginManager` @type ^`org.apache.cordova.PluginManager` @kind object;
+  #L2722b2.  call temp:= `get`(v0, v1) @signature `Ljava/lang/reflect/Field;.get:(Ljava/lang/Object;)Ljava/lang/Object;` @kind virtual;
+  #L2722b8.  v0:= temp @kind object;
+  #L2722ba.  v0:= (`java.util.LinkedHashMap`) v0 @kind object;
+  #L2722be.  call temp:= `remove`(v0, v4) @signature `Ljava/util/LinkedHashMap;.remove:(Ljava/lang/Object;)Ljava/lang/Object;` @kind virtual;
+  #L2722c4.  goto L2722ce;
+  #L2722c6.  v4:= Exception @type ^`java.lang.Exception` @kind object;
+  #L2722c8.  call `printStackTrace`(v4) @signature `Ljava/lang/Exception;.printStackTrace:()V` @kind virtual;
+  #L2722ce.  call `gc`() @signature `Ljava/lang/System;.gc:()V` @kind static;
+  #L2722d4.  call temp:= `getRuntime`() @signature `Ljava/lang/Runtime;.getRuntime:()Ljava/lang/Runtime;` @kind static;
+  #L2722da.  v4:= temp @kind object;
+  #L2722dc.  call `gc`(v4) @signature `Ljava/lang/Runtime;.gc:()V` @kind virtual;
+  #L2722e2.  call `success`(v5) @signature `Lorg/apache/cordova/CallbackContext;.success:()V` @kind virtual;
+  #L2722e8.  return @kind void;
+  catch `java.lang.Exception` @[L27225a..L2722c4] goto L2722c6;
+}
+procedure `void` `resume`(`plugin.google.maps.CordovaGoogleMaps` v1 @kind this, `org.json.JSONArray` v2 @kind object, `org.apache.cordova.CallbackContext` v3 @kind object) @signature `Lplugin/google/maps/CordovaGoogleMaps;.resume:(Lorg/json/JSONArray;Lorg/apache/cordova/CallbackContext;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L27230c.  @monitorenter v1
+  #L27230e.  v2:= `@@plugin.google.maps.CordovaGoogleMaps.timerLock` @type ^`java.lang.Object` @kind object;
+  #L272312.  @monitorenter v2
+  #L272314.  v0:= v1.`plugin.google.maps.CordovaGoogleMaps.mPluginLayout` @type ^`plugin.google.maps.MyPluginLayout` @kind object;
+  #L272318.  if v0 != 0 then goto L272328;
+  #L27231c.  call `success`(v3) @signature `Lorg/apache/cordova/CallbackContext;.success:()V` @kind virtual;
+  #L272322.  @monitorexit v2
+  #L272324.  @monitorexit v1
+  #L272326.  return @kind void;
+  #L272328.  v0:= v1.`plugin.google.maps.CordovaGoogleMaps.mPluginLayout` @type ^`plugin.google.maps.MyPluginLayout` @kind object;
+  #L27232c.  v0:= v0.`plugin.google.maps.MyPluginLayout.isSuspended` @type ^`boolean` @kind boolean;
+  #L272330.  if v0 == 0 then goto L27233e;
+  #L272334.  v0:= v1.`plugin.google.maps.CordovaGoogleMaps.mPluginLayout` @type ^`plugin.google.maps.MyPluginLayout` @kind object;
+  #L272338.  call `startTimer`(v0) @signature `Lplugin/google/maps/MyPluginLayout;.startTimer:()V` @kind virtual;
+  #L27233e.  call `success`(v3) @signature `Lorg/apache/cordova/CallbackContext;.success:()V` @kind virtual;
+  #L272344.  v3:= v1.`plugin.google.maps.CordovaGoogleMaps.webView` @type ^`org.apache.cordova.CordovaWebView` @kind object;
+  #L272348.  call temp:= `getView`(v3) @signature `Lorg/apache/cordova/CordovaWebView;.getView:()Landroid/view/View;` @kind interface;
+  #L27234e.  v3:= temp @kind object;
+  #L272350.  v0:= 0I;
+  #L272352.  call `setBackgroundColor`(v3, v0) @signature `Landroid/view/View;.setBackgroundColor:(I)V` @kind virtual;
+  #L272358.  @monitorexit v2
+  #L27235a.  @monitorexit v1
+  #L27235c.  return @kind void;
+  #L27235e.  v3:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L272360.  @monitorexit v2
+  #L272362.  throw v3;
+  #L272364.  v2:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L272366.  @monitorexit v1
+  #L272368.  throw v2;
+  catch `java.lang.Throwable` @[L27230e..L272314] goto L272364;
+  catch `java.lang.Throwable` @[L272314..L272324] goto L27235e;
+  catch `java.lang.Throwable` @[L272328..L27235a] goto L27235e;
+  catch `java.lang.Throwable` @[L272360..L272362] goto L27235e;
+  catch `java.lang.Throwable` @[L272362..L272364] goto L272364;
+}
+procedure `void` `updateMapPositionOnly`(`plugin.google.maps.CordovaGoogleMaps` v11 @kind this, `org.json.JSONArray` v12 @kind object, `org.apache.cordova.CallbackContext` v13 @kind object) @signature `Lplugin/google/maps/CordovaGoogleMaps;.updateMapPositionOnly:(Lorg/json/JSONArray;Lorg/apache/cordova/CallbackContext;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+    v9;
+    v10;
+
+  #L2723ac.  v0:= 0I;
+  #L2723ae.  call temp:= `getJSONObject`(v12, v0) @signature `Lorg/json/JSONArray;.getJSONObject:(I)Lorg/json/JSONObject;` @kind virtual;
+  #L2723b4.  v12:= temp @kind object;
+  #L2723b6.  call temp:= `Json2Bundle`(v12) @signature `Lplugin/google/maps/PluginUtil;.Json2Bundle:(Lorg/json/JSONObject;)Landroid/os/Bundle;` @kind static;
+  #L2723bc.  v12:= temp @kind object;
+  #L2723be.  call temp:= `getSystem`() @signature `Landroid/content/res/Resources;.getSystem:()Landroid/content/res/Resources;` @kind static;
+  #L2723c4.  v0:= temp @kind object;
+  #L2723c6.  call temp:= `getDisplayMetrics`(v0) @signature `Landroid/content/res/Resources;.getDisplayMetrics:()Landroid/util/DisplayMetrics;` @kind virtual;
+  #L2723cc.  v0:= temp @kind object;
+  #L2723ce.  v0:= v0.`android.util.DisplayMetrics.density` @type ^`float`;
+  #L2723d2.  call temp:= `keySet`(v12) @signature `Landroid/os/Bundle;.keySet:()Ljava/util/Set;` @kind virtual;
+  #L2723d8.  v1:= temp @kind object;
+  #L2723da.  call temp:= `iterator`(v1) @signature `Ljava/util/Set;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L2723e0.  v1:= temp @kind object;
+  #L2723e2.  call temp:= `hasNext`(v1) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L2723e8.  v2:= temp;
+  #L2723ea.  if v2 == 0 then goto L272550;
+  #L2723ee.  call temp:= `next`(v1) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L2723f4.  v2:= temp @kind object;
+  #L2723f6.  v2:= (`java.lang.String`) v2 @kind object;
+  #L2723fa.  call temp:= `getBundle`(v12, v2) @signature `Landroid/os/Bundle;.getBundle:(Ljava/lang/String;)Landroid/os/Bundle;` @kind virtual;
+  #L272400.  v3:= temp @kind object;
+  #L272402.  v4:= "size" @kind object;
+  #L272406.  call temp:= `getBundle`(v3, v4) @signature `Landroid/os/Bundle;.getBundle:(Ljava/lang/String;)Landroid/os/Bundle;` @kind virtual;
+  #L27240c.  v3:= temp @kind object;
+  #L27240e.  v4:= new `android.graphics.RectF`;
+  #L272412.  call `<init>`(v4) @signature `Landroid/graphics/RectF;.<init>:()V` @kind direct;
+  #L272418.  v5:= new `java.lang.StringBuilder`;
+  #L27241c.  call `<init>`(v5) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L272422.  v6:= "left" @kind object;
+  #L272426.  call temp:= `get`(v3, v6) @signature `Landroid/os/Bundle;.get:(Ljava/lang/String;)Ljava/lang/Object;` @kind virtual;
+  #L27242c.  v6:= temp @kind object;
+  #L27242e.  call temp:= `append`(v5, v6) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L272434.  v6:= "" @kind object;
+  #L272438.  call temp:= `append`(v5, v6) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L27243e.  call temp:= `toString`(v5) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L272444.  v5:= temp @kind object;
+  #L272446.  call temp:= `parseDouble`(v5) @signature `Ljava/lang/Double;.parseDouble:(Ljava/lang/String;)D` @kind static;
+  #L27244c.  v5:= temp @kind wide;
+  #L27244e.  v7:= (`double`) v0 @kind f2d;
+  #L272450.  call temp:= `isNaN`(v7) @signature `Ljava/lang/Double;.isNaN:(D)Z` @kind static;
+  #L272456.  v5:= v5 * v7 @kind double;
+  #L27245a.  v5:= (`float`) v5 @kind d2f;
+  #L27245c.  v4.`android.graphics.RectF.left` @type ^`float` := v5;
+  #L272460.  v5:= new `java.lang.StringBuilder`;
+  #L272464.  call `<init>`(v5) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L27246a.  v6:= "top" @kind object;
+  #L27246e.  call temp:= `get`(v3, v6) @signature `Landroid/os/Bundle;.get:(Ljava/lang/String;)Ljava/lang/Object;` @kind virtual;
+  #L272474.  v6:= temp @kind object;
+  #L272476.  call temp:= `append`(v5, v6) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L27247c.  v6:= "" @kind object;
+  #L272480.  call temp:= `append`(v5, v6) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L272486.  call temp:= `toString`(v5) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L27248c.  v5:= temp @kind object;
+  #L27248e.  call temp:= `parseDouble`(v5) @signature `Ljava/lang/Double;.parseDouble:(Ljava/lang/String;)D` @kind static;
+  #L272494.  v5:= temp @kind wide;
+  #L272496.  call temp:= `isNaN`(v7) @signature `Ljava/lang/Double;.isNaN:(D)Z` @kind static;
+  #L27249c.  v5:= v5 * v7 @kind double;
+  #L2724a0.  v5:= (`float`) v5 @kind d2f;
+  #L2724a2.  v4.`android.graphics.RectF.top` @type ^`float` := v5;
+  #L2724a6.  v5:= v4.`android.graphics.RectF.left` @type ^`float`;
+  #L2724aa.  v6:= new `java.lang.StringBuilder`;
+  #L2724ae.  call `<init>`(v6) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L2724b4.  v9:= "width" @kind object;
+  #L2724b8.  call temp:= `get`(v3, v9) @signature `Landroid/os/Bundle;.get:(Ljava/lang/String;)Ljava/lang/Object;` @kind virtual;
+  #L2724be.  v9:= temp @kind object;
+  #L2724c0.  call temp:= `append`(v6, v9) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2724c6.  v9:= "" @kind object;
+  #L2724ca.  call temp:= `append`(v6, v9) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2724d0.  call temp:= `toString`(v6) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L2724d6.  v6:= temp @kind object;
+  #L2724d8.  call temp:= `parseDouble`(v6) @signature `Ljava/lang/Double;.parseDouble:(Ljava/lang/String;)D` @kind static;
+  #L2724de.  v9:= temp @kind wide;
+  #L2724e0.  call temp:= `isNaN`(v7) @signature `Ljava/lang/Double;.isNaN:(D)Z` @kind static;
+  #L2724e6.  v9:= v9 * v7 @kind double;
+  #L2724ea.  v6:= (`float`) v9 @kind d2f;
+  #L2724ec.  v5:= v5 + v6 @kind float;
+  #L2724ee.  v4.`android.graphics.RectF.right` @type ^`float` := v5;
+  #L2724f2.  v5:= v4.`android.graphics.RectF.top` @type ^`float`;
+  #L2724f6.  v6:= new `java.lang.StringBuilder`;
+  #L2724fa.  call `<init>`(v6) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L272500.  v9:= "height" @kind object;
+  #L272504.  call temp:= `get`(v3, v9) @signature `Landroid/os/Bundle;.get:(Ljava/lang/String;)Ljava/lang/Object;` @kind virtual;
+  #L27250a.  v3:= temp @kind object;
+  #L27250c.  call temp:= `append`(v6, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L272512.  v3:= "" @kind object;
+  #L272516.  call temp:= `append`(v6, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L27251c.  call temp:= `toString`(v6) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L272522.  v3:= temp @kind object;
+  #L272524.  call temp:= `parseDouble`(v3) @signature `Ljava/lang/Double;.parseDouble:(Ljava/lang/String;)D` @kind static;
+  #L27252a.  v9:= temp @kind wide;
+  #L27252c.  call temp:= `isNaN`(v7) @signature `Ljava/lang/Double;.isNaN:(D)Z` @kind static;
+  #L272532.  v9:= v9 * v7 @kind double;
+  #L272536.  v3:= (`float`) v9 @kind d2f;
+  #L272538.  v5:= v5 + v3 @kind float;
+  #L27253a.  v4.`android.graphics.RectF.bottom` @type ^`float` := v5;
+  #L27253e.  v3:= v11.`plugin.google.maps.CordovaGoogleMaps.mPluginLayout` @type ^`plugin.google.maps.MyPluginLayout` @kind object;
+  #L272542.  v3:= v3.`plugin.google.maps.MyPluginLayout.HTMLNodeRectFs` @type ^`java.util.Map` @kind object;
+  #L272546.  call temp:= `put`(v3, v2, v4) @signature `Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L27254c.  goto L2723e2;
+  #L272550.  v12:= v11.`plugin.google.maps.CordovaGoogleMaps.mPluginLayout` @type ^`plugin.google.maps.MyPluginLayout` @kind object;
+  #L272554.  v12:= v12.`plugin.google.maps.MyPluginLayout.isSuspended` @type ^`boolean` @kind boolean;
+  #L272558.  if v12 == 0 then goto L272566;
+  #L27255c.  v12:= v11.`plugin.google.maps.CordovaGoogleMaps.mPluginLayout` @type ^`plugin.google.maps.MyPluginLayout` @kind object;
+  #L272560.  call `updateMapPositions`(v12) @signature `Lplugin/google/maps/MyPluginLayout;.updateMapPositions:()V` @kind virtual;
+  #L272566.  call `success`(v13) @signature `Lorg/apache/cordova/CallbackContext;.success:()V` @kind virtual;
+  #L27256c.  return @kind void;
+}

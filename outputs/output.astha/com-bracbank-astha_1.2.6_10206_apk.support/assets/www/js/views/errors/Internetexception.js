@@ -1,0 +1,1 @@
+define(["jquery","underscore","Backbone","text!views/errors/Internetexception.tpl"],function(e,r,t,n){var i=new EncryptedLocalStorage("secret"),c=t.View.extend({el:"#container",events:{},render:function(){hideSpinner();i.get("errordesc");return this.$el.html(r.template(n)).i18n(),this.$el.trigger("create"),this}});return c});

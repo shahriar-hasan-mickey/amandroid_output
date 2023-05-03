@@ -1,0 +1,638 @@
+record `com.shagi.materialdatepicker.date.DayPickerView` @kind class @AccessFlag PUBLIC_ABSTRACT extends `androidx.recyclerview.widget.RecyclerView` @kind class, `com.shagi.materialdatepicker.date.DatePickerFragmentDialog$OnDateChangedListener` @kind interface {
+  `androidx.recyclerview.widget.LinearLayoutManager` `com.shagi.materialdatepicker.date.DayPickerView.linearLayoutManager` @AccessFlag PRIVATE;
+  `com.shagi.materialdatepicker.date.MonthAdapter` `com.shagi.materialdatepicker.date.DayPickerView.mAdapter` @AccessFlag PROTECTED;
+  `android.content.Context` `com.shagi.materialdatepicker.date.DayPickerView.mContext` @AccessFlag PROTECTED;
+  `com.shagi.materialdatepicker.date.DatePickerController` `com.shagi.materialdatepicker.date.DayPickerView.mController` @AccessFlag PRIVATE;
+  `int` `com.shagi.materialdatepicker.date.DayPickerView.mCurrentMonthDisplayed` @AccessFlag PROTECTED;
+  `int` `com.shagi.materialdatepicker.date.DayPickerView.mDaysPerWeek` @AccessFlag PROTECTED;
+  `int` `com.shagi.materialdatepicker.date.DayPickerView.mFirstDayOfWeek` @AccessFlag PROTECTED;
+  `android.os.Handler` `com.shagi.materialdatepicker.date.DayPickerView.mHandler` @AccessFlag PROTECTED;
+  `int` `com.shagi.materialdatepicker.date.DayPickerView.mNumWeeks` @AccessFlag PROTECTED;
+  `java.lang.CharSequence` `com.shagi.materialdatepicker.date.DayPickerView.mPrevMonthName` @AccessFlag PROTECTED;
+  `long` `com.shagi.materialdatepicker.date.DayPickerView.mPreviousScrollPosition` @AccessFlag PROTECTED;
+  `int` `com.shagi.materialdatepicker.date.DayPickerView.mPreviousScrollState` @AccessFlag PROTECTED;
+  `com.shagi.materialdatepicker.date.MonthAdapter$CalendarDay` `com.shagi.materialdatepicker.date.DayPickerView.mSelectedDay` @AccessFlag PROTECTED;
+  `boolean` `com.shagi.materialdatepicker.date.DayPickerView.mShowWeekNumber` @AccessFlag PROTECTED;
+  `com.shagi.materialdatepicker.date.MonthAdapter$CalendarDay` `com.shagi.materialdatepicker.date.DayPickerView.mTempDay` @AccessFlag PROTECTED;
+}
+global `int` `@@com.shagi.materialdatepicker.date.DayPickerView.DAYS_PER_WEEK` @AccessFlag PUBLIC_STATIC_FINAL;
+global `int` `@@com.shagi.materialdatepicker.date.DayPickerView.SCROLL_HYST_WEEKS` @AccessFlag PROTECTED_STATIC_FINAL;
+global `java.lang.String` `@@com.shagi.materialdatepicker.date.DayPickerView.TAG` @AccessFlag PRIVATE_STATIC_FINAL;
+global `java.text.SimpleDateFormat` `@@com.shagi.materialdatepicker.date.DayPickerView.YEAR_FORMAT` @AccessFlag PRIVATE_STATIC;
+procedure `void` `<clinit>`() @signature `Lcom/shagi/materialdatepicker/date/DayPickerView;.<clinit>:()V` @AccessFlag STATIC_CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L2b8378.  v0:= new `java.text.SimpleDateFormat`;
+  #L2b837c.  call temp:= `getDefault`() @signature `Ljava/util/Locale;.getDefault:()Ljava/util/Locale;` @kind static;
+  #L2b8382.  v1:= temp @kind object;
+  #L2b8384.  v2:= "yyyy" @kind object;
+  #L2b8388.  call `<init>`(v0, v2, v1) @signature `Ljava/text/SimpleDateFormat;.<init>:(Ljava/lang/String;Ljava/util/Locale;)V` @kind direct;
+  #L2b838e.  `@@com.shagi.materialdatepicker.date.DayPickerView.YEAR_FORMAT` @type ^`java.text.SimpleDateFormat` := v0 @kind object;
+  #L2b8392.  return @kind void;
+}
+procedure `void` `<init>`(`com.shagi.materialdatepicker.date.DayPickerView` v1 @kind this, `android.content.Context` v2 @kind object, `android.util.AttributeSet` v3 @kind object) @signature `Lcom/shagi/materialdatepicker/date/DayPickerView;.<init>:(Landroid/content/Context;Landroid/util/AttributeSet;)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L2b83a4.  call `<init>`(v1, v2, v3) @signature `Landroidx/recyclerview/widget/RecyclerView;.<init>:(Landroid/content/Context;Landroid/util/AttributeSet;)V` @kind direct;
+  #L2b83aa.  v3:= 6I;
+  #L2b83ac.  v1.`com.shagi.materialdatepicker.date.DayPickerView.mNumWeeks` @type ^`int` := v3;
+  #L2b83b0.  v3:= 0I;
+  #L2b83b2.  v1.`com.shagi.materialdatepicker.date.DayPickerView.mShowWeekNumber` @type ^`boolean` := v3 @kind boolean;
+  #L2b83b6.  v0:= 7I;
+  #L2b83b8.  v1.`com.shagi.materialdatepicker.date.DayPickerView.mDaysPerWeek` @type ^`int` := v0;
+  #L2b83bc.  v1.`com.shagi.materialdatepicker.date.DayPickerView.mPreviousScrollState` @type ^`int` := v3;
+  #L2b83c0.  call `init`(v1, v2) @signature `Lcom/shagi/materialdatepicker/date/DayPickerView;.init:(Landroid/content/Context;)V` @kind virtual;
+  #L2b83c6.  return @kind void;
+}
+procedure `void` `<init>`(`com.shagi.materialdatepicker.date.DayPickerView` v2 @kind this, `android.content.Context` v3 @kind object, `com.shagi.materialdatepicker.date.DatePickerController` v4 @kind object) @signature `Lcom/shagi/materialdatepicker/date/DayPickerView;.<init>:(Landroid/content/Context;Lcom/shagi/materialdatepicker/date/DatePickerController;)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+
+  #L2b83d8.  call `<init>`(v2, v3) @signature `Landroidx/recyclerview/widget/RecyclerView;.<init>:(Landroid/content/Context;)V` @kind direct;
+  #L2b83de.  v0:= 6I;
+  #L2b83e0.  v2.`com.shagi.materialdatepicker.date.DayPickerView.mNumWeeks` @type ^`int` := v0;
+  #L2b83e4.  v0:= 0I;
+  #L2b83e6.  v2.`com.shagi.materialdatepicker.date.DayPickerView.mShowWeekNumber` @type ^`boolean` := v0 @kind boolean;
+  #L2b83ea.  v1:= 7I;
+  #L2b83ec.  v2.`com.shagi.materialdatepicker.date.DayPickerView.mDaysPerWeek` @type ^`int` := v1;
+  #L2b83f0.  v2.`com.shagi.materialdatepicker.date.DayPickerView.mPreviousScrollState` @type ^`int` := v0;
+  #L2b83f4.  call `init`(v2, v3) @signature `Lcom/shagi/materialdatepicker/date/DayPickerView;.init:(Landroid/content/Context;)V` @kind virtual;
+  #L2b83fa.  call `setController`(v2, v4) @signature `Lcom/shagi/materialdatepicker/date/DayPickerView;.setController:(Lcom/shagi/materialdatepicker/date/DatePickerController;)V` @kind virtual;
+  #L2b8400.  return @kind void;
+}
+procedure `com.shagi.materialdatepicker.date.MonthAdapter$CalendarDay` `findAccessibilityFocus`(`com.shagi.materialdatepicker.date.DayPickerView` v4 @kind this) @signature `Lcom/shagi/materialdatepicker/date/DayPickerView;.findAccessibilityFocus:()Lcom/shagi/materialdatepicker/date/MonthAdapter$CalendarDay;` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L2b8178.  call temp:= `getChildCount`(v4) @signature `Landroid/view/ViewGroup;.getChildCount:()I` @kind virtual;
+  #L2b817e.  v0:= temp;
+  #L2b8180.  v1:= 0I;
+  #L2b8182.  if v1 >= v0 then goto L2b81c0;
+  #L2b8186.  call temp:= `getChildAt`(v4, v1) @signature `Landroid/view/ViewGroup;.getChildAt:(I)Landroid/view/View;` @kind virtual;
+  #L2b818c.  v2:= temp @kind object;
+  #L2b818e.  v3:= instanceof @variable v2 @type ^`com.shagi.materialdatepicker.date.MonthView` @kind boolean;
+  #L2b8192.  if v3 == 0 then goto L2b81ba;
+  #L2b8196.  v2:= (`com.shagi.materialdatepicker.date.MonthView`) v2 @kind object;
+  #L2b819a.  call temp:= `getAccessibilityFocus`(v2) @signature `Lcom/shagi/materialdatepicker/date/MonthView;.getAccessibilityFocus:()Lcom/shagi/materialdatepicker/date/MonthAdapter$CalendarDay;` @kind virtual;
+  #L2b81a0.  v3:= temp @kind object;
+  #L2b81a2.  if v3 == 0 then goto L2b81ba;
+  #L2b81a6.  v0:= `@@android.os.Build$VERSION.SDK_INT` @type ^`int`;
+  #L2b81aa.  v1:= 17I;
+  #L2b81ae.  if v0 != v1 then goto L2b81b8;
+  #L2b81b2.  call `clearAccessibilityFocus`(v2) @signature `Lcom/shagi/materialdatepicker/date/MonthView;.clearAccessibilityFocus:()V` @kind virtual;
+  #L2b81b8.  return v3 @kind object;
+  #L2b81ba.  v1:= v1 + 1;
+  #L2b81be.  goto L2b8182;
+  #L2b81c0.  v0:= 0I;
+  #L2b81c2.  return v0 @kind object;
+}
+procedure `int` `getFirstVisiblePosition`(`com.shagi.materialdatepicker.date.DayPickerView` v1 @kind this) @signature `Lcom/shagi/materialdatepicker/date/DayPickerView;.getFirstVisiblePosition:()I` @AccessFlag PRIVATE {
+    temp;
+    v0;
+
+  #L2b827c.  v0:= 0I;
+  #L2b827e.  call temp:= `getChildAt`(v1, v0) @signature `Landroid/view/ViewGroup;.getChildAt:(I)Landroid/view/View;` @kind virtual;
+  #L2b8284.  v0:= temp @kind object;
+  #L2b8286.  call temp:= `getChildAdapterPosition`(v1, v0) @signature `Landroidx/recyclerview/widget/RecyclerView;.getChildAdapterPosition:(Landroid/view/View;)I` @kind virtual;
+  #L2b828c.  v0:= temp;
+  #L2b828e.  return v0;
+}
+procedure `java.lang.String` `getMonthAndYearString`(`com.shagi.materialdatepicker.date.MonthAdapter$CalendarDay` v3 @kind object) @signature `Lcom/shagi/materialdatepicker/date/DayPickerView;.getMonthAndYearString:(Lcom/shagi/materialdatepicker/date/MonthAdapter$CalendarDay;)Ljava/lang/String;` @AccessFlag PRIVATE_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L2b82c4.  call temp:= `getInstance`() @signature `Ljava/util/Calendar;.getInstance:()Ljava/util/Calendar;` @kind static;
+  #L2b82ca.  v0:= temp @kind object;
+  #L2b82cc.  v1:= v3.`com.shagi.materialdatepicker.date.MonthAdapter$CalendarDay.a` @type ^`int`;
+  #L2b82d0.  v2:= v3.`com.shagi.materialdatepicker.date.MonthAdapter$CalendarDay.b` @type ^`int`;
+  #L2b82d4.  v3:= v3.`com.shagi.materialdatepicker.date.MonthAdapter$CalendarDay.c` @type ^`int`;
+  #L2b82d8.  call `set`(v0, v1, v2, v3) @signature `Ljava/util/Calendar;.set:(III)V` @kind virtual;
+  #L2b82de.  v3:= new `java.lang.StringBuilder`;
+  #L2b82e2.  call `<init>`(v3) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L2b82e8.  v1:= "" @kind object;
+  #L2b82ec.  call temp:= `append`(v3, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2b82f2.  call temp:= `getDefault`() @signature `Ljava/util/Locale;.getDefault:()Ljava/util/Locale;` @kind static;
+  #L2b82f8.  v1:= temp @kind object;
+  #L2b82fa.  v2:= 2I;
+  #L2b82fc.  call temp:= `getDisplayName`(v0, v2, v2, v1) @signature `Ljava/util/Calendar;.getDisplayName:(IILjava/util/Locale;)Ljava/lang/String;` @kind virtual;
+  #L2b8302.  v1:= temp @kind object;
+  #L2b8304.  call temp:= `append`(v3, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2b830a.  call temp:= `toString`(v3) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L2b8310.  v3:= temp @kind object;
+  #L2b8312.  v1:= new `java.lang.StringBuilder`;
+  #L2b8316.  call `<init>`(v1) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L2b831c.  call temp:= `append`(v1, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2b8322.  v3:= " " @kind object;
+  #L2b8326.  call temp:= `append`(v1, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2b832c.  call temp:= `toString`(v1) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L2b8332.  v3:= temp @kind object;
+  #L2b8334.  v1:= new `java.lang.StringBuilder`;
+  #L2b8338.  call `<init>`(v1) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L2b833e.  call temp:= `append`(v1, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2b8344.  v3:= `@@com.shagi.materialdatepicker.date.DayPickerView.YEAR_FORMAT` @type ^`java.text.SimpleDateFormat` @kind object;
+  #L2b8348.  call temp:= `getTime`(v0) @signature `Ljava/util/Calendar;.getTime:()Ljava/util/Date;` @kind virtual;
+  #L2b834e.  v0:= temp @kind object;
+  #L2b8350.  call temp:= `format`(v3, v0) @signature `Ljava/text/SimpleDateFormat;.format:(Ljava/util/Date;)Ljava/lang/String;` @kind virtual;
+  #L2b8356.  v3:= temp @kind object;
+  #L2b8358.  call temp:= `append`(v1, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2b835e.  call temp:= `toString`(v1) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L2b8364.  v3:= temp @kind object;
+  #L2b8366.  return v3 @kind object;
+}
+procedure `boolean` `restoreAccessibilityFocus`(`com.shagi.materialdatepicker.date.DayPickerView` v5 @kind this, `com.shagi.materialdatepicker.date.MonthAdapter$CalendarDay` v6 @kind object) @signature `Lcom/shagi/materialdatepicker/date/DayPickerView;.restoreAccessibilityFocus:(Lcom/shagi/materialdatepicker/date/MonthAdapter$CalendarDay;)Z` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L2b8124.  v0:= 0I;
+  #L2b8126.  if v6 != 0 then goto L2b812c;
+  #L2b812a.  return v0;
+  #L2b812c.  call temp:= `getChildCount`(v5) @signature `Landroid/view/ViewGroup;.getChildCount:()I` @kind virtual;
+  #L2b8132.  v1:= temp;
+  #L2b8134.  v2:= 0I;
+  #L2b8136.  if v2 >= v1 then goto L2b8164;
+  #L2b813a.  call temp:= `getChildAt`(v5, v2) @signature `Landroid/view/ViewGroup;.getChildAt:(I)Landroid/view/View;` @kind virtual;
+  #L2b8140.  v3:= temp @kind object;
+  #L2b8142.  v4:= instanceof @variable v3 @type ^`com.shagi.materialdatepicker.date.MonthView` @kind boolean;
+  #L2b8146.  if v4 == 0 then goto L2b815e;
+  #L2b814a.  v3:= (`com.shagi.materialdatepicker.date.MonthView`) v3 @kind object;
+  #L2b814e.  call temp:= `restoreAccessibilityFocus`(v3, v6) @signature `Lcom/shagi/materialdatepicker/date/MonthView;.restoreAccessibilityFocus:(Lcom/shagi/materialdatepicker/date/MonthAdapter$CalendarDay;)Z` @kind virtual;
+  #L2b8154.  v3:= temp;
+  #L2b8156.  if v3 == 0 then goto L2b815e;
+  #L2b815a.  v6:= 1I;
+  #L2b815c.  return v6;
+  #L2b815e.  v2:= v2 + 1;
+  #L2b8162.  goto L2b8136;
+  #L2b8164.  return v0;
+}
+procedure `com.shagi.materialdatepicker.date.MonthAdapter` `createMonthAdapter`(`com.shagi.materialdatepicker.date.DatePickerController` v0 @kind object) @signature `Lcom/shagi/materialdatepicker/date/DayPickerView;.createMonthAdapter:(Lcom/shagi/materialdatepicker/date/DatePickerController;)Lcom/shagi/materialdatepicker/date/MonthAdapter;` @AccessFlag PUBLIC_ABSTRACT {
+
+  # return;
+}
+procedure `com.shagi.materialdatepicker.date.MonthView` `getMostVisibleMonth`(`com.shagi.materialdatepicker.date.DayPickerView` v10 @kind this) @signature `Lcom/shagi/materialdatepicker/date/DayPickerView;.getMostVisibleMonth:()Lcom/shagi/materialdatepicker/date/MonthView;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+    v9;
+
+  #L2b81d4.  call temp:= `getLayoutManager`(v10) @signature `Landroidx/recyclerview/widget/RecyclerView;.getLayoutManager:()Landroidx/recyclerview/widget/RecyclerView$LayoutManager;` @kind virtual;
+  #L2b81da.  v0:= temp @kind object;
+  #L2b81dc.  v0:= (`androidx.recyclerview.widget.LinearLayoutManager`) v0 @kind object;
+  #L2b81e0.  call temp:= `getOrientation`(v0) @signature `Landroidx/recyclerview/widget/LinearLayoutManager;.getOrientation:()I` @kind virtual;
+  #L2b81e6.  v0:= temp;
+  #L2b81e8.  v1:= 1I;
+  #L2b81ea.  v2:= 0I;
+  #L2b81ec.  if v0 != v1 then goto L2b81f2;
+  #L2b81f0.  goto L2b81f4;
+  #L2b81f2.  v1:= 0I;
+  #L2b81f4.  if v1 == 0 then goto L2b8202;
+  #L2b81f8.  call temp:= `getHeight`(v10) @signature `Landroid/view/ViewGroup;.getHeight:()I` @kind virtual;
+  #L2b81fe.  v0:= temp;
+  #L2b8200.  goto L2b820a;
+  #L2b8202.  call temp:= `getWidth`(v10) @signature `Landroid/view/ViewGroup;.getWidth:()I` @kind virtual;
+  #L2b8208.  v0:= temp;
+  #L2b820a.  v3:= 0I;
+  #L2b820c.  v4:= 0I;
+  #L2b820e.  v5:= 0I;
+  #L2b8210.  v6:= 0I;
+  #L2b8212.  if v4 >= v0 then goto L2b8268;
+  #L2b8216.  call temp:= `getChildAt`(v10, v5) @signature `Landroid/view/ViewGroup;.getChildAt:(I)Landroid/view/View;` @kind virtual;
+  #L2b821c.  v4:= temp @kind object;
+  #L2b821e.  if v4 != 0 then goto L2b8224;
+  #L2b8222.  goto L2b8268;
+  #L2b8224.  if v1 == 0 then goto L2b8232;
+  #L2b8228.  call temp:= `getBottom`(v4) @signature `Landroid/view/View;.getBottom:()I` @kind virtual;
+  #L2b822e.  v7:= temp;
+  #L2b8230.  goto L2b823a;
+  #L2b8232.  call temp:= `getRight`(v10) @signature `Landroid/view/ViewGroup;.getRight:()I` @kind virtual;
+  #L2b8238.  v7:= temp;
+  #L2b823a.  call temp:= `min`(v7, v0) @signature `Ljava/lang/Math;.min:(II)I` @kind static;
+  #L2b8240.  v8:= temp;
+  #L2b8242.  call temp:= `getTop`(v4) @signature `Landroid/view/View;.getTop:()I` @kind virtual;
+  #L2b8248.  v9:= temp;
+  #L2b824a.  call temp:= `max`(v2, v9) @signature `Ljava/lang/Math;.max:(II)I` @kind static;
+  #L2b8250.  v9:= temp;
+  #L2b8252.  v8:= v8 - v9 @kind int;
+  #L2b8254.  if v8 <= v6 then goto L2b8260;
+  #L2b8258.  v4:= (`com.shagi.materialdatepicker.date.MonthView`) v4 @kind object;
+  #L2b825c.  v3:= v4 @kind object;
+  #L2b825e.  v6:= v8;
+  #L2b8260.  v5:= v5 + 1;
+  #L2b8264.  v4:= v7;
+  #L2b8266.  goto L2b8212;
+  #L2b8268.  return v3 @kind object;
+}
+procedure `int` `getMostVisiblePosition`(`com.shagi.materialdatepicker.date.DayPickerView` v1 @kind this) @signature `Lcom/shagi/materialdatepicker/date/DayPickerView;.getMostVisiblePosition:()I` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L2b82a0.  call temp:= `getMostVisibleMonth`(v1) @signature `Lcom/shagi/materialdatepicker/date/DayPickerView;.getMostVisibleMonth:()Lcom/shagi/materialdatepicker/date/MonthView;` @kind virtual;
+  #L2b82a6.  v0:= temp @kind object;
+  #L2b82a8.  call temp:= `getChildAdapterPosition`(v1, v0) @signature `Landroidx/recyclerview/widget/RecyclerView;.getChildAdapterPosition:(Landroid/view/View;)I` @kind virtual;
+  #L2b82ae.  v0:= temp;
+  #L2b82b0.  return v0;
+}
+procedure `boolean` `goTo`(`com.shagi.materialdatepicker.date.DayPickerView` v8 @kind this, `com.shagi.materialdatepicker.date.MonthAdapter$CalendarDay` v9 @kind object, `boolean` v10 , `boolean` v11 , `boolean` v12 ) @signature `Lcom/shagi/materialdatepicker/date/DayPickerView;.goTo:(Lcom/shagi/materialdatepicker/date/MonthAdapter$CalendarDay;ZZZ)Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+
+  #L2b7ed8.  if v11 == 0 then goto L2b7ee6;
+  #L2b7edc.  v0:= v8.`com.shagi.materialdatepicker.date.DayPickerView.mSelectedDay` @type ^`com.shagi.materialdatepicker.date.MonthAdapter$CalendarDay` @kind object;
+  #L2b7ee0.  call `set`(v0, v9) @signature `Lcom/shagi/materialdatepicker/date/MonthAdapter$CalendarDay;.set:(Lcom/shagi/materialdatepicker/date/MonthAdapter$CalendarDay;)V` @kind virtual;
+  #L2b7ee6.  v0:= v8.`com.shagi.materialdatepicker.date.DayPickerView.mTempDay` @type ^`com.shagi.materialdatepicker.date.MonthAdapter$CalendarDay` @kind object;
+  #L2b7eea.  call `set`(v0, v9) @signature `Lcom/shagi/materialdatepicker/date/MonthAdapter$CalendarDay;.set:(Lcom/shagi/materialdatepicker/date/MonthAdapter$CalendarDay;)V` @kind virtual;
+  #L2b7ef0.  v0:= v8.`com.shagi.materialdatepicker.date.DayPickerView.mController` @type ^`com.shagi.materialdatepicker.date.DatePickerController` @kind object;
+  #L2b7ef4.  call temp:= `getStartDate`(v0) @signature `Lcom/shagi/materialdatepicker/date/DatePickerController;.getStartDate:()Ljava/util/Calendar;` @kind interface;
+  #L2b7efa.  v0:= temp @kind object;
+  #L2b7efc.  v1:= 2I;
+  #L2b7efe.  call temp:= `get`(v0, v1) @signature `Ljava/util/Calendar;.get:(I)I` @kind virtual;
+  #L2b7f04.  v0:= temp;
+  #L2b7f06.  v1:= v9.`com.shagi.materialdatepicker.date.MonthAdapter$CalendarDay.a` @type ^`int`;
+  #L2b7f0a.  v2:= v8.`com.shagi.materialdatepicker.date.DayPickerView.mController` @type ^`com.shagi.materialdatepicker.date.DatePickerController` @kind object;
+  #L2b7f0e.  call temp:= `getMinYear`(v2) @signature `Lcom/shagi/materialdatepicker/date/DatePickerController;.getMinYear:()I` @kind interface;
+  #L2b7f14.  v2:= temp;
+  #L2b7f16.  v1:= v1 - v2 @kind int;
+  #L2b7f18.  v1:= v1 * 12;
+  #L2b7f1c.  v9:= v9.`com.shagi.materialdatepicker.date.MonthAdapter$CalendarDay.b` @type ^`int`;
+  #L2b7f20.  v1:= v1 + v9 @kind int;
+  #L2b7f22.  v1:= v1 - v0 @kind int;
+  #L2b7f24.  v9:= 0I;
+  #L2b7f26.  v0:= 0I;
+  #L2b7f28.  v2:= v0 + 1;
+  #L2b7f2c.  call temp:= `getChildAt`(v8, v0) @signature `Landroid/view/ViewGroup;.getChildAt:(I)Landroid/view/View;` @kind virtual;
+  #L2b7f32.  v0:= temp @kind object;
+  #L2b7f34.  v3:= 3I;
+  #L2b7f36.  v4:= "MonthFragment" @kind object;
+  #L2b7f3a.  if v0 != 0 then goto L2b7f40;
+  #L2b7f3e.  goto L2b7f94;
+  #L2b7f40.  call temp:= `getTop`(v0) @signature `Landroid/view/View;.getTop:()I` @kind virtual;
+  #L2b7f46.  v5:= temp;
+  #L2b7f48.  call temp:= `isLoggable`(v4, v3) @signature `Landroid/util/Log;.isLoggable:(Ljava/lang/String;I)Z` @kind static;
+  #L2b7f4e.  v6:= temp;
+  #L2b7f50.  if v6 == 0 then goto L2b7f90;
+  #L2b7f54.  v6:= new `java.lang.StringBuilder`;
+  #L2b7f58.  call `<init>`(v6) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L2b7f5e.  v7:= "child at " @kind object;
+  #L2b7f62.  call temp:= `append`(v6, v7) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2b7f68.  v7:= v2 + -1;
+  #L2b7f6c.  call temp:= `append`(v6, v7) @signature `Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2b7f72.  v7:= " has top " @kind object;
+  #L2b7f76.  call temp:= `append`(v6, v7) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2b7f7c.  call temp:= `append`(v6, v5) @signature `Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2b7f82.  call temp:= `toString`(v6) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L2b7f88.  v6:= temp @kind object;
+  #L2b7f8a.  call temp:= `d`(v4, v6) @signature `Landroid/util/Log;.d:(Ljava/lang/String;Ljava/lang/String;)I` @kind static;
+  #L2b7f90.  if v5 < 0 then goto L2b8028;
+  #L2b7f94.  if v0 == 0 then goto L2b7fa2;
+  #L2b7f98.  call temp:= `getChildAdapterPosition`(v8, v0) @signature `Landroidx/recyclerview/widget/RecyclerView;.getChildAdapterPosition:(Landroid/view/View;)I` @kind virtual;
+  #L2b7f9e.  v0:= temp;
+  #L2b7fa0.  goto L2b7fa4;
+  #L2b7fa2.  v0:= 0I;
+  #L2b7fa4.  if v11 == 0 then goto L2b7fb6;
+  #L2b7fa8.  v2:= v8.`com.shagi.materialdatepicker.date.DayPickerView.mAdapter` @type ^`com.shagi.materialdatepicker.date.MonthAdapter` @kind object;
+  #L2b7fac.  v5:= v8.`com.shagi.materialdatepicker.date.DayPickerView.mSelectedDay` @type ^`com.shagi.materialdatepicker.date.MonthAdapter$CalendarDay` @kind object;
+  #L2b7fb0.  call `setSelectedDay`(v2, v5) @signature `Lcom/shagi/materialdatepicker/date/MonthAdapter;.setSelectedDay:(Lcom/shagi/materialdatepicker/date/MonthAdapter$CalendarDay;)V` @kind virtual;
+  #L2b7fb6.  call temp:= `isLoggable`(v4, v3) @signature `Landroid/util/Log;.isLoggable:(Ljava/lang/String;I)Z` @kind static;
+  #L2b7fbc.  v2:= temp;
+  #L2b7fbe.  if v2 == 0 then goto L2b7fea;
+  #L2b7fc2.  v2:= new `java.lang.StringBuilder`;
+  #L2b7fc6.  call `<init>`(v2) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L2b7fcc.  v3:= "GoTo position " @kind object;
+  #L2b7fd0.  call temp:= `append`(v2, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2b7fd6.  call temp:= `append`(v2, v1) @signature `Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2b7fdc.  call temp:= `toString`(v2) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L2b7fe2.  v2:= temp @kind object;
+  #L2b7fe4.  call temp:= `d`(v4, v2) @signature `Landroid/util/Log;.d:(Ljava/lang/String;Ljava/lang/String;)I` @kind static;
+  #L2b7fea.  if v1 != v0 then goto L2b8004;
+  #L2b7fee.  if v12 == 0 then goto L2b7ff4;
+  #L2b7ff2.  goto L2b8004;
+  #L2b7ff4.  if v11 == 0 then goto L2b8026;
+  #L2b7ff8.  v10:= v8.`com.shagi.materialdatepicker.date.DayPickerView.mSelectedDay` @type ^`com.shagi.materialdatepicker.date.MonthAdapter$CalendarDay` @kind object;
+  #L2b7ffc.  call `setMonthDisplayed`(v8, v10) @signature `Lcom/shagi/materialdatepicker/date/DayPickerView;.setMonthDisplayed:(Lcom/shagi/materialdatepicker/date/MonthAdapter$CalendarDay;)V` @kind virtual;
+  #L2b8002.  goto L2b8026;
+  #L2b8004.  v11:= v8.`com.shagi.materialdatepicker.date.DayPickerView.mTempDay` @type ^`com.shagi.materialdatepicker.date.MonthAdapter$CalendarDay` @kind object;
+  #L2b8008.  call `setMonthDisplayed`(v8, v11) @signature `Lcom/shagi/materialdatepicker/date/DayPickerView;.setMonthDisplayed:(Lcom/shagi/materialdatepicker/date/MonthAdapter$CalendarDay;)V` @kind virtual;
+  #L2b800e.  v11:= 1I;
+  #L2b8010.  v8.`com.shagi.materialdatepicker.date.DayPickerView.mPreviousScrollState` @type ^`int` := v11;
+  #L2b8014.  if v10 == 0 then goto L2b8020;
+  #L2b8018.  call `smoothScrollToPosition`(v8, v1) @signature `Landroidx/recyclerview/widget/RecyclerView;.smoothScrollToPosition:(I)V` @kind virtual;
+  #L2b801e.  return v11;
+  #L2b8020.  call `postSetSelection`(v8, v1) @signature `Lcom/shagi/materialdatepicker/date/DayPickerView;.postSetSelection:(I)V` @kind virtual;
+  #L2b8026.  return v9;
+  #L2b8028.  v0:= v2;
+  #L2b802a.  goto L2b7f28;
+}
+procedure `void` `init`(`com.shagi.materialdatepicker.date.DayPickerView` v3 @kind this, `android.content.Context` v4 @kind object) @signature `Lcom/shagi/materialdatepicker/date/DayPickerView;.init:(Landroid/content/Context;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L2b8414.  v0:= new `androidx.recyclerview.widget.LinearLayoutManager`;
+  #L2b8418.  v1:= 0I;
+  #L2b841a.  call `<init>`(v0, v4, v1, v1) @signature `Landroidx/recyclerview/widget/LinearLayoutManager;.<init>:(Landroid/content/Context;IZ)V` @kind direct;
+  #L2b8420.  v3.`com.shagi.materialdatepicker.date.DayPickerView.linearLayoutManager` @type ^`androidx.recyclerview.widget.LinearLayoutManager` := v0 @kind object;
+  #L2b8424.  call `setLayoutManager`(v3, v0) @signature `Landroidx/recyclerview/widget/RecyclerView;.setLayoutManager:(Landroidx/recyclerview/widget/RecyclerView$LayoutManager;)V` @kind virtual;
+  #L2b842a.  v0:= new `android.os.Handler`;
+  #L2b842e.  call `<init>`(v0) @signature `Landroid/os/Handler;.<init>:()V` @kind direct;
+  #L2b8434.  v3.`com.shagi.materialdatepicker.date.DayPickerView.mHandler` @type ^`android.os.Handler` := v0 @kind object;
+  #L2b8438.  v0:= new `androidx.recyclerview.widget.RecyclerView$LayoutParams`;
+  #L2b843c.  v2:= -1I;
+  #L2b843e.  call `<init>`(v0, v2, v2) @signature `Landroidx/recyclerview/widget/RecyclerView$LayoutParams;.<init>:(II)V` @kind direct;
+  #L2b8444.  call `setLayoutParams`(v3, v0) @signature `Landroid/view/ViewGroup;.setLayoutParams:(Landroid/view/ViewGroup$LayoutParams;)V` @kind virtual;
+  #L2b844a.  call `setVerticalScrollBarEnabled`(v3, v1) @signature `Landroid/view/ViewGroup;.setVerticalScrollBarEnabled:(Z)V` @kind virtual;
+  #L2b8450.  call `setHorizontalScrollBarEnabled`(v3, v1) @signature `Landroid/view/ViewGroup;.setHorizontalScrollBarEnabled:(Z)V` @kind virtual;
+  #L2b8456.  v3.`com.shagi.materialdatepicker.date.DayPickerView.mContext` @type ^`android.content.Context` := v4 @kind object;
+  #L2b845a.  call `setUpRecyclerView`(v3) @signature `Lcom/shagi/materialdatepicker/date/DayPickerView;.setUpRecyclerView:()V` @kind virtual;
+  #L2b8460.  return @kind void;
+}
+procedure `void` `onChange`(`com.shagi.materialdatepicker.date.DayPickerView` v0 @kind this) @signature `Lcom/shagi/materialdatepicker/date/DayPickerView;.onChange:()V` @AccessFlag PUBLIC {
+    temp;
+
+  #L2b8474.  call `refreshAdapter`(v0) @signature `Lcom/shagi/materialdatepicker/date/DayPickerView;.refreshAdapter:()V` @kind virtual;
+  #L2b847a.  return @kind void;
+}
+procedure `void` `onDateChanged`(`com.shagi.materialdatepicker.date.DayPickerView` v3 @kind this) @signature `Lcom/shagi/materialdatepicker/date/DayPickerView;.onDateChanged:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L2b848c.  v0:= v3.`com.shagi.materialdatepicker.date.DayPickerView.mController` @type ^`com.shagi.materialdatepicker.date.DatePickerController` @kind object;
+  #L2b8490.  call temp:= `getSelectedDay`(v0) @signature `Lcom/shagi/materialdatepicker/date/DatePickerController;.getSelectedDay:()Lcom/shagi/materialdatepicker/date/MonthAdapter$CalendarDay;` @kind interface;
+  #L2b8496.  v0:= temp @kind object;
+  #L2b8498.  v1:= 0I;
+  #L2b849a.  v2:= 1I;
+  #L2b849c.  call temp:= `goTo`(v3, v0, v1, v2, v2) @signature `Lcom/shagi/materialdatepicker/date/DayPickerView;.goTo:(Lcom/shagi/materialdatepicker/date/MonthAdapter$CalendarDay;ZZZ)Z` @kind virtual;
+  #L2b84a2.  return @kind void;
+}
+procedure `void` `onInitializeAccessibilityEvent`(`com.shagi.materialdatepicker.date.DayPickerView` v1 @kind this, `android.view.accessibility.AccessibilityEvent` v2 @kind object) @signature `Lcom/shagi/materialdatepicker/date/DayPickerView;.onInitializeAccessibilityEvent:(Landroid/view/accessibility/AccessibilityEvent;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L2b84b4.  call `onInitializeAccessibilityEvent`(v1, v2) @signature `Landroid/view/ViewGroup;.onInitializeAccessibilityEvent:(Landroid/view/accessibility/AccessibilityEvent;)V` @kind super;
+  #L2b84ba.  v0:= -1I;
+  #L2b84bc.  call `setItemCount`(v2, v0) @signature `Landroid/view/accessibility/AccessibilityEvent;.setItemCount:(I)V` @kind virtual;
+  #L2b84c2.  return @kind void;
+}
+procedure `void` `onInitializeAccessibilityNodeInfo`(`com.shagi.materialdatepicker.date.DayPickerView` v2 @kind this, `android.view.accessibility.AccessibilityNodeInfo` v3 @kind object) @signature `Lcom/shagi/materialdatepicker/date/DayPickerView;.onInitializeAccessibilityNodeInfo:(Landroid/view/accessibility/AccessibilityNodeInfo;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L2b84d4.  call `onInitializeAccessibilityNodeInfo`(v2, v3) @signature `Landroid/view/ViewGroup;.onInitializeAccessibilityNodeInfo:(Landroid/view/accessibility/AccessibilityNodeInfo;)V` @kind super;
+  #L2b84da.  v0:= `@@android.os.Build$VERSION.SDK_INT` @type ^`int`;
+  #L2b84de.  v1:= 21I;
+  #L2b84e2.  if v0 < v1 then goto L2b84fc;
+  #L2b84e6.  v0:= `@@android.view.accessibility.AccessibilityNodeInfo$AccessibilityAction.ACTION_SCROLL_BACKWARD` @type ^`android.view.accessibility.AccessibilityNodeInfo$AccessibilityAction` @kind object;
+  #L2b84ea.  call `addAction`(v3, v0) @signature `Landroid/view/accessibility/AccessibilityNodeInfo;.addAction:(Landroid/view/accessibility/AccessibilityNodeInfo$AccessibilityAction;)V` @kind virtual;
+  #L2b84f0.  v0:= `@@android.view.accessibility.AccessibilityNodeInfo$AccessibilityAction.ACTION_SCROLL_FORWARD` @type ^`android.view.accessibility.AccessibilityNodeInfo$AccessibilityAction` @kind object;
+  #L2b84f4.  call `addAction`(v3, v0) @signature `Landroid/view/accessibility/AccessibilityNodeInfo;.addAction:(Landroid/view/accessibility/AccessibilityNodeInfo$AccessibilityAction;)V` @kind virtual;
+  #L2b84fa.  goto L2b8510;
+  #L2b84fc.  v0:= 4096I;
+  #L2b8500.  call `addAction`(v3, v0) @signature `Landroid/view/accessibility/AccessibilityNodeInfo;.addAction:(I)V` @kind virtual;
+  #L2b8506.  v0:= 8192I;
+  #L2b850a.  call `addAction`(v3, v0) @signature `Landroid/view/accessibility/AccessibilityNodeInfo;.addAction:(I)V` @kind virtual;
+  #L2b8510.  return @kind void;
+}
+procedure `void` `onLayout`(`com.shagi.materialdatepicker.date.DayPickerView` v0 @kind this, `boolean` v1 , `int` v2 , `int` v3 , `int` v4 , `int` v5 ) @signature `Lcom/shagi/materialdatepicker/date/DayPickerView;.onLayout:(ZIIII)V` @AccessFlag PROTECTED {
+    temp;
+
+  #L2b8524.  call `onLayout`(v0, v1, v2, v3, v4, v5) @signature `Landroidx/recyclerview/widget/RecyclerView;.onLayout:(ZIIII)V` @kind super;
+  #L2b852a.  call temp:= `findAccessibilityFocus`(v0) @signature `Lcom/shagi/materialdatepicker/date/DayPickerView;.findAccessibilityFocus:()Lcom/shagi/materialdatepicker/date/MonthAdapter$CalendarDay;` @kind direct;
+  #L2b8530.  v1:= temp @kind object;
+  #L2b8532.  call temp:= `restoreAccessibilityFocus`(v0, v1) @signature `Lcom/shagi/materialdatepicker/date/DayPickerView;.restoreAccessibilityFocus:(Lcom/shagi/materialdatepicker/date/MonthAdapter$CalendarDay;)Z` @kind direct;
+  #L2b8538.  return @kind void;
+}
+procedure `boolean` `performAccessibilityAction`(`com.shagi.materialdatepicker.date.DayPickerView` v6 @kind this, `int` v7 , `android.os.Bundle` v8 @kind object) @signature `Lcom/shagi/materialdatepicker/date/DayPickerView;.performAccessibilityAction:(ILandroid/os/Bundle;)Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L2b8040.  v0:= 8192I;
+  #L2b8044.  v1:= 4096I;
+  #L2b8048.  if v7 == v1 then goto L2b805a;
+  #L2b804c.  if v7 == v0 then goto L2b805a;
+  #L2b8050.  call temp:= `performAccessibilityAction`(v6, v7, v8) @signature `Landroid/view/ViewGroup;.performAccessibilityAction:(ILandroid/os/Bundle;)Z` @kind super;
+  #L2b8056.  v7:= temp;
+  #L2b8058.  return v7;
+  #L2b805a.  call temp:= `getFirstVisiblePosition`(v6) @signature `Lcom/shagi/materialdatepicker/date/DayPickerView;.getFirstVisiblePosition:()I` @kind direct;
+  #L2b8060.  v8:= temp;
+  #L2b8062.  v2:= v6.`com.shagi.materialdatepicker.date.DayPickerView.mController` @type ^`com.shagi.materialdatepicker.date.DatePickerController` @kind object;
+  #L2b8066.  call temp:= `getStartDate`(v2) @signature `Lcom/shagi/materialdatepicker/date/DatePickerController;.getStartDate:()Ljava/util/Calendar;` @kind interface;
+  #L2b806c.  v2:= temp @kind object;
+  #L2b806e.  v3:= 2I;
+  #L2b8070.  call temp:= `get`(v2, v3) @signature `Ljava/util/Calendar;.get:(I)I` @kind virtual;
+  #L2b8076.  v2:= temp;
+  #L2b8078.  v8:= v8 + v2 @kind int;
+  #L2b807a.  v2:= v8 %% 12;
+  #L2b807e.  v3:= 12I;
+  #L2b8082.  v8:= v8 / v3 @kind int;
+  #L2b8084.  v4:= v6.`com.shagi.materialdatepicker.date.DayPickerView.mController` @type ^`com.shagi.materialdatepicker.date.DatePickerController` @kind object;
+  #L2b8088.  call temp:= `getMinYear`(v4) @signature `Lcom/shagi/materialdatepicker/date/DatePickerController;.getMinYear:()I` @kind interface;
+  #L2b808e.  v4:= temp;
+  #L2b8090.  v8:= v8 + v4 @kind int;
+  #L2b8092.  v4:= new `com.shagi.materialdatepicker.date.MonthAdapter$CalendarDay`;
+  #L2b8096.  v5:= 1I;
+  #L2b8098.  call `<init>`(v4, v8, v2, v5) @signature `Lcom/shagi/materialdatepicker/date/MonthAdapter$CalendarDay;.<init>:(III)V` @kind direct;
+  #L2b809e.  v8:= 0I;
+  #L2b80a0.  if v7 != v1 then goto L2b80c2;
+  #L2b80a4.  v7:= v4.`com.shagi.materialdatepicker.date.MonthAdapter$CalendarDay.b` @type ^`int`;
+  #L2b80a8.  v7:= v7 + v5 @kind int;
+  #L2b80aa.  v4.`com.shagi.materialdatepicker.date.MonthAdapter$CalendarDay.b` @type ^`int` := v7;
+  #L2b80ae.  if v7 != v3 then goto L2b80fe;
+  #L2b80b2.  v4.`com.shagi.materialdatepicker.date.MonthAdapter$CalendarDay.b` @type ^`int` := v8;
+  #L2b80b6.  v7:= v4.`com.shagi.materialdatepicker.date.MonthAdapter$CalendarDay.a` @type ^`int`;
+  #L2b80ba.  v7:= v7 + v5 @kind int;
+  #L2b80bc.  v4.`com.shagi.materialdatepicker.date.MonthAdapter$CalendarDay.a` @type ^`int` := v7;
+  #L2b80c0.  goto L2b80fe;
+  #L2b80c2.  if v7 != v0 then goto L2b80fe;
+  #L2b80c6.  call temp:= `getChildAt`(v6, v8) @signature `Landroid/view/ViewGroup;.getChildAt:(I)Landroid/view/View;` @kind virtual;
+  #L2b80cc.  v7:= temp @kind object;
+  #L2b80ce.  if v7 == 0 then goto L2b80fe;
+  #L2b80d2.  call temp:= `getTop`(v7) @signature `Landroid/view/View;.getTop:()I` @kind virtual;
+  #L2b80d8.  v7:= temp;
+  #L2b80da.  v0:= -1I;
+  #L2b80dc.  if v7 < v0 then goto L2b80fe;
+  #L2b80e0.  v7:= v4.`com.shagi.materialdatepicker.date.MonthAdapter$CalendarDay.b` @type ^`int`;
+  #L2b80e4.  v7:= v7 - v5 @kind int;
+  #L2b80e6.  v4.`com.shagi.materialdatepicker.date.MonthAdapter$CalendarDay.b` @type ^`int` := v7;
+  #L2b80ea.  if v7 != v0 then goto L2b80fe;
+  #L2b80ee.  v7:= 11I;
+  #L2b80f2.  v4.`com.shagi.materialdatepicker.date.MonthAdapter$CalendarDay.b` @type ^`int` := v7;
+  #L2b80f6.  v7:= v4.`com.shagi.materialdatepicker.date.MonthAdapter$CalendarDay.a` @type ^`int`;
+  #L2b80fa.  v7:= v7 - v5 @kind int;
+  #L2b80fc.  goto L2b80bc;
+  #L2b80fe.  call temp:= `getMonthAndYearString`(v4) @signature `Lcom/shagi/materialdatepicker/date/DayPickerView;.getMonthAndYearString:(Lcom/shagi/materialdatepicker/date/MonthAdapter$CalendarDay;)Ljava/lang/String;` @kind static;
+  #L2b8104.  v7:= temp @kind object;
+  #L2b8106.  call `tryAccessibilityAnnounce`(v6, v7) @signature `Lcom/shagi/materialdatepicker/Utils;.tryAccessibilityAnnounce:(Landroid/view/View;Ljava/lang/CharSequence;)V` @kind static;
+  #L2b810c.  call temp:= `goTo`(v6, v4, v5, v8, v5) @signature `Lcom/shagi/materialdatepicker/date/DayPickerView;.goTo:(Lcom/shagi/materialdatepicker/date/MonthAdapter$CalendarDay;ZZZ)Z` @kind virtual;
+  #L2b8112.  return v5;
+}
+procedure `void` `postSetSelection`(`com.shagi.materialdatepicker.date.DayPickerView` v1 @kind this, `int` v2 ) @signature `Lcom/shagi/materialdatepicker/date/DayPickerView;.postSetSelection:(I)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L2b854c.  call `clearFocus`(v1) @signature `Landroid/view/ViewGroup;.clearFocus:()V` @kind virtual;
+  #L2b8552.  v0:= new `com.shagi.materialdatepicker.date.DayPickerView$1`;
+  #L2b8556.  call `<init>`(v0, v1, v2) @signature `Lcom/shagi/materialdatepicker/date/DayPickerView$1;.<init>:(Lcom/shagi/materialdatepicker/date/DayPickerView;I)V` @kind direct;
+  #L2b855c.  call temp:= `post`(v1, v0) @signature `Landroid/view/ViewGroup;.post:(Ljava/lang/Runnable;)Z` @kind virtual;
+  #L2b8562.  return @kind void;
+}
+procedure `void` `refreshAdapter`(`com.shagi.materialdatepicker.date.DayPickerView` v2 @kind this) @signature `Lcom/shagi/materialdatepicker/date/DayPickerView;.refreshAdapter:()V` @AccessFlag PROTECTED {
+    temp;
+    v0;
+    v1;
+
+  #L2b8574.  v0:= v2.`com.shagi.materialdatepicker.date.DayPickerView.mAdapter` @type ^`com.shagi.materialdatepicker.date.MonthAdapter` @kind object;
+  #L2b8578.  if v0 != 0 then goto L2b858e;
+  #L2b857c.  v0:= v2.`com.shagi.materialdatepicker.date.DayPickerView.mController` @type ^`com.shagi.materialdatepicker.date.DatePickerController` @kind object;
+  #L2b8580.  call temp:= `createMonthAdapter`(v2, v0) @signature `Lcom/shagi/materialdatepicker/date/DayPickerView;.createMonthAdapter:(Lcom/shagi/materialdatepicker/date/DatePickerController;)Lcom/shagi/materialdatepicker/date/MonthAdapter;` @kind virtual;
+  #L2b8586.  v0:= temp @kind object;
+  #L2b8588.  v2.`com.shagi.materialdatepicker.date.DayPickerView.mAdapter` @type ^`com.shagi.materialdatepicker.date.MonthAdapter` := v0 @kind object;
+  #L2b858c.  goto L2b8598;
+  #L2b858e.  v1:= v2.`com.shagi.materialdatepicker.date.DayPickerView.mSelectedDay` @type ^`com.shagi.materialdatepicker.date.MonthAdapter$CalendarDay` @kind object;
+  #L2b8592.  call `setSelectedDay`(v0, v1) @signature `Lcom/shagi/materialdatepicker/date/MonthAdapter;.setSelectedDay:(Lcom/shagi/materialdatepicker/date/MonthAdapter$CalendarDay;)V` @kind virtual;
+  #L2b8598.  v0:= v2.`com.shagi.materialdatepicker.date.DayPickerView.mAdapter` @type ^`com.shagi.materialdatepicker.date.MonthAdapter` @kind object;
+  #L2b859c.  call `setAdapter`(v2, v0) @signature `Landroidx/recyclerview/widget/RecyclerView;.setAdapter:(Landroidx/recyclerview/widget/RecyclerView$Adapter;)V` @kind virtual;
+  #L2b85a2.  return @kind void;
+}
+procedure `void` `scrollToMonth`(`com.shagi.materialdatepicker.date.DayPickerView` v3 @kind this, `int` v4 ) @signature `Lcom/shagi/materialdatepicker/date/DayPickerView;.scrollToMonth:(I)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L2b85b4.  v0:= v3.`com.shagi.materialdatepicker.date.DayPickerView.mController` @type ^`com.shagi.materialdatepicker.date.DatePickerController` @kind object;
+  #L2b85b8.  call temp:= `getStartDate`(v0) @signature `Lcom/shagi/materialdatepicker/date/DatePickerController;.getStartDate:()Ljava/util/Calendar;` @kind interface;
+  #L2b85be.  v0:= temp @kind object;
+  #L2b85c0.  v1:= 2I;
+  #L2b85c2.  call temp:= `get`(v0, v1) @signature `Ljava/util/Calendar;.get:(I)I` @kind virtual;
+  #L2b85c8.  v0:= temp;
+  #L2b85ca.  v1:= v3.`com.shagi.materialdatepicker.date.DayPickerView.mSelectedDay` @type ^`com.shagi.materialdatepicker.date.MonthAdapter$CalendarDay` @kind object;
+  #L2b85ce.  v1:= v1.`com.shagi.materialdatepicker.date.MonthAdapter$CalendarDay.a` @type ^`int`;
+  #L2b85d2.  v2:= v3.`com.shagi.materialdatepicker.date.DayPickerView.mController` @type ^`com.shagi.materialdatepicker.date.DatePickerController` @kind object;
+  #L2b85d6.  call temp:= `getMinYear`(v2) @signature `Lcom/shagi/materialdatepicker/date/DatePickerController;.getMinYear:()I` @kind interface;
+  #L2b85dc.  v2:= temp;
+  #L2b85de.  v1:= v1 - v2 @kind int;
+  #L2b85e0.  v1:= v1 * 12;
+  #L2b85e4.  v1:= v1 + v4 @kind int;
+  #L2b85e6.  v1:= v1 - v0 @kind int;
+  #L2b85e8.  call `smoothScrollToPosition`(v3, v1) @signature `Landroidx/recyclerview/widget/RecyclerView;.smoothScrollToPosition:(I)V` @kind virtual;
+  #L2b85ee.  return @kind void;
+}
+procedure `void` `scrollToNextMonth`(`com.shagi.materialdatepicker.date.DayPickerView` v2 @kind this) @signature `Lcom/shagi/materialdatepicker/date/DayPickerView;.scrollToNextMonth:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L2b8600.  call temp:= `getLayoutManager`(v2) @signature `Landroidx/recyclerview/widget/RecyclerView;.getLayoutManager:()Landroidx/recyclerview/widget/RecyclerView$LayoutManager;` @kind virtual;
+  #L2b8606.  v0:= temp @kind object;
+  #L2b8608.  v0:= (`androidx.recyclerview.widget.LinearLayoutManager`) v0 @kind object;
+  #L2b860c.  call temp:= `findFirstCompletelyVisibleItemPosition`(v0) @signature `Landroidx/recyclerview/widget/LinearLayoutManager;.findFirstCompletelyVisibleItemPosition:()I` @kind virtual;
+  #L2b8612.  v0:= temp;
+  #L2b8614.  call temp:= `getAdapter`(v2) @signature `Landroidx/recyclerview/widget/RecyclerView;.getAdapter:()Landroidx/recyclerview/widget/RecyclerView$Adapter;` @kind virtual;
+  #L2b861a.  v1:= temp @kind object;
+  #L2b861c.  call temp:= `getItemCount`(v1) @signature `Landroidx/recyclerview/widget/RecyclerView$Adapter;.getItemCount:()I` @kind virtual;
+  #L2b8622.  v1:= temp;
+  #L2b8624.  if v0 >= v1 then goto L2b8632;
+  #L2b8628.  v0:= v0 + 1;
+  #L2b862c.  call `smoothScrollToPosition`(v2, v0) @signature `Landroidx/recyclerview/widget/RecyclerView;.smoothScrollToPosition:(I)V` @kind virtual;
+  #L2b8632.  return @kind void;
+}
+procedure `void` `scrollToPrevMonth`(`com.shagi.materialdatepicker.date.DayPickerView` v1 @kind this) @signature `Lcom/shagi/materialdatepicker/date/DayPickerView;.scrollToPrevMonth:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L2b8644.  call temp:= `getLayoutManager`(v1) @signature `Landroidx/recyclerview/widget/RecyclerView;.getLayoutManager:()Landroidx/recyclerview/widget/RecyclerView$LayoutManager;` @kind virtual;
+  #L2b864a.  v0:= temp @kind object;
+  #L2b864c.  v0:= (`androidx.recyclerview.widget.LinearLayoutManager`) v0 @kind object;
+  #L2b8650.  call temp:= `findFirstCompletelyVisibleItemPosition`(v0) @signature `Landroidx/recyclerview/widget/LinearLayoutManager;.findFirstCompletelyVisibleItemPosition:()I` @kind virtual;
+  #L2b8656.  v0:= temp;
+  #L2b8658.  if v0 <= 0 then goto L2b8666;
+  #L2b865c.  v0:= v0 + -1;
+  #L2b8660.  call `smoothScrollToPosition`(v1, v0) @signature `Landroidx/recyclerview/widget/RecyclerView;.smoothScrollToPosition:(I)V` @kind virtual;
+  #L2b8666.  return @kind void;
+}
+procedure `void` `setController`(`com.shagi.materialdatepicker.date.DayPickerView` v1 @kind this, `com.shagi.materialdatepicker.date.DatePickerController` v2 @kind object) @signature `Lcom/shagi/materialdatepicker/date/DayPickerView;.setController:(Lcom/shagi/materialdatepicker/date/DatePickerController;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L2b8678.  v1.`com.shagi.materialdatepicker.date.DayPickerView.mController` @type ^`com.shagi.materialdatepicker.date.DatePickerController` := v2 @kind object;
+  #L2b867c.  call `registerOnDateChangedListener`(v2, v1) @signature `Lcom/shagi/materialdatepicker/date/DatePickerController;.registerOnDateChangedListener:(Lcom/shagi/materialdatepicker/date/DatePickerFragmentDialog$OnDateChangedListener;)V` @kind interface;
+  #L2b8682.  v2:= new `com.shagi.materialdatepicker.date.MonthAdapter$CalendarDay`;
+  #L2b8686.  v0:= v1.`com.shagi.materialdatepicker.date.DayPickerView.mController` @type ^`com.shagi.materialdatepicker.date.DatePickerController` @kind object;
+  #L2b868a.  call temp:= `getTimeZone`(v0) @signature `Lcom/shagi/materialdatepicker/date/DatePickerController;.getTimeZone:()Ljava/util/TimeZone;` @kind interface;
+  #L2b8690.  v0:= temp @kind object;
+  #L2b8692.  call `<init>`(v2, v0) @signature `Lcom/shagi/materialdatepicker/date/MonthAdapter$CalendarDay;.<init>:(Ljava/util/TimeZone;)V` @kind direct;
+  #L2b8698.  v1.`com.shagi.materialdatepicker.date.DayPickerView.mSelectedDay` @type ^`com.shagi.materialdatepicker.date.MonthAdapter$CalendarDay` := v2 @kind object;
+  #L2b869c.  v2:= new `com.shagi.materialdatepicker.date.MonthAdapter$CalendarDay`;
+  #L2b86a0.  v0:= v1.`com.shagi.materialdatepicker.date.DayPickerView.mController` @type ^`com.shagi.materialdatepicker.date.DatePickerController` @kind object;
+  #L2b86a4.  call temp:= `getTimeZone`(v0) @signature `Lcom/shagi/materialdatepicker/date/DatePickerController;.getTimeZone:()Ljava/util/TimeZone;` @kind interface;
+  #L2b86aa.  v0:= temp @kind object;
+  #L2b86ac.  call `<init>`(v2, v0) @signature `Lcom/shagi/materialdatepicker/date/MonthAdapter$CalendarDay;.<init>:(Ljava/util/TimeZone;)V` @kind direct;
+  #L2b86b2.  v1.`com.shagi.materialdatepicker.date.DayPickerView.mTempDay` @type ^`com.shagi.materialdatepicker.date.MonthAdapter$CalendarDay` := v2 @kind object;
+  #L2b86b6.  call `refreshAdapter`(v1) @signature `Lcom/shagi/materialdatepicker/date/DayPickerView;.refreshAdapter:()V` @kind virtual;
+  #L2b86bc.  call `onDateChanged`(v1) @signature `Lcom/shagi/materialdatepicker/date/DayPickerView;.onDateChanged:()V` @kind virtual;
+  #L2b86c2.  return @kind void;
+}
+procedure `void` `setMonthDisplayed`(`com.shagi.materialdatepicker.date.DayPickerView` v0 @kind this, `com.shagi.materialdatepicker.date.MonthAdapter$CalendarDay` v1 @kind object) @signature `Lcom/shagi/materialdatepicker/date/DayPickerView;.setMonthDisplayed:(Lcom/shagi/materialdatepicker/date/MonthAdapter$CalendarDay;)V` @AccessFlag PROTECTED {
+    temp;
+
+  #L2b86d4.  v1:= v1.`com.shagi.materialdatepicker.date.MonthAdapter$CalendarDay.b` @type ^`int`;
+  #L2b86d8.  v0.`com.shagi.materialdatepicker.date.DayPickerView.mCurrentMonthDisplayed` @type ^`int` := v1;
+  #L2b86dc.  return @kind void;
+}
+procedure `void` `setScrollOrientation`(`com.shagi.materialdatepicker.date.DayPickerView` v1 @kind this, `int` v2 ) @signature `Lcom/shagi/materialdatepicker/date/DayPickerView;.setScrollOrientation:(I)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L2b86f0.  v0:= v1.`com.shagi.materialdatepicker.date.DayPickerView.linearLayoutManager` @type ^`androidx.recyclerview.widget.LinearLayoutManager` @kind object;
+  #L2b86f4.  call `setOrientation`(v0, v2) @signature `Landroidx/recyclerview/widget/LinearLayoutManager;.setOrientation:(I)V` @kind virtual;
+  #L2b86fa.  return @kind void;
+}
+procedure `void` `setUpRecyclerView`(`com.shagi.materialdatepicker.date.DayPickerView` v2 @kind this) @signature `Lcom/shagi/materialdatepicker/date/DayPickerView;.setUpRecyclerView:()V` @AccessFlag PROTECTED {
+    temp;
+    v0;
+    v1;
+
+  #L2b870c.  v0:= 0I;
+  #L2b870e.  call `setVerticalScrollBarEnabled`(v2, v0) @signature `Landroid/view/ViewGroup;.setVerticalScrollBarEnabled:(Z)V` @kind virtual;
+  #L2b8714.  call `setFadingEdgeLength`(v2, v0) @signature `Landroid/view/ViewGroup;.setFadingEdgeLength:(I)V` @kind virtual;
+  #L2b871a.  v0:= new `com.shagi.materialdatepicker.GravitySnapHelper`;
+  #L2b871e.  v1:= 48I;
+  #L2b8722.  call `<init>`(v0, v1) @signature `Lcom/shagi/materialdatepicker/GravitySnapHelper;.<init>:(I)V` @kind direct;
+  #L2b8728.  call `attachToRecyclerView`(v0, v2) @signature `Lcom/shagi/materialdatepicker/GravitySnapHelper;.attachToRecyclerView:(Landroidx/recyclerview/widget/RecyclerView;)V` @kind virtual;
+  #L2b872e.  return @kind void;
+}

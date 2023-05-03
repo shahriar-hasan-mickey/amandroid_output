@@ -1,0 +1,570 @@
+record `com.adjust.sdk.PackageHandler` @kind class @AccessFlag PUBLIC extends `com.adjust.sdk.IPackageHandler` @kind interface, `com.adjust.sdk.network.IActivityPackageSender$ResponseDataCallbackSubscriber` @kind interface {
+  `java.lang.ref.WeakReference` `com.adjust.sdk.PackageHandler.activityHandlerWeakRef` @AccessFlag PRIVATE;
+  `com.adjust.sdk.network.IActivityPackageSender` `com.adjust.sdk.PackageHandler.activityPackageSender` @AccessFlag PRIVATE;
+  `com.adjust.sdk.BackoffStrategy` `com.adjust.sdk.PackageHandler.backoffStrategy` @AccessFlag PRIVATE;
+  `com.adjust.sdk.BackoffStrategy` `com.adjust.sdk.PackageHandler.backoffStrategyForInstallSession` @AccessFlag PRIVATE;
+  `android.content.Context` `com.adjust.sdk.PackageHandler.context` @AccessFlag PRIVATE;
+  `java.util.concurrent.atomic.AtomicBoolean` `com.adjust.sdk.PackageHandler.isSending` @AccessFlag PRIVATE;
+  `com.adjust.sdk.ILogger` `com.adjust.sdk.PackageHandler.logger` @AccessFlag PRIVATE;
+  `java.util.List` `com.adjust.sdk.PackageHandler.packageQueue` @AccessFlag PRIVATE;
+  `boolean` `com.adjust.sdk.PackageHandler.paused` @AccessFlag PRIVATE;
+  `com.adjust.sdk.scheduler.ThreadScheduler` `com.adjust.sdk.PackageHandler.scheduler` @AccessFlag PRIVATE;
+}
+global `java.lang.String` `@@com.adjust.sdk.PackageHandler.PACKAGE_QUEUE_FILENAME` @AccessFlag PRIVATE_STATIC_FINAL;
+global `java.lang.String` `@@com.adjust.sdk.PackageHandler.PACKAGE_QUEUE_NAME` @AccessFlag PRIVATE_STATIC_FINAL;
+procedure `void` `<init>`(`com.adjust.sdk.PackageHandler` v2 @kind this, `com.adjust.sdk.IActivityHandler` v3 @kind object, `android.content.Context` v4 @kind object, `boolean` v5 , `com.adjust.sdk.network.IActivityPackageSender` v6 @kind object) @signature `Lcom/adjust/sdk/PackageHandler;.<init>:(Lcom/adjust/sdk/IActivityHandler;Landroid/content/Context;ZLcom/adjust/sdk/network/IActivityPackageSender;)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+
+  #L274510.  call `<init>`(v2) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L274516.  v0:= new `com.adjust.sdk.scheduler.SingleThreadCachedScheduler`;
+  #L27451a.  v1:= "PackageHandler" @kind object;
+  #L27451e.  call `<init>`(v0, v1) @signature `Lcom/adjust/sdk/scheduler/SingleThreadCachedScheduler;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L274524.  v2.`com.adjust.sdk.PackageHandler.scheduler` @type ^`com.adjust.sdk.scheduler.ThreadScheduler` := v0 @kind object;
+  #L274528.  call temp:= `getLogger`() @signature `Lcom/adjust/sdk/AdjustFactory;.getLogger:()Lcom/adjust/sdk/ILogger;` @kind static;
+  #L27452e.  v0:= temp @kind object;
+  #L274530.  v2.`com.adjust.sdk.PackageHandler.logger` @type ^`com.adjust.sdk.ILogger` := v0 @kind object;
+  #L274534.  call temp:= `getPackageHandlerBackoffStrategy`() @signature `Lcom/adjust/sdk/AdjustFactory;.getPackageHandlerBackoffStrategy:()Lcom/adjust/sdk/BackoffStrategy;` @kind static;
+  #L27453a.  v0:= temp @kind object;
+  #L27453c.  v2.`com.adjust.sdk.PackageHandler.backoffStrategy` @type ^`com.adjust.sdk.BackoffStrategy` := v0 @kind object;
+  #L274540.  call temp:= `getInstallSessionBackoffStrategy`() @signature `Lcom/adjust/sdk/AdjustFactory;.getInstallSessionBackoffStrategy:()Lcom/adjust/sdk/BackoffStrategy;` @kind static;
+  #L274546.  v0:= temp @kind object;
+  #L274548.  v2.`com.adjust.sdk.PackageHandler.backoffStrategyForInstallSession` @type ^`com.adjust.sdk.BackoffStrategy` := v0 @kind object;
+  #L27454c.  call `init`(v2, v3, v4, v5, v6) @signature `Lcom/adjust/sdk/PackageHandler;.init:(Lcom/adjust/sdk/IActivityHandler;Landroid/content/Context;ZLcom/adjust/sdk/network/IActivityPackageSender;)V` @kind virtual;
+  #L274552.  v3:= v2.`com.adjust.sdk.PackageHandler.scheduler` @type ^`com.adjust.sdk.scheduler.ThreadScheduler` @kind object;
+  #L274556.  v4:= new `com.adjust.sdk.PackageHandler$1`;
+  #L27455a.  call `<init>`(v4, v2) @signature `Lcom/adjust/sdk/PackageHandler$1;.<init>:(Lcom/adjust/sdk/PackageHandler;)V` @kind direct;
+  #L274560.  call `submit`(v3, v4) @signature `Lcom/adjust/sdk/scheduler/ThreadExecutor;.submit:(Ljava/lang/Runnable;)V` @kind interface;
+  #L274566.  return @kind void;
+}
+procedure `void` `access$000`(`com.adjust.sdk.PackageHandler` v0 @kind object) @signature `Lcom/adjust/sdk/PackageHandler;.access$000:(Lcom/adjust/sdk/PackageHandler;)V` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L274578.  call `initI`(v0) @signature `Lcom/adjust/sdk/PackageHandler;.initI:()V` @kind direct;
+  #L27457e.  return @kind void;
+}
+procedure `void` `access$100`(`com.adjust.sdk.PackageHandler` v0 @kind object, `com.adjust.sdk.ActivityPackage` v1 @kind object) @signature `Lcom/adjust/sdk/PackageHandler;.access$100:(Lcom/adjust/sdk/PackageHandler;Lcom/adjust/sdk/ActivityPackage;)V` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L274590.  call `addI`(v0, v1) @signature `Lcom/adjust/sdk/PackageHandler;.addI:(Lcom/adjust/sdk/ActivityPackage;)V` @kind direct;
+  #L274596.  return @kind void;
+}
+procedure `void` `access$200`(`com.adjust.sdk.PackageHandler` v0 @kind object) @signature `Lcom/adjust/sdk/PackageHandler;.access$200:(Lcom/adjust/sdk/PackageHandler;)V` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L2745a8.  call `sendFirstI`(v0) @signature `Lcom/adjust/sdk/PackageHandler;.sendFirstI:()V` @kind direct;
+  #L2745ae.  return @kind void;
+}
+procedure `void` `access$300`(`com.adjust.sdk.PackageHandler` v0 @kind object) @signature `Lcom/adjust/sdk/PackageHandler;.access$300:(Lcom/adjust/sdk/PackageHandler;)V` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L2745c0.  call `sendNextI`(v0) @signature `Lcom/adjust/sdk/PackageHandler;.sendNextI:()V` @kind direct;
+  #L2745c6.  return @kind void;
+}
+procedure `com.adjust.sdk.ILogger` `access$400`(`com.adjust.sdk.PackageHandler` v0 @kind object) @signature `Lcom/adjust/sdk/PackageHandler;.access$400:(Lcom/adjust/sdk/PackageHandler;)Lcom/adjust/sdk/ILogger;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L274454.  v0:= v0.`com.adjust.sdk.PackageHandler.logger` @type ^`com.adjust.sdk.ILogger` @kind object;
+  #L274458.  return v0 @kind object;
+}
+procedure `java.util.concurrent.atomic.AtomicBoolean` `access$500`(`com.adjust.sdk.PackageHandler` v0 @kind object) @signature `Lcom/adjust/sdk/PackageHandler;.access$500:(Lcom/adjust/sdk/PackageHandler;)Ljava/util/concurrent/atomic/AtomicBoolean;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L2744f8.  v0:= v0.`com.adjust.sdk.PackageHandler.isSending` @type ^`java.util.concurrent.atomic.AtomicBoolean` @kind object;
+  #L2744fc.  return v0 @kind object;
+}
+procedure `void` `access$600`(`com.adjust.sdk.PackageHandler` v0 @kind object) @signature `Lcom/adjust/sdk/PackageHandler;.access$600:(Lcom/adjust/sdk/PackageHandler;)V` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L2745d8.  call `flushI`(v0) @signature `Lcom/adjust/sdk/PackageHandler;.flushI:()V` @kind direct;
+  #L2745de.  return @kind void;
+}
+procedure `void` `addI`(`com.adjust.sdk.PackageHandler` v5 @kind this, `com.adjust.sdk.ActivityPackage` v6 @kind object) @signature `Lcom/adjust/sdk/PackageHandler;.addI:(Lcom/adjust/sdk/ActivityPackage;)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L2745f0.  v0:= v5.`com.adjust.sdk.PackageHandler.packageQueue` @type ^`java.util.List` @kind object;
+  #L2745f4.  call temp:= `add`(v0, v6) @signature `Ljava/util/List;.add:(Ljava/lang/Object;)Z` @kind interface;
+  #L2745fa.  v0:= v5.`com.adjust.sdk.PackageHandler.logger` @type ^`com.adjust.sdk.ILogger` @kind object;
+  #L2745fe.  v1:= 2I;
+  #L274600.  v1:= new `java.lang.Object`[v1];
+  #L274604.  v2:= v5.`com.adjust.sdk.PackageHandler.packageQueue` @type ^`java.util.List` @kind object;
+  #L274608.  call temp:= `size`(v2) @signature `Ljava/util/List;.size:()I` @kind interface;
+  #L27460e.  v2:= temp;
+  #L274610.  call temp:= `valueOf`(v2) @signature `Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer;` @kind static;
+  #L274616.  v2:= temp @kind object;
+  #L274618.  v3:= 0I;
+  #L27461a.  v1[v3]:= v2 @kind object;
+  #L27461e.  v2:= 1I;
+  #L274620.  v1[v2]:= v6 @kind object;
+  #L274624.  v4:= "Added package %d (%s)" @kind object;
+  #L274628.  call `debug`(v0, v4, v1) @signature `Lcom/adjust/sdk/ILogger;.debug:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L27462e.  v0:= v5.`com.adjust.sdk.PackageHandler.logger` @type ^`com.adjust.sdk.ILogger` @kind object;
+  #L274632.  v1:= new `java.lang.Object`[v2];
+  #L274636.  call temp:= `getExtendedString`(v6) @signature `Lcom/adjust/sdk/ActivityPackage;.getExtendedString:()Ljava/lang/String;` @kind virtual;
+  #L27463c.  v6:= temp @kind object;
+  #L27463e.  v1[v3]:= v6 @kind object;
+  #L274642.  v6:= "%s" @kind object;
+  #L274646.  call `verbose`(v0, v6, v1) @signature `Lcom/adjust/sdk/ILogger;.verbose:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L27464c.  call `writePackageQueueI`(v5) @signature `Lcom/adjust/sdk/PackageHandler;.writePackageQueueI:()V` @kind direct;
+  #L274652.  return @kind void;
+}
+procedure `java.lang.Boolean` `deletePackageQueue`(`android.content.Context` v1 @kind object) @signature `Lcom/adjust/sdk/PackageHandler;.deletePackageQueue:(Landroid/content/Context;)Ljava/lang/Boolean;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+
+  #L27446c.  v0:= "AdjustIoPackageQueue" @kind object;
+  #L274470.  call temp:= `deleteFile`(v1, v0) @signature `Landroid/content/Context;.deleteFile:(Ljava/lang/String;)Z` @kind virtual;
+  #L274476.  v1:= temp;
+  #L274478.  call temp:= `valueOf`(v1) @signature `Ljava/lang/Boolean;.valueOf:(Z)Ljava/lang/Boolean;` @kind static;
+  #L27447e.  v1:= temp @kind object;
+  #L274480.  return v1 @kind object;
+}
+procedure `void` `deleteState`(`android.content.Context` v0 @kind object) @signature `Lcom/adjust/sdk/PackageHandler;.deleteState:(Landroid/content/Context;)V` @AccessFlag STATIC {
+    temp;
+
+  #L27468c.  call temp:= `deletePackageQueue`(v0) @signature `Lcom/adjust/sdk/PackageHandler;.deletePackageQueue:(Landroid/content/Context;)Ljava/lang/Boolean;` @kind static;
+  #L274692.  return @kind void;
+}
+procedure `void` `flushI`(`com.adjust.sdk.PackageHandler` v1 @kind this) @signature `Lcom/adjust/sdk/PackageHandler;.flushI:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+
+  #L2746cc.  v0:= v1.`com.adjust.sdk.PackageHandler.packageQueue` @type ^`java.util.List` @kind object;
+  #L2746d0.  call `clear`(v0) @signature `Ljava/util/List;.clear:()V` @kind interface;
+  #L2746d6.  call `writePackageQueueI`(v1) @signature `Lcom/adjust/sdk/PackageHandler;.writePackageQueueI:()V` @kind direct;
+  #L2746dc.  return @kind void;
+}
+procedure `java.util.Map` `generateSendingParametersI`(`com.adjust.sdk.PackageHandler` v4 @kind this) @signature `Lcom/adjust/sdk/PackageHandler;.generateSendingParametersI:()Ljava/util/Map;` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L274494.  v0:= new `java.util.HashMap`;
+  #L274498.  call `<init>`(v0) @signature `Ljava/util/HashMap;.<init>:()V` @kind direct;
+  #L27449e.  call temp:= `currentTimeMillis`() @signature `Ljava/lang/System;.currentTimeMillis:()J` @kind static;
+  #L2744a4.  v1:= temp @kind wide;
+  #L2744a6.  v3:= `@@com.adjust.sdk.Util.dateFormatter` @type ^`java.text.SimpleDateFormat` @kind object;
+  #L2744aa.  call temp:= `valueOf`(v1) @signature `Ljava/lang/Long;.valueOf:(J)Ljava/lang/Long;` @kind static;
+  #L2744b0.  v1:= temp @kind object;
+  #L2744b2.  call temp:= `format`(v3, v1) @signature `Ljava/text/SimpleDateFormat;.format:(Ljava/lang/Object;)Ljava/lang/String;` @kind virtual;
+  #L2744b8.  v1:= temp @kind object;
+  #L2744ba.  v2:= "sent_at" @kind object;
+  #L2744be.  call `addString`(v0, v2, v1) @signature `Lcom/adjust/sdk/PackageBuilder;.addString:(Ljava/util/Map;Ljava/lang/String;Ljava/lang/String;)V` @kind static;
+  #L2744c4.  v1:= v4.`com.adjust.sdk.PackageHandler.packageQueue` @type ^`java.util.List` @kind object;
+  #L2744c8.  call temp:= `size`(v1) @signature `Ljava/util/List;.size:()I` @kind interface;
+  #L2744ce.  v1:= temp;
+  #L2744d0.  v1:= v1 + -1;
+  #L2744d4.  if v1 <= 0 then goto L2744e4;
+  #L2744d8.  v1:= (`long`) v1 @kind i2l;
+  #L2744da.  v3:= "queue_size" @kind object;
+  #L2744de.  call `addLong`(v0, v3, v1) @signature `Lcom/adjust/sdk/PackageBuilder;.addLong:(Ljava/util/Map;Ljava/lang/String;J)V` @kind static;
+  #L2744e4.  return v0 @kind object;
+}
+procedure `void` `initI`(`com.adjust.sdk.PackageHandler` v1 @kind this) @signature `Lcom/adjust/sdk/PackageHandler;.initI:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+
+  #L274720.  v0:= new `java.util.concurrent.atomic.AtomicBoolean`;
+  #L274724.  call `<init>`(v0) @signature `Ljava/util/concurrent/atomic/AtomicBoolean;.<init>:()V` @kind direct;
+  #L27472a.  v1.`com.adjust.sdk.PackageHandler.isSending` @type ^`java.util.concurrent.atomic.AtomicBoolean` := v0 @kind object;
+  #L27472e.  call `readPackageQueueI`(v1) @signature `Lcom/adjust/sdk/PackageHandler;.readPackageQueueI:()V` @kind direct;
+  #L274734.  return @kind void;
+}
+procedure `void` `readPackageQueueI`(`com.adjust.sdk.PackageHandler` v6 @kind this) @signature `Lcom/adjust/sdk/PackageHandler;.readPackageQueueI:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L274894.  v0:= "Package queue" @kind object;
+  #L274898.  v1:= 1I;
+  #L27489a.  v2:= 0I;
+  #L27489c.  v3:= v6.`com.adjust.sdk.PackageHandler.context` @type ^`android.content.Context` @kind object;
+  #L2748a0.  v4:= "AdjustIoPackageQueue" @kind object;
+  #L2748a4.  v5:= constclass @type ^`java.util.List` @kind object;
+  #L2748a8.  call temp:= `readObject`(v3, v4, v0, v5) @signature `Lcom/adjust/sdk/Util;.readObject:(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Class;)Ljava/lang/Object;` @kind static;
+  #L2748ae.  v3:= temp @kind object;
+  #L2748b0.  v3:= (`java.util.List`) v3 @kind object;
+  #L2748b4.  v6.`com.adjust.sdk.PackageHandler.packageQueue` @type ^`java.util.List` := v3 @kind object;
+  #L2748b8.  goto L2748e6;
+  #L2748ba.  v3:= Exception @type ^`java.lang.Exception` @kind object;
+  #L2748bc.  v4:= v6.`com.adjust.sdk.PackageHandler.logger` @type ^`com.adjust.sdk.ILogger` @kind object;
+  #L2748c0.  v5:= 2I;
+  #L2748c2.  v5:= new `java.lang.Object`[v5];
+  #L2748c6.  v5[v2]:= v0 @kind object;
+  #L2748ca.  call temp:= `getMessage`(v3) @signature `Ljava/lang/Exception;.getMessage:()Ljava/lang/String;` @kind virtual;
+  #L2748d0.  v0:= temp @kind object;
+  #L2748d2.  v5[v1]:= v0 @kind object;
+  #L2748d6.  v0:= "Failed to read %s file (%s)" @kind object;
+  #L2748da.  call `error`(v4, v0, v5) @signature `Lcom/adjust/sdk/ILogger;.error:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L2748e0.  v0:= 0I;
+  #L2748e2.  v6.`com.adjust.sdk.PackageHandler.packageQueue` @type ^`java.util.List` := v0 @kind object;
+  #L2748e6.  v0:= v6.`com.adjust.sdk.PackageHandler.packageQueue` @type ^`java.util.List` @kind object;
+  #L2748ea.  if v0 == 0 then goto L274916;
+  #L2748ee.  v3:= v6.`com.adjust.sdk.PackageHandler.logger` @type ^`com.adjust.sdk.ILogger` @kind object;
+  #L2748f2.  v1:= new `java.lang.Object`[v1];
+  #L2748f6.  call temp:= `size`(v0) @signature `Ljava/util/List;.size:()I` @kind interface;
+  #L2748fc.  v0:= temp;
+  #L2748fe.  call temp:= `valueOf`(v0) @signature `Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer;` @kind static;
+  #L274904.  v0:= temp @kind object;
+  #L274906.  v1[v2]:= v0 @kind object;
+  #L27490a.  v0:= "Package handler read %d packages" @kind object;
+  #L27490e.  call `debug`(v3, v0, v1) @signature `Lcom/adjust/sdk/ILogger;.debug:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L274914.  goto L274924;
+  #L274916.  v0:= new `java.util.ArrayList`;
+  #L27491a.  call `<init>`(v0) @signature `Ljava/util/ArrayList;.<init>:()V` @kind direct;
+  #L274920.  v6.`com.adjust.sdk.PackageHandler.packageQueue` @type ^`java.util.List` := v0 @kind object;
+  #L274924.  return @kind void;
+  catch `java.lang.Exception` @[L27489c..L2748b8] goto L2748ba;
+}
+procedure `void` `sendFirstI`(`com.adjust.sdk.PackageHandler` v3 @kind this) @signature `Lcom/adjust/sdk/PackageHandler;.sendFirstI:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L274960.  v0:= v3.`com.adjust.sdk.PackageHandler.packageQueue` @type ^`java.util.List` @kind object;
+  #L274964.  call temp:= `isEmpty`(v0) @signature `Ljava/util/List;.isEmpty:()Z` @kind interface;
+  #L27496a.  v0:= temp;
+  #L27496c.  if v0 == 0 then goto L274972;
+  #L274970.  return @kind void;
+  #L274972.  v0:= v3.`com.adjust.sdk.PackageHandler.paused` @type ^`boolean` @kind boolean;
+  #L274976.  v1:= 0I;
+  #L274978.  if v0 == 0 then goto L274990;
+  #L27497c.  v0:= v3.`com.adjust.sdk.PackageHandler.logger` @type ^`com.adjust.sdk.ILogger` @kind object;
+  #L274980.  v1:= new `java.lang.Object`[v1];
+  #L274984.  v2:= "Package handler is paused" @kind object;
+  #L274988.  call `debug`(v0, v2, v1) @signature `Lcom/adjust/sdk/ILogger;.debug:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L27498e.  return @kind void;
+  #L274990.  v0:= v3.`com.adjust.sdk.PackageHandler.isSending` @type ^`java.util.concurrent.atomic.AtomicBoolean` @kind object;
+  #L274994.  v2:= 1I;
+  #L274996.  call temp:= `getAndSet`(v0, v2) @signature `Ljava/util/concurrent/atomic/AtomicBoolean;.getAndSet:(Z)Z` @kind virtual;
+  #L27499c.  v0:= temp;
+  #L27499e.  if v0 == 0 then goto L2749b6;
+  #L2749a2.  v0:= v3.`com.adjust.sdk.PackageHandler.logger` @type ^`com.adjust.sdk.ILogger` @kind object;
+  #L2749a6.  v1:= new `java.lang.Object`[v1];
+  #L2749aa.  v2:= "Package handler is already sending" @kind object;
+  #L2749ae.  call `verbose`(v0, v2, v1) @signature `Lcom/adjust/sdk/ILogger;.verbose:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L2749b4.  return @kind void;
+  #L2749b6.  call temp:= `generateSendingParametersI`(v3) @signature `Lcom/adjust/sdk/PackageHandler;.generateSendingParametersI:()Ljava/util/Map;` @kind direct;
+  #L2749bc.  v0:= temp @kind object;
+  #L2749be.  v2:= v3.`com.adjust.sdk.PackageHandler.packageQueue` @type ^`java.util.List` @kind object;
+  #L2749c2.  call temp:= `get`(v2, v1) @signature `Ljava/util/List;.get:(I)Ljava/lang/Object;` @kind interface;
+  #L2749c8.  v1:= temp @kind object;
+  #L2749ca.  v1:= (`com.adjust.sdk.ActivityPackage`) v1 @kind object;
+  #L2749ce.  v2:= v3.`com.adjust.sdk.PackageHandler.activityPackageSender` @type ^`com.adjust.sdk.network.IActivityPackageSender` @kind object;
+  #L2749d2.  call `sendActivityPackage`(v2, v1, v0, v3) @signature `Lcom/adjust/sdk/network/IActivityPackageSender;.sendActivityPackage:(Lcom/adjust/sdk/ActivityPackage;Ljava/util/Map;Lcom/adjust/sdk/network/IActivityPackageSender$ResponseDataCallbackSubscriber;)V` @kind interface;
+  #L2749d8.  return @kind void;
+}
+procedure `void` `sendNextI`(`com.adjust.sdk.PackageHandler` v3 @kind this) @signature `Lcom/adjust/sdk/PackageHandler;.sendNextI:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L274a14.  v0:= v3.`com.adjust.sdk.PackageHandler.packageQueue` @type ^`java.util.List` @kind object;
+  #L274a18.  call temp:= `isEmpty`(v0) @signature `Ljava/util/List;.isEmpty:()Z` @kind interface;
+  #L274a1e.  v0:= temp;
+  #L274a20.  if v0 == 0 then goto L274a26;
+  #L274a24.  return @kind void;
+  #L274a26.  v0:= v3.`com.adjust.sdk.PackageHandler.packageQueue` @type ^`java.util.List` @kind object;
+  #L274a2a.  v1:= 0I;
+  #L274a2c.  call temp:= `remove`(v0, v1) @signature `Ljava/util/List;.remove:(I)Ljava/lang/Object;` @kind interface;
+  #L274a32.  call `writePackageQueueI`(v3) @signature `Lcom/adjust/sdk/PackageHandler;.writePackageQueueI:()V` @kind direct;
+  #L274a38.  v0:= v3.`com.adjust.sdk.PackageHandler.isSending` @type ^`java.util.concurrent.atomic.AtomicBoolean` @kind object;
+  #L274a3c.  call `set`(v0, v1) @signature `Ljava/util/concurrent/atomic/AtomicBoolean;.set:(Z)V` @kind virtual;
+  #L274a42.  v0:= v3.`com.adjust.sdk.PackageHandler.logger` @type ^`com.adjust.sdk.ILogger` @kind object;
+  #L274a46.  v1:= new `java.lang.Object`[v1];
+  #L274a4a.  v2:= "Package handler can send" @kind object;
+  #L274a4e.  call `verbose`(v0, v2, v1) @signature `Lcom/adjust/sdk/ILogger;.verbose:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L274a54.  call `sendFirstI`(v3) @signature `Lcom/adjust/sdk/PackageHandler;.sendFirstI:()V` @kind direct;
+  #L274a5a.  return @kind void;
+}
+procedure `void` `writePackageQueueI`(`com.adjust.sdk.PackageHandler` v4 @kind this) @signature `Lcom/adjust/sdk/PackageHandler;.writePackageQueueI:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L274bf0.  v0:= v4.`com.adjust.sdk.PackageHandler.packageQueue` @type ^`java.util.List` @kind object;
+  #L274bf4.  v1:= v4.`com.adjust.sdk.PackageHandler.context` @type ^`android.content.Context` @kind object;
+  #L274bf8.  v2:= "AdjustIoPackageQueue" @kind object;
+  #L274bfc.  v3:= "Package queue" @kind object;
+  #L274c00.  call `writeObject`(v0, v1, v2, v3) @signature `Lcom/adjust/sdk/Util;.writeObject:(Ljava/lang/Object;Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)V` @kind static;
+  #L274c06.  v0:= v4.`com.adjust.sdk.PackageHandler.logger` @type ^`com.adjust.sdk.ILogger` @kind object;
+  #L274c0a.  v1:= 1I;
+  #L274c0c.  v1:= new `java.lang.Object`[v1];
+  #L274c10.  v2:= v4.`com.adjust.sdk.PackageHandler.packageQueue` @type ^`java.util.List` @kind object;
+  #L274c14.  call temp:= `size`(v2) @signature `Ljava/util/List;.size:()I` @kind interface;
+  #L274c1a.  v2:= temp;
+  #L274c1c.  call temp:= `valueOf`(v2) @signature `Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer;` @kind static;
+  #L274c22.  v2:= temp @kind object;
+  #L274c24.  v3:= 0I;
+  #L274c26.  v1[v3]:= v2 @kind object;
+  #L274c2a.  v2:= "Package handler wrote %d packages" @kind object;
+  #L274c2e.  call `debug`(v0, v2, v1) @signature `Lcom/adjust/sdk/ILogger;.debug:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L274c34.  return @kind void;
+}
+procedure `void` `addPackage`(`com.adjust.sdk.PackageHandler` v2 @kind this, `com.adjust.sdk.ActivityPackage` v3 @kind object) @signature `Lcom/adjust/sdk/PackageHandler;.addPackage:(Lcom/adjust/sdk/ActivityPackage;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L274664.  v0:= v2.`com.adjust.sdk.PackageHandler.scheduler` @type ^`com.adjust.sdk.scheduler.ThreadScheduler` @kind object;
+  #L274668.  v1:= new `com.adjust.sdk.PackageHandler$2`;
+  #L27466c.  call `<init>`(v1, v2, v3) @signature `Lcom/adjust/sdk/PackageHandler$2;.<init>:(Lcom/adjust/sdk/PackageHandler;Lcom/adjust/sdk/ActivityPackage;)V` @kind direct;
+  #L274672.  call `submit`(v0, v1) @signature `Lcom/adjust/sdk/scheduler/ThreadExecutor;.submit:(Ljava/lang/Runnable;)V` @kind interface;
+  #L274678.  return @kind void;
+}
+procedure `void` `flush`(`com.adjust.sdk.PackageHandler` v2 @kind this) @signature `Lcom/adjust/sdk/PackageHandler;.flush:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L2746a4.  v0:= v2.`com.adjust.sdk.PackageHandler.scheduler` @type ^`com.adjust.sdk.scheduler.ThreadScheduler` @kind object;
+  #L2746a8.  v1:= new `com.adjust.sdk.PackageHandler$7`;
+  #L2746ac.  call `<init>`(v1, v2) @signature `Lcom/adjust/sdk/PackageHandler$7;.<init>:(Lcom/adjust/sdk/PackageHandler;)V` @kind direct;
+  #L2746b2.  call `submit`(v0, v1) @signature `Lcom/adjust/sdk/scheduler/ThreadExecutor;.submit:(Ljava/lang/Runnable;)V` @kind interface;
+  #L2746b8.  return @kind void;
+}
+procedure `void` `init`(`com.adjust.sdk.PackageHandler` v1 @kind this, `com.adjust.sdk.IActivityHandler` v2 @kind object, `android.content.Context` v3 @kind object, `boolean` v4 , `com.adjust.sdk.network.IActivityPackageSender` v5 @kind object) @signature `Lcom/adjust/sdk/PackageHandler;.init:(Lcom/adjust/sdk/IActivityHandler;Landroid/content/Context;ZLcom/adjust/sdk/network/IActivityPackageSender;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L2746f0.  v0:= new `java.lang.ref.WeakReference`;
+  #L2746f4.  call `<init>`(v0, v2) @signature `Ljava/lang/ref/WeakReference;.<init>:(Ljava/lang/Object;)V` @kind direct;
+  #L2746fa.  v1.`com.adjust.sdk.PackageHandler.activityHandlerWeakRef` @type ^`java.lang.ref.WeakReference` := v0 @kind object;
+  #L2746fe.  v1.`com.adjust.sdk.PackageHandler.context` @type ^`android.content.Context` := v3 @kind object;
+  #L274702.  v2:= v4 ^~ 1;
+  #L274706.  v1.`com.adjust.sdk.PackageHandler.paused` @type ^`boolean` := v2 @kind boolean;
+  #L27470a.  v1.`com.adjust.sdk.PackageHandler.activityPackageSender` @type ^`com.adjust.sdk.network.IActivityPackageSender` := v5 @kind object;
+  #L27470e.  return @kind void;
+}
+procedure `void` `onResponseDataCallback`(`com.adjust.sdk.PackageHandler` v9 @kind this, `com.adjust.sdk.ResponseData` v10 @kind object) @signature `Lcom/adjust/sdk/PackageHandler;.onResponseDataCallback:(Lcom/adjust/sdk/ResponseData;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+
+  #L274748.  v0:= v9.`com.adjust.sdk.PackageHandler.logger` @type ^`com.adjust.sdk.ILogger` @kind object;
+  #L27474c.  v1:= 0I;
+  #L27474e.  v2:= new `java.lang.Object`[v1];
+  #L274752.  v3:= "Got response in PackageHandler" @kind object;
+  #L274756.  call `debug`(v0, v3, v2) @signature `Lcom/adjust/sdk/ILogger;.debug:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L27475c.  v0:= v9.`com.adjust.sdk.PackageHandler.activityHandlerWeakRef` @type ^`java.lang.ref.WeakReference` @kind object;
+  #L274760.  call temp:= `get`(v0) @signature `Ljava/lang/ref/WeakReference;.get:()Ljava/lang/Object;` @kind virtual;
+  #L274766.  v0:= temp @kind object;
+  #L274768.  v0:= (`com.adjust.sdk.IActivityHandler`) v0 @kind object;
+  #L27476c.  if v0 == 0 then goto L274782;
+  #L274770.  v2:= v10.`com.adjust.sdk.ResponseData.trackingState` @type ^`com.adjust.sdk.TrackingState` @kind object;
+  #L274774.  v3:= `@@com.adjust.sdk.TrackingState.OPTED_OUT` @type ^`com.adjust.sdk.TrackingState` @kind object;
+  #L274778.  if v2 != v3 then goto L274782;
+  #L27477c.  call `gotOptOutResponse`(v0) @signature `Lcom/adjust/sdk/IActivityHandler;.gotOptOutResponse:()V` @kind interface;
+  #L274782.  v2:= v10.`com.adjust.sdk.ResponseData.willRetry` @type ^`boolean` @kind boolean;
+  #L274786.  if v2 != 0 then goto L2747aa;
+  #L27478a.  v1:= v9.`com.adjust.sdk.PackageHandler.scheduler` @type ^`com.adjust.sdk.scheduler.ThreadScheduler` @kind object;
+  #L27478e.  v2:= new `com.adjust.sdk.PackageHandler$4`;
+  #L274792.  call `<init>`(v2, v9) @signature `Lcom/adjust/sdk/PackageHandler$4;.<init>:(Lcom/adjust/sdk/PackageHandler;)V` @kind direct;
+  #L274798.  call `submit`(v1, v2) @signature `Lcom/adjust/sdk/scheduler/ThreadExecutor;.submit:(Ljava/lang/Runnable;)V` @kind interface;
+  #L27479e.  if v0 == 0 then goto L2747a8;
+  #L2747a2.  call `finishedTrackingActivity`(v0, v10) @signature `Lcom/adjust/sdk/IActivityHandler;.finishedTrackingActivity:(Lcom/adjust/sdk/ResponseData;)V` @kind interface;
+  #L2747a8.  return @kind void;
+  #L2747aa.  if v0 == 0 then goto L2747b4;
+  #L2747ae.  call `finishedTrackingActivity`(v0, v10) @signature `Lcom/adjust/sdk/IActivityHandler;.finishedTrackingActivity:(Lcom/adjust/sdk/ResponseData;)V` @kind interface;
+  #L2747b4.  v0:= new `com.adjust.sdk.PackageHandler$5`;
+  #L2747b8.  call `<init>`(v0, v9) @signature `Lcom/adjust/sdk/PackageHandler$5;.<init>:(Lcom/adjust/sdk/PackageHandler;)V` @kind direct;
+  #L2747be.  v2:= v10.`com.adjust.sdk.ResponseData.activityPackage` @type ^`com.adjust.sdk.ActivityPackage` @kind object;
+  #L2747c2.  if v2 != 0 then goto L2747ce;
+  #L2747c6.  call `run`(v0) @signature `Ljava/lang/Runnable;.run:()V` @kind interface;
+  #L2747cc.  return @kind void;
+  #L2747ce.  call temp:= `increaseRetries`(v2) @signature `Lcom/adjust/sdk/ActivityPackage;.increaseRetries:()I` @kind virtual;
+  #L2747d4.  v2:= temp;
+  #L2747d6.  v3:= new `com.adjust.sdk.SharedPreferencesManager`;
+  #L2747da.  v4:= v9.`com.adjust.sdk.PackageHandler.context` @type ^`android.content.Context` @kind object;
+  #L2747de.  call `<init>`(v3, v4) @signature `Lcom/adjust/sdk/SharedPreferencesManager;.<init>:(Landroid/content/Context;)V` @kind direct;
+  #L2747e4.  v10:= v10.`com.adjust.sdk.ResponseData.activityPackage` @type ^`com.adjust.sdk.ActivityPackage` @kind object;
+  #L2747e8.  call temp:= `getActivityKind`(v10) @signature `Lcom/adjust/sdk/ActivityPackage;.getActivityKind:()Lcom/adjust/sdk/ActivityKind;` @kind virtual;
+  #L2747ee.  v10:= temp @kind object;
+  #L2747f0.  v4:= `@@com.adjust.sdk.ActivityKind.SESSION` @type ^`com.adjust.sdk.ActivityKind` @kind object;
+  #L2747f4.  if v10 != v4 then goto L274812;
+  #L2747f8.  call temp:= `getInstallTracked`(v3) @signature `Lcom/adjust/sdk/SharedPreferencesManager;.getInstallTracked:()Z` @kind virtual;
+  #L2747fe.  v10:= temp;
+  #L274800.  if v10 != 0 then goto L274812;
+  #L274804.  v10:= v9.`com.adjust.sdk.PackageHandler.backoffStrategyForInstallSession` @type ^`com.adjust.sdk.BackoffStrategy` @kind object;
+  #L274808.  call temp:= `getWaitingTime`(v2, v10) @signature `Lcom/adjust/sdk/Util;.getWaitingTime:(ILcom/adjust/sdk/BackoffStrategy;)J` @kind static;
+  #L27480e.  v3:= temp @kind wide;
+  #L274810.  goto L27481e;
+  #L274812.  v10:= v9.`com.adjust.sdk.PackageHandler.backoffStrategy` @type ^`com.adjust.sdk.BackoffStrategy` @kind object;
+  #L274816.  call temp:= `getWaitingTime`(v2, v10) @signature `Lcom/adjust/sdk/Util;.getWaitingTime:(ILcom/adjust/sdk/BackoffStrategy;)J` @kind static;
+  #L27481c.  v3:= temp @kind wide;
+  #L27481e.  v5:= (`double`) v3 @kind l2d;
+  #L274820.  v7:= 1000.0D;
+  #L27482a.  v5:= v5 / v7 @kind double;
+  #L27482c.  v10:= `@@com.adjust.sdk.Util.SecondsDisplayFormat` @type ^`java.text.DecimalFormat` @kind object;
+  #L274830.  call temp:= `format`(v10, v5) @signature `Ljava/text/DecimalFormat;.format:(D)Ljava/lang/String;` @kind virtual;
+  #L274836.  v10:= temp @kind object;
+  #L274838.  v5:= v9.`com.adjust.sdk.PackageHandler.logger` @type ^`com.adjust.sdk.ILogger` @kind object;
+  #L27483c.  v6:= 2I;
+  #L27483e.  v6:= new `java.lang.Object`[v6];
+  #L274842.  v6[v1]:= v10 @kind object;
+  #L274846.  v10:= 1I;
+  #L274848.  call temp:= `valueOf`(v2) @signature `Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer;` @kind static;
+  #L27484e.  v1:= temp @kind object;
+  #L274850.  v6[v10]:= v1 @kind object;
+  #L274854.  v10:= "Waiting for %s seconds before retrying the %d time" @kind object;
+  #L274858.  call `verbose`(v5, v10, v6) @signature `Lcom/adjust/sdk/ILogger;.verbose:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L27485e.  v10:= v9.`com.adjust.sdk.PackageHandler.scheduler` @type ^`com.adjust.sdk.scheduler.ThreadScheduler` @kind object;
+  #L274862.  call `schedule`(v10, v0, v3) @signature `Lcom/adjust/sdk/scheduler/ThreadScheduler;.schedule:(Ljava/lang/Runnable;J)V` @kind interface;
+  #L274868.  return @kind void;
+}
+procedure `void` `pauseSending`(`com.adjust.sdk.PackageHandler` v1 @kind this) @signature `Lcom/adjust/sdk/PackageHandler;.pauseSending:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L27487c.  v0:= 1I;
+  #L27487e.  v1.`com.adjust.sdk.PackageHandler.paused` @type ^`boolean` := v0 @kind boolean;
+  #L274882.  return @kind void;
+}
+procedure `void` `resumeSending`(`com.adjust.sdk.PackageHandler` v1 @kind this) @signature `Lcom/adjust/sdk/PackageHandler;.resumeSending:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L274948.  v0:= 0I;
+  #L27494a.  v1.`com.adjust.sdk.PackageHandler.paused` @type ^`boolean` := v0 @kind boolean;
+  #L27494e.  return @kind void;
+}
+procedure `void` `sendFirstPackage`(`com.adjust.sdk.PackageHandler` v2 @kind this) @signature `Lcom/adjust/sdk/PackageHandler;.sendFirstPackage:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L2749ec.  v0:= v2.`com.adjust.sdk.PackageHandler.scheduler` @type ^`com.adjust.sdk.scheduler.ThreadScheduler` @kind object;
+  #L2749f0.  v1:= new `com.adjust.sdk.PackageHandler$3`;
+  #L2749f4.  call `<init>`(v1, v2) @signature `Lcom/adjust/sdk/PackageHandler$3;.<init>:(Lcom/adjust/sdk/PackageHandler;)V` @kind direct;
+  #L2749fa.  call `submit`(v0, v1) @signature `Lcom/adjust/sdk/scheduler/ThreadExecutor;.submit:(Ljava/lang/Runnable;)V` @kind interface;
+  #L274a00.  return @kind void;
+}
+procedure `void` `teardown`(`com.adjust.sdk.PackageHandler` v3 @kind this) @signature `Lcom/adjust/sdk/PackageHandler;.teardown:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L274a6c.  v0:= v3.`com.adjust.sdk.PackageHandler.logger` @type ^`com.adjust.sdk.ILogger` @kind object;
+  #L274a70.  v1:= 0I;
+  #L274a72.  v1:= new `java.lang.Object`[v1];
+  #L274a76.  v2:= "PackageHandler teardown" @kind object;
+  #L274a7a.  call `verbose`(v0, v2, v1) @signature `Lcom/adjust/sdk/ILogger;.verbose:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L274a80.  v0:= v3.`com.adjust.sdk.PackageHandler.scheduler` @type ^`com.adjust.sdk.scheduler.ThreadScheduler` @kind object;
+  #L274a84.  if v0 == 0 then goto L274a8e;
+  #L274a88.  call `teardown`(v0) @signature `Lcom/adjust/sdk/scheduler/ThreadExecutor;.teardown:()V` @kind interface;
+  #L274a8e.  v0:= v3.`com.adjust.sdk.PackageHandler.activityHandlerWeakRef` @type ^`java.lang.ref.WeakReference` @kind object;
+  #L274a92.  if v0 == 0 then goto L274a9c;
+  #L274a96.  call `clear`(v0) @signature `Ljava/lang/ref/WeakReference;.clear:()V` @kind virtual;
+  #L274a9c.  v0:= v3.`com.adjust.sdk.PackageHandler.packageQueue` @type ^`java.util.List` @kind object;
+  #L274aa0.  if v0 == 0 then goto L274aaa;
+  #L274aa4.  call `clear`(v0) @signature `Ljava/util/List;.clear:()V` @kind interface;
+  #L274aaa.  v0:= 0I;
+  #L274aac.  v3.`com.adjust.sdk.PackageHandler.scheduler` @type ^`com.adjust.sdk.scheduler.ThreadScheduler` := v0 @kind object;
+  #L274ab0.  v3.`com.adjust.sdk.PackageHandler.activityHandlerWeakRef` @type ^`java.lang.ref.WeakReference` := v0 @kind object;
+  #L274ab4.  v3.`com.adjust.sdk.PackageHandler.packageQueue` @type ^`java.util.List` := v0 @kind object;
+  #L274ab8.  v3.`com.adjust.sdk.PackageHandler.isSending` @type ^`java.util.concurrent.atomic.AtomicBoolean` := v0 @kind object;
+  #L274abc.  v3.`com.adjust.sdk.PackageHandler.context` @type ^`android.content.Context` := v0 @kind object;
+  #L274ac0.  v3.`com.adjust.sdk.PackageHandler.logger` @type ^`com.adjust.sdk.ILogger` := v0 @kind object;
+  #L274ac4.  v3.`com.adjust.sdk.PackageHandler.backoffStrategy` @type ^`com.adjust.sdk.BackoffStrategy` := v0 @kind object;
+  #L274ac8.  return @kind void;
+}
+procedure `void` `updatePackages`(`com.adjust.sdk.PackageHandler` v2 @kind this, `com.adjust.sdk.SessionParameters` v3 @kind object) @signature `Lcom/adjust/sdk/PackageHandler;.updatePackages:(Lcom/adjust/sdk/SessionParameters;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L274adc.  if v3 == 0 then goto L274aea;
+  #L274ae0.  call temp:= `deepCopy`(v3) @signature `Lcom/adjust/sdk/SessionParameters;.deepCopy:()Lcom/adjust/sdk/SessionParameters;` @kind virtual;
+  #L274ae6.  v3:= temp @kind object;
+  #L274ae8.  goto L274aec;
+  #L274aea.  v3:= 0I;
+  #L274aec.  v0:= v2.`com.adjust.sdk.PackageHandler.scheduler` @type ^`com.adjust.sdk.scheduler.ThreadScheduler` @kind object;
+  #L274af0.  v1:= new `com.adjust.sdk.PackageHandler$6`;
+  #L274af4.  call `<init>`(v1, v2, v3) @signature `Lcom/adjust/sdk/PackageHandler$6;.<init>:(Lcom/adjust/sdk/PackageHandler;Lcom/adjust/sdk/SessionParameters;)V` @kind direct;
+  #L274afa.  call `submit`(v0, v1) @signature `Lcom/adjust/sdk/scheduler/ThreadExecutor;.submit:(Ljava/lang/Runnable;)V` @kind interface;
+  #L274b00.  return @kind void;
+}
+procedure `void` `updatePackagesI`(`com.adjust.sdk.PackageHandler` v6 @kind this, `com.adjust.sdk.SessionParameters` v7 @kind object) @signature `Lcom/adjust/sdk/PackageHandler;.updatePackagesI:(Lcom/adjust/sdk/SessionParameters;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L274b14.  if v7 != 0 then goto L274b1a;
+  #L274b18.  return @kind void;
+  #L274b1a.  v0:= v6.`com.adjust.sdk.PackageHandler.logger` @type ^`com.adjust.sdk.ILogger` @kind object;
+  #L274b1e.  v1:= 0I;
+  #L274b20.  v2:= new `java.lang.Object`[v1];
+  #L274b24.  v3:= "Updating package handler queue" @kind object;
+  #L274b28.  call `debug`(v0, v3, v2) @signature `Lcom/adjust/sdk/ILogger;.debug:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L274b2e.  v0:= v6.`com.adjust.sdk.PackageHandler.logger` @type ^`com.adjust.sdk.ILogger` @kind object;
+  #L274b32.  v2:= 1I;
+  #L274b34.  v3:= new `java.lang.Object`[v2];
+  #L274b38.  v4:= v7.`com.adjust.sdk.SessionParameters.callbackParameters` @type ^`java.util.Map` @kind object;
+  #L274b3c.  v3[v1]:= v4 @kind object;
+  #L274b40.  v4:= "Session callback parameters: %s" @kind object;
+  #L274b44.  call `verbose`(v0, v4, v3) @signature `Lcom/adjust/sdk/ILogger;.verbose:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L274b4a.  v0:= v6.`com.adjust.sdk.PackageHandler.logger` @type ^`com.adjust.sdk.ILogger` @kind object;
+  #L274b4e.  v2:= new `java.lang.Object`[v2];
+  #L274b52.  v3:= v7.`com.adjust.sdk.SessionParameters.partnerParameters` @type ^`java.util.Map` @kind object;
+  #L274b56.  v2[v1]:= v3 @kind object;
+  #L274b5a.  v1:= "Session partner parameters: %s" @kind object;
+  #L274b5e.  call `verbose`(v0, v1, v2) @signature `Lcom/adjust/sdk/ILogger;.verbose:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L274b64.  v0:= v6.`com.adjust.sdk.PackageHandler.packageQueue` @type ^`java.util.List` @kind object;
+  #L274b68.  call temp:= `iterator`(v0) @signature `Ljava/util/List;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L274b6e.  v0:= temp @kind object;
+  #L274b70.  call temp:= `hasNext`(v0) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L274b76.  v1:= temp;
+  #L274b78.  if v1 == 0 then goto L274bd6;
+  #L274b7c.  call temp:= `next`(v0) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L274b82.  v1:= temp @kind object;
+  #L274b84.  v1:= (`com.adjust.sdk.ActivityPackage`) v1 @kind object;
+  #L274b88.  call temp:= `getParameters`(v1) @signature `Lcom/adjust/sdk/ActivityPackage;.getParameters:()Ljava/util/Map;` @kind virtual;
+  #L274b8e.  v2:= temp @kind object;
+  #L274b90.  v3:= v7.`com.adjust.sdk.SessionParameters.callbackParameters` @type ^`java.util.Map` @kind object;
+  #L274b94.  call temp:= `getCallbackParameters`(v1) @signature `Lcom/adjust/sdk/ActivityPackage;.getCallbackParameters:()Ljava/util/Map;` @kind virtual;
+  #L274b9a.  v4:= temp @kind object;
+  #L274b9c.  v5:= "Callback" @kind object;
+  #L274ba0.  call temp:= `mergeParameters`(v3, v4, v5) @signature `Lcom/adjust/sdk/Util;.mergeParameters:(Ljava/util/Map;Ljava/util/Map;Ljava/lang/String;)Ljava/util/Map;` @kind static;
+  #L274ba6.  v3:= temp @kind object;
+  #L274ba8.  v4:= "callback_params" @kind object;
+  #L274bac.  call `addMapJson`(v2, v4, v3) @signature `Lcom/adjust/sdk/PackageBuilder;.addMapJson:(Ljava/util/Map;Ljava/lang/String;Ljava/util/Map;)V` @kind static;
+  #L274bb2.  v3:= v7.`com.adjust.sdk.SessionParameters.partnerParameters` @type ^`java.util.Map` @kind object;
+  #L274bb6.  call temp:= `getPartnerParameters`(v1) @signature `Lcom/adjust/sdk/ActivityPackage;.getPartnerParameters:()Ljava/util/Map;` @kind virtual;
+  #L274bbc.  v1:= temp @kind object;
+  #L274bbe.  v4:= "Partner" @kind object;
+  #L274bc2.  call temp:= `mergeParameters`(v3, v1, v4) @signature `Lcom/adjust/sdk/Util;.mergeParameters:(Ljava/util/Map;Ljava/util/Map;Ljava/lang/String;)Ljava/util/Map;` @kind static;
+  #L274bc8.  v1:= temp @kind object;
+  #L274bca.  v3:= "partner_params" @kind object;
+  #L274bce.  call `addMapJson`(v2, v3, v1) @signature `Lcom/adjust/sdk/PackageBuilder;.addMapJson:(Ljava/util/Map;Ljava/lang/String;Ljava/util/Map;)V` @kind static;
+  #L274bd4.  goto L274b70;
+  #L274bd6.  call `writePackageQueueI`(v6) @signature `Lcom/adjust/sdk/PackageHandler;.writePackageQueueI:()V` @kind direct;
+  #L274bdc.  return @kind void;
+}

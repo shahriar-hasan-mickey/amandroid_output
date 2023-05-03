@@ -1,0 +1,121 @@
+record `io.reactivex.internal.util.EndConsumerHelper` @kind class @AccessFlag PUBLIC_FINAL {
+}
+procedure `void` `<init>`(`io.reactivex.internal.util.EndConsumerHelper` v2 @kind this) @signature `Lio/reactivex/internal/util/EndConsumerHelper;.<init>:()V` @AccessFlag PRIVATE_CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+
+  #L459ac0.  call `<init>`(v2) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L459ac6.  v0:= new `java.lang.IllegalStateException`;
+  #L459aca.  v1:= "No instances!" @kind object;
+  #L459ace.  call `<init>`(v0, v1) @signature `Ljava/lang/IllegalStateException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L459ad4.  throw v0;
+}
+procedure `java.lang.String` `composeMessage`(`java.lang.String` v2 @kind object) @signature `Lio/reactivex/internal/util/EndConsumerHelper;.composeMessage:(Ljava/lang/String;)Ljava/lang/String;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+
+  #L459a68.  v0:= new `java.lang.StringBuilder`;
+  #L459a6c.  call `<init>`(v0) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L459a72.  v1:= "It is not allowed to subscribe with a(n) " @kind object;
+  #L459a76.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L459a7c.  call temp:= `append`(v0, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L459a82.  v1:= " multiple times. " @kind object;
+  #L459a86.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L459a8c.  v1:= "Please create a fresh instance of " @kind object;
+  #L459a90.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L459a96.  call temp:= `append`(v0, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L459a9c.  v2:= " and subscribe that to the target source instead." @kind object;
+  #L459aa0.  call temp:= `append`(v0, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L459aa6.  call temp:= `toString`(v0) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L459aac.  v2:= temp @kind object;
+  #L459aae.  return v2 @kind object;
+}
+procedure `void` `reportDoubleSubscription`(`java.lang.Class` v1 @kind object) @signature `Lio/reactivex/internal/util/EndConsumerHelper;.reportDoubleSubscription:(Ljava/lang/Class;)V` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+
+  #L459ae8.  v0:= new `io.reactivex.exceptions.ProtocolViolationException`;
+  #L459aec.  call temp:= `getName`(v1) @signature `Ljava/lang/Class;.getName:()Ljava/lang/String;` @kind virtual;
+  #L459af2.  v1:= temp @kind object;
+  #L459af4.  call temp:= `composeMessage`(v1) @signature `Lio/reactivex/internal/util/EndConsumerHelper;.composeMessage:(Ljava/lang/String;)Ljava/lang/String;` @kind static;
+  #L459afa.  v1:= temp @kind object;
+  #L459afc.  call `<init>`(v0, v1) @signature `Lio/reactivex/exceptions/ProtocolViolationException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L459b02.  call `onError`(v0) @signature `Lio/reactivex/plugins/RxJavaPlugins;.onError:(Ljava/lang/Throwable;)V` @kind static;
+  #L459b08.  return @kind void;
+}
+procedure `boolean` `setOnce`(`java.util.concurrent.atomic.AtomicReference` v1 @kind object, `io.reactivex.disposables.Disposable` v2 @kind object, `java.lang.Class` v3 @kind object) @signature `Lio/reactivex/internal/util/EndConsumerHelper;.setOnce:(Ljava/util/concurrent/atomic/AtomicReference;Lio/reactivex/disposables/Disposable;Ljava/lang/Class;)Z` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+
+  #L459958.  v0:= "next is null" @kind object;
+  #L45995c.  call temp:= `requireNonNull`(v2, v0) @signature `Lio/reactivex/internal/functions/ObjectHelper;.requireNonNull:(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/Object;` @kind static;
+  #L459962.  v0:= 0I;
+  #L459964.  call temp:= `compareAndSet`(v1, v0, v2) @signature `Ljava/util/concurrent/atomic/AtomicReference;.compareAndSet:(Ljava/lang/Object;Ljava/lang/Object;)Z` @kind virtual;
+  #L45996a.  v0:= temp;
+  #L45996c.  if v0 != 0 then goto L459990;
+  #L459970.  call `dispose`(v2) @signature `Lio/reactivex/disposables/Disposable;.dispose:()V` @kind interface;
+  #L459976.  call temp:= `get`(v1) @signature `Ljava/util/concurrent/atomic/AtomicReference;.get:()Ljava/lang/Object;` @kind virtual;
+  #L45997c.  v1:= temp @kind object;
+  #L45997e.  v2:= `@@io.reactivex.internal.disposables.DisposableHelper.DISPOSED` @type ^`io.reactivex.internal.disposables.DisposableHelper` @kind object;
+  #L459982.  if v1 == v2 then goto L45998c;
+  #L459986.  call `reportDoubleSubscription`(v3) @signature `Lio/reactivex/internal/util/EndConsumerHelper;.reportDoubleSubscription:(Ljava/lang/Class;)V` @kind static;
+  #L45998c.  v1:= 0I;
+  #L45998e.  return v1;
+  #L459990.  v1:= 1I;
+  #L459992.  return v1;
+}
+procedure `boolean` `setOnce`(`java.util.concurrent.atomic.AtomicReference` v1 @kind object, `org.reactivestreams.Subscription` v2 @kind object, `java.lang.Class` v3 @kind object) @signature `Lio/reactivex/internal/util/EndConsumerHelper;.setOnce:(Ljava/util/concurrent/atomic/AtomicReference;Lorg/reactivestreams/Subscription;Ljava/lang/Class;)Z` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+
+  #L4599a4.  v0:= "next is null" @kind object;
+  #L4599a8.  call temp:= `requireNonNull`(v2, v0) @signature `Lio/reactivex/internal/functions/ObjectHelper;.requireNonNull:(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/Object;` @kind static;
+  #L4599ae.  v0:= 0I;
+  #L4599b0.  call temp:= `compareAndSet`(v1, v0, v2) @signature `Ljava/util/concurrent/atomic/AtomicReference;.compareAndSet:(Ljava/lang/Object;Ljava/lang/Object;)Z` @kind virtual;
+  #L4599b6.  v0:= temp;
+  #L4599b8.  if v0 != 0 then goto L4599dc;
+  #L4599bc.  call `cancel`(v2) @signature `Lorg/reactivestreams/Subscription;.cancel:()V` @kind interface;
+  #L4599c2.  call temp:= `get`(v1) @signature `Ljava/util/concurrent/atomic/AtomicReference;.get:()Ljava/lang/Object;` @kind virtual;
+  #L4599c8.  v1:= temp @kind object;
+  #L4599ca.  v2:= `@@io.reactivex.internal.subscriptions.SubscriptionHelper.CANCELLED` @type ^`io.reactivex.internal.subscriptions.SubscriptionHelper` @kind object;
+  #L4599ce.  if v1 == v2 then goto L4599d8;
+  #L4599d2.  call `reportDoubleSubscription`(v3) @signature `Lio/reactivex/internal/util/EndConsumerHelper;.reportDoubleSubscription:(Ljava/lang/Class;)V` @kind static;
+  #L4599d8.  v1:= 0I;
+  #L4599da.  return v1;
+  #L4599dc.  v1:= 1I;
+  #L4599de.  return v1;
+}
+procedure `boolean` `validate`(`io.reactivex.disposables.Disposable` v1 @kind object, `io.reactivex.disposables.Disposable` v2 @kind object, `java.lang.Class` v3 @kind object) @signature `Lio/reactivex/internal/util/EndConsumerHelper;.validate:(Lio/reactivex/disposables/Disposable;Lio/reactivex/disposables/Disposable;Ljava/lang/Class;)Z` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+
+  #L4599f0.  v0:= "next is null" @kind object;
+  #L4599f4.  call temp:= `requireNonNull`(v2, v0) @signature `Lio/reactivex/internal/functions/ObjectHelper;.requireNonNull:(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/Object;` @kind static;
+  #L4599fa.  if v1 == 0 then goto L459a16;
+  #L4599fe.  call `dispose`(v2) @signature `Lio/reactivex/disposables/Disposable;.dispose:()V` @kind interface;
+  #L459a04.  v2:= `@@io.reactivex.internal.disposables.DisposableHelper.DISPOSED` @type ^`io.reactivex.internal.disposables.DisposableHelper` @kind object;
+  #L459a08.  if v1 == v2 then goto L459a12;
+  #L459a0c.  call `reportDoubleSubscription`(v3) @signature `Lio/reactivex/internal/util/EndConsumerHelper;.reportDoubleSubscription:(Ljava/lang/Class;)V` @kind static;
+  #L459a12.  v1:= 0I;
+  #L459a14.  return v1;
+  #L459a16.  v1:= 1I;
+  #L459a18.  return v1;
+}
+procedure `boolean` `validate`(`org.reactivestreams.Subscription` v1 @kind object, `org.reactivestreams.Subscription` v2 @kind object, `java.lang.Class` v3 @kind object) @signature `Lio/reactivex/internal/util/EndConsumerHelper;.validate:(Lorg/reactivestreams/Subscription;Lorg/reactivestreams/Subscription;Ljava/lang/Class;)Z` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+
+  #L459a2c.  v0:= "next is null" @kind object;
+  #L459a30.  call temp:= `requireNonNull`(v2, v0) @signature `Lio/reactivex/internal/functions/ObjectHelper;.requireNonNull:(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/Object;` @kind static;
+  #L459a36.  if v1 == 0 then goto L459a52;
+  #L459a3a.  call `cancel`(v2) @signature `Lorg/reactivestreams/Subscription;.cancel:()V` @kind interface;
+  #L459a40.  v2:= `@@io.reactivex.internal.subscriptions.SubscriptionHelper.CANCELLED` @type ^`io.reactivex.internal.subscriptions.SubscriptionHelper` @kind object;
+  #L459a44.  if v1 == v2 then goto L459a4e;
+  #L459a48.  call `reportDoubleSubscription`(v3) @signature `Lio/reactivex/internal/util/EndConsumerHelper;.reportDoubleSubscription:(Ljava/lang/Class;)V` @kind static;
+  #L459a4e.  v1:= 0I;
+  #L459a50.  return v1;
+  #L459a52.  v1:= 1I;
+  #L459a54.  return v1;
+}

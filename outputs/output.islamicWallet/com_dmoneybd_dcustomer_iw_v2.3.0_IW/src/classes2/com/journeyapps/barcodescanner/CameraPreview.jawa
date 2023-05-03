@@ -1,0 +1,1033 @@
+record `com.journeyapps.barcodescanner.CameraPreview` @kind class @AccessFlag PUBLIC extends `android.view.ViewGroup` @kind class {
+  `com.journeyapps.barcodescanner.camera.CameraInstance` `com.journeyapps.barcodescanner.CameraPreview.cameraInstance` @AccessFlag PRIVATE;
+  `com.journeyapps.barcodescanner.camera.CameraSettings` `com.journeyapps.barcodescanner.CameraPreview.cameraSettings` @AccessFlag PRIVATE;
+  `com.journeyapps.barcodescanner.Size` `com.journeyapps.barcodescanner.CameraPreview.containerSize` @AccessFlag PRIVATE;
+  `com.journeyapps.barcodescanner.Size` `com.journeyapps.barcodescanner.CameraPreview.currentSurfaceSize` @AccessFlag PRIVATE;
+  `com.journeyapps.barcodescanner.camera.DisplayConfiguration` `com.journeyapps.barcodescanner.CameraPreview.displayConfiguration` @AccessFlag PRIVATE;
+  `com.journeyapps.barcodescanner.CameraPreview$StateListener` `com.journeyapps.barcodescanner.CameraPreview.fireState` @AccessFlag PRIVATE_FINAL;
+  `android.graphics.Rect` `com.journeyapps.barcodescanner.CameraPreview.framingRect` @AccessFlag PRIVATE;
+  `com.journeyapps.barcodescanner.Size` `com.journeyapps.barcodescanner.CameraPreview.framingRectSize` @AccessFlag PRIVATE;
+  `double` `com.journeyapps.barcodescanner.CameraPreview.marginFraction` @AccessFlag PRIVATE;
+  `int` `com.journeyapps.barcodescanner.CameraPreview.openedOrientation` @AccessFlag PRIVATE;
+  `boolean` `com.journeyapps.barcodescanner.CameraPreview.previewActive` @AccessFlag PRIVATE;
+  `android.graphics.Rect` `com.journeyapps.barcodescanner.CameraPreview.previewFramingRect` @AccessFlag PRIVATE;
+  `com.journeyapps.barcodescanner.camera.PreviewScalingStrategy` `com.journeyapps.barcodescanner.CameraPreview.previewScalingStrategy` @AccessFlag PRIVATE;
+  `com.journeyapps.barcodescanner.Size` `com.journeyapps.barcodescanner.CameraPreview.previewSize` @AccessFlag PRIVATE;
+  `com.journeyapps.barcodescanner.RotationCallback` `com.journeyapps.barcodescanner.CameraPreview.rotationCallback` @AccessFlag PRIVATE;
+  `com.journeyapps.barcodescanner.RotationListener` `com.journeyapps.barcodescanner.CameraPreview.rotationListener` @AccessFlag PRIVATE;
+  `android.os.Handler$Callback` `com.journeyapps.barcodescanner.CameraPreview.stateCallback` @AccessFlag PRIVATE_FINAL;
+  `android.os.Handler` `com.journeyapps.barcodescanner.CameraPreview.stateHandler` @AccessFlag PRIVATE;
+  `java.util.List` `com.journeyapps.barcodescanner.CameraPreview.stateListeners` @AccessFlag PRIVATE;
+  `android.view.SurfaceHolder$Callback` `com.journeyapps.barcodescanner.CameraPreview.surfaceCallback` @AccessFlag PRIVATE_FINAL;
+  `android.graphics.Rect` `com.journeyapps.barcodescanner.CameraPreview.surfaceRect` @AccessFlag PRIVATE;
+  `android.view.SurfaceView` `com.journeyapps.barcodescanner.CameraPreview.surfaceView` @AccessFlag PRIVATE;
+  `android.view.TextureView` `com.journeyapps.barcodescanner.CameraPreview.textureView` @AccessFlag PRIVATE;
+  `boolean` `com.journeyapps.barcodescanner.CameraPreview.torchOn` @AccessFlag PRIVATE;
+  `boolean` `com.journeyapps.barcodescanner.CameraPreview.useTextureView` @AccessFlag PRIVATE;
+  `android.view.WindowManager` `com.journeyapps.barcodescanner.CameraPreview.windowManager` @AccessFlag PRIVATE;
+}
+global `int` `@@com.journeyapps.barcodescanner.CameraPreview.ROTATION_LISTENER_DELAY_MS` @AccessFlag PRIVATE_STATIC_FINAL;
+global `java.lang.String` `@@com.journeyapps.barcodescanner.CameraPreview.TAG` @AccessFlag PRIVATE_STATIC_FINAL;
+procedure `void` `<clinit>`() @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.<clinit>:()V` @AccessFlag STATIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L29c40c.  v0:= constclass @type ^`com.journeyapps.barcodescanner.CameraPreview` @kind object;
+  #L29c410.  call temp:= `getSimpleName`(v0) @signature `Ljava/lang/Class;.getSimpleName:()Ljava/lang/String;` @kind virtual;
+  #L29c416.  v0:= temp @kind object;
+  #L29c418.  `@@com.journeyapps.barcodescanner.CameraPreview.TAG` @type ^`java.lang.String` := v0 @kind object;
+  #L29c41c.  return @kind void;
+}
+procedure `void` `<init>`(`com.journeyapps.barcodescanner.CameraPreview` v4 @kind this, `android.content.Context` v5 @kind object) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.<init>:(Landroid/content/Context;)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L29c430.  call `<init>`(v4, v5) @signature `Landroid/view/ViewGroup;.<init>:(Landroid/content/Context;)V` @kind direct;
+  #L29c436.  v0:= 0I;
+  #L29c438.  v4.`com.journeyapps.barcodescanner.CameraPreview.useTextureView` @type ^`boolean` := v0 @kind boolean;
+  #L29c43c.  v4.`com.journeyapps.barcodescanner.CameraPreview.previewActive` @type ^`boolean` := v0 @kind boolean;
+  #L29c440.  v1:= -1I;
+  #L29c442.  v4.`com.journeyapps.barcodescanner.CameraPreview.openedOrientation` @type ^`int` := v1;
+  #L29c446.  v1:= new `java.util.ArrayList`;
+  #L29c44a.  call `<init>`(v1) @signature `Ljava/util/ArrayList;.<init>:()V` @kind direct;
+  #L29c450.  v4.`com.journeyapps.barcodescanner.CameraPreview.stateListeners` @type ^`java.util.List` := v1 @kind object;
+  #L29c454.  v1:= new `com.journeyapps.barcodescanner.camera.CameraSettings`;
+  #L29c458.  call `<init>`(v1) @signature `Lcom/journeyapps/barcodescanner/camera/CameraSettings;.<init>:()V` @kind direct;
+  #L29c45e.  v4.`com.journeyapps.barcodescanner.CameraPreview.cameraSettings` @type ^`com.journeyapps.barcodescanner.camera.CameraSettings` := v1 @kind object;
+  #L29c462.  v1:= 0I;
+  #L29c464.  v4.`com.journeyapps.barcodescanner.CameraPreview.framingRect` @type ^`android.graphics.Rect` := v1 @kind object;
+  #L29c468.  v4.`com.journeyapps.barcodescanner.CameraPreview.previewFramingRect` @type ^`android.graphics.Rect` := v1 @kind object;
+  #L29c46c.  v4.`com.journeyapps.barcodescanner.CameraPreview.framingRectSize` @type ^`com.journeyapps.barcodescanner.Size` := v1 @kind object;
+  #L29c470.  v2:= 0.1D;
+  #L29c47a.  v4.`com.journeyapps.barcodescanner.CameraPreview.marginFraction` @type ^`double` := v2 @kind wide;
+  #L29c47e.  v4.`com.journeyapps.barcodescanner.CameraPreview.previewScalingStrategy` @type ^`com.journeyapps.barcodescanner.camera.PreviewScalingStrategy` := v1 @kind object;
+  #L29c482.  v4.`com.journeyapps.barcodescanner.CameraPreview.torchOn` @type ^`boolean` := v0 @kind boolean;
+  #L29c486.  v2:= new `com.journeyapps.barcodescanner.CameraPreview$2`;
+  #L29c48a.  call `<init>`(v2, v4) @signature `Lcom/journeyapps/barcodescanner/CameraPreview$2;.<init>:(Lcom/journeyapps/barcodescanner/CameraPreview;)V` @kind direct;
+  #L29c490.  v4.`com.journeyapps.barcodescanner.CameraPreview.surfaceCallback` @type ^`android.view.SurfaceHolder$Callback` := v2 @kind object;
+  #L29c494.  v2:= new `com.journeyapps.barcodescanner.CameraPreview$3`;
+  #L29c498.  call `<init>`(v2, v4) @signature `Lcom/journeyapps/barcodescanner/CameraPreview$3;.<init>:(Lcom/journeyapps/barcodescanner/CameraPreview;)V` @kind direct;
+  #L29c49e.  v4.`com.journeyapps.barcodescanner.CameraPreview.stateCallback` @type ^`android.os.Handler$Callback` := v2 @kind object;
+  #L29c4a2.  v2:= new `com.journeyapps.barcodescanner.CameraPreview$4`;
+  #L29c4a6.  call `<init>`(v2, v4) @signature `Lcom/journeyapps/barcodescanner/CameraPreview$4;.<init>:(Lcom/journeyapps/barcodescanner/CameraPreview;)V` @kind direct;
+  #L29c4ac.  v4.`com.journeyapps.barcodescanner.CameraPreview.rotationCallback` @type ^`com.journeyapps.barcodescanner.RotationCallback` := v2 @kind object;
+  #L29c4b0.  v2:= new `com.journeyapps.barcodescanner.CameraPreview$5`;
+  #L29c4b4.  call `<init>`(v2, v4) @signature `Lcom/journeyapps/barcodescanner/CameraPreview$5;.<init>:(Lcom/journeyapps/barcodescanner/CameraPreview;)V` @kind direct;
+  #L29c4ba.  v4.`com.journeyapps.barcodescanner.CameraPreview.fireState` @type ^`com.journeyapps.barcodescanner.CameraPreview$StateListener` := v2 @kind object;
+  #L29c4be.  call `initialize`(v4, v5, v1, v0, v0) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.initialize:(Landroid/content/Context;Landroid/util/AttributeSet;II)V` @kind direct;
+  #L29c4c4.  return @kind void;
+}
+procedure `void` `<init>`(`com.journeyapps.barcodescanner.CameraPreview` v4 @kind this, `android.content.Context` v5 @kind object, `android.util.AttributeSet` v6 @kind object) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.<init>:(Landroid/content/Context;Landroid/util/AttributeSet;)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L29c4d8.  call `<init>`(v4, v5, v6) @signature `Landroid/view/ViewGroup;.<init>:(Landroid/content/Context;Landroid/util/AttributeSet;)V` @kind direct;
+  #L29c4de.  v0:= 0I;
+  #L29c4e0.  v4.`com.journeyapps.barcodescanner.CameraPreview.useTextureView` @type ^`boolean` := v0 @kind boolean;
+  #L29c4e4.  v4.`com.journeyapps.barcodescanner.CameraPreview.previewActive` @type ^`boolean` := v0 @kind boolean;
+  #L29c4e8.  v1:= -1I;
+  #L29c4ea.  v4.`com.journeyapps.barcodescanner.CameraPreview.openedOrientation` @type ^`int` := v1;
+  #L29c4ee.  v1:= new `java.util.ArrayList`;
+  #L29c4f2.  call `<init>`(v1) @signature `Ljava/util/ArrayList;.<init>:()V` @kind direct;
+  #L29c4f8.  v4.`com.journeyapps.barcodescanner.CameraPreview.stateListeners` @type ^`java.util.List` := v1 @kind object;
+  #L29c4fc.  v1:= new `com.journeyapps.barcodescanner.camera.CameraSettings`;
+  #L29c500.  call `<init>`(v1) @signature `Lcom/journeyapps/barcodescanner/camera/CameraSettings;.<init>:()V` @kind direct;
+  #L29c506.  v4.`com.journeyapps.barcodescanner.CameraPreview.cameraSettings` @type ^`com.journeyapps.barcodescanner.camera.CameraSettings` := v1 @kind object;
+  #L29c50a.  v1:= 0I;
+  #L29c50c.  v4.`com.journeyapps.barcodescanner.CameraPreview.framingRect` @type ^`android.graphics.Rect` := v1 @kind object;
+  #L29c510.  v4.`com.journeyapps.barcodescanner.CameraPreview.previewFramingRect` @type ^`android.graphics.Rect` := v1 @kind object;
+  #L29c514.  v4.`com.journeyapps.barcodescanner.CameraPreview.framingRectSize` @type ^`com.journeyapps.barcodescanner.Size` := v1 @kind object;
+  #L29c518.  v2:= 0.1D;
+  #L29c522.  v4.`com.journeyapps.barcodescanner.CameraPreview.marginFraction` @type ^`double` := v2 @kind wide;
+  #L29c526.  v4.`com.journeyapps.barcodescanner.CameraPreview.previewScalingStrategy` @type ^`com.journeyapps.barcodescanner.camera.PreviewScalingStrategy` := v1 @kind object;
+  #L29c52a.  v4.`com.journeyapps.barcodescanner.CameraPreview.torchOn` @type ^`boolean` := v0 @kind boolean;
+  #L29c52e.  v1:= new `com.journeyapps.barcodescanner.CameraPreview$2`;
+  #L29c532.  call `<init>`(v1, v4) @signature `Lcom/journeyapps/barcodescanner/CameraPreview$2;.<init>:(Lcom/journeyapps/barcodescanner/CameraPreview;)V` @kind direct;
+  #L29c538.  v4.`com.journeyapps.barcodescanner.CameraPreview.surfaceCallback` @type ^`android.view.SurfaceHolder$Callback` := v1 @kind object;
+  #L29c53c.  v1:= new `com.journeyapps.barcodescanner.CameraPreview$3`;
+  #L29c540.  call `<init>`(v1, v4) @signature `Lcom/journeyapps/barcodescanner/CameraPreview$3;.<init>:(Lcom/journeyapps/barcodescanner/CameraPreview;)V` @kind direct;
+  #L29c546.  v4.`com.journeyapps.barcodescanner.CameraPreview.stateCallback` @type ^`android.os.Handler$Callback` := v1 @kind object;
+  #L29c54a.  v1:= new `com.journeyapps.barcodescanner.CameraPreview$4`;
+  #L29c54e.  call `<init>`(v1, v4) @signature `Lcom/journeyapps/barcodescanner/CameraPreview$4;.<init>:(Lcom/journeyapps/barcodescanner/CameraPreview;)V` @kind direct;
+  #L29c554.  v4.`com.journeyapps.barcodescanner.CameraPreview.rotationCallback` @type ^`com.journeyapps.barcodescanner.RotationCallback` := v1 @kind object;
+  #L29c558.  v1:= new `com.journeyapps.barcodescanner.CameraPreview$5`;
+  #L29c55c.  call `<init>`(v1, v4) @signature `Lcom/journeyapps/barcodescanner/CameraPreview$5;.<init>:(Lcom/journeyapps/barcodescanner/CameraPreview;)V` @kind direct;
+  #L29c562.  v4.`com.journeyapps.barcodescanner.CameraPreview.fireState` @type ^`com.journeyapps.barcodescanner.CameraPreview$StateListener` := v1 @kind object;
+  #L29c566.  call `initialize`(v4, v5, v6, v0, v0) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.initialize:(Landroid/content/Context;Landroid/util/AttributeSet;II)V` @kind direct;
+  #L29c56c.  return @kind void;
+}
+procedure `void` `<init>`(`com.journeyapps.barcodescanner.CameraPreview` v4 @kind this, `android.content.Context` v5 @kind object, `android.util.AttributeSet` v6 @kind object, `int` v7 ) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.<init>:(Landroid/content/Context;Landroid/util/AttributeSet;I)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L29c580.  call `<init>`(v4, v5, v6, v7) @signature `Landroid/view/ViewGroup;.<init>:(Landroid/content/Context;Landroid/util/AttributeSet;I)V` @kind direct;
+  #L29c586.  v0:= 0I;
+  #L29c588.  v4.`com.journeyapps.barcodescanner.CameraPreview.useTextureView` @type ^`boolean` := v0 @kind boolean;
+  #L29c58c.  v4.`com.journeyapps.barcodescanner.CameraPreview.previewActive` @type ^`boolean` := v0 @kind boolean;
+  #L29c590.  v1:= -1I;
+  #L29c592.  v4.`com.journeyapps.barcodescanner.CameraPreview.openedOrientation` @type ^`int` := v1;
+  #L29c596.  v1:= new `java.util.ArrayList`;
+  #L29c59a.  call `<init>`(v1) @signature `Ljava/util/ArrayList;.<init>:()V` @kind direct;
+  #L29c5a0.  v4.`com.journeyapps.barcodescanner.CameraPreview.stateListeners` @type ^`java.util.List` := v1 @kind object;
+  #L29c5a4.  v1:= new `com.journeyapps.barcodescanner.camera.CameraSettings`;
+  #L29c5a8.  call `<init>`(v1) @signature `Lcom/journeyapps/barcodescanner/camera/CameraSettings;.<init>:()V` @kind direct;
+  #L29c5ae.  v4.`com.journeyapps.barcodescanner.CameraPreview.cameraSettings` @type ^`com.journeyapps.barcodescanner.camera.CameraSettings` := v1 @kind object;
+  #L29c5b2.  v1:= 0I;
+  #L29c5b4.  v4.`com.journeyapps.barcodescanner.CameraPreview.framingRect` @type ^`android.graphics.Rect` := v1 @kind object;
+  #L29c5b8.  v4.`com.journeyapps.barcodescanner.CameraPreview.previewFramingRect` @type ^`android.graphics.Rect` := v1 @kind object;
+  #L29c5bc.  v4.`com.journeyapps.barcodescanner.CameraPreview.framingRectSize` @type ^`com.journeyapps.barcodescanner.Size` := v1 @kind object;
+  #L29c5c0.  v2:= 0.1D;
+  #L29c5ca.  v4.`com.journeyapps.barcodescanner.CameraPreview.marginFraction` @type ^`double` := v2 @kind wide;
+  #L29c5ce.  v4.`com.journeyapps.barcodescanner.CameraPreview.previewScalingStrategy` @type ^`com.journeyapps.barcodescanner.camera.PreviewScalingStrategy` := v1 @kind object;
+  #L29c5d2.  v4.`com.journeyapps.barcodescanner.CameraPreview.torchOn` @type ^`boolean` := v0 @kind boolean;
+  #L29c5d6.  v1:= new `com.journeyapps.barcodescanner.CameraPreview$2`;
+  #L29c5da.  call `<init>`(v1, v4) @signature `Lcom/journeyapps/barcodescanner/CameraPreview$2;.<init>:(Lcom/journeyapps/barcodescanner/CameraPreview;)V` @kind direct;
+  #L29c5e0.  v4.`com.journeyapps.barcodescanner.CameraPreview.surfaceCallback` @type ^`android.view.SurfaceHolder$Callback` := v1 @kind object;
+  #L29c5e4.  v1:= new `com.journeyapps.barcodescanner.CameraPreview$3`;
+  #L29c5e8.  call `<init>`(v1, v4) @signature `Lcom/journeyapps/barcodescanner/CameraPreview$3;.<init>:(Lcom/journeyapps/barcodescanner/CameraPreview;)V` @kind direct;
+  #L29c5ee.  v4.`com.journeyapps.barcodescanner.CameraPreview.stateCallback` @type ^`android.os.Handler$Callback` := v1 @kind object;
+  #L29c5f2.  v1:= new `com.journeyapps.barcodescanner.CameraPreview$4`;
+  #L29c5f6.  call `<init>`(v1, v4) @signature `Lcom/journeyapps/barcodescanner/CameraPreview$4;.<init>:(Lcom/journeyapps/barcodescanner/CameraPreview;)V` @kind direct;
+  #L29c5fc.  v4.`com.journeyapps.barcodescanner.CameraPreview.rotationCallback` @type ^`com.journeyapps.barcodescanner.RotationCallback` := v1 @kind object;
+  #L29c600.  v1:= new `com.journeyapps.barcodescanner.CameraPreview$5`;
+  #L29c604.  call `<init>`(v1, v4) @signature `Lcom/journeyapps/barcodescanner/CameraPreview$5;.<init>:(Lcom/journeyapps/barcodescanner/CameraPreview;)V` @kind direct;
+  #L29c60a.  v4.`com.journeyapps.barcodescanner.CameraPreview.fireState` @type ^`com.journeyapps.barcodescanner.CameraPreview$StateListener` := v1 @kind object;
+  #L29c60e.  call `initialize`(v4, v5, v6, v7, v0) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.initialize:(Landroid/content/Context;Landroid/util/AttributeSet;II)V` @kind direct;
+  #L29c614.  return @kind void;
+}
+procedure `com.journeyapps.barcodescanner.Size` `a`(`com.journeyapps.barcodescanner.CameraPreview` v0 @kind object, `com.journeyapps.barcodescanner.Size` v1 @kind object) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.a:(Lcom/journeyapps/barcodescanner/CameraPreview;Lcom/journeyapps/barcodescanner/Size;)Lcom/journeyapps/barcodescanner/Size;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L29c300.  v0.`com.journeyapps.barcodescanner.CameraPreview.currentSurfaceSize` @type ^`com.journeyapps.barcodescanner.Size` := v1 @kind object;
+  #L29c304.  return v1 @kind object;
+}
+procedure `void` `b`(`com.journeyapps.barcodescanner.CameraPreview` v0 @kind object) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.b:(Lcom/journeyapps/barcodescanner/CameraPreview;)V` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L29c628.  call `startPreviewIfReady`(v0) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.startPreviewIfReady:()V` @kind direct;
+  #L29c62e.  return @kind void;
+}
+procedure `java.lang.String` `c`() @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.c:()Ljava/lang/String;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+    v0;
+
+  #L29c3dc.  v0:= `@@com.journeyapps.barcodescanner.CameraPreview.TAG` @type ^`java.lang.String` @kind object;
+  #L29c3e0.  return v0 @kind object;
+}
+procedure `void` `calculateFrames`(`com.journeyapps.barcodescanner.CameraPreview` v8 @kind this) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.calculateFrames:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+
+  #L29c68c.  v0:= v8.`com.journeyapps.barcodescanner.CameraPreview.containerSize` @type ^`com.journeyapps.barcodescanner.Size` @kind object;
+  #L29c690.  v1:= 0I;
+  #L29c692.  if v0 == 0 then goto L29c7aa;
+  #L29c696.  v2:= v8.`com.journeyapps.barcodescanner.CameraPreview.previewSize` @type ^`com.journeyapps.barcodescanner.Size` @kind object;
+  #L29c69a.  if v2 == 0 then goto L29c7aa;
+  #L29c69e.  v3:= v8.`com.journeyapps.barcodescanner.CameraPreview.displayConfiguration` @type ^`com.journeyapps.barcodescanner.camera.DisplayConfiguration` @kind object;
+  #L29c6a2.  if v3 == 0 then goto L29c7aa;
+  #L29c6a6.  v4:= v2.`com.journeyapps.barcodescanner.Size.width` @type ^`int`;
+  #L29c6aa.  v5:= v2.`com.journeyapps.barcodescanner.Size.height` @type ^`int`;
+  #L29c6ae.  v6:= v0.`com.journeyapps.barcodescanner.Size.width` @type ^`int`;
+  #L29c6b2.  v0:= v0.`com.journeyapps.barcodescanner.Size.height` @type ^`int`;
+  #L29c6b6.  call temp:= `scalePreview`(v3, v2) @signature `Lcom/journeyapps/barcodescanner/camera/DisplayConfiguration;.scalePreview:(Lcom/journeyapps/barcodescanner/Size;)Landroid/graphics/Rect;` @kind virtual;
+  #L29c6bc.  v2:= temp @kind object;
+  #L29c6be.  v8.`com.journeyapps.barcodescanner.CameraPreview.surfaceRect` @type ^`android.graphics.Rect` := v2 @kind object;
+  #L29c6c2.  v2:= new `android.graphics.Rect`;
+  #L29c6c6.  v3:= 0I;
+  #L29c6c8.  call `<init>`(v2, v3, v3, v6, v0) @signature `Landroid/graphics/Rect;.<init>:(IIII)V` @kind direct;
+  #L29c6ce.  v0:= v8.`com.journeyapps.barcodescanner.CameraPreview.surfaceRect` @type ^`android.graphics.Rect` @kind object;
+  #L29c6d2.  call temp:= `calculateFramingRect`(v8, v2, v0) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.calculateFramingRect:(Landroid/graphics/Rect;Landroid/graphics/Rect;)Landroid/graphics/Rect;` @kind virtual;
+  #L29c6d8.  v0:= temp @kind object;
+  #L29c6da.  v8.`com.journeyapps.barcodescanner.CameraPreview.framingRect` @type ^`android.graphics.Rect` := v0 @kind object;
+  #L29c6de.  v0:= new `android.graphics.Rect`;
+  #L29c6e2.  v2:= v8.`com.journeyapps.barcodescanner.CameraPreview.framingRect` @type ^`android.graphics.Rect` @kind object;
+  #L29c6e6.  call `<init>`(v0, v2) @signature `Landroid/graphics/Rect;.<init>:(Landroid/graphics/Rect;)V` @kind direct;
+  #L29c6ec.  v2:= v8.`com.journeyapps.barcodescanner.CameraPreview.surfaceRect` @type ^`android.graphics.Rect` @kind object;
+  #L29c6f0.  v3:= v2.`android.graphics.Rect.left` @type ^`int`;
+  #L29c6f4.  v3:= -v3 @kind int;
+  #L29c6f6.  v2:= v2.`android.graphics.Rect.top` @type ^`int`;
+  #L29c6fa.  v2:= -v2 @kind int;
+  #L29c6fc.  call `offset`(v0, v3, v2) @signature `Landroid/graphics/Rect;.offset:(II)V` @kind virtual;
+  #L29c702.  v2:= new `android.graphics.Rect`;
+  #L29c706.  v3:= v0.`android.graphics.Rect.left` @type ^`int`;
+  #L29c70a.  v3:= v3 * v4 @kind int;
+  #L29c70e.  v6:= v8.`com.journeyapps.barcodescanner.CameraPreview.surfaceRect` @type ^`android.graphics.Rect` @kind object;
+  #L29c712.  call temp:= `width`(v6) @signature `Landroid/graphics/Rect;.width:()I` @kind virtual;
+  #L29c718.  v6:= temp;
+  #L29c71a.  v3:= v3 / v6 @kind int;
+  #L29c71c.  v6:= v0.`android.graphics.Rect.top` @type ^`int`;
+  #L29c720.  v6:= v6 * v5 @kind int;
+  #L29c724.  v7:= v8.`com.journeyapps.barcodescanner.CameraPreview.surfaceRect` @type ^`android.graphics.Rect` @kind object;
+  #L29c728.  call temp:= `height`(v7) @signature `Landroid/graphics/Rect;.height:()I` @kind virtual;
+  #L29c72e.  v7:= temp;
+  #L29c730.  v6:= v6 / v7 @kind int;
+  #L29c732.  v7:= v0.`android.graphics.Rect.right` @type ^`int`;
+  #L29c736.  v7:= v7 * v4 @kind int;
+  #L29c73a.  v4:= v8.`com.journeyapps.barcodescanner.CameraPreview.surfaceRect` @type ^`android.graphics.Rect` @kind object;
+  #L29c73e.  call temp:= `width`(v4) @signature `Landroid/graphics/Rect;.width:()I` @kind virtual;
+  #L29c744.  v4:= temp;
+  #L29c746.  v7:= v7 / v4 @kind int;
+  #L29c748.  v0:= v0.`android.graphics.Rect.bottom` @type ^`int`;
+  #L29c74c.  v0:= v0 * v5 @kind int;
+  #L29c750.  v4:= v8.`com.journeyapps.barcodescanner.CameraPreview.surfaceRect` @type ^`android.graphics.Rect` @kind object;
+  #L29c754.  call temp:= `height`(v4) @signature `Landroid/graphics/Rect;.height:()I` @kind virtual;
+  #L29c75a.  v4:= temp;
+  #L29c75c.  v0:= v0 / v4 @kind int;
+  #L29c75e.  call `<init>`(v2, v3, v6, v7, v0) @signature `Landroid/graphics/Rect;.<init>:(IIII)V` @kind direct;
+  #L29c764.  v8.`com.journeyapps.barcodescanner.CameraPreview.previewFramingRect` @type ^`android.graphics.Rect` := v2 @kind object;
+  #L29c768.  call temp:= `width`(v2) @signature `Landroid/graphics/Rect;.width:()I` @kind virtual;
+  #L29c76e.  v0:= temp;
+  #L29c770.  if v0 <= 0 then goto L29c792;
+  #L29c774.  v0:= v8.`com.journeyapps.barcodescanner.CameraPreview.previewFramingRect` @type ^`android.graphics.Rect` @kind object;
+  #L29c778.  call temp:= `height`(v0) @signature `Landroid/graphics/Rect;.height:()I` @kind virtual;
+  #L29c77e.  v0:= temp;
+  #L29c780.  if v0 > 0 then goto L29c786;
+  #L29c784.  goto L29c792;
+  #L29c786.  v0:= v8.`com.journeyapps.barcodescanner.CameraPreview.fireState` @type ^`com.journeyapps.barcodescanner.CameraPreview$StateListener` @kind object;
+  #L29c78a.  call `previewSized`(v0) @signature `Lcom/journeyapps/barcodescanner/CameraPreview$StateListener;.previewSized:()V` @kind interface;
+  #L29c790.  goto L29c7a8;
+  #L29c792.  v8.`com.journeyapps.barcodescanner.CameraPreview.previewFramingRect` @type ^`android.graphics.Rect` := v1 @kind object;
+  #L29c796.  v8.`com.journeyapps.barcodescanner.CameraPreview.framingRect` @type ^`android.graphics.Rect` := v1 @kind object;
+  #L29c79a.  v0:= `@@com.journeyapps.barcodescanner.CameraPreview.TAG` @type ^`java.lang.String` @kind object;
+  #L29c79e.  v1:= "Preview frame is too small" @kind object;
+  #L29c7a2.  call temp:= `w`(v0, v1) @signature `Landroid/util/Log;.w:(Ljava/lang/String;Ljava/lang/String;)I` @kind static;
+  #L29c7a8.  return @kind void;
+  #L29c7aa.  v8.`com.journeyapps.barcodescanner.CameraPreview.previewFramingRect` @type ^`android.graphics.Rect` := v1 @kind object;
+  #L29c7ae.  v8.`com.journeyapps.barcodescanner.CameraPreview.framingRect` @type ^`android.graphics.Rect` := v1 @kind object;
+  #L29c7b2.  v8.`com.journeyapps.barcodescanner.CameraPreview.surfaceRect` @type ^`android.graphics.Rect` := v1 @kind object;
+  #L29c7b6.  v0:= new `java.lang.IllegalStateException`;
+  #L29c7ba.  v1:= "containerSize or previewSize is not set yet" @kind object;
+  #L29c7be.  call `<init>`(v0, v1) @signature `Ljava/lang/IllegalStateException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L29c7c4.  throw v0;
+}
+procedure `void` `containerSized`(`com.journeyapps.barcodescanner.CameraPreview` v2 @kind this, `com.journeyapps.barcodescanner.Size` v3 @kind object) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.containerSized:(Lcom/journeyapps/barcodescanner/Size;)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+
+  #L29c7d8.  v2.`com.journeyapps.barcodescanner.CameraPreview.containerSize` @type ^`com.journeyapps.barcodescanner.Size` := v3 @kind object;
+  #L29c7dc.  v0:= v2.`com.journeyapps.barcodescanner.CameraPreview.cameraInstance` @type ^`com.journeyapps.barcodescanner.camera.CameraInstance` @kind object;
+  #L29c7e0.  if v0 == 0 then goto L29c83e;
+  #L29c7e4.  call temp:= `getDisplayConfiguration`(v0) @signature `Lcom/journeyapps/barcodescanner/camera/CameraInstance;.getDisplayConfiguration:()Lcom/journeyapps/barcodescanner/camera/DisplayConfiguration;` @kind virtual;
+  #L29c7ea.  v0:= temp @kind object;
+  #L29c7ec.  if v0 != 0 then goto L29c83e;
+  #L29c7f0.  v0:= new `com.journeyapps.barcodescanner.camera.DisplayConfiguration`;
+  #L29c7f4.  call temp:= `getDisplayRotation`(v2) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.getDisplayRotation:()I` @kind direct;
+  #L29c7fa.  v1:= temp;
+  #L29c7fc.  call `<init>`(v0, v1, v3) @signature `Lcom/journeyapps/barcodescanner/camera/DisplayConfiguration;.<init>:(ILcom/journeyapps/barcodescanner/Size;)V` @kind direct;
+  #L29c802.  v2.`com.journeyapps.barcodescanner.CameraPreview.displayConfiguration` @type ^`com.journeyapps.barcodescanner.camera.DisplayConfiguration` := v0 @kind object;
+  #L29c806.  call temp:= `getPreviewScalingStrategy`(v2) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.getPreviewScalingStrategy:()Lcom/journeyapps/barcodescanner/camera/PreviewScalingStrategy;` @kind virtual;
+  #L29c80c.  v3:= temp @kind object;
+  #L29c80e.  call `setPreviewScalingStrategy`(v0, v3) @signature `Lcom/journeyapps/barcodescanner/camera/DisplayConfiguration;.setPreviewScalingStrategy:(Lcom/journeyapps/barcodescanner/camera/PreviewScalingStrategy;)V` @kind virtual;
+  #L29c814.  v3:= v2.`com.journeyapps.barcodescanner.CameraPreview.cameraInstance` @type ^`com.journeyapps.barcodescanner.camera.CameraInstance` @kind object;
+  #L29c818.  v0:= v2.`com.journeyapps.barcodescanner.CameraPreview.displayConfiguration` @type ^`com.journeyapps.barcodescanner.camera.DisplayConfiguration` @kind object;
+  #L29c81c.  call `setDisplayConfiguration`(v3, v0) @signature `Lcom/journeyapps/barcodescanner/camera/CameraInstance;.setDisplayConfiguration:(Lcom/journeyapps/barcodescanner/camera/DisplayConfiguration;)V` @kind virtual;
+  #L29c822.  v3:= v2.`com.journeyapps.barcodescanner.CameraPreview.cameraInstance` @type ^`com.journeyapps.barcodescanner.camera.CameraInstance` @kind object;
+  #L29c826.  call `configureCamera`(v3) @signature `Lcom/journeyapps/barcodescanner/camera/CameraInstance;.configureCamera:()V` @kind virtual;
+  #L29c82c.  v3:= v2.`com.journeyapps.barcodescanner.CameraPreview.torchOn` @type ^`boolean` @kind boolean;
+  #L29c830.  if v3 == 0 then goto L29c83e;
+  #L29c834.  v0:= v2.`com.journeyapps.barcodescanner.CameraPreview.cameraInstance` @type ^`com.journeyapps.barcodescanner.camera.CameraInstance` @kind object;
+  #L29c838.  call `setTorch`(v0, v3) @signature `Lcom/journeyapps/barcodescanner/camera/CameraInstance;.setTorch:(Z)V` @kind virtual;
+  #L29c83e.  return @kind void;
+}
+procedure `void` `d`(`com.journeyapps.barcodescanner.CameraPreview` v0 @kind object, `com.journeyapps.barcodescanner.Size` v1 @kind object) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.d:(Lcom/journeyapps/barcodescanner/CameraPreview;Lcom/journeyapps/barcodescanner/Size;)V` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L29c640.  call `previewSized`(v0, v1) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.previewSized:(Lcom/journeyapps/barcodescanner/Size;)V` @kind direct;
+  #L29c646.  return @kind void;
+}
+procedure `com.journeyapps.barcodescanner.CameraPreview$StateListener` `e`(`com.journeyapps.barcodescanner.CameraPreview` v0 @kind object) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.e:(Lcom/journeyapps/barcodescanner/CameraPreview;)Lcom/journeyapps/barcodescanner/CameraPreview$StateListener;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L29c2e8.  v0:= v0.`com.journeyapps.barcodescanner.CameraPreview.fireState` @type ^`com.journeyapps.barcodescanner.CameraPreview$StateListener` @kind object;
+  #L29c2ec.  return v0 @kind object;
+}
+procedure `void` `f`(`com.journeyapps.barcodescanner.CameraPreview` v0 @kind object) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.f:(Lcom/journeyapps/barcodescanner/CameraPreview;)V` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L29c658.  call `rotationChanged`(v0) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.rotationChanged:()V` @kind direct;
+  #L29c65e.  return @kind void;
+}
+procedure `android.os.Handler` `g`(`com.journeyapps.barcodescanner.CameraPreview` v0 @kind object) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.g:(Lcom/journeyapps/barcodescanner/CameraPreview;)Landroid/os/Handler;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L29c228.  v0:= v0.`com.journeyapps.barcodescanner.CameraPreview.stateHandler` @type ^`android.os.Handler` @kind object;
+  #L29c22c.  return v0 @kind object;
+}
+procedure `int` `getDisplayRotation`(`com.journeyapps.barcodescanner.CameraPreview` v1 @kind this) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.getDisplayRotation:()I` @AccessFlag PRIVATE {
+    temp;
+    v0;
+
+  #L29c3b4.  v0:= v1.`com.journeyapps.barcodescanner.CameraPreview.windowManager` @type ^`android.view.WindowManager` @kind object;
+  #L29c3b8.  call temp:= `getDefaultDisplay`(v0) @signature `Landroid/view/WindowManager;.getDefaultDisplay:()Landroid/view/Display;` @kind interface;
+  #L29c3be.  v0:= temp @kind object;
+  #L29c3c0.  call temp:= `getRotation`(v0) @signature `Landroid/view/Display;.getRotation:()I` @kind virtual;
+  #L29c3c6.  v0:= temp;
+  #L29c3c8.  return v0;
+}
+procedure `java.util.List` `h`(`com.journeyapps.barcodescanner.CameraPreview` v0 @kind object) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.h:(Lcom/journeyapps/barcodescanner/CameraPreview;)Ljava/util/List;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L29c3f4.  v0:= v0.`com.journeyapps.barcodescanner.CameraPreview.stateListeners` @type ^`java.util.List` @kind object;
+  #L29c3f8.  return v0 @kind object;
+}
+procedure `void` `initCamera`(`com.journeyapps.barcodescanner.CameraPreview` v2 @kind this) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.initCamera:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+
+  #L29c850.  v0:= v2.`com.journeyapps.barcodescanner.CameraPreview.cameraInstance` @type ^`com.journeyapps.barcodescanner.camera.CameraInstance` @kind object;
+  #L29c854.  if v0 == 0 then goto L29c868;
+  #L29c858.  v0:= `@@com.journeyapps.barcodescanner.CameraPreview.TAG` @type ^`java.lang.String` @kind object;
+  #L29c85c.  v1:= "initCamera called twice" @kind object;
+  #L29c860.  call temp:= `w`(v0, v1) @signature `Landroid/util/Log;.w:(Ljava/lang/String;Ljava/lang/String;)I` @kind static;
+  #L29c866.  return @kind void;
+  #L29c868.  v0:= new `com.journeyapps.barcodescanner.camera.CameraInstance`;
+  #L29c86c.  call temp:= `getContext`(v2) @signature `Landroid/view/ViewGroup;.getContext:()Landroid/content/Context;` @kind virtual;
+  #L29c872.  v1:= temp @kind object;
+  #L29c874.  call `<init>`(v0, v1) @signature `Lcom/journeyapps/barcodescanner/camera/CameraInstance;.<init>:(Landroid/content/Context;)V` @kind direct;
+  #L29c87a.  v2.`com.journeyapps.barcodescanner.CameraPreview.cameraInstance` @type ^`com.journeyapps.barcodescanner.camera.CameraInstance` := v0 @kind object;
+  #L29c87e.  v1:= v2.`com.journeyapps.barcodescanner.CameraPreview.cameraSettings` @type ^`com.journeyapps.barcodescanner.camera.CameraSettings` @kind object;
+  #L29c882.  call `setCameraSettings`(v0, v1) @signature `Lcom/journeyapps/barcodescanner/camera/CameraInstance;.setCameraSettings:(Lcom/journeyapps/barcodescanner/camera/CameraSettings;)V` @kind virtual;
+  #L29c888.  v0:= v2.`com.journeyapps.barcodescanner.CameraPreview.cameraInstance` @type ^`com.journeyapps.barcodescanner.camera.CameraInstance` @kind object;
+  #L29c88c.  v1:= v2.`com.journeyapps.barcodescanner.CameraPreview.stateHandler` @type ^`android.os.Handler` @kind object;
+  #L29c890.  call `setReadyHandler`(v0, v1) @signature `Lcom/journeyapps/barcodescanner/camera/CameraInstance;.setReadyHandler:(Landroid/os/Handler;)V` @kind virtual;
+  #L29c896.  v0:= v2.`com.journeyapps.barcodescanner.CameraPreview.cameraInstance` @type ^`com.journeyapps.barcodescanner.camera.CameraInstance` @kind object;
+  #L29c89a.  call `open`(v0) @signature `Lcom/journeyapps/barcodescanner/camera/CameraInstance;.open:()V` @kind virtual;
+  #L29c8a0.  call temp:= `getDisplayRotation`(v2) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.getDisplayRotation:()I` @kind direct;
+  #L29c8a6.  v0:= temp;
+  #L29c8a8.  v2.`com.journeyapps.barcodescanner.CameraPreview.openedOrientation` @type ^`int` := v0;
+  #L29c8ac.  return @kind void;
+}
+procedure `void` `initialize`(`com.journeyapps.barcodescanner.CameraPreview` v0 @kind this, `android.content.Context` v1 @kind object, `android.util.AttributeSet` v2 @kind object, `int` v3 , `int` v4 ) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.initialize:(Landroid/content/Context;Landroid/util/AttributeSet;II)V` @AccessFlag PRIVATE {
+    temp;
+
+  #L29c8c0.  call temp:= `getBackground`(v0) @signature `Landroid/view/ViewGroup;.getBackground:()Landroid/graphics/drawable/Drawable;` @kind virtual;
+  #L29c8c6.  v3:= temp @kind object;
+  #L29c8c8.  if v3 != 0 then goto L29c8d6;
+  #L29c8cc.  v3:= -16777216I;
+  #L29c8d0.  call `setBackgroundColor`(v0, v3) @signature `Landroid/view/ViewGroup;.setBackgroundColor:(I)V` @kind virtual;
+  #L29c8d6.  call `initializeAttributes`(v0, v2) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.initializeAttributes:(Landroid/util/AttributeSet;)V` @kind virtual;
+  #L29c8dc.  v2:= "window" @kind object;
+  #L29c8e0.  call temp:= `getSystemService`(v1, v2) @signature `Landroid/content/Context;.getSystemService:(Ljava/lang/String;)Ljava/lang/Object;` @kind virtual;
+  #L29c8e6.  v1:= temp @kind object;
+  #L29c8e8.  v1:= (`android.view.WindowManager`) v1 @kind object;
+  #L29c8ec.  v0.`com.journeyapps.barcodescanner.CameraPreview.windowManager` @type ^`android.view.WindowManager` := v1 @kind object;
+  #L29c8f0.  v1:= new `android.os.Handler`;
+  #L29c8f4.  v2:= v0.`com.journeyapps.barcodescanner.CameraPreview.stateCallback` @type ^`android.os.Handler$Callback` @kind object;
+  #L29c8f8.  call `<init>`(v1, v2) @signature `Landroid/os/Handler;.<init>:(Landroid/os/Handler$Callback;)V` @kind direct;
+  #L29c8fe.  v0.`com.journeyapps.barcodescanner.CameraPreview.stateHandler` @type ^`android.os.Handler` := v1 @kind object;
+  #L29c902.  v1:= new `com.journeyapps.barcodescanner.RotationListener`;
+  #L29c906.  call `<init>`(v1) @signature `Lcom/journeyapps/barcodescanner/RotationListener;.<init>:()V` @kind direct;
+  #L29c90c.  v0.`com.journeyapps.barcodescanner.CameraPreview.rotationListener` @type ^`com.journeyapps.barcodescanner.RotationListener` := v1 @kind object;
+  #L29c910.  return @kind void;
+}
+procedure `void` `previewSized`(`com.journeyapps.barcodescanner.CameraPreview` v0 @kind this, `com.journeyapps.barcodescanner.Size` v1 @kind object) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.previewSized:(Lcom/journeyapps/barcodescanner/Size;)V` @AccessFlag PRIVATE {
+    temp;
+
+  #L29cb8c.  v0.`com.journeyapps.barcodescanner.CameraPreview.previewSize` @type ^`com.journeyapps.barcodescanner.Size` := v1 @kind object;
+  #L29cb90.  v1:= v0.`com.journeyapps.barcodescanner.CameraPreview.containerSize` @type ^`com.journeyapps.barcodescanner.Size` @kind object;
+  #L29cb94.  if v1 == 0 then goto L29cbaa;
+  #L29cb98.  call `calculateFrames`(v0) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.calculateFrames:()V` @kind direct;
+  #L29cb9e.  call `requestLayout`(v0) @signature `Landroid/view/ViewGroup;.requestLayout:()V` @kind virtual;
+  #L29cba4.  call `startPreviewIfReady`(v0) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.startPreviewIfReady:()V` @kind direct;
+  #L29cbaa.  return @kind void;
+}
+procedure `void` `rotationChanged`(`com.journeyapps.barcodescanner.CameraPreview` v2 @kind this) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.rotationChanged:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+
+  #L29cc68.  call temp:= `isActive`(v2) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.isActive:()Z` @kind virtual;
+  #L29cc6e.  v0:= temp;
+  #L29cc70.  if v0 == 0 then goto L29cc90;
+  #L29cc74.  call temp:= `getDisplayRotation`(v2) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.getDisplayRotation:()I` @kind direct;
+  #L29cc7a.  v0:= temp;
+  #L29cc7c.  v1:= v2.`com.journeyapps.barcodescanner.CameraPreview.openedOrientation` @type ^`int`;
+  #L29cc80.  if v0 == v1 then goto L29cc90;
+  #L29cc84.  call `pause`(v2) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.pause:()V` @kind virtual;
+  #L29cc8a.  call `resume`(v2) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.resume:()V` @kind virtual;
+  #L29cc90.  return @kind void;
+}
+procedure `void` `setupSurfaceView`(`com.journeyapps.barcodescanner.CameraPreview` v3 @kind this) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.setupSurfaceView:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L29cd5c.  v0:= v3.`com.journeyapps.barcodescanner.CameraPreview.useTextureView` @type ^`boolean` @kind boolean;
+  #L29cd60.  if v0 == 0 then goto L29cd9a;
+  #L29cd64.  v0:= `@@android.os.Build$VERSION.SDK_INT` @type ^`int`;
+  #L29cd68.  v1:= 14I;
+  #L29cd6c.  if v0 < v1 then goto L29cd9a;
+  #L29cd70.  v0:= new `android.view.TextureView`;
+  #L29cd74.  call temp:= `getContext`(v3) @signature `Landroid/view/ViewGroup;.getContext:()Landroid/content/Context;` @kind virtual;
+  #L29cd7a.  v1:= temp @kind object;
+  #L29cd7c.  call `<init>`(v0, v1) @signature `Landroid/view/TextureView;.<init>:(Landroid/content/Context;)V` @kind direct;
+  #L29cd82.  v3.`com.journeyapps.barcodescanner.CameraPreview.textureView` @type ^`android.view.TextureView` := v0 @kind object;
+  #L29cd86.  call temp:= `surfaceTextureListener`(v3) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.surfaceTextureListener:()Landroid/view/TextureView$SurfaceTextureListener;` @kind direct;
+  #L29cd8c.  v1:= temp @kind object;
+  #L29cd8e.  call `setSurfaceTextureListener`(v0, v1) @signature `Landroid/view/TextureView;.setSurfaceTextureListener:(Landroid/view/TextureView$SurfaceTextureListener;)V` @kind virtual;
+  #L29cd94.  v0:= v3.`com.journeyapps.barcodescanner.CameraPreview.textureView` @type ^`android.view.TextureView` @kind object;
+  #L29cd98.  goto L29cde6;
+  #L29cd9a.  v0:= new `android.view.SurfaceView`;
+  #L29cd9e.  call temp:= `getContext`(v3) @signature `Landroid/view/ViewGroup;.getContext:()Landroid/content/Context;` @kind virtual;
+  #L29cda4.  v1:= temp @kind object;
+  #L29cda6.  call `<init>`(v0, v1) @signature `Landroid/view/SurfaceView;.<init>:(Landroid/content/Context;)V` @kind direct;
+  #L29cdac.  v3.`com.journeyapps.barcodescanner.CameraPreview.surfaceView` @type ^`android.view.SurfaceView` := v0 @kind object;
+  #L29cdb0.  v1:= `@@android.os.Build$VERSION.SDK_INT` @type ^`int`;
+  #L29cdb4.  v2:= 11I;
+  #L29cdb8.  if v1 >= v2 then goto L29cdcc;
+  #L29cdbc.  call temp:= `getHolder`(v0) @signature `Landroid/view/SurfaceView;.getHolder:()Landroid/view/SurfaceHolder;` @kind virtual;
+  #L29cdc2.  v0:= temp @kind object;
+  #L29cdc4.  v1:= 3I;
+  #L29cdc6.  call `setType`(v0, v1) @signature `Landroid/view/SurfaceHolder;.setType:(I)V` @kind interface;
+  #L29cdcc.  v0:= v3.`com.journeyapps.barcodescanner.CameraPreview.surfaceView` @type ^`android.view.SurfaceView` @kind object;
+  #L29cdd0.  call temp:= `getHolder`(v0) @signature `Landroid/view/SurfaceView;.getHolder:()Landroid/view/SurfaceHolder;` @kind virtual;
+  #L29cdd6.  v0:= temp @kind object;
+  #L29cdd8.  v1:= v3.`com.journeyapps.barcodescanner.CameraPreview.surfaceCallback` @type ^`android.view.SurfaceHolder$Callback` @kind object;
+  #L29cddc.  call `addCallback`(v0, v1) @signature `Landroid/view/SurfaceHolder;.addCallback:(Landroid/view/SurfaceHolder$Callback;)V` @kind interface;
+  #L29cde2.  v0:= v3.`com.journeyapps.barcodescanner.CameraPreview.surfaceView` @type ^`android.view.SurfaceView` @kind object;
+  #L29cde6.  call `addView`(v3, v0) @signature `Landroid/view/ViewGroup;.addView:(Landroid/view/View;)V` @kind virtual;
+  #L29cdec.  return @kind void;
+}
+procedure `void` `startCameraPreview`(`com.journeyapps.barcodescanner.CameraPreview` v2 @kind this, `com.journeyapps.barcodescanner.camera.CameraSurface` v3 @kind object) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.startCameraPreview:(Lcom/journeyapps/barcodescanner/camera/CameraSurface;)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+
+  #L29ce00.  v0:= v2.`com.journeyapps.barcodescanner.CameraPreview.previewActive` @type ^`boolean` @kind boolean;
+  #L29ce04.  if v0 != 0 then goto L29ce48;
+  #L29ce08.  v0:= v2.`com.journeyapps.barcodescanner.CameraPreview.cameraInstance` @type ^`com.journeyapps.barcodescanner.camera.CameraInstance` @kind object;
+  #L29ce0c.  if v0 == 0 then goto L29ce48;
+  #L29ce10.  v0:= `@@com.journeyapps.barcodescanner.CameraPreview.TAG` @type ^`java.lang.String` @kind object;
+  #L29ce14.  v1:= "Starting preview" @kind object;
+  #L29ce18.  call temp:= `i`(v0, v1) @signature `Landroid/util/Log;.i:(Ljava/lang/String;Ljava/lang/String;)I` @kind static;
+  #L29ce1e.  v0:= v2.`com.journeyapps.barcodescanner.CameraPreview.cameraInstance` @type ^`com.journeyapps.barcodescanner.camera.CameraInstance` @kind object;
+  #L29ce22.  call `setSurface`(v0, v3) @signature `Lcom/journeyapps/barcodescanner/camera/CameraInstance;.setSurface:(Lcom/journeyapps/barcodescanner/camera/CameraSurface;)V` @kind virtual;
+  #L29ce28.  v3:= v2.`com.journeyapps.barcodescanner.CameraPreview.cameraInstance` @type ^`com.journeyapps.barcodescanner.camera.CameraInstance` @kind object;
+  #L29ce2c.  call `startPreview`(v3) @signature `Lcom/journeyapps/barcodescanner/camera/CameraInstance;.startPreview:()V` @kind virtual;
+  #L29ce32.  v3:= 1I;
+  #L29ce34.  v2.`com.journeyapps.barcodescanner.CameraPreview.previewActive` @type ^`boolean` := v3 @kind boolean;
+  #L29ce38.  call `previewStarted`(v2) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.previewStarted:()V` @kind virtual;
+  #L29ce3e.  v3:= v2.`com.journeyapps.barcodescanner.CameraPreview.fireState` @type ^`com.journeyapps.barcodescanner.CameraPreview$StateListener` @kind object;
+  #L29ce42.  call `previewStarted`(v3) @signature `Lcom/journeyapps/barcodescanner/CameraPreview$StateListener;.previewStarted:()V` @kind interface;
+  #L29ce48.  return @kind void;
+}
+procedure `void` `startPreviewIfReady`(`com.journeyapps.barcodescanner.CameraPreview` v4 @kind this) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.startPreviewIfReady:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L29ce5c.  v0:= v4.`com.journeyapps.barcodescanner.CameraPreview.currentSurfaceSize` @type ^`com.journeyapps.barcodescanner.Size` @kind object;
+  #L29ce60.  if v0 == 0 then goto L29cf3c;
+  #L29ce64.  v1:= v4.`com.journeyapps.barcodescanner.CameraPreview.previewSize` @type ^`com.journeyapps.barcodescanner.Size` @kind object;
+  #L29ce68.  if v1 == 0 then goto L29cf3c;
+  #L29ce6c.  v1:= v4.`com.journeyapps.barcodescanner.CameraPreview.surfaceRect` @type ^`android.graphics.Rect` @kind object;
+  #L29ce70.  if v1 == 0 then goto L29cf3c;
+  #L29ce74.  v2:= v4.`com.journeyapps.barcodescanner.CameraPreview.surfaceView` @type ^`android.view.SurfaceView` @kind object;
+  #L29ce78.  if v2 == 0 then goto L29cec4;
+  #L29ce7c.  v2:= new `com.journeyapps.barcodescanner.Size`;
+  #L29ce80.  call temp:= `width`(v1) @signature `Landroid/graphics/Rect;.width:()I` @kind virtual;
+  #L29ce86.  v1:= temp;
+  #L29ce88.  v3:= v4.`com.journeyapps.barcodescanner.CameraPreview.surfaceRect` @type ^`android.graphics.Rect` @kind object;
+  #L29ce8c.  call temp:= `height`(v3) @signature `Landroid/graphics/Rect;.height:()I` @kind virtual;
+  #L29ce92.  v3:= temp;
+  #L29ce94.  call `<init>`(v2, v1, v3) @signature `Lcom/journeyapps/barcodescanner/Size;.<init>:(II)V` @kind direct;
+  #L29ce9a.  call temp:= `equals`(v0, v2) @signature `Lcom/journeyapps/barcodescanner/Size;.equals:(Ljava/lang/Object;)Z` @kind virtual;
+  #L29cea0.  v0:= temp;
+  #L29cea2.  if v0 == 0 then goto L29cec4;
+  #L29cea6.  v0:= new `com.journeyapps.barcodescanner.camera.CameraSurface`;
+  #L29ceaa.  v1:= v4.`com.journeyapps.barcodescanner.CameraPreview.surfaceView` @type ^`android.view.SurfaceView` @kind object;
+  #L29ceae.  call temp:= `getHolder`(v1) @signature `Landroid/view/SurfaceView;.getHolder:()Landroid/view/SurfaceHolder;` @kind virtual;
+  #L29ceb4.  v1:= temp @kind object;
+  #L29ceb6.  call `<init>`(v0, v1) @signature `Lcom/journeyapps/barcodescanner/camera/CameraSurface;.<init>:(Landroid/view/SurfaceHolder;)V` @kind direct;
+  #L29cebc.  call `startCameraPreview`(v4, v0) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.startCameraPreview:(Lcom/journeyapps/barcodescanner/camera/CameraSurface;)V` @kind direct;
+  #L29cec2.  goto L29cf3c;
+  #L29cec4.  v0:= v4.`com.journeyapps.barcodescanner.CameraPreview.textureView` @type ^`android.view.TextureView` @kind object;
+  #L29cec8.  if v0 == 0 then goto L29cf3c;
+  #L29cecc.  v1:= `@@android.os.Build$VERSION.SDK_INT` @type ^`int`;
+  #L29ced0.  v2:= 14I;
+  #L29ced4.  if v1 < v2 then goto L29cf3c;
+  #L29ced8.  call temp:= `getSurfaceTexture`(v0) @signature `Landroid/view/TextureView;.getSurfaceTexture:()Landroid/graphics/SurfaceTexture;` @kind virtual;
+  #L29cede.  v0:= temp @kind object;
+  #L29cee0.  if v0 == 0 then goto L29cf3c;
+  #L29cee4.  v0:= v4.`com.journeyapps.barcodescanner.CameraPreview.previewSize` @type ^`com.journeyapps.barcodescanner.Size` @kind object;
+  #L29cee8.  if v0 == 0 then goto L29cf24;
+  #L29ceec.  v0:= new `com.journeyapps.barcodescanner.Size`;
+  #L29cef0.  v1:= v4.`com.journeyapps.barcodescanner.CameraPreview.textureView` @type ^`android.view.TextureView` @kind object;
+  #L29cef4.  call temp:= `getWidth`(v1) @signature `Landroid/view/TextureView;.getWidth:()I` @kind virtual;
+  #L29cefa.  v1:= temp;
+  #L29cefc.  v2:= v4.`com.journeyapps.barcodescanner.CameraPreview.textureView` @type ^`android.view.TextureView` @kind object;
+  #L29cf00.  call temp:= `getHeight`(v2) @signature `Landroid/view/TextureView;.getHeight:()I` @kind virtual;
+  #L29cf06.  v2:= temp;
+  #L29cf08.  call `<init>`(v0, v1, v2) @signature `Lcom/journeyapps/barcodescanner/Size;.<init>:(II)V` @kind direct;
+  #L29cf0e.  v1:= v4.`com.journeyapps.barcodescanner.CameraPreview.previewSize` @type ^`com.journeyapps.barcodescanner.Size` @kind object;
+  #L29cf12.  call temp:= `calculateTextureTransform`(v4, v0, v1) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.calculateTextureTransform:(Lcom/journeyapps/barcodescanner/Size;Lcom/journeyapps/barcodescanner/Size;)Landroid/graphics/Matrix;` @kind virtual;
+  #L29cf18.  v0:= temp @kind object;
+  #L29cf1a.  v1:= v4.`com.journeyapps.barcodescanner.CameraPreview.textureView` @type ^`android.view.TextureView` @kind object;
+  #L29cf1e.  call `setTransform`(v1, v0) @signature `Landroid/view/TextureView;.setTransform:(Landroid/graphics/Matrix;)V` @kind virtual;
+  #L29cf24.  v0:= new `com.journeyapps.barcodescanner.camera.CameraSurface`;
+  #L29cf28.  v1:= v4.`com.journeyapps.barcodescanner.CameraPreview.textureView` @type ^`android.view.TextureView` @kind object;
+  #L29cf2c.  call temp:= `getSurfaceTexture`(v1) @signature `Landroid/view/TextureView;.getSurfaceTexture:()Landroid/graphics/SurfaceTexture;` @kind virtual;
+  #L29cf32.  v1:= temp @kind object;
+  #L29cf34.  call `<init>`(v0, v1) @signature `Lcom/journeyapps/barcodescanner/camera/CameraSurface;.<init>:(Landroid/graphics/SurfaceTexture;)V` @kind direct;
+  #L29cf3a.  goto L29cebc;
+  #L29cf3c.  return @kind void;
+}
+procedure `android.view.TextureView$SurfaceTextureListener` `surfaceTextureListener`(`com.journeyapps.barcodescanner.CameraPreview` v1 @kind this) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.surfaceTextureListener:()Landroid/view/TextureView$SurfaceTextureListener;` @AccessFlag PRIVATE {
+    temp;
+    v0;
+
+  #L29c27c.  v0:= new `com.journeyapps.barcodescanner.CameraPreview$1`;
+  #L29c280.  call `<init>`(v0, v1) @signature `Lcom/journeyapps/barcodescanner/CameraPreview$1;.<init>:(Lcom/journeyapps/barcodescanner/CameraPreview;)V` @kind direct;
+  #L29c286.  return v0 @kind object;
+}
+procedure `void` `addStateListener`(`com.journeyapps.barcodescanner.CameraPreview` v1 @kind this, `com.journeyapps.barcodescanner.CameraPreview$StateListener` v2 @kind object) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.addStateListener:(Lcom/journeyapps/barcodescanner/CameraPreview$StateListener;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L29c670.  v0:= v1.`com.journeyapps.barcodescanner.CameraPreview.stateListeners` @type ^`java.util.List` @kind object;
+  #L29c674.  call temp:= `add`(v0, v2) @signature `Ljava/util/List;.add:(Ljava/lang/Object;)Z` @kind interface;
+  #L29c67a.  return @kind void;
+}
+procedure `android.graphics.Rect` `calculateFramingRect`(`com.journeyapps.barcodescanner.CameraPreview` v7 @kind this, `android.graphics.Rect` v8 @kind object, `android.graphics.Rect` v9 @kind object) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.calculateFramingRect:(Landroid/graphics/Rect;Landroid/graphics/Rect;)Landroid/graphics/Rect;` @AccessFlag PROTECTED {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+
+  #L29c118.  v0:= new `android.graphics.Rect`;
+  #L29c11c.  call `<init>`(v0, v8) @signature `Landroid/graphics/Rect;.<init>:(Landroid/graphics/Rect;)V` @kind direct;
+  #L29c122.  call temp:= `intersect`(v0, v9) @signature `Landroid/graphics/Rect;.intersect:(Landroid/graphics/Rect;)Z` @kind virtual;
+  #L29c128.  v8:= v7.`com.journeyapps.barcodescanner.CameraPreview.framingRectSize` @type ^`com.journeyapps.barcodescanner.Size` @kind object;
+  #L29c12c.  v9:= 0I;
+  #L29c12e.  if v8 == 0 then goto L29c176;
+  #L29c132.  call temp:= `width`(v0) @signature `Landroid/graphics/Rect;.width:()I` @kind virtual;
+  #L29c138.  v8:= temp;
+  #L29c13a.  v1:= v7.`com.journeyapps.barcodescanner.CameraPreview.framingRectSize` @type ^`com.journeyapps.barcodescanner.Size` @kind object;
+  #L29c13e.  v1:= v1.`com.journeyapps.barcodescanner.Size.width` @type ^`int`;
+  #L29c142.  v8:= v8 - v1 @kind int;
+  #L29c144.  v8:= v8 / 2;
+  #L29c148.  call temp:= `max`(v9, v8) @signature `Ljava/lang/Math;.max:(II)I` @kind static;
+  #L29c14e.  v8:= temp;
+  #L29c150.  call temp:= `height`(v0) @signature `Landroid/graphics/Rect;.height:()I` @kind virtual;
+  #L29c156.  v1:= temp;
+  #L29c158.  v2:= v7.`com.journeyapps.barcodescanner.CameraPreview.framingRectSize` @type ^`com.journeyapps.barcodescanner.Size` @kind object;
+  #L29c15c.  v2:= v2.`com.journeyapps.barcodescanner.Size.height` @type ^`int`;
+  #L29c160.  v1:= v1 - v2 @kind int;
+  #L29c162.  v1:= v1 / 2;
+  #L29c166.  call temp:= `max`(v9, v1) @signature `Ljava/lang/Math;.max:(II)I` @kind static;
+  #L29c16c.  v9:= temp;
+  #L29c16e.  call `inset`(v0, v8, v9) @signature `Landroid/graphics/Rect;.inset:(II)V` @kind virtual;
+  #L29c174.  return v0 @kind object;
+  #L29c176.  call temp:= `width`(v0) @signature `Landroid/graphics/Rect;.width:()I` @kind virtual;
+  #L29c17c.  v8:= temp;
+  #L29c17e.  v1:= (`double`) v8 @kind i2d;
+  #L29c180.  v3:= v7.`com.journeyapps.barcodescanner.CameraPreview.marginFraction` @type ^`double` @kind wide;
+  #L29c184.  call temp:= `isNaN`(v1) @signature `Ljava/lang/Double;.isNaN:(D)Z` @kind static;
+  #L29c18a.  v1:= v1 * v3 @kind double;
+  #L29c18e.  call temp:= `height`(v0) @signature `Landroid/graphics/Rect;.height:()I` @kind virtual;
+  #L29c194.  v8:= temp;
+  #L29c196.  v3:= (`double`) v8 @kind i2d;
+  #L29c198.  v5:= v7.`com.journeyapps.barcodescanner.CameraPreview.marginFraction` @type ^`double` @kind wide;
+  #L29c19c.  call temp:= `isNaN`(v3) @signature `Ljava/lang/Double;.isNaN:(D)Z` @kind static;
+  #L29c1a2.  v3:= v3 * v5 @kind double;
+  #L29c1a6.  call temp:= `min`(v1, v3) @signature `Ljava/lang/Math;.min:(DD)D` @kind static;
+  #L29c1ac.  v1:= temp @kind wide;
+  #L29c1ae.  v8:= (`int`) v1 @kind d2i;
+  #L29c1b0.  call `inset`(v0, v8, v8) @signature `Landroid/graphics/Rect;.inset:(II)V` @kind virtual;
+  #L29c1b6.  call temp:= `height`(v0) @signature `Landroid/graphics/Rect;.height:()I` @kind virtual;
+  #L29c1bc.  v8:= temp;
+  #L29c1be.  call temp:= `width`(v0) @signature `Landroid/graphics/Rect;.width:()I` @kind virtual;
+  #L29c1c4.  v1:= temp;
+  #L29c1c6.  if v8 <= v1 then goto L29c1e6;
+  #L29c1ca.  call temp:= `height`(v0) @signature `Landroid/graphics/Rect;.height:()I` @kind virtual;
+  #L29c1d0.  v8:= temp;
+  #L29c1d2.  call temp:= `width`(v0) @signature `Landroid/graphics/Rect;.width:()I` @kind virtual;
+  #L29c1d8.  v1:= temp;
+  #L29c1da.  v8:= v8 - v1 @kind int;
+  #L29c1dc.  v8:= v8 / 2;
+  #L29c1e0.  call `inset`(v0, v9, v8) @signature `Landroid/graphics/Rect;.inset:(II)V` @kind virtual;
+  #L29c1e6.  return v0 @kind object;
+}
+procedure `android.graphics.Matrix` `calculateTextureTransform`(`com.journeyapps.barcodescanner.CameraPreview` v4 @kind this, `com.journeyapps.barcodescanner.Size` v5 @kind object, `com.journeyapps.barcodescanner.Size` v6 @kind object) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.calculateTextureTransform:(Lcom/journeyapps/barcodescanner/Size;Lcom/journeyapps/barcodescanner/Size;)Landroid/graphics/Matrix;` @AccessFlag PROTECTED {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L29c098.  v0:= v5.`com.journeyapps.barcodescanner.Size.width` @type ^`int`;
+  #L29c09c.  v0:= (`float`) v0 @kind i2f;
+  #L29c09e.  v1:= v5.`com.journeyapps.barcodescanner.Size.height` @type ^`int`;
+  #L29c0a2.  v1:= (`float`) v1 @kind i2f;
+  #L29c0a4.  v0:= v0 / v1 @kind float;
+  #L29c0a6.  v1:= v6.`com.journeyapps.barcodescanner.Size.width` @type ^`int`;
+  #L29c0aa.  v1:= (`float`) v1 @kind i2f;
+  #L29c0ac.  v6:= v6.`com.journeyapps.barcodescanner.Size.height` @type ^`int`;
+  #L29c0b0.  v6:= (`float`) v6 @kind i2f;
+  #L29c0b2.  v1:= v1 / v6 @kind float;
+  #L29c0b4.  v6:= 1.0F;
+  #L29c0b8.  v2:= fcmpg(v0, v1);
+  #L29c0bc.  if v2 >= 0 then goto L29c0ca;
+  #L29c0c0.  v1:= v1 / v0 @kind float;
+  #L29c0c2.  v6:= v1;
+  #L29c0c4.  v0:= 1.0F;
+  #L29c0c8.  goto L29c0cc;
+  #L29c0ca.  v0:= v0 / v1 @kind float;
+  #L29c0cc.  v1:= new `android.graphics.Matrix`;
+  #L29c0d0.  call `<init>`(v1) @signature `Landroid/graphics/Matrix;.<init>:()V` @kind direct;
+  #L29c0d6.  call `setScale`(v1, v6, v0) @signature `Landroid/graphics/Matrix;.setScale:(FF)V` @kind virtual;
+  #L29c0dc.  v2:= v5.`com.journeyapps.barcodescanner.Size.width` @type ^`int`;
+  #L29c0e0.  v3:= (`float`) v2 @kind i2f;
+  #L29c0e2.  v3:= v3 * v6 @kind float;
+  #L29c0e6.  v5:= v5.`com.journeyapps.barcodescanner.Size.height` @type ^`int`;
+  #L29c0ea.  v6:= (`float`) v5 @kind i2f;
+  #L29c0ec.  v6:= v6 * v0 @kind float;
+  #L29c0f0.  v0:= (`float`) v2 @kind i2f;
+  #L29c0f2.  v0:= v0 - v3 @kind float;
+  #L29c0f4.  v2:= 2.0F;
+  #L29c0f8.  v0:= v0 / v2 @kind float;
+  #L29c0fa.  v5:= (`float`) v5 @kind i2f;
+  #L29c0fc.  v5:= v5 - v6 @kind float;
+  #L29c0fe.  v5:= v5 / v2 @kind float;
+  #L29c100.  call temp:= `postTranslate`(v1, v0, v5) @signature `Landroid/graphics/Matrix;.postTranslate:(FF)Z` @kind virtual;
+  #L29c106.  return v1 @kind object;
+}
+procedure `com.journeyapps.barcodescanner.camera.CameraInstance` `getCameraInstance`(`com.journeyapps.barcodescanner.CameraPreview` v1 @kind this) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.getCameraInstance:()Lcom/journeyapps/barcodescanner/camera/CameraInstance;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L29c330.  v0:= v1.`com.journeyapps.barcodescanner.CameraPreview.cameraInstance` @type ^`com.journeyapps.barcodescanner.camera.CameraInstance` @kind object;
+  #L29c334.  return v0 @kind object;
+}
+procedure `com.journeyapps.barcodescanner.camera.CameraSettings` `getCameraSettings`(`com.journeyapps.barcodescanner.CameraPreview` v1 @kind this) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.getCameraSettings:()Lcom/journeyapps/barcodescanner/camera/CameraSettings;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L29c348.  v0:= v1.`com.journeyapps.barcodescanner.CameraPreview.cameraSettings` @type ^`com.journeyapps.barcodescanner.camera.CameraSettings` @kind object;
+  #L29c34c.  return v0 @kind object;
+}
+procedure `android.graphics.Rect` `getFramingRect`(`com.journeyapps.barcodescanner.CameraPreview` v1 @kind this) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.getFramingRect:()Landroid/graphics/Rect;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L29c1f8.  v0:= v1.`com.journeyapps.barcodescanner.CameraPreview.framingRect` @type ^`android.graphics.Rect` @kind object;
+  #L29c1fc.  return v0 @kind object;
+}
+procedure `com.journeyapps.barcodescanner.Size` `getFramingRectSize`(`com.journeyapps.barcodescanner.CameraPreview` v1 @kind this) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.getFramingRectSize:()Lcom/journeyapps/barcodescanner/Size;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L29c318.  v0:= v1.`com.journeyapps.barcodescanner.CameraPreview.framingRectSize` @type ^`com.journeyapps.barcodescanner.Size` @kind object;
+  #L29c31c.  return v0 @kind object;
+}
+procedure `double` `getMarginFraction`(`com.journeyapps.barcodescanner.CameraPreview` v2 @kind this) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.getMarginFraction:()D` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L29c39c.  v0:= v2.`com.journeyapps.barcodescanner.CameraPreview.marginFraction` @type ^`double` @kind wide;
+  #L29c3a0.  return v0 @kind wide;
+}
+procedure `android.graphics.Rect` `getPreviewFramingRect`(`com.journeyapps.barcodescanner.CameraPreview` v1 @kind this) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.getPreviewFramingRect:()Landroid/graphics/Rect;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L29c210.  v0:= v1.`com.journeyapps.barcodescanner.CameraPreview.previewFramingRect` @type ^`android.graphics.Rect` @kind object;
+  #L29c214.  return v0 @kind object;
+}
+procedure `com.journeyapps.barcodescanner.camera.PreviewScalingStrategy` `getPreviewScalingStrategy`(`com.journeyapps.barcodescanner.CameraPreview` v1 @kind this) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.getPreviewScalingStrategy:()Lcom/journeyapps/barcodescanner/camera/PreviewScalingStrategy;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L29c360.  v0:= v1.`com.journeyapps.barcodescanner.CameraPreview.previewScalingStrategy` @type ^`com.journeyapps.barcodescanner.camera.PreviewScalingStrategy` @kind object;
+  #L29c364.  if v0 == 0 then goto L29c36a;
+  #L29c368.  return v0 @kind object;
+  #L29c36a.  v0:= v1.`com.journeyapps.barcodescanner.CameraPreview.textureView` @type ^`android.view.TextureView` @kind object;
+  #L29c36e.  if v0 == 0 then goto L29c37e;
+  #L29c372.  v0:= new `com.journeyapps.barcodescanner.camera.CenterCropStrategy`;
+  #L29c376.  call `<init>`(v0) @signature `Lcom/journeyapps/barcodescanner/camera/CenterCropStrategy;.<init>:()V` @kind direct;
+  #L29c37c.  return v0 @kind object;
+  #L29c37e.  v0:= new `com.journeyapps.barcodescanner.camera.FitCenterStrategy`;
+  #L29c382.  call `<init>`(v0) @signature `Lcom/journeyapps/barcodescanner/camera/FitCenterStrategy;.<init>:()V` @kind direct;
+  #L29c388.  return v0 @kind object;
+}
+procedure `void` `initializeAttributes`(`com.journeyapps.barcodescanner.CameraPreview` v3 @kind this, `android.util.AttributeSet` v4 @kind object) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.initializeAttributes:(Landroid/util/AttributeSet;)V` @AccessFlag PROTECTED {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L29c924.  call temp:= `getContext`(v3) @signature `Landroid/view/ViewGroup;.getContext:()Landroid/content/Context;` @kind virtual;
+  #L29c92a.  v0:= temp @kind object;
+  #L29c92c.  v1:= `@@com.google.zxing.client.android.R$styleable.zxing_camera_preview` @type ^`int`[] @kind object;
+  #L29c930.  call temp:= `obtainStyledAttributes`(v0, v4, v1) @signature `Landroid/content/Context;.obtainStyledAttributes:(Landroid/util/AttributeSet;[I)Landroid/content/res/TypedArray;` @kind virtual;
+  #L29c936.  v4:= temp @kind object;
+  #L29c938.  v0:= `@@com.google.zxing.client.android.R$styleable.zxing_camera_preview_zxing_framing_rect_width` @type ^`int`;
+  #L29c93c.  v1:= -1.0F;
+  #L29c940.  call temp:= `getDimension`(v4, v0, v1) @signature `Landroid/content/res/TypedArray;.getDimension:(IF)F` @kind virtual;
+  #L29c946.  v0:= temp;
+  #L29c948.  v0:= (`int`) v0 @kind f2i;
+  #L29c94a.  v2:= `@@com.google.zxing.client.android.R$styleable.zxing_camera_preview_zxing_framing_rect_height` @type ^`int`;
+  #L29c94e.  call temp:= `getDimension`(v4, v2, v1) @signature `Landroid/content/res/TypedArray;.getDimension:(IF)F` @kind virtual;
+  #L29c954.  v1:= temp;
+  #L29c956.  v1:= (`int`) v1 @kind f2i;
+  #L29c958.  if v0 <= 0 then goto L29c96e;
+  #L29c95c.  if v1 <= 0 then goto L29c96e;
+  #L29c960.  v2:= new `com.journeyapps.barcodescanner.Size`;
+  #L29c964.  call `<init>`(v2, v0, v1) @signature `Lcom/journeyapps/barcodescanner/Size;.<init>:(II)V` @kind direct;
+  #L29c96a.  v3.`com.journeyapps.barcodescanner.CameraPreview.framingRectSize` @type ^`com.journeyapps.barcodescanner.Size` := v2 @kind object;
+  #L29c96e.  v0:= `@@com.google.zxing.client.android.R$styleable.zxing_camera_preview_zxing_use_texture_view` @type ^`int`;
+  #L29c972.  v1:= 1I;
+  #L29c974.  call temp:= `getBoolean`(v4, v0, v1) @signature `Landroid/content/res/TypedArray;.getBoolean:(IZ)Z` @kind virtual;
+  #L29c97a.  v0:= temp;
+  #L29c97c.  v3.`com.journeyapps.barcodescanner.CameraPreview.useTextureView` @type ^`boolean` := v0 @kind boolean;
+  #L29c980.  v0:= `@@com.google.zxing.client.android.R$styleable.zxing_camera_preview_zxing_preview_scaling_strategy` @type ^`int`;
+  #L29c984.  v2:= -1I;
+  #L29c986.  call temp:= `getInteger`(v4, v0, v2) @signature `Landroid/content/res/TypedArray;.getInteger:(II)I` @kind virtual;
+  #L29c98c.  v0:= temp;
+  #L29c98e.  if v0 != v1 then goto L29c9a2;
+  #L29c992.  v0:= new `com.journeyapps.barcodescanner.camera.CenterCropStrategy`;
+  #L29c996.  call `<init>`(v0) @signature `Lcom/journeyapps/barcodescanner/camera/CenterCropStrategy;.<init>:()V` @kind direct;
+  #L29c99c.  v3.`com.journeyapps.barcodescanner.CameraPreview.previewScalingStrategy` @type ^`com.journeyapps.barcodescanner.camera.PreviewScalingStrategy` := v0 @kind object;
+  #L29c9a0.  goto L29c9c6;
+  #L29c9a2.  v1:= 2I;
+  #L29c9a4.  if v0 != v1 then goto L29c9b4;
+  #L29c9a8.  v0:= new `com.journeyapps.barcodescanner.camera.FitCenterStrategy`;
+  #L29c9ac.  call `<init>`(v0) @signature `Lcom/journeyapps/barcodescanner/camera/FitCenterStrategy;.<init>:()V` @kind direct;
+  #L29c9b2.  goto L29c99c;
+  #L29c9b4.  v1:= 3I;
+  #L29c9b6.  if v0 != v1 then goto L29c9c6;
+  #L29c9ba.  v0:= new `com.journeyapps.barcodescanner.camera.FitXYStrategy`;
+  #L29c9be.  call `<init>`(v0) @signature `Lcom/journeyapps/barcodescanner/camera/FitXYStrategy;.<init>:()V` @kind direct;
+  #L29c9c4.  goto L29c99c;
+  #L29c9c6.  call `recycle`(v4) @signature `Landroid/content/res/TypedArray;.recycle:()V` @kind virtual;
+  #L29c9cc.  return @kind void;
+}
+procedure `boolean` `isActive`(`com.journeyapps.barcodescanner.CameraPreview` v1 @kind this) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.isActive:()Z` @AccessFlag PROTECTED {
+    temp;
+    v0;
+
+  #L29c298.  v0:= v1.`com.journeyapps.barcodescanner.CameraPreview.cameraInstance` @type ^`com.journeyapps.barcodescanner.camera.CameraInstance` @kind object;
+  #L29c29c.  if v0 == 0 then goto L29c2a4;
+  #L29c2a0.  v0:= 1I;
+  #L29c2a2.  goto L29c2a6;
+  #L29c2a4.  v0:= 0I;
+  #L29c2a6.  return v0;
+}
+procedure `boolean` `isPreviewActive`(`com.journeyapps.barcodescanner.CameraPreview` v1 @kind this) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.isPreviewActive:()Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L29c2b8.  v0:= v1.`com.journeyapps.barcodescanner.CameraPreview.previewActive` @type ^`boolean` @kind boolean;
+  #L29c2bc.  return v0;
+}
+procedure `boolean` `isUseTextureView`(`com.journeyapps.barcodescanner.CameraPreview` v1 @kind this) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.isUseTextureView:()Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L29c2d0.  v0:= v1.`com.journeyapps.barcodescanner.CameraPreview.useTextureView` @type ^`boolean` @kind boolean;
+  #L29c2d4.  return v0;
+}
+procedure `void` `onAttachedToWindow`(`com.journeyapps.barcodescanner.CameraPreview` v0 @kind this) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.onAttachedToWindow:()V` @AccessFlag PROTECTED {
+    temp;
+
+  #L29c9e0.  call `onAttachedToWindow`(v0) @signature `Landroid/view/ViewGroup;.onAttachedToWindow:()V` @kind super;
+  #L29c9e6.  call `setupSurfaceView`(v0) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.setupSurfaceView:()V` @kind direct;
+  #L29c9ec.  return @kind void;
+}
+procedure `void` `onLayout`(`com.journeyapps.barcodescanner.CameraPreview` v0 @kind this, `boolean` v1 , `int` v2 , `int` v3 , `int` v4 , `int` v5 ) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.onLayout:(ZIIII)V` @AccessFlag PROTECTED {
+    temp;
+
+  #L29ca00.  v1:= new `com.journeyapps.barcodescanner.Size`;
+  #L29ca04.  v4:= v4 - v2 @kind int;
+  #L29ca06.  v5:= v5 - v3 @kind int;
+  #L29ca08.  call `<init>`(v1, v4, v5) @signature `Lcom/journeyapps/barcodescanner/Size;.<init>:(II)V` @kind direct;
+  #L29ca0e.  call `containerSized`(v0, v1) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.containerSized:(Lcom/journeyapps/barcodescanner/Size;)V` @kind direct;
+  #L29ca14.  v1:= v0.`com.journeyapps.barcodescanner.CameraPreview.surfaceView` @type ^`android.view.SurfaceView` @kind object;
+  #L29ca18.  v2:= 0I;
+  #L29ca1a.  if v1 == 0 then goto L29ca56;
+  #L29ca1e.  v3:= v0.`com.journeyapps.barcodescanner.CameraPreview.surfaceRect` @type ^`android.graphics.Rect` @kind object;
+  #L29ca22.  if v3 != 0 then goto L29ca3e;
+  #L29ca26.  call temp:= `getWidth`(v0) @signature `Landroid/view/ViewGroup;.getWidth:()I` @kind virtual;
+  #L29ca2c.  v3:= temp;
+  #L29ca2e.  call temp:= `getHeight`(v0) @signature `Landroid/view/ViewGroup;.getHeight:()I` @kind virtual;
+  #L29ca34.  v4:= temp;
+  #L29ca36.  call `layout`(v1, v2, v2, v3, v4) @signature `Landroid/view/SurfaceView;.layout:(IIII)V` @kind virtual;
+  #L29ca3c.  goto L29ca80;
+  #L29ca3e.  v2:= v3.`android.graphics.Rect.left` @type ^`int`;
+  #L29ca42.  v4:= v3.`android.graphics.Rect.top` @type ^`int`;
+  #L29ca46.  v5:= v3.`android.graphics.Rect.right` @type ^`int`;
+  #L29ca4a.  v3:= v3.`android.graphics.Rect.bottom` @type ^`int`;
+  #L29ca4e.  call `layout`(v1, v2, v4, v5, v3) @signature `Landroid/view/SurfaceView;.layout:(IIII)V` @kind virtual;
+  #L29ca54.  goto L29ca80;
+  #L29ca56.  v1:= v0.`com.journeyapps.barcodescanner.CameraPreview.textureView` @type ^`android.view.TextureView` @kind object;
+  #L29ca5a.  if v1 == 0 then goto L29ca80;
+  #L29ca5e.  v3:= `@@android.os.Build$VERSION.SDK_INT` @type ^`int`;
+  #L29ca62.  v4:= 14I;
+  #L29ca66.  if v3 < v4 then goto L29ca80;
+  #L29ca6a.  call temp:= `getWidth`(v0) @signature `Landroid/view/ViewGroup;.getWidth:()I` @kind virtual;
+  #L29ca70.  v3:= temp;
+  #L29ca72.  call temp:= `getHeight`(v0) @signature `Landroid/view/ViewGroup;.getHeight:()I` @kind virtual;
+  #L29ca78.  v4:= temp;
+  #L29ca7a.  call `layout`(v1, v2, v2, v3, v4) @signature `Landroid/view/TextureView;.layout:(IIII)V` @kind virtual;
+  #L29ca80.  return @kind void;
+}
+procedure `void` `onRestoreInstanceState`(`com.journeyapps.barcodescanner.CameraPreview` v1 @kind this, `android.os.Parcelable` v2 @kind object) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.onRestoreInstanceState:(Landroid/os/Parcelable;)V` @AccessFlag PROTECTED {
+    temp;
+    v0;
+
+  #L29ca94.  v0:= instanceof @variable v2 @type ^`android.os.Bundle` @kind boolean;
+  #L29ca98.  if v0 != 0 then goto L29caa4;
+  #L29ca9c.  call `onRestoreInstanceState`(v1, v2) @signature `Landroid/view/ViewGroup;.onRestoreInstanceState:(Landroid/os/Parcelable;)V` @kind super;
+  #L29caa2.  return @kind void;
+  #L29caa4.  v2:= (`android.os.Bundle`) v2 @kind object;
+  #L29caa8.  v0:= "super" @kind object;
+  #L29caac.  call temp:= `getParcelable`(v2, v0) @signature `Landroid/os/Bundle;.getParcelable:(Ljava/lang/String;)Landroid/os/Parcelable;` @kind virtual;
+  #L29cab2.  v0:= temp @kind object;
+  #L29cab4.  call `onRestoreInstanceState`(v1, v0) @signature `Landroid/view/ViewGroup;.onRestoreInstanceState:(Landroid/os/Parcelable;)V` @kind super;
+  #L29caba.  v0:= "torch" @kind object;
+  #L29cabe.  call temp:= `getBoolean`(v2, v0) @signature `Landroid/os/Bundle;.getBoolean:(Ljava/lang/String;)Z` @kind virtual;
+  #L29cac4.  v2:= temp;
+  #L29cac6.  call `setTorch`(v1, v2) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.setTorch:(Z)V` @kind virtual;
+  #L29cacc.  return @kind void;
+}
+procedure `android.os.Parcelable` `onSaveInstanceState`(`com.journeyapps.barcodescanner.CameraPreview` v3 @kind this) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.onSaveInstanceState:()Landroid/os/Parcelable;` @AccessFlag PROTECTED {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L29c240.  call temp:= `onSaveInstanceState`(v3) @signature `Landroid/view/ViewGroup;.onSaveInstanceState:()Landroid/os/Parcelable;` @kind super;
+  #L29c246.  v0:= temp @kind object;
+  #L29c248.  v1:= new `android.os.Bundle`;
+  #L29c24c.  call `<init>`(v1) @signature `Landroid/os/Bundle;.<init>:()V` @kind direct;
+  #L29c252.  v2:= "super" @kind object;
+  #L29c256.  call `putParcelable`(v1, v2, v0) @signature `Landroid/os/Bundle;.putParcelable:(Ljava/lang/String;Landroid/os/Parcelable;)V` @kind virtual;
+  #L29c25c.  v0:= v3.`com.journeyapps.barcodescanner.CameraPreview.torchOn` @type ^`boolean` @kind boolean;
+  #L29c260.  v2:= "torch" @kind object;
+  #L29c264.  call `putBoolean`(v1, v2, v0) @signature `Landroid/os/Bundle;.putBoolean:(Ljava/lang/String;Z)V` @kind virtual;
+  #L29c26a.  return v1 @kind object;
+}
+procedure `void` `pause`(`com.journeyapps.barcodescanner.CameraPreview` v4 @kind this) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.pause:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L29cae0.  call `validateMainThread`() @signature `Lcom/journeyapps/barcodescanner/Util;.validateMainThread:()V` @kind static;
+  #L29cae6.  v0:= `@@com.journeyapps.barcodescanner.CameraPreview.TAG` @type ^`java.lang.String` @kind object;
+  #L29caea.  v1:= "pause()" @kind object;
+  #L29caee.  call temp:= `d`(v0, v1) @signature `Landroid/util/Log;.d:(Ljava/lang/String;Ljava/lang/String;)I` @kind static;
+  #L29caf4.  v0:= -1I;
+  #L29caf6.  v4.`com.journeyapps.barcodescanner.CameraPreview.openedOrientation` @type ^`int` := v0;
+  #L29cafa.  v0:= v4.`com.journeyapps.barcodescanner.CameraPreview.cameraInstance` @type ^`com.journeyapps.barcodescanner.camera.CameraInstance` @kind object;
+  #L29cafe.  v1:= 0I;
+  #L29cb00.  if v0 == 0 then goto L29cb14;
+  #L29cb04.  call `close`(v0) @signature `Lcom/journeyapps/barcodescanner/camera/CameraInstance;.close:()V` @kind virtual;
+  #L29cb0a.  v4.`com.journeyapps.barcodescanner.CameraPreview.cameraInstance` @type ^`com.journeyapps.barcodescanner.camera.CameraInstance` := v1 @kind object;
+  #L29cb0e.  v0:= 0I;
+  #L29cb10.  v4.`com.journeyapps.barcodescanner.CameraPreview.previewActive` @type ^`boolean` := v0 @kind boolean;
+  #L29cb14.  v0:= v4.`com.journeyapps.barcodescanner.CameraPreview.currentSurfaceSize` @type ^`com.journeyapps.barcodescanner.Size` @kind object;
+  #L29cb18.  if v0 != 0 then goto L29cb36;
+  #L29cb1c.  v0:= v4.`com.journeyapps.barcodescanner.CameraPreview.surfaceView` @type ^`android.view.SurfaceView` @kind object;
+  #L29cb20.  if v0 == 0 then goto L29cb36;
+  #L29cb24.  call temp:= `getHolder`(v0) @signature `Landroid/view/SurfaceView;.getHolder:()Landroid/view/SurfaceHolder;` @kind virtual;
+  #L29cb2a.  v0:= temp @kind object;
+  #L29cb2c.  v2:= v4.`com.journeyapps.barcodescanner.CameraPreview.surfaceCallback` @type ^`android.view.SurfaceHolder$Callback` @kind object;
+  #L29cb30.  call `removeCallback`(v0, v2) @signature `Landroid/view/SurfaceHolder;.removeCallback:(Landroid/view/SurfaceHolder$Callback;)V` @kind interface;
+  #L29cb36.  v0:= v4.`com.journeyapps.barcodescanner.CameraPreview.currentSurfaceSize` @type ^`com.journeyapps.barcodescanner.Size` @kind object;
+  #L29cb3a.  if v0 != 0 then goto L29cb58;
+  #L29cb3e.  v0:= v4.`com.journeyapps.barcodescanner.CameraPreview.textureView` @type ^`android.view.TextureView` @kind object;
+  #L29cb42.  if v0 == 0 then goto L29cb58;
+  #L29cb46.  v2:= `@@android.os.Build$VERSION.SDK_INT` @type ^`int`;
+  #L29cb4a.  v3:= 14I;
+  #L29cb4e.  if v2 < v3 then goto L29cb58;
+  #L29cb52.  call `setSurfaceTextureListener`(v0, v1) @signature `Landroid/view/TextureView;.setSurfaceTextureListener:(Landroid/view/TextureView$SurfaceTextureListener;)V` @kind virtual;
+  #L29cb58.  v4.`com.journeyapps.barcodescanner.CameraPreview.containerSize` @type ^`com.journeyapps.barcodescanner.Size` := v1 @kind object;
+  #L29cb5c.  v4.`com.journeyapps.barcodescanner.CameraPreview.previewSize` @type ^`com.journeyapps.barcodescanner.Size` := v1 @kind object;
+  #L29cb60.  v4.`com.journeyapps.barcodescanner.CameraPreview.previewFramingRect` @type ^`android.graphics.Rect` := v1 @kind object;
+  #L29cb64.  v0:= v4.`com.journeyapps.barcodescanner.CameraPreview.rotationListener` @type ^`com.journeyapps.barcodescanner.RotationListener` @kind object;
+  #L29cb68.  call `stop`(v0) @signature `Lcom/journeyapps/barcodescanner/RotationListener;.stop:()V` @kind virtual;
+  #L29cb6e.  v0:= v4.`com.journeyapps.barcodescanner.CameraPreview.fireState` @type ^`com.journeyapps.barcodescanner.CameraPreview$StateListener` @kind object;
+  #L29cb72.  call `previewStopped`(v0) @signature `Lcom/journeyapps/barcodescanner/CameraPreview$StateListener;.previewStopped:()V` @kind interface;
+  #L29cb78.  return @kind void;
+}
+procedure `void` `previewStarted`(`com.journeyapps.barcodescanner.CameraPreview` v0 @kind this) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.previewStarted:()V` @AccessFlag PROTECTED {
+    temp;
+
+  #L29cbbc.  return @kind void;
+}
+procedure `void` `resume`(`com.journeyapps.barcodescanner.CameraPreview` v3 @kind this) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.resume:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L29cbd0.  call `validateMainThread`() @signature `Lcom/journeyapps/barcodescanner/Util;.validateMainThread:()V` @kind static;
+  #L29cbd6.  v0:= `@@com.journeyapps.barcodescanner.CameraPreview.TAG` @type ^`java.lang.String` @kind object;
+  #L29cbda.  v1:= "resume()" @kind object;
+  #L29cbde.  call temp:= `d`(v0, v1) @signature `Landroid/util/Log;.d:(Ljava/lang/String;Ljava/lang/String;)I` @kind static;
+  #L29cbe4.  call `initCamera`(v3) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.initCamera:()V` @kind direct;
+  #L29cbea.  v0:= v3.`com.journeyapps.barcodescanner.CameraPreview.currentSurfaceSize` @type ^`com.journeyapps.barcodescanner.Size` @kind object;
+  #L29cbee.  if v0 == 0 then goto L29cbfa;
+  #L29cbf2.  call `startPreviewIfReady`(v3) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.startPreviewIfReady:()V` @kind direct;
+  #L29cbf8.  goto L29cc38;
+  #L29cbfa.  v0:= v3.`com.journeyapps.barcodescanner.CameraPreview.surfaceView` @type ^`android.view.SurfaceView` @kind object;
+  #L29cbfe.  if v0 == 0 then goto L29cc16;
+  #L29cc02.  call temp:= `getHolder`(v0) @signature `Landroid/view/SurfaceView;.getHolder:()Landroid/view/SurfaceHolder;` @kind virtual;
+  #L29cc08.  v0:= temp @kind object;
+  #L29cc0a.  v1:= v3.`com.journeyapps.barcodescanner.CameraPreview.surfaceCallback` @type ^`android.view.SurfaceHolder$Callback` @kind object;
+  #L29cc0e.  call `addCallback`(v0, v1) @signature `Landroid/view/SurfaceHolder;.addCallback:(Landroid/view/SurfaceHolder$Callback;)V` @kind interface;
+  #L29cc14.  goto L29cc38;
+  #L29cc16.  v0:= v3.`com.journeyapps.barcodescanner.CameraPreview.textureView` @type ^`android.view.TextureView` @kind object;
+  #L29cc1a.  if v0 == 0 then goto L29cc38;
+  #L29cc1e.  v1:= `@@android.os.Build$VERSION.SDK_INT` @type ^`int`;
+  #L29cc22.  v2:= 14I;
+  #L29cc26.  if v1 < v2 then goto L29cc38;
+  #L29cc2a.  call temp:= `surfaceTextureListener`(v3) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.surfaceTextureListener:()Landroid/view/TextureView$SurfaceTextureListener;` @kind direct;
+  #L29cc30.  v1:= temp @kind object;
+  #L29cc32.  call `setSurfaceTextureListener`(v0, v1) @signature `Landroid/view/TextureView;.setSurfaceTextureListener:(Landroid/view/TextureView$SurfaceTextureListener;)V` @kind virtual;
+  #L29cc38.  call `requestLayout`(v3) @signature `Landroid/view/ViewGroup;.requestLayout:()V` @kind virtual;
+  #L29cc3e.  v0:= v3.`com.journeyapps.barcodescanner.CameraPreview.rotationListener` @type ^`com.journeyapps.barcodescanner.RotationListener` @kind object;
+  #L29cc42.  call temp:= `getContext`(v3) @signature `Landroid/view/ViewGroup;.getContext:()Landroid/content/Context;` @kind virtual;
+  #L29cc48.  v1:= temp @kind object;
+  #L29cc4a.  v2:= v3.`com.journeyapps.barcodescanner.CameraPreview.rotationCallback` @type ^`com.journeyapps.barcodescanner.RotationCallback` @kind object;
+  #L29cc4e.  call `listen`(v0, v1, v2) @signature `Lcom/journeyapps/barcodescanner/RotationListener;.listen:(Landroid/content/Context;Lcom/journeyapps/barcodescanner/RotationCallback;)V` @kind virtual;
+  #L29cc54.  return @kind void;
+}
+procedure `void` `setCameraSettings`(`com.journeyapps.barcodescanner.CameraPreview` v0 @kind this, `com.journeyapps.barcodescanner.camera.CameraSettings` v1 @kind object) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.setCameraSettings:(Lcom/journeyapps/barcodescanner/camera/CameraSettings;)V` @AccessFlag PUBLIC {
+    temp;
+
+  #L29cca4.  v0.`com.journeyapps.barcodescanner.CameraPreview.cameraSettings` @type ^`com.journeyapps.barcodescanner.camera.CameraSettings` := v1 @kind object;
+  #L29cca8.  return @kind void;
+}
+procedure `void` `setFramingRectSize`(`com.journeyapps.barcodescanner.CameraPreview` v0 @kind this, `com.journeyapps.barcodescanner.Size` v1 @kind object) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.setFramingRectSize:(Lcom/journeyapps/barcodescanner/Size;)V` @AccessFlag PUBLIC {
+    temp;
+
+  #L29ccbc.  v0.`com.journeyapps.barcodescanner.CameraPreview.framingRectSize` @type ^`com.journeyapps.barcodescanner.Size` := v1 @kind object;
+  #L29ccc0.  return @kind void;
+}
+procedure `void` `setMarginFraction`(`com.journeyapps.barcodescanner.CameraPreview` v3 @kind this, `double` v4 ) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.setMarginFraction:(D)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L29ccd4.  v0:= 0.5D;
+  #L29ccd8.  v2:= dcmpl(v4, v0);
+  #L29ccdc.  if v2 >= 0 then goto L29cce6;
+  #L29cce0.  v3.`com.journeyapps.barcodescanner.CameraPreview.marginFraction` @type ^`double` := v4 @kind wide;
+  #L29cce4.  return @kind void;
+  #L29cce6.  v4:= new `java.lang.IllegalArgumentException`;
+  #L29ccea.  v5:= "The margin fraction must be less than 0.5" @kind object;
+  #L29ccee.  call `<init>`(v4, v5) @signature `Ljava/lang/IllegalArgumentException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L29ccf4.  throw v4;
+}
+procedure `void` `setPreviewScalingStrategy`(`com.journeyapps.barcodescanner.CameraPreview` v0 @kind this, `com.journeyapps.barcodescanner.camera.PreviewScalingStrategy` v1 @kind object) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.setPreviewScalingStrategy:(Lcom/journeyapps/barcodescanner/camera/PreviewScalingStrategy;)V` @AccessFlag PUBLIC {
+    temp;
+
+  #L29cd08.  v0.`com.journeyapps.barcodescanner.CameraPreview.previewScalingStrategy` @type ^`com.journeyapps.barcodescanner.camera.PreviewScalingStrategy` := v1 @kind object;
+  #L29cd0c.  return @kind void;
+}
+procedure `void` `setTorch`(`com.journeyapps.barcodescanner.CameraPreview` v1 @kind this, `boolean` v2 ) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.setTorch:(Z)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L29cd20.  v1.`com.journeyapps.barcodescanner.CameraPreview.torchOn` @type ^`boolean` := v2 @kind boolean;
+  #L29cd24.  v0:= v1.`com.journeyapps.barcodescanner.CameraPreview.cameraInstance` @type ^`com.journeyapps.barcodescanner.camera.CameraInstance` @kind object;
+  #L29cd28.  if v0 == 0 then goto L29cd32;
+  #L29cd2c.  call `setTorch`(v0, v2) @signature `Lcom/journeyapps/barcodescanner/camera/CameraInstance;.setTorch:(Z)V` @kind virtual;
+  #L29cd32.  return @kind void;
+}
+procedure `void` `setUseTextureView`(`com.journeyapps.barcodescanner.CameraPreview` v0 @kind this, `boolean` v1 ) @signature `Lcom/journeyapps/barcodescanner/CameraPreview;.setUseTextureView:(Z)V` @AccessFlag PUBLIC {
+    temp;
+
+  #L29cd44.  v0.`com.journeyapps.barcodescanner.CameraPreview.useTextureView` @type ^`boolean` := v1 @kind boolean;
+  #L29cd48.  return @kind void;
+}

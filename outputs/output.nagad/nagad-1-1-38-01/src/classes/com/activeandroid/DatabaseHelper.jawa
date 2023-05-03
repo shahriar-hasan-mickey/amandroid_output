@@ -1,0 +1,363 @@
+record `com.activeandroid.DatabaseHelper` @kind class @AccessFlag PUBLIC_FINAL extends `android.database.sqlite.SQLiteOpenHelper` @kind class {
+  `java.lang.String` `com.activeandroid.DatabaseHelper.mSqlParser` @AccessFlag PRIVATE_FINAL;
+}
+global `java.lang.String` `@@com.activeandroid.DatabaseHelper.MIGRATION_PATH` @AccessFlag PUBLIC_STATIC_FINAL;
+procedure `void` `<init>`(`com.activeandroid.DatabaseHelper` v4 @kind this, `com.activeandroid.Configuration` v5 @kind object) @signature `Lcom/activeandroid/DatabaseHelper;.<init>:(Lcom/activeandroid/Configuration;)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L25f020.  call temp:= `getContext`(v5) @signature `Lcom/activeandroid/Configuration;.getContext:()Landroid/content/Context;` @kind virtual;
+  #L25f026.  v0:= temp @kind object;
+  #L25f028.  call temp:= `getDatabaseName`(v5) @signature `Lcom/activeandroid/Configuration;.getDatabaseName:()Ljava/lang/String;` @kind virtual;
+  #L25f02e.  v1:= temp @kind object;
+  #L25f030.  call temp:= `getDatabaseVersion`(v5) @signature `Lcom/activeandroid/Configuration;.getDatabaseVersion:()I` @kind virtual;
+  #L25f036.  v2:= temp;
+  #L25f038.  v3:= 0I;
+  #L25f03a.  call `<init>`(v4, v0, v1, v3, v2) @signature `Landroid/database/sqlite/SQLiteOpenHelper;.<init>:(Landroid/content/Context;Ljava/lang/String;Landroid/database/sqlite/SQLiteDatabase$CursorFactory;I)V` @kind direct;
+  #L25f040.  call temp:= `getContext`(v5) @signature `Lcom/activeandroid/Configuration;.getContext:()Landroid/content/Context;` @kind virtual;
+  #L25f046.  v0:= temp @kind object;
+  #L25f048.  call temp:= `getDatabaseName`(v5) @signature `Lcom/activeandroid/Configuration;.getDatabaseName:()Ljava/lang/String;` @kind virtual;
+  #L25f04e.  v1:= temp @kind object;
+  #L25f050.  call `copyAttachedDatabase`(v4, v0, v1) @signature `Lcom/activeandroid/DatabaseHelper;.copyAttachedDatabase:(Landroid/content/Context;Ljava/lang/String;)V` @kind virtual;
+  #L25f056.  call temp:= `getSqlParser`(v5) @signature `Lcom/activeandroid/Configuration;.getSqlParser:()Ljava/lang/String;` @kind virtual;
+  #L25f05c.  v5:= temp @kind object;
+  #L25f05e.  v4.`com.activeandroid.DatabaseHelper.mSqlParser` @type ^`java.lang.String` := v5 @kind object;
+  #L25f062.  return @kind void;
+}
+procedure `void` `executeCreate`(`com.activeandroid.DatabaseHelper` v2 @kind this, `android.database.sqlite.SQLiteDatabase` v3 @kind object) @signature `Lcom/activeandroid/DatabaseHelper;.executeCreate:(Landroid/database/sqlite/SQLiteDatabase;)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+
+  #L25f114.  call `beginTransaction`(v3) @signature `Landroid/database/sqlite/SQLiteDatabase;.beginTransaction:()V` @kind virtual;
+  #L25f11a.  call temp:= `getTableInfos`() @signature `Lcom/activeandroid/Cache;.getTableInfos:()Ljava/util/Collection;` @kind static;
+  #L25f120.  v0:= temp @kind object;
+  #L25f122.  call temp:= `iterator`(v0) @signature `Ljava/util/Collection;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L25f128.  v0:= temp @kind object;
+  #L25f12a.  call temp:= `hasNext`(v0) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L25f130.  v1:= temp;
+  #L25f132.  if v1 == 0 then goto L25f152;
+  #L25f136.  call temp:= `next`(v0) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L25f13c.  v1:= temp @kind object;
+  #L25f13e.  v1:= (`com.activeandroid.TableInfo`) v1 @kind object;
+  #L25f142.  call temp:= `createTableDefinition`(v1) @signature `Lcom/activeandroid/util/SQLiteUtils;.createTableDefinition:(Lcom/activeandroid/TableInfo;)Ljava/lang/String;` @kind static;
+  #L25f148.  v1:= temp @kind object;
+  #L25f14a.  call `execSQL`(v3, v1) @signature `Landroid/database/sqlite/SQLiteDatabase;.execSQL:(Ljava/lang/String;)V` @kind virtual;
+  #L25f150.  goto L25f12a;
+  #L25f152.  call `setTransactionSuccessful`(v3) @signature `Landroid/database/sqlite/SQLiteDatabase;.setTransactionSuccessful:()V` @kind virtual;
+  #L25f158.  call `endTransaction`(v3) @signature `Landroid/database/sqlite/SQLiteDatabase;.endTransaction:()V` @kind virtual;
+  #L25f15e.  return @kind void;
+  #L25f160.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L25f162.  call `endTransaction`(v3) @signature `Landroid/database/sqlite/SQLiteDatabase;.endTransaction:()V` @kind virtual;
+  #L25f168.  throw v0;
+  catch `java.lang.Throwable` @[L25f11a..L25f158] goto L25f160;
+}
+procedure `void` `executeCreateIndex`(`com.activeandroid.DatabaseHelper` v5 @kind this, `android.database.sqlite.SQLiteDatabase` v6 @kind object) @signature `Lcom/activeandroid/DatabaseHelper;.executeCreateIndex:(Landroid/database/sqlite/SQLiteDatabase;)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L25f188.  call `beginTransaction`(v6) @signature `Landroid/database/sqlite/SQLiteDatabase;.beginTransaction:()V` @kind virtual;
+  #L25f18e.  call temp:= `getTableInfos`() @signature `Lcom/activeandroid/Cache;.getTableInfos:()Ljava/util/Collection;` @kind static;
+  #L25f194.  v0:= temp @kind object;
+  #L25f196.  call temp:= `iterator`(v0) @signature `Ljava/util/Collection;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L25f19c.  v0:= temp @kind object;
+  #L25f19e.  call temp:= `hasNext`(v0) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L25f1a4.  v1:= temp;
+  #L25f1a6.  if v1 == 0 then goto L25f1d6;
+  #L25f1aa.  call temp:= `next`(v0) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L25f1b0.  v1:= temp @kind object;
+  #L25f1b2.  v1:= (`com.activeandroid.TableInfo`) v1 @kind object;
+  #L25f1b6.  call temp:= `createIndexDefinition`(v1) @signature `Lcom/activeandroid/util/SQLiteUtils;.createIndexDefinition:(Lcom/activeandroid/TableInfo;)[Ljava/lang/String;` @kind static;
+  #L25f1bc.  v1:= temp @kind object;
+  #L25f1be.  v2:= length @variable v1;
+  #L25f1c0.  v3:= 0I;
+  #L25f1c2.  if v3 >= v2 then goto L25f19e;
+  #L25f1c6.  v4:= v1[v3] @kind object;
+  #L25f1ca.  call `execSQL`(v6, v4) @signature `Landroid/database/sqlite/SQLiteDatabase;.execSQL:(Ljava/lang/String;)V` @kind virtual;
+  #L25f1d0.  v3:= v3 + 1;
+  #L25f1d4.  goto L25f1c2;
+  #L25f1d6.  call `setTransactionSuccessful`(v6) @signature `Landroid/database/sqlite/SQLiteDatabase;.setTransactionSuccessful:()V` @kind virtual;
+  #L25f1dc.  call `endTransaction`(v6) @signature `Landroid/database/sqlite/SQLiteDatabase;.endTransaction:()V` @kind virtual;
+  #L25f1e2.  return @kind void;
+  #L25f1e4.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L25f1e6.  call `endTransaction`(v6) @signature `Landroid/database/sqlite/SQLiteDatabase;.endTransaction:()V` @kind virtual;
+  #L25f1ec.  throw v0;
+  catch `java.lang.Throwable` @[L25f18e..L25f1dc] goto L25f1e4;
+}
+procedure `void` `executeDelimitedSqlScript`(`com.activeandroid.DatabaseHelper` v1 @kind this, `android.database.sqlite.SQLiteDatabase` v2 @kind object, `java.io.InputStream` v3 @kind object) @signature `Lcom/activeandroid/DatabaseHelper;.executeDelimitedSqlScript:(Landroid/database/sqlite/SQLiteDatabase;Ljava/io/InputStream;)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+
+  #L25f20c.  call temp:= `parse`(v3) @signature `Lcom/activeandroid/util/SqlParser;.parse:(Ljava/io/InputStream;)Ljava/util/List;` @kind static;
+  #L25f212.  v3:= temp @kind object;
+  #L25f214.  call temp:= `iterator`(v3) @signature `Ljava/util/List;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L25f21a.  v3:= temp @kind object;
+  #L25f21c.  call temp:= `hasNext`(v3) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L25f222.  v0:= temp;
+  #L25f224.  if v0 == 0 then goto L25f23c;
+  #L25f228.  call temp:= `next`(v3) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L25f22e.  v0:= temp @kind object;
+  #L25f230.  v0:= (`java.lang.String`) v0 @kind object;
+  #L25f234.  call `execSQL`(v2, v0) @signature `Landroid/database/sqlite/SQLiteDatabase;.execSQL:(Ljava/lang/String;)V` @kind virtual;
+  #L25f23a.  goto L25f21c;
+  #L25f23c.  return @kind void;
+}
+procedure `void` `executeLegacySqlScript`(`com.activeandroid.DatabaseHelper` v4 @kind this, `android.database.sqlite.SQLiteDatabase` v5 @kind object, `java.io.InputStream` v6 @kind object) @signature `Lcom/activeandroid/DatabaseHelper;.executeLegacySqlScript:(Landroid/database/sqlite/SQLiteDatabase;Ljava/io/InputStream;)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L25f250.  v0:= 0I;
+  #L25f252.  v1:= new `java.io.InputStreamReader`;
+  #L25f256.  call `<init>`(v1, v6) @signature `Ljava/io/InputStreamReader;.<init>:(Ljava/io/InputStream;)V` @kind direct;
+  #L25f25c.  v6:= new `java.io.BufferedReader`;
+  #L25f260.  call `<init>`(v6, v1) @signature `Ljava/io/BufferedReader;.<init>:(Ljava/io/Reader;)V` @kind direct;
+  #L25f266.  call temp:= `readLine`(v6) @signature `Ljava/io/BufferedReader;.readLine:()Ljava/lang/String;` @kind virtual;
+  #L25f26c.  v0:= temp @kind object;
+  #L25f26e.  if v0 == 0 then goto L25f29e;
+  #L25f272.  v2:= ";" @kind object;
+  #L25f276.  v3:= "" @kind object;
+  #L25f27a.  call temp:= `replace`(v0, v2, v3) @signature `Ljava/lang/String;.replace:(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Ljava/lang/String;` @kind virtual;
+  #L25f280.  v0:= temp @kind object;
+  #L25f282.  call temp:= `trim`(v0) @signature `Ljava/lang/String;.trim:()Ljava/lang/String;` @kind virtual;
+  #L25f288.  v0:= temp @kind object;
+  #L25f28a.  call temp:= `isEmpty`(v0) @signature `Landroid/text/TextUtils;.isEmpty:(Ljava/lang/CharSequence;)Z` @kind static;
+  #L25f290.  v2:= temp;
+  #L25f292.  if v2 != 0 then goto L25f266;
+  #L25f296.  call `execSQL`(v5, v0) @signature `Landroid/database/sqlite/SQLiteDatabase;.execSQL:(Ljava/lang/String;)V` @kind virtual;
+  #L25f29c.  goto L25f266;
+  #L25f29e.  call `closeQuietly`(v6) @signature `Lcom/activeandroid/util/IOUtils;.closeQuietly:(Ljava/io/Closeable;)V` @kind static;
+  #L25f2a4.  call `closeQuietly`(v1) @signature `Lcom/activeandroid/util/IOUtils;.closeQuietly:(Ljava/io/Closeable;)V` @kind static;
+  #L25f2aa.  return @kind void;
+  #L25f2ac.  v5:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L25f2ae.  goto L25f2bc;
+  #L25f2b0.  v5:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L25f2b2.  v6:= v0 @kind object;
+  #L25f2b4.  goto L25f2bc;
+  #L25f2b6.  v5:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L25f2b8.  v6:= v0 @kind object;
+  #L25f2ba.  v1:= v6 @kind object;
+  #L25f2bc.  call `closeQuietly`(v6) @signature `Lcom/activeandroid/util/IOUtils;.closeQuietly:(Ljava/io/Closeable;)V` @kind static;
+  #L25f2c2.  call `closeQuietly`(v1) @signature `Lcom/activeandroid/util/IOUtils;.closeQuietly:(Ljava/io/Closeable;)V` @kind static;
+  #L25f2c8.  throw v5;
+  catch `java.lang.Throwable` @[L25f252..L25f25c] goto L25f2b6;
+  catch `java.lang.Throwable` @[L25f25c..L25f266] goto L25f2b0;
+  catch `java.lang.Throwable` @[L25f266..L25f29c] goto L25f2ac;
+}
+procedure `boolean` `executeMigrations`(`com.activeandroid.DatabaseHelper` v6 @kind this, `android.database.sqlite.SQLiteDatabase` v7 @kind object, `int` v8 , `int` v9 ) @signature `Lcom/activeandroid/DatabaseHelper;.executeMigrations:(Landroid/database/sqlite/SQLiteDatabase;II)Z` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L25eed4.  v0:= 0I;
+  #L25eed6.  call temp:= `getContext`() @signature `Lcom/activeandroid/Cache;.getContext:()Landroid/content/Context;` @kind static;
+  #L25eedc.  v1:= temp @kind object;
+  #L25eede.  call temp:= `getAssets`(v1) @signature `Landroid/content/Context;.getAssets:()Landroid/content/res/AssetManager;` @kind virtual;
+  #L25eee4.  v1:= temp @kind object;
+  #L25eee6.  v2:= "migrations" @kind object;
+  #L25eeea.  call temp:= `list`(v1, v2) @signature `Landroid/content/res/AssetManager;.list:(Ljava/lang/String;)[Ljava/lang/String;` @kind virtual;
+  #L25eef0.  v1:= temp @kind object;
+  #L25eef2.  call temp:= `asList`(v1) @signature `Ljava/util/Arrays;.asList:([Ljava/lang/Object;)Ljava/util/List;` @kind static;
+  #L25eef8.  v1:= temp @kind object;
+  #L25eefa.  v2:= new `com.activeandroid.util.NaturalOrderComparator`;
+  #L25eefe.  call `<init>`(v2) @signature `Lcom/activeandroid/util/NaturalOrderComparator;.<init>:()V` @kind direct;
+  #L25ef04.  call `sort`(v1, v2) @signature `Ljava/util/Collections;.sort:(Ljava/util/List;Ljava/util/Comparator;)V` @kind static;
+  #L25ef0a.  call `beginTransaction`(v7) @signature `Landroid/database/sqlite/SQLiteDatabase;.beginTransaction:()V` @kind virtual;
+  #L25ef10.  call temp:= `iterator`(v1) @signature `Ljava/util/List;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L25ef16.  v1:= temp @kind object;
+  #L25ef18.  call temp:= `hasNext`(v1) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L25ef1e.  v2:= temp;
+  #L25ef20.  if v2 == 0 then goto L25efb6;
+  #L25ef24.  call temp:= `next`(v1) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L25ef2a.  v2:= temp @kind object;
+  #L25ef2c.  v2:= (`java.lang.String`) v2 @kind object;
+  #L25ef30.  v3:= ".sql" @kind object;
+  #L25ef34.  v4:= "" @kind object;
+  #L25ef38.  call temp:= `replace`(v2, v3, v4) @signature `Ljava/lang/String;.replace:(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Ljava/lang/String;` @kind virtual;
+  #L25ef3e.  v3:= temp @kind object;
+  #L25ef40.  call temp:= `valueOf`(v3) @signature `Ljava/lang/Integer;.valueOf:(Ljava/lang/String;)Ljava/lang/Integer;` @kind static;
+  #L25ef46.  v3:= temp @kind object;
+  #L25ef48.  call temp:= `intValue`(v3) @signature `Ljava/lang/Integer;.intValue:()I` @kind virtual;
+  #L25ef4e.  v3:= temp;
+  #L25ef50.  if v3 <= v8 then goto L25ef18;
+  #L25ef54.  if v3 > v9 then goto L25ef18;
+  #L25ef58.  call `executeSqlScript`(v6, v7, v2) @signature `Lcom/activeandroid/DatabaseHelper;.executeSqlScript:(Landroid/database/sqlite/SQLiteDatabase;Ljava/lang/String;)V` @kind direct;
+  #L25ef5e.  v0:= 1I;
+  #L25ef60.  v3:= new `java.lang.StringBuilder`;
+  #L25ef64.  call `<init>`(v3) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L25ef6a.  call temp:= `append`(v3, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L25ef70.  v4:= " executed succesfully." @kind object;
+  #L25ef74.  call temp:= `append`(v3, v4) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L25ef7a.  call temp:= `toString`(v3) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L25ef80.  v3:= temp @kind object;
+  #L25ef82.  call temp:= `i`(v3) @signature `Lcom/activeandroid/util/Log;.i:(Ljava/lang/String;)I` @kind static;
+  #L25ef88.  goto L25ef18;
+  #L25ef8a.  v3:= Exception @type ^`java.lang.NumberFormatException` @kind object;
+  #L25ef8c.  v4:= new `java.lang.StringBuilder`;
+  #L25ef90.  call `<init>`(v4) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L25ef96.  v5:= "Skipping invalidly named file: " @kind object;
+  #L25ef9a.  call temp:= `append`(v4, v5) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L25efa0.  call temp:= `append`(v4, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L25efa6.  call temp:= `toString`(v4) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L25efac.  v2:= temp @kind object;
+  #L25efae.  call temp:= `w`(v2, v3) @signature `Lcom/activeandroid/util/Log;.w:(Ljava/lang/String;Ljava/lang/Throwable;)I` @kind static;
+  #L25efb4.  goto L25ef18;
+  #L25efb6.  call `setTransactionSuccessful`(v7) @signature `Landroid/database/sqlite/SQLiteDatabase;.setTransactionSuccessful:()V` @kind virtual;
+  #L25efbc.  call `endTransaction`(v7) @signature `Landroid/database/sqlite/SQLiteDatabase;.endTransaction:()V` @kind virtual;
+  #L25efc2.  goto L25efda;
+  #L25efc4.  v8:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L25efc6.  call `endTransaction`(v7) @signature `Landroid/database/sqlite/SQLiteDatabase;.endTransaction:()V` @kind virtual;
+  #L25efcc.  throw v8;
+  #L25efce.  v7:= Exception @type ^`java.io.IOException` @kind object;
+  #L25efd0.  v8:= "Failed to execute migrations." @kind object;
+  #L25efd4.  call temp:= `e`(v8, v7) @signature `Lcom/activeandroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/Throwable;)I` @kind static;
+  #L25efda.  return v0;
+  catch `java.io.IOException` @[L25eed6..L25ef10] goto L25efce;
+  catch `java.lang.Throwable` @[L25ef10..L25ef30] goto L25efc4;
+  catch `java.lang.NumberFormatException` @[L25ef30..L25ef88] goto L25ef8a;
+  catch `java.lang.Throwable` @[L25ef30..L25ef88] goto L25efc4;
+  catch `java.lang.Throwable` @[L25ef8c..L25efbc] goto L25efc4;
+  catch `java.io.IOException` @[L25efbc..L25efce] goto L25efce;
+}
+procedure `void` `executePragmas`(`com.activeandroid.DatabaseHelper` v1 @kind this, `android.database.sqlite.SQLiteDatabase` v2 @kind object) @signature `Lcom/activeandroid/DatabaseHelper;.executePragmas:(Landroid/database/sqlite/SQLiteDatabase;)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+
+  #L25f2fc.  v0:= `@@com.activeandroid.util.SQLiteUtils.FOREIGN_KEYS_SUPPORTED` @type ^`boolean` @kind boolean;
+  #L25f300.  if v0 == 0 then goto L25f318;
+  #L25f304.  v0:= "PRAGMA foreign_keys=ON;" @kind object;
+  #L25f308.  call `execSQL`(v2, v0) @signature `Landroid/database/sqlite/SQLiteDatabase;.execSQL:(Ljava/lang/String;)V` @kind virtual;
+  #L25f30e.  v2:= "Foreign Keys supported. Enabling foreign key features." @kind object;
+  #L25f312.  call temp:= `i`(v2) @signature `Lcom/activeandroid/util/Log;.i:(Ljava/lang/String;)I` @kind static;
+  #L25f318.  return @kind void;
+}
+procedure `void` `executeSqlScript`(`com.activeandroid.DatabaseHelper` v4 @kind this, `android.database.sqlite.SQLiteDatabase` v5 @kind object, `java.lang.String` v6 @kind object) @signature `Lcom/activeandroid/DatabaseHelper;.executeSqlScript:(Landroid/database/sqlite/SQLiteDatabase;Ljava/lang/String;)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L25f32c.  v0:= 0I;
+  #L25f32e.  call temp:= `getContext`() @signature `Lcom/activeandroid/Cache;.getContext:()Landroid/content/Context;` @kind static;
+  #L25f334.  v1:= temp @kind object;
+  #L25f336.  call temp:= `getAssets`(v1) @signature `Landroid/content/Context;.getAssets:()Landroid/content/res/AssetManager;` @kind virtual;
+  #L25f33c.  v1:= temp @kind object;
+  #L25f33e.  v2:= new `java.lang.StringBuilder`;
+  #L25f342.  call `<init>`(v2) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L25f348.  v3:= "migrations/" @kind object;
+  #L25f34c.  call temp:= `append`(v2, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L25f352.  call temp:= `append`(v2, v6) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L25f358.  call temp:= `toString`(v2) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L25f35e.  v2:= temp @kind object;
+  #L25f360.  call temp:= `open`(v1, v2) @signature `Landroid/content/res/AssetManager;.open:(Ljava/lang/String;)Ljava/io/InputStream;` @kind virtual;
+  #L25f366.  v0:= temp @kind object;
+  #L25f368.  v1:= "delimited" @kind object;
+  #L25f36c.  v2:= v4.`com.activeandroid.DatabaseHelper.mSqlParser` @type ^`java.lang.String` @kind object;
+  #L25f370.  call temp:= `equalsIgnoreCase`(v1, v2) @signature `Ljava/lang/String;.equalsIgnoreCase:(Ljava/lang/String;)Z` @kind virtual;
+  #L25f376.  v1:= temp;
+  #L25f378.  if v1 == 0 then goto L25f384;
+  #L25f37c.  call `executeDelimitedSqlScript`(v4, v5, v0) @signature `Lcom/activeandroid/DatabaseHelper;.executeDelimitedSqlScript:(Landroid/database/sqlite/SQLiteDatabase;Ljava/io/InputStream;)V` @kind direct;
+  #L25f382.  goto L25f3ba;
+  #L25f384.  call `executeLegacySqlScript`(v4, v5, v0) @signature `Lcom/activeandroid/DatabaseHelper;.executeLegacySqlScript:(Landroid/database/sqlite/SQLiteDatabase;Ljava/io/InputStream;)V` @kind direct;
+  #L25f38a.  goto L25f3ba;
+  #L25f38c.  v5:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L25f38e.  goto L25f3c2;
+  #L25f390.  v5:= Exception @type ^`java.io.IOException` @kind object;
+  #L25f392.  v1:= new `java.lang.StringBuilder`;
+  #L25f396.  call `<init>`(v1) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L25f39c.  v2:= "Failed to execute " @kind object;
+  #L25f3a0.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L25f3a6.  call temp:= `append`(v1, v6) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L25f3ac.  call temp:= `toString`(v1) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L25f3b2.  v6:= temp @kind object;
+  #L25f3b4.  call temp:= `e`(v6, v5) @signature `Lcom/activeandroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/Throwable;)I` @kind static;
+  #L25f3ba.  call `closeQuietly`(v0) @signature `Lcom/activeandroid/util/IOUtils;.closeQuietly:(Ljava/io/Closeable;)V` @kind static;
+  #L25f3c0.  return @kind void;
+  #L25f3c2.  call `closeQuietly`(v0) @signature `Lcom/activeandroid/util/IOUtils;.closeQuietly:(Ljava/io/Closeable;)V` @kind static;
+  #L25f3c8.  throw v5;
+  catch `java.io.IOException` @[L25f32e..L25f38a] goto L25f390;
+  catch `java.lang.Throwable` @[L25f32e..L25f38a] goto L25f38c;
+  catch `java.lang.Throwable` @[L25f392..L25f3ba] goto L25f38c;
+}
+procedure `void` `copyAttachedDatabase`(`com.activeandroid.DatabaseHelper` v4 @kind this, `android.content.Context` v5 @kind object, `java.lang.String` v6 @kind object) @signature `Lcom/activeandroid/DatabaseHelper;.copyAttachedDatabase:(Landroid/content/Context;Ljava/lang/String;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L25f074.  call temp:= `getDatabasePath`(v5, v6) @signature `Landroid/content/Context;.getDatabasePath:(Ljava/lang/String;)Ljava/io/File;` @kind virtual;
+  #L25f07a.  v0:= temp @kind object;
+  #L25f07c.  call temp:= `exists`(v0) @signature `Ljava/io/File;.exists:()Z` @kind virtual;
+  #L25f082.  v1:= temp;
+  #L25f084.  if v1 == 0 then goto L25f08a;
+  #L25f088.  return @kind void;
+  #L25f08a.  call temp:= `getParentFile`(v0) @signature `Ljava/io/File;.getParentFile:()Ljava/io/File;` @kind virtual;
+  #L25f090.  v1:= temp @kind object;
+  #L25f092.  call temp:= `mkdirs`(v1) @signature `Ljava/io/File;.mkdirs:()Z` @kind virtual;
+  #L25f098.  call temp:= `getAssets`(v5) @signature `Landroid/content/Context;.getAssets:()Landroid/content/res/AssetManager;` @kind virtual;
+  #L25f09e.  v5:= temp @kind object;
+  #L25f0a0.  call temp:= `open`(v5, v6) @signature `Landroid/content/res/AssetManager;.open:(Ljava/lang/String;)Ljava/io/InputStream;` @kind virtual;
+  #L25f0a6.  v5:= temp @kind object;
+  #L25f0a8.  v6:= new `java.io.FileOutputStream`;
+  #L25f0ac.  call `<init>`(v6, v0) @signature `Ljava/io/FileOutputStream;.<init>:(Ljava/io/File;)V` @kind direct;
+  #L25f0b2.  v0:= 8192I;
+  #L25f0b6.  v1:= new `byte`[v0];
+  #L25f0ba.  v2:= 0I;
+  #L25f0bc.  call temp:= `read`(v5, v1, v2, v0) @signature `Ljava/io/InputStream;.read:([BII)I` @kind virtual;
+  #L25f0c2.  v3:= temp;
+  #L25f0c4.  if v3 <= 0 then goto L25f0d0;
+  #L25f0c8.  call `write`(v6, v1, v2, v3) @signature `Ljava/io/OutputStream;.write:([BII)V` @kind virtual;
+  #L25f0ce.  goto L25f0ba;
+  #L25f0d0.  call `flush`(v6) @signature `Ljava/io/OutputStream;.flush:()V` @kind virtual;
+  #L25f0d6.  call `close`(v6) @signature `Ljava/io/OutputStream;.close:()V` @kind virtual;
+  #L25f0dc.  call `close`(v5) @signature `Ljava/io/InputStream;.close:()V` @kind virtual;
+  #L25f0e2.  goto L25f0f0;
+  #L25f0e4.  v5:= Exception @type ^`java.io.IOException` @kind object;
+  #L25f0e6.  v6:= "Failed to open file" @kind object;
+  #L25f0ea.  call temp:= `e`(v6, v5) @signature `Lcom/activeandroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/Throwable;)I` @kind static;
+  #L25f0f0.  return @kind void;
+  catch `java.io.IOException` @[L25f098..L25f0e2] goto L25f0e4;
+}
+procedure `void` `onCreate`(`com.activeandroid.DatabaseHelper` v2 @kind this, `android.database.sqlite.SQLiteDatabase` v3 @kind object) @signature `Lcom/activeandroid/DatabaseHelper;.onCreate:(Landroid/database/sqlite/SQLiteDatabase;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L25f3f4.  call `executePragmas`(v2, v3) @signature `Lcom/activeandroid/DatabaseHelper;.executePragmas:(Landroid/database/sqlite/SQLiteDatabase;)V` @kind direct;
+  #L25f3fa.  call `executeCreate`(v2, v3) @signature `Lcom/activeandroid/DatabaseHelper;.executeCreate:(Landroid/database/sqlite/SQLiteDatabase;)V` @kind direct;
+  #L25f400.  call temp:= `getVersion`(v3) @signature `Landroid/database/sqlite/SQLiteDatabase;.getVersion:()I` @kind virtual;
+  #L25f406.  v0:= temp;
+  #L25f408.  v1:= -1I;
+  #L25f40a.  call temp:= `executeMigrations`(v2, v3, v1, v0) @signature `Lcom/activeandroid/DatabaseHelper;.executeMigrations:(Landroid/database/sqlite/SQLiteDatabase;II)Z` @kind direct;
+  #L25f410.  call `executeCreateIndex`(v2, v3) @signature `Lcom/activeandroid/DatabaseHelper;.executeCreateIndex:(Landroid/database/sqlite/SQLiteDatabase;)V` @kind direct;
+  #L25f416.  return @kind void;
+}
+procedure `void` `onOpen`(`com.activeandroid.DatabaseHelper` v0 @kind this, `android.database.sqlite.SQLiteDatabase` v1 @kind object) @signature `Lcom/activeandroid/DatabaseHelper;.onOpen:(Landroid/database/sqlite/SQLiteDatabase;)V` @AccessFlag PUBLIC {
+    temp;
+
+  #L25f428.  call `executePragmas`(v0, v1) @signature `Lcom/activeandroid/DatabaseHelper;.executePragmas:(Landroid/database/sqlite/SQLiteDatabase;)V` @kind direct;
+  #L25f42e.  return @kind void;
+}
+procedure `void` `onUpgrade`(`com.activeandroid.DatabaseHelper` v0 @kind this, `android.database.sqlite.SQLiteDatabase` v1 @kind object, `int` v2 , `int` v3 ) @signature `Lcom/activeandroid/DatabaseHelper;.onUpgrade:(Landroid/database/sqlite/SQLiteDatabase;II)V` @AccessFlag PUBLIC {
+    temp;
+
+  #L25f440.  call `executePragmas`(v0, v1) @signature `Lcom/activeandroid/DatabaseHelper;.executePragmas:(Landroid/database/sqlite/SQLiteDatabase;)V` @kind direct;
+  #L25f446.  call `executeCreate`(v0, v1) @signature `Lcom/activeandroid/DatabaseHelper;.executeCreate:(Landroid/database/sqlite/SQLiteDatabase;)V` @kind direct;
+  #L25f44c.  call temp:= `executeMigrations`(v0, v1, v2, v3) @signature `Lcom/activeandroid/DatabaseHelper;.executeMigrations:(Landroid/database/sqlite/SQLiteDatabase;II)Z` @kind direct;
+  #L25f452.  return @kind void;
+}

@@ -1,0 +1,1273 @@
+record `okhttp3.internal.cache.DiskLruCache` @kind class @AccessFlag PUBLIC_FINAL extends `java.io.Closeable` @kind interface, `java.io.Flushable` @kind interface {
+  `int` `okhttp3.internal.cache.DiskLruCache.appVersion` @AccessFlag PRIVATE_FINAL;
+  `java.lang.Runnable` `okhttp3.internal.cache.DiskLruCache.cleanupRunnable` @AccessFlag PRIVATE_FINAL;
+  `boolean` `okhttp3.internal.cache.DiskLruCache.closed` @AccessFlag ;
+  `java.io.File` `okhttp3.internal.cache.DiskLruCache.directory` @AccessFlag FINAL;
+  `java.util.concurrent.Executor` `okhttp3.internal.cache.DiskLruCache.executor` @AccessFlag PRIVATE_FINAL;
+  `okhttp3.internal.io.FileSystem` `okhttp3.internal.cache.DiskLruCache.fileSystem` @AccessFlag FINAL;
+  `boolean` `okhttp3.internal.cache.DiskLruCache.hasJournalErrors` @AccessFlag ;
+  `boolean` `okhttp3.internal.cache.DiskLruCache.initialized` @AccessFlag ;
+  `java.io.File` `okhttp3.internal.cache.DiskLruCache.journalFile` @AccessFlag PRIVATE_FINAL;
+  `java.io.File` `okhttp3.internal.cache.DiskLruCache.journalFileBackup` @AccessFlag PRIVATE_FINAL;
+  `java.io.File` `okhttp3.internal.cache.DiskLruCache.journalFileTmp` @AccessFlag PRIVATE_FINAL;
+  `okio.BufferedSink` `okhttp3.internal.cache.DiskLruCache.journalWriter` @AccessFlag ;
+  `java.util.LinkedHashMap` `okhttp3.internal.cache.DiskLruCache.lruEntries` @AccessFlag FINAL;
+  `long` `okhttp3.internal.cache.DiskLruCache.maxSize` @AccessFlag PRIVATE;
+  `boolean` `okhttp3.internal.cache.DiskLruCache.mostRecentRebuildFailed` @AccessFlag ;
+  `boolean` `okhttp3.internal.cache.DiskLruCache.mostRecentTrimFailed` @AccessFlag ;
+  `long` `okhttp3.internal.cache.DiskLruCache.nextSequenceNumber` @AccessFlag PRIVATE;
+  `int` `okhttp3.internal.cache.DiskLruCache.redundantOpCount` @AccessFlag ;
+  `long` `okhttp3.internal.cache.DiskLruCache.size` @AccessFlag PRIVATE;
+  `int` `okhttp3.internal.cache.DiskLruCache.valueCount` @AccessFlag FINAL;
+}
+global `boolean` `@@okhttp3.internal.cache.DiskLruCache.$assertionsDisabled` @AccessFlag STATIC_FINAL_SYNTHETIC;
+global `long` `@@okhttp3.internal.cache.DiskLruCache.ANY_SEQUENCE_NUMBER` @AccessFlag STATIC_FINAL;
+global `java.lang.String` `@@okhttp3.internal.cache.DiskLruCache.CLEAN` @AccessFlag PRIVATE_STATIC_FINAL;
+global `java.lang.String` `@@okhttp3.internal.cache.DiskLruCache.DIRTY` @AccessFlag PRIVATE_STATIC_FINAL;
+global `java.lang.String` `@@okhttp3.internal.cache.DiskLruCache.JOURNAL_FILE` @AccessFlag STATIC_FINAL;
+global `java.lang.String` `@@okhttp3.internal.cache.DiskLruCache.JOURNAL_FILE_BACKUP` @AccessFlag STATIC_FINAL;
+global `java.lang.String` `@@okhttp3.internal.cache.DiskLruCache.JOURNAL_FILE_TEMP` @AccessFlag STATIC_FINAL;
+global `java.util.regex.Pattern` `@@okhttp3.internal.cache.DiskLruCache.LEGAL_KEY_PATTERN` @AccessFlag STATIC_FINAL;
+global `java.lang.String` `@@okhttp3.internal.cache.DiskLruCache.MAGIC` @AccessFlag STATIC_FINAL;
+global `java.lang.String` `@@okhttp3.internal.cache.DiskLruCache.READ` @AccessFlag PRIVATE_STATIC_FINAL;
+global `java.lang.String` `@@okhttp3.internal.cache.DiskLruCache.REMOVE` @AccessFlag PRIVATE_STATIC_FINAL;
+global `java.lang.String` `@@okhttp3.internal.cache.DiskLruCache.VERSION_1` @AccessFlag STATIC_FINAL;
+procedure `void` `<clinit>`() @signature `Lokhttp3/internal/cache/DiskLruCache;.<clinit>:()V` @AccessFlag STATIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L235f7c.  v0:= "[a-z0-9_-]{1,120}" @kind object;
+  #L235f80.  call temp:= `compile`(v0) @signature `Ljava/util/regex/Pattern;.compile:(Ljava/lang/String;)Ljava/util/regex/Pattern;` @kind static;
+  #L235f86.  v0:= temp @kind object;
+  #L235f88.  `@@okhttp3.internal.cache.DiskLruCache.LEGAL_KEY_PATTERN` @type ^`java.util.regex.Pattern` := v0 @kind object;
+  #L235f8c.  return @kind void;
+}
+procedure `void` `<init>`(`okhttp3.internal.cache.DiskLruCache` v6 @kind this, `okhttp3.internal.io.FileSystem` v7 @kind object, `java.io.File` v8 @kind object, `int` v9 , `int` v10 , `long` v11 , `java.util.concurrent.Executor` v13 @kind object) @signature `Lokhttp3/internal/cache/DiskLruCache;.<init>:(Lokhttp3/internal/io/FileSystem;Ljava/io/File;IIJLjava/util/concurrent/Executor;)V` @AccessFlag CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L235fa0.  call `<init>`(v6) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L235fa6.  v0:= 0L;
+  #L235faa.  v6.`okhttp3.internal.cache.DiskLruCache.size` @type ^`long` := v0 @kind wide;
+  #L235fae.  v2:= new `java.util.LinkedHashMap`;
+  #L235fb2.  v3:= 0I;
+  #L235fb4.  v4:= 0.75F;
+  #L235fb8.  v5:= 1I;
+  #L235fba.  call `<init>`(v2, v3, v4, v5) @signature `Ljava/util/LinkedHashMap;.<init>:(IFZ)V` @kind direct;
+  #L235fc0.  v6.`okhttp3.internal.cache.DiskLruCache.lruEntries` @type ^`java.util.LinkedHashMap` := v2 @kind object;
+  #L235fc4.  v6.`okhttp3.internal.cache.DiskLruCache.nextSequenceNumber` @type ^`long` := v0 @kind wide;
+  #L235fc8.  v0:= new `okhttp3.internal.cache.DiskLruCache$1`;
+  #L235fcc.  call `<init>`(v0, v6) @signature `Lokhttp3/internal/cache/DiskLruCache$1;.<init>:(Lokhttp3/internal/cache/DiskLruCache;)V` @kind direct;
+  #L235fd2.  v6.`okhttp3.internal.cache.DiskLruCache.cleanupRunnable` @type ^`java.lang.Runnable` := v0 @kind object;
+  #L235fd6.  v6.`okhttp3.internal.cache.DiskLruCache.fileSystem` @type ^`okhttp3.internal.io.FileSystem` := v7 @kind object;
+  #L235fda.  v6.`okhttp3.internal.cache.DiskLruCache.directory` @type ^`java.io.File` := v8 @kind object;
+  #L235fde.  v6.`okhttp3.internal.cache.DiskLruCache.appVersion` @type ^`int` := v9;
+  #L235fe2.  v7:= new `java.io.File`;
+  #L235fe6.  v9:= "journal" @kind object;
+  #L235fea.  call `<init>`(v7, v8, v9) @signature `Ljava/io/File;.<init>:(Ljava/io/File;Ljava/lang/String;)V` @kind direct;
+  #L235ff0.  v6.`okhttp3.internal.cache.DiskLruCache.journalFile` @type ^`java.io.File` := v7 @kind object;
+  #L235ff4.  v7:= new `java.io.File`;
+  #L235ff8.  v9:= "journal.tmp" @kind object;
+  #L235ffc.  call `<init>`(v7, v8, v9) @signature `Ljava/io/File;.<init>:(Ljava/io/File;Ljava/lang/String;)V` @kind direct;
+  #L236002.  v6.`okhttp3.internal.cache.DiskLruCache.journalFileTmp` @type ^`java.io.File` := v7 @kind object;
+  #L236006.  v7:= new `java.io.File`;
+  #L23600a.  v9:= "journal.bkp" @kind object;
+  #L23600e.  call `<init>`(v7, v8, v9) @signature `Ljava/io/File;.<init>:(Ljava/io/File;Ljava/lang/String;)V` @kind direct;
+  #L236014.  v6.`okhttp3.internal.cache.DiskLruCache.journalFileBackup` @type ^`java.io.File` := v7 @kind object;
+  #L236018.  v6.`okhttp3.internal.cache.DiskLruCache.valueCount` @type ^`int` := v10;
+  #L23601c.  v6.`okhttp3.internal.cache.DiskLruCache.maxSize` @type ^`long` := v11 @kind wide;
+  #L236020.  v6.`okhttp3.internal.cache.DiskLruCache.executor` @type ^`java.util.concurrent.Executor` := v13 @kind object;
+  #L236024.  return @kind void;
+}
+procedure `void` `checkNotClosed`(`okhttp3.internal.cache.DiskLruCache` v2 @kind this) @signature `Lokhttp3/internal/cache/DiskLruCache;.checkNotClosed:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+
+  #L236038.  @monitorenter v2
+  #L23603a.  call temp:= `isClosed`(v2) @signature `Lokhttp3/internal/cache/DiskLruCache;.isClosed:()Z` @kind virtual;
+  #L236040.  v0:= temp;
+  #L236042.  if v0 != 0 then goto L23604a;
+  #L236046.  @monitorexit v2
+  #L236048.  return @kind void;
+  #L23604a.  v0:= new `java.lang.IllegalStateException`;
+  #L23604e.  v1:= "cache is closed" @kind object;
+  #L236052.  call `<init>`(v0, v1) @signature `Ljava/lang/IllegalStateException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L236058.  throw v0;
+  #L23605a.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L23605c.  @monitorexit v2
+  #L23605e.  throw v0;
+  catch `java.lang.Throwable` @[L23603a..L236042] goto L23605a;
+  catch `java.lang.Throwable` @[L23604a..L23605a] goto L23605a;
+}
+procedure `okhttp3.internal.cache.DiskLruCache` `create`(`okhttp3.internal.io.FileSystem` v10 @kind object, `java.io.File` v11 @kind object, `int` v12 , `int` v13 , `long` v14 ) @signature `Lokhttp3/internal/cache/DiskLruCache;.create:(Lokhttp3/internal/io/FileSystem;Ljava/io/File;IIJ)Lokhttp3/internal/cache/DiskLruCache;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+    v9;
+
+  #L235ca8.  v0:= 0L;
+  #L235cac.  v2:= lcmp(v14, v0);
+  #L235cb0.  if v2 <= 0 then goto L235d10;
+  #L235cb4.  if v13 <= 0 then goto L235d00;
+  #L235cb8.  v9:= new `java.util.concurrent.ThreadPoolExecutor`;
+  #L235cbc.  v1:= 0I;
+  #L235cbe.  v2:= 1I;
+  #L235cc0.  v3:= 60L;
+  #L235cc4.  v5:= `@@java.util.concurrent.TimeUnit.SECONDS` @type ^`java.util.concurrent.TimeUnit` @kind object;
+  #L235cc8.  v6:= new `java.util.concurrent.LinkedBlockingQueue`;
+  #L235ccc.  call `<init>`(v6) @signature `Ljava/util/concurrent/LinkedBlockingQueue;.<init>:()V` @kind direct;
+  #L235cd2.  v0:= "OkHttp DiskLruCache" @kind object;
+  #L235cd6.  v7:= 1I;
+  #L235cd8.  call temp:= `threadFactory`(v0, v7) @signature `Lokhttp3/internal/Util;.threadFactory:(Ljava/lang/String;Z)Ljava/util/concurrent/ThreadFactory;` @kind static;
+  #L235cde.  v7:= temp @kind object;
+  #L235ce0.  v0:= v9 @kind object;
+  #L235ce2.  call `<init>`(v0, v1, v2, v3, v5, v6, v7) @signature `Ljava/util/concurrent/ThreadPoolExecutor;.<init>:(IIJLjava/util/concurrent/TimeUnit;Ljava/util/concurrent/BlockingQueue;Ljava/util/concurrent/ThreadFactory;)V` @kind direct;
+  #L235ce8.  v0:= new `okhttp3.internal.cache.DiskLruCache`;
+  #L235cec.  v2:= v0 @kind object;
+  #L235cee.  v3:= v10 @kind object;
+  #L235cf0.  v4:= v11 @kind object;
+  #L235cf2.  v5:= v12;
+  #L235cf4.  v6:= v13;
+  #L235cf6.  v7:= v14 @kind wide;
+  #L235cf8.  call `<init>`(v2, v3, v4, v5, v6, v7, v9) @signature `Lokhttp3/internal/cache/DiskLruCache;.<init>:(Lokhttp3/internal/io/FileSystem;Ljava/io/File;IIJLjava/util/concurrent/Executor;)V` @kind direct;
+  #L235cfe.  return v0 @kind object;
+  #L235d00.  v0:= new `java.lang.IllegalArgumentException`;
+  #L235d04.  v1:= "valueCount <= 0" @kind object;
+  #L235d08.  call `<init>`(v0, v1) @signature `Ljava/lang/IllegalArgumentException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L235d0e.  throw v0;
+  #L235d10.  v0:= new `java.lang.IllegalArgumentException`;
+  #L235d14.  v1:= "maxSize <= 0" @kind object;
+  #L235d18.  call `<init>`(v0, v1) @signature `Ljava/lang/IllegalArgumentException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L235d1e.  throw v0;
+}
+procedure `okio.BufferedSink` `newJournalWriter`(`okhttp3.internal.cache.DiskLruCache` v2 @kind this) @signature `Lokhttp3/internal/cache/DiskLruCache;.newJournalWriter:()Lokio/BufferedSink;` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+
+  #L235f48.  v0:= v2.`okhttp3.internal.cache.DiskLruCache.fileSystem` @type ^`okhttp3.internal.io.FileSystem` @kind object;
+  #L235f4c.  v1:= v2.`okhttp3.internal.cache.DiskLruCache.journalFile` @type ^`java.io.File` @kind object;
+  #L235f50.  call temp:= `appendingSink`(v0, v1) @signature `Lokhttp3/internal/io/FileSystem;.appendingSink:(Ljava/io/File;)Lokio/Sink;` @kind interface;
+  #L235f56.  v0:= temp @kind object;
+  #L235f58.  v1:= new `okhttp3.internal.cache.DiskLruCache$2`;
+  #L235f5c.  call `<init>`(v1, v2, v0) @signature `Lokhttp3/internal/cache/DiskLruCache$2;.<init>:(Lokhttp3/internal/cache/DiskLruCache;Lokio/Sink;)V` @kind direct;
+  #L235f62.  call temp:= `buffer`(v1) @signature `Lokio/Okio;.buffer:(Lokio/Sink;)Lokio/BufferedSink;` @kind static;
+  #L235f68.  v0:= temp @kind object;
+  #L235f6a.  return v0 @kind object;
+}
+procedure `void` `processJournal`(`okhttp3.internal.cache.DiskLruCache` v8 @kind this) @signature `Lokhttp3/internal/cache/DiskLruCache;.processJournal:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+
+  #L2365ac.  v0:= v8.`okhttp3.internal.cache.DiskLruCache.fileSystem` @type ^`okhttp3.internal.io.FileSystem` @kind object;
+  #L2365b0.  v1:= v8.`okhttp3.internal.cache.DiskLruCache.journalFileTmp` @type ^`java.io.File` @kind object;
+  #L2365b4.  call `delete`(v0, v1) @signature `Lokhttp3/internal/io/FileSystem;.delete:(Ljava/io/File;)V` @kind interface;
+  #L2365ba.  v0:= v8.`okhttp3.internal.cache.DiskLruCache.lruEntries` @type ^`java.util.LinkedHashMap` @kind object;
+  #L2365be.  call temp:= `values`(v0) @signature `Ljava/util/LinkedHashMap;.values:()Ljava/util/Collection;` @kind virtual;
+  #L2365c4.  v0:= temp @kind object;
+  #L2365c6.  call temp:= `iterator`(v0) @signature `Ljava/util/Collection;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L2365cc.  v0:= temp @kind object;
+  #L2365ce.  call temp:= `hasNext`(v0) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L2365d4.  v1:= temp;
+  #L2365d6.  if v1 == 0 then goto L236650;
+  #L2365da.  call temp:= `next`(v0) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L2365e0.  v1:= temp @kind object;
+  #L2365e2.  v1:= (`okhttp3.internal.cache.DiskLruCache$Entry`) v1 @kind object;
+  #L2365e6.  v2:= v1.`okhttp3.internal.cache.DiskLruCache$Entry.currentEditor` @type ^`okhttp3.internal.cache.DiskLruCache$Editor` @kind object;
+  #L2365ea.  v3:= 0I;
+  #L2365ec.  if v2 != 0 then goto L236610;
+  #L2365f0.  v2:= v8.`okhttp3.internal.cache.DiskLruCache.valueCount` @type ^`int`;
+  #L2365f4.  if v3 >= v2 then goto L2365ce;
+  #L2365f8.  v4:= v8.`okhttp3.internal.cache.DiskLruCache.size` @type ^`long` @kind wide;
+  #L2365fc.  v2:= v1.`okhttp3.internal.cache.DiskLruCache$Entry.lengths` @type ^`long`[] @kind object;
+  #L236600.  v6:= v2[v3] @kind wide;
+  #L236604.  v4:= v4 + v6 @kind long;
+  #L236606.  v8.`okhttp3.internal.cache.DiskLruCache.size` @type ^`long` := v4 @kind wide;
+  #L23660a.  v3:= v3 + 1;
+  #L23660e.  goto L2365f0;
+  #L236610.  v2:= 0I;
+  #L236612.  v1.`okhttp3.internal.cache.DiskLruCache$Entry.currentEditor` @type ^`okhttp3.internal.cache.DiskLruCache$Editor` := v2 @kind object;
+  #L236616.  v2:= v8.`okhttp3.internal.cache.DiskLruCache.valueCount` @type ^`int`;
+  #L23661a.  if v3 >= v2 then goto L236648;
+  #L23661e.  v2:= v8.`okhttp3.internal.cache.DiskLruCache.fileSystem` @type ^`okhttp3.internal.io.FileSystem` @kind object;
+  #L236622.  v4:= v1.`okhttp3.internal.cache.DiskLruCache$Entry.cleanFiles` @type ^`java.io.File`[] @kind object;
+  #L236626.  v4:= v4[v3] @kind object;
+  #L23662a.  call `delete`(v2, v4) @signature `Lokhttp3/internal/io/FileSystem;.delete:(Ljava/io/File;)V` @kind interface;
+  #L236630.  v2:= v8.`okhttp3.internal.cache.DiskLruCache.fileSystem` @type ^`okhttp3.internal.io.FileSystem` @kind object;
+  #L236634.  v4:= v1.`okhttp3.internal.cache.DiskLruCache$Entry.dirtyFiles` @type ^`java.io.File`[] @kind object;
+  #L236638.  v4:= v4[v3] @kind object;
+  #L23663c.  call `delete`(v2, v4) @signature `Lokhttp3/internal/io/FileSystem;.delete:(Ljava/io/File;)V` @kind interface;
+  #L236642.  v3:= v3 + 1;
+  #L236646.  goto L236616;
+  #L236648.  call `remove`(v0) @signature `Ljava/util/Iterator;.remove:()V` @kind interface;
+  #L23664e.  goto L2365ce;
+  #L236650.  return @kind void;
+}
+procedure `void` `readJournal`(`okhttp3.internal.cache.DiskLruCache` v8 @kind this) @signature `Lokhttp3/internal/cache/DiskLruCache;.readJournal:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+
+  #L236664.  v0:= v8.`okhttp3.internal.cache.DiskLruCache.fileSystem` @type ^`okhttp3.internal.io.FileSystem` @kind object;
+  #L236668.  v1:= v8.`okhttp3.internal.cache.DiskLruCache.journalFile` @type ^`java.io.File` @kind object;
+  #L23666c.  call temp:= `source`(v0, v1) @signature `Lokhttp3/internal/io/FileSystem;.source:(Ljava/io/File;)Lokio/Source;` @kind interface;
+  #L236672.  v0:= temp @kind object;
+  #L236674.  call temp:= `buffer`(v0) @signature `Lokio/Okio;.buffer:(Lokio/Source;)Lokio/BufferedSource;` @kind static;
+  #L23667a.  v0:= temp @kind object;
+  #L23667c.  call temp:= `readUtf8LineStrict`(v0) @signature `Lokio/BufferedSource;.readUtf8LineStrict:()Ljava/lang/String;` @kind interface;
+  #L236682.  v1:= temp @kind object;
+  #L236684.  call temp:= `readUtf8LineStrict`(v0) @signature `Lokio/BufferedSource;.readUtf8LineStrict:()Ljava/lang/String;` @kind interface;
+  #L23668a.  v2:= temp @kind object;
+  #L23668c.  call temp:= `readUtf8LineStrict`(v0) @signature `Lokio/BufferedSource;.readUtf8LineStrict:()Ljava/lang/String;` @kind interface;
+  #L236692.  v3:= temp @kind object;
+  #L236694.  call temp:= `readUtf8LineStrict`(v0) @signature `Lokio/BufferedSource;.readUtf8LineStrict:()Ljava/lang/String;` @kind interface;
+  #L23669a.  v4:= temp @kind object;
+  #L23669c.  call temp:= `readUtf8LineStrict`(v0) @signature `Lokio/BufferedSource;.readUtf8LineStrict:()Ljava/lang/String;` @kind interface;
+  #L2366a2.  v5:= temp @kind object;
+  #L2366a4.  v6:= "libcore.io.DiskLruCache" @kind object;
+  #L2366a8.  call temp:= `equals`(v6, v1) @signature `Ljava/lang/String;.equals:(Ljava/lang/Object;)Z` @kind virtual;
+  #L2366ae.  v6:= temp;
+  #L2366b0.  if v6 == 0 then goto L236754;
+  #L2366b4.  v6:= "1" @kind object;
+  #L2366b8.  call temp:= `equals`(v6, v2) @signature `Ljava/lang/String;.equals:(Ljava/lang/Object;)Z` @kind virtual;
+  #L2366be.  v6:= temp;
+  #L2366c0.  if v6 == 0 then goto L236754;
+  #L2366c4.  v6:= v8.`okhttp3.internal.cache.DiskLruCache.appVersion` @type ^`int`;
+  #L2366c8.  call temp:= `toString`(v6) @signature `Ljava/lang/Integer;.toString:(I)Ljava/lang/String;` @kind static;
+  #L2366ce.  v6:= temp @kind object;
+  #L2366d0.  call temp:= `equals`(v6, v3) @signature `Ljava/lang/String;.equals:(Ljava/lang/Object;)Z` @kind virtual;
+  #L2366d6.  v3:= temp;
+  #L2366d8.  if v3 == 0 then goto L236754;
+  #L2366dc.  v3:= v8.`okhttp3.internal.cache.DiskLruCache.valueCount` @type ^`int`;
+  #L2366e0.  call temp:= `toString`(v3) @signature `Ljava/lang/Integer;.toString:(I)Ljava/lang/String;` @kind static;
+  #L2366e6.  v3:= temp @kind object;
+  #L2366e8.  call temp:= `equals`(v3, v4) @signature `Ljava/lang/String;.equals:(Ljava/lang/Object;)Z` @kind virtual;
+  #L2366ee.  v3:= temp;
+  #L2366f0.  if v3 == 0 then goto L236754;
+  #L2366f4.  v3:= "" @kind object;
+  #L2366f8.  call temp:= `equals`(v3, v5) @signature `Ljava/lang/String;.equals:(Ljava/lang/Object;)Z` @kind virtual;
+  #L2366fe.  v3:= temp;
+  #L236700.  if v3 == 0 then goto L236754;
+  #L236704.  v1:= 0I;
+  #L236706.  call temp:= `readUtf8LineStrict`(v0) @signature `Lokio/BufferedSource;.readUtf8LineStrict:()Ljava/lang/String;` @kind interface;
+  #L23670c.  v2:= temp @kind object;
+  #L23670e.  call `readJournalLine`(v8, v2) @signature `Lokhttp3/internal/cache/DiskLruCache;.readJournalLine:(Ljava/lang/String;)V` @kind direct;
+  #L236714.  v1:= v1 + 1;
+  #L236718.  goto L236706;
+  #L23671a.  v2:= v8.`okhttp3.internal.cache.DiskLruCache.lruEntries` @type ^`java.util.LinkedHashMap` @kind object;
+  #L23671e.  call temp:= `size`(v2) @signature `Ljava/util/LinkedHashMap;.size:()I` @kind virtual;
+  #L236724.  v2:= temp;
+  #L236726.  v1:= v1 - v2 @kind int;
+  #L236728.  v8.`okhttp3.internal.cache.DiskLruCache.redundantOpCount` @type ^`int` := v1;
+  #L23672c.  call temp:= `exhausted`(v0) @signature `Lokio/BufferedSource;.exhausted:()Z` @kind interface;
+  #L236732.  v1:= temp;
+  #L236734.  if v1 != 0 then goto L236740;
+  #L236738.  call `rebuildJournal`(v8) @signature `Lokhttp3/internal/cache/DiskLruCache;.rebuildJournal:()V` @kind virtual;
+  #L23673e.  goto L23674c;
+  #L236740.  call temp:= `newJournalWriter`(v8) @signature `Lokhttp3/internal/cache/DiskLruCache;.newJournalWriter:()Lokio/BufferedSink;` @kind direct;
+  #L236746.  v1:= temp @kind object;
+  #L236748.  v8.`okhttp3.internal.cache.DiskLruCache.journalWriter` @type ^`okio.BufferedSink` := v1 @kind object;
+  #L23674c.  call `closeQuietly`(v0) @signature `Lokhttp3/internal/Util;.closeQuietly:(Ljava/io/Closeable;)V` @kind static;
+  #L236752.  return @kind void;
+  #L236754.  v3:= new `java.io.IOException`;
+  #L236758.  v6:= new `java.lang.StringBuilder`;
+  #L23675c.  call `<init>`(v6) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L236762.  v7:= "unexpected journal header: [" @kind object;
+  #L236766.  call temp:= `append`(v6, v7) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L23676c.  call temp:= `append`(v6, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L236772.  v1:= ", " @kind object;
+  #L236776.  call temp:= `append`(v6, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L23677c.  call temp:= `append`(v6, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L236782.  v1:= ", " @kind object;
+  #L236786.  call temp:= `append`(v6, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L23678c.  call temp:= `append`(v6, v4) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L236792.  v1:= ", " @kind object;
+  #L236796.  call temp:= `append`(v6, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L23679c.  call temp:= `append`(v6, v5) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2367a2.  v1:= "]" @kind object;
+  #L2367a6.  call temp:= `append`(v6, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2367ac.  call temp:= `toString`(v6) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L2367b2.  v1:= temp @kind object;
+  #L2367b4.  call `<init>`(v3, v1) @signature `Ljava/io/IOException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L2367ba.  throw v3;
+  #L2367bc.  v1:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L2367be.  call `closeQuietly`(v0) @signature `Lokhttp3/internal/Util;.closeQuietly:(Ljava/io/Closeable;)V` @kind static;
+  #L2367c4.  throw v1;
+  #L2367c6.  return @kind void;
+  catch `java.lang.Throwable` @[L23667c..L236700] goto L2367bc;
+  catch `java.io.EOFException` @[L236706..L236714] goto L23671a;
+  catch `java.lang.Throwable` @[L236706..L236714] goto L2367bc;
+  catch `java.lang.Throwable` @[L23671a..L23674c] goto L2367bc;
+  catch `java.lang.Throwable` @[L236754..L2367bc] goto L2367bc;
+}
+procedure `void` `readJournalLine`(`okhttp3.internal.cache.DiskLruCache` v6 @kind this, `java.lang.String` v7 @kind object) @signature `Lokhttp3/internal/cache/DiskLruCache;.readJournalLine:(Ljava/lang/String;)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L236804.  v0:= 32I;
+  #L236808.  call temp:= `indexOf`(v7, v0) @signature `Ljava/lang/String;.indexOf:(I)I` @kind virtual;
+  #L23680e.  v1:= temp;
+  #L236810.  v2:= -1I;
+  #L236812.  if v1 == v2 then goto L236936;
+  #L236816.  v3:= v1 + 1;
+  #L23681a.  call temp:= `indexOf`(v7, v0, v3) @signature `Ljava/lang/String;.indexOf:(II)I` @kind virtual;
+  #L236820.  v0:= temp;
+  #L236822.  if v0 != v2 then goto L236850;
+  #L236826.  call temp:= `substring`(v7, v3) @signature `Ljava/lang/String;.substring:(I)Ljava/lang/String;` @kind virtual;
+  #L23682c.  v3:= temp @kind object;
+  #L23682e.  v4:= 6I;
+  #L236830.  if v1 != v4 then goto L236858;
+  #L236834.  v4:= "REMOVE" @kind object;
+  #L236838.  call temp:= `startsWith`(v7, v4) @signature `Ljava/lang/String;.startsWith:(Ljava/lang/String;)Z` @kind virtual;
+  #L23683e.  v4:= temp;
+  #L236840.  if v4 == 0 then goto L236858;
+  #L236844.  v7:= v6.`okhttp3.internal.cache.DiskLruCache.lruEntries` @type ^`java.util.LinkedHashMap` @kind object;
+  #L236848.  call temp:= `remove`(v7, v3) @signature `Ljava/util/LinkedHashMap;.remove:(Ljava/lang/Object;)Ljava/lang/Object;` @kind virtual;
+  #L23684e.  return @kind void;
+  #L236850.  call temp:= `substring`(v7, v3, v0) @signature `Ljava/lang/String;.substring:(II)Ljava/lang/String;` @kind virtual;
+  #L236856.  v3:= temp @kind object;
+  #L236858.  v4:= v6.`okhttp3.internal.cache.DiskLruCache.lruEntries` @type ^`java.util.LinkedHashMap` @kind object;
+  #L23685c.  call temp:= `get`(v4, v3) @signature `Ljava/util/LinkedHashMap;.get:(Ljava/lang/Object;)Ljava/lang/Object;` @kind virtual;
+  #L236862.  v4:= temp @kind object;
+  #L236864.  v4:= (`okhttp3.internal.cache.DiskLruCache$Entry`) v4 @kind object;
+  #L236868.  if v4 != 0 then goto L236880;
+  #L23686c.  v4:= new `okhttp3.internal.cache.DiskLruCache$Entry`;
+  #L236870.  call `<init>`(v4, v6, v3) @signature `Lokhttp3/internal/cache/DiskLruCache$Entry;.<init>:(Lokhttp3/internal/cache/DiskLruCache;Ljava/lang/String;)V` @kind direct;
+  #L236876.  v5:= v6.`okhttp3.internal.cache.DiskLruCache.lruEntries` @type ^`java.util.LinkedHashMap` @kind object;
+  #L23687a.  call temp:= `put`(v5, v3, v4) @signature `Ljava/util/LinkedHashMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;` @kind virtual;
+  #L236880.  v3:= 5I;
+  #L236882.  if v0 == v2 then goto L2368c4;
+  #L236886.  if v1 != v3 then goto L2368c4;
+  #L23688a.  v5:= "CLEAN" @kind object;
+  #L23688e.  call temp:= `startsWith`(v7, v5) @signature `Ljava/lang/String;.startsWith:(Ljava/lang/String;)Z` @kind virtual;
+  #L236894.  v5:= temp;
+  #L236896.  if v5 == 0 then goto L2368c4;
+  #L23689a.  v1:= 1I;
+  #L23689c.  v0:= v0 + v1 @kind int;
+  #L23689e.  call temp:= `substring`(v7, v0) @signature `Ljava/lang/String;.substring:(I)Ljava/lang/String;` @kind virtual;
+  #L2368a4.  v7:= temp @kind object;
+  #L2368a6.  v0:= " " @kind object;
+  #L2368aa.  call temp:= `split`(v7, v0) @signature `Ljava/lang/String;.split:(Ljava/lang/String;)[Ljava/lang/String;` @kind virtual;
+  #L2368b0.  v7:= temp @kind object;
+  #L2368b2.  v4.`okhttp3.internal.cache.DiskLruCache$Entry.readable` @type ^`boolean` := v1 @kind boolean;
+  #L2368b6.  v0:= 0I;
+  #L2368b8.  v4.`okhttp3.internal.cache.DiskLruCache$Entry.currentEditor` @type ^`okhttp3.internal.cache.DiskLruCache$Editor` := v0 @kind object;
+  #L2368bc.  call `setLengths`(v4, v7) @signature `Lokhttp3/internal/cache/DiskLruCache$Entry;.setLengths:([Ljava/lang/String;)V` @kind virtual;
+  #L2368c2.  goto L236906;
+  #L2368c4.  if v0 != v2 then goto L2368ec;
+  #L2368c8.  if v1 != v3 then goto L2368ec;
+  #L2368cc.  v3:= "DIRTY" @kind object;
+  #L2368d0.  call temp:= `startsWith`(v7, v3) @signature `Ljava/lang/String;.startsWith:(Ljava/lang/String;)Z` @kind virtual;
+  #L2368d6.  v3:= temp;
+  #L2368d8.  if v3 == 0 then goto L2368ec;
+  #L2368dc.  v7:= new `okhttp3.internal.cache.DiskLruCache$Editor`;
+  #L2368e0.  call `<init>`(v7, v6, v4) @signature `Lokhttp3/internal/cache/DiskLruCache$Editor;.<init>:(Lokhttp3/internal/cache/DiskLruCache;Lokhttp3/internal/cache/DiskLruCache$Entry;)V` @kind direct;
+  #L2368e6.  v4.`okhttp3.internal.cache.DiskLruCache$Entry.currentEditor` @type ^`okhttp3.internal.cache.DiskLruCache$Editor` := v7 @kind object;
+  #L2368ea.  goto L236906;
+  #L2368ec.  if v0 != v2 then goto L236908;
+  #L2368f0.  v0:= 4I;
+  #L2368f2.  if v1 != v0 then goto L236908;
+  #L2368f6.  v0:= "READ" @kind object;
+  #L2368fa.  call temp:= `startsWith`(v7, v0) @signature `Ljava/lang/String;.startsWith:(Ljava/lang/String;)Z` @kind virtual;
+  #L236900.  v0:= temp;
+  #L236902.  if v0 == 0 then goto L236908;
+  #L236906.  return @kind void;
+  #L236908.  v0:= new `java.io.IOException`;
+  #L23690c.  v1:= new `java.lang.StringBuilder`;
+  #L236910.  call `<init>`(v1) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L236916.  v2:= "unexpected journal line: " @kind object;
+  #L23691a.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L236920.  call temp:= `append`(v1, v7) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L236926.  call temp:= `toString`(v1) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L23692c.  v7:= temp @kind object;
+  #L23692e.  call `<init>`(v0, v7) @signature `Ljava/io/IOException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L236934.  throw v0;
+  #L236936.  v0:= new `java.io.IOException`;
+  #L23693a.  v1:= new `java.lang.StringBuilder`;
+  #L23693e.  call `<init>`(v1) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L236944.  v2:= "unexpected journal line: " @kind object;
+  #L236948.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L23694e.  call temp:= `append`(v1, v7) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L236954.  call temp:= `toString`(v1) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L23695a.  v7:= temp @kind object;
+  #L23695c.  call `<init>`(v0, v7) @signature `Ljava/io/IOException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L236962.  throw v0;
+}
+procedure `void` `validateKey`(`okhttp3.internal.cache.DiskLruCache` v3 @kind this, `java.lang.String` v4 @kind object) @signature `Lokhttp3/internal/cache/DiskLruCache;.validateKey:(Ljava/lang/String;)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L236bc0.  v0:= `@@okhttp3.internal.cache.DiskLruCache.LEGAL_KEY_PATTERN` @type ^`java.util.regex.Pattern` @kind object;
+  #L236bc4.  call temp:= `matcher`(v0, v4) @signature `Ljava/util/regex/Pattern;.matcher:(Ljava/lang/CharSequence;)Ljava/util/regex/Matcher;` @kind virtual;
+  #L236bca.  v0:= temp @kind object;
+  #L236bcc.  call temp:= `matches`(v0) @signature `Ljava/util/regex/Matcher;.matches:()Z` @kind virtual;
+  #L236bd2.  v0:= temp;
+  #L236bd4.  if v0 == 0 then goto L236bda;
+  #L236bd8.  return @kind void;
+  #L236bda.  v0:= new `java.lang.IllegalArgumentException`;
+  #L236bde.  v1:= new `java.lang.StringBuilder`;
+  #L236be2.  call `<init>`(v1) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L236be8.  v2:= "keys must match regex [a-z0-9_-]{1,120}: \"" @kind object;
+  #L236bec.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L236bf2.  call temp:= `append`(v1, v4) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L236bf8.  v4:= "\"" @kind object;
+  #L236bfc.  call temp:= `append`(v1, v4) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L236c02.  call temp:= `toString`(v1) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L236c08.  v4:= temp @kind object;
+  #L236c0a.  call `<init>`(v0, v4) @signature `Ljava/lang/IllegalArgumentException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L236c10.  throw v0;
+}
+procedure `void` `close`(`okhttp3.internal.cache.DiskLruCache` v6 @kind this) @signature `Lokhttp3/internal/cache/DiskLruCache;.close:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L236084.  @monitorenter v6
+  #L236086.  v0:= v6.`okhttp3.internal.cache.DiskLruCache.initialized` @type ^`boolean` @kind boolean;
+  #L23608a.  v1:= 1I;
+  #L23608c.  if v0 == 0 then goto L236104;
+  #L236090.  v0:= v6.`okhttp3.internal.cache.DiskLruCache.closed` @type ^`boolean` @kind boolean;
+  #L236094.  if v0 == 0 then goto L23609a;
+  #L236098.  goto L236104;
+  #L23609a.  v0:= v6.`okhttp3.internal.cache.DiskLruCache.lruEntries` @type ^`java.util.LinkedHashMap` @kind object;
+  #L23609e.  call temp:= `values`(v0) @signature `Ljava/util/LinkedHashMap;.values:()Ljava/util/Collection;` @kind virtual;
+  #L2360a4.  v0:= temp @kind object;
+  #L2360a6.  v2:= v6.`okhttp3.internal.cache.DiskLruCache.lruEntries` @type ^`java.util.LinkedHashMap` @kind object;
+  #L2360aa.  call temp:= `size`(v2) @signature `Ljava/util/LinkedHashMap;.size:()I` @kind virtual;
+  #L2360b0.  v2:= temp;
+  #L2360b2.  v2:= new `okhttp3.internal.cache.DiskLruCache$Entry`[v2];
+  #L2360b6.  call temp:= `toArray`(v0, v2) @signature `Ljava/util/Collection;.toArray:([Ljava/lang/Object;)[Ljava/lang/Object;` @kind interface;
+  #L2360bc.  v0:= temp @kind object;
+  #L2360be.  v0:= (`okhttp3.internal.cache.DiskLruCache$Entry`[]) v0 @kind object;
+  #L2360c2.  v2:= length @variable v0;
+  #L2360c4.  v3:= 0I;
+  #L2360c6.  if v3 >= v2 then goto L2360e6;
+  #L2360ca.  v4:= v0[v3] @kind object;
+  #L2360ce.  v5:= v4.`okhttp3.internal.cache.DiskLruCache$Entry.currentEditor` @type ^`okhttp3.internal.cache.DiskLruCache$Editor` @kind object;
+  #L2360d2.  if v5 == 0 then goto L2360e0;
+  #L2360d6.  v4:= v4.`okhttp3.internal.cache.DiskLruCache$Entry.currentEditor` @type ^`okhttp3.internal.cache.DiskLruCache$Editor` @kind object;
+  #L2360da.  call `abort`(v4) @signature `Lokhttp3/internal/cache/DiskLruCache$Editor;.abort:()V` @kind virtual;
+  #L2360e0.  v3:= v3 + 1;
+  #L2360e4.  goto L2360c6;
+  #L2360e6.  call `trimToSize`(v6) @signature `Lokhttp3/internal/cache/DiskLruCache;.trimToSize:()V` @kind virtual;
+  #L2360ec.  v0:= v6.`okhttp3.internal.cache.DiskLruCache.journalWriter` @type ^`okio.BufferedSink` @kind object;
+  #L2360f0.  call `close`(v0) @signature `Lokio/BufferedSink;.close:()V` @kind interface;
+  #L2360f6.  v0:= 0I;
+  #L2360f8.  v6.`okhttp3.internal.cache.DiskLruCache.journalWriter` @type ^`okio.BufferedSink` := v0 @kind object;
+  #L2360fc.  v6.`okhttp3.internal.cache.DiskLruCache.closed` @type ^`boolean` := v1 @kind boolean;
+  #L236100.  @monitorexit v6
+  #L236102.  return @kind void;
+  #L236104.  v6.`okhttp3.internal.cache.DiskLruCache.closed` @type ^`boolean` := v1 @kind boolean;
+  #L236108.  @monitorexit v6
+  #L23610a.  return @kind void;
+  #L23610c.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L23610e.  @monitorexit v6
+  #L236110.  throw v0;
+  #L236112.  return @kind void;
+  catch `java.lang.Throwable` @[L236086..L236100] goto L23610c;
+  catch `java.lang.Throwable` @[L236104..L236108] goto L23610c;
+}
+procedure `void` `completeEdit`(`okhttp3.internal.cache.DiskLruCache` v9 @kind this, `okhttp3.internal.cache.DiskLruCache$Editor` v10 @kind object, `boolean` v11 ) @signature `Lokhttp3/internal/cache/DiskLruCache;.completeEdit:(Lokhttp3/internal/cache/DiskLruCache$Editor;Z)V` @AccessFlag  {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+
+  #L236138.  @monitorenter v9
+  #L23613a.  v0:= v10.`okhttp3.internal.cache.DiskLruCache$Editor.entry` @type ^`okhttp3.internal.cache.DiskLruCache$Entry` @kind object;
+  #L23613e.  v1:= v0.`okhttp3.internal.cache.DiskLruCache$Entry.currentEditor` @type ^`okhttp3.internal.cache.DiskLruCache$Editor` @kind object;
+  #L236142.  if v1 != v10 then goto L236322;
+  #L236146.  v1:= 0I;
+  #L236148.  if v11 == 0 then goto L2361c6;
+  #L23614c.  v2:= v0.`okhttp3.internal.cache.DiskLruCache$Entry.readable` @type ^`boolean` @kind boolean;
+  #L236150.  if v2 != 0 then goto L2361c6;
+  #L236154.  v2:= 0I;
+  #L236156.  v3:= v9.`okhttp3.internal.cache.DiskLruCache.valueCount` @type ^`int`;
+  #L23615a.  if v2 >= v3 then goto L2361c6;
+  #L23615e.  v3:= v10.`okhttp3.internal.cache.DiskLruCache$Editor.written` @type ^`boolean`[] @kind object;
+  #L236162.  v3:= v3[v2] @kind boolean;
+  #L236166.  if v3 == 0 then goto L236192;
+  #L23616a.  v3:= v9.`okhttp3.internal.cache.DiskLruCache.fileSystem` @type ^`okhttp3.internal.io.FileSystem` @kind object;
+  #L23616e.  v4:= v0.`okhttp3.internal.cache.DiskLruCache$Entry.dirtyFiles` @type ^`java.io.File`[] @kind object;
+  #L236172.  v4:= v4[v2] @kind object;
+  #L236176.  call temp:= `exists`(v3, v4) @signature `Lokhttp3/internal/io/FileSystem;.exists:(Ljava/io/File;)Z` @kind interface;
+  #L23617c.  v3:= temp;
+  #L23617e.  if v3 != 0 then goto L23618c;
+  #L236182.  call `abort`(v10) @signature `Lokhttp3/internal/cache/DiskLruCache$Editor;.abort:()V` @kind virtual;
+  #L236188.  @monitorexit v9
+  #L23618a.  return @kind void;
+  #L23618c.  v2:= v2 + 1;
+  #L236190.  goto L236156;
+  #L236192.  call `abort`(v10) @signature `Lokhttp3/internal/cache/DiskLruCache$Editor;.abort:()V` @kind virtual;
+  #L236198.  v10:= new `java.lang.IllegalStateException`;
+  #L23619c.  v11:= new `java.lang.StringBuilder`;
+  #L2361a0.  call `<init>`(v11) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L2361a6.  v0:= "Newly created entry didn't create value for index " @kind object;
+  #L2361aa.  call temp:= `append`(v11, v0) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2361b0.  call temp:= `append`(v11, v2) @signature `Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2361b6.  call temp:= `toString`(v11) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L2361bc.  v11:= temp @kind object;
+  #L2361be.  call `<init>`(v10, v11) @signature `Ljava/lang/IllegalStateException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L2361c4.  throw v10;
+  #L2361c6.  v10:= v9.`okhttp3.internal.cache.DiskLruCache.valueCount` @type ^`int`;
+  #L2361ca.  if v1 >= v10 then goto L236236;
+  #L2361ce.  v10:= v0.`okhttp3.internal.cache.DiskLruCache$Entry.dirtyFiles` @type ^`java.io.File`[] @kind object;
+  #L2361d2.  v10:= v10[v1] @kind object;
+  #L2361d6.  if v11 == 0 then goto L236226;
+  #L2361da.  v2:= v9.`okhttp3.internal.cache.DiskLruCache.fileSystem` @type ^`okhttp3.internal.io.FileSystem` @kind object;
+  #L2361de.  call temp:= `exists`(v2, v10) @signature `Lokhttp3/internal/io/FileSystem;.exists:(Ljava/io/File;)Z` @kind interface;
+  #L2361e4.  v2:= temp;
+  #L2361e6.  if v2 == 0 then goto L236230;
+  #L2361ea.  v2:= v0.`okhttp3.internal.cache.DiskLruCache$Entry.cleanFiles` @type ^`java.io.File`[] @kind object;
+  #L2361ee.  v2:= v2[v1] @kind object;
+  #L2361f2.  v3:= v9.`okhttp3.internal.cache.DiskLruCache.fileSystem` @type ^`okhttp3.internal.io.FileSystem` @kind object;
+  #L2361f6.  call `rename`(v3, v10, v2) @signature `Lokhttp3/internal/io/FileSystem;.rename:(Ljava/io/File;Ljava/io/File;)V` @kind interface;
+  #L2361fc.  v10:= v0.`okhttp3.internal.cache.DiskLruCache$Entry.lengths` @type ^`long`[] @kind object;
+  #L236200.  v3:= v10[v1] @kind wide;
+  #L236204.  v10:= v9.`okhttp3.internal.cache.DiskLruCache.fileSystem` @type ^`okhttp3.internal.io.FileSystem` @kind object;
+  #L236208.  call temp:= `size`(v10, v2) @signature `Lokhttp3/internal/io/FileSystem;.size:(Ljava/io/File;)J` @kind interface;
+  #L23620e.  v5:= temp @kind wide;
+  #L236210.  v10:= v0.`okhttp3.internal.cache.DiskLruCache$Entry.lengths` @type ^`long`[] @kind object;
+  #L236214.  v10[v1]:= v5 @kind wide;
+  #L236218.  v7:= v9.`okhttp3.internal.cache.DiskLruCache.size` @type ^`long` @kind wide;
+  #L23621c.  v7:= v7 - v3 @kind long;
+  #L23621e.  v7:= v7 + v5 @kind long;
+  #L236220.  v9.`okhttp3.internal.cache.DiskLruCache.size` @type ^`long` := v7 @kind wide;
+  #L236224.  goto L236230;
+  #L236226.  v2:= v9.`okhttp3.internal.cache.DiskLruCache.fileSystem` @type ^`okhttp3.internal.io.FileSystem` @kind object;
+  #L23622a.  call `delete`(v2, v10) @signature `Lokhttp3/internal/io/FileSystem;.delete:(Ljava/io/File;)V` @kind interface;
+  #L236230.  v1:= v1 + 1;
+  #L236234.  goto L2361c6;
+  #L236236.  v10:= v9.`okhttp3.internal.cache.DiskLruCache.redundantOpCount` @type ^`int`;
+  #L23623a.  v1:= 1I;
+  #L23623c.  v10:= v10 + v1 @kind int;
+  #L23623e.  v9.`okhttp3.internal.cache.DiskLruCache.redundantOpCount` @type ^`int` := v10;
+  #L236242.  v10:= 0I;
+  #L236244.  v0.`okhttp3.internal.cache.DiskLruCache$Entry.currentEditor` @type ^`okhttp3.internal.cache.DiskLruCache$Editor` := v10 @kind object;
+  #L236248.  v10:= v0.`okhttp3.internal.cache.DiskLruCache$Entry.readable` @type ^`boolean` @kind boolean;
+  #L23624c.  v10:= v10 ^| v11 @kind int;
+  #L23624e.  v2:= 10I;
+  #L236252.  v3:= 32I;
+  #L236256.  if v10 == 0 then goto L2362ae;
+  #L23625a.  v0.`okhttp3.internal.cache.DiskLruCache$Entry.readable` @type ^`boolean` := v1 @kind boolean;
+  #L23625e.  v10:= v9.`okhttp3.internal.cache.DiskLruCache.journalWriter` @type ^`okio.BufferedSink` @kind object;
+  #L236262.  v1:= "CLEAN" @kind object;
+  #L236266.  call temp:= `writeUtf8`(v10, v1) @signature `Lokio/BufferedSink;.writeUtf8:(Ljava/lang/String;)Lokio/BufferedSink;` @kind interface;
+  #L23626c.  v10:= temp @kind object;
+  #L23626e.  call temp:= `writeByte`(v10, v3) @signature `Lokio/BufferedSink;.writeByte:(I)Lokio/BufferedSink;` @kind interface;
+  #L236274.  v10:= v9.`okhttp3.internal.cache.DiskLruCache.journalWriter` @type ^`okio.BufferedSink` @kind object;
+  #L236278.  v1:= v0.`okhttp3.internal.cache.DiskLruCache$Entry.key` @type ^`java.lang.String` @kind object;
+  #L23627c.  call temp:= `writeUtf8`(v10, v1) @signature `Lokio/BufferedSink;.writeUtf8:(Ljava/lang/String;)Lokio/BufferedSink;` @kind interface;
+  #L236282.  v10:= v9.`okhttp3.internal.cache.DiskLruCache.journalWriter` @type ^`okio.BufferedSink` @kind object;
+  #L236286.  call `writeLengths`(v0, v10) @signature `Lokhttp3/internal/cache/DiskLruCache$Entry;.writeLengths:(Lokio/BufferedSink;)V` @kind virtual;
+  #L23628c.  v10:= v9.`okhttp3.internal.cache.DiskLruCache.journalWriter` @type ^`okio.BufferedSink` @kind object;
+  #L236290.  call temp:= `writeByte`(v10, v2) @signature `Lokio/BufferedSink;.writeByte:(I)Lokio/BufferedSink;` @kind interface;
+  #L236296.  if v11 == 0 then goto L2362ea;
+  #L23629a.  v10:= v9.`okhttp3.internal.cache.DiskLruCache.nextSequenceNumber` @type ^`long` @kind wide;
+  #L23629e.  v1:= 1L;
+  #L2362a2.  v1:= v1 + v10 @kind long;
+  #L2362a4.  v9.`okhttp3.internal.cache.DiskLruCache.nextSequenceNumber` @type ^`long` := v1 @kind wide;
+  #L2362a8.  v0.`okhttp3.internal.cache.DiskLruCache$Entry.sequenceNumber` @type ^`long` := v10 @kind wide;
+  #L2362ac.  goto L2362ea;
+  #L2362ae.  v10:= v9.`okhttp3.internal.cache.DiskLruCache.lruEntries` @type ^`java.util.LinkedHashMap` @kind object;
+  #L2362b2.  v11:= v0.`okhttp3.internal.cache.DiskLruCache$Entry.key` @type ^`java.lang.String` @kind object;
+  #L2362b6.  call temp:= `remove`(v10, v11) @signature `Ljava/util/LinkedHashMap;.remove:(Ljava/lang/Object;)Ljava/lang/Object;` @kind virtual;
+  #L2362bc.  v10:= v9.`okhttp3.internal.cache.DiskLruCache.journalWriter` @type ^`okio.BufferedSink` @kind object;
+  #L2362c0.  v11:= "REMOVE" @kind object;
+  #L2362c4.  call temp:= `writeUtf8`(v10, v11) @signature `Lokio/BufferedSink;.writeUtf8:(Ljava/lang/String;)Lokio/BufferedSink;` @kind interface;
+  #L2362ca.  v10:= temp @kind object;
+  #L2362cc.  call temp:= `writeByte`(v10, v3) @signature `Lokio/BufferedSink;.writeByte:(I)Lokio/BufferedSink;` @kind interface;
+  #L2362d2.  v10:= v9.`okhttp3.internal.cache.DiskLruCache.journalWriter` @type ^`okio.BufferedSink` @kind object;
+  #L2362d6.  v11:= v0.`okhttp3.internal.cache.DiskLruCache$Entry.key` @type ^`java.lang.String` @kind object;
+  #L2362da.  call temp:= `writeUtf8`(v10, v11) @signature `Lokio/BufferedSink;.writeUtf8:(Ljava/lang/String;)Lokio/BufferedSink;` @kind interface;
+  #L2362e0.  v10:= v9.`okhttp3.internal.cache.DiskLruCache.journalWriter` @type ^`okio.BufferedSink` @kind object;
+  #L2362e4.  call temp:= `writeByte`(v10, v2) @signature `Lokio/BufferedSink;.writeByte:(I)Lokio/BufferedSink;` @kind interface;
+  #L2362ea.  v10:= v9.`okhttp3.internal.cache.DiskLruCache.journalWriter` @type ^`okio.BufferedSink` @kind object;
+  #L2362ee.  call `flush`(v10) @signature `Lokio/BufferedSink;.flush:()V` @kind interface;
+  #L2362f4.  v10:= v9.`okhttp3.internal.cache.DiskLruCache.size` @type ^`long` @kind wide;
+  #L2362f8.  v0:= v9.`okhttp3.internal.cache.DiskLruCache.maxSize` @type ^`long` @kind wide;
+  #L2362fc.  v2:= lcmp(v10, v0);
+  #L236300.  if v2 > 0 then goto L236310;
+  #L236304.  call temp:= `journalRebuildRequired`(v9) @signature `Lokhttp3/internal/cache/DiskLruCache;.journalRebuildRequired:()Z` @kind virtual;
+  #L23630a.  v10:= temp;
+  #L23630c.  if v10 == 0 then goto L23631e;
+  #L236310.  v10:= v9.`okhttp3.internal.cache.DiskLruCache.executor` @type ^`java.util.concurrent.Executor` @kind object;
+  #L236314.  v11:= v9.`okhttp3.internal.cache.DiskLruCache.cleanupRunnable` @type ^`java.lang.Runnable` @kind object;
+  #L236318.  call `execute`(v10, v11) @signature `Ljava/util/concurrent/Executor;.execute:(Ljava/lang/Runnable;)V` @kind interface;
+  #L23631e.  @monitorexit v9
+  #L236320.  return @kind void;
+  #L236322.  v10:= new `java.lang.IllegalStateException`;
+  #L236326.  call `<init>`(v10) @signature `Ljava/lang/IllegalStateException;.<init>:()V` @kind direct;
+  #L23632c.  throw v10;
+  #L23632e.  v10:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L236330.  @monitorexit v9
+  #L236332.  throw v10;
+  #L236334.  return @kind void;
+  catch `java.lang.Throwable` @[L23613a..L236188] goto L23632e;
+  catch `java.lang.Throwable` @[L236192..L23631e] goto L23632e;
+  catch `java.lang.Throwable` @[L236322..L23632e] goto L23632e;
+}
+procedure `void` `delete`(`okhttp3.internal.cache.DiskLruCache` v2 @kind this) @signature `Lokhttp3/internal/cache/DiskLruCache;.delete:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L236364.  call `close`(v2) @signature `Lokhttp3/internal/cache/DiskLruCache;.close:()V` @kind virtual;
+  #L23636a.  v0:= v2.`okhttp3.internal.cache.DiskLruCache.fileSystem` @type ^`okhttp3.internal.io.FileSystem` @kind object;
+  #L23636e.  v1:= v2.`okhttp3.internal.cache.DiskLruCache.directory` @type ^`java.io.File` @kind object;
+  #L236372.  call `deleteContents`(v0, v1) @signature `Lokhttp3/internal/io/FileSystem;.deleteContents:(Ljava/io/File;)V` @kind interface;
+  #L236378.  return @kind void;
+}
+procedure `okhttp3.internal.cache.DiskLruCache$Editor` `edit`(`okhttp3.internal.cache.DiskLruCache` v2 @kind this, `java.lang.String` v3 @kind object) @signature `Lokhttp3/internal/cache/DiskLruCache;.edit:(Ljava/lang/String;)Lokhttp3/internal/cache/DiskLruCache$Editor;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L235d30.  v0:= -1L;
+  #L235d34.  call temp:= `edit`(v2, v3, v0) @signature `Lokhttp3/internal/cache/DiskLruCache;.edit:(Ljava/lang/String;J)Lokhttp3/internal/cache/DiskLruCache$Editor;` @kind virtual;
+  #L235d3a.  v3:= temp @kind object;
+  #L235d3c.  return v3 @kind object;
+}
+procedure `okhttp3.internal.cache.DiskLruCache$Editor` `edit`(`okhttp3.internal.cache.DiskLruCache` v5 @kind this, `java.lang.String` v6 @kind object, `long` v7 ) @signature `Lokhttp3/internal/cache/DiskLruCache;.edit:(Ljava/lang/String;J)Lokhttp3/internal/cache/DiskLruCache$Editor;` @AccessFlag  {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L235d50.  @monitorenter v5
+  #L235d52.  call `initialize`(v5) @signature `Lokhttp3/internal/cache/DiskLruCache;.initialize:()V` @kind virtual;
+  #L235d58.  call `checkNotClosed`(v5) @signature `Lokhttp3/internal/cache/DiskLruCache;.checkNotClosed:()V` @kind direct;
+  #L235d5e.  call `validateKey`(v5, v6) @signature `Lokhttp3/internal/cache/DiskLruCache;.validateKey:(Ljava/lang/String;)V` @kind direct;
+  #L235d64.  v0:= v5.`okhttp3.internal.cache.DiskLruCache.lruEntries` @type ^`java.util.LinkedHashMap` @kind object;
+  #L235d68.  call temp:= `get`(v0, v6) @signature `Ljava/util/LinkedHashMap;.get:(Ljava/lang/Object;)Ljava/lang/Object;` @kind virtual;
+  #L235d6e.  v0:= temp @kind object;
+  #L235d70.  v0:= (`okhttp3.internal.cache.DiskLruCache$Entry`) v0 @kind object;
+  #L235d74.  v1:= -1L;
+  #L235d78.  v3:= 0I;
+  #L235d7a.  v4:= lcmp(v7, v1);
+  #L235d7e.  if v4 == 0 then goto L235d96;
+  #L235d82.  if v0 == 0 then goto L235d92;
+  #L235d86.  v1:= v0.`okhttp3.internal.cache.DiskLruCache$Entry.sequenceNumber` @type ^`long` @kind wide;
+  #L235d8a.  v4:= lcmp(v1, v7);
+  #L235d8e.  if v4 == 0 then goto L235d96;
+  #L235d92.  @monitorexit v5
+  #L235d94.  return v3 @kind object;
+  #L235d96.  if v0 == 0 then goto L235da6;
+  #L235d9a.  v7:= v0.`okhttp3.internal.cache.DiskLruCache$Entry.currentEditor` @type ^`okhttp3.internal.cache.DiskLruCache$Editor` @kind object;
+  #L235d9e.  if v7 == 0 then goto L235da6;
+  #L235da2.  @monitorexit v5
+  #L235da4.  return v3 @kind object;
+  #L235da6.  v7:= v5.`okhttp3.internal.cache.DiskLruCache.mostRecentTrimFailed` @type ^`boolean` @kind boolean;
+  #L235daa.  if v7 != 0 then goto L235e26;
+  #L235dae.  v7:= v5.`okhttp3.internal.cache.DiskLruCache.mostRecentRebuildFailed` @type ^`boolean` @kind boolean;
+  #L235db2.  if v7 == 0 then goto L235db8;
+  #L235db6.  goto L235e26;
+  #L235db8.  v7:= v5.`okhttp3.internal.cache.DiskLruCache.journalWriter` @type ^`okio.BufferedSink` @kind object;
+  #L235dbc.  v8:= "DIRTY" @kind object;
+  #L235dc0.  call temp:= `writeUtf8`(v7, v8) @signature `Lokio/BufferedSink;.writeUtf8:(Ljava/lang/String;)Lokio/BufferedSink;` @kind interface;
+  #L235dc6.  v7:= temp @kind object;
+  #L235dc8.  v8:= 32I;
+  #L235dcc.  call temp:= `writeByte`(v7, v8) @signature `Lokio/BufferedSink;.writeByte:(I)Lokio/BufferedSink;` @kind interface;
+  #L235dd2.  v7:= temp @kind object;
+  #L235dd4.  call temp:= `writeUtf8`(v7, v6) @signature `Lokio/BufferedSink;.writeUtf8:(Ljava/lang/String;)Lokio/BufferedSink;` @kind interface;
+  #L235dda.  v7:= temp @kind object;
+  #L235ddc.  v8:= 10I;
+  #L235de0.  call temp:= `writeByte`(v7, v8) @signature `Lokio/BufferedSink;.writeByte:(I)Lokio/BufferedSink;` @kind interface;
+  #L235de6.  v7:= v5.`okhttp3.internal.cache.DiskLruCache.journalWriter` @type ^`okio.BufferedSink` @kind object;
+  #L235dea.  call `flush`(v7) @signature `Lokio/BufferedSink;.flush:()V` @kind interface;
+  #L235df0.  v7:= v5.`okhttp3.internal.cache.DiskLruCache.hasJournalErrors` @type ^`boolean` @kind boolean;
+  #L235df4.  if v7 == 0 then goto L235dfc;
+  #L235df8.  @monitorexit v5
+  #L235dfa.  return v3 @kind object;
+  #L235dfc.  if v0 != 0 then goto L235e14;
+  #L235e00.  v0:= new `okhttp3.internal.cache.DiskLruCache$Entry`;
+  #L235e04.  call `<init>`(v0, v5, v6) @signature `Lokhttp3/internal/cache/DiskLruCache$Entry;.<init>:(Lokhttp3/internal/cache/DiskLruCache;Ljava/lang/String;)V` @kind direct;
+  #L235e0a.  v7:= v5.`okhttp3.internal.cache.DiskLruCache.lruEntries` @type ^`java.util.LinkedHashMap` @kind object;
+  #L235e0e.  call temp:= `put`(v7, v6, v0) @signature `Ljava/util/LinkedHashMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;` @kind virtual;
+  #L235e14.  v6:= new `okhttp3.internal.cache.DiskLruCache$Editor`;
+  #L235e18.  call `<init>`(v6, v5, v0) @signature `Lokhttp3/internal/cache/DiskLruCache$Editor;.<init>:(Lokhttp3/internal/cache/DiskLruCache;Lokhttp3/internal/cache/DiskLruCache$Entry;)V` @kind direct;
+  #L235e1e.  v0.`okhttp3.internal.cache.DiskLruCache$Entry.currentEditor` @type ^`okhttp3.internal.cache.DiskLruCache$Editor` := v6 @kind object;
+  #L235e22.  @monitorexit v5
+  #L235e24.  return v6 @kind object;
+  #L235e26.  v6:= v5.`okhttp3.internal.cache.DiskLruCache.executor` @type ^`java.util.concurrent.Executor` @kind object;
+  #L235e2a.  v7:= v5.`okhttp3.internal.cache.DiskLruCache.cleanupRunnable` @type ^`java.lang.Runnable` @kind object;
+  #L235e2e.  call `execute`(v6, v7) @signature `Ljava/util/concurrent/Executor;.execute:(Ljava/lang/Runnable;)V` @kind interface;
+  #L235e34.  @monitorexit v5
+  #L235e36.  return v3 @kind object;
+  #L235e38.  v6:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L235e3a.  @monitorexit v5
+  #L235e3c.  throw v6;
+  catch `java.lang.Throwable` @[L235d52..L235d8a] goto L235e38;
+  catch `java.lang.Throwable` @[L235d9a..L235d9e] goto L235e38;
+  catch `java.lang.Throwable` @[L235da6..L235df4] goto L235e38;
+  catch `java.lang.Throwable` @[L235e00..L235e22] goto L235e38;
+  catch `java.lang.Throwable` @[L235e26..L235e34] goto L235e38;
+}
+procedure `void` `evictAll`(`okhttp3.internal.cache.DiskLruCache` v5 @kind this) @signature `Lokhttp3/internal/cache/DiskLruCache;.evictAll:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L23638c.  @monitorenter v5
+  #L23638e.  call `initialize`(v5) @signature `Lokhttp3/internal/cache/DiskLruCache;.initialize:()V` @kind virtual;
+  #L236394.  v0:= v5.`okhttp3.internal.cache.DiskLruCache.lruEntries` @type ^`java.util.LinkedHashMap` @kind object;
+  #L236398.  call temp:= `values`(v0) @signature `Ljava/util/LinkedHashMap;.values:()Ljava/util/Collection;` @kind virtual;
+  #L23639e.  v0:= temp @kind object;
+  #L2363a0.  v1:= v5.`okhttp3.internal.cache.DiskLruCache.lruEntries` @type ^`java.util.LinkedHashMap` @kind object;
+  #L2363a4.  call temp:= `size`(v1) @signature `Ljava/util/LinkedHashMap;.size:()I` @kind virtual;
+  #L2363aa.  v1:= temp;
+  #L2363ac.  v1:= new `okhttp3.internal.cache.DiskLruCache$Entry`[v1];
+  #L2363b0.  call temp:= `toArray`(v0, v1) @signature `Ljava/util/Collection;.toArray:([Ljava/lang/Object;)[Ljava/lang/Object;` @kind interface;
+  #L2363b6.  v0:= temp @kind object;
+  #L2363b8.  v0:= (`okhttp3.internal.cache.DiskLruCache$Entry`[]) v0 @kind object;
+  #L2363bc.  v1:= length @variable v0;
+  #L2363be.  v2:= 0I;
+  #L2363c0.  v3:= 0I;
+  #L2363c2.  if v3 >= v1 then goto L2363d6;
+  #L2363c6.  v4:= v0[v3] @kind object;
+  #L2363ca.  call temp:= `removeEntry`(v5, v4) @signature `Lokhttp3/internal/cache/DiskLruCache;.removeEntry:(Lokhttp3/internal/cache/DiskLruCache$Entry;)Z` @kind virtual;
+  #L2363d0.  v3:= v3 + 1;
+  #L2363d4.  goto L2363c2;
+  #L2363d6.  v5.`okhttp3.internal.cache.DiskLruCache.mostRecentTrimFailed` @type ^`boolean` := v2 @kind boolean;
+  #L2363da.  @monitorexit v5
+  #L2363dc.  return @kind void;
+  #L2363de.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L2363e0.  @monitorexit v5
+  #L2363e2.  throw v0;
+  #L2363e4.  return @kind void;
+  catch `java.lang.Throwable` @[L23638e..L2363da] goto L2363de;
+}
+procedure `void` `flush`(`okhttp3.internal.cache.DiskLruCache` v1 @kind this) @signature `Lokhttp3/internal/cache/DiskLruCache;.flush:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L236404.  @monitorenter v1
+  #L236406.  v0:= v1.`okhttp3.internal.cache.DiskLruCache.initialized` @type ^`boolean` @kind boolean;
+  #L23640a.  if v0 != 0 then goto L236412;
+  #L23640e.  @monitorexit v1
+  #L236410.  return @kind void;
+  #L236412.  call `checkNotClosed`(v1) @signature `Lokhttp3/internal/cache/DiskLruCache;.checkNotClosed:()V` @kind direct;
+  #L236418.  call `trimToSize`(v1) @signature `Lokhttp3/internal/cache/DiskLruCache;.trimToSize:()V` @kind virtual;
+  #L23641e.  v0:= v1.`okhttp3.internal.cache.DiskLruCache.journalWriter` @type ^`okio.BufferedSink` @kind object;
+  #L236422.  call `flush`(v0) @signature `Lokio/BufferedSink;.flush:()V` @kind interface;
+  #L236428.  @monitorexit v1
+  #L23642a.  return @kind void;
+  #L23642c.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L23642e.  @monitorexit v1
+  #L236430.  throw v0;
+  catch `java.lang.Throwable` @[L236406..L23640a] goto L23642c;
+  catch `java.lang.Throwable` @[L236412..L236428] goto L23642c;
+}
+procedure `okhttp3.internal.cache.DiskLruCache$Snapshot` `get`(`okhttp3.internal.cache.DiskLruCache` v3 @kind this, `java.lang.String` v4 @kind object) @signature `Lokhttp3/internal/cache/DiskLruCache;.get:(Ljava/lang/String;)Lokhttp3/internal/cache/DiskLruCache$Snapshot;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L235e7c.  @monitorenter v3
+  #L235e7e.  call `initialize`(v3) @signature `Lokhttp3/internal/cache/DiskLruCache;.initialize:()V` @kind virtual;
+  #L235e84.  call `checkNotClosed`(v3) @signature `Lokhttp3/internal/cache/DiskLruCache;.checkNotClosed:()V` @kind direct;
+  #L235e8a.  call `validateKey`(v3, v4) @signature `Lokhttp3/internal/cache/DiskLruCache;.validateKey:(Ljava/lang/String;)V` @kind direct;
+  #L235e90.  v0:= v3.`okhttp3.internal.cache.DiskLruCache.lruEntries` @type ^`java.util.LinkedHashMap` @kind object;
+  #L235e94.  call temp:= `get`(v0, v4) @signature `Ljava/util/LinkedHashMap;.get:(Ljava/lang/Object;)Ljava/lang/Object;` @kind virtual;
+  #L235e9a.  v0:= temp @kind object;
+  #L235e9c.  v0:= (`okhttp3.internal.cache.DiskLruCache$Entry`) v0 @kind object;
+  #L235ea0.  v1:= 0I;
+  #L235ea2.  if v0 == 0 then goto L235f18;
+  #L235ea6.  v2:= v0.`okhttp3.internal.cache.DiskLruCache$Entry.readable` @type ^`boolean` @kind boolean;
+  #L235eaa.  if v2 != 0 then goto L235eb0;
+  #L235eae.  goto L235f18;
+  #L235eb0.  call temp:= `snapshot`(v0) @signature `Lokhttp3/internal/cache/DiskLruCache$Entry;.snapshot:()Lokhttp3/internal/cache/DiskLruCache$Snapshot;` @kind virtual;
+  #L235eb6.  v0:= temp @kind object;
+  #L235eb8.  if v0 != 0 then goto L235ec0;
+  #L235ebc.  @monitorexit v3
+  #L235ebe.  return v1 @kind object;
+  #L235ec0.  v1:= v3.`okhttp3.internal.cache.DiskLruCache.redundantOpCount` @type ^`int`;
+  #L235ec4.  v1:= v1 + 1;
+  #L235ec8.  v3.`okhttp3.internal.cache.DiskLruCache.redundantOpCount` @type ^`int` := v1;
+  #L235ecc.  v1:= v3.`okhttp3.internal.cache.DiskLruCache.journalWriter` @type ^`okio.BufferedSink` @kind object;
+  #L235ed0.  v2:= "READ" @kind object;
+  #L235ed4.  call temp:= `writeUtf8`(v1, v2) @signature `Lokio/BufferedSink;.writeUtf8:(Ljava/lang/String;)Lokio/BufferedSink;` @kind interface;
+  #L235eda.  v1:= temp @kind object;
+  #L235edc.  v2:= 32I;
+  #L235ee0.  call temp:= `writeByte`(v1, v2) @signature `Lokio/BufferedSink;.writeByte:(I)Lokio/BufferedSink;` @kind interface;
+  #L235ee6.  v1:= temp @kind object;
+  #L235ee8.  call temp:= `writeUtf8`(v1, v4) @signature `Lokio/BufferedSink;.writeUtf8:(Ljava/lang/String;)Lokio/BufferedSink;` @kind interface;
+  #L235eee.  v4:= temp @kind object;
+  #L235ef0.  v1:= 10I;
+  #L235ef4.  call temp:= `writeByte`(v4, v1) @signature `Lokio/BufferedSink;.writeByte:(I)Lokio/BufferedSink;` @kind interface;
+  #L235efa.  call temp:= `journalRebuildRequired`(v3) @signature `Lokhttp3/internal/cache/DiskLruCache;.journalRebuildRequired:()Z` @kind virtual;
+  #L235f00.  v4:= temp;
+  #L235f02.  if v4 == 0 then goto L235f14;
+  #L235f06.  v4:= v3.`okhttp3.internal.cache.DiskLruCache.executor` @type ^`java.util.concurrent.Executor` @kind object;
+  #L235f0a.  v1:= v3.`okhttp3.internal.cache.DiskLruCache.cleanupRunnable` @type ^`java.lang.Runnable` @kind object;
+  #L235f0e.  call `execute`(v4, v1) @signature `Ljava/util/concurrent/Executor;.execute:(Ljava/lang/Runnable;)V` @kind interface;
+  #L235f14.  @monitorexit v3
+  #L235f16.  return v0 @kind object;
+  #L235f18.  @monitorexit v3
+  #L235f1a.  return v1 @kind object;
+  #L235f1c.  v4:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L235f1e.  @monitorexit v3
+  #L235f20.  throw v4;
+  catch `java.lang.Throwable` @[L235e7e..L235eb8] goto L235f1c;
+  catch `java.lang.Throwable` @[L235ec0..L235f14] goto L235f1c;
+}
+procedure `java.io.File` `getDirectory`(`okhttp3.internal.cache.DiskLruCache` v1 @kind this) @signature `Lokhttp3/internal/cache/DiskLruCache;.getDirectory:()Ljava/io/File;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L235bf8.  v0:= v1.`okhttp3.internal.cache.DiskLruCache.directory` @type ^`java.io.File` @kind object;
+  #L235bfc.  return v0 @kind object;
+}
+procedure `long` `getMaxSize`(`okhttp3.internal.cache.DiskLruCache` v2 @kind this) @signature `Lokhttp3/internal/cache/DiskLruCache;.getMaxSize:()J` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L235c48.  @monitorenter v2
+  #L235c4a.  v0:= v2.`okhttp3.internal.cache.DiskLruCache.maxSize` @type ^`long` @kind wide;
+  #L235c4e.  @monitorexit v2
+  #L235c50.  return v0 @kind wide;
+  #L235c52.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L235c54.  @monitorexit v2
+  #L235c56.  throw v0;
+  catch `java.lang.Throwable` @[L235c4a..L235c4e] goto L235c52;
+}
+procedure `void` `initialize`(`okhttp3.internal.cache.DiskLruCache` v6 @kind this) @signature `Lokhttp3/internal/cache/DiskLruCache;.initialize:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L236458.  @monitorenter v6
+  #L23645a.  v0:= v6.`okhttp3.internal.cache.DiskLruCache.initialized` @type ^`boolean` @kind boolean;
+  #L23645e.  if v0 == 0 then goto L236466;
+  #L236462.  @monitorexit v6
+  #L236464.  return @kind void;
+  #L236466.  v0:= v6.`okhttp3.internal.cache.DiskLruCache.fileSystem` @type ^`okhttp3.internal.io.FileSystem` @kind object;
+  #L23646a.  v1:= v6.`okhttp3.internal.cache.DiskLruCache.journalFileBackup` @type ^`java.io.File` @kind object;
+  #L23646e.  call temp:= `exists`(v0, v1) @signature `Lokhttp3/internal/io/FileSystem;.exists:(Ljava/io/File;)Z` @kind interface;
+  #L236474.  v0:= temp;
+  #L236476.  if v0 == 0 then goto L2364b0;
+  #L23647a.  v0:= v6.`okhttp3.internal.cache.DiskLruCache.fileSystem` @type ^`okhttp3.internal.io.FileSystem` @kind object;
+  #L23647e.  v1:= v6.`okhttp3.internal.cache.DiskLruCache.journalFile` @type ^`java.io.File` @kind object;
+  #L236482.  call temp:= `exists`(v0, v1) @signature `Lokhttp3/internal/io/FileSystem;.exists:(Ljava/io/File;)Z` @kind interface;
+  #L236488.  v0:= temp;
+  #L23648a.  if v0 == 0 then goto L23649e;
+  #L23648e.  v0:= v6.`okhttp3.internal.cache.DiskLruCache.fileSystem` @type ^`okhttp3.internal.io.FileSystem` @kind object;
+  #L236492.  v1:= v6.`okhttp3.internal.cache.DiskLruCache.journalFileBackup` @type ^`java.io.File` @kind object;
+  #L236496.  call `delete`(v0, v1) @signature `Lokhttp3/internal/io/FileSystem;.delete:(Ljava/io/File;)V` @kind interface;
+  #L23649c.  goto L2364b0;
+  #L23649e.  v0:= v6.`okhttp3.internal.cache.DiskLruCache.fileSystem` @type ^`okhttp3.internal.io.FileSystem` @kind object;
+  #L2364a2.  v1:= v6.`okhttp3.internal.cache.DiskLruCache.journalFileBackup` @type ^`java.io.File` @kind object;
+  #L2364a6.  v2:= v6.`okhttp3.internal.cache.DiskLruCache.journalFile` @type ^`java.io.File` @kind object;
+  #L2364aa.  call `rename`(v0, v1, v2) @signature `Lokhttp3/internal/io/FileSystem;.rename:(Ljava/io/File;Ljava/io/File;)V` @kind interface;
+  #L2364b0.  v0:= v6.`okhttp3.internal.cache.DiskLruCache.fileSystem` @type ^`okhttp3.internal.io.FileSystem` @kind object;
+  #L2364b4.  v1:= v6.`okhttp3.internal.cache.DiskLruCache.journalFile` @type ^`java.io.File` @kind object;
+  #L2364b8.  call temp:= `exists`(v0, v1) @signature `Lokhttp3/internal/io/FileSystem;.exists:(Ljava/io/File;)Z` @kind interface;
+  #L2364be.  v0:= temp;
+  #L2364c0.  v1:= 1I;
+  #L2364c2.  if v0 == 0 then goto L23654a;
+  #L2364c6.  call `readJournal`(v6) @signature `Lokhttp3/internal/cache/DiskLruCache;.readJournal:()V` @kind direct;
+  #L2364cc.  call `processJournal`(v6) @signature `Lokhttp3/internal/cache/DiskLruCache;.processJournal:()V` @kind direct;
+  #L2364d2.  v6.`okhttp3.internal.cache.DiskLruCache.initialized` @type ^`boolean` := v1 @kind boolean;
+  #L2364d6.  @monitorexit v6
+  #L2364d8.  return @kind void;
+  #L2364da.  v0:= Exception @type ^`java.io.IOException` @kind object;
+  #L2364dc.  call temp:= `get`() @signature `Lokhttp3/internal/platform/Platform;.get:()Lokhttp3/internal/platform/Platform;` @kind static;
+  #L2364e2.  v2:= temp @kind object;
+  #L2364e4.  v3:= 5I;
+  #L2364e6.  v4:= new `java.lang.StringBuilder`;
+  #L2364ea.  call `<init>`(v4) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L2364f0.  v5:= "DiskLruCache " @kind object;
+  #L2364f4.  call temp:= `append`(v4, v5) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2364fa.  v5:= v6.`okhttp3.internal.cache.DiskLruCache.directory` @type ^`java.io.File` @kind object;
+  #L2364fe.  call temp:= `append`(v4, v5) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L236504.  v5:= " is corrupt: " @kind object;
+  #L236508.  call temp:= `append`(v4, v5) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L23650e.  call temp:= `getMessage`(v0) @signature `Ljava/io/IOException;.getMessage:()Ljava/lang/String;` @kind virtual;
+  #L236514.  v5:= temp @kind object;
+  #L236516.  call temp:= `append`(v4, v5) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L23651c.  v5:= ", removing" @kind object;
+  #L236520.  call temp:= `append`(v4, v5) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L236526.  call temp:= `toString`(v4) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L23652c.  v4:= temp @kind object;
+  #L23652e.  call `log`(v2, v3, v4, v0) @signature `Lokhttp3/internal/platform/Platform;.log:(ILjava/lang/String;Ljava/lang/Throwable;)V` @kind virtual;
+  #L236534.  v0:= 0I;
+  #L236536.  call `delete`(v6) @signature `Lokhttp3/internal/cache/DiskLruCache;.delete:()V` @kind virtual;
+  #L23653c.  v6.`okhttp3.internal.cache.DiskLruCache.closed` @type ^`boolean` := v0 @kind boolean;
+  #L236540.  goto L23654a;
+  #L236542.  v1:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L236544.  v6.`okhttp3.internal.cache.DiskLruCache.closed` @type ^`boolean` := v0 @kind boolean;
+  #L236548.  throw v1;
+  #L23654a.  call `rebuildJournal`(v6) @signature `Lokhttp3/internal/cache/DiskLruCache;.rebuildJournal:()V` @kind virtual;
+  #L236550.  v6.`okhttp3.internal.cache.DiskLruCache.initialized` @type ^`boolean` := v1 @kind boolean;
+  #L236554.  @monitorexit v6
+  #L236556.  return @kind void;
+  #L236558.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L23655a.  @monitorexit v6
+  #L23655c.  throw v0;
+  catch `java.lang.Throwable` @[L23645a..L23645e] goto L236558;
+  catch `java.lang.Throwable` @[L236466..L2364c0] goto L236558;
+  catch `java.io.IOException` @[L2364c6..L2364d6] goto L2364da;
+  catch `java.lang.Throwable` @[L2364c6..L2364d6] goto L236558;
+  catch `java.lang.Throwable` @[L2364dc..L236534] goto L236558;
+  catch `java.lang.Throwable` @[L236536..L23653c] goto L236542;
+  catch `java.lang.Throwable` @[L23653c..L236554] goto L236558;
+}
+procedure `boolean` `isClosed`(`okhttp3.internal.cache.DiskLruCache` v1 @kind this) @signature `Lokhttp3/internal/cache/DiskLruCache;.isClosed:()Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L235a50.  @monitorenter v1
+  #L235a52.  v0:= v1.`okhttp3.internal.cache.DiskLruCache.closed` @type ^`boolean` @kind boolean;
+  #L235a56.  @monitorexit v1
+  #L235a58.  return v0;
+  #L235a5a.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L235a5c.  @monitorexit v1
+  #L235a5e.  throw v0;
+  catch `java.lang.Throwable` @[L235a52..L235a56] goto L235a5a;
+}
+procedure `boolean` `journalRebuildRequired`(`okhttp3.internal.cache.DiskLruCache` v2 @kind this) @signature `Lokhttp3/internal/cache/DiskLruCache;.journalRebuildRequired:()Z` @AccessFlag  {
+    temp;
+    v0;
+    v1;
+
+  #L235a7c.  v0:= v2.`okhttp3.internal.cache.DiskLruCache.redundantOpCount` @type ^`int`;
+  #L235a80.  v1:= 2000I;
+  #L235a84.  if v0 < v1 then goto L235a9c;
+  #L235a88.  v1:= v2.`okhttp3.internal.cache.DiskLruCache.lruEntries` @type ^`java.util.LinkedHashMap` @kind object;
+  #L235a8c.  call temp:= `size`(v1) @signature `Ljava/util/LinkedHashMap;.size:()I` @kind virtual;
+  #L235a92.  v1:= temp;
+  #L235a94.  if v0 < v1 then goto L235a9c;
+  #L235a98.  v0:= 1I;
+  #L235a9a.  goto L235a9e;
+  #L235a9c.  v0:= 0I;
+  #L235a9e.  return v0;
+}
+procedure `void` `rebuildJournal`(`okhttp3.internal.cache.DiskLruCache` v6 @kind this) @signature `Lokhttp3/internal/cache/DiskLruCache;.rebuildJournal:()V` @AccessFlag  {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L236974.  @monitorenter v6
+  #L236976.  v0:= v6.`okhttp3.internal.cache.DiskLruCache.journalWriter` @type ^`okio.BufferedSink` @kind object;
+  #L23697a.  if v0 == 0 then goto L236988;
+  #L23697e.  v0:= v6.`okhttp3.internal.cache.DiskLruCache.journalWriter` @type ^`okio.BufferedSink` @kind object;
+  #L236982.  call `close`(v0) @signature `Lokio/BufferedSink;.close:()V` @kind interface;
+  #L236988.  v0:= v6.`okhttp3.internal.cache.DiskLruCache.fileSystem` @type ^`okhttp3.internal.io.FileSystem` @kind object;
+  #L23698c.  v1:= v6.`okhttp3.internal.cache.DiskLruCache.journalFileTmp` @type ^`java.io.File` @kind object;
+  #L236990.  call temp:= `sink`(v0, v1) @signature `Lokhttp3/internal/io/FileSystem;.sink:(Ljava/io/File;)Lokio/Sink;` @kind interface;
+  #L236996.  v0:= temp @kind object;
+  #L236998.  call temp:= `buffer`(v0) @signature `Lokio/Okio;.buffer:(Lokio/Sink;)Lokio/BufferedSink;` @kind static;
+  #L23699e.  v0:= temp @kind object;
+  #L2369a0.  v1:= "libcore.io.DiskLruCache" @kind object;
+  #L2369a4.  call temp:= `writeUtf8`(v0, v1) @signature `Lokio/BufferedSink;.writeUtf8:(Ljava/lang/String;)Lokio/BufferedSink;` @kind interface;
+  #L2369aa.  v1:= temp @kind object;
+  #L2369ac.  v2:= 10I;
+  #L2369b0.  call temp:= `writeByte`(v1, v2) @signature `Lokio/BufferedSink;.writeByte:(I)Lokio/BufferedSink;` @kind interface;
+  #L2369b6.  v1:= "1" @kind object;
+  #L2369ba.  call temp:= `writeUtf8`(v0, v1) @signature `Lokio/BufferedSink;.writeUtf8:(Ljava/lang/String;)Lokio/BufferedSink;` @kind interface;
+  #L2369c0.  v1:= temp @kind object;
+  #L2369c2.  call temp:= `writeByte`(v1, v2) @signature `Lokio/BufferedSink;.writeByte:(I)Lokio/BufferedSink;` @kind interface;
+  #L2369c8.  v1:= v6.`okhttp3.internal.cache.DiskLruCache.appVersion` @type ^`int`;
+  #L2369cc.  v3:= (`long`) v1 @kind i2l;
+  #L2369ce.  call temp:= `writeDecimalLong`(v0, v3) @signature `Lokio/BufferedSink;.writeDecimalLong:(J)Lokio/BufferedSink;` @kind interface;
+  #L2369d4.  v1:= temp @kind object;
+  #L2369d6.  call temp:= `writeByte`(v1, v2) @signature `Lokio/BufferedSink;.writeByte:(I)Lokio/BufferedSink;` @kind interface;
+  #L2369dc.  v1:= v6.`okhttp3.internal.cache.DiskLruCache.valueCount` @type ^`int`;
+  #L2369e0.  v3:= (`long`) v1 @kind i2l;
+  #L2369e2.  call temp:= `writeDecimalLong`(v0, v3) @signature `Lokio/BufferedSink;.writeDecimalLong:(J)Lokio/BufferedSink;` @kind interface;
+  #L2369e8.  v1:= temp @kind object;
+  #L2369ea.  call temp:= `writeByte`(v1, v2) @signature `Lokio/BufferedSink;.writeByte:(I)Lokio/BufferedSink;` @kind interface;
+  #L2369f0.  call temp:= `writeByte`(v0, v2) @signature `Lokio/BufferedSink;.writeByte:(I)Lokio/BufferedSink;` @kind interface;
+  #L2369f6.  v1:= v6.`okhttp3.internal.cache.DiskLruCache.lruEntries` @type ^`java.util.LinkedHashMap` @kind object;
+  #L2369fa.  call temp:= `values`(v1) @signature `Ljava/util/LinkedHashMap;.values:()Ljava/util/Collection;` @kind virtual;
+  #L236a00.  v1:= temp @kind object;
+  #L236a02.  call temp:= `iterator`(v1) @signature `Ljava/util/Collection;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L236a08.  v1:= temp @kind object;
+  #L236a0a.  call temp:= `hasNext`(v1) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L236a10.  v3:= temp;
+  #L236a12.  if v3 == 0 then goto L236a7c;
+  #L236a16.  call temp:= `next`(v1) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L236a1c.  v3:= temp @kind object;
+  #L236a1e.  v3:= (`okhttp3.internal.cache.DiskLruCache$Entry`) v3 @kind object;
+  #L236a22.  v4:= v3.`okhttp3.internal.cache.DiskLruCache$Entry.currentEditor` @type ^`okhttp3.internal.cache.DiskLruCache$Editor` @kind object;
+  #L236a26.  v5:= 32I;
+  #L236a2a.  if v4 == 0 then goto L236a52;
+  #L236a2e.  v4:= "DIRTY" @kind object;
+  #L236a32.  call temp:= `writeUtf8`(v0, v4) @signature `Lokio/BufferedSink;.writeUtf8:(Ljava/lang/String;)Lokio/BufferedSink;` @kind interface;
+  #L236a38.  v4:= temp @kind object;
+  #L236a3a.  call temp:= `writeByte`(v4, v5) @signature `Lokio/BufferedSink;.writeByte:(I)Lokio/BufferedSink;` @kind interface;
+  #L236a40.  v3:= v3.`okhttp3.internal.cache.DiskLruCache$Entry.key` @type ^`java.lang.String` @kind object;
+  #L236a44.  call temp:= `writeUtf8`(v0, v3) @signature `Lokio/BufferedSink;.writeUtf8:(Ljava/lang/String;)Lokio/BufferedSink;` @kind interface;
+  #L236a4a.  call temp:= `writeByte`(v0, v2) @signature `Lokio/BufferedSink;.writeByte:(I)Lokio/BufferedSink;` @kind interface;
+  #L236a50.  goto L236a0a;
+  #L236a52.  v4:= "CLEAN" @kind object;
+  #L236a56.  call temp:= `writeUtf8`(v0, v4) @signature `Lokio/BufferedSink;.writeUtf8:(Ljava/lang/String;)Lokio/BufferedSink;` @kind interface;
+  #L236a5c.  v4:= temp @kind object;
+  #L236a5e.  call temp:= `writeByte`(v4, v5) @signature `Lokio/BufferedSink;.writeByte:(I)Lokio/BufferedSink;` @kind interface;
+  #L236a64.  v4:= v3.`okhttp3.internal.cache.DiskLruCache$Entry.key` @type ^`java.lang.String` @kind object;
+  #L236a68.  call temp:= `writeUtf8`(v0, v4) @signature `Lokio/BufferedSink;.writeUtf8:(Ljava/lang/String;)Lokio/BufferedSink;` @kind interface;
+  #L236a6e.  call `writeLengths`(v3, v0) @signature `Lokhttp3/internal/cache/DiskLruCache$Entry;.writeLengths:(Lokio/BufferedSink;)V` @kind virtual;
+  #L236a74.  call temp:= `writeByte`(v0, v2) @signature `Lokio/BufferedSink;.writeByte:(I)Lokio/BufferedSink;` @kind interface;
+  #L236a7a.  goto L236a0a;
+  #L236a7c.  call `close`(v0) @signature `Lokio/BufferedSink;.close:()V` @kind interface;
+  #L236a82.  v0:= v6.`okhttp3.internal.cache.DiskLruCache.fileSystem` @type ^`okhttp3.internal.io.FileSystem` @kind object;
+  #L236a86.  v1:= v6.`okhttp3.internal.cache.DiskLruCache.journalFile` @type ^`java.io.File` @kind object;
+  #L236a8a.  call temp:= `exists`(v0, v1) @signature `Lokhttp3/internal/io/FileSystem;.exists:(Ljava/io/File;)Z` @kind interface;
+  #L236a90.  v0:= temp;
+  #L236a92.  if v0 == 0 then goto L236aa8;
+  #L236a96.  v0:= v6.`okhttp3.internal.cache.DiskLruCache.fileSystem` @type ^`okhttp3.internal.io.FileSystem` @kind object;
+  #L236a9a.  v1:= v6.`okhttp3.internal.cache.DiskLruCache.journalFile` @type ^`java.io.File` @kind object;
+  #L236a9e.  v2:= v6.`okhttp3.internal.cache.DiskLruCache.journalFileBackup` @type ^`java.io.File` @kind object;
+  #L236aa2.  call `rename`(v0, v1, v2) @signature `Lokhttp3/internal/io/FileSystem;.rename:(Ljava/io/File;Ljava/io/File;)V` @kind interface;
+  #L236aa8.  v0:= v6.`okhttp3.internal.cache.DiskLruCache.fileSystem` @type ^`okhttp3.internal.io.FileSystem` @kind object;
+  #L236aac.  v1:= v6.`okhttp3.internal.cache.DiskLruCache.journalFileTmp` @type ^`java.io.File` @kind object;
+  #L236ab0.  v2:= v6.`okhttp3.internal.cache.DiskLruCache.journalFile` @type ^`java.io.File` @kind object;
+  #L236ab4.  call `rename`(v0, v1, v2) @signature `Lokhttp3/internal/io/FileSystem;.rename:(Ljava/io/File;Ljava/io/File;)V` @kind interface;
+  #L236aba.  v0:= v6.`okhttp3.internal.cache.DiskLruCache.fileSystem` @type ^`okhttp3.internal.io.FileSystem` @kind object;
+  #L236abe.  v1:= v6.`okhttp3.internal.cache.DiskLruCache.journalFileBackup` @type ^`java.io.File` @kind object;
+  #L236ac2.  call `delete`(v0, v1) @signature `Lokhttp3/internal/io/FileSystem;.delete:(Ljava/io/File;)V` @kind interface;
+  #L236ac8.  call temp:= `newJournalWriter`(v6) @signature `Lokhttp3/internal/cache/DiskLruCache;.newJournalWriter:()Lokio/BufferedSink;` @kind direct;
+  #L236ace.  v0:= temp @kind object;
+  #L236ad0.  v6.`okhttp3.internal.cache.DiskLruCache.journalWriter` @type ^`okio.BufferedSink` := v0 @kind object;
+  #L236ad4.  v0:= 0I;
+  #L236ad6.  v6.`okhttp3.internal.cache.DiskLruCache.hasJournalErrors` @type ^`boolean` := v0 @kind boolean;
+  #L236ada.  v6.`okhttp3.internal.cache.DiskLruCache.mostRecentRebuildFailed` @type ^`boolean` := v0 @kind boolean;
+  #L236ade.  @monitorexit v6
+  #L236ae0.  return @kind void;
+  #L236ae2.  v1:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L236ae4.  call `close`(v0) @signature `Lokio/BufferedSink;.close:()V` @kind interface;
+  #L236aea.  throw v1;
+  #L236aec.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L236aee.  @monitorexit v6
+  #L236af0.  throw v0;
+  #L236af2.  return @kind void;
+  catch `java.lang.Throwable` @[L236976..L2369a0] goto L236aec;
+  catch `java.lang.Throwable` @[L2369a0..L236a7a] goto L236ae2;
+  catch `java.lang.Throwable` @[L236a7c..L236ade] goto L236aec;
+  catch `java.lang.Throwable` @[L236ae4..L236aec] goto L236aec;
+}
+procedure `boolean` `remove`(`okhttp3.internal.cache.DiskLruCache` v6 @kind this, `java.lang.String` v7 @kind object) @signature `Lokhttp3/internal/cache/DiskLruCache;.remove:(Ljava/lang/String;)Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L235ab0.  @monitorenter v6
+  #L235ab2.  call `initialize`(v6) @signature `Lokhttp3/internal/cache/DiskLruCache;.initialize:()V` @kind virtual;
+  #L235ab8.  call `checkNotClosed`(v6) @signature `Lokhttp3/internal/cache/DiskLruCache;.checkNotClosed:()V` @kind direct;
+  #L235abe.  call `validateKey`(v6, v7) @signature `Lokhttp3/internal/cache/DiskLruCache;.validateKey:(Ljava/lang/String;)V` @kind direct;
+  #L235ac4.  v0:= v6.`okhttp3.internal.cache.DiskLruCache.lruEntries` @type ^`java.util.LinkedHashMap` @kind object;
+  #L235ac8.  call temp:= `get`(v0, v7) @signature `Ljava/util/LinkedHashMap;.get:(Ljava/lang/Object;)Ljava/lang/Object;` @kind virtual;
+  #L235ace.  v7:= temp @kind object;
+  #L235ad0.  v7:= (`okhttp3.internal.cache.DiskLruCache$Entry`) v7 @kind object;
+  #L235ad4.  v0:= 0I;
+  #L235ad6.  if v7 != 0 then goto L235ade;
+  #L235ada.  @monitorexit v6
+  #L235adc.  return v0;
+  #L235ade.  call temp:= `removeEntry`(v6, v7) @signature `Lokhttp3/internal/cache/DiskLruCache;.removeEntry:(Lokhttp3/internal/cache/DiskLruCache$Entry;)Z` @kind virtual;
+  #L235ae4.  v7:= temp;
+  #L235ae6.  if v7 == 0 then goto L235afe;
+  #L235aea.  v1:= v6.`okhttp3.internal.cache.DiskLruCache.size` @type ^`long` @kind wide;
+  #L235aee.  v3:= v6.`okhttp3.internal.cache.DiskLruCache.maxSize` @type ^`long` @kind wide;
+  #L235af2.  v5:= lcmp(v1, v3);
+  #L235af6.  if v5 > 0 then goto L235afe;
+  #L235afa.  v6.`okhttp3.internal.cache.DiskLruCache.mostRecentTrimFailed` @type ^`boolean` := v0 @kind boolean;
+  #L235afe.  @monitorexit v6
+  #L235b00.  return v7;
+  #L235b02.  v7:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L235b04.  @monitorexit v6
+  #L235b06.  throw v7;
+  catch `java.lang.Throwable` @[L235ab2..L235ad4] goto L235b02;
+  catch `java.lang.Throwable` @[L235ade..L235afe] goto L235b02;
+}
+procedure `boolean` `removeEntry`(`okhttp3.internal.cache.DiskLruCache` v6 @kind this, `okhttp3.internal.cache.DiskLruCache$Entry` v7 @kind object) @signature `Lokhttp3/internal/cache/DiskLruCache;.removeEntry:(Lokhttp3/internal/cache/DiskLruCache$Entry;)Z` @AccessFlag  {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L235b2c.  v0:= v7.`okhttp3.internal.cache.DiskLruCache$Entry.currentEditor` @type ^`okhttp3.internal.cache.DiskLruCache$Editor` @kind object;
+  #L235b30.  if v0 == 0 then goto L235b3e;
+  #L235b34.  v0:= v7.`okhttp3.internal.cache.DiskLruCache$Entry.currentEditor` @type ^`okhttp3.internal.cache.DiskLruCache$Editor` @kind object;
+  #L235b38.  call `detach`(v0) @signature `Lokhttp3/internal/cache/DiskLruCache$Editor;.detach:()V` @kind virtual;
+  #L235b3e.  v0:= 0I;
+  #L235b40.  v1:= v6.`okhttp3.internal.cache.DiskLruCache.valueCount` @type ^`int`;
+  #L235b44.  if v0 >= v1 then goto L235b7e;
+  #L235b48.  v1:= v6.`okhttp3.internal.cache.DiskLruCache.fileSystem` @type ^`okhttp3.internal.io.FileSystem` @kind object;
+  #L235b4c.  v2:= v7.`okhttp3.internal.cache.DiskLruCache$Entry.cleanFiles` @type ^`java.io.File`[] @kind object;
+  #L235b50.  v2:= v2[v0] @kind object;
+  #L235b54.  call `delete`(v1, v2) @signature `Lokhttp3/internal/io/FileSystem;.delete:(Ljava/io/File;)V` @kind interface;
+  #L235b5a.  v1:= v6.`okhttp3.internal.cache.DiskLruCache.size` @type ^`long` @kind wide;
+  #L235b5e.  v3:= v7.`okhttp3.internal.cache.DiskLruCache$Entry.lengths` @type ^`long`[] @kind object;
+  #L235b62.  v4:= v3[v0] @kind wide;
+  #L235b66.  v1:= v1 - v4 @kind long;
+  #L235b68.  v6.`okhttp3.internal.cache.DiskLruCache.size` @type ^`long` := v1 @kind wide;
+  #L235b6c.  v1:= v7.`okhttp3.internal.cache.DiskLruCache$Entry.lengths` @type ^`long`[] @kind object;
+  #L235b70.  v2:= 0L;
+  #L235b74.  v1[v0]:= v2 @kind wide;
+  #L235b78.  v0:= v0 + 1;
+  #L235b7c.  goto L235b40;
+  #L235b7e.  v0:= v6.`okhttp3.internal.cache.DiskLruCache.redundantOpCount` @type ^`int`;
+  #L235b82.  v1:= 1I;
+  #L235b84.  v0:= v0 + v1 @kind int;
+  #L235b86.  v6.`okhttp3.internal.cache.DiskLruCache.redundantOpCount` @type ^`int` := v0;
+  #L235b8a.  v0:= v6.`okhttp3.internal.cache.DiskLruCache.journalWriter` @type ^`okio.BufferedSink` @kind object;
+  #L235b8e.  v2:= "REMOVE" @kind object;
+  #L235b92.  call temp:= `writeUtf8`(v0, v2) @signature `Lokio/BufferedSink;.writeUtf8:(Ljava/lang/String;)Lokio/BufferedSink;` @kind interface;
+  #L235b98.  v0:= temp @kind object;
+  #L235b9a.  v2:= 32I;
+  #L235b9e.  call temp:= `writeByte`(v0, v2) @signature `Lokio/BufferedSink;.writeByte:(I)Lokio/BufferedSink;` @kind interface;
+  #L235ba4.  v0:= temp @kind object;
+  #L235ba6.  v2:= v7.`okhttp3.internal.cache.DiskLruCache$Entry.key` @type ^`java.lang.String` @kind object;
+  #L235baa.  call temp:= `writeUtf8`(v0, v2) @signature `Lokio/BufferedSink;.writeUtf8:(Ljava/lang/String;)Lokio/BufferedSink;` @kind interface;
+  #L235bb0.  v0:= temp @kind object;
+  #L235bb2.  v2:= 10I;
+  #L235bb6.  call temp:= `writeByte`(v0, v2) @signature `Lokio/BufferedSink;.writeByte:(I)Lokio/BufferedSink;` @kind interface;
+  #L235bbc.  v0:= v6.`okhttp3.internal.cache.DiskLruCache.lruEntries` @type ^`java.util.LinkedHashMap` @kind object;
+  #L235bc0.  v7:= v7.`okhttp3.internal.cache.DiskLruCache$Entry.key` @type ^`java.lang.String` @kind object;
+  #L235bc4.  call temp:= `remove`(v0, v7) @signature `Ljava/util/LinkedHashMap;.remove:(Ljava/lang/Object;)Ljava/lang/Object;` @kind virtual;
+  #L235bca.  call temp:= `journalRebuildRequired`(v6) @signature `Lokhttp3/internal/cache/DiskLruCache;.journalRebuildRequired:()Z` @kind virtual;
+  #L235bd0.  v7:= temp;
+  #L235bd2.  if v7 == 0 then goto L235be4;
+  #L235bd6.  v7:= v6.`okhttp3.internal.cache.DiskLruCache.executor` @type ^`java.util.concurrent.Executor` @kind object;
+  #L235bda.  v0:= v6.`okhttp3.internal.cache.DiskLruCache.cleanupRunnable` @type ^`java.lang.Runnable` @kind object;
+  #L235bde.  call `execute`(v7, v0) @signature `Ljava/util/concurrent/Executor;.execute:(Ljava/lang/Runnable;)V` @kind interface;
+  #L235be4.  return v1;
+}
+procedure `void` `setMaxSize`(`okhttp3.internal.cache.DiskLruCache` v0 @kind this, `long` v1 ) @signature `Lokhttp3/internal/cache/DiskLruCache;.setMaxSize:(J)V` @AccessFlag PUBLIC {
+    temp;
+
+  #L236b2c.  @monitorenter v0
+  #L236b2e.  v0.`okhttp3.internal.cache.DiskLruCache.maxSize` @type ^`long` := v1 @kind wide;
+  #L236b32.  v1:= v0.`okhttp3.internal.cache.DiskLruCache.initialized` @type ^`boolean` @kind boolean;
+  #L236b36.  if v1 == 0 then goto L236b48;
+  #L236b3a.  v1:= v0.`okhttp3.internal.cache.DiskLruCache.executor` @type ^`java.util.concurrent.Executor` @kind object;
+  #L236b3e.  v2:= v0.`okhttp3.internal.cache.DiskLruCache.cleanupRunnable` @type ^`java.lang.Runnable` @kind object;
+  #L236b42.  call `execute`(v1, v2) @signature `Ljava/util/concurrent/Executor;.execute:(Ljava/lang/Runnable;)V` @kind interface;
+  #L236b48.  @monitorexit v0
+  #L236b4a.  return @kind void;
+  #L236b4c.  v1:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L236b4e.  @monitorexit v0
+  #L236b50.  throw v1;
+  catch `java.lang.Throwable` @[L236b2e..L236b48] goto L236b4c;
+}
+procedure `long` `size`(`okhttp3.internal.cache.DiskLruCache` v2 @kind this) @signature `Lokhttp3/internal/cache/DiskLruCache;.size:()J` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L235c74.  @monitorenter v2
+  #L235c76.  call `initialize`(v2) @signature `Lokhttp3/internal/cache/DiskLruCache;.initialize:()V` @kind virtual;
+  #L235c7c.  v0:= v2.`okhttp3.internal.cache.DiskLruCache.size` @type ^`long` @kind wide;
+  #L235c80.  @monitorexit v2
+  #L235c82.  return v0 @kind wide;
+  #L235c84.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L235c86.  @monitorexit v2
+  #L235c88.  throw v0;
+  catch `java.lang.Throwable` @[L235c76..L235c80] goto L235c84;
+}
+procedure `java.util.Iterator` `snapshots`(`okhttp3.internal.cache.DiskLruCache` v1 @kind this) @signature `Lokhttp3/internal/cache/DiskLruCache;.snapshots:()Ljava/util/Iterator;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L235c10.  @monitorenter v1
+  #L235c12.  call `initialize`(v1) @signature `Lokhttp3/internal/cache/DiskLruCache;.initialize:()V` @kind virtual;
+  #L235c18.  v0:= new `okhttp3.internal.cache.DiskLruCache$3`;
+  #L235c1c.  call `<init>`(v0, v1) @signature `Lokhttp3/internal/cache/DiskLruCache$3;.<init>:(Lokhttp3/internal/cache/DiskLruCache;)V` @kind direct;
+  #L235c22.  @monitorexit v1
+  #L235c24.  return v0 @kind object;
+  #L235c26.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L235c28.  @monitorexit v1
+  #L235c2a.  throw v0;
+  catch `java.lang.Throwable` @[L235c12..L235c22] goto L235c26;
+}
+procedure `void` `trimToSize`(`okhttp3.internal.cache.DiskLruCache` v5 @kind this) @signature `Lokhttp3/internal/cache/DiskLruCache;.trimToSize:()V` @AccessFlag  {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L236b70.  v0:= v5.`okhttp3.internal.cache.DiskLruCache.size` @type ^`long` @kind wide;
+  #L236b74.  v2:= v5.`okhttp3.internal.cache.DiskLruCache.maxSize` @type ^`long` @kind wide;
+  #L236b78.  v4:= lcmp(v0, v2);
+  #L236b7c.  if v4 <= 0 then goto L236ba8;
+  #L236b80.  v0:= v5.`okhttp3.internal.cache.DiskLruCache.lruEntries` @type ^`java.util.LinkedHashMap` @kind object;
+  #L236b84.  call temp:= `values`(v0) @signature `Ljava/util/LinkedHashMap;.values:()Ljava/util/Collection;` @kind virtual;
+  #L236b8a.  v0:= temp @kind object;
+  #L236b8c.  call temp:= `iterator`(v0) @signature `Ljava/util/Collection;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L236b92.  v0:= temp @kind object;
+  #L236b94.  call temp:= `next`(v0) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L236b9a.  v0:= temp @kind object;
+  #L236b9c.  v0:= (`okhttp3.internal.cache.DiskLruCache$Entry`) v0 @kind object;
+  #L236ba0.  call temp:= `removeEntry`(v5, v0) @signature `Lokhttp3/internal/cache/DiskLruCache;.removeEntry:(Lokhttp3/internal/cache/DiskLruCache$Entry;)Z` @kind virtual;
+  #L236ba6.  goto L236b70;
+  #L236ba8.  v0:= 0I;
+  #L236baa.  v5.`okhttp3.internal.cache.DiskLruCache.mostRecentTrimFailed` @type ^`boolean` := v0 @kind boolean;
+  #L236bae.  return @kind void;
+}

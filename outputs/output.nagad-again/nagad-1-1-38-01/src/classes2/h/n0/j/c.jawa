@@ -1,0 +1,143 @@
+record `h.n0.j.c` @kind class @AccessFlag PUBLIC extends `h.n0.j.f` @kind class {
+}
+procedure `void` `<init>`(`h.n0.j.c` v0 @kind this) @signature `Lh/n0/j/c;.<init>:()V` @AccessFlag PRIVATE_CONSTRUCTOR {
+    temp;
+
+  #L20ca8c.  call `<init>`(v0) @signature `Lh/n0/j/f;.<init>:()V` @kind direct;
+  #L20ca92.  return @kind void;
+}
+procedure `java.security.Provider` `a`(`h.n0.j.c` v1 @kind this) @signature `Lh/n0/j/c;.a:()Ljava/security/Provider;` @AccessFlag PRIVATE {
+    temp;
+    v0;
+
+  #L20c934.  call temp:= `newProviderBuilder`() @signature `Lorg/conscrypt/Conscrypt;.newProviderBuilder:()Lorg/conscrypt/Conscrypt$ProviderBuilder;` @kind static;
+  #L20c93a.  v0:= temp @kind object;
+  #L20c93c.  call temp:= `provideTrustManager`(v0) @signature `Lorg/conscrypt/Conscrypt$ProviderBuilder;.provideTrustManager:()Lorg/conscrypt/Conscrypt$ProviderBuilder;` @kind virtual;
+  #L20c942.  v0:= temp @kind object;
+  #L20c944.  call temp:= `build`(v0) @signature `Lorg/conscrypt/Conscrypt$ProviderBuilder;.build:()Ljava/security/Provider;` @kind virtual;
+  #L20c94a.  v0:= temp @kind object;
+  #L20c94c.  return v0 @kind object;
+}
+procedure `h.n0.j.c` `buildIfSupported`() @signature `Lh/n0/j/c;.buildIfSupported:()Lh/n0/j/c;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+
+  #L20ca44.  v0:= "org.conscrypt.Conscrypt" @kind object;
+  #L20ca48.  v1:= 0I;
+  #L20ca4a.  call temp:= `forName`(v0) @signature `Ljava/lang/Class;.forName:(Ljava/lang/String;)Ljava/lang/Class;` @kind static;
+  #L20ca50.  call temp:= `isAvailable`() @signature `Lorg/conscrypt/Conscrypt;.isAvailable:()Z` @kind static;
+  #L20ca56.  v0:= temp;
+  #L20ca58.  if v0 != 0 then goto L20ca5e;
+  #L20ca5c.  return v1 @kind object;
+  #L20ca5e.  v0:= new `h.n0.j.c`;
+  #L20ca62.  call `<init>`(v0) @signature `Lh/n0/j/c;.<init>:()V` @kind direct;
+  #L20ca68.  return v0 @kind object;
+  #L20ca6a.  return v1 @kind object;
+  catch `java.lang.ClassNotFoundException` @[L20ca4a..L20ca68] goto L20ca6a;
+}
+procedure `void` `configureSslSocketFactory`(`h.n0.j.c` v1 @kind this, `javax.net.ssl.SSLSocketFactory` v2 @kind object) @signature `Lh/n0/j/c;.configureSslSocketFactory:(Ljavax/net/ssl/SSLSocketFactory;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L20caa4.  call temp:= `isConscrypt`(v2) @signature `Lorg/conscrypt/Conscrypt;.isConscrypt:(Ljavax/net/ssl/SSLSocketFactory;)Z` @kind static;
+  #L20caaa.  v0:= temp;
+  #L20caac.  if v0 == 0 then goto L20cab8;
+  #L20cab0.  v0:= 1I;
+  #L20cab2.  call `setUseEngineSocket`(v2, v0) @signature `Lorg/conscrypt/Conscrypt;.setUseEngineSocket:(Ljavax/net/ssl/SSLSocketFactory;Z)V` @kind static;
+  #L20cab8.  return @kind void;
+}
+procedure `void` `configureTlsExtensions`(`h.n0.j.c` v1 @kind this, `javax.net.ssl.SSLSocket` v2 @kind object, `java.lang.String` v3 @kind object, `java.util.List` v4 @kind object) @signature `Lh/n0/j/c;.configureTlsExtensions:(Ljavax/net/ssl/SSLSocket;Ljava/lang/String;Ljava/util/List;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L20cacc.  call temp:= `isConscrypt`(v2) @signature `Lorg/conscrypt/Conscrypt;.isConscrypt:(Ljavax/net/ssl/SSLSocket;)Z` @kind static;
+  #L20cad2.  v0:= temp;
+  #L20cad4.  if v0 == 0 then goto L20cb0c;
+  #L20cad8.  if v3 == 0 then goto L20caea;
+  #L20cadc.  v0:= 1I;
+  #L20cade.  call `setUseSessionTickets`(v2, v0) @signature `Lorg/conscrypt/Conscrypt;.setUseSessionTickets:(Ljavax/net/ssl/SSLSocket;Z)V` @kind static;
+  #L20cae4.  call `setHostname`(v2, v3) @signature `Lorg/conscrypt/Conscrypt;.setHostname:(Ljavax/net/ssl/SSLSocket;Ljava/lang/String;)V` @kind static;
+  #L20caea.  call temp:= `alpnProtocolNames`(v4) @signature `Lh/n0/j/f;.alpnProtocolNames:(Ljava/util/List;)Ljava/util/List;` @kind static;
+  #L20caf0.  v3:= temp @kind object;
+  #L20caf2.  v4:= 0I;
+  #L20caf4.  v4:= new `java.lang.String`[v4];
+  #L20caf8.  call temp:= `toArray`(v3, v4) @signature `Ljava/util/List;.toArray:([Ljava/lang/Object;)[Ljava/lang/Object;` @kind interface;
+  #L20cafe.  v3:= temp @kind object;
+  #L20cb00.  v3:= (`java.lang.String`[]) v3 @kind object;
+  #L20cb04.  call `setApplicationProtocols`(v2, v3) @signature `Lorg/conscrypt/Conscrypt;.setApplicationProtocols:(Ljavax/net/ssl/SSLSocket;[Ljava/lang/String;)V` @kind static;
+  #L20cb0a.  goto L20cb12;
+  #L20cb0c.  call `configureTlsExtensions`(v1, v2, v3, v4) @signature `Lh/n0/j/f;.configureTlsExtensions:(Ljavax/net/ssl/SSLSocket;Ljava/lang/String;Ljava/util/List;)V` @kind super;
+  #L20cb12.  return @kind void;
+}
+procedure `javax.net.ssl.SSLContext` `getSSLContext`(`h.n0.j.c` v3 @kind this) @signature `Lh/n0/j/c;.getSSLContext:()Ljavax/net/ssl/SSLContext;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L20c960.  v0:= "TLSv1.3" @kind object;
+  #L20c964.  call temp:= `a`(v3) @signature `Lh/n0/j/c;.a:()Ljava/security/Provider;` @kind direct;
+  #L20c96a.  v1:= temp @kind object;
+  #L20c96c.  call temp:= `getInstance`(v0, v1) @signature `Ljavax/net/ssl/SSLContext;.getInstance:(Ljava/lang/String;Ljava/security/Provider;)Ljavax/net/ssl/SSLContext;` @kind static;
+  #L20c972.  v0:= temp @kind object;
+  #L20c974.  return v0 @kind object;
+  #L20c976.  v0:= Exception @type ^`java.security.NoSuchAlgorithmException` @kind object;
+  #L20c978.  v1:= "TLS" @kind object;
+  #L20c97c.  call temp:= `a`(v3) @signature `Lh/n0/j/c;.a:()Ljava/security/Provider;` @kind direct;
+  #L20c982.  v2:= temp @kind object;
+  #L20c984.  call temp:= `getInstance`(v1, v2) @signature `Ljavax/net/ssl/SSLContext;.getInstance:(Ljava/lang/String;Ljava/security/Provider;)Ljavax/net/ssl/SSLContext;` @kind static;
+  #L20c98a.  v0:= temp @kind object;
+  #L20c98c.  return v0 @kind object;
+  #L20c98e.  v1:= new `java.lang.IllegalStateException`;
+  #L20c992.  v2:= "No TLS provider" @kind object;
+  #L20c996.  call `<init>`(v1, v2, v0) @signature `Ljava/lang/IllegalStateException;.<init>:(Ljava/lang/String;Ljava/lang/Throwable;)V` @kind direct;
+  #L20c99c.  throw v1;
+  catch `java.security.NoSuchAlgorithmException` @[L20c960..L20c974] goto L20c976;
+  catch `java.security.NoSuchAlgorithmException` @[L20c978..L20c98c] goto L20c98e;
+}
+procedure `java.lang.String` `getSelectedProtocol`(`h.n0.j.c` v1 @kind this, `javax.net.ssl.SSLSocket` v2 @kind object) @signature `Lh/n0/j/c;.getSelectedProtocol:(Ljavax/net/ssl/SSLSocket;)Ljava/lang/String;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L20c904.  call temp:= `isConscrypt`(v2) @signature `Lorg/conscrypt/Conscrypt;.isConscrypt:(Ljavax/net/ssl/SSLSocket;)Z` @kind static;
+  #L20c90a.  v0:= temp;
+  #L20c90c.  if v0 == 0 then goto L20c91a;
+  #L20c910.  call temp:= `getApplicationProtocol`(v2) @signature `Lorg/conscrypt/Conscrypt;.getApplicationProtocol:(Ljavax/net/ssl/SSLSocket;)Ljava/lang/String;` @kind static;
+  #L20c916.  v2:= temp @kind object;
+  #L20c918.  return v2 @kind object;
+  #L20c91a.  call temp:= `getSelectedProtocol`(v1, v2) @signature `Lh/n0/j/f;.getSelectedProtocol:(Ljavax/net/ssl/SSLSocket;)Ljava/lang/String;` @kind super;
+  #L20c920.  v2:= temp @kind object;
+  #L20c922.  return v2 @kind object;
+}
+procedure `javax.net.ssl.X509TrustManager` `trustManager`(`h.n0.j.c` v2 @kind this, `javax.net.ssl.SSLSocketFactory` v3 @kind object) @signature `Lh/n0/j/c;.trustManager:(Ljavax/net/ssl/SSLSocketFactory;)Ljavax/net/ssl/X509TrustManager;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L20c9cc.  call temp:= `isConscrypt`(v3) @signature `Lorg/conscrypt/Conscrypt;.isConscrypt:(Ljavax/net/ssl/SSLSocketFactory;)Z` @kind static;
+  #L20c9d2.  v0:= temp;
+  #L20c9d4.  if v0 != 0 then goto L20c9e2;
+  #L20c9d8.  call temp:= `trustManager`(v2, v3) @signature `Lh/n0/j/f;.trustManager:(Ljavax/net/ssl/SSLSocketFactory;)Ljavax/net/ssl/X509TrustManager;` @kind super;
+  #L20c9de.  v3:= temp @kind object;
+  #L20c9e0.  return v3 @kind object;
+  #L20c9e2.  v0:= constclass @type ^`java.lang.Object` @kind object;
+  #L20c9e6.  v1:= "sslParameters" @kind object;
+  #L20c9ea.  call temp:= `a`(v3, v0, v1) @signature `Lh/n0/j/f;.a:(Ljava/lang/Object;Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/Object;` @kind static;
+  #L20c9f0.  v3:= temp @kind object;
+  #L20c9f2.  if v3 == 0 then goto L20ca0c;
+  #L20c9f6.  v0:= constclass @type ^`javax.net.ssl.X509TrustManager` @kind object;
+  #L20c9fa.  v1:= "x509TrustManager" @kind object;
+  #L20c9fe.  call temp:= `a`(v3, v0, v1) @signature `Lh/n0/j/f;.a:(Ljava/lang/Object;Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/Object;` @kind static;
+  #L20ca04.  v3:= temp @kind object;
+  #L20ca06.  v3:= (`javax.net.ssl.X509TrustManager`) v3 @kind object;
+  #L20ca0a.  return v3 @kind object;
+  #L20ca0c.  v3:= 0I;
+  #L20ca0e.  return v3 @kind object;
+  #L20ca10.  v3:= Exception @type ^`java.lang.Exception` @kind object;
+  #L20ca12.  v0:= new `java.lang.UnsupportedOperationException`;
+  #L20ca16.  v1:= "clientBuilder.sslSocketFactory(SSLSocketFactory) not supported on Conscrypt" @kind object;
+  #L20ca1a.  call `<init>`(v0, v1, v3) @signature `Ljava/lang/UnsupportedOperationException;.<init>:(Ljava/lang/String;Ljava/lang/Throwable;)V` @kind direct;
+  #L20ca20.  throw v0;
+  catch `java.lang.Exception` @[L20c9e2..L20ca0a] goto L20ca10;
+}

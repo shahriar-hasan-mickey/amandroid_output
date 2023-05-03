@@ -1,0 +1,303 @@
+record `com.android.volley.toolbox.ImageLoader` @kind class @AccessFlag PUBLIC {
+  `int` `com.android.volley.toolbox.ImageLoader.mBatchResponseDelayMs` @AccessFlag PRIVATE;
+  `java.util.HashMap` `com.android.volley.toolbox.ImageLoader.mBatchedResponses` @AccessFlag PRIVATE_FINAL;
+  `com.android.volley.toolbox.ImageLoader$ImageCache` `com.android.volley.toolbox.ImageLoader.mCache` @AccessFlag PRIVATE_FINAL;
+  `android.os.Handler` `com.android.volley.toolbox.ImageLoader.mHandler` @AccessFlag PRIVATE_FINAL;
+  `java.util.HashMap` `com.android.volley.toolbox.ImageLoader.mInFlightRequests` @AccessFlag PRIVATE_FINAL;
+  `com.android.volley.RequestQueue` `com.android.volley.toolbox.ImageLoader.mRequestQueue` @AccessFlag PRIVATE_FINAL;
+  `java.lang.Runnable` `com.android.volley.toolbox.ImageLoader.mRunnable` @AccessFlag PRIVATE;
+}
+procedure `void` `<init>`(`com.android.volley.toolbox.ImageLoader` v2 @kind this, `com.android.volley.RequestQueue` v3 @kind object, `com.android.volley.toolbox.ImageLoader$ImageCache` v4 @kind object) @signature `Lcom/android/volley/toolbox/ImageLoader;.<init>:(Lcom/android/volley/RequestQueue;Lcom/android/volley/toolbox/ImageLoader$ImageCache;)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+
+  #L2b6680.  call `<init>`(v2) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L2b6686.  v0:= 100I;
+  #L2b668a.  v2.`com.android.volley.toolbox.ImageLoader.mBatchResponseDelayMs` @type ^`int` := v0;
+  #L2b668e.  v0:= new `java.util.HashMap`;
+  #L2b6692.  call `<init>`(v0) @signature `Ljava/util/HashMap;.<init>:()V` @kind direct;
+  #L2b6698.  v2.`com.android.volley.toolbox.ImageLoader.mInFlightRequests` @type ^`java.util.HashMap` := v0 @kind object;
+  #L2b669c.  v0:= new `java.util.HashMap`;
+  #L2b66a0.  call `<init>`(v0) @signature `Ljava/util/HashMap;.<init>:()V` @kind direct;
+  #L2b66a6.  v2.`com.android.volley.toolbox.ImageLoader.mBatchedResponses` @type ^`java.util.HashMap` := v0 @kind object;
+  #L2b66aa.  v0:= new `android.os.Handler`;
+  #L2b66ae.  call temp:= `getMainLooper`() @signature `Landroid/os/Looper;.getMainLooper:()Landroid/os/Looper;` @kind static;
+  #L2b66b4.  v1:= temp @kind object;
+  #L2b66b6.  call `<init>`(v0, v1) @signature `Landroid/os/Handler;.<init>:(Landroid/os/Looper;)V` @kind direct;
+  #L2b66bc.  v2.`com.android.volley.toolbox.ImageLoader.mHandler` @type ^`android.os.Handler` := v0 @kind object;
+  #L2b66c0.  v2.`com.android.volley.toolbox.ImageLoader.mRequestQueue` @type ^`com.android.volley.RequestQueue` := v3 @kind object;
+  #L2b66c4.  v2.`com.android.volley.toolbox.ImageLoader.mCache` @type ^`com.android.volley.toolbox.ImageLoader$ImageCache` := v4 @kind object;
+  #L2b66c8.  return @kind void;
+}
+procedure `java.util.HashMap` `a`(`com.android.volley.toolbox.ImageLoader` v0 @kind object) @signature `Lcom/android/volley/toolbox/ImageLoader;.a:(Lcom/android/volley/toolbox/ImageLoader;)Ljava/util/HashMap;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L2b6650.  v0:= v0.`com.android.volley.toolbox.ImageLoader.mInFlightRequests` @type ^`java.util.HashMap` @kind object;
+  #L2b6654.  return v0 @kind object;
+}
+procedure `java.util.HashMap` `b`(`com.android.volley.toolbox.ImageLoader` v0 @kind object) @signature `Lcom/android/volley/toolbox/ImageLoader;.b:(Lcom/android/volley/toolbox/ImageLoader;)Ljava/util/HashMap;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L2b6668.  v0:= v0.`com.android.volley.toolbox.ImageLoader.mBatchedResponses` @type ^`java.util.HashMap` @kind object;
+  #L2b666c.  return v0 @kind object;
+}
+procedure `void` `batchResponse`(`com.android.volley.toolbox.ImageLoader` v2 @kind this, `java.lang.String` v3 @kind object, `com.android.volley.toolbox.ImageLoader$BatchedImageRequest` v4 @kind object) @signature `Lcom/android/volley/toolbox/ImageLoader;.batchResponse:(Ljava/lang/String;Lcom/android/volley/toolbox/ImageLoader$BatchedImageRequest;)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+
+  #L2b66dc.  v0:= v2.`com.android.volley.toolbox.ImageLoader.mBatchedResponses` @type ^`java.util.HashMap` @kind object;
+  #L2b66e0.  call temp:= `put`(v0, v3, v4) @signature `Ljava/util/HashMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;` @kind virtual;
+  #L2b66e6.  v3:= v2.`com.android.volley.toolbox.ImageLoader.mRunnable` @type ^`java.lang.Runnable` @kind object;
+  #L2b66ea.  if v3 != 0 then goto L2b670c;
+  #L2b66ee.  v3:= new `com.android.volley.toolbox.ImageLoader$4`;
+  #L2b66f2.  call `<init>`(v3, v2) @signature `Lcom/android/volley/toolbox/ImageLoader$4;.<init>:(Lcom/android/volley/toolbox/ImageLoader;)V` @kind direct;
+  #L2b66f8.  v2.`com.android.volley.toolbox.ImageLoader.mRunnable` @type ^`java.lang.Runnable` := v3 @kind object;
+  #L2b66fc.  v4:= v2.`com.android.volley.toolbox.ImageLoader.mHandler` @type ^`android.os.Handler` @kind object;
+  #L2b6700.  v0:= v2.`com.android.volley.toolbox.ImageLoader.mBatchResponseDelayMs` @type ^`int`;
+  #L2b6704.  v0:= (`long`) v0 @kind i2l;
+  #L2b6706.  call temp:= `postDelayed`(v4, v3, v0) @signature `Landroid/os/Handler;.postDelayed:(Ljava/lang/Runnable;J)Z` @kind virtual;
+  #L2b670c.  return @kind void;
+}
+procedure `java.lang.Runnable` `c`(`com.android.volley.toolbox.ImageLoader` v0 @kind object, `java.lang.Runnable` v1 @kind object) @signature `Lcom/android/volley/toolbox/ImageLoader;.c:(Lcom/android/volley/toolbox/ImageLoader;Ljava/lang/Runnable;)Ljava/lang/Runnable;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L2b65c8.  v0.`com.android.volley.toolbox.ImageLoader.mRunnable` @type ^`java.lang.Runnable` := v1 @kind object;
+  #L2b65cc.  return v1 @kind object;
+}
+procedure `java.lang.String` `getCacheKey`(`java.lang.String` v2 @kind object, `int` v3 , `int` v4 , `android.widget.ImageView$ScaleType` v5 @kind object) @signature `Lcom/android/volley/toolbox/ImageLoader;.getCacheKey:(Ljava/lang/String;IILandroid/widget/ImageView$ScaleType;)Ljava/lang/String;` @AccessFlag PRIVATE_STATIC {
+    temp;
+    v0;
+    v1;
+
+  #L2b65e0.  v0:= new `java.lang.StringBuilder`;
+  #L2b65e4.  call temp:= `length`(v2) @signature `Ljava/lang/String;.length:()I` @kind virtual;
+  #L2b65ea.  v1:= temp;
+  #L2b65ec.  v1:= v1 + 12;
+  #L2b65f0.  call `<init>`(v0, v1) @signature `Ljava/lang/StringBuilder;.<init>:(I)V` @kind direct;
+  #L2b65f6.  v1:= "#W" @kind object;
+  #L2b65fa.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2b6600.  call temp:= `append`(v0, v3) @signature `Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2b6606.  v3:= "#H" @kind object;
+  #L2b660a.  call temp:= `append`(v0, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2b6610.  call temp:= `append`(v0, v4) @signature `Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2b6616.  v3:= "#S" @kind object;
+  #L2b661a.  call temp:= `append`(v0, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2b6620.  call temp:= `ordinal`(v5) @signature `Landroid/widget/ImageView$ScaleType;.ordinal:()I` @kind virtual;
+  #L2b6626.  v3:= temp;
+  #L2b6628.  call temp:= `append`(v0, v3) @signature `Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2b662e.  call temp:= `append`(v0, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2b6634.  call temp:= `toString`(v0) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L2b663a.  v2:= temp @kind object;
+  #L2b663c.  return v2 @kind object;
+}
+procedure `com.android.volley.toolbox.ImageLoader$ImageListener` `getImageListener`(`android.widget.ImageView` v1 @kind object, `int` v2 , `int` v3 ) @signature `Lcom/android/volley/toolbox/ImageLoader;.getImageListener:(Landroid/widget/ImageView;II)Lcom/android/volley/toolbox/ImageLoader$ImageListener;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+
+  #L2b65ac.  v0:= new `com.android.volley.toolbox.ImageLoader$1`;
+  #L2b65b0.  call `<init>`(v0, v3, v1, v2) @signature `Lcom/android/volley/toolbox/ImageLoader$1;.<init>:(ILandroid/widget/ImageView;I)V` @kind direct;
+  #L2b65b6.  return v0 @kind object;
+}
+procedure `void` `throwIfNotOnMainThread`(`com.android.volley.toolbox.ImageLoader` v2 @kind this) @signature `Lcom/android/volley/toolbox/ImageLoader;.throwIfNotOnMainThread:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+
+  #L2b67a8.  call temp:= `myLooper`() @signature `Landroid/os/Looper;.myLooper:()Landroid/os/Looper;` @kind static;
+  #L2b67ae.  v0:= temp @kind object;
+  #L2b67b0.  call temp:= `getMainLooper`() @signature `Landroid/os/Looper;.getMainLooper:()Landroid/os/Looper;` @kind static;
+  #L2b67b6.  v1:= temp @kind object;
+  #L2b67b8.  if v0 != v1 then goto L2b67be;
+  #L2b67bc.  return @kind void;
+  #L2b67be.  v0:= new `java.lang.IllegalStateException`;
+  #L2b67c2.  v1:= "ImageLoader must be invoked from the main thread." @kind object;
+  #L2b67c6.  call `<init>`(v0, v1) @signature `Ljava/lang/IllegalStateException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L2b67cc.  throw v0;
+}
+procedure `com.android.volley.toolbox.ImageLoader$ImageContainer` `get`(`com.android.volley.toolbox.ImageLoader` v1 @kind this, `java.lang.String` v2 @kind object, `com.android.volley.toolbox.ImageLoader$ImageListener` v3 @kind object) @signature `Lcom/android/volley/toolbox/ImageLoader;.get:(Ljava/lang/String;Lcom/android/volley/toolbox/ImageLoader$ImageListener;)Lcom/android/volley/toolbox/ImageLoader$ImageContainer;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L2b648c.  v0:= 0I;
+  #L2b648e.  call temp:= `get`(v1, v2, v3, v0, v0) @signature `Lcom/android/volley/toolbox/ImageLoader;.get:(Ljava/lang/String;Lcom/android/volley/toolbox/ImageLoader$ImageListener;II)Lcom/android/volley/toolbox/ImageLoader$ImageContainer;` @kind virtual;
+  #L2b6494.  v2:= temp @kind object;
+  #L2b6496.  return v2 @kind object;
+}
+procedure `com.android.volley.toolbox.ImageLoader$ImageContainer` `get`(`com.android.volley.toolbox.ImageLoader` v6 @kind this, `java.lang.String` v7 @kind object, `com.android.volley.toolbox.ImageLoader$ImageListener` v8 @kind object, `int` v9 , `int` v10 ) @signature `Lcom/android/volley/toolbox/ImageLoader;.get:(Ljava/lang/String;Lcom/android/volley/toolbox/ImageLoader$ImageListener;II)Lcom/android/volley/toolbox/ImageLoader$ImageContainer;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L2b64a8.  v5:= `@@android.widget.ImageView$ScaleType.CENTER_INSIDE` @type ^`android.widget.ImageView$ScaleType` @kind object;
+  #L2b64ac.  v0:= v6 @kind object;
+  #L2b64ae.  v1:= v7 @kind object;
+  #L2b64b0.  v2:= v8 @kind object;
+  #L2b64b2.  v3:= v9;
+  #L2b64b4.  v4:= v10;
+  #L2b64b6.  call temp:= `get`(v0, v1, v2, v3, v4, v5) @signature `Lcom/android/volley/toolbox/ImageLoader;.get:(Ljava/lang/String;Lcom/android/volley/toolbox/ImageLoader$ImageListener;IILandroid/widget/ImageView$ScaleType;)Lcom/android/volley/toolbox/ImageLoader$ImageContainer;` @kind virtual;
+  #L2b64bc.  v7:= temp @kind object;
+  #L2b64be.  return v7 @kind object;
+}
+procedure `com.android.volley.toolbox.ImageLoader$ImageContainer` `get`(`com.android.volley.toolbox.ImageLoader` v15 @kind this, `java.lang.String` v16 @kind object, `com.android.volley.toolbox.ImageLoader$ImageListener` v17 @kind object, `int` v18 , `int` v19 , `android.widget.ImageView$ScaleType` v20 @kind object) @signature `Lcom/android/volley/toolbox/ImageLoader;.get:(Ljava/lang/String;Lcom/android/volley/toolbox/ImageLoader$ImageListener;IILandroid/widget/ImageView$ScaleType;)Lcom/android/volley/toolbox/ImageLoader$ImageContainer;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+    v9;
+    v10;
+    v11;
+    v12;
+    v13;
+    v14;
+
+  #L2b64d0.  v6:= v15 @kind object;
+  #L2b64d2.  v7:= v17 @kind object;
+  #L2b64d6.  call `throwIfNotOnMainThread`(v15) @signature `Lcom/android/volley/toolbox/ImageLoader;.throwIfNotOnMainThread:()V` @kind direct;
+  #L2b64dc.  v8:= v16 @kind object;
+  #L2b64e0.  v9:= v18;
+  #L2b64e4.  v10:= v19;
+  #L2b64e8.  v11:= v20 @kind object;
+  #L2b64ec.  call temp:= `getCacheKey`(v8, v9, v10, v11) @signature `Lcom/android/volley/toolbox/ImageLoader;.getCacheKey:(Ljava/lang/String;IILandroid/widget/ImageView$ScaleType;)Ljava/lang/String;` @kind static;
+  #L2b64f2.  v12:= temp @kind object;
+  #L2b64f4.  v0:= v6.`com.android.volley.toolbox.ImageLoader.mCache` @type ^`com.android.volley.toolbox.ImageLoader$ImageCache` @kind object;
+  #L2b64f8.  call temp:= `getBitmap`(v0, v12) @signature `Lcom/android/volley/toolbox/ImageLoader$ImageCache;.getBitmap:(Ljava/lang/String;)Landroid/graphics/Bitmap;` @kind interface;
+  #L2b64fe.  v2:= temp @kind object;
+  #L2b6500.  v13:= 1I;
+  #L2b6502.  if v2 == 0 then goto L2b6524;
+  #L2b6506.  v9:= new `com.android.volley.toolbox.ImageLoader$ImageContainer`;
+  #L2b650a.  v4:= 0I;
+  #L2b650c.  v5:= 0I;
+  #L2b650e.  v0:= v9 @kind object;
+  #L2b6510.  v1:= v15 @kind object;
+  #L2b6512.  v3:= v16 @kind object;
+  #L2b6516.  call `<init>`(v0, v1, v2, v3, v4, v5) @signature `Lcom/android/volley/toolbox/ImageLoader$ImageContainer;.<init>:(Lcom/android/volley/toolbox/ImageLoader;Landroid/graphics/Bitmap;Ljava/lang/String;Ljava/lang/String;Lcom/android/volley/toolbox/ImageLoader$ImageListener;)V` @kind direct;
+  #L2b651c.  call `onResponse`(v7, v9, v13) @signature `Lcom/android/volley/toolbox/ImageLoader$ImageListener;.onResponse:(Lcom/android/volley/toolbox/ImageLoader$ImageContainer;Z)V` @kind interface;
+  #L2b6522.  return v9 @kind object;
+  #L2b6524.  v14:= new `com.android.volley.toolbox.ImageLoader$ImageContainer`;
+  #L2b6528.  v2:= 0I;
+  #L2b652a.  v0:= v14 @kind object;
+  #L2b652c.  v1:= v15 @kind object;
+  #L2b652e.  v3:= v16 @kind object;
+  #L2b6532.  v4:= v12 @kind object;
+  #L2b6534.  v5:= v17 @kind object;
+  #L2b6538.  call `<init>`(v0, v1, v2, v3, v4, v5) @signature `Lcom/android/volley/toolbox/ImageLoader$ImageContainer;.<init>:(Lcom/android/volley/toolbox/ImageLoader;Landroid/graphics/Bitmap;Ljava/lang/String;Ljava/lang/String;Lcom/android/volley/toolbox/ImageLoader$ImageListener;)V` @kind direct;
+  #L2b653e.  call `onResponse`(v7, v14, v13) @signature `Lcom/android/volley/toolbox/ImageLoader$ImageListener;.onResponse:(Lcom/android/volley/toolbox/ImageLoader$ImageContainer;Z)V` @kind interface;
+  #L2b6544.  v0:= v6.`com.android.volley.toolbox.ImageLoader.mInFlightRequests` @type ^`java.util.HashMap` @kind object;
+  #L2b6548.  call temp:= `get`(v0, v12) @signature `Ljava/util/HashMap;.get:(Ljava/lang/Object;)Ljava/lang/Object;` @kind virtual;
+  #L2b654e.  v0:= temp @kind object;
+  #L2b6550.  v0:= (`com.android.volley.toolbox.ImageLoader$BatchedImageRequest`) v0 @kind object;
+  #L2b6554.  if v0 == 0 then goto L2b6560;
+  #L2b6558.  call `addContainer`(v0, v14) @signature `Lcom/android/volley/toolbox/ImageLoader$BatchedImageRequest;.addContainer:(Lcom/android/volley/toolbox/ImageLoader$ImageContainer;)V` @kind virtual;
+  #L2b655e.  return v14 @kind object;
+  #L2b6560.  v0:= v15 @kind object;
+  #L2b6562.  v1:= v16 @kind object;
+  #L2b6566.  v2:= v18;
+  #L2b656a.  v3:= v19;
+  #L2b656e.  v4:= v20 @kind object;
+  #L2b6572.  v5:= v12 @kind object;
+  #L2b6574.  call temp:= `makeImageRequest`(v0, v1, v2, v3, v4, v5) @signature `Lcom/android/volley/toolbox/ImageLoader;.makeImageRequest:(Ljava/lang/String;IILandroid/widget/ImageView$ScaleType;Ljava/lang/String;)Lcom/android/volley/Request;` @kind virtual;
+  #L2b657a.  v0:= temp @kind object;
+  #L2b657c.  v1:= v6.`com.android.volley.toolbox.ImageLoader.mRequestQueue` @type ^`com.android.volley.RequestQueue` @kind object;
+  #L2b6580.  call temp:= `add`(v1, v0) @signature `Lcom/android/volley/RequestQueue;.add:(Lcom/android/volley/Request;)Lcom/android/volley/Request;` @kind virtual;
+  #L2b6586.  v1:= v6.`com.android.volley.toolbox.ImageLoader.mInFlightRequests` @type ^`java.util.HashMap` @kind object;
+  #L2b658a.  v2:= new `com.android.volley.toolbox.ImageLoader$BatchedImageRequest`;
+  #L2b658e.  call `<init>`(v2, v15, v0, v14) @signature `Lcom/android/volley/toolbox/ImageLoader$BatchedImageRequest;.<init>:(Lcom/android/volley/toolbox/ImageLoader;Lcom/android/volley/Request;Lcom/android/volley/toolbox/ImageLoader$ImageContainer;)V` @kind direct;
+  #L2b6594.  call temp:= `put`(v1, v12, v2) @signature `Ljava/util/HashMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;` @kind virtual;
+  #L2b659a.  return v14 @kind object;
+}
+procedure `boolean` `isCached`(`com.android.volley.toolbox.ImageLoader` v1 @kind this, `java.lang.String` v2 @kind object, `int` v3 , `int` v4 ) @signature `Lcom/android/volley/toolbox/ImageLoader;.isCached:(Ljava/lang/String;II)Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L2b63f4.  v0:= `@@android.widget.ImageView$ScaleType.CENTER_INSIDE` @type ^`android.widget.ImageView$ScaleType` @kind object;
+  #L2b63f8.  call temp:= `isCached`(v1, v2, v3, v4, v0) @signature `Lcom/android/volley/toolbox/ImageLoader;.isCached:(Ljava/lang/String;IILandroid/widget/ImageView$ScaleType;)Z` @kind virtual;
+  #L2b63fe.  v2:= temp;
+  #L2b6400.  return v2;
+}
+procedure `boolean` `isCached`(`com.android.volley.toolbox.ImageLoader` v0 @kind this, `java.lang.String` v1 @kind object, `int` v2 , `int` v3 , `android.widget.ImageView$ScaleType` v4 @kind object) @signature `Lcom/android/volley/toolbox/ImageLoader;.isCached:(Ljava/lang/String;IILandroid/widget/ImageView$ScaleType;)Z` @AccessFlag PUBLIC {
+    temp;
+
+  #L2b6414.  call `throwIfNotOnMainThread`(v0) @signature `Lcom/android/volley/toolbox/ImageLoader;.throwIfNotOnMainThread:()V` @kind direct;
+  #L2b641a.  call temp:= `getCacheKey`(v1, v2, v3, v4) @signature `Lcom/android/volley/toolbox/ImageLoader;.getCacheKey:(Ljava/lang/String;IILandroid/widget/ImageView$ScaleType;)Ljava/lang/String;` @kind static;
+  #L2b6420.  v1:= temp @kind object;
+  #L2b6422.  v2:= v0.`com.android.volley.toolbox.ImageLoader.mCache` @type ^`com.android.volley.toolbox.ImageLoader$ImageCache` @kind object;
+  #L2b6426.  call temp:= `getBitmap`(v2, v1) @signature `Lcom/android/volley/toolbox/ImageLoader$ImageCache;.getBitmap:(Ljava/lang/String;)Landroid/graphics/Bitmap;` @kind interface;
+  #L2b642c.  v1:= temp @kind object;
+  #L2b642e.  if v1 == 0 then goto L2b6436;
+  #L2b6432.  v1:= 1I;
+  #L2b6434.  goto L2b6438;
+  #L2b6436.  v1:= 0I;
+  #L2b6438.  return v1;
+}
+procedure `com.android.volley.Request` `makeImageRequest`(`com.android.volley.toolbox.ImageLoader` v9 @kind this, `java.lang.String` v10 @kind object, `int` v11 , `int` v12 , `android.widget.ImageView$ScaleType` v13 @kind object, `java.lang.String` v14 @kind object) @signature `Lcom/android/volley/toolbox/ImageLoader;.makeImageRequest:(Ljava/lang/String;IILandroid/widget/ImageView$ScaleType;Ljava/lang/String;)Lcom/android/volley/Request;` @AccessFlag PROTECTED {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+
+  #L2b644c.  v8:= new `com.android.volley.toolbox.ImageRequest`;
+  #L2b6450.  v2:= new `com.android.volley.toolbox.ImageLoader$2`;
+  #L2b6454.  call `<init>`(v2, v9, v14) @signature `Lcom/android/volley/toolbox/ImageLoader$2;.<init>:(Lcom/android/volley/toolbox/ImageLoader;Ljava/lang/String;)V` @kind direct;
+  #L2b645a.  v6:= `@@android.graphics.Bitmap$Config.RGB_565` @type ^`android.graphics.Bitmap$Config` @kind object;
+  #L2b645e.  v7:= new `com.android.volley.toolbox.ImageLoader$3`;
+  #L2b6462.  call `<init>`(v7, v9, v14) @signature `Lcom/android/volley/toolbox/ImageLoader$3;.<init>:(Lcom/android/volley/toolbox/ImageLoader;Ljava/lang/String;)V` @kind direct;
+  #L2b6468.  v0:= v8 @kind object;
+  #L2b646a.  v1:= v10 @kind object;
+  #L2b646c.  v3:= v11;
+  #L2b646e.  v4:= v12;
+  #L2b6470.  v5:= v13 @kind object;
+  #L2b6472.  call `<init>`(v0, v1, v2, v3, v4, v5, v6, v7) @signature `Lcom/android/volley/toolbox/ImageRequest;.<init>:(Ljava/lang/String;Lcom/android/volley/Response$Listener;IILandroid/widget/ImageView$ScaleType;Landroid/graphics/Bitmap$Config;Lcom/android/volley/Response$ErrorListener;)V` @kind direct;
+  #L2b6478.  return v8 @kind object;
+}
+procedure `void` `onGetImageError`(`com.android.volley.toolbox.ImageLoader` v1 @kind this, `java.lang.String` v2 @kind object, `com.android.volley.VolleyError` v3 @kind object) @signature `Lcom/android/volley/toolbox/ImageLoader;.onGetImageError:(Ljava/lang/String;Lcom/android/volley/VolleyError;)V` @AccessFlag PROTECTED {
+    temp;
+    v0;
+
+  #L2b6720.  v0:= v1.`com.android.volley.toolbox.ImageLoader.mInFlightRequests` @type ^`java.util.HashMap` @kind object;
+  #L2b6724.  call temp:= `remove`(v0, v2) @signature `Ljava/util/HashMap;.remove:(Ljava/lang/Object;)Ljava/lang/Object;` @kind virtual;
+  #L2b672a.  v0:= temp @kind object;
+  #L2b672c.  v0:= (`com.android.volley.toolbox.ImageLoader$BatchedImageRequest`) v0 @kind object;
+  #L2b6730.  if v0 == 0 then goto L2b6740;
+  #L2b6734.  call `setError`(v0, v3) @signature `Lcom/android/volley/toolbox/ImageLoader$BatchedImageRequest;.setError:(Lcom/android/volley/VolleyError;)V` @kind virtual;
+  #L2b673a.  call `batchResponse`(v1, v2, v0) @signature `Lcom/android/volley/toolbox/ImageLoader;.batchResponse:(Ljava/lang/String;Lcom/android/volley/toolbox/ImageLoader$BatchedImageRequest;)V` @kind direct;
+  #L2b6740.  return @kind void;
+}
+procedure `void` `onGetImageSuccess`(`com.android.volley.toolbox.ImageLoader` v1 @kind this, `java.lang.String` v2 @kind object, `android.graphics.Bitmap` v3 @kind object) @signature `Lcom/android/volley/toolbox/ImageLoader;.onGetImageSuccess:(Ljava/lang/String;Landroid/graphics/Bitmap;)V` @AccessFlag PROTECTED {
+    temp;
+    v0;
+
+  #L2b6754.  v0:= v1.`com.android.volley.toolbox.ImageLoader.mCache` @type ^`com.android.volley.toolbox.ImageLoader$ImageCache` @kind object;
+  #L2b6758.  call `putBitmap`(v0, v2, v3) @signature `Lcom/android/volley/toolbox/ImageLoader$ImageCache;.putBitmap:(Ljava/lang/String;Landroid/graphics/Bitmap;)V` @kind interface;
+  #L2b675e.  v0:= v1.`com.android.volley.toolbox.ImageLoader.mInFlightRequests` @type ^`java.util.HashMap` @kind object;
+  #L2b6762.  call temp:= `remove`(v0, v2) @signature `Ljava/util/HashMap;.remove:(Ljava/lang/Object;)Ljava/lang/Object;` @kind virtual;
+  #L2b6768.  v0:= temp @kind object;
+  #L2b676a.  v0:= (`com.android.volley.toolbox.ImageLoader$BatchedImageRequest`) v0 @kind object;
+  #L2b676e.  if v0 == 0 then goto L2b677e;
+  #L2b6772.  call temp:= `b`(v0, v3) @signature `Lcom/android/volley/toolbox/ImageLoader$BatchedImageRequest;.b:(Lcom/android/volley/toolbox/ImageLoader$BatchedImageRequest;Landroid/graphics/Bitmap;)Landroid/graphics/Bitmap;` @kind static;
+  #L2b6778.  call `batchResponse`(v1, v2, v0) @signature `Lcom/android/volley/toolbox/ImageLoader;.batchResponse:(Ljava/lang/String;Lcom/android/volley/toolbox/ImageLoader$BatchedImageRequest;)V` @kind direct;
+  #L2b677e.  return @kind void;
+}
+procedure `void` `setBatchedResponseDelay`(`com.android.volley.toolbox.ImageLoader` v0 @kind this, `int` v1 ) @signature `Lcom/android/volley/toolbox/ImageLoader;.setBatchedResponseDelay:(I)V` @AccessFlag PUBLIC {
+    temp;
+
+  #L2b6790.  v0.`com.android.volley.toolbox.ImageLoader.mBatchResponseDelayMs` @type ^`int` := v1;
+  #L2b6794.  return @kind void;
+}

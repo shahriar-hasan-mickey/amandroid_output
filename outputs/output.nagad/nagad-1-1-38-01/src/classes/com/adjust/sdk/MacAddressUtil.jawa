@@ -1,0 +1,113 @@
+record `com.adjust.sdk.MacAddressUtil` @kind class @AccessFlag PUBLIC {
+}
+procedure `void` `<init>`(`com.adjust.sdk.MacAddressUtil` v0 @kind this) @signature `Lcom/adjust/sdk/MacAddressUtil;.<init>:()V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+
+  #L270274.  call `<init>`(v0) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L27027a.  return @kind void;
+}
+procedure `java.lang.String` `getMacAddress`(`android.content.Context` v1 @kind object) @signature `Lcom/adjust/sdk/MacAddressUtil;.getMacAddress:(Landroid/content/Context;)Ljava/lang/String;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+
+  #L2700e8.  call temp:= `getRawMacAddress`(v1) @signature `Lcom/adjust/sdk/MacAddressUtil;.getRawMacAddress:(Landroid/content/Context;)Ljava/lang/String;` @kind static;
+  #L2700ee.  v1:= temp @kind object;
+  #L2700f0.  if v1 != 0 then goto L2700f8;
+  #L2700f4.  v1:= 0I;
+  #L2700f6.  return v1 @kind object;
+  #L2700f8.  v0:= `@@java.util.Locale.US` @type ^`java.util.Locale` @kind object;
+  #L2700fc.  call temp:= `toUpperCase`(v1, v0) @signature `Ljava/lang/String;.toUpperCase:(Ljava/util/Locale;)Ljava/lang/String;` @kind virtual;
+  #L270102.  v1:= temp @kind object;
+  #L270104.  call temp:= `removeSpaceString`(v1) @signature `Lcom/adjust/sdk/MacAddressUtil;.removeSpaceString:(Ljava/lang/String;)Ljava/lang/String;` @kind static;
+  #L27010a.  v1:= temp @kind object;
+  #L27010c.  return v1 @kind object;
+}
+procedure `java.lang.String` `getRawMacAddress`(`android.content.Context` v1 @kind object) @signature `Lcom/adjust/sdk/MacAddressUtil;.getRawMacAddress:(Landroid/content/Context;)Ljava/lang/String;` @AccessFlag PRIVATE_STATIC {
+    temp;
+    v0;
+
+  #L270120.  v0:= "wlan0" @kind object;
+  #L270124.  call temp:= `loadAddress`(v0) @signature `Lcom/adjust/sdk/MacAddressUtil;.loadAddress:(Ljava/lang/String;)Ljava/lang/String;` @kind static;
+  #L27012a.  v0:= temp @kind object;
+  #L27012c.  if v0 == 0 then goto L270132;
+  #L270130.  return v0 @kind object;
+  #L270132.  v0:= "eth0" @kind object;
+  #L270136.  call temp:= `loadAddress`(v0) @signature `Lcom/adjust/sdk/MacAddressUtil;.loadAddress:(Ljava/lang/String;)Ljava/lang/String;` @kind static;
+  #L27013c.  v0:= temp @kind object;
+  #L27013e.  if v0 == 0 then goto L270144;
+  #L270142.  return v0 @kind object;
+  #L270144.  v0:= "wifi" @kind object;
+  #L270148.  call temp:= `getSystemService`(v1, v0) @signature `Landroid/content/Context;.getSystemService:(Ljava/lang/String;)Ljava/lang/Object;` @kind virtual;
+  #L27014e.  v1:= temp @kind object;
+  #L270150.  v1:= (`android.net.wifi.WifiManager`) v1 @kind object;
+  #L270154.  call temp:= `getConnectionInfo`(v1) @signature `Landroid/net/wifi/WifiManager;.getConnectionInfo:()Landroid/net/wifi/WifiInfo;` @kind virtual;
+  #L27015a.  v1:= temp @kind object;
+  #L27015c.  call temp:= `getMacAddress`(v1) @signature `Landroid/net/wifi/WifiInfo;.getMacAddress:()Ljava/lang/String;` @kind virtual;
+  #L270162.  v1:= temp @kind object;
+  #L270164.  if v1 == 0 then goto L27016a;
+  #L270168.  return v1 @kind object;
+  #L27016a.  v1:= 0I;
+  #L27016c.  return v1 @kind object;
+  catch `java.lang.Exception` @[L270144..L270164] goto L27016a;
+}
+procedure `java.lang.String` `loadAddress`(`java.lang.String` v4 @kind object) @signature `Lcom/adjust/sdk/MacAddressUtil;.loadAddress:(Ljava/lang/String;)Ljava/lang/String;` @AccessFlag PRIVATE_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L270190.  v0:= new `java.lang.StringBuilder`;
+  #L270194.  call `<init>`(v0) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L27019a.  v1:= "/sys/class/net/" @kind object;
+  #L27019e.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2701a4.  call temp:= `append`(v0, v4) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2701aa.  v4:= "/address" @kind object;
+  #L2701ae.  call temp:= `append`(v0, v4) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2701b4.  call temp:= `toString`(v0) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L2701ba.  v4:= temp @kind object;
+  #L2701bc.  v0:= new `java.lang.StringBuilder`;
+  #L2701c0.  v1:= 1000I;
+  #L2701c4.  call `<init>`(v0, v1) @signature `Ljava/lang/StringBuilder;.<init>:(I)V` @kind direct;
+  #L2701ca.  v1:= new `java.io.BufferedReader`;
+  #L2701ce.  v2:= new `java.io.FileReader`;
+  #L2701d2.  call `<init>`(v2, v4) @signature `Ljava/io/FileReader;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L2701d8.  v4:= 1024I;
+  #L2701dc.  call `<init>`(v1, v2, v4) @signature `Ljava/io/BufferedReader;.<init>:(Ljava/io/Reader;I)V` @kind direct;
+  #L2701e2.  v4:= new `char`[v4];
+  #L2701e6.  call temp:= `read`(v1, v4) @signature `Ljava/io/BufferedReader;.read:([C)I` @kind virtual;
+  #L2701ec.  v2:= temp;
+  #L2701ee.  v3:= -1I;
+  #L2701f0.  if v2 == v3 then goto L270206;
+  #L2701f4.  v3:= 0I;
+  #L2701f6.  call temp:= `valueOf`(v4, v3, v2) @signature `Ljava/lang/String;.valueOf:([CII)Ljava/lang/String;` @kind static;
+  #L2701fc.  v2:= temp @kind object;
+  #L2701fe.  call temp:= `append`(v0, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L270204.  goto L2701e6;
+  #L270206.  call `close`(v1) @signature `Ljava/io/BufferedReader;.close:()V` @kind virtual;
+  #L27020c.  call temp:= `toString`(v0) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L270212.  v4:= temp @kind object;
+  #L270214.  return v4 @kind object;
+  #L270216.  v4:= 0I;
+  #L270218.  return v4 @kind object;
+  catch `java.io.IOException` @[L270190..L270214] goto L270216;
+}
+procedure `java.lang.String` `removeSpaceString`(`java.lang.String` v3 @kind object) @signature `Lcom/adjust/sdk/MacAddressUtil;.removeSpaceString:(Ljava/lang/String;)Ljava/lang/String;` @AccessFlag PRIVATE_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L27023c.  v0:= 0I;
+  #L27023e.  if v3 != 0 then goto L270244;
+  #L270242.  return v0 @kind object;
+  #L270244.  v1:= "\\s" @kind object;
+  #L270248.  v2:= "" @kind object;
+  #L27024c.  call temp:= `replaceAll`(v3, v1, v2) @signature `Ljava/lang/String;.replaceAll:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;` @kind virtual;
+  #L270252.  v3:= temp @kind object;
+  #L270254.  call temp:= `isEmpty`(v3) @signature `Landroid/text/TextUtils;.isEmpty:(Ljava/lang/CharSequence;)Z` @kind static;
+  #L27025a.  v1:= temp;
+  #L27025c.  if v1 == 0 then goto L270262;
+  #L270260.  return v0 @kind object;
+  #L270262.  return v3 @kind object;
+}

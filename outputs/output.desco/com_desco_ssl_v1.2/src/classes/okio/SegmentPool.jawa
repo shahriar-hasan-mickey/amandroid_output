@@ -1,0 +1,95 @@
+record `okio.SegmentPool` @kind class @AccessFlag FINAL {
+}
+global `long` `@@okio.SegmentPool.MAX_SIZE` @AccessFlag STATIC_FINAL;
+global `long` `@@okio.SegmentPool.byteCount` @AccessFlag STATIC;
+global `okio.Segment` `@@okio.SegmentPool.next` @AccessFlag STATIC;
+procedure `void` `<init>`(`okio.SegmentPool` v0 @kind this) @signature `Lokio/SegmentPool;.<init>:()V` @AccessFlag PRIVATE_CONSTRUCTOR {
+    temp;
+
+  #L24e4e8.  call `<init>`(v0) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L24e4ee.  return @kind void;
+}
+procedure `void` `recycle`(`okio.Segment` v8 @kind object @name `segment`) @signature `Lokio/SegmentPool;.recycle:(Lokio/Segment;)V` @AccessFlag STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+
+  #L24e500.  v6:= 8192L;
+  #L24e504.  v0:= v8.`okio.Segment.next` @type ^`okio.Segment` @kind object;
+  #L24e508.  if v0 != 0 then goto L24e514;
+  #L24e50c.  v0:= v8.`okio.Segment.prev` @type ^`okio.Segment` @kind object;
+  #L24e510.  if v0 == 0 then goto L24e520;
+  #L24e514.  v0:= new `java.lang.IllegalArgumentException`;
+  #L24e518.  call `<init>`(v0) @signature `Ljava/lang/IllegalArgumentException;.<init>:()V` @kind direct;
+  #L24e51e.  throw v0;
+  #L24e520.  v0:= v8.`okio.Segment.shared` @type ^`boolean` @kind boolean;
+  #L24e524.  if v0 == 0 then goto L24e52a;
+  #L24e528.  return @kind void;
+  #L24e52a.  v1:= constclass @type ^`okio.SegmentPool` @kind object;
+  #L24e52e.  @monitorenter v1
+  #L24e530.  v2:= `@@okio.SegmentPool.byteCount` @type ^`long` @kind wide;
+  #L24e534.  v2:= v2 + v6 @kind long;
+  #L24e536.  v4:= 65536L;
+  #L24e53c.  v0:= lcmp(v2, v4);
+  #L24e540.  if v0 <= 0 then goto L24e54e;
+  #L24e544.  @monitorexit v1
+  #L24e546.  goto L24e528;
+  #L24e548.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L24e54a.  @monitorexit v1
+  #L24e54c.  throw v0;
+  #L24e54e.  v2:= `@@okio.SegmentPool.byteCount` @type ^`long` @kind wide;
+  #L24e552.  v2:= v2 + v6 @kind long;
+  #L24e554.  `@@okio.SegmentPool.byteCount` @type ^`long` := v2 @kind wide;
+  #L24e558.  v0:= `@@okio.SegmentPool.next` @type ^`okio.Segment` @kind object;
+  #L24e55c.  v8.`okio.Segment.next` @type ^`okio.Segment` := v0 @kind object;
+  #L24e560.  v0:= 0I;
+  #L24e562.  v8.`okio.Segment.limit` @type ^`int` := v0;
+  #L24e566.  v8.`okio.Segment.pos` @type ^`int` := v0;
+  #L24e56a.  `@@okio.SegmentPool.next` @type ^`okio.Segment` := v8 @kind object;
+  #L24e56e.  @monitorexit v1
+  #L24e570.  goto L24e528;
+  catch `java.lang.Throwable` @[L24e530..L24e54c] goto L24e548;
+  catch `java.lang.Throwable` @[L24e54e..L24e570] goto L24e548;
+}
+procedure `okio.Segment` `take`() @signature `Lokio/SegmentPool;.take:()Lokio/Segment;` @AccessFlag STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+
+  #L24e598.  v2:= constclass @type ^`okio.SegmentPool` @kind object;
+  #L24e59c.  @monitorenter v2
+  #L24e59e.  v1:= `@@okio.SegmentPool.next` @type ^`okio.Segment` @kind object;
+  #L24e5a2.  if v1 == 0 then goto L24e5ca;
+  #L24e5a6.  v0:= `@@okio.SegmentPool.next` @type ^`okio.Segment` @kind object;
+  #L24e5aa.  v1:= v0.`okio.Segment.next` @type ^`okio.Segment` @kind object;
+  #L24e5ae.  `@@okio.SegmentPool.next` @type ^`okio.Segment` := v1 @kind object;
+  #L24e5b2.  v1:= 0I;
+  #L24e5b4.  v0.`okio.Segment.next` @type ^`okio.Segment` := v1 @kind object;
+  #L24e5b8.  v4:= `@@okio.SegmentPool.byteCount` @type ^`long` @kind wide;
+  #L24e5bc.  v6:= 8192L;
+  #L24e5c0.  v4:= v4 - v6 @kind long;
+  #L24e5c2.  `@@okio.SegmentPool.byteCount` @type ^`long` := v4 @kind wide;
+  #L24e5c6.  @monitorexit v2
+  #L24e5c8.  return v0 @kind object;
+  #L24e5ca.  @monitorexit v2
+  #L24e5cc.  v0:= new `okio.Segment`;
+  #L24e5d0.  call `<init>`(v0) @signature `Lokio/Segment;.<init>:()V` @kind direct;
+  #L24e5d6.  goto L24e5c8;
+  #L24e5d8.  v1:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L24e5da.  @monitorexit v2
+  #L24e5dc.  throw v1;
+  catch `java.lang.Throwable` @[L24e59e..L24e5cc] goto L24e5d8;
+  catch `java.lang.Throwable` @[L24e5da..L24e5dc] goto L24e5d8;
+}

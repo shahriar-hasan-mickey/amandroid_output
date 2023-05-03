@@ -1,0 +1,1 @@
+define(["underscore","Backbone"],function(n,e){var i=Backbone.Model.extend({url:function(){return this.instanceUrl},initialize:function(n){this.url=n.url}});return i});

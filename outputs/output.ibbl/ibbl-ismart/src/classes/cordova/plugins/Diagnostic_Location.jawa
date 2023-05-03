@@ -1,0 +1,541 @@
+record `cordova.plugins.Diagnostic_Location` @kind class @AccessFlag PUBLIC extends `org.apache.cordova.CordovaPlugin` @kind class {
+  `org.apache.cordova.CallbackContext` `cordova.plugins.Diagnostic_Location.currentContext` @AccessFlag PROTECTED;
+  `java.lang.String` `cordova.plugins.Diagnostic_Location.currentLocationMode` @AccessFlag PRIVATE;
+  `cordova.plugins.Diagnostic` `cordova.plugins.Diagnostic_Location.diagnostic` @AccessFlag PRIVATE;
+  `android.content.BroadcastReceiver` `cordova.plugins.Diagnostic_Location.locationProviderChangedReceiver` @AccessFlag PROTECTED_FINAL;
+}
+global `java.lang.String` `@@cordova.plugins.Diagnostic_Location.LOCATION_MODE_BATTERY_SAVING` @AccessFlag PRIVATE_STATIC_FINAL;
+global `java.lang.String` `@@cordova.plugins.Diagnostic_Location.LOCATION_MODE_DEVICE_ONLY` @AccessFlag PRIVATE_STATIC_FINAL;
+global `java.lang.String` `@@cordova.plugins.Diagnostic_Location.LOCATION_MODE_HIGH_ACCURACY` @AccessFlag PRIVATE_STATIC_FINAL;
+global `java.lang.String` `@@cordova.plugins.Diagnostic_Location.LOCATION_MODE_OFF` @AccessFlag PRIVATE_STATIC_FINAL;
+global `java.lang.String` `@@cordova.plugins.Diagnostic_Location.LOCATION_MODE_UNKNOWN` @AccessFlag PRIVATE_STATIC_FINAL;
+global `java.lang.String` `@@cordova.plugins.Diagnostic_Location.TAG` @AccessFlag PUBLIC_STATIC_FINAL;
+global `java.lang.String` `@@cordova.plugins.Diagnostic_Location.gpsLocationPermission` @AccessFlag PRIVATE_STATIC;
+global `cordova.plugins.Diagnostic_Location` `@@cordova.plugins.Diagnostic_Location.instance` @AccessFlag PUBLIC_STATIC;
+global `android.location.LocationManager` `@@cordova.plugins.Diagnostic_Location.locationManager` @AccessFlag PUBLIC_STATIC;
+global `java.lang.String` `@@cordova.plugins.Diagnostic_Location.networkLocationPermission` @AccessFlag PRIVATE_STATIC;
+procedure `void` `<clinit>`() @signature `Lcordova/plugins/Diagnostic_Location;.<clinit>:()V` @AccessFlag STATIC_CONSTRUCTOR {
+    temp;
+
+  #L221d60.  return @kind void;
+}
+procedure `void` `<init>`(`cordova.plugins.Diagnostic_Location` v1 @kind this) @signature `Lcordova/plugins/Diagnostic_Location;.<init>:()V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L221d74.  call `<init>`(v1) @signature `Lorg/apache/cordova/CordovaPlugin;.<init>:()V` @kind direct;
+  #L221d7a.  v0:= 0I;
+  #L221d7c.  v1.`cordova.plugins.Diagnostic_Location.currentLocationMode` @type ^`java.lang.String` := v0 @kind object;
+  #L221d80.  v0:= new `cordova.plugins.Diagnostic_Location$1`;
+  #L221d84.  call `<init>`(v0, v1) @signature `Lcordova/plugins/Diagnostic_Location$1;.<init>:(Lcordova/plugins/Diagnostic_Location;)V` @kind direct;
+  #L221d8a.  v1.`cordova.plugins.Diagnostic_Location.locationProviderChangedReceiver` @type ^`android.content.BroadcastReceiver` := v0 @kind object;
+  #L221d8e.  return @kind void;
+}
+procedure `cordova.plugins.Diagnostic` `access$000`(`cordova.plugins.Diagnostic_Location` v0 @kind object) @signature `Lcordova/plugins/Diagnostic_Location;.access$000:(Lcordova/plugins/Diagnostic_Location;)Lcordova/plugins/Diagnostic;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L221c64.  v0:= v0.`cordova.plugins.Diagnostic_Location.diagnostic` @type ^`cordova.plugins.Diagnostic` @kind object;
+  #L221c68.  return v0 @kind object;
+}
+procedure `int` `getLocationMode`(`cordova.plugins.Diagnostic_Location` v2 @kind this) @signature `Lcordova/plugins/Diagnostic_Location;.getLocationMode:()I` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+
+  #L221c7c.  v0:= `@@android.os.Build$VERSION.SDK_INT` @type ^`int`;
+  #L221c80.  v1:= 19I;
+  #L221c84.  if v0 < v1 then goto L221caa;
+  #L221c88.  v0:= v2.`cordova.plugins.Diagnostic_Location.cordova` @type ^`org.apache.cordova.CordovaInterface` @kind object;
+  #L221c8c.  call temp:= `getActivity`(v0) @signature `Lorg/apache/cordova/CordovaInterface;.getActivity:()Landroid/app/Activity;` @kind interface;
+  #L221c92.  v0:= temp @kind object;
+  #L221c94.  call temp:= `getContentResolver`(v0) @signature `Landroid/app/Activity;.getContentResolver:()Landroid/content/ContentResolver;` @kind virtual;
+  #L221c9a.  v0:= temp @kind object;
+  #L221c9c.  v1:= "location_mode" @kind object;
+  #L221ca0.  call temp:= `getInt`(v0, v1) @signature `Landroid/provider/Settings$Secure;.getInt:(Landroid/content/ContentResolver;Ljava/lang/String;)I` @kind static;
+  #L221ca6.  v0:= temp;
+  #L221ca8.  goto L221cf8;
+  #L221caa.  v0:= "gps" @kind object;
+  #L221cae.  call temp:= `isLocationProviderEnabled`(v2, v0) @signature `Lcordova/plugins/Diagnostic_Location;.isLocationProviderEnabled:(Ljava/lang/String;)Z` @kind direct;
+  #L221cb4.  v0:= temp;
+  #L221cb6.  if v0 == 0 then goto L221cce;
+  #L221cba.  v0:= "network" @kind object;
+  #L221cbe.  call temp:= `isLocationProviderEnabled`(v2, v0) @signature `Lcordova/plugins/Diagnostic_Location;.isLocationProviderEnabled:(Ljava/lang/String;)Z` @kind direct;
+  #L221cc4.  v0:= temp;
+  #L221cc6.  if v0 == 0 then goto L221cce;
+  #L221cca.  v0:= 3I;
+  #L221ccc.  goto L221cf8;
+  #L221cce.  v0:= "gps" @kind object;
+  #L221cd2.  call temp:= `isLocationProviderEnabled`(v2, v0) @signature `Lcordova/plugins/Diagnostic_Location;.isLocationProviderEnabled:(Ljava/lang/String;)Z` @kind direct;
+  #L221cd8.  v0:= temp;
+  #L221cda.  if v0 == 0 then goto L221ce2;
+  #L221cde.  v0:= 1I;
+  #L221ce0.  goto L221cf8;
+  #L221ce2.  v0:= "network" @kind object;
+  #L221ce6.  call temp:= `isLocationProviderEnabled`(v2, v0) @signature `Lcordova/plugins/Diagnostic_Location;.isLocationProviderEnabled:(Ljava/lang/String;)Z` @kind direct;
+  #L221cec.  v0:= temp;
+  #L221cee.  if v0 == 0 then goto L221cf6;
+  #L221cf2.  v0:= 2I;
+  #L221cf4.  goto L221cf8;
+  #L221cf6.  v0:= 0I;
+  #L221cf8.  return v0;
+}
+procedure `boolean` `isLocationAuthorized`(`cordova.plugins.Diagnostic_Location` v4 @kind this) @signature `Lcordova/plugins/Diagnostic_Location;.isLocationAuthorized:()Z` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L221af0.  v0:= v4.`cordova.plugins.Diagnostic_Location.diagnostic` @type ^`cordova.plugins.Diagnostic` @kind object;
+  #L221af4.  v1:= `@@cordova.plugins.Diagnostic.permissionsMap` @type ^`java.util.Map` @kind object;
+  #L221af8.  v2:= `@@cordova.plugins.Diagnostic_Location.gpsLocationPermission` @type ^`java.lang.String` @kind object;
+  #L221afc.  call temp:= `get`(v1, v2) @signature `Ljava/util/Map;.get:(Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L221b02.  v1:= temp @kind object;
+  #L221b04.  v1:= (`java.lang.String`) v1 @kind object;
+  #L221b08.  call temp:= `hasPermission`(v0, v1) @signature `Lcordova/plugins/Diagnostic;.hasPermission:(Ljava/lang/String;)Z` @kind virtual;
+  #L221b0e.  v0:= temp;
+  #L221b10.  if v0 != 0 then goto L221b3e;
+  #L221b14.  v0:= v4.`cordova.plugins.Diagnostic_Location.diagnostic` @type ^`cordova.plugins.Diagnostic` @kind object;
+  #L221b18.  v1:= `@@cordova.plugins.Diagnostic.permissionsMap` @type ^`java.util.Map` @kind object;
+  #L221b1c.  v2:= `@@cordova.plugins.Diagnostic_Location.networkLocationPermission` @type ^`java.lang.String` @kind object;
+  #L221b20.  call temp:= `get`(v1, v2) @signature `Ljava/util/Map;.get:(Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L221b26.  v1:= temp @kind object;
+  #L221b28.  v1:= (`java.lang.String`) v1 @kind object;
+  #L221b2c.  call temp:= `hasPermission`(v0, v1) @signature `Lcordova/plugins/Diagnostic;.hasPermission:(Ljava/lang/String;)Z` @kind virtual;
+  #L221b32.  v0:= temp;
+  #L221b34.  if v0 == 0 then goto L221b3a;
+  #L221b38.  goto L221b3e;
+  #L221b3a.  v0:= 0I;
+  #L221b3c.  goto L221b40;
+  #L221b3e.  v0:= 1I;
+  #L221b40.  v1:= "Diagnostic_Location" @kind object;
+  #L221b44.  v2:= new `java.lang.StringBuilder`;
+  #L221b48.  call `<init>`(v2) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L221b4e.  v3:= "Location permission is " @kind object;
+  #L221b52.  call temp:= `append`(v2, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L221b58.  if v0 == 0 then goto L221b62;
+  #L221b5c.  v3:= "authorized" @kind object;
+  #L221b60.  goto L221b66;
+  #L221b62.  v3:= "unauthorized" @kind object;
+  #L221b66.  call temp:= `append`(v2, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L221b6c.  call temp:= `toString`(v2) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L221b72.  v2:= temp @kind object;
+  #L221b74.  call temp:= `v`(v1, v2) @signature `Landroid/util/Log;.v:(Ljava/lang/String;Ljava/lang/String;)I` @kind static;
+  #L221b7a.  return v0;
+}
+procedure `boolean` `isLocationProviderEnabled`(`cordova.plugins.Diagnostic_Location` v1 @kind this, `java.lang.String` v2 @kind object) @signature `Lcordova/plugins/Diagnostic_Location;.isLocationProviderEnabled:(Ljava/lang/String;)Z` @AccessFlag PRIVATE {
+    temp;
+    v0;
+
+  #L221b8c.  v0:= `@@cordova.plugins.Diagnostic_Location.locationManager` @type ^`android.location.LocationManager` @kind object;
+  #L221b90.  call temp:= `isProviderEnabled`(v0, v2) @signature `Landroid/location/LocationManager;.isProviderEnabled:(Ljava/lang/String;)Z` @kind virtual;
+  #L221b96.  v2:= temp;
+  #L221b98.  return v2;
+}
+procedure `boolean` `execute`(`cordova.plugins.Diagnostic_Location` v2 @kind this, `java.lang.String` v3 @kind object, `org.json.JSONArray` v4 @kind object, `org.apache.cordova.CallbackContext` v5 @kind object) @signature `Lcordova/plugins/Diagnostic_Location;.execute:(Ljava/lang/String;Lorg/json/JSONArray;Lorg/apache/cordova/CallbackContext;)Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L221888.  v2.`cordova.plugins.Diagnostic_Location.currentContext` @type ^`org.apache.cordova.CallbackContext` := v5 @kind object;
+  #L22188c.  v4:= 0I;
+  #L22188e.  v0:= "switchToLocationSettings" @kind object;
+  #L221892.  call temp:= `equals`(v3, v0) @signature `Ljava/lang/String;.equals:(Ljava/lang/Object;)Z` @kind virtual;
+  #L221898.  v0:= temp;
+  #L22189a.  v1:= 1I;
+  #L22189c.  if v0 == 0 then goto L2218b0;
+  #L2218a0.  call `switchToLocationSettings`(v2) @signature `Lcordova/plugins/Diagnostic_Location;.switchToLocationSettings:()V` @kind virtual;
+  #L2218a6.  call `success`(v5) @signature `Lorg/apache/cordova/CallbackContext;.success:()V` @kind virtual;
+  #L2218ac.  goto L2219e8;
+  #L2218b0.  v0:= "isLocationAvailable" @kind object;
+  #L2218b4.  call temp:= `equals`(v3, v0) @signature `Ljava/lang/String;.equals:(Ljava/lang/Object;)Z` @kind virtual;
+  #L2218ba.  v0:= temp;
+  #L2218bc.  if v0 == 0 then goto L2218ea;
+  #L2218c0.  call temp:= `isGpsLocationAvailable`(v2) @signature `Lcordova/plugins/Diagnostic_Location;.isGpsLocationAvailable:()Z` @kind virtual;
+  #L2218c6.  v3:= temp;
+  #L2218c8.  if v3 != 0 then goto L2218de;
+  #L2218cc.  call temp:= `isNetworkLocationAvailable`(v2) @signature `Lcordova/plugins/Diagnostic_Location;.isNetworkLocationAvailable:()Z` @kind virtual;
+  #L2218d2.  v3:= temp;
+  #L2218d4.  if v3 == 0 then goto L2218da;
+  #L2218d8.  goto L2218de;
+  #L2218da.  v3:= 0I;
+  #L2218dc.  goto L2218e0;
+  #L2218de.  v3:= 1I;
+  #L2218e0.  call `success`(v5, v3) @signature `Lorg/apache/cordova/CallbackContext;.success:(I)V` @kind virtual;
+  #L2218e6.  goto L2219e8;
+  #L2218ea.  v0:= "isLocationEnabled" @kind object;
+  #L2218ee.  call temp:= `equals`(v3, v0) @signature `Ljava/lang/String;.equals:(Ljava/lang/Object;)Z` @kind virtual;
+  #L2218f4.  v0:= temp;
+  #L2218f6.  if v0 == 0 then goto L221922;
+  #L2218fa.  call temp:= `isGpsLocationEnabled`(v2) @signature `Lcordova/plugins/Diagnostic_Location;.isGpsLocationEnabled:()Z` @kind virtual;
+  #L221900.  v3:= temp;
+  #L221902.  if v3 != 0 then goto L221918;
+  #L221906.  call temp:= `isNetworkLocationEnabled`(v2) @signature `Lcordova/plugins/Diagnostic_Location;.isNetworkLocationEnabled:()Z` @kind virtual;
+  #L22190c.  v3:= temp;
+  #L22190e.  if v3 == 0 then goto L221914;
+  #L221912.  goto L221918;
+  #L221914.  v3:= 0I;
+  #L221916.  goto L22191a;
+  #L221918.  v3:= 1I;
+  #L22191a.  call `success`(v5, v3) @signature `Lorg/apache/cordova/CallbackContext;.success:(I)V` @kind virtual;
+  #L221920.  goto L2219e8;
+  #L221922.  v0:= "isGpsLocationAvailable" @kind object;
+  #L221926.  call temp:= `equals`(v3, v0) @signature `Ljava/lang/String;.equals:(Ljava/lang/Object;)Z` @kind virtual;
+  #L22192c.  v0:= temp;
+  #L22192e.  if v0 == 0 then goto L22194c;
+  #L221932.  call temp:= `isGpsLocationAvailable`(v2) @signature `Lcordova/plugins/Diagnostic_Location;.isGpsLocationAvailable:()Z` @kind virtual;
+  #L221938.  v3:= temp;
+  #L22193a.  if v3 == 0 then goto L221942;
+  #L22193e.  v3:= 1I;
+  #L221940.  goto L221944;
+  #L221942.  v3:= 0I;
+  #L221944.  call `success`(v5, v3) @signature `Lorg/apache/cordova/CallbackContext;.success:(I)V` @kind virtual;
+  #L22194a.  goto L2219e8;
+  #L22194c.  v0:= "isNetworkLocationAvailable" @kind object;
+  #L221950.  call temp:= `equals`(v3, v0) @signature `Ljava/lang/String;.equals:(Ljava/lang/Object;)Z` @kind virtual;
+  #L221956.  v0:= temp;
+  #L221958.  if v0 == 0 then goto L221976;
+  #L22195c.  call temp:= `isNetworkLocationAvailable`(v2) @signature `Lcordova/plugins/Diagnostic_Location;.isNetworkLocationAvailable:()Z` @kind virtual;
+  #L221962.  v3:= temp;
+  #L221964.  if v3 == 0 then goto L22196c;
+  #L221968.  v3:= 1I;
+  #L22196a.  goto L22196e;
+  #L22196c.  v3:= 0I;
+  #L22196e.  call `success`(v5, v3) @signature `Lorg/apache/cordova/CallbackContext;.success:(I)V` @kind virtual;
+  #L221974.  goto L2219e8;
+  #L221976.  v0:= "isGpsLocationEnabled" @kind object;
+  #L22197a.  call temp:= `equals`(v3, v0) @signature `Ljava/lang/String;.equals:(Ljava/lang/Object;)Z` @kind virtual;
+  #L221980.  v0:= temp;
+  #L221982.  if v0 == 0 then goto L2219a0;
+  #L221986.  call temp:= `isGpsLocationEnabled`(v2) @signature `Lcordova/plugins/Diagnostic_Location;.isGpsLocationEnabled:()Z` @kind virtual;
+  #L22198c.  v3:= temp;
+  #L22198e.  if v3 == 0 then goto L221996;
+  #L221992.  v3:= 1I;
+  #L221994.  goto L221998;
+  #L221996.  v3:= 0I;
+  #L221998.  call `success`(v5, v3) @signature `Lorg/apache/cordova/CallbackContext;.success:(I)V` @kind virtual;
+  #L22199e.  goto L2219e8;
+  #L2219a0.  v0:= "isNetworkLocationEnabled" @kind object;
+  #L2219a4.  call temp:= `equals`(v3, v0) @signature `Ljava/lang/String;.equals:(Ljava/lang/Object;)Z` @kind virtual;
+  #L2219aa.  v0:= temp;
+  #L2219ac.  if v0 == 0 then goto L2219ca;
+  #L2219b0.  call temp:= `isNetworkLocationEnabled`(v2) @signature `Lcordova/plugins/Diagnostic_Location;.isNetworkLocationEnabled:()Z` @kind virtual;
+  #L2219b6.  v3:= temp;
+  #L2219b8.  if v3 == 0 then goto L2219c0;
+  #L2219bc.  v3:= 1I;
+  #L2219be.  goto L2219c2;
+  #L2219c0.  v3:= 0I;
+  #L2219c2.  call `success`(v5, v3) @signature `Lorg/apache/cordova/CallbackContext;.success:(I)V` @kind virtual;
+  #L2219c8.  goto L2219e8;
+  #L2219ca.  v0:= "getLocationMode" @kind object;
+  #L2219ce.  call temp:= `equals`(v3, v0) @signature `Ljava/lang/String;.equals:(Ljava/lang/Object;)Z` @kind virtual;
+  #L2219d4.  v3:= temp;
+  #L2219d6.  if v3 == 0 then goto L2219ea;
+  #L2219da.  call temp:= `getLocationModeName`(v2) @signature `Lcordova/plugins/Diagnostic_Location;.getLocationModeName:()Ljava/lang/String;` @kind virtual;
+  #L2219e0.  v3:= temp @kind object;
+  #L2219e2.  call `success`(v5, v3) @signature `Lorg/apache/cordova/CallbackContext;.success:(Ljava/lang/String;)V` @kind virtual;
+  #L2219e8.  return v1;
+  #L2219ea.  v3:= v2.`cordova.plugins.Diagnostic_Location.diagnostic` @type ^`cordova.plugins.Diagnostic` @kind object;
+  #L2219ee.  v5:= "Invalid action" @kind object;
+  #L2219f2.  call `handleError`(v3, v5) @signature `Lcordova/plugins/Diagnostic;.handleError:(Ljava/lang/String;)V` @kind virtual;
+  #L2219f8.  return v4;
+  #L2219fa.  v3:= Exception @type ^`java.lang.Exception` @kind object;
+  #L2219fc.  v5:= v2.`cordova.plugins.Diagnostic_Location.diagnostic` @type ^`cordova.plugins.Diagnostic` @kind object;
+  #L221a00.  v0:= "Exception occurred: " @kind object;
+  #L221a04.  call temp:= `getMessage`(v3) @signature `Ljava/lang/Exception;.getMessage:()Ljava/lang/String;` @kind virtual;
+  #L221a0a.  v3:= temp @kind object;
+  #L221a0c.  call temp:= `concat`(v0, v3) @signature `Ljava/lang/String;.concat:(Ljava/lang/String;)Ljava/lang/String;` @kind virtual;
+  #L221a12.  v3:= temp @kind object;
+  #L221a14.  call `handleError`(v5, v3) @signature `Lcordova/plugins/Diagnostic;.handleError:(Ljava/lang/String;)V` @kind virtual;
+  #L221a1a.  return v4;
+  catch `java.lang.Exception` @[L22188e..L2219f8] goto L2219fa;
+}
+procedure `java.lang.String` `getLocationModeName`(`cordova.plugins.Diagnostic_Location` v1 @kind this) @signature `Lcordova/plugins/Diagnostic_Location;.getLocationModeName:()Ljava/lang/String;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L221d0c.  call temp:= `getLocationMode`(v1) @signature `Lcordova/plugins/Diagnostic_Location;.getLocationMode:()I` @kind direct;
+  #L221d12.  v0:= temp;
+  #L221d14.  goto L221d38;
+  #L221d1a.  v0:= "unknown" @kind object;
+  #L221d1e.  goto L221d36;
+  #L221d20.  v0:= "high_accuracy" @kind object;
+  #L221d24.  goto L221d36;
+  #L221d26.  v0:= "battery_saving" @kind object;
+  #L221d2a.  goto L221d36;
+  #L221d2c.  v0:= "device_only" @kind object;
+  #L221d30.  goto L221d36;
+  #L221d32.  v0:= "location_off" @kind object;
+  #L221d36.  return v0 @kind object;
+  #L221d38.  switch v0
+                  | 0 => goto L221d32
+                  | 1 => goto L221d2c
+                  | 2 => goto L221d26
+                  | 3 => goto L221d20
+                  | else => goto L221d1a;
+}
+procedure `void` `initialize`(`cordova.plugins.Diagnostic_Location` v4 @kind this, `org.apache.cordova.CordovaInterface` v5 @kind object, `org.apache.cordova.CordovaWebView` v6 @kind object) @signature `Lcordova/plugins/Diagnostic_Location;.initialize:(Lorg/apache/cordova/CordovaInterface;Lorg/apache/cordova/CordovaWebView;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L221da0.  v0:= "Diagnostic_Location" @kind object;
+  #L221da4.  v1:= "initialize()" @kind object;
+  #L221da8.  call temp:= `d`(v0, v1) @signature `Landroid/util/Log;.d:(Ljava/lang/String;Ljava/lang/String;)I` @kind static;
+  #L221dae.  `@@cordova.plugins.Diagnostic_Location.instance` @type ^`cordova.plugins.Diagnostic_Location` := v4 @kind object;
+  #L221db2.  call temp:= `getInstance`() @signature `Lcordova/plugins/Diagnostic;.getInstance:()Lcordova/plugins/Diagnostic;` @kind static;
+  #L221db8.  v0:= temp @kind object;
+  #L221dba.  v4.`cordova.plugins.Diagnostic_Location.diagnostic` @type ^`cordova.plugins.Diagnostic` := v0 @kind object;
+  #L221dbe.  v0:= v4.`cordova.plugins.Diagnostic_Location.diagnostic` @type ^`cordova.plugins.Diagnostic` @kind object;
+  #L221dc2.  v0:= v0.`cordova.plugins.Diagnostic.applicationContext` @type ^`android.content.Context` @kind object;
+  #L221dc6.  v1:= v4.`cordova.plugins.Diagnostic_Location.locationProviderChangedReceiver` @type ^`android.content.BroadcastReceiver` @kind object;
+  #L221dca.  v2:= new `android.content.IntentFilter`;
+  #L221dce.  v3:= "android.location.PROVIDERS_CHANGED" @kind object;
+  #L221dd2.  call `<init>`(v2, v3) @signature `Landroid/content/IntentFilter;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L221dd8.  call temp:= `registerReceiver`(v0, v1, v2) @signature `Landroid/content/Context;.registerReceiver:(Landroid/content/BroadcastReceiver;Landroid/content/IntentFilter;)Landroid/content/Intent;` @kind virtual;
+  #L221dde.  v0:= v4.`cordova.plugins.Diagnostic_Location.cordova` @type ^`org.apache.cordova.CordovaInterface` @kind object;
+  #L221de2.  call temp:= `getActivity`(v0) @signature `Lorg/apache/cordova/CordovaInterface;.getActivity:()Landroid/app/Activity;` @kind interface;
+  #L221de8.  v0:= temp @kind object;
+  #L221dea.  v1:= "location" @kind object;
+  #L221dee.  call temp:= `getSystemService`(v0, v1) @signature `Landroid/app/Activity;.getSystemService:(Ljava/lang/String;)Ljava/lang/Object;` @kind virtual;
+  #L221df4.  v0:= temp @kind object;
+  #L221df6.  v0:= (`android.location.LocationManager`) v0 @kind object;
+  #L221dfa.  `@@cordova.plugins.Diagnostic_Location.locationManager` @type ^`android.location.LocationManager` := v0 @kind object;
+  #L221dfe.  goto L221e36;
+  #L221e00.  v0:= Exception @type ^`java.lang.Exception` @kind object;
+  #L221e02.  v1:= v4.`cordova.plugins.Diagnostic_Location.diagnostic` @type ^`cordova.plugins.Diagnostic` @kind object;
+  #L221e06.  v2:= new `java.lang.StringBuilder`;
+  #L221e0a.  call `<init>`(v2) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L221e10.  v3:= "Unable to register Location Provider Change receiver: " @kind object;
+  #L221e14.  call temp:= `append`(v2, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L221e1a.  call temp:= `getMessage`(v0) @signature `Ljava/lang/Exception;.getMessage:()Ljava/lang/String;` @kind virtual;
+  #L221e20.  v0:= temp @kind object;
+  #L221e22.  call temp:= `append`(v2, v0) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L221e28.  call temp:= `toString`(v2) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L221e2e.  v0:= temp @kind object;
+  #L221e30.  call `logWarning`(v1, v0) @signature `Lcordova/plugins/Diagnostic;.logWarning:(Ljava/lang/String;)V` @kind virtual;
+  #L221e36.  call temp:= `getLocationModeName`(v4) @signature `Lcordova/plugins/Diagnostic_Location;.getLocationModeName:()Ljava/lang/String;` @kind virtual;
+  #L221e3c.  v0:= temp @kind object;
+  #L221e3e.  v4.`cordova.plugins.Diagnostic_Location.currentLocationMode` @type ^`java.lang.String` := v0 @kind object;
+  #L221e42.  goto L221e7a;
+  #L221e44.  v0:= Exception @type ^`java.lang.Exception` @kind object;
+  #L221e46.  v1:= v4.`cordova.plugins.Diagnostic_Location.diagnostic` @type ^`cordova.plugins.Diagnostic` @kind object;
+  #L221e4a.  v2:= new `java.lang.StringBuilder`;
+  #L221e4e.  call `<init>`(v2) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L221e54.  v3:= "Unable to get initial location mode: " @kind object;
+  #L221e58.  call temp:= `append`(v2, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L221e5e.  call temp:= `getMessage`(v0) @signature `Ljava/lang/Exception;.getMessage:()Ljava/lang/String;` @kind virtual;
+  #L221e64.  v0:= temp @kind object;
+  #L221e66.  call temp:= `append`(v2, v0) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L221e6c.  call temp:= `toString`(v2) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L221e72.  v0:= temp @kind object;
+  #L221e74.  call `logWarning`(v1, v0) @signature `Lcordova/plugins/Diagnostic;.logWarning:(Ljava/lang/String;)V` @kind virtual;
+  #L221e7a.  call `initialize`(v4, v5, v6) @signature `Lorg/apache/cordova/CordovaPlugin;.initialize:(Lorg/apache/cordova/CordovaInterface;Lorg/apache/cordova/CordovaWebView;)V` @kind super;
+  #L221e80.  return @kind void;
+  catch `java.lang.Exception` @[L221dbe..L221dfe] goto L221e00;
+  catch `java.lang.Exception` @[L221e36..L221e42] goto L221e44;
+}
+procedure `boolean` `isGpsLocationAvailable`(`cordova.plugins.Diagnostic_Location` v4 @kind this) @signature `Lcordova/plugins/Diagnostic_Location;.isGpsLocationAvailable:()Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L221a3c.  call temp:= `isGpsLocationEnabled`(v4) @signature `Lcordova/plugins/Diagnostic_Location;.isGpsLocationEnabled:()Z` @kind virtual;
+  #L221a42.  v0:= temp;
+  #L221a44.  if v0 == 0 then goto L221a58;
+  #L221a48.  call temp:= `isLocationAuthorized`(v4) @signature `Lcordova/plugins/Diagnostic_Location;.isLocationAuthorized:()Z` @kind direct;
+  #L221a4e.  v0:= temp;
+  #L221a50.  if v0 == 0 then goto L221a58;
+  #L221a54.  v0:= 1I;
+  #L221a56.  goto L221a5a;
+  #L221a58.  v0:= 0I;
+  #L221a5a.  v1:= v4.`cordova.plugins.Diagnostic_Location.diagnostic` @type ^`cordova.plugins.Diagnostic` @kind object;
+  #L221a5e.  v2:= new `java.lang.StringBuilder`;
+  #L221a62.  call `<init>`(v2) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L221a68.  v3:= "GPS location available: " @kind object;
+  #L221a6c.  call temp:= `append`(v2, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L221a72.  call temp:= `append`(v2, v0) @signature `Ljava/lang/StringBuilder;.append:(Z)Ljava/lang/StringBuilder;` @kind virtual;
+  #L221a78.  call temp:= `toString`(v2) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L221a7e.  v2:= temp @kind object;
+  #L221a80.  call `logDebug`(v1, v2) @signature `Lcordova/plugins/Diagnostic;.logDebug:(Ljava/lang/String;)V` @kind virtual;
+  #L221a86.  return v0;
+}
+procedure `boolean` `isGpsLocationEnabled`(`cordova.plugins.Diagnostic_Location` v4 @kind this) @signature `Lcordova/plugins/Diagnostic_Location;.isGpsLocationEnabled:()Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L221a98.  call temp:= `getLocationMode`(v4) @signature `Lcordova/plugins/Diagnostic_Location;.getLocationMode:()I` @kind direct;
+  #L221a9e.  v0:= temp;
+  #L221aa0.  v1:= 1I;
+  #L221aa2.  v2:= 3I;
+  #L221aa4.  if v0 == v2 then goto L221ab0;
+  #L221aa8.  if v0 != v1 then goto L221aae;
+  #L221aac.  goto L221ab0;
+  #L221aae.  v1:= 0I;
+  #L221ab0.  v0:= v4.`cordova.plugins.Diagnostic_Location.diagnostic` @type ^`cordova.plugins.Diagnostic` @kind object;
+  #L221ab4.  v2:= new `java.lang.StringBuilder`;
+  #L221ab8.  call `<init>`(v2) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L221abe.  v3:= "GPS location setting enabled: " @kind object;
+  #L221ac2.  call temp:= `append`(v2, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L221ac8.  call temp:= `append`(v2, v1) @signature `Ljava/lang/StringBuilder;.append:(Z)Ljava/lang/StringBuilder;` @kind virtual;
+  #L221ace.  call temp:= `toString`(v2) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L221ad4.  v2:= temp @kind object;
+  #L221ad6.  call `logDebug`(v0, v2) @signature `Lcordova/plugins/Diagnostic;.logDebug:(Ljava/lang/String;)V` @kind virtual;
+  #L221adc.  return v1;
+}
+procedure `boolean` `isNetworkLocationAvailable`(`cordova.plugins.Diagnostic_Location` v4 @kind this) @signature `Lcordova/plugins/Diagnostic_Location;.isNetworkLocationAvailable:()Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L221bac.  call temp:= `isNetworkLocationEnabled`(v4) @signature `Lcordova/plugins/Diagnostic_Location;.isNetworkLocationEnabled:()Z` @kind virtual;
+  #L221bb2.  v0:= temp;
+  #L221bb4.  if v0 == 0 then goto L221bc8;
+  #L221bb8.  call temp:= `isLocationAuthorized`(v4) @signature `Lcordova/plugins/Diagnostic_Location;.isLocationAuthorized:()Z` @kind direct;
+  #L221bbe.  v0:= temp;
+  #L221bc0.  if v0 == 0 then goto L221bc8;
+  #L221bc4.  v0:= 1I;
+  #L221bc6.  goto L221bca;
+  #L221bc8.  v0:= 0I;
+  #L221bca.  v1:= v4.`cordova.plugins.Diagnostic_Location.diagnostic` @type ^`cordova.plugins.Diagnostic` @kind object;
+  #L221bce.  v2:= new `java.lang.StringBuilder`;
+  #L221bd2.  call `<init>`(v2) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L221bd8.  v3:= "Network location available: " @kind object;
+  #L221bdc.  call temp:= `append`(v2, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L221be2.  call temp:= `append`(v2, v0) @signature `Ljava/lang/StringBuilder;.append:(Z)Ljava/lang/StringBuilder;` @kind virtual;
+  #L221be8.  call temp:= `toString`(v2) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L221bee.  v2:= temp @kind object;
+  #L221bf0.  call `logDebug`(v1, v2) @signature `Lcordova/plugins/Diagnostic;.logDebug:(Ljava/lang/String;)V` @kind virtual;
+  #L221bf6.  return v0;
+}
+procedure `boolean` `isNetworkLocationEnabled`(`cordova.plugins.Diagnostic_Location` v4 @kind this) @signature `Lcordova/plugins/Diagnostic_Location;.isNetworkLocationEnabled:()Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L221c08.  call temp:= `getLocationMode`(v4) @signature `Lcordova/plugins/Diagnostic_Location;.getLocationMode:()I` @kind direct;
+  #L221c0e.  v0:= temp;
+  #L221c10.  v1:= 3I;
+  #L221c12.  if v0 == v1 then goto L221c22;
+  #L221c16.  v1:= 2I;
+  #L221c18.  if v0 != v1 then goto L221c1e;
+  #L221c1c.  goto L221c22;
+  #L221c1e.  v0:= 0I;
+  #L221c20.  goto L221c24;
+  #L221c22.  v0:= 1I;
+  #L221c24.  v1:= v4.`cordova.plugins.Diagnostic_Location.diagnostic` @type ^`cordova.plugins.Diagnostic` @kind object;
+  #L221c28.  v2:= new `java.lang.StringBuilder`;
+  #L221c2c.  call `<init>`(v2) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L221c32.  v3:= "Network location setting enabled: " @kind object;
+  #L221c36.  call temp:= `append`(v2, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L221c3c.  call temp:= `append`(v2, v0) @signature `Ljava/lang/StringBuilder;.append:(Z)Ljava/lang/StringBuilder;` @kind virtual;
+  #L221c42.  call temp:= `toString`(v2) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L221c48.  v2:= temp @kind object;
+  #L221c4a.  call `logDebug`(v1, v2) @signature `Lcordova/plugins/Diagnostic;.logDebug:(Ljava/lang/String;)V` @kind virtual;
+  #L221c50.  return v0;
+}
+procedure `void` `notifyLocationStateChange`(`cordova.plugins.Diagnostic_Location` v4 @kind this) @signature `Lcordova/plugins/Diagnostic_Location;.notifyLocationStateChange:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L221eb0.  call temp:= `getLocationModeName`(v4) @signature `Lcordova/plugins/Diagnostic_Location;.getLocationModeName:()Ljava/lang/String;` @kind virtual;
+  #L221eb6.  v0:= temp @kind object;
+  #L221eb8.  v1:= v4.`cordova.plugins.Diagnostic_Location.currentLocationMode` @type ^`java.lang.String` @kind object;
+  #L221ebc.  call temp:= `equals`(v0, v1) @signature `Ljava/lang/String;.equals:(Ljava/lang/Object;)Z` @kind virtual;
+  #L221ec2.  v1:= temp;
+  #L221ec4.  if v1 != 0 then goto L221f66;
+  #L221ec8.  v1:= v4.`cordova.plugins.Diagnostic_Location.diagnostic` @type ^`cordova.plugins.Diagnostic` @kind object;
+  #L221ecc.  v2:= new `java.lang.StringBuilder`;
+  #L221ed0.  call `<init>`(v2) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L221ed6.  v3:= "Location mode change to: " @kind object;
+  #L221eda.  call temp:= `append`(v2, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L221ee0.  call temp:= `append`(v2, v0) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L221ee6.  call temp:= `toString`(v2) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L221eec.  v2:= temp @kind object;
+  #L221eee.  call `logDebug`(v1, v2) @signature `Lcordova/plugins/Diagnostic;.logDebug:(Ljava/lang/String;)V` @kind virtual;
+  #L221ef4.  v1:= v4.`cordova.plugins.Diagnostic_Location.diagnostic` @type ^`cordova.plugins.Diagnostic` @kind object;
+  #L221ef8.  v2:= new `java.lang.StringBuilder`;
+  #L221efc.  call `<init>`(v2) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L221f02.  v3:= "location._onLocationStateChange(\"" @kind object;
+  #L221f06.  call temp:= `append`(v2, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L221f0c.  call temp:= `append`(v2, v0) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L221f12.  v3:= "\");" @kind object;
+  #L221f16.  call temp:= `append`(v2, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L221f1c.  call temp:= `toString`(v2) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L221f22.  v2:= temp @kind object;
+  #L221f24.  call `executePluginJavascript`(v1, v2) @signature `Lcordova/plugins/Diagnostic;.executePluginJavascript:(Ljava/lang/String;)V` @kind virtual;
+  #L221f2a.  v4.`cordova.plugins.Diagnostic_Location.currentLocationMode` @type ^`java.lang.String` := v0 @kind object;
+  #L221f2e.  goto L221f66;
+  #L221f30.  v0:= Exception @type ^`java.lang.Exception` @kind object;
+  #L221f32.  v1:= v4.`cordova.plugins.Diagnostic_Location.diagnostic` @type ^`cordova.plugins.Diagnostic` @kind object;
+  #L221f36.  v2:= new `java.lang.StringBuilder`;
+  #L221f3a.  call `<init>`(v2) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L221f40.  v3:= "Error retrieving current location mode on location state change: " @kind object;
+  #L221f44.  call temp:= `append`(v2, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L221f4a.  call temp:= `toString`(v0) @signature `Ljava/lang/Exception;.toString:()Ljava/lang/String;` @kind virtual;
+  #L221f50.  v0:= temp @kind object;
+  #L221f52.  call temp:= `append`(v2, v0) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L221f58.  call temp:= `toString`(v2) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L221f5e.  v0:= temp @kind object;
+  #L221f60.  call `logError`(v1, v0) @signature `Lcordova/plugins/Diagnostic;.logError:(Ljava/lang/String;)V` @kind virtual;
+  #L221f66.  return @kind void;
+  catch `java.lang.Exception` @[L221eb0..L221f2e] goto L221f30;
+}
+procedure `void` `onDestroy`(`cordova.plugins.Diagnostic_Location` v4 @kind this) @signature `Lcordova/plugins/Diagnostic_Location;.onDestroy:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L221f88.  v0:= v4.`cordova.plugins.Diagnostic_Location.diagnostic` @type ^`cordova.plugins.Diagnostic` @kind object;
+  #L221f8c.  v0:= v0.`cordova.plugins.Diagnostic.applicationContext` @type ^`android.content.Context` @kind object;
+  #L221f90.  v1:= v4.`cordova.plugins.Diagnostic_Location.locationProviderChangedReceiver` @type ^`android.content.BroadcastReceiver` @kind object;
+  #L221f94.  call `unregisterReceiver`(v0, v1) @signature `Landroid/content/Context;.unregisterReceiver:(Landroid/content/BroadcastReceiver;)V` @kind virtual;
+  #L221f9a.  goto L221fd2;
+  #L221f9c.  v0:= Exception @type ^`java.lang.Exception` @kind object;
+  #L221f9e.  v1:= v4.`cordova.plugins.Diagnostic_Location.diagnostic` @type ^`cordova.plugins.Diagnostic` @kind object;
+  #L221fa2.  v2:= new `java.lang.StringBuilder`;
+  #L221fa6.  call `<init>`(v2) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L221fac.  v3:= "Unable to unregister Location Provider Change receiver: " @kind object;
+  #L221fb0.  call temp:= `append`(v2, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L221fb6.  call temp:= `getMessage`(v0) @signature `Ljava/lang/Exception;.getMessage:()Ljava/lang/String;` @kind virtual;
+  #L221fbc.  v0:= temp @kind object;
+  #L221fbe.  call temp:= `append`(v2, v0) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L221fc4.  call temp:= `toString`(v2) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L221fca.  v0:= temp @kind object;
+  #L221fcc.  call `logWarning`(v1, v0) @signature `Lcordova/plugins/Diagnostic;.logWarning:(Ljava/lang/String;)V` @kind virtual;
+  #L221fd2.  return @kind void;
+  catch `java.lang.Exception` @[L221f88..L221f9a] goto L221f9c;
+}
+procedure `void` `switchToLocationSettings`(`cordova.plugins.Diagnostic_Location` v2 @kind this) @signature `Lcordova/plugins/Diagnostic_Location;.switchToLocationSettings:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L221ff4.  v0:= v2.`cordova.plugins.Diagnostic_Location.diagnostic` @type ^`cordova.plugins.Diagnostic` @kind object;
+  #L221ff8.  v1:= "Switch to Location Settings" @kind object;
+  #L221ffc.  call `logDebug`(v0, v1) @signature `Lcordova/plugins/Diagnostic;.logDebug:(Ljava/lang/String;)V` @kind virtual;
+  #L222002.  v0:= new `android.content.Intent`;
+  #L222006.  v1:= "android.settings.LOCATION_SOURCE_SETTINGS" @kind object;
+  #L22200a.  call `<init>`(v0, v1) @signature `Landroid/content/Intent;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L222010.  v1:= v2.`cordova.plugins.Diagnostic_Location.cordova` @type ^`org.apache.cordova.CordovaInterface` @kind object;
+  #L222014.  call temp:= `getActivity`(v1) @signature `Lorg/apache/cordova/CordovaInterface;.getActivity:()Landroid/app/Activity;` @kind interface;
+  #L22201a.  v1:= temp @kind object;
+  #L22201c.  call `startActivity`(v1, v0) @signature `Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V` @kind virtual;
+  #L222022.  return @kind void;
+}

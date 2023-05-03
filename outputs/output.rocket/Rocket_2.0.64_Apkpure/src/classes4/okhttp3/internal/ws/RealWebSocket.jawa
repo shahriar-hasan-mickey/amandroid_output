@@ -1,0 +1,1371 @@
+record `okhttp3.internal.ws.RealWebSocket` @kind class @AccessFlag PUBLIC_FINAL extends `okhttp3.WebSocket` @kind interface, `okhttp3.internal.ws.WebSocketReader$FrameCallback` @kind interface {
+  `java.lang.String` `okhttp3.internal.ws.RealWebSocket.a` @AccessFlag PRIVATE_FINAL;
+  `okhttp3.Call` `okhttp3.internal.ws.RealWebSocket.b` @AccessFlag PRIVATE;
+  `okhttp3.internal.concurrent.Task` `okhttp3.internal.ws.RealWebSocket.c` @AccessFlag PRIVATE;
+  `okhttp3.internal.ws.WebSocketReader` `okhttp3.internal.ws.RealWebSocket.d` @AccessFlag PRIVATE;
+  `okhttp3.internal.ws.WebSocketWriter` `okhttp3.internal.ws.RealWebSocket.e` @AccessFlag PRIVATE;
+  `okhttp3.internal.concurrent.TaskQueue` `okhttp3.internal.ws.RealWebSocket.f` @AccessFlag PRIVATE;
+  `java.lang.String` `okhttp3.internal.ws.RealWebSocket.g` @AccessFlag PRIVATE;
+  `okhttp3.internal.ws.RealWebSocket$Streams` `okhttp3.internal.ws.RealWebSocket.h` @AccessFlag PRIVATE;
+  `java.util.ArrayDeque` `okhttp3.internal.ws.RealWebSocket.i` @AccessFlag PRIVATE_FINAL;
+  `java.util.ArrayDeque` `okhttp3.internal.ws.RealWebSocket.j` @AccessFlag PRIVATE_FINAL;
+  `long` `okhttp3.internal.ws.RealWebSocket.k` @AccessFlag PRIVATE;
+  `boolean` `okhttp3.internal.ws.RealWebSocket.l` @AccessFlag PRIVATE;
+  `int` `okhttp3.internal.ws.RealWebSocket.m` @AccessFlag PRIVATE;
+  `java.lang.String` `okhttp3.internal.ws.RealWebSocket.n` @AccessFlag PRIVATE;
+  `boolean` `okhttp3.internal.ws.RealWebSocket.o` @AccessFlag PRIVATE;
+  `int` `okhttp3.internal.ws.RealWebSocket.p` @AccessFlag PRIVATE;
+  `int` `okhttp3.internal.ws.RealWebSocket.q` @AccessFlag PRIVATE;
+  `int` `okhttp3.internal.ws.RealWebSocket.r` @AccessFlag PRIVATE;
+  `boolean` `okhttp3.internal.ws.RealWebSocket.s` @AccessFlag PRIVATE;
+  `okhttp3.Request` `okhttp3.internal.ws.RealWebSocket.t` @AccessFlag PRIVATE_FINAL;
+  `okhttp3.WebSocketListener` `okhttp3.internal.ws.RealWebSocket.u` @AccessFlag PRIVATE_FINAL;
+  `java.util.Random` `okhttp3.internal.ws.RealWebSocket.v` @AccessFlag PRIVATE_FINAL;
+  `long` `okhttp3.internal.ws.RealWebSocket.w` @AccessFlag PRIVATE_FINAL;
+  `okhttp3.internal.ws.WebSocketExtensions` `okhttp3.internal.ws.RealWebSocket.x` @AccessFlag PRIVATE;
+  `long` `okhttp3.internal.ws.RealWebSocket.y` @AccessFlag PRIVATE;
+}
+global `okhttp3.internal.ws.RealWebSocket$Companion` `@@okhttp3.internal.ws.RealWebSocket.Companion` @AccessFlag PUBLIC_STATIC_FINAL;
+global `long` `@@okhttp3.internal.ws.RealWebSocket.DEFAULT_MINIMUM_DEFLATE_SIZE` @AccessFlag PUBLIC_STATIC_FINAL;
+global `java.util.List` `@@okhttp3.internal.ws.RealWebSocket.z` @AccessFlag PRIVATE_STATIC_FINAL;
+procedure `void` `<clinit>`() @signature `Lokhttp3/internal/ws/RealWebSocket;.<clinit>:()V` @AccessFlag STATIC_CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+
+  #L15cea0.  v0:= new `okhttp3.internal.ws.RealWebSocket$Companion`;
+  #L15cea4.  v1:= 0I;
+  #L15cea6.  call `<init>`(v0, v1) @signature `Lokhttp3/internal/ws/RealWebSocket$Companion;.<init>:(Lkotlin/jvm/internal/DefaultConstructorMarker;)V` @kind direct;
+  #L15ceac.  `@@okhttp3.internal.ws.RealWebSocket.Companion` @type ^`okhttp3.internal.ws.RealWebSocket$Companion` := v0 @kind object;
+  #L15ceb0.  v0:= `@@okhttp3.Protocol.HTTP_1_1` @type ^`okhttp3.Protocol` @kind object;
+  #L15ceb4.  call temp:= `listOf`(v0) @signature `Lkotlin/collections/CollectionsKt;.listOf:(Ljava/lang/Object;)Ljava/util/List;` @kind static;
+  #L15ceba.  v0:= temp @kind object;
+  #L15cebc.  `@@okhttp3.internal.ws.RealWebSocket.z` @type ^`java.util.List` := v0 @kind object;
+  #L15cec0.  return @kind void;
+}
+procedure `void` `<init>`(`okhttp3.internal.ws.RealWebSocket` v1 @kind this, `okhttp3.internal.concurrent.TaskRunner` v2 @kind object, `okhttp3.Request` v3 @kind object, `okhttp3.WebSocketListener` v4 @kind object, `java.util.Random` v5 @kind object, `long` v6 , `okhttp3.internal.ws.WebSocketExtensions` v8 @kind object, `long` v9 ) @signature `Lokhttp3/internal/ws/RealWebSocket;.<init>:(Lokhttp3/internal/concurrent/TaskRunner;Lokhttp3/Request;Lokhttp3/WebSocketListener;Ljava/util/Random;JLokhttp3/internal/ws/WebSocketExtensions;J)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L15ced4.  v0:= "taskRunner" @kind object;
+  #L15ced8.  call `checkNotNullParameter`(v2, v0) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V` @kind static;
+  #L15cede.  v0:= "originalRequest" @kind object;
+  #L15cee2.  call `checkNotNullParameter`(v3, v0) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V` @kind static;
+  #L15cee8.  v0:= "listener" @kind object;
+  #L15ceec.  call `checkNotNullParameter`(v4, v0) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V` @kind static;
+  #L15cef2.  v0:= "random" @kind object;
+  #L15cef6.  call `checkNotNullParameter`(v5, v0) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V` @kind static;
+  #L15cefc.  call `<init>`(v1) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L15cf02.  v1.`okhttp3.internal.ws.RealWebSocket.t` @type ^`okhttp3.Request` := v3 @kind object;
+  #L15cf06.  v1.`okhttp3.internal.ws.RealWebSocket.u` @type ^`okhttp3.WebSocketListener` := v4 @kind object;
+  #L15cf0a.  v1.`okhttp3.internal.ws.RealWebSocket.v` @type ^`java.util.Random` := v5 @kind object;
+  #L15cf0e.  v1.`okhttp3.internal.ws.RealWebSocket.w` @type ^`long` := v6 @kind wide;
+  #L15cf12.  v1.`okhttp3.internal.ws.RealWebSocket.x` @type ^`okhttp3.internal.ws.WebSocketExtensions` := v8 @kind object;
+  #L15cf16.  v1.`okhttp3.internal.ws.RealWebSocket.y` @type ^`long` := v9 @kind wide;
+  #L15cf1a.  call temp:= `newQueue`(v2) @signature `Lokhttp3/internal/concurrent/TaskRunner;.newQueue:()Lokhttp3/internal/concurrent/TaskQueue;` @kind virtual;
+  #L15cf20.  v2:= temp @kind object;
+  #L15cf22.  v1.`okhttp3.internal.ws.RealWebSocket.f` @type ^`okhttp3.internal.concurrent.TaskQueue` := v2 @kind object;
+  #L15cf26.  v2:= new `java.util.ArrayDeque`;
+  #L15cf2a.  call `<init>`(v2) @signature `Ljava/util/ArrayDeque;.<init>:()V` @kind direct;
+  #L15cf30.  v1.`okhttp3.internal.ws.RealWebSocket.i` @type ^`java.util.ArrayDeque` := v2 @kind object;
+  #L15cf34.  v2:= new `java.util.ArrayDeque`;
+  #L15cf38.  call `<init>`(v2) @signature `Ljava/util/ArrayDeque;.<init>:()V` @kind direct;
+  #L15cf3e.  v1.`okhttp3.internal.ws.RealWebSocket.j` @type ^`java.util.ArrayDeque` := v2 @kind object;
+  #L15cf42.  v2:= -1I;
+  #L15cf44.  v1.`okhttp3.internal.ws.RealWebSocket.m` @type ^`int` := v2;
+  #L15cf48.  call temp:= `method`(v3) @signature `Lokhttp3/Request;.method:()Ljava/lang/String;` @kind virtual;
+  #L15cf4e.  v2:= temp @kind object;
+  #L15cf50.  v4:= "GET" @kind object;
+  #L15cf54.  call temp:= `areEqual`(v4, v2) @signature `Lkotlin/jvm/internal/Intrinsics;.areEqual:(Ljava/lang/Object;Ljava/lang/Object;)Z` @kind static;
+  #L15cf5a.  v2:= temp;
+  #L15cf5c.  if v2 == 0 then goto L15cf94;
+  #L15cf60.  v3:= `@@okio.ByteString.Companion` @type ^`okio.ByteString$Companion` @kind object;
+  #L15cf64.  v2:= 16I;
+  #L15cf68.  v4:= new `byte`[v2];
+  #L15cf6c.  call `nextBytes`(v5, v4) @signature `Ljava/util/Random;.nextBytes:([B)V` @kind virtual;
+  #L15cf72.  v2:= `@@kotlin.Unit.INSTANCE` @type ^`kotlin.Unit` @kind object;
+  #L15cf76.  v5:= 0I;
+  #L15cf78.  v6:= 0I;
+  #L15cf7a.  v7:= 3I;
+  #L15cf7c.  v8:= 0I;
+  #L15cf7e.  call temp:= `of$default`(v3, v4, v5, v6, v7, v8) @signature `Lokio/ByteString$Companion;.of$default:(Lokio/ByteString$Companion;[BIIILjava/lang/Object;)Lokio/ByteString;` @kind static;
+  #L15cf84.  v2:= temp @kind object;
+  #L15cf86.  call temp:= `base64`(v2) @signature `Lokio/ByteString;.base64:()Ljava/lang/String;` @kind virtual;
+  #L15cf8c.  v2:= temp @kind object;
+  #L15cf8e.  v1.`okhttp3.internal.ws.RealWebSocket.a` @type ^`java.lang.String` := v2 @kind object;
+  #L15cf92.  return @kind void;
+  #L15cf94.  v2:= new `java.lang.StringBuilder`;
+  #L15cf98.  call `<init>`(v2) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L15cf9e.  v4:= "Request must be GET: " @kind object;
+  #L15cfa2.  call temp:= `append`(v2, v4) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L15cfa8.  call temp:= `method`(v3) @signature `Lokhttp3/Request;.method:()Ljava/lang/String;` @kind virtual;
+  #L15cfae.  v3:= temp @kind object;
+  #L15cfb0.  call temp:= `append`(v2, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L15cfb6.  call temp:= `toString`(v2) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L15cfbc.  v2:= temp @kind object;
+  #L15cfbe.  v3:= new `java.lang.IllegalArgumentException`;
+  #L15cfc2.  call temp:= `toString`(v2) @signature `Ljava/lang/Object;.toString:()Ljava/lang/String;` @kind virtual;
+  #L15cfc8.  v2:= temp @kind object;
+  #L15cfca.  call `<init>`(v3, v2) @signature `Ljava/lang/IllegalArgumentException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L15cfd0.  throw v3;
+}
+procedure `boolean` `a`(`okhttp3.internal.ws.RealWebSocket` v3 @kind this, `okhttp3.internal.ws.WebSocketExtensions` v4 @kind object) @signature `Lokhttp3/internal/ws/RealWebSocket;.a:(Lokhttp3/internal/ws/WebSocketExtensions;)Z` @AccessFlag PRIVATE_FINAL {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L15c764.  v0:= v4.`okhttp3.internal.ws.WebSocketExtensions.unknownValues` @type ^`boolean` @kind boolean;
+  #L15c768.  v1:= 0I;
+  #L15c76a.  if v0 == 0 then goto L15c770;
+  #L15c76e.  return v1;
+  #L15c770.  v0:= v4.`okhttp3.internal.ws.WebSocketExtensions.clientMaxWindowBits` @type ^`java.lang.Integer` @kind object;
+  #L15c774.  if v0 == 0 then goto L15c77a;
+  #L15c778.  return v1;
+  #L15c77a.  v4:= v4.`okhttp3.internal.ws.WebSocketExtensions.serverMaxWindowBits` @type ^`java.lang.Integer` @kind object;
+  #L15c77e.  if v4 == 0 then goto L15c79c;
+  #L15c782.  v0:= 15I;
+  #L15c786.  v2:= 8I;
+  #L15c78a.  call temp:= `intValue`(v4) @signature `Ljava/lang/Integer;.intValue:()I` @kind virtual;
+  #L15c790.  v4:= temp;
+  #L15c792.  if v2 > v4 then goto L15c79a;
+  #L15c796.  if v0 >= v4 then goto L15c79c;
+  #L15c79a.  return v1;
+  #L15c79c.  v4:= 1I;
+  #L15c79e.  return v4;
+}
+procedure `okhttp3.internal.ws.WebSocketExtensions` `access$getExtensions$p`(`okhttp3.internal.ws.RealWebSocket` v0 @kind object) @signature `Lokhttp3/internal/ws/RealWebSocket;.access$getExtensions$p:(Lokhttp3/internal/ws/RealWebSocket;)Lokhttp3/internal/ws/WebSocketExtensions;` @AccessFlag PUBLIC_STATIC_FINAL_SYNTHETIC {
+    temp;
+
+  #L15ce88.  v0:= v0.`okhttp3.internal.ws.RealWebSocket.x` @type ^`okhttp3.internal.ws.WebSocketExtensions` @kind object;
+  #L15ce8c.  return v0 @kind object;
+}
+procedure `java.util.ArrayDeque` `access$getMessageAndCloseQueue$p`(`okhttp3.internal.ws.RealWebSocket` v0 @kind object) @signature `Lokhttp3/internal/ws/RealWebSocket;.access$getMessageAndCloseQueue$p:(Lokhttp3/internal/ws/RealWebSocket;)Ljava/util/ArrayDeque;` @AccessFlag PUBLIC_STATIC_FINAL_SYNTHETIC {
+    temp;
+
+  #L15ce14.  v0:= v0.`okhttp3.internal.ws.RealWebSocket.j` @type ^`java.util.ArrayDeque` @kind object;
+  #L15ce18.  return v0 @kind object;
+}
+procedure `java.lang.String` `access$getName$p`(`okhttp3.internal.ws.RealWebSocket` v0 @kind object) @signature `Lokhttp3/internal/ws/RealWebSocket;.access$getName$p:(Lokhttp3/internal/ws/RealWebSocket;)Ljava/lang/String;` @AccessFlag PUBLIC_STATIC_FINAL_SYNTHETIC {
+    temp;
+
+  #L15cdfc.  v0:= v0.`okhttp3.internal.ws.RealWebSocket.g` @type ^`java.lang.String` @kind object;
+  #L15ce00.  return v0 @kind object;
+}
+procedure `boolean` `access$isValid`(`okhttp3.internal.ws.RealWebSocket` v0 @kind object, `okhttp3.internal.ws.WebSocketExtensions` v1 @kind object) @signature `Lokhttp3/internal/ws/RealWebSocket;.access$isValid:(Lokhttp3/internal/ws/RealWebSocket;Lokhttp3/internal/ws/WebSocketExtensions;)Z` @AccessFlag PUBLIC_STATIC_FINAL_SYNTHETIC {
+    temp;
+
+  #L15c654.  call temp:= `a`(v0, v1) @signature `Lokhttp3/internal/ws/RealWebSocket;.a:(Lokhttp3/internal/ws/WebSocketExtensions;)Z` @kind direct;
+  #L15c65a.  v0:= temp;
+  #L15c65c.  return v0;
+}
+procedure `void` `access$setExtensions$p`(`okhttp3.internal.ws.RealWebSocket` v0 @kind object, `okhttp3.internal.ws.WebSocketExtensions` v1 @kind object) @signature `Lokhttp3/internal/ws/RealWebSocket;.access$setExtensions$p:(Lokhttp3/internal/ws/RealWebSocket;Lokhttp3/internal/ws/WebSocketExtensions;)V` @AccessFlag PUBLIC_STATIC_FINAL_SYNTHETIC {
+    temp;
+
+  #L15cfe4.  v0.`okhttp3.internal.ws.RealWebSocket.x` @type ^`okhttp3.internal.ws.WebSocketExtensions` := v1 @kind object;
+  #L15cfe8.  return @kind void;
+}
+procedure `void` `access$setName$p`(`okhttp3.internal.ws.RealWebSocket` v0 @kind object, `java.lang.String` v1 @kind object) @signature `Lokhttp3/internal/ws/RealWebSocket;.access$setName$p:(Lokhttp3/internal/ws/RealWebSocket;Ljava/lang/String;)V` @AccessFlag PUBLIC_STATIC_FINAL_SYNTHETIC {
+    temp;
+
+  #L15cffc.  v0.`okhttp3.internal.ws.RealWebSocket.g` @type ^`java.lang.String` := v1 @kind object;
+  #L15d000.  return @kind void;
+}
+procedure `void` `b`(`okhttp3.internal.ws.RealWebSocket` v8 @kind this) @signature `Lokhttp3/internal/ws/RealWebSocket;.b:()V` @AccessFlag PRIVATE_FINAL {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+
+  #L15d7e8.  v0:= `@@okhttp3.internal.Util.assertionsEnabled` @type ^`boolean` @kind boolean;
+  #L15d7ec.  if v0 == 0 then goto L15d856;
+  #L15d7f0.  call temp:= `holdsLock`(v8) @signature `Ljava/lang/Thread;.holdsLock:(Ljava/lang/Object;)Z` @kind static;
+  #L15d7f6.  v0:= temp;
+  #L15d7f8.  if v0 == 0 then goto L15d7fe;
+  #L15d7fc.  goto L15d856;
+  #L15d7fe.  v0:= new `java.lang.AssertionError`;
+  #L15d802.  v1:= new `java.lang.StringBuilder`;
+  #L15d806.  call `<init>`(v1) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L15d80c.  v2:= "Thread " @kind object;
+  #L15d810.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L15d816.  call temp:= `currentThread`() @signature `Ljava/lang/Thread;.currentThread:()Ljava/lang/Thread;` @kind static;
+  #L15d81c.  v2:= temp @kind object;
+  #L15d81e.  v3:= "Thread.currentThread()" @kind object;
+  #L15d822.  call `checkNotNullExpressionValue`(v2, v3) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V` @kind static;
+  #L15d828.  call temp:= `getName`(v2) @signature `Ljava/lang/Thread;.getName:()Ljava/lang/String;` @kind virtual;
+  #L15d82e.  v2:= temp @kind object;
+  #L15d830.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L15d836.  v2:= " MUST hold lock on " @kind object;
+  #L15d83a.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L15d840.  call temp:= `append`(v1, v8) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L15d846.  call temp:= `toString`(v1) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L15d84c.  v1:= temp @kind object;
+  #L15d84e.  call `<init>`(v0, v1) @signature `Ljava/lang/AssertionError;.<init>:(Ljava/lang/Object;)V` @kind direct;
+  #L15d854.  throw v0;
+  #L15d856.  v3:= v8.`okhttp3.internal.ws.RealWebSocket.c` @type ^`okhttp3.internal.concurrent.Task` @kind object;
+  #L15d85a.  if v3 == 0 then goto L15d870;
+  #L15d85e.  v2:= v8.`okhttp3.internal.ws.RealWebSocket.f` @type ^`okhttp3.internal.concurrent.TaskQueue` @kind object;
+  #L15d862.  v4:= 0L;
+  #L15d866.  v6:= 2I;
+  #L15d868.  v7:= 0I;
+  #L15d86a.  call `schedule$default`(v2, v3, v4, v6, v7) @signature `Lokhttp3/internal/concurrent/TaskQueue;.schedule$default:(Lokhttp3/internal/concurrent/TaskQueue;Lokhttp3/internal/concurrent/Task;JILjava/lang/Object;)V` @kind static;
+  #L15d870.  return @kind void;
+}
+procedure `boolean` `c`(`okhttp3.internal.ws.RealWebSocket` v6 @kind this, `okio.ByteString` v7 @kind object, `int` v8 ) @signature `Lokhttp3/internal/ws/RealWebSocket;.c:(Lokio/ByteString;I)Z` @AccessFlag PRIVATE_FINAL {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L15c8c4.  @monitorenter v6
+  #L15c8c6.  v0:= v6.`okhttp3.internal.ws.RealWebSocket.o` @type ^`boolean` @kind boolean;
+  #L15c8ca.  v1:= 0I;
+  #L15c8cc.  if v0 != 0 then goto L15c93c;
+  #L15c8d0.  v0:= v6.`okhttp3.internal.ws.RealWebSocket.l` @type ^`boolean` @kind boolean;
+  #L15c8d4.  if v0 == 0 then goto L15c8da;
+  #L15c8d8.  goto L15c93c;
+  #L15c8da.  v2:= v6.`okhttp3.internal.ws.RealWebSocket.k` @type ^`long` @kind wide;
+  #L15c8de.  call temp:= `size`(v7) @signature `Lokio/ByteString;.size:()I` @kind virtual;
+  #L15c8e4.  v0:= temp;
+  #L15c8e6.  v4:= (`long`) v0 @kind i2l;
+  #L15c8e8.  v2:= v2 + v4 @kind long;
+  #L15c8ea.  v4:= 16777216L;
+  #L15c8f0.  v0:= lcmp(v2, v4);
+  #L15c8f4.  if v0 <= 0 then goto L15c908;
+  #L15c8f8.  v7:= 1001I;
+  #L15c8fc.  v8:= 0I;
+  #L15c8fe.  call temp:= `close`(v6, v7, v8) @signature `Lokhttp3/internal/ws/RealWebSocket;.close:(ILjava/lang/String;)Z` @kind virtual;
+  #L15c904.  @monitorexit v6
+  #L15c906.  return v1;
+  #L15c908.  v0:= v6.`okhttp3.internal.ws.RealWebSocket.k` @type ^`long` @kind wide;
+  #L15c90c.  call temp:= `size`(v7) @signature `Lokio/ByteString;.size:()I` @kind virtual;
+  #L15c912.  v2:= temp;
+  #L15c914.  v2:= (`long`) v2 @kind i2l;
+  #L15c916.  v0:= v0 + v2 @kind long;
+  #L15c918.  v6.`okhttp3.internal.ws.RealWebSocket.k` @type ^`long` := v0 @kind wide;
+  #L15c91c.  v0:= v6.`okhttp3.internal.ws.RealWebSocket.j` @type ^`java.util.ArrayDeque` @kind object;
+  #L15c920.  v1:= new `okhttp3.internal.ws.RealWebSocket$Message`;
+  #L15c924.  call `<init>`(v1, v8, v7) @signature `Lokhttp3/internal/ws/RealWebSocket$Message;.<init>:(ILokio/ByteString;)V` @kind direct;
+  #L15c92a.  call temp:= `add`(v0, v1) @signature `Ljava/util/ArrayDeque;.add:(Ljava/lang/Object;)Z` @kind virtual;
+  #L15c930.  call `b`(v6) @signature `Lokhttp3/internal/ws/RealWebSocket;.b:()V` @kind direct;
+  #L15c936.  v7:= 1I;
+  #L15c938.  @monitorexit v6
+  #L15c93a.  return v7;
+  #L15c93c.  @monitorexit v6
+  #L15c93e.  return v1;
+  #L15c940.  v7:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L15c942.  @monitorexit v6
+  #L15c944.  throw v7;
+  catch `java.lang.Throwable` @[L15c8c6..L15c904] goto L15c940;
+  catch `java.lang.Throwable` @[L15c908..L15c936] goto L15c940;
+}
+procedure `void` `awaitTermination`(`okhttp3.internal.ws.RealWebSocket` v1 @kind this, `long` v2 , `java.util.concurrent.TimeUnit` v4 @kind object) @signature `Lokhttp3/internal/ws/RealWebSocket;.awaitTermination:(JLjava/util/concurrent/TimeUnit;)V` @AccessFlag PUBLIC_FINAL {
+    temp;
+    v0;
+
+  #L15d014.  v0:= "timeUnit" @kind object;
+  #L15d018.  call `checkNotNullParameter`(v4, v0) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V` @kind static;
+  #L15d01e.  v0:= v1.`okhttp3.internal.ws.RealWebSocket.f` @type ^`okhttp3.internal.concurrent.TaskQueue` @kind object;
+  #L15d022.  call temp:= `idleLatch`(v0) @signature `Lokhttp3/internal/concurrent/TaskQueue;.idleLatch:()Ljava/util/concurrent/CountDownLatch;` @kind virtual;
+  #L15d028.  v0:= temp @kind object;
+  #L15d02a.  call temp:= `await`(v0, v2, v4) @signature `Ljava/util/concurrent/CountDownLatch;.await:(JLjava/util/concurrent/TimeUnit;)Z` @kind virtual;
+  #L15d030.  return @kind void;
+}
+procedure `void` `cancel`(`okhttp3.internal.ws.RealWebSocket` v1 @kind this) @signature `Lokhttp3/internal/ws/RealWebSocket;.cancel:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L15d044.  v0:= v1.`okhttp3.internal.ws.RealWebSocket.b` @type ^`okhttp3.Call` @kind object;
+  #L15d048.  call `checkNotNull`(v0) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNull:(Ljava/lang/Object;)V` @kind static;
+  #L15d04e.  call `cancel`(v0) @signature `Lokhttp3/Call;.cancel:()V` @kind interface;
+  #L15d054.  return @kind void;
+}
+procedure `void` `checkUpgradeSuccess$okhttp`(`okhttp3.internal.ws.RealWebSocket` v7 @kind this, `okhttp3.Response` v8 @kind object, `okhttp3.internal.connection.Exchange` v9 @kind object) @signature `Lokhttp3/internal/ws/RealWebSocket;.checkUpgradeSuccess$okhttp:(Lokhttp3/Response;Lokhttp3/internal/connection/Exchange;)V` @AccessFlag PUBLIC_FINAL {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+
+  #L15d068.  v0:= "response" @kind object;
+  #L15d06c.  call `checkNotNullParameter`(v8, v0) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V` @kind static;
+  #L15d072.  call temp:= `code`(v8) @signature `Lokhttp3/Response;.code:()I` @kind virtual;
+  #L15d078.  v0:= temp;
+  #L15d07a.  v1:= 39I;
+  #L15d07e.  v2:= 101I;
+  #L15d082.  if v0 != v2 then goto L15d1de;
+  #L15d086.  v0:= "Connection" @kind object;
+  #L15d08a.  v2:= 0I;
+  #L15d08c.  v3:= 2I;
+  #L15d08e.  call temp:= `header$default`(v8, v0, v2, v3, v2) @signature `Lokhttp3/Response;.header$default:(Lokhttp3/Response;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Ljava/lang/String;` @kind static;
+  #L15d094.  v0:= temp @kind object;
+  #L15d096.  v4:= "Upgrade" @kind object;
+  #L15d09a.  v5:= 1I;
+  #L15d09c.  call temp:= `equals`(v4, v0, v5) @signature `Lkotlin/text/StringsKt;.equals:(Ljava/lang/String;Ljava/lang/String;Z)Z` @kind static;
+  #L15d0a2.  v6:= temp;
+  #L15d0a4.  if v6 == 0 then goto L15d1aa;
+  #L15d0a8.  call temp:= `header$default`(v8, v4, v2, v3, v2) @signature `Lokhttp3/Response;.header$default:(Lokhttp3/Response;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Ljava/lang/String;` @kind static;
+  #L15d0ae.  v0:= temp @kind object;
+  #L15d0b0.  v4:= "websocket" @kind object;
+  #L15d0b4.  call temp:= `equals`(v4, v0, v5) @signature `Lkotlin/text/StringsKt;.equals:(Ljava/lang/String;Ljava/lang/String;Z)Z` @kind static;
+  #L15d0ba.  v4:= temp;
+  #L15d0bc.  if v4 == 0 then goto L15d176;
+  #L15d0c0.  v0:= "Sec-WebSocket-Accept" @kind object;
+  #L15d0c4.  call temp:= `header$default`(v8, v0, v2, v3, v2) @signature `Lokhttp3/Response;.header$default:(Lokhttp3/Response;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Ljava/lang/String;` @kind static;
+  #L15d0ca.  v8:= temp @kind object;
+  #L15d0cc.  v0:= `@@okio.ByteString.Companion` @type ^`okio.ByteString$Companion` @kind object;
+  #L15d0d0.  v2:= new `java.lang.StringBuilder`;
+  #L15d0d4.  call `<init>`(v2) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L15d0da.  v3:= v7.`okhttp3.internal.ws.RealWebSocket.a` @type ^`java.lang.String` @kind object;
+  #L15d0de.  call temp:= `append`(v2, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L15d0e4.  v3:= "258EAFA5-E914-47DA-95CA-C5AB0DC85B11" @kind object;
+  #L15d0e8.  call temp:= `append`(v2, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L15d0ee.  call temp:= `toString`(v2) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L15d0f4.  v2:= temp @kind object;
+  #L15d0f6.  call temp:= `encodeUtf8`(v0, v2) @signature `Lokio/ByteString$Companion;.encodeUtf8:(Ljava/lang/String;)Lokio/ByteString;` @kind virtual;
+  #L15d0fc.  v0:= temp @kind object;
+  #L15d0fe.  call temp:= `sha1`(v0) @signature `Lokio/ByteString;.sha1:()Lokio/ByteString;` @kind virtual;
+  #L15d104.  v0:= temp @kind object;
+  #L15d106.  call temp:= `base64`(v0) @signature `Lokio/ByteString;.base64:()Ljava/lang/String;` @kind virtual;
+  #L15d10c.  v0:= temp @kind object;
+  #L15d10e.  call temp:= `areEqual`(v0, v8) @signature `Lkotlin/jvm/internal/Intrinsics;.areEqual:(Ljava/lang/Object;Ljava/lang/Object;)Z` @kind static;
+  #L15d114.  v2:= temp;
+  #L15d116.  v2:= v2 ^~ v5 @kind int;
+  #L15d118.  if v2 != 0 then goto L15d132;
+  #L15d11c.  if v9 == 0 then goto L15d122;
+  #L15d120.  return @kind void;
+  #L15d122.  v8:= new `java.net.ProtocolException`;
+  #L15d126.  v9:= "Web Socket exchange missing: bad interceptor?" @kind object;
+  #L15d12a.  call `<init>`(v8, v9) @signature `Ljava/net/ProtocolException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L15d130.  throw v8;
+  #L15d132.  v9:= new `java.net.ProtocolException`;
+  #L15d136.  v2:= new `java.lang.StringBuilder`;
+  #L15d13a.  call `<init>`(v2) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L15d140.  v3:= "Expected 'Sec-WebSocket-Accept' header value '" @kind object;
+  #L15d144.  call temp:= `append`(v2, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L15d14a.  call temp:= `append`(v2, v0) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L15d150.  v0:= "' but was '" @kind object;
+  #L15d154.  call temp:= `append`(v2, v0) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L15d15a.  call temp:= `append`(v2, v8) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L15d160.  call temp:= `append`(v2, v1) @signature `Ljava/lang/StringBuilder;.append:(C)Ljava/lang/StringBuilder;` @kind virtual;
+  #L15d166.  call temp:= `toString`(v2) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L15d16c.  v8:= temp @kind object;
+  #L15d16e.  call `<init>`(v9, v8) @signature `Ljava/net/ProtocolException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L15d174.  throw v9;
+  #L15d176.  v8:= new `java.net.ProtocolException`;
+  #L15d17a.  v9:= new `java.lang.StringBuilder`;
+  #L15d17e.  call `<init>`(v9) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L15d184.  v2:= "Expected 'Upgrade' header value 'websocket' but was '" @kind object;
+  #L15d188.  call temp:= `append`(v9, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L15d18e.  call temp:= `append`(v9, v0) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L15d194.  call temp:= `append`(v9, v1) @signature `Ljava/lang/StringBuilder;.append:(C)Ljava/lang/StringBuilder;` @kind virtual;
+  #L15d19a.  call temp:= `toString`(v9) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L15d1a0.  v9:= temp @kind object;
+  #L15d1a2.  call `<init>`(v8, v9) @signature `Ljava/net/ProtocolException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L15d1a8.  throw v8;
+  #L15d1aa.  v8:= new `java.net.ProtocolException`;
+  #L15d1ae.  v9:= new `java.lang.StringBuilder`;
+  #L15d1b2.  call `<init>`(v9) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L15d1b8.  v2:= "Expected 'Connection' header value 'Upgrade' but was '" @kind object;
+  #L15d1bc.  call temp:= `append`(v9, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L15d1c2.  call temp:= `append`(v9, v0) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L15d1c8.  call temp:= `append`(v9, v1) @signature `Ljava/lang/StringBuilder;.append:(C)Ljava/lang/StringBuilder;` @kind virtual;
+  #L15d1ce.  call temp:= `toString`(v9) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L15d1d4.  v9:= temp @kind object;
+  #L15d1d6.  call `<init>`(v8, v9) @signature `Ljava/net/ProtocolException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L15d1dc.  throw v8;
+  #L15d1de.  v9:= new `java.net.ProtocolException`;
+  #L15d1e2.  v0:= new `java.lang.StringBuilder`;
+  #L15d1e6.  call `<init>`(v0) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L15d1ec.  v2:= "Expected HTTP 101 response but was '" @kind object;
+  #L15d1f0.  call temp:= `append`(v0, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L15d1f6.  call temp:= `code`(v8) @signature `Lokhttp3/Response;.code:()I` @kind virtual;
+  #L15d1fc.  v2:= temp;
+  #L15d1fe.  call temp:= `append`(v0, v2) @signature `Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder;` @kind virtual;
+  #L15d204.  v2:= 32I;
+  #L15d208.  call temp:= `append`(v0, v2) @signature `Ljava/lang/StringBuilder;.append:(C)Ljava/lang/StringBuilder;` @kind virtual;
+  #L15d20e.  call temp:= `message`(v8) @signature `Lokhttp3/Response;.message:()Ljava/lang/String;` @kind virtual;
+  #L15d214.  v8:= temp @kind object;
+  #L15d216.  call temp:= `append`(v0, v8) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L15d21c.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(C)Ljava/lang/StringBuilder;` @kind virtual;
+  #L15d222.  call temp:= `toString`(v0) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L15d228.  v8:= temp @kind object;
+  #L15d22a.  call `<init>`(v9, v8) @signature `Ljava/net/ProtocolException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L15d230.  throw v9;
+}
+procedure `boolean` `close`(`okhttp3.internal.ws.RealWebSocket` v2 @kind this, `int` v3 , `java.lang.String` v4 @kind object) @signature `Lokhttp3/internal/ws/RealWebSocket;.close:(ILjava/lang/String;)Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L15c670.  v0:= 60000L;
+  #L15c676.  call temp:= `close`(v2, v3, v4, v0) @signature `Lokhttp3/internal/ws/RealWebSocket;.close:(ILjava/lang/String;J)Z` @kind virtual;
+  #L15c67c.  v3:= temp;
+  #L15c67e.  return v3;
+}
+procedure `boolean` `close`(`okhttp3.internal.ws.RealWebSocket` v8 @kind this, `int` v9 , `java.lang.String` v10 @kind object, `long` v11 ) @signature `Lokhttp3/internal/ws/RealWebSocket;.close:(ILjava/lang/String;J)Z` @AccessFlag PUBLIC_FINAL {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+
+  #L15c690.  @monitorenter v8
+  #L15c692.  v0:= `@@okhttp3.internal.ws.WebSocketProtocol.INSTANCE` @type ^`okhttp3.internal.ws.WebSocketProtocol` @kind object;
+  #L15c696.  call `validateCloseCode`(v0, v9) @signature `Lokhttp3/internal/ws/WebSocketProtocol;.validateCloseCode:(I)V` @kind virtual;
+  #L15c69c.  v0:= 0I;
+  #L15c69e.  v1:= 0I;
+  #L15c6a0.  v2:= 1I;
+  #L15c6a2.  if v10 == 0 then goto L15c70a;
+  #L15c6a6.  v0:= `@@okio.ByteString.Companion` @type ^`okio.ByteString$Companion` @kind object;
+  #L15c6aa.  call temp:= `encodeUtf8`(v0, v10) @signature `Lokio/ByteString$Companion;.encodeUtf8:(Ljava/lang/String;)Lokio/ByteString;` @kind virtual;
+  #L15c6b0.  v0:= temp @kind object;
+  #L15c6b2.  call temp:= `size`(v0) @signature `Lokio/ByteString;.size:()I` @kind virtual;
+  #L15c6b8.  v3:= temp;
+  #L15c6ba.  v3:= (`long`) v3 @kind i2l;
+  #L15c6bc.  v5:= 123L;
+  #L15c6c0.  v7:= lcmp(v3, v5);
+  #L15c6c4.  if v7 > 0 then goto L15c6cc;
+  #L15c6c8.  v3:= 1I;
+  #L15c6ca.  goto L15c6ce;
+  #L15c6cc.  v3:= 0I;
+  #L15c6ce.  if v3 == 0 then goto L15c6d4;
+  #L15c6d2.  goto L15c70a;
+  #L15c6d4.  v9:= new `java.lang.StringBuilder`;
+  #L15c6d8.  call `<init>`(v9) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L15c6de.  v11:= "reason.size() > 123: " @kind object;
+  #L15c6e2.  call temp:= `append`(v9, v11) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L15c6e8.  call temp:= `append`(v9, v10) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L15c6ee.  call temp:= `toString`(v9) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L15c6f4.  v9:= temp @kind object;
+  #L15c6f6.  v10:= new `java.lang.IllegalArgumentException`;
+  #L15c6fa.  call temp:= `toString`(v9) @signature `Ljava/lang/Object;.toString:()Ljava/lang/String;` @kind virtual;
+  #L15c700.  v9:= temp @kind object;
+  #L15c702.  call `<init>`(v10, v9) @signature `Ljava/lang/IllegalArgumentException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L15c708.  throw v10;
+  #L15c70a.  v10:= v8.`okhttp3.internal.ws.RealWebSocket.o` @type ^`boolean` @kind boolean;
+  #L15c70e.  if v10 != 0 then goto L15c73e;
+  #L15c712.  v10:= v8.`okhttp3.internal.ws.RealWebSocket.l` @type ^`boolean` @kind boolean;
+  #L15c716.  if v10 == 0 then goto L15c71c;
+  #L15c71a.  goto L15c73e;
+  #L15c71c.  v8.`okhttp3.internal.ws.RealWebSocket.l` @type ^`boolean` := v2 @kind boolean;
+  #L15c720.  v10:= v8.`okhttp3.internal.ws.RealWebSocket.j` @type ^`java.util.ArrayDeque` @kind object;
+  #L15c724.  v1:= new `okhttp3.internal.ws.RealWebSocket$Close`;
+  #L15c728.  call `<init>`(v1, v9, v0, v11) @signature `Lokhttp3/internal/ws/RealWebSocket$Close;.<init>:(ILokio/ByteString;J)V` @kind direct;
+  #L15c72e.  call temp:= `add`(v10, v1) @signature `Ljava/util/ArrayDeque;.add:(Ljava/lang/Object;)Z` @kind virtual;
+  #L15c734.  call `b`(v8) @signature `Lokhttp3/internal/ws/RealWebSocket;.b:()V` @kind direct;
+  #L15c73a.  @monitorexit v8
+  #L15c73c.  return v2;
+  #L15c73e.  @monitorexit v8
+  #L15c740.  return v1;
+  #L15c742.  v9:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L15c744.  @monitorexit v8
+  #L15c746.  throw v9;
+  catch `java.lang.Throwable` @[L15c692..L15c73a] goto L15c742;
+}
+procedure `void` `connect`(`okhttp3.internal.ws.RealWebSocket` v4 @kind this, `okhttp3.OkHttpClient` v5 @kind object) @signature `Lokhttp3/internal/ws/RealWebSocket;.connect:(Lokhttp3/OkHttpClient;)V` @AccessFlag PUBLIC_FINAL {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L15d244.  v0:= "client" @kind object;
+  #L15d248.  call `checkNotNullParameter`(v5, v0) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V` @kind static;
+  #L15d24e.  v0:= v4.`okhttp3.internal.ws.RealWebSocket.t` @type ^`okhttp3.Request` @kind object;
+  #L15d252.  v1:= "Sec-WebSocket-Extensions" @kind object;
+  #L15d256.  call temp:= `header`(v0, v1) @signature `Lokhttp3/Request;.header:(Ljava/lang/String;)Ljava/lang/String;` @kind virtual;
+  #L15d25c.  v0:= temp @kind object;
+  #L15d25e.  if v0 == 0 then goto L15d27a;
+  #L15d262.  v5:= new `java.net.ProtocolException`;
+  #L15d266.  v0:= "Request header not permitted: 'Sec-WebSocket-Extensions'" @kind object;
+  #L15d26a.  call `<init>`(v5, v0) @signature `Ljava/net/ProtocolException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L15d270.  v0:= 0I;
+  #L15d272.  call `failWebSocket`(v4, v5, v0) @signature `Lokhttp3/internal/ws/RealWebSocket;.failWebSocket:(Ljava/lang/Exception;Lokhttp3/Response;)V` @kind virtual;
+  #L15d278.  return @kind void;
+  #L15d27a.  call temp:= `newBuilder`(v5) @signature `Lokhttp3/OkHttpClient;.newBuilder:()Lokhttp3/OkHttpClient$Builder;` @kind virtual;
+  #L15d280.  v5:= temp @kind object;
+  #L15d282.  v0:= `@@okhttp3.EventListener.NONE` @type ^`okhttp3.EventListener` @kind object;
+  #L15d286.  call temp:= `eventListener`(v5, v0) @signature `Lokhttp3/OkHttpClient$Builder;.eventListener:(Lokhttp3/EventListener;)Lokhttp3/OkHttpClient$Builder;` @kind virtual;
+  #L15d28c.  v5:= temp @kind object;
+  #L15d28e.  v0:= `@@okhttp3.internal.ws.RealWebSocket.z` @type ^`java.util.List` @kind object;
+  #L15d292.  call temp:= `protocols`(v5, v0) @signature `Lokhttp3/OkHttpClient$Builder;.protocols:(Ljava/util/List;)Lokhttp3/OkHttpClient$Builder;` @kind virtual;
+  #L15d298.  v5:= temp @kind object;
+  #L15d29a.  call temp:= `build`(v5) @signature `Lokhttp3/OkHttpClient$Builder;.build:()Lokhttp3/OkHttpClient;` @kind virtual;
+  #L15d2a0.  v5:= temp @kind object;
+  #L15d2a2.  v0:= v4.`okhttp3.internal.ws.RealWebSocket.t` @type ^`okhttp3.Request` @kind object;
+  #L15d2a6.  call temp:= `newBuilder`(v0) @signature `Lokhttp3/Request;.newBuilder:()Lokhttp3/Request$Builder;` @kind virtual;
+  #L15d2ac.  v0:= temp @kind object;
+  #L15d2ae.  v2:= "Upgrade" @kind object;
+  #L15d2b2.  v3:= "websocket" @kind object;
+  #L15d2b6.  call temp:= `header`(v0, v2, v3) @signature `Lokhttp3/Request$Builder;.header:(Ljava/lang/String;Ljava/lang/String;)Lokhttp3/Request$Builder;` @kind virtual;
+  #L15d2bc.  v0:= temp @kind object;
+  #L15d2be.  v3:= "Connection" @kind object;
+  #L15d2c2.  call temp:= `header`(v0, v3, v2) @signature `Lokhttp3/Request$Builder;.header:(Ljava/lang/String;Ljava/lang/String;)Lokhttp3/Request$Builder;` @kind virtual;
+  #L15d2c8.  v0:= temp @kind object;
+  #L15d2ca.  v2:= v4.`okhttp3.internal.ws.RealWebSocket.a` @type ^`java.lang.String` @kind object;
+  #L15d2ce.  v3:= "Sec-WebSocket-Key" @kind object;
+  #L15d2d2.  call temp:= `header`(v0, v3, v2) @signature `Lokhttp3/Request$Builder;.header:(Ljava/lang/String;Ljava/lang/String;)Lokhttp3/Request$Builder;` @kind virtual;
+  #L15d2d8.  v0:= temp @kind object;
+  #L15d2da.  v2:= "Sec-WebSocket-Version" @kind object;
+  #L15d2de.  v3:= "13" @kind object;
+  #L15d2e2.  call temp:= `header`(v0, v2, v3) @signature `Lokhttp3/Request$Builder;.header:(Ljava/lang/String;Ljava/lang/String;)Lokhttp3/Request$Builder;` @kind virtual;
+  #L15d2e8.  v0:= temp @kind object;
+  #L15d2ea.  v2:= "permessage-deflate" @kind object;
+  #L15d2ee.  call temp:= `header`(v0, v1, v2) @signature `Lokhttp3/Request$Builder;.header:(Ljava/lang/String;Ljava/lang/String;)Lokhttp3/Request$Builder;` @kind virtual;
+  #L15d2f4.  v0:= temp @kind object;
+  #L15d2f6.  call temp:= `build`(v0) @signature `Lokhttp3/Request$Builder;.build:()Lokhttp3/Request;` @kind virtual;
+  #L15d2fc.  v0:= temp @kind object;
+  #L15d2fe.  v1:= new `okhttp3.internal.connection.RealCall`;
+  #L15d302.  v2:= 1I;
+  #L15d304.  call `<init>`(v1, v5, v0, v2) @signature `Lokhttp3/internal/connection/RealCall;.<init>:(Lokhttp3/OkHttpClient;Lokhttp3/Request;Z)V` @kind direct;
+  #L15d30a.  v4.`okhttp3.internal.ws.RealWebSocket.b` @type ^`okhttp3.Call` := v1 @kind object;
+  #L15d30e.  call `checkNotNull`(v1) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNull:(Ljava/lang/Object;)V` @kind static;
+  #L15d314.  v5:= new `okhttp3.internal.ws.RealWebSocket$connect$1`;
+  #L15d318.  call `<init>`(v5, v4, v0) @signature `Lokhttp3/internal/ws/RealWebSocket$connect$1;.<init>:(Lokhttp3/internal/ws/RealWebSocket;Lokhttp3/Request;)V` @kind direct;
+  #L15d31e.  call `enqueue`(v1, v5) @signature `Lokhttp3/Call;.enqueue:(Lokhttp3/Callback;)V` @kind interface;
+  #L15d324.  return @kind void;
+}
+procedure `void` `failWebSocket`(`okhttp3.internal.ws.RealWebSocket` v4 @kind this, `java.lang.Exception` v5 @kind object, `okhttp3.Response` v6 @kind object) @signature `Lokhttp3/internal/ws/RealWebSocket;.failWebSocket:(Ljava/lang/Exception;Lokhttp3/Response;)V` @AccessFlag PUBLIC_FINAL {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L15d338.  v0:= "e" @kind object;
+  #L15d33c.  call `checkNotNullParameter`(v5, v0) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V` @kind static;
+  #L15d342.  @monitorenter v4
+  #L15d344.  v0:= v4.`okhttp3.internal.ws.RealWebSocket.o` @type ^`boolean` @kind boolean;
+  #L15d348.  if v0 == 0 then goto L15d350;
+  #L15d34c.  @monitorexit v4
+  #L15d34e.  return @kind void;
+  #L15d350.  v0:= 1I;
+  #L15d352.  v4.`okhttp3.internal.ws.RealWebSocket.o` @type ^`boolean` := v0 @kind boolean;
+  #L15d356.  v0:= v4.`okhttp3.internal.ws.RealWebSocket.h` @type ^`okhttp3.internal.ws.RealWebSocket$Streams` @kind object;
+  #L15d35a.  v1:= 0I;
+  #L15d35c.  v4.`okhttp3.internal.ws.RealWebSocket.h` @type ^`okhttp3.internal.ws.RealWebSocket$Streams` := v1 @kind object;
+  #L15d360.  v2:= v4.`okhttp3.internal.ws.RealWebSocket.d` @type ^`okhttp3.internal.ws.WebSocketReader` @kind object;
+  #L15d364.  v4.`okhttp3.internal.ws.RealWebSocket.d` @type ^`okhttp3.internal.ws.WebSocketReader` := v1 @kind object;
+  #L15d368.  v3:= v4.`okhttp3.internal.ws.RealWebSocket.e` @type ^`okhttp3.internal.ws.WebSocketWriter` @kind object;
+  #L15d36c.  v4.`okhttp3.internal.ws.RealWebSocket.e` @type ^`okhttp3.internal.ws.WebSocketWriter` := v1 @kind object;
+  #L15d370.  v1:= v4.`okhttp3.internal.ws.RealWebSocket.f` @type ^`okhttp3.internal.concurrent.TaskQueue` @kind object;
+  #L15d374.  call `shutdown`(v1) @signature `Lokhttp3/internal/concurrent/TaskQueue;.shutdown:()V` @kind virtual;
+  #L15d37a.  v1:= `@@kotlin.Unit.INSTANCE` @type ^`kotlin.Unit` @kind object;
+  #L15d37e.  @monitorexit v4
+  #L15d380.  v1:= v4.`okhttp3.internal.ws.RealWebSocket.u` @type ^`okhttp3.WebSocketListener` @kind object;
+  #L15d384.  call `onFailure`(v1, v4, v5, v6) @signature `Lokhttp3/WebSocketListener;.onFailure:(Lokhttp3/WebSocket;Ljava/lang/Throwable;Lokhttp3/Response;)V` @kind virtual;
+  #L15d38a.  if v0 == 0 then goto L15d394;
+  #L15d38e.  call `closeQuietly`(v0) @signature `Lokhttp3/internal/Util;.closeQuietly:(Ljava/io/Closeable;)V` @kind static;
+  #L15d394.  if v2 == 0 then goto L15d39e;
+  #L15d398.  call `closeQuietly`(v2) @signature `Lokhttp3/internal/Util;.closeQuietly:(Ljava/io/Closeable;)V` @kind static;
+  #L15d39e.  if v3 == 0 then goto L15d3a8;
+  #L15d3a2.  call `closeQuietly`(v3) @signature `Lokhttp3/internal/Util;.closeQuietly:(Ljava/io/Closeable;)V` @kind static;
+  #L15d3a8.  return @kind void;
+  #L15d3aa.  v5:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L15d3ac.  if v0 == 0 then goto L15d3b6;
+  #L15d3b0.  call `closeQuietly`(v0) @signature `Lokhttp3/internal/Util;.closeQuietly:(Ljava/io/Closeable;)V` @kind static;
+  #L15d3b6.  if v2 == 0 then goto L15d3c0;
+  #L15d3ba.  call `closeQuietly`(v2) @signature `Lokhttp3/internal/Util;.closeQuietly:(Ljava/io/Closeable;)V` @kind static;
+  #L15d3c0.  if v3 == 0 then goto L15d3ca;
+  #L15d3c4.  call `closeQuietly`(v3) @signature `Lokhttp3/internal/Util;.closeQuietly:(Ljava/io/Closeable;)V` @kind static;
+  #L15d3ca.  throw v5;
+  #L15d3cc.  v5:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L15d3ce.  @monitorexit v4
+  #L15d3d0.  throw v5;
+  catch `java.lang.Throwable` @[L15d344..L15d348] goto L15d3cc;
+  catch `java.lang.Throwable` @[L15d352..L15d37e] goto L15d3cc;
+  catch `java.lang.Throwable` @[L15d380..L15d38a] goto L15d3aa;
+}
+procedure `okhttp3.WebSocketListener` `getListener$okhttp`(`okhttp3.internal.ws.RealWebSocket` v1 @kind this) @signature `Lokhttp3/internal/ws/RealWebSocket;.getListener$okhttp:()Lokhttp3/WebSocketListener;` @AccessFlag PUBLIC_FINAL {
+    temp;
+    v0;
+
+  #L15ce70.  v0:= v1.`okhttp3.internal.ws.RealWebSocket.u` @type ^`okhttp3.WebSocketListener` @kind object;
+  #L15ce74.  return v0 @kind object;
+}
+procedure `void` `initReaderAndWriter`(`okhttp3.internal.ws.RealWebSocket` v16 @kind this, `java.lang.String` v17 @kind object, `okhttp3.internal.ws.RealWebSocket$Streams` v18 @kind object) @signature `Lokhttp3/internal/ws/RealWebSocket;.initReaderAndWriter:(Ljava/lang/String;Lokhttp3/internal/ws/RealWebSocket$Streams;)V` @AccessFlag PUBLIC_FINAL {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+    v9;
+    v10;
+    v11;
+    v12;
+    v13;
+    v14;
+    v15;
+
+  #L15d404.  v10:= v16 @kind object;
+  #L15d408.  v0:= v17 @kind object;
+  #L15d40c.  v11:= v18 @kind object;
+  #L15d410.  v1:= "name" @kind object;
+  #L15d414.  call `checkNotNullParameter`(v0, v1) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V` @kind static;
+  #L15d41a.  v1:= "streams" @kind object;
+  #L15d41e.  call `checkNotNullParameter`(v11, v1) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V` @kind static;
+  #L15d424.  v12:= v10.`okhttp3.internal.ws.RealWebSocket.x` @type ^`okhttp3.internal.ws.WebSocketExtensions` @kind object;
+  #L15d428.  call `checkNotNull`(v12) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNull:(Ljava/lang/Object;)V` @kind static;
+  #L15d42e.  @monitorenter v16
+  #L15d430.  v10.`okhttp3.internal.ws.RealWebSocket.g` @type ^`java.lang.String` := v0 @kind object;
+  #L15d434.  v10.`okhttp3.internal.ws.RealWebSocket.h` @type ^`okhttp3.internal.ws.RealWebSocket$Streams` := v11 @kind object;
+  #L15d438.  v9:= new `okhttp3.internal.ws.WebSocketWriter`;
+  #L15d43c.  call temp:= `getClient`(v18) @signature `Lokhttp3/internal/ws/RealWebSocket$Streams;.getClient:()Z` @kind virtual;
+  #L15d442.  v2:= temp;
+  #L15d444.  call temp:= `getSink`(v18) @signature `Lokhttp3/internal/ws/RealWebSocket$Streams;.getSink:()Lokio/BufferedSink;` @kind virtual;
+  #L15d44a.  v3:= temp @kind object;
+  #L15d44c.  v4:= v10.`okhttp3.internal.ws.RealWebSocket.v` @type ^`java.util.Random` @kind object;
+  #L15d450.  v5:= v12.`okhttp3.internal.ws.WebSocketExtensions.perMessageDeflate` @type ^`boolean` @kind boolean;
+  #L15d454.  call temp:= `getClient`(v18) @signature `Lokhttp3/internal/ws/RealWebSocket$Streams;.getClient:()Z` @kind virtual;
+  #L15d45a.  v1:= temp;
+  #L15d45c.  call temp:= `noContextTakeover`(v12, v1) @signature `Lokhttp3/internal/ws/WebSocketExtensions;.noContextTakeover:(Z)Z` @kind virtual;
+  #L15d462.  v6:= temp;
+  #L15d464.  v7:= v10.`okhttp3.internal.ws.RealWebSocket.y` @type ^`long` @kind wide;
+  #L15d468.  v1:= v9 @kind object;
+  #L15d46a.  call `<init>`(v1, v2, v3, v4, v5, v6, v7) @signature `Lokhttp3/internal/ws/WebSocketWriter;.<init>:(ZLokio/BufferedSink;Ljava/util/Random;ZZJ)V` @kind direct;
+  #L15d470.  v10.`okhttp3.internal.ws.RealWebSocket.e` @type ^`okhttp3.internal.ws.WebSocketWriter` := v9 @kind object;
+  #L15d474.  v1:= new `okhttp3.internal.ws.RealWebSocket$a`;
+  #L15d478.  call `<init>`(v1, v10) @signature `Lokhttp3/internal/ws/RealWebSocket$a;.<init>:(Lokhttp3/internal/ws/RealWebSocket;)V` @kind direct;
+  #L15d47e.  v10.`okhttp3.internal.ws.RealWebSocket.c` @type ^`okhttp3.internal.concurrent.Task` := v1 @kind object;
+  #L15d482.  v1:= v10.`okhttp3.internal.ws.RealWebSocket.w` @type ^`long` @kind wide;
+  #L15d486.  v3:= 0L;
+  #L15d48a.  v5:= lcmp(v1, v3);
+  #L15d48e.  if v5 == 0 then goto L15d4ea;
+  #L15d492.  v3:= `@@java.util.concurrent.TimeUnit.MILLISECONDS` @type ^`java.util.concurrent.TimeUnit` @kind object;
+  #L15d496.  call temp:= `toNanos`(v3, v1) @signature `Ljava/util/concurrent/TimeUnit;.toNanos:(J)J` @kind virtual;
+  #L15d49c.  v13:= temp @kind wide;
+  #L15d49e.  v15:= v10.`okhttp3.internal.ws.RealWebSocket.f` @type ^`okhttp3.internal.concurrent.TaskQueue` @kind object;
+  #L15d4a2.  v1:= new `java.lang.StringBuilder`;
+  #L15d4a6.  call `<init>`(v1) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L15d4ac.  call temp:= `append`(v1, v0) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L15d4b2.  v2:= " ping" @kind object;
+  #L15d4b6.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L15d4bc.  call temp:= `toString`(v1) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L15d4c2.  v3:= temp @kind object;
+  #L15d4c4.  v9:= new `okhttp3.internal.ws.RealWebSocket$initReaderAndWriter$$inlined$synchronized$lambda$1`;
+  #L15d4c8.  v1:= v9 @kind object;
+  #L15d4ca.  v2:= v3 @kind object;
+  #L15d4cc.  v4:= v13 @kind wide;
+  #L15d4ce.  v6:= v16 @kind object;
+  #L15d4d2.  v7:= v17 @kind object;
+  #L15d4d6.  v8:= v18 @kind object;
+  #L15d4da.  v0:= v9 @kind object;
+  #L15d4dc.  v9:= v12 @kind object;
+  #L15d4de.  call `<init>`(v1, v2, v3, v4, v6, v7, v8, v9) @signature `Lokhttp3/internal/ws/RealWebSocket$initReaderAndWriter$$inlined$synchronized$lambda$1;.<init>:(Ljava/lang/String;Ljava/lang/String;JLokhttp3/internal/ws/RealWebSocket;Ljava/lang/String;Lokhttp3/internal/ws/RealWebSocket$Streams;Lokhttp3/internal/ws/WebSocketExtensions;)V` @kind direct;
+  #L15d4e4.  call `schedule`(v15, v0, v13) @signature `Lokhttp3/internal/concurrent/TaskQueue;.schedule:(Lokhttp3/internal/concurrent/Task;J)V` @kind virtual;
+  #L15d4ea.  v0:= v10.`okhttp3.internal.ws.RealWebSocket.j` @type ^`java.util.ArrayDeque` @kind object;
+  #L15d4ee.  call temp:= `isEmpty`(v0) @signature `Ljava/util/Collection;.isEmpty:()Z` @kind interface;
+  #L15d4f4.  v0:= temp;
+  #L15d4f6.  v0:= v0 ^~ 1;
+  #L15d4fa.  if v0 == 0 then goto L15d504;
+  #L15d4fe.  call `b`(v16) @signature `Lokhttp3/internal/ws/RealWebSocket;.b:()V` @kind direct;
+  #L15d504.  v0:= `@@kotlin.Unit.INSTANCE` @type ^`kotlin.Unit` @kind object;
+  #L15d508.  @monitorexit v16
+  #L15d50a.  v0:= new `okhttp3.internal.ws.WebSocketReader`;
+  #L15d50e.  call temp:= `getClient`(v18) @signature `Lokhttp3/internal/ws/RealWebSocket$Streams;.getClient:()Z` @kind virtual;
+  #L15d514.  v2:= temp;
+  #L15d516.  call temp:= `getSource`(v18) @signature `Lokhttp3/internal/ws/RealWebSocket$Streams;.getSource:()Lokio/BufferedSource;` @kind virtual;
+  #L15d51c.  v3:= temp @kind object;
+  #L15d51e.  v5:= v12.`okhttp3.internal.ws.WebSocketExtensions.perMessageDeflate` @type ^`boolean` @kind boolean;
+  #L15d522.  call temp:= `getClient`(v18) @signature `Lokhttp3/internal/ws/RealWebSocket$Streams;.getClient:()Z` @kind virtual;
+  #L15d528.  v1:= temp;
+  #L15d52a.  v1:= v1 ^~ 1;
+  #L15d52e.  call temp:= `noContextTakeover`(v12, v1) @signature `Lokhttp3/internal/ws/WebSocketExtensions;.noContextTakeover:(Z)Z` @kind virtual;
+  #L15d534.  v6:= temp;
+  #L15d536.  v1:= v0 @kind object;
+  #L15d538.  v4:= v16 @kind object;
+  #L15d53c.  call `<init>`(v1, v2, v3, v4, v5, v6) @signature `Lokhttp3/internal/ws/WebSocketReader;.<init>:(ZLokio/BufferedSource;Lokhttp3/internal/ws/WebSocketReader$FrameCallback;ZZ)V` @kind direct;
+  #L15d542.  v10.`okhttp3.internal.ws.RealWebSocket.d` @type ^`okhttp3.internal.ws.WebSocketReader` := v0 @kind object;
+  #L15d546.  return @kind void;
+  #L15d548.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L15d54a.  @monitorexit v16
+  #L15d54c.  throw v0;
+  catch `java.lang.Throwable` @[L15d430..L15d508] goto L15d548;
+}
+procedure `void` `loopReader`(`okhttp3.internal.ws.RealWebSocket` v2 @kind this) @signature `Lokhttp3/internal/ws/RealWebSocket;.loopReader:()V` @AccessFlag PUBLIC_FINAL {
+    temp;
+    v0;
+    v1;
+
+  #L15d56c.  v0:= v2.`okhttp3.internal.ws.RealWebSocket.m` @type ^`int`;
+  #L15d570.  v1:= -1I;
+  #L15d572.  if v0 != v1 then goto L15d588;
+  #L15d576.  v0:= v2.`okhttp3.internal.ws.RealWebSocket.d` @type ^`okhttp3.internal.ws.WebSocketReader` @kind object;
+  #L15d57a.  call `checkNotNull`(v0) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNull:(Ljava/lang/Object;)V` @kind static;
+  #L15d580.  call `processNextFrame`(v0) @signature `Lokhttp3/internal/ws/WebSocketReader;.processNextFrame:()V` @kind virtual;
+  #L15d586.  goto L15d56c;
+  #L15d588.  return @kind void;
+}
+procedure `void` `onReadClose`(`okhttp3.internal.ws.RealWebSocket` v4 @kind this, `int` v5 , `java.lang.String` v6 @kind object) @signature `Lokhttp3/internal/ws/RealWebSocket;.onReadClose:(ILjava/lang/String;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L15d59c.  v0:= "reason" @kind object;
+  #L15d5a0.  call `checkNotNullParameter`(v6, v0) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V` @kind static;
+  #L15d5a6.  v0:= 1I;
+  #L15d5a8.  v1:= 0I;
+  #L15d5aa.  v2:= -1I;
+  #L15d5ac.  if v5 == v2 then goto L15d5b4;
+  #L15d5b0.  v3:= 1I;
+  #L15d5b2.  goto L15d5b6;
+  #L15d5b4.  v3:= 0I;
+  #L15d5b6.  if v3 == 0 then goto L15d696;
+  #L15d5ba.  @monitorenter v4
+  #L15d5bc.  v3:= v4.`okhttp3.internal.ws.RealWebSocket.m` @type ^`int`;
+  #L15d5c0.  if v3 != v2 then goto L15d5c6;
+  #L15d5c4.  goto L15d5c8;
+  #L15d5c6.  v0:= 0I;
+  #L15d5c8.  if v0 == 0 then goto L15d678;
+  #L15d5cc.  v4.`okhttp3.internal.ws.RealWebSocket.m` @type ^`int` := v5;
+  #L15d5d0.  v4.`okhttp3.internal.ws.RealWebSocket.n` @type ^`java.lang.String` := v6 @kind object;
+  #L15d5d4.  v0:= v4.`okhttp3.internal.ws.RealWebSocket.l` @type ^`boolean` @kind boolean;
+  #L15d5d8.  v1:= 0I;
+  #L15d5da.  if v0 == 0 then goto L15d614;
+  #L15d5de.  v0:= v4.`okhttp3.internal.ws.RealWebSocket.j` @type ^`java.util.ArrayDeque` @kind object;
+  #L15d5e2.  call temp:= `isEmpty`(v0) @signature `Ljava/util/ArrayDeque;.isEmpty:()Z` @kind virtual;
+  #L15d5e8.  v0:= temp;
+  #L15d5ea.  if v0 == 0 then goto L15d614;
+  #L15d5ee.  v0:= v4.`okhttp3.internal.ws.RealWebSocket.h` @type ^`okhttp3.internal.ws.RealWebSocket$Streams` @kind object;
+  #L15d5f2.  v4.`okhttp3.internal.ws.RealWebSocket.h` @type ^`okhttp3.internal.ws.RealWebSocket$Streams` := v1 @kind object;
+  #L15d5f6.  v2:= v4.`okhttp3.internal.ws.RealWebSocket.d` @type ^`okhttp3.internal.ws.WebSocketReader` @kind object;
+  #L15d5fa.  v4.`okhttp3.internal.ws.RealWebSocket.d` @type ^`okhttp3.internal.ws.WebSocketReader` := v1 @kind object;
+  #L15d5fe.  v3:= v4.`okhttp3.internal.ws.RealWebSocket.e` @type ^`okhttp3.internal.ws.WebSocketWriter` @kind object;
+  #L15d602.  v4.`okhttp3.internal.ws.RealWebSocket.e` @type ^`okhttp3.internal.ws.WebSocketWriter` := v1 @kind object;
+  #L15d606.  v1:= v4.`okhttp3.internal.ws.RealWebSocket.f` @type ^`okhttp3.internal.concurrent.TaskQueue` @kind object;
+  #L15d60a.  call `shutdown`(v1) @signature `Lokhttp3/internal/concurrent/TaskQueue;.shutdown:()V` @kind virtual;
+  #L15d610.  v1:= v0 @kind object;
+  #L15d612.  goto L15d618;
+  #L15d614.  v2:= v1 @kind object;
+  #L15d616.  v3:= v2 @kind object;
+  #L15d618.  v0:= `@@kotlin.Unit.INSTANCE` @type ^`kotlin.Unit` @kind object;
+  #L15d61c.  @monitorexit v4
+  #L15d61e.  v0:= v4.`okhttp3.internal.ws.RealWebSocket.u` @type ^`okhttp3.WebSocketListener` @kind object;
+  #L15d622.  call `onClosing`(v0, v4, v5, v6) @signature `Lokhttp3/WebSocketListener;.onClosing:(Lokhttp3/WebSocket;ILjava/lang/String;)V` @kind virtual;
+  #L15d628.  if v1 == 0 then goto L15d636;
+  #L15d62c.  v0:= v4.`okhttp3.internal.ws.RealWebSocket.u` @type ^`okhttp3.WebSocketListener` @kind object;
+  #L15d630.  call `onClosed`(v0, v4, v5, v6) @signature `Lokhttp3/WebSocketListener;.onClosed:(Lokhttp3/WebSocket;ILjava/lang/String;)V` @kind virtual;
+  #L15d636.  if v1 == 0 then goto L15d640;
+  #L15d63a.  call `closeQuietly`(v1) @signature `Lokhttp3/internal/Util;.closeQuietly:(Ljava/io/Closeable;)V` @kind static;
+  #L15d640.  if v2 == 0 then goto L15d64a;
+  #L15d644.  call `closeQuietly`(v2) @signature `Lokhttp3/internal/Util;.closeQuietly:(Ljava/io/Closeable;)V` @kind static;
+  #L15d64a.  if v3 == 0 then goto L15d654;
+  #L15d64e.  call `closeQuietly`(v3) @signature `Lokhttp3/internal/Util;.closeQuietly:(Ljava/io/Closeable;)V` @kind static;
+  #L15d654.  return @kind void;
+  #L15d656.  v5:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L15d658.  if v1 == 0 then goto L15d662;
+  #L15d65c.  call `closeQuietly`(v1) @signature `Lokhttp3/internal/Util;.closeQuietly:(Ljava/io/Closeable;)V` @kind static;
+  #L15d662.  if v2 == 0 then goto L15d66c;
+  #L15d666.  call `closeQuietly`(v2) @signature `Lokhttp3/internal/Util;.closeQuietly:(Ljava/io/Closeable;)V` @kind static;
+  #L15d66c.  if v3 == 0 then goto L15d676;
+  #L15d670.  call `closeQuietly`(v3) @signature `Lokhttp3/internal/Util;.closeQuietly:(Ljava/io/Closeable;)V` @kind static;
+  #L15d676.  throw v5;
+  #L15d678.  v5:= "already closed" @kind object;
+  #L15d67c.  v6:= new `java.lang.IllegalStateException`;
+  #L15d680.  call temp:= `toString`(v5) @signature `Ljava/lang/Object;.toString:()Ljava/lang/String;` @kind virtual;
+  #L15d686.  v5:= temp @kind object;
+  #L15d688.  call `<init>`(v6, v5) @signature `Ljava/lang/IllegalStateException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L15d68e.  throw v6;
+  #L15d690.  v5:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L15d692.  @monitorexit v4
+  #L15d694.  throw v5;
+  #L15d696.  v5:= "Failed requirement." @kind object;
+  #L15d69a.  v6:= new `java.lang.IllegalArgumentException`;
+  #L15d69e.  call temp:= `toString`(v5) @signature `Ljava/lang/Object;.toString:()Ljava/lang/String;` @kind virtual;
+  #L15d6a4.  v5:= temp @kind object;
+  #L15d6a6.  call `<init>`(v6, v5) @signature `Ljava/lang/IllegalArgumentException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L15d6ac.  throw v6;
+  catch `java.lang.Throwable` @[L15d5bc..L15d61c] goto L15d690;
+  catch `java.lang.Throwable` @[L15d61e..L15d636] goto L15d656;
+  catch `java.lang.Throwable` @[L15d678..L15d690] goto L15d690;
+}
+procedure `void` `onReadMessage`(`okhttp3.internal.ws.RealWebSocket` v1 @kind this, `java.lang.String` v2 @kind object) @signature `Lokhttp3/internal/ws/RealWebSocket;.onReadMessage:(Ljava/lang/String;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L15d6e0.  v0:= "text" @kind object;
+  #L15d6e4.  call `checkNotNullParameter`(v2, v0) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V` @kind static;
+  #L15d6ea.  v0:= v1.`okhttp3.internal.ws.RealWebSocket.u` @type ^`okhttp3.WebSocketListener` @kind object;
+  #L15d6ee.  call `onMessage`(v0, v1, v2) @signature `Lokhttp3/WebSocketListener;.onMessage:(Lokhttp3/WebSocket;Ljava/lang/String;)V` @kind virtual;
+  #L15d6f4.  return @kind void;
+}
+procedure `void` `onReadMessage`(`okhttp3.internal.ws.RealWebSocket` v1 @kind this, `okio.ByteString` v2 @kind object) @signature `Lokhttp3/internal/ws/RealWebSocket;.onReadMessage:(Lokio/ByteString;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L15d708.  v0:= "bytes" @kind object;
+  #L15d70c.  call `checkNotNullParameter`(v2, v0) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V` @kind static;
+  #L15d712.  v0:= v1.`okhttp3.internal.ws.RealWebSocket.u` @type ^`okhttp3.WebSocketListener` @kind object;
+  #L15d716.  call `onMessage`(v0, v1, v2) @signature `Lokhttp3/WebSocketListener;.onMessage:(Lokhttp3/WebSocket;Lokio/ByteString;)V` @kind virtual;
+  #L15d71c.  return @kind void;
+}
+procedure `void` `onReadPing`(`okhttp3.internal.ws.RealWebSocket` v1 @kind this, `okio.ByteString` v2 @kind object) @signature `Lokhttp3/internal/ws/RealWebSocket;.onReadPing:(Lokio/ByteString;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L15d730.  @monitorenter v1
+  #L15d732.  v0:= "payload" @kind object;
+  #L15d736.  call `checkNotNullParameter`(v2, v0) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V` @kind static;
+  #L15d73c.  v0:= v1.`okhttp3.internal.ws.RealWebSocket.o` @type ^`boolean` @kind boolean;
+  #L15d740.  if v0 != 0 then goto L15d77e;
+  #L15d744.  v0:= v1.`okhttp3.internal.ws.RealWebSocket.l` @type ^`boolean` @kind boolean;
+  #L15d748.  if v0 == 0 then goto L15d75e;
+  #L15d74c.  v0:= v1.`okhttp3.internal.ws.RealWebSocket.j` @type ^`java.util.ArrayDeque` @kind object;
+  #L15d750.  call temp:= `isEmpty`(v0) @signature `Ljava/util/ArrayDeque;.isEmpty:()Z` @kind virtual;
+  #L15d756.  v0:= temp;
+  #L15d758.  if v0 == 0 then goto L15d75e;
+  #L15d75c.  goto L15d77e;
+  #L15d75e.  v0:= v1.`okhttp3.internal.ws.RealWebSocket.i` @type ^`java.util.ArrayDeque` @kind object;
+  #L15d762.  call temp:= `add`(v0, v2) @signature `Ljava/util/ArrayDeque;.add:(Ljava/lang/Object;)Z` @kind virtual;
+  #L15d768.  call `b`(v1) @signature `Lokhttp3/internal/ws/RealWebSocket;.b:()V` @kind direct;
+  #L15d76e.  v2:= v1.`okhttp3.internal.ws.RealWebSocket.q` @type ^`int`;
+  #L15d772.  v2:= v2 + 1;
+  #L15d776.  v1.`okhttp3.internal.ws.RealWebSocket.q` @type ^`int` := v2;
+  #L15d77a.  @monitorexit v1
+  #L15d77c.  return @kind void;
+  #L15d77e.  @monitorexit v1
+  #L15d780.  return @kind void;
+  #L15d782.  v2:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L15d784.  @monitorexit v1
+  #L15d786.  throw v2;
+  catch `java.lang.Throwable` @[L15d732..L15d77a] goto L15d782;
+}
+procedure `void` `onReadPong`(`okhttp3.internal.ws.RealWebSocket` v1 @kind this, `okio.ByteString` v2 @kind object) @signature `Lokhttp3/internal/ws/RealWebSocket;.onReadPong:(Lokio/ByteString;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L15d7a4.  @monitorenter v1
+  #L15d7a6.  v0:= "payload" @kind object;
+  #L15d7aa.  call `checkNotNullParameter`(v2, v0) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V` @kind static;
+  #L15d7b0.  v2:= v1.`okhttp3.internal.ws.RealWebSocket.r` @type ^`int`;
+  #L15d7b4.  v2:= v2 + 1;
+  #L15d7b8.  v1.`okhttp3.internal.ws.RealWebSocket.r` @type ^`int` := v2;
+  #L15d7bc.  v2:= 0I;
+  #L15d7be.  v1.`okhttp3.internal.ws.RealWebSocket.s` @type ^`boolean` := v2 @kind boolean;
+  #L15d7c2.  @monitorexit v1
+  #L15d7c4.  return @kind void;
+  #L15d7c6.  v2:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L15d7c8.  @monitorexit v1
+  #L15d7ca.  throw v2;
+  catch `java.lang.Throwable` @[L15d7a6..L15d7c2] goto L15d7c6;
+}
+procedure `boolean` `pong`(`okhttp3.internal.ws.RealWebSocket` v1 @kind this, `okio.ByteString` v2 @kind object) @signature `Lokhttp3/internal/ws/RealWebSocket;.pong:(Lokio/ByteString;)Z` @AccessFlag PUBLIC_FINAL {
+    temp;
+    v0;
+
+  #L15c7b0.  @monitorenter v1
+  #L15c7b2.  v0:= "payload" @kind object;
+  #L15c7b6.  call `checkNotNullParameter`(v2, v0) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V` @kind static;
+  #L15c7bc.  v0:= v1.`okhttp3.internal.ws.RealWebSocket.o` @type ^`boolean` @kind boolean;
+  #L15c7c0.  if v0 != 0 then goto L15c7f4;
+  #L15c7c4.  v0:= v1.`okhttp3.internal.ws.RealWebSocket.l` @type ^`boolean` @kind boolean;
+  #L15c7c8.  if v0 == 0 then goto L15c7de;
+  #L15c7cc.  v0:= v1.`okhttp3.internal.ws.RealWebSocket.j` @type ^`java.util.ArrayDeque` @kind object;
+  #L15c7d0.  call temp:= `isEmpty`(v0) @signature `Ljava/util/ArrayDeque;.isEmpty:()Z` @kind virtual;
+  #L15c7d6.  v0:= temp;
+  #L15c7d8.  if v0 == 0 then goto L15c7de;
+  #L15c7dc.  goto L15c7f4;
+  #L15c7de.  v0:= v1.`okhttp3.internal.ws.RealWebSocket.i` @type ^`java.util.ArrayDeque` @kind object;
+  #L15c7e2.  call temp:= `add`(v0, v2) @signature `Ljava/util/ArrayDeque;.add:(Ljava/lang/Object;)Z` @kind virtual;
+  #L15c7e8.  call `b`(v1) @signature `Lokhttp3/internal/ws/RealWebSocket;.b:()V` @kind direct;
+  #L15c7ee.  v2:= 1I;
+  #L15c7f0.  @monitorexit v1
+  #L15c7f2.  return v2;
+  #L15c7f4.  v2:= 0I;
+  #L15c7f6.  @monitorexit v1
+  #L15c7f8.  return v2;
+  #L15c7fa.  v2:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L15c7fc.  @monitorexit v1
+  #L15c7fe.  throw v2;
+  catch `java.lang.Throwable` @[L15c7b2..L15c7ee] goto L15c7fa;
+}
+procedure `boolean` `processNextFrame`(`okhttp3.internal.ws.RealWebSocket` v3 @kind this) @signature `Lokhttp3/internal/ws/RealWebSocket;.processNextFrame:()Z` @AccessFlag PUBLIC_FINAL {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L15c81c.  v0:= 0I;
+  #L15c81e.  v1:= v3.`okhttp3.internal.ws.RealWebSocket.d` @type ^`okhttp3.internal.ws.WebSocketReader` @kind object;
+  #L15c822.  call `checkNotNull`(v1) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNull:(Ljava/lang/Object;)V` @kind static;
+  #L15c828.  call `processNextFrame`(v1) @signature `Lokhttp3/internal/ws/WebSocketReader;.processNextFrame:()V` @kind virtual;
+  #L15c82e.  v1:= v3.`okhttp3.internal.ws.RealWebSocket.m` @type ^`int`;
+  #L15c832.  v2:= -1I;
+  #L15c834.  if v1 != v2 then goto L15c846;
+  #L15c838.  v0:= 1I;
+  #L15c83a.  goto L15c846;
+  #L15c83c.  v1:= Exception @type ^`java.lang.Exception` @kind object;
+  #L15c83e.  v2:= 0I;
+  #L15c840.  call `failWebSocket`(v3, v1, v2) @signature `Lokhttp3/internal/ws/RealWebSocket;.failWebSocket:(Ljava/lang/Exception;Lokhttp3/Response;)V` @kind virtual;
+  #L15c846.  return v0;
+  catch `java.lang.Exception` @[L15c81e..L15c832] goto L15c83c;
+}
+procedure `long` `queueSize`(`okhttp3.internal.ws.RealWebSocket` v2 @kind this) @signature `Lokhttp3/internal/ws/RealWebSocket;.queueSize:()J` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L15ce2c.  @monitorenter v2
+  #L15ce2e.  v0:= v2.`okhttp3.internal.ws.RealWebSocket.k` @type ^`long` @kind wide;
+  #L15ce32.  @monitorexit v2
+  #L15ce34.  return v0 @kind wide;
+  #L15ce36.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L15ce38.  @monitorexit v2
+  #L15ce3a.  throw v0;
+  catch `java.lang.Throwable` @[L15ce2e..L15ce32] goto L15ce36;
+}
+procedure `int` `receivedPingCount`(`okhttp3.internal.ws.RealWebSocket` v1 @kind this) @signature `Lokhttp3/internal/ws/RealWebSocket;.receivedPingCount:()I` @AccessFlag PUBLIC_FINAL {
+    temp;
+    v0;
+
+  #L15cd78.  @monitorenter v1
+  #L15cd7a.  v0:= v1.`okhttp3.internal.ws.RealWebSocket.q` @type ^`int`;
+  #L15cd7e.  @monitorexit v1
+  #L15cd80.  return v0;
+  #L15cd82.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L15cd84.  @monitorexit v1
+  #L15cd86.  throw v0;
+  catch `java.lang.Throwable` @[L15cd7a..L15cd7e] goto L15cd82;
+}
+procedure `int` `receivedPongCount`(`okhttp3.internal.ws.RealWebSocket` v1 @kind this) @signature `Lokhttp3/internal/ws/RealWebSocket;.receivedPongCount:()I` @AccessFlag PUBLIC_FINAL {
+    temp;
+    v0;
+
+  #L15cda4.  @monitorenter v1
+  #L15cda6.  v0:= v1.`okhttp3.internal.ws.RealWebSocket.r` @type ^`int`;
+  #L15cdaa.  @monitorexit v1
+  #L15cdac.  return v0;
+  #L15cdae.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L15cdb0.  @monitorexit v1
+  #L15cdb2.  throw v0;
+  catch `java.lang.Throwable` @[L15cda6..L15cdaa] goto L15cdae;
+}
+procedure `okhttp3.Request` `request`(`okhttp3.internal.ws.RealWebSocket` v1 @kind this) @signature `Lokhttp3/internal/ws/RealWebSocket;.request:()Lokhttp3/Request;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L15ce58.  v0:= v1.`okhttp3.internal.ws.RealWebSocket.t` @type ^`okhttp3.Request` @kind object;
+  #L15ce5c.  return v0 @kind object;
+}
+procedure `boolean` `send`(`okhttp3.internal.ws.RealWebSocket` v1 @kind this, `java.lang.String` v2 @kind object) @signature `Lokhttp3/internal/ws/RealWebSocket;.send:(Ljava/lang/String;)Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L15c868.  v0:= "text" @kind object;
+  #L15c86c.  call `checkNotNullParameter`(v2, v0) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V` @kind static;
+  #L15c872.  v0:= `@@okio.ByteString.Companion` @type ^`okio.ByteString$Companion` @kind object;
+  #L15c876.  call temp:= `encodeUtf8`(v0, v2) @signature `Lokio/ByteString$Companion;.encodeUtf8:(Ljava/lang/String;)Lokio/ByteString;` @kind virtual;
+  #L15c87c.  v2:= temp @kind object;
+  #L15c87e.  v0:= 1I;
+  #L15c880.  call temp:= `c`(v1, v2, v0) @signature `Lokhttp3/internal/ws/RealWebSocket;.c:(Lokio/ByteString;I)Z` @kind direct;
+  #L15c886.  v2:= temp;
+  #L15c888.  return v2;
+}
+procedure `boolean` `send`(`okhttp3.internal.ws.RealWebSocket` v1 @kind this, `okio.ByteString` v2 @kind object) @signature `Lokhttp3/internal/ws/RealWebSocket;.send:(Lokio/ByteString;)Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L15c89c.  v0:= "bytes" @kind object;
+  #L15c8a0.  call `checkNotNullParameter`(v2, v0) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V` @kind static;
+  #L15c8a6.  v0:= 2I;
+  #L15c8a8.  call temp:= `c`(v1, v2, v0) @signature `Lokhttp3/internal/ws/RealWebSocket;.c:(Lokio/ByteString;I)Z` @kind direct;
+  #L15c8ae.  v2:= temp;
+  #L15c8b0.  return v2;
+}
+procedure `int` `sentPingCount`(`okhttp3.internal.ws.RealWebSocket` v1 @kind this) @signature `Lokhttp3/internal/ws/RealWebSocket;.sentPingCount:()I` @AccessFlag PUBLIC_FINAL {
+    temp;
+    v0;
+
+  #L15cdd0.  @monitorenter v1
+  #L15cdd2.  v0:= v1.`okhttp3.internal.ws.RealWebSocket.p` @type ^`int`;
+  #L15cdd6.  @monitorexit v1
+  #L15cdd8.  return v0;
+  #L15cdda.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L15cddc.  @monitorexit v1
+  #L15cdde.  throw v0;
+  catch `java.lang.Throwable` @[L15cdd2..L15cdd6] goto L15cdda;
+}
+procedure `void` `tearDown`(`okhttp3.internal.ws.RealWebSocket` v4 @kind this) @signature `Lokhttp3/internal/ws/RealWebSocket;.tearDown:()V` @AccessFlag PUBLIC_FINAL {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L15d884.  v0:= v4.`okhttp3.internal.ws.RealWebSocket.f` @type ^`okhttp3.internal.concurrent.TaskQueue` @kind object;
+  #L15d888.  call `shutdown`(v0) @signature `Lokhttp3/internal/concurrent/TaskQueue;.shutdown:()V` @kind virtual;
+  #L15d88e.  v0:= v4.`okhttp3.internal.ws.RealWebSocket.f` @type ^`okhttp3.internal.concurrent.TaskQueue` @kind object;
+  #L15d892.  call temp:= `idleLatch`(v0) @signature `Lokhttp3/internal/concurrent/TaskQueue;.idleLatch:()Ljava/util/concurrent/CountDownLatch;` @kind virtual;
+  #L15d898.  v0:= temp @kind object;
+  #L15d89a.  v1:= `@@java.util.concurrent.TimeUnit.SECONDS` @type ^`java.util.concurrent.TimeUnit` @kind object;
+  #L15d89e.  v2:= 10L;
+  #L15d8a2.  call temp:= `await`(v0, v2, v1) @signature `Ljava/util/concurrent/CountDownLatch;.await:(JLjava/util/concurrent/TimeUnit;)Z` @kind virtual;
+  #L15d8a8.  return @kind void;
+}
+procedure `boolean` `writeOneFrame$okhttp`(`okhttp3.internal.ws.RealWebSocket` v27 @kind this) @signature `Lokhttp3/internal/ws/RealWebSocket;.writeOneFrame$okhttp:()Z` @AccessFlag PUBLIC_FINAL {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+    v9;
+    v10;
+    v11;
+    v12;
+    v13;
+    v14;
+    v15;
+    v16;
+    v17;
+    v18;
+    v19;
+    v20;
+    v21;
+    v22;
+    v23;
+    v24;
+    v25;
+    v26;
+
+  #L15c96c.  v15:= v27 @kind object;
+  #L15c970.  v0:= new `kotlin.jvm.internal.Ref$ObjectRef`;
+  #L15c974.  call `<init>`(v0) @signature `Lkotlin/jvm/internal/Ref$ObjectRef;.<init>:()V` @kind direct;
+  #L15c97a.  v1:= 0I;
+  #L15c97c.  v0.`kotlin.jvm.internal.Ref$ObjectRef.element` @type ^`java.lang.Object` := v1 @kind object;
+  #L15c980.  v14:= new `kotlin.jvm.internal.Ref$IntRef`;
+  #L15c984.  call `<init>`(v14) @signature `Lkotlin/jvm/internal/Ref$IntRef;.<init>:()V` @kind direct;
+  #L15c98a.  v2:= -1I;
+  #L15c98c.  v14.`kotlin.jvm.internal.Ref$IntRef.element` @type ^`int` := v2;
+  #L15c990.  v13:= new `kotlin.jvm.internal.Ref$ObjectRef`;
+  #L15c994.  call `<init>`(v13) @signature `Lkotlin/jvm/internal/Ref$ObjectRef;.<init>:()V` @kind direct;
+  #L15c99a.  v13.`kotlin.jvm.internal.Ref$ObjectRef.element` @type ^`java.lang.Object` := v1 @kind object;
+  #L15c99e.  v12:= new `kotlin.jvm.internal.Ref$ObjectRef`;
+  #L15c9a2.  call `<init>`(v12) @signature `Lkotlin/jvm/internal/Ref$ObjectRef;.<init>:()V` @kind direct;
+  #L15c9a8.  v12.`kotlin.jvm.internal.Ref$ObjectRef.element` @type ^`java.lang.Object` := v1 @kind object;
+  #L15c9ac.  v11:= new `kotlin.jvm.internal.Ref$ObjectRef`;
+  #L15c9b0.  call `<init>`(v11) @signature `Lkotlin/jvm/internal/Ref$ObjectRef;.<init>:()V` @kind direct;
+  #L15c9b6.  v11.`kotlin.jvm.internal.Ref$ObjectRef.element` @type ^`java.lang.Object` := v1 @kind object;
+  #L15c9ba.  v10:= new `kotlin.jvm.internal.Ref$ObjectRef`;
+  #L15c9be.  call `<init>`(v10) @signature `Lkotlin/jvm/internal/Ref$ObjectRef;.<init>:()V` @kind direct;
+  #L15c9c4.  v10.`kotlin.jvm.internal.Ref$ObjectRef.element` @type ^`java.lang.Object` := v1 @kind object;
+  #L15c9c8.  @monitorenter v27
+  #L15c9ca.  v3:= v15.`okhttp3.internal.ws.RealWebSocket.o` @type ^`boolean` @kind boolean;
+  #L15c9ce.  v4:= 0I;
+  #L15c9d0.  if v3 == 0 then goto L15c9d8;
+  #L15c9d4.  @monitorexit v27
+  #L15c9d6.  return v4;
+  #L15c9d8.  v9:= v15.`okhttp3.internal.ws.RealWebSocket.e` @type ^`okhttp3.internal.ws.WebSocketWriter` @kind object;
+  #L15c9dc.  v3:= v15.`okhttp3.internal.ws.RealWebSocket.i` @type ^`java.util.ArrayDeque` @kind object;
+  #L15c9e0.  call temp:= `poll`(v3) @signature `Ljava/util/ArrayDeque;.poll:()Ljava/lang/Object;` @kind virtual;
+  #L15c9e6.  v3:= temp @kind object;
+  #L15c9e8.  v8:= v3 @kind object;
+  #L15c9ea.  v8:= (`okio.ByteString`) v8 @kind object;
+  #L15c9ee.  if v8 != 0 then goto L15cb38;
+  #L15c9f2.  v3:= v15.`okhttp3.internal.ws.RealWebSocket.j` @type ^`java.util.ArrayDeque` @kind object;
+  #L15c9f6.  call temp:= `poll`(v3) @signature `Ljava/util/ArrayDeque;.poll:()Ljava/lang/Object;` @kind virtual;
+  #L15c9fc.  v3:= temp @kind object;
+  #L15c9fe.  v0.`kotlin.jvm.internal.Ref$ObjectRef.element` @type ^`java.lang.Object` := v3 @kind object;
+  #L15ca02.  v5:= instanceof @variable v3 @type ^`okhttp3.internal.ws.RealWebSocket$Close` @kind boolean;
+  #L15ca06.  if v5 == 0 then goto L15cb14;
+  #L15ca0a.  v3:= v15.`okhttp3.internal.ws.RealWebSocket.m` @type ^`int`;
+  #L15ca0e.  v14.`kotlin.jvm.internal.Ref$IntRef.element` @type ^`int` := v3;
+  #L15ca12.  v4:= v15.`okhttp3.internal.ws.RealWebSocket.n` @type ^`java.lang.String` @kind object;
+  #L15ca16.  v13.`kotlin.jvm.internal.Ref$ObjectRef.element` @type ^`java.lang.Object` := v4 @kind object;
+  #L15ca1a.  if v3 == v2 then goto L15ca50;
+  #L15ca1e.  v2:= v15.`okhttp3.internal.ws.RealWebSocket.h` @type ^`okhttp3.internal.ws.RealWebSocket$Streams` @kind object;
+  #L15ca22.  v12.`kotlin.jvm.internal.Ref$ObjectRef.element` @type ^`java.lang.Object` := v2 @kind object;
+  #L15ca26.  v15.`okhttp3.internal.ws.RealWebSocket.h` @type ^`okhttp3.internal.ws.RealWebSocket$Streams` := v1 @kind object;
+  #L15ca2a.  v2:= v15.`okhttp3.internal.ws.RealWebSocket.d` @type ^`okhttp3.internal.ws.WebSocketReader` @kind object;
+  #L15ca2e.  v11.`kotlin.jvm.internal.Ref$ObjectRef.element` @type ^`java.lang.Object` := v2 @kind object;
+  #L15ca32.  v15.`okhttp3.internal.ws.RealWebSocket.d` @type ^`okhttp3.internal.ws.WebSocketReader` := v1 @kind object;
+  #L15ca36.  v2:= v15.`okhttp3.internal.ws.RealWebSocket.e` @type ^`okhttp3.internal.ws.WebSocketWriter` @kind object;
+  #L15ca3a.  v10.`kotlin.jvm.internal.Ref$ObjectRef.element` @type ^`java.lang.Object` := v2 @kind object;
+  #L15ca3e.  v15.`okhttp3.internal.ws.RealWebSocket.e` @type ^`okhttp3.internal.ws.WebSocketWriter` := v1 @kind object;
+  #L15ca42.  v1:= v15.`okhttp3.internal.ws.RealWebSocket.f` @type ^`okhttp3.internal.concurrent.TaskQueue` @kind object;
+  #L15ca46.  call `shutdown`(v1) @signature `Lokhttp3/internal/concurrent/TaskQueue;.shutdown:()V` @kind virtual;
+  #L15ca4c.  goto L15cb38;
+  #L15ca50.  v1:= v0.`kotlin.jvm.internal.Ref$ObjectRef.element` @type ^`java.lang.Object` @kind object;
+  #L15ca54.  if v1 == 0 then goto L15cb04;
+  #L15ca58.  v1:= (`okhttp3.internal.ws.RealWebSocket$Close`) v1 @kind object;
+  #L15ca5c.  call temp:= `getCancelAfterCloseMillis`(v1) @signature `Lokhttp3/internal/ws/RealWebSocket$Close;.getCancelAfterCloseMillis:()J` @kind virtual;
+  #L15ca62.  v1:= temp @kind wide;
+  #L15ca64.  v7:= v15.`okhttp3.internal.ws.RealWebSocket.f` @type ^`okhttp3.internal.concurrent.TaskQueue` @kind object;
+  #L15ca68.  v3:= new `java.lang.StringBuilder`;
+  #L15ca6c.  call `<init>`(v3) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L15ca72.  v4:= v15.`okhttp3.internal.ws.RealWebSocket.g` @type ^`java.lang.String` @kind object;
+  #L15ca76.  call temp:= `append`(v3, v4) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L15ca7c.  v4:= " cancel" @kind object;
+  #L15ca80.  call temp:= `append`(v3, v4) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L15ca86.  call temp:= `toString`(v3) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L15ca8c.  v4:= temp @kind object;
+  #L15ca8e.  v3:= `@@java.util.concurrent.TimeUnit.MILLISECONDS` @type ^`java.util.concurrent.TimeUnit` @kind object;
+  #L15ca92.  call temp:= `toNanos`(v3, v1) @signature `Ljava/util/concurrent/TimeUnit;.toNanos:(J)J` @kind virtual;
+  #L15ca98.  v5:= temp @kind wide;
+  #L15ca9a.  v16:= 1I;
+  #L15ca9e.  v3:= new `okhttp3.internal.ws.RealWebSocket$writeOneFrame$$inlined$synchronized$lambda$1`;
+  #L15caa2.  v1:= v3 @kind object;
+  #L15caa4.  v2:= v4 @kind object;
+  #L15caa6.  v17:= v3 @kind object;
+  #L15caaa.  v3:= v16;
+  #L15caae.  v18:= v5 @kind wide;
+  #L15cab2.  v5:= v16;
+  #L15cab6.  v6:= v27 @kind object;
+  #L15caba.  v20:= v7 @kind object;
+  #L15cabe.  v7:= v9 @kind object;
+  #L15cac0.  v16:= v8 @kind object;
+  #L15cac4.  v21:= v9 @kind object;
+  #L15cac8.  v9:= v0 @kind object;
+  #L15caca.  v22:= v10 @kind object;
+  #L15cace.  v10:= v14 @kind object;
+  #L15cad0.  v23:= v11 @kind object;
+  #L15cad4.  v11:= v13 @kind object;
+  #L15cad6.  v24:= v12 @kind object;
+  #L15cada.  v25:= v13 @kind object;
+  #L15cade.  v13:= v23 @kind object;
+  #L15cae2.  v26:= v14 @kind object;
+  #L15cae6.  v14:= v22 @kind object;
+  #L15caea.  call `<init>`(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14) @signature `Lokhttp3/internal/ws/RealWebSocket$writeOneFrame$$inlined$synchronized$lambda$1;.<init>:(Ljava/lang/String;ZLjava/lang/String;ZLokhttp3/internal/ws/RealWebSocket;Lokhttp3/internal/ws/WebSocketWriter;Lokio/ByteString;Lkotlin/jvm/internal/Ref$ObjectRef;Lkotlin/jvm/internal/Ref$IntRef;Lkotlin/jvm/internal/Ref$ObjectRef;Lkotlin/jvm/internal/Ref$ObjectRef;Lkotlin/jvm/internal/Ref$ObjectRef;Lkotlin/jvm/internal/Ref$ObjectRef;)V` @kind direct;
+  #L15caf0.  v4:= v17 @kind object;
+  #L15caf4.  v2:= v18 @kind wide;
+  #L15caf8.  v1:= v20 @kind object;
+  #L15cafc.  call `schedule`(v1, v4, v2) @signature `Lokhttp3/internal/concurrent/TaskQueue;.schedule:(Lokhttp3/internal/concurrent/Task;J)V` @kind virtual;
+  #L15cb02.  goto L15cb54;
+  #L15cb04.  v0:= new `java.lang.NullPointerException`;
+  #L15cb08.  v1:= "null cannot be cast to non-null type okhttp3.internal.ws.RealWebSocket.Close" @kind object;
+  #L15cb0c.  call `<init>`(v0, v1) @signature `Ljava/lang/NullPointerException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L15cb12.  throw v0;
+  #L15cb14.  v16:= v8 @kind object;
+  #L15cb18.  v21:= v9 @kind object;
+  #L15cb1c.  v22:= v10 @kind object;
+  #L15cb20.  v23:= v11 @kind object;
+  #L15cb24.  v24:= v12 @kind object;
+  #L15cb28.  v25:= v13 @kind object;
+  #L15cb2c.  v26:= v14 @kind object;
+  #L15cb30.  if v3 != 0 then goto L15cb54;
+  #L15cb34.  @monitorexit v27
+  #L15cb36.  return v4;
+  #L15cb38.  v16:= v8 @kind object;
+  #L15cb3c.  v21:= v9 @kind object;
+  #L15cb40.  v22:= v10 @kind object;
+  #L15cb44.  v23:= v11 @kind object;
+  #L15cb48.  v24:= v12 @kind object;
+  #L15cb4c.  v25:= v13 @kind object;
+  #L15cb50.  v26:= v14 @kind object;
+  #L15cb54.  v1:= `@@kotlin.Unit.INSTANCE` @type ^`kotlin.Unit` @kind object;
+  #L15cb58.  @monitorexit v27
+  #L15cb5a.  v3:= v16 @kind object;
+  #L15cb5e.  if v3 == 0 then goto L15cb78;
+  #L15cb62.  call `checkNotNull`(v21) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNull:(Ljava/lang/Object;)V` @kind static;
+  #L15cb68.  v1:= v21 @kind object;
+  #L15cb6c.  call `writePong`(v1, v3) @signature `Lokhttp3/internal/ws/WebSocketWriter;.writePong:(Lokio/ByteString;)V` @kind virtual;
+  #L15cb72.  v1:= v24 @kind object;
+  #L15cb76.  goto L15cc44;
+  #L15cb78.  v1:= v21 @kind object;
+  #L15cb7c.  v0:= v0.`kotlin.jvm.internal.Ref$ObjectRef.element` @type ^`java.lang.Object` @kind object;
+  #L15cb80.  v2:= instanceof @variable v0 @type ^`okhttp3.internal.ws.RealWebSocket$Message` @kind boolean;
+  #L15cb84.  if v2 == 0 then goto L15cbe4;
+  #L15cb88.  if v0 == 0 then goto L15cbd4;
+  #L15cb8c.  v0:= (`okhttp3.internal.ws.RealWebSocket$Message`) v0 @kind object;
+  #L15cb90.  call `checkNotNull`(v1) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNull:(Ljava/lang/Object;)V` @kind static;
+  #L15cb96.  call temp:= `getFormatOpcode`(v0) @signature `Lokhttp3/internal/ws/RealWebSocket$Message;.getFormatOpcode:()I` @kind virtual;
+  #L15cb9c.  v2:= temp;
+  #L15cb9e.  call temp:= `getData`(v0) @signature `Lokhttp3/internal/ws/RealWebSocket$Message;.getData:()Lokio/ByteString;` @kind virtual;
+  #L15cba4.  v3:= temp @kind object;
+  #L15cba6.  call `writeMessageFrame`(v1, v2, v3) @signature `Lokhttp3/internal/ws/WebSocketWriter;.writeMessageFrame:(ILokio/ByteString;)V` @kind virtual;
+  #L15cbac.  @monitorenter v27
+  #L15cbae.  v1:= v15.`okhttp3.internal.ws.RealWebSocket.k` @type ^`long` @kind wide;
+  #L15cbb2.  call temp:= `getData`(v0) @signature `Lokhttp3/internal/ws/RealWebSocket$Message;.getData:()Lokio/ByteString;` @kind virtual;
+  #L15cbb8.  v0:= temp @kind object;
+  #L15cbba.  call temp:= `size`(v0) @signature `Lokio/ByteString;.size:()I` @kind virtual;
+  #L15cbc0.  v0:= temp;
+  #L15cbc2.  v3:= (`long`) v0 @kind i2l;
+  #L15cbc4.  v1:= v1 - v3 @kind long;
+  #L15cbc6.  v15.`okhttp3.internal.ws.RealWebSocket.k` @type ^`long` := v1 @kind wide;
+  #L15cbca.  @monitorexit v27
+  #L15cbcc.  goto L15cb72;
+  #L15cbce.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L15cbd0.  @monitorexit v27
+  #L15cbd2.  throw v0;
+  #L15cbd4.  v0:= new `java.lang.NullPointerException`;
+  #L15cbd8.  v1:= "null cannot be cast to non-null type okhttp3.internal.ws.RealWebSocket.Message" @kind object;
+  #L15cbdc.  call `<init>`(v0, v1) @signature `Ljava/lang/NullPointerException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L15cbe2.  throw v0;
+  #L15cbe4.  v2:= instanceof @variable v0 @type ^`okhttp3.internal.ws.RealWebSocket$Close` @kind boolean;
+  #L15cbe8.  if v2 == 0 then goto L15ccae;
+  #L15cbec.  if v0 == 0 then goto L15cc92;
+  #L15cbf0.  v0:= (`okhttp3.internal.ws.RealWebSocket$Close`) v0 @kind object;
+  #L15cbf4.  call `checkNotNull`(v1) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNull:(Ljava/lang/Object;)V` @kind static;
+  #L15cbfa.  call temp:= `getCode`(v0) @signature `Lokhttp3/internal/ws/RealWebSocket$Close;.getCode:()I` @kind virtual;
+  #L15cc00.  v2:= temp;
+  #L15cc02.  call temp:= `getReason`(v0) @signature `Lokhttp3/internal/ws/RealWebSocket$Close;.getReason:()Lokio/ByteString;` @kind virtual;
+  #L15cc08.  v0:= temp @kind object;
+  #L15cc0a.  call `writeClose`(v1, v2, v0) @signature `Lokhttp3/internal/ws/WebSocketWriter;.writeClose:(ILokio/ByteString;)V` @kind virtual;
+  #L15cc10.  v1:= v24 @kind object;
+  #L15cc14.  v0:= v1.`kotlin.jvm.internal.Ref$ObjectRef.element` @type ^`java.lang.Object` @kind object;
+  #L15cc18.  v0:= (`okhttp3.internal.ws.RealWebSocket$Streams`) v0 @kind object;
+  #L15cc1c.  if v0 == 0 then goto L15cc44;
+  #L15cc20.  v0:= v15.`okhttp3.internal.ws.RealWebSocket.u` @type ^`okhttp3.WebSocketListener` @kind object;
+  #L15cc24.  v2:= v26 @kind object;
+  #L15cc28.  v2:= v2.`kotlin.jvm.internal.Ref$IntRef.element` @type ^`int`;
+  #L15cc2c.  v3:= v25 @kind object;
+  #L15cc30.  v3:= v3.`kotlin.jvm.internal.Ref$ObjectRef.element` @type ^`java.lang.Object` @kind object;
+  #L15cc34.  v3:= (`java.lang.String`) v3 @kind object;
+  #L15cc38.  call `checkNotNull`(v3) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNull:(Ljava/lang/Object;)V` @kind static;
+  #L15cc3e.  call `onClosed`(v0, v15, v2, v3) @signature `Lokhttp3/WebSocketListener;.onClosed:(Lokhttp3/WebSocket;ILjava/lang/String;)V` @kind virtual;
+  #L15cc44.  v0:= 1I;
+  #L15cc46.  v1:= v1.`kotlin.jvm.internal.Ref$ObjectRef.element` @type ^`java.lang.Object` @kind object;
+  #L15cc4a.  v1:= (`okhttp3.internal.ws.RealWebSocket$Streams`) v1 @kind object;
+  #L15cc4e.  if v1 == 0 then goto L15cc58;
+  #L15cc52.  call `closeQuietly`(v1) @signature `Lokhttp3/internal/Util;.closeQuietly:(Ljava/io/Closeable;)V` @kind static;
+  #L15cc58.  v2:= v23 @kind object;
+  #L15cc5c.  v1:= v2.`kotlin.jvm.internal.Ref$ObjectRef.element` @type ^`java.lang.Object` @kind object;
+  #L15cc60.  v1:= (`okhttp3.internal.ws.WebSocketReader`) v1 @kind object;
+  #L15cc64.  if v1 == 0 then goto L15cc6e;
+  #L15cc68.  call `closeQuietly`(v1) @signature `Lokhttp3/internal/Util;.closeQuietly:(Ljava/io/Closeable;)V` @kind static;
+  #L15cc6e.  v3:= v22 @kind object;
+  #L15cc72.  v1:= v3.`kotlin.jvm.internal.Ref$ObjectRef.element` @type ^`java.lang.Object` @kind object;
+  #L15cc76.  v1:= (`okhttp3.internal.ws.WebSocketWriter`) v1 @kind object;
+  #L15cc7a.  if v1 == 0 then goto L15cc84;
+  #L15cc7e.  call `closeQuietly`(v1) @signature `Lokhttp3/internal/Util;.closeQuietly:(Ljava/io/Closeable;)V` @kind static;
+  #L15cc84.  return v0;
+  #L15cc86.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L15cc88.  v3:= v22 @kind object;
+  #L15cc8c.  v2:= v23 @kind object;
+  #L15cc90.  goto L15ccd8;
+  #L15cc92.  v3:= v22 @kind object;
+  #L15cc96.  v2:= v23 @kind object;
+  #L15cc9a.  v1:= v24 @kind object;
+  #L15cc9e.  v0:= new `java.lang.NullPointerException`;
+  #L15cca2.  v4:= "null cannot be cast to non-null type okhttp3.internal.ws.RealWebSocket.Close" @kind object;
+  #L15cca6.  call `<init>`(v0, v4) @signature `Ljava/lang/NullPointerException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L15ccac.  throw v0;
+  #L15ccae.  v3:= v22 @kind object;
+  #L15ccb2.  v2:= v23 @kind object;
+  #L15ccb6.  v1:= v24 @kind object;
+  #L15ccba.  v0:= new `java.lang.AssertionError`;
+  #L15ccbe.  call `<init>`(v0) @signature `Ljava/lang/AssertionError;.<init>:()V` @kind direct;
+  #L15ccc4.  throw v0;
+  #L15ccc6.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L15ccc8.  goto L15ccd8;
+  #L15ccca.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L15cccc.  v3:= v22 @kind object;
+  #L15ccd0.  v2:= v23 @kind object;
+  #L15ccd4.  v1:= v24 @kind object;
+  #L15ccd8.  v1:= v1.`kotlin.jvm.internal.Ref$ObjectRef.element` @type ^`java.lang.Object` @kind object;
+  #L15ccdc.  v1:= (`okhttp3.internal.ws.RealWebSocket$Streams`) v1 @kind object;
+  #L15cce0.  if v1 == 0 then goto L15ccea;
+  #L15cce4.  call `closeQuietly`(v1) @signature `Lokhttp3/internal/Util;.closeQuietly:(Ljava/io/Closeable;)V` @kind static;
+  #L15ccea.  v1:= v2.`kotlin.jvm.internal.Ref$ObjectRef.element` @type ^`java.lang.Object` @kind object;
+  #L15ccee.  v1:= (`okhttp3.internal.ws.WebSocketReader`) v1 @kind object;
+  #L15ccf2.  if v1 == 0 then goto L15ccfc;
+  #L15ccf6.  call `closeQuietly`(v1) @signature `Lokhttp3/internal/Util;.closeQuietly:(Ljava/io/Closeable;)V` @kind static;
+  #L15ccfc.  v1:= v3.`kotlin.jvm.internal.Ref$ObjectRef.element` @type ^`java.lang.Object` @kind object;
+  #L15cd00.  v1:= (`okhttp3.internal.ws.WebSocketWriter`) v1 @kind object;
+  #L15cd04.  if v1 == 0 then goto L15cd0e;
+  #L15cd08.  call `closeQuietly`(v1) @signature `Lokhttp3/internal/Util;.closeQuietly:(Ljava/io/Closeable;)V` @kind static;
+  #L15cd0e.  throw v0;
+  #L15cd10.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L15cd12.  @monitorexit v27
+  #L15cd14.  throw v0;
+  catch `java.lang.Throwable` @[L15c9ca..L15c9ce] goto L15cd10;
+  catch `java.lang.Throwable` @[L15c9d8..L15cb14] goto L15cd10;
+  catch `java.lang.Throwable` @[L15cb54..L15cb58] goto L15cd10;
+  catch `java.lang.Throwable` @[L15cb62..L15cbae] goto L15ccca;
+  catch `java.lang.Throwable` @[L15cbae..L15cbca] goto L15cbce;
+  catch `java.lang.Throwable` @[L15cbca..L15cc10] goto L15ccca;
+  catch `java.lang.Throwable` @[L15cc14..L15cc44] goto L15cc86;
+  catch `java.lang.Throwable` @[L15cc9e..L15ccc6] goto L15ccc6;
+}
+procedure `void` `writePingFrame$okhttp`(`okhttp3.internal.ws.RealWebSocket` v7 @kind this) @signature `Lokhttp3/internal/ws/RealWebSocket;.writePingFrame$okhttp:()V` @AccessFlag PUBLIC_FINAL {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+
+  #L15d8bc.  @monitorenter v7
+  #L15d8be.  v0:= v7.`okhttp3.internal.ws.RealWebSocket.o` @type ^`boolean` @kind boolean;
+  #L15d8c2.  if v0 == 0 then goto L15d8ca;
+  #L15d8c6.  @monitorexit v7
+  #L15d8c8.  return @kind void;
+  #L15d8ca.  v0:= v7.`okhttp3.internal.ws.RealWebSocket.e` @type ^`okhttp3.internal.ws.WebSocketWriter` @kind object;
+  #L15d8ce.  if v0 == 0 then goto L15d96a;
+  #L15d8d2.  v1:= v7.`okhttp3.internal.ws.RealWebSocket.s` @type ^`boolean` @kind boolean;
+  #L15d8d6.  v2:= -1I;
+  #L15d8d8.  if v1 == 0 then goto L15d8e2;
+  #L15d8dc.  v1:= v7.`okhttp3.internal.ws.RealWebSocket.p` @type ^`int`;
+  #L15d8e0.  goto L15d8e4;
+  #L15d8e2.  v1:= -1I;
+  #L15d8e4.  v3:= v7.`okhttp3.internal.ws.RealWebSocket.p` @type ^`int`;
+  #L15d8e8.  v4:= 1I;
+  #L15d8ea.  v3:= v3 + v4 @kind int;
+  #L15d8ec.  v7.`okhttp3.internal.ws.RealWebSocket.p` @type ^`int` := v3;
+  #L15d8f0.  v7.`okhttp3.internal.ws.RealWebSocket.s` @type ^`boolean` := v4 @kind boolean;
+  #L15d8f4.  v3:= `@@kotlin.Unit.INSTANCE` @type ^`kotlin.Unit` @kind object;
+  #L15d8f8.  @monitorexit v7
+  #L15d8fa.  v3:= 0I;
+  #L15d8fc.  if v1 == v2 then goto L15d954;
+  #L15d900.  v0:= new `java.net.SocketTimeoutException`;
+  #L15d904.  v2:= new `java.lang.StringBuilder`;
+  #L15d908.  call `<init>`(v2) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L15d90e.  v5:= "sent ping but didn't receive pong within " @kind object;
+  #L15d912.  call temp:= `append`(v2, v5) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L15d918.  v5:= v7.`okhttp3.internal.ws.RealWebSocket.w` @type ^`long` @kind wide;
+  #L15d91c.  call temp:= `append`(v2, v5) @signature `Ljava/lang/StringBuilder;.append:(J)Ljava/lang/StringBuilder;` @kind virtual;
+  #L15d922.  v5:= "ms (after " @kind object;
+  #L15d926.  call temp:= `append`(v2, v5) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L15d92c.  v1:= v1 - v4 @kind int;
+  #L15d92e.  call temp:= `append`(v2, v1) @signature `Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder;` @kind virtual;
+  #L15d934.  v1:= " successful ping/pongs)" @kind object;
+  #L15d938.  call temp:= `append`(v2, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L15d93e.  call temp:= `toString`(v2) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L15d944.  v1:= temp @kind object;
+  #L15d946.  call `<init>`(v0, v1) @signature `Ljava/net/SocketTimeoutException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L15d94c.  call `failWebSocket`(v7, v0, v3) @signature `Lokhttp3/internal/ws/RealWebSocket;.failWebSocket:(Ljava/lang/Exception;Lokhttp3/Response;)V` @kind virtual;
+  #L15d952.  return @kind void;
+  #L15d954.  v1:= `@@okio.ByteString.EMPTY` @type ^`okio.ByteString` @kind object;
+  #L15d958.  call `writePing`(v0, v1) @signature `Lokhttp3/internal/ws/WebSocketWriter;.writePing:(Lokio/ByteString;)V` @kind virtual;
+  #L15d95e.  goto L15d968;
+  #L15d960.  v0:= Exception @type ^`java.io.IOException` @kind object;
+  #L15d962.  call `failWebSocket`(v7, v0, v3) @signature `Lokhttp3/internal/ws/RealWebSocket;.failWebSocket:(Ljava/lang/Exception;Lokhttp3/Response;)V` @kind virtual;
+  #L15d968.  return @kind void;
+  #L15d96a.  @monitorexit v7
+  #L15d96c.  return @kind void;
+  #L15d96e.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L15d970.  @monitorexit v7
+  #L15d972.  throw v0;
+  catch `java.lang.Throwable` @[L15d8be..L15d8c2] goto L15d96e;
+  catch `java.lang.Throwable` @[L15d8ca..L15d8f8] goto L15d96e;
+  catch `java.io.IOException` @[L15d954..L15d95e] goto L15d960;
+}

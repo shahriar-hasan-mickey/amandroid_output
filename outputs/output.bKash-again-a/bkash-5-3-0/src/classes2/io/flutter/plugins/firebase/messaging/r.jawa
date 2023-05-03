@@ -1,0 +1,323 @@
+record `io.flutter.plugins.firebase.messaging.r` @kind class @AccessFlag ABSTRACT extends `android.app.Service` @kind class {
+  `java.util.ArrayList` `io.flutter.plugins.firebase.messaging.r.mCompatQueue` @AccessFlag FINAL;
+  `io.flutter.plugins.firebase.messaging.r$i` `io.flutter.plugins.firebase.messaging.r.mCompatWorkEnqueuer` @AccessFlag ;
+  `io.flutter.plugins.firebase.messaging.r$a` `io.flutter.plugins.firebase.messaging.r.mCurProcessor` @AccessFlag ;
+  `boolean` `io.flutter.plugins.firebase.messaging.r.mDestroyed` @AccessFlag ;
+  `boolean` `io.flutter.plugins.firebase.messaging.r.mInterruptIfStopped` @AccessFlag ;
+  `io.flutter.plugins.firebase.messaging.r$b` `io.flutter.plugins.firebase.messaging.r.mJobImpl` @AccessFlag ;
+  `boolean` `io.flutter.plugins.firebase.messaging.r.mStopped` @AccessFlag ;
+}
+global `boolean` `@@io.flutter.plugins.firebase.messaging.r.DEBUG` @AccessFlag STATIC_FINAL;
+global `java.lang.String` `@@io.flutter.plugins.firebase.messaging.r.TAG` @AccessFlag STATIC_FINAL;
+global `java.util.HashMap` `@@io.flutter.plugins.firebase.messaging.r.sClassWorkEnqueuer` @AccessFlag STATIC_FINAL;
+global `java.lang.Object` `@@io.flutter.plugins.firebase.messaging.r.sLock` @AccessFlag STATIC_FINAL;
+procedure `void` `<clinit>`() @signature `Lio/flutter/plugins/firebase/messaging/r;.<clinit>:()V` @AccessFlag STATIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L2ea9c0.  v0:= new `java.lang.Object`;
+  #L2ea9c4.  call `<init>`(v0) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L2ea9ca.  `@@io.flutter.plugins.firebase.messaging.r.sLock` @type ^`java.lang.Object` := v0 @kind object;
+  #L2ea9ce.  v0:= new `java.util.HashMap`;
+  #L2ea9d2.  call `<init>`(v0) @signature `Ljava/util/HashMap;.<init>:()V` @kind direct;
+  #L2ea9d8.  `@@io.flutter.plugins.firebase.messaging.r.sClassWorkEnqueuer` @type ^`java.util.HashMap` := v0 @kind object;
+  #L2ea9dc.  return @kind void;
+}
+procedure `void` `<init>`(`io.flutter.plugins.firebase.messaging.r` v1 @kind this) @signature `Lio/flutter/plugins/firebase/messaging/r;.<init>:()V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L2ea9f0.  call `<init>`(v1) @signature `Landroid/app/Service;.<init>:()V` @kind direct;
+  #L2ea9f6.  v0:= 0I;
+  #L2ea9f8.  v1.`io.flutter.plugins.firebase.messaging.r.mInterruptIfStopped` @type ^`boolean` := v0 @kind boolean;
+  #L2ea9fc.  v1.`io.flutter.plugins.firebase.messaging.r.mStopped` @type ^`boolean` := v0 @kind boolean;
+  #L2eaa00.  v1.`io.flutter.plugins.firebase.messaging.r.mDestroyed` @type ^`boolean` := v0 @kind boolean;
+  #L2eaa04.  v0:= new `java.util.ArrayList`;
+  #L2eaa08.  call `<init>`(v0) @signature `Ljava/util/ArrayList;.<init>:()V` @kind direct;
+  #L2eaa0e.  v1.`io.flutter.plugins.firebase.messaging.r.mCompatQueue` @type ^`java.util.ArrayList` := v0 @kind object;
+  #L2eaa12.  return @kind void;
+}
+procedure `void` `enqueueWork`(`android.content.Context` v3 @kind object, `android.content.ComponentName` v4 @kind object, `int` v5 , `android.content.Intent` v6 @kind object, `boolean` v7 ) @signature `Lio/flutter/plugins/firebase/messaging/r;.enqueueWork:(Landroid/content/Context;Landroid/content/ComponentName;ILandroid/content/Intent;Z)V` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L2eaa24.  if v6 == 0 then goto L2eaa68;
+  #L2eaa28.  v0:= `@@io.flutter.plugins.firebase.messaging.r.sLock` @type ^`java.lang.Object` @kind object;
+  #L2eaa2c.  @monitorenter v0
+  #L2eaa2e.  v1:= 1I;
+  #L2eaa30.  call temp:= `getWorkEnqueuer`(v3, v4, v1, v5, v7) @signature `Lio/flutter/plugins/firebase/messaging/r;.getWorkEnqueuer:(Landroid/content/Context;Landroid/content/ComponentName;ZIZ)Lio/flutter/plugins/firebase/messaging/r$i;` @kind static;
+  #L2eaa36.  v2:= temp @kind object;
+  #L2eaa38.  call `b`(v2, v5) @signature `Lio/flutter/plugins/firebase/messaging/r$i;.b:(I)V` @kind virtual;
+  #L2eaa3e.  call `a`(v2, v6) @signature `Lio/flutter/plugins/firebase/messaging/r$i;.a:(Landroid/content/Intent;)V` @kind virtual;
+  #L2eaa44.  goto L2eaa5c;
+  #L2eaa46.  v2:= Exception @type ^`java.lang.IllegalStateException` @kind object;
+  #L2eaa48.  if v7 == 0 then goto L2eaa60;
+  #L2eaa4c.  v7:= 0I;
+  #L2eaa4e.  call temp:= `getWorkEnqueuer`(v3, v4, v1, v5, v7) @signature `Lio/flutter/plugins/firebase/messaging/r;.getWorkEnqueuer:(Landroid/content/Context;Landroid/content/ComponentName;ZIZ)Lio/flutter/plugins/firebase/messaging/r$i;` @kind static;
+  #L2eaa54.  v3:= temp @kind object;
+  #L2eaa56.  call `a`(v3, v6) @signature `Lio/flutter/plugins/firebase/messaging/r$i;.a:(Landroid/content/Intent;)V` @kind virtual;
+  #L2eaa5c.  @monitorexit v0
+  #L2eaa5e.  return @kind void;
+  #L2eaa60.  throw v2;
+  #L2eaa62.  v3:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L2eaa64.  @monitorexit v0
+  #L2eaa66.  throw v3;
+  #L2eaa68.  v3:= new `java.lang.IllegalArgumentException`;
+  #L2eaa6c.  v4:= "work must not be null" @kind object;
+  #L2eaa70.  call `<init>`(v3, v4) @signature `Ljava/lang/IllegalArgumentException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L2eaa76.  throw v3;
+  catch `java.lang.Throwable` @[L2eaa30..L2eaa3e] goto L2eaa62;
+  catch `java.lang.IllegalStateException` @[L2eaa3e..L2eaa44] goto L2eaa46;
+  catch `java.lang.Throwable` @[L2eaa3e..L2eaa44] goto L2eaa62;
+  catch `java.lang.Throwable` @[L2eaa4e..L2eaa66] goto L2eaa62;
+}
+procedure `void` `enqueueWork`(`android.content.Context` v1 @kind object, `java.lang.Class` v2 @kind object, `int` v3 , `android.content.Intent` v4 @kind object, `boolean` v5 ) @signature `Lio/flutter/plugins/firebase/messaging/r;.enqueueWork:(Landroid/content/Context;Ljava/lang/Class;ILandroid/content/Intent;Z)V` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+
+  #L2eaaa8.  v0:= new `android.content.ComponentName`;
+  #L2eaaac.  call `<init>`(v0, v1, v2) @signature `Landroid/content/ComponentName;.<init>:(Landroid/content/Context;Ljava/lang/Class;)V` @kind direct;
+  #L2eaab2.  call `enqueueWork`(v1, v0, v3, v4, v5) @signature `Lio/flutter/plugins/firebase/messaging/r;.enqueueWork:(Landroid/content/Context;Landroid/content/ComponentName;ILandroid/content/Intent;Z)V` @kind static;
+  #L2eaab8.  return @kind void;
+}
+procedure `io.flutter.plugins.firebase.messaging.r$i` `getWorkEnqueuer`(`android.content.Context` v4 @kind object, `android.content.ComponentName` v5 @kind object, `boolean` v6 , `int` v7 , `boolean` v8 ) @signature `Lio/flutter/plugins/firebase/messaging/r;.getWorkEnqueuer:(Landroid/content/Context;Landroid/content/ComponentName;ZIZ)Lio/flutter/plugins/firebase/messaging/r$i;` @AccessFlag STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L2ea94c.  v0:= new `io.flutter.plugins.firebase.messaging.r$e`;
+  #L2ea950.  call `<init>`(v0, v5, v8) @signature `Lio/flutter/plugins/firebase/messaging/r$e;.<init>:(Landroid/content/ComponentName;Z)V` @kind direct;
+  #L2ea956.  v1:= `@@io.flutter.plugins.firebase.messaging.r.sClassWorkEnqueuer` @type ^`java.util.HashMap` @kind object;
+  #L2ea95a.  call temp:= `get`(v1, v0) @signature `Ljava/util/HashMap;.get:(Ljava/lang/Object;)Ljava/lang/Object;` @kind virtual;
+  #L2ea960.  v2:= temp @kind object;
+  #L2ea962.  v2:= (`io.flutter.plugins.firebase.messaging.r$i`) v2 @kind object;
+  #L2ea966.  if v2 != 0 then goto L2ea9ac;
+  #L2ea96a.  v2:= `@@android.os.Build$VERSION.SDK_INT` @type ^`int`;
+  #L2ea96e.  v3:= 26I;
+  #L2ea972.  if v2 < v3 then goto L2ea99a;
+  #L2ea976.  if v8 != 0 then goto L2ea99a;
+  #L2ea97a.  if v6 == 0 then goto L2ea98a;
+  #L2ea97e.  v6:= new `io.flutter.plugins.firebase.messaging.r$h`;
+  #L2ea982.  call `<init>`(v6, v4, v5, v7) @signature `Lio/flutter/plugins/firebase/messaging/r$h;.<init>:(Landroid/content/Context;Landroid/content/ComponentName;I)V` @kind direct;
+  #L2ea988.  goto L2ea9a4;
+  #L2ea98a.  v4:= new `java.lang.IllegalArgumentException`;
+  #L2ea98e.  v5:= "Can't be here without a job id" @kind object;
+  #L2ea992.  call `<init>`(v4, v5) @signature `Ljava/lang/IllegalArgumentException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L2ea998.  throw v4;
+  #L2ea99a.  v6:= new `io.flutter.plugins.firebase.messaging.r$c`;
+  #L2ea99e.  call `<init>`(v6, v4, v5) @signature `Lio/flutter/plugins/firebase/messaging/r$c;.<init>:(Landroid/content/Context;Landroid/content/ComponentName;)V` @kind direct;
+  #L2ea9a4.  v2:= v6 @kind object;
+  #L2ea9a6.  call temp:= `put`(v1, v0, v2) @signature `Ljava/util/HashMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;` @kind virtual;
+  #L2ea9ac.  return v2 @kind object;
+}
+procedure `io.flutter.plugins.firebase.messaging.r$f` `dequeueWork`(`io.flutter.plugins.firebase.messaging.r` v3 @kind this) @signature `Lio/flutter/plugins/firebase/messaging/r;.dequeueWork:()Lio/flutter/plugins/firebase/messaging/r$f;` @AccessFlag  {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L2ea8e0.  v0:= v3.`io.flutter.plugins.firebase.messaging.r.mJobImpl` @type ^`io.flutter.plugins.firebase.messaging.r$b` @kind object;
+  #L2ea8e4.  if v0 == 0 then goto L2ea8f6;
+  #L2ea8e8.  call temp:= `b`(v0) @signature `Lio/flutter/plugins/firebase/messaging/r$b;.b:()Lio/flutter/plugins/firebase/messaging/r$f;` @kind interface;
+  #L2ea8ee.  v0:= temp @kind object;
+  #L2ea8f0.  if v0 == 0 then goto L2ea8f6;
+  #L2ea8f4.  return v0 @kind object;
+  #L2ea8f6.  v0:= v3.`io.flutter.plugins.firebase.messaging.r.mCompatQueue` @type ^`java.util.ArrayList` @kind object;
+  #L2ea8fa.  @monitorenter v0
+  #L2ea8fc.  v1:= v3.`io.flutter.plugins.firebase.messaging.r.mCompatQueue` @type ^`java.util.ArrayList` @kind object;
+  #L2ea900.  call temp:= `size`(v1) @signature `Ljava/util/ArrayList;.size:()I` @kind virtual;
+  #L2ea906.  v1:= temp;
+  #L2ea908.  if v1 <= 0 then goto L2ea922;
+  #L2ea90c.  v1:= v3.`io.flutter.plugins.firebase.messaging.r.mCompatQueue` @type ^`java.util.ArrayList` @kind object;
+  #L2ea910.  v2:= 0I;
+  #L2ea912.  call temp:= `remove`(v1, v2) @signature `Ljava/util/ArrayList;.remove:(I)Ljava/lang/Object;` @kind virtual;
+  #L2ea918.  v1:= temp @kind object;
+  #L2ea91a.  v1:= (`io.flutter.plugins.firebase.messaging.r$f`) v1 @kind object;
+  #L2ea91e.  @monitorexit v0
+  #L2ea920.  return v1 @kind object;
+  #L2ea922.  v1:= 0I;
+  #L2ea924.  @monitorexit v0
+  #L2ea926.  return v1 @kind object;
+  #L2ea928.  v1:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L2ea92a.  @monitorexit v0
+  #L2ea92c.  throw v1;
+  catch `java.lang.Throwable` @[L2ea8fc..L2ea92c] goto L2ea928;
+}
+procedure `boolean` `doStopCurrentWork`(`io.flutter.plugins.firebase.messaging.r` v2 @kind this) @signature `Lio/flutter/plugins/firebase/messaging/r;.doStopCurrentWork:()Z` @AccessFlag  {
+    temp;
+    v0;
+    v1;
+
+  #L2ea81c.  v0:= v2.`io.flutter.plugins.firebase.messaging.r.mCurProcessor` @type ^`io.flutter.plugins.firebase.messaging.r$a` @kind object;
+  #L2ea820.  if v0 == 0 then goto L2ea82e;
+  #L2ea824.  v1:= v2.`io.flutter.plugins.firebase.messaging.r.mInterruptIfStopped` @type ^`boolean` @kind boolean;
+  #L2ea828.  call temp:= `cancel`(v0, v1) @signature `Landroid/os/AsyncTask;.cancel:(Z)Z` @kind virtual;
+  #L2ea82e.  v0:= 1I;
+  #L2ea830.  v2.`io.flutter.plugins.firebase.messaging.r.mStopped` @type ^`boolean` := v0 @kind boolean;
+  #L2ea834.  call temp:= `onStopCurrentWork`(v2) @signature `Lio/flutter/plugins/firebase/messaging/r;.onStopCurrentWork:()Z` @kind virtual;
+  #L2ea83a.  v0:= temp;
+  #L2ea83c.  return v0;
+}
+procedure `void` `ensureProcessorRunningLocked`(`io.flutter.plugins.firebase.messaging.r` v2 @kind this, `boolean` v3 ) @signature `Lio/flutter/plugins/firebase/messaging/r;.ensureProcessorRunningLocked:(Z)V` @AccessFlag  {
+    temp;
+    v0;
+    v1;
+
+  #L2eaacc.  v0:= v2.`io.flutter.plugins.firebase.messaging.r.mCurProcessor` @type ^`io.flutter.plugins.firebase.messaging.r$a` @kind object;
+  #L2eaad0.  if v0 != 0 then goto L2eab08;
+  #L2eaad4.  v0:= new `io.flutter.plugins.firebase.messaging.r$a`;
+  #L2eaad8.  call `<init>`(v0, v2) @signature `Lio/flutter/plugins/firebase/messaging/r$a;.<init>:(Lio/flutter/plugins/firebase/messaging/r;)V` @kind direct;
+  #L2eaade.  v2.`io.flutter.plugins.firebase.messaging.r.mCurProcessor` @type ^`io.flutter.plugins.firebase.messaging.r$a` := v0 @kind object;
+  #L2eaae2.  v0:= v2.`io.flutter.plugins.firebase.messaging.r.mCompatWorkEnqueuer` @type ^`io.flutter.plugins.firebase.messaging.r$i` @kind object;
+  #L2eaae6.  if v0 == 0 then goto L2eaaf4;
+  #L2eaaea.  if v3 == 0 then goto L2eaaf4;
+  #L2eaaee.  call `d`(v0) @signature `Lio/flutter/plugins/firebase/messaging/r$i;.d:()V` @kind virtual;
+  #L2eaaf4.  v3:= v2.`io.flutter.plugins.firebase.messaging.r.mCurProcessor` @type ^`io.flutter.plugins.firebase.messaging.r$a` @kind object;
+  #L2eaaf8.  v0:= `@@android.os.AsyncTask.THREAD_POOL_EXECUTOR` @type ^`java.util.concurrent.Executor` @kind object;
+  #L2eaafc.  v1:= 0I;
+  #L2eaafe.  v1:= new `java.lang.Void`[v1];
+  #L2eab02.  call temp:= `executeOnExecutor`(v3, v0, v1) @signature `Landroid/os/AsyncTask;.executeOnExecutor:(Ljava/util/concurrent/Executor;[Ljava/lang/Object;)Landroid/os/AsyncTask;` @kind virtual;
+  #L2eab08.  return @kind void;
+}
+procedure `boolean` `isStopped`(`io.flutter.plugins.firebase.messaging.r` v1 @kind this) @signature `Lio/flutter/plugins/firebase/messaging/r;.isStopped:()Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L2ea850.  v0:= v1.`io.flutter.plugins.firebase.messaging.r.mStopped` @type ^`boolean` @kind boolean;
+  #L2ea854.  return v0;
+}
+procedure `android.os.IBinder` `onBind`(`io.flutter.plugins.firebase.messaging.r` v0 @kind this, `android.content.Intent` v1 @kind object) @signature `Lio/flutter/plugins/firebase/messaging/r;.onBind:(Landroid/content/Intent;)Landroid/os/IBinder;` @AccessFlag PUBLIC {
+    temp;
+
+  #L2ea7f4.  v1:= v0.`io.flutter.plugins.firebase.messaging.r.mJobImpl` @type ^`io.flutter.plugins.firebase.messaging.r$b` @kind object;
+  #L2ea7f8.  if v1 == 0 then goto L2ea806;
+  #L2ea7fc.  call temp:= `a`(v1) @signature `Lio/flutter/plugins/firebase/messaging/r$b;.a:()Landroid/os/IBinder;` @kind interface;
+  #L2ea802.  v1:= temp @kind object;
+  #L2ea804.  return v1 @kind object;
+  #L2ea806.  v1:= 0I;
+  #L2ea808.  return v1 @kind object;
+}
+procedure `void` `onCreate`(`io.flutter.plugins.firebase.messaging.r` v3 @kind this) @signature `Lio/flutter/plugins/firebase/messaging/r;.onCreate:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L2eab1c.  call `onCreate`(v3) @signature `Landroid/app/Service;.onCreate:()V` @kind super;
+  #L2eab22.  v0:= `@@android.os.Build$VERSION.SDK_INT` @type ^`int`;
+  #L2eab26.  v1:= 26I;
+  #L2eab2a.  if v0 < v1 then goto L2eab42;
+  #L2eab2e.  v0:= new `io.flutter.plugins.firebase.messaging.r$g`;
+  #L2eab32.  call `<init>`(v0, v3) @signature `Lio/flutter/plugins/firebase/messaging/r$g;.<init>:(Lio/flutter/plugins/firebase/messaging/r;)V` @kind direct;
+  #L2eab38.  v3.`io.flutter.plugins.firebase.messaging.r.mJobImpl` @type ^`io.flutter.plugins.firebase.messaging.r$b` := v0 @kind object;
+  #L2eab3c.  v0:= 0I;
+  #L2eab3e.  v3.`io.flutter.plugins.firebase.messaging.r.mCompatWorkEnqueuer` @type ^`io.flutter.plugins.firebase.messaging.r$i` := v0 @kind object;
+  #L2eab42.  v0:= new `android.content.ComponentName`;
+  #L2eab46.  call temp:= `getClass`(v3) @signature `Ljava/lang/Object;.getClass:()Ljava/lang/Class;` @kind virtual;
+  #L2eab4c.  v1:= temp @kind object;
+  #L2eab4e.  call `<init>`(v0, v3, v1) @signature `Landroid/content/ComponentName;.<init>:(Landroid/content/Context;Ljava/lang/Class;)V` @kind direct;
+  #L2eab54.  v1:= 1I;
+  #L2eab56.  v2:= 0I;
+  #L2eab58.  call temp:= `getWorkEnqueuer`(v3, v0, v2, v2, v1) @signature `Lio/flutter/plugins/firebase/messaging/r;.getWorkEnqueuer:(Landroid/content/Context;Landroid/content/ComponentName;ZIZ)Lio/flutter/plugins/firebase/messaging/r$i;` @kind static;
+  #L2eab5e.  v0:= temp @kind object;
+  #L2eab60.  v3.`io.flutter.plugins.firebase.messaging.r.mCompatWorkEnqueuer` @type ^`io.flutter.plugins.firebase.messaging.r$i` := v0 @kind object;
+  #L2eab64.  return @kind void;
+}
+procedure `void` `onDestroy`(`io.flutter.plugins.firebase.messaging.r` v2 @kind this) @signature `Lio/flutter/plugins/firebase/messaging/r;.onDestroy:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L2eab78.  call `onDestroy`(v2) @signature `Landroid/app/Service;.onDestroy:()V` @kind super;
+  #L2eab7e.  call temp:= `doStopCurrentWork`(v2) @signature `Lio/flutter/plugins/firebase/messaging/r;.doStopCurrentWork:()Z` @kind virtual;
+  #L2eab84.  v0:= v2.`io.flutter.plugins.firebase.messaging.r.mCompatQueue` @type ^`java.util.ArrayList` @kind object;
+  #L2eab88.  @monitorenter v0
+  #L2eab8a.  v1:= 1I;
+  #L2eab8c.  v2.`io.flutter.plugins.firebase.messaging.r.mDestroyed` @type ^`boolean` := v1 @kind boolean;
+  #L2eab90.  v1:= v2.`io.flutter.plugins.firebase.messaging.r.mCompatWorkEnqueuer` @type ^`io.flutter.plugins.firebase.messaging.r$i` @kind object;
+  #L2eab94.  call `c`(v1) @signature `Lio/flutter/plugins/firebase/messaging/r$i;.c:()V` @kind virtual;
+  #L2eab9a.  @monitorexit v0
+  #L2eab9c.  return @kind void;
+  #L2eab9e.  v1:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L2eaba0.  @monitorexit v0
+  #L2eaba2.  throw v1;
+  catch `java.lang.Throwable` @[L2eab8c..L2eaba2] goto L2eab9e;
+}
+procedure `void` `onHandleWork`(`android.content.Intent` v0 @kind object) @signature `Lio/flutter/plugins/firebase/messaging/r;.onHandleWork:(Landroid/content/Intent;)V` @AccessFlag PROTECTED_ABSTRACT {
+
+  # return;
+}
+procedure `int` `onStartCommand`(`io.flutter.plugins.firebase.messaging.r` v2 @kind this, `android.content.Intent` v3 @kind object, `int` v4 , `int` v5 ) @signature `Lio/flutter/plugins/firebase/messaging/r;.onStartCommand:(Landroid/content/Intent;II)I` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L2ea87c.  v4:= v2.`io.flutter.plugins.firebase.messaging.r.mCompatWorkEnqueuer` @type ^`io.flutter.plugins.firebase.messaging.r$i` @kind object;
+  #L2ea880.  call `e`(v4) @signature `Lio/flutter/plugins/firebase/messaging/r$i;.e:()V` @kind virtual;
+  #L2ea886.  v4:= v2.`io.flutter.plugins.firebase.messaging.r.mCompatQueue` @type ^`java.util.ArrayList` @kind object;
+  #L2ea88a.  @monitorenter v4
+  #L2ea88c.  v0:= v2.`io.flutter.plugins.firebase.messaging.r.mCompatQueue` @type ^`java.util.ArrayList` @kind object;
+  #L2ea890.  v1:= new `io.flutter.plugins.firebase.messaging.r$d`;
+  #L2ea894.  if v3 == 0 then goto L2ea89a;
+  #L2ea898.  goto L2ea8a4;
+  #L2ea89a.  v3:= new `android.content.Intent`;
+  #L2ea89e.  call `<init>`(v3) @signature `Landroid/content/Intent;.<init>:()V` @kind direct;
+  #L2ea8a4.  call `<init>`(v1, v2, v3, v5) @signature `Lio/flutter/plugins/firebase/messaging/r$d;.<init>:(Lio/flutter/plugins/firebase/messaging/r;Landroid/content/Intent;I)V` @kind direct;
+  #L2ea8aa.  call temp:= `add`(v0, v1) @signature `Ljava/util/ArrayList;.add:(Ljava/lang/Object;)Z` @kind virtual;
+  #L2ea8b0.  v3:= 1I;
+  #L2ea8b2.  call `ensureProcessorRunningLocked`(v2, v3) @signature `Lio/flutter/plugins/firebase/messaging/r;.ensureProcessorRunningLocked:(Z)V` @kind virtual;
+  #L2ea8b8.  @monitorexit v4
+  #L2ea8ba.  v3:= 3I;
+  #L2ea8bc.  return v3;
+  #L2ea8be.  v3:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L2ea8c0.  @monitorexit v4
+  #L2ea8c2.  throw v3;
+  catch `java.lang.Throwable` @[L2ea88c..L2ea8c2] goto L2ea8be;
+}
+procedure `boolean` `onStopCurrentWork`(`io.flutter.plugins.firebase.messaging.r` v1 @kind this) @signature `Lio/flutter/plugins/firebase/messaging/r;.onStopCurrentWork:()Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L2ea868.  v0:= 1I;
+  #L2ea86a.  return v0;
+}
+procedure `void` `processorFinished`(`io.flutter.plugins.firebase.messaging.r` v2 @kind this) @signature `Lio/flutter/plugins/firebase/messaging/r;.processorFinished:()V` @AccessFlag  {
+    temp;
+    v0;
+    v1;
+
+  #L2eabc0.  v0:= v2.`io.flutter.plugins.firebase.messaging.r.mCompatQueue` @type ^`java.util.ArrayList` @kind object;
+  #L2eabc4.  if v0 == 0 then goto L2eac0a;
+  #L2eabc8.  @monitorenter v0
+  #L2eabca.  v1:= 0I;
+  #L2eabcc.  v2.`io.flutter.plugins.firebase.messaging.r.mCurProcessor` @type ^`io.flutter.plugins.firebase.messaging.r$a` := v1 @kind object;
+  #L2eabd0.  v1:= v2.`io.flutter.plugins.firebase.messaging.r.mCompatQueue` @type ^`java.util.ArrayList` @kind object;
+  #L2eabd4.  if v1 == 0 then goto L2eabee;
+  #L2eabd8.  call temp:= `size`(v1) @signature `Ljava/util/ArrayList;.size:()I` @kind virtual;
+  #L2eabde.  v1:= temp;
+  #L2eabe0.  if v1 <= 0 then goto L2eabee;
+  #L2eabe4.  v1:= 0I;
+  #L2eabe6.  call `ensureProcessorRunningLocked`(v2, v1) @signature `Lio/flutter/plugins/firebase/messaging/r;.ensureProcessorRunningLocked:(Z)V` @kind virtual;
+  #L2eabec.  goto L2eac00;
+  #L2eabee.  v1:= v2.`io.flutter.plugins.firebase.messaging.r.mDestroyed` @type ^`boolean` @kind boolean;
+  #L2eabf2.  if v1 != 0 then goto L2eac00;
+  #L2eabf6.  v1:= v2.`io.flutter.plugins.firebase.messaging.r.mCompatWorkEnqueuer` @type ^`io.flutter.plugins.firebase.messaging.r$i` @kind object;
+  #L2eabfa.  call `c`(v1) @signature `Lio/flutter/plugins/firebase/messaging/r$i;.c:()V` @kind virtual;
+  #L2eac00.  @monitorexit v0
+  #L2eac02.  goto L2eac0a;
+  #L2eac04.  v1:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L2eac06.  @monitorexit v0
+  #L2eac08.  throw v1;
+  #L2eac0a.  return @kind void;
+  catch `java.lang.Throwable` @[L2eabcc..L2eac08] goto L2eac04;
+}
+procedure `void` `setInterruptIfStopped`(`io.flutter.plugins.firebase.messaging.r` v0 @kind this, `boolean` v1 ) @signature `Lio/flutter/plugins/firebase/messaging/r;.setInterruptIfStopped:(Z)V` @AccessFlag PUBLIC {
+    temp;
+
+  #L2eac28.  v0.`io.flutter.plugins.firebase.messaging.r.mInterruptIfStopped` @type ^`boolean` := v1 @kind boolean;
+  #L2eac2c.  return @kind void;
+}

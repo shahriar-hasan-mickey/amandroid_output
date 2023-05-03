@@ -1,0 +1,61 @@
+Application Name: icc_implicit_mix1.apk
+Uses Permissions: android.permission.READ_PHONE_STATE
+
+Component org.arguslab.icc_implicit_mix1.FooActivity
+  Component type: activity
+  Exported: true
+  Dynamic Registered: false
+  Required Permission: 
+  IntentFilters:
+    IntentFilter:(Actions:["test_action"],Categories:["test_category1","test_category2","android.intent.category.DEFAULT"],Data:[(Schemes:<"amandroid">,Hosts:<"fgwei">,Ports:<"8888">,PathPrefixs:<"/abc">,MimeTypes:<"test/type">)])
+
+  Inter-component communication (ICC) Result:
+
+
+Component org.arguslab.icc_implicit_mix1.HookActivity
+  Component type: activity
+  Exported: true
+  Dynamic Registered: false
+  Required Permission: 
+  IntentFilters:
+    IntentFilter:(Actions:["test_action2"],Categories:["test_category3","android.intent.category.DEFAULT","test_category4"],Data:[(Schemes:<"amandroid">,Hosts:<"fgwei">,Ports:<"8888">,PathPatterns:<".*\\.com">,MimeTypes:<"test/type">)])
+
+  Inter-component communication (ICC) Result:
+
+
+Component org.arguslab.icc_implicit_mix1.MainActivity
+  Component type: activity
+  Exported: true
+  Dynamic Registered: false
+  Required Permission: 
+  IntentFilters:
+    IntentFilter:(Actions:["android.intent.action.MAIN"],Categories:["android.intent.category.LAUNCHER"])
+
+  Inter-component communication (ICC) Result:
+
+
+
+Taint analysis result:
+  Sources found:
+  Sinks found:
+  Discovered taint paths are listed below:
+    TaintPath:
+      Source: <Descriptors: icc_source: #L018a4e.  call temp:= `getStringExtra`(v3, v4) @signature `Landroid/content/Intent;.getStringExtra:(Ljava/lang/String;)Ljava/lang/String;` @kind virtual;>
+      Sink: <Descriptors: icc_sink: #L018a5c.  call `startActivity`(v5, v0) @signature `Lorg/arguslab/icc_implicit_mix1/FooActivity;.startActivity:(Landroid/content/Intent;)V` @kind virtual;>
+      Types: 
+      The path consists of the following edges ("->"). The nodes have the context information (p1 to pn means which parameter). The source is at the top :
+        List(#L018a4e.  call temp:= `getStringExtra`(v3, v4) @signature `Landroid/content/Intent;.getStringExtra:(Ljava/lang/String;)Ljava/lang/String;` @kind virtual;, #L018a56.  call temp:= `putExtra`(v0, v2, v3) @signature `Landroid/content/Intent;.putExtra:(Ljava/lang/String;Ljava/lang/String;)Landroid/content/Intent;` @kind virtual;, #L018a5c.  call `startActivity`(v5, v0) @signature `Lorg/arguslab/icc_implicit_mix1/FooActivity;.startActivity:(Landroid/content/Intent;)V` @kind virtual;)
+
+    TaintPath:
+      Source: <Descriptors: icc_source: #L018ac0.  call temp:= `getStringExtra`(v0, v3) @signature `Landroid/content/Intent;.getStringExtra:(Ljava/lang/String;)Ljava/lang/String;` @kind virtual;>
+      Sink: <Descriptors: api_sink: #L018adc.  call temp:= `d`(v2, v1) @signature `Landroid/util/Log;.d:(Ljava/lang/String;Ljava/lang/String;)I` @kind static;>
+      Types: 
+      The path consists of the following edges ("->"). The nodes have the context information (p1 to pn means which parameter). The source is at the top :
+        List(#L018ac0.  call temp:= `getStringExtra`(v0, v3) @signature `Landroid/content/Intent;.getStringExtra:(Ljava/lang/String;)Ljava/lang/String;` @kind virtual;, #L018ac8.  call temp:= `append`(v2, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;, #L018ad0.  call temp:= `toString`(v2) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;, #L018adc.  call temp:= `d`(v2, v1) @signature `Landroid/util/Log;.d:(Ljava/lang/String;Ljava/lang/String;)I` @kind static;)
+
+    TaintPath:
+      Source: <Descriptors: api_source: #L018b1c.  call temp:= `getDeviceId`(v2) @signature `Landroid/telephony/TelephonyManager;.getDeviceId:()Ljava/lang/String;` @kind virtual;>
+      Sink: <Descriptors: icc_sink: #L018b6c.  call `startActivity`(v5, v0) @signature `Lorg/arguslab/icc_implicit_mix1/MainActivity;.startActivity:(Landroid/content/Intent;)V` @kind virtual;>
+      Types: 
+      The path consists of the following edges ("->"). The nodes have the context information (p1 to pn means which parameter). The source is at the top :
+        List(#L018b1c.  call temp:= `getDeviceId`(v2) @signature `Landroid/telephony/TelephonyManager;.getDeviceId:()Ljava/lang/String;` @kind virtual;, #L018b66.  call temp:= `putExtra`(v0, v4, v1) @signature `Landroid/content/Intent;.putExtra:(Ljava/lang/String;Ljava/lang/String;)Landroid/content/Intent;` @kind virtual;, #L018b6c.  call `startActivity`(v5, v0) @signature `Lorg/arguslab/icc_implicit_mix1/MainActivity;.startActivity:(Landroid/content/Intent;)V` @kind virtual;)

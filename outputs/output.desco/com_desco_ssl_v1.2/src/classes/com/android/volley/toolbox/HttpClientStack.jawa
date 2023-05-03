@@ -1,0 +1,215 @@
+record `com.android.volley.toolbox.HttpClientStack` @kind class @AccessFlag PUBLIC extends `com.android.volley.toolbox.HttpStack` @kind interface {
+  `org.apache.http.client.HttpClient` `com.android.volley.toolbox.HttpClientStack.mClient` @AccessFlag PROTECTED_FINAL;
+}
+global `java.lang.String` `@@com.android.volley.toolbox.HttpClientStack.HEADER_CONTENT_TYPE` @AccessFlag PRIVATE_STATIC_FINAL;
+procedure `void` `<init>`(`com.android.volley.toolbox.HttpClientStack` v0 @kind this, `org.apache.http.client.HttpClient` v1 @kind object @name `client`) @signature `Lcom/android/volley/toolbox/HttpClientStack;.<init>:(Lorg/apache/http/client/HttpClient;)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+
+  #L2b0560.  call `<init>`(v0) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L2b0566.  v0.`com.android.volley.toolbox.HttpClientStack.mClient` @type ^`org.apache.http.client.HttpClient` := v1 @kind object;
+  #L2b056a.  return @kind void;
+}
+procedure `void` `addHeaders`(`org.apache.http.client.methods.HttpUriRequest` v3 @kind object @name `httpRequest`, `java.util.Map` v4 @kind object) @signature `Lcom/android/volley/toolbox/HttpClientStack;.addHeaders:(Lorg/apache/http/client/methods/HttpUriRequest;Ljava/util/Map;)V` @AccessFlag PRIVATE_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L2b057c.  call temp:= `keySet`(v4) @signature `Ljava/util/Map;.keySet:()Ljava/util/Set;` @kind interface;
+  #L2b0582.  v2:= temp @kind object;
+  #L2b0584.  call temp:= `iterator`(v2) @signature `Ljava/util/Set;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L2b058a.  v0:= temp @kind object;
+  #L2b058c.  call temp:= `hasNext`(v0) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L2b0592.  v2:= temp;
+  #L2b0594.  if v2 == 0 then goto L2b05b8;
+  #L2b0598.  call temp:= `next`(v0) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L2b059e.  v1:= temp @kind object;
+  #L2b05a0.  v1:= (`java.lang.String`) v1 @kind object;
+  #L2b05a4.  call temp:= `get`(v4, v1) @signature `Ljava/util/Map;.get:(Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L2b05aa.  v2:= temp @kind object;
+  #L2b05ac.  v2:= (`java.lang.String`) v2 @kind object;
+  #L2b05b0.  call `setHeader`(v3, v1, v2) @signature `Lorg/apache/http/client/methods/HttpUriRequest;.setHeader:(Ljava/lang/String;Ljava/lang/String;)V` @kind interface;
+  #L2b05b6.  goto L2b058c;
+  #L2b05b8.  return @kind void;
+}
+procedure `org.apache.http.client.methods.HttpUriRequest` `createHttpRequest`(`com.android.volley.Request` v7 @kind object, `java.util.Map` v8 @kind object) @signature `Lcom/android/volley/toolbox/HttpClientStack;.createHttpRequest:(Lcom/android/volley/Request;Ljava/util/Map;)Lorg/apache/http/client/methods/HttpUriRequest;` @AccessFlag STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+
+  #L2b05cc.  call temp:= `getMethod`(v7) @signature `Lcom/android/volley/Request;.getMethod:()I` @kind virtual;
+  #L2b05d2.  v5:= temp;
+  #L2b05d4.  goto L2b072c;
+  #L2b05da.  v5:= new `java.lang.IllegalStateException`;
+  #L2b05de.  v6:= "Unknown request method." @kind object;
+  #L2b05e2.  call `<init>`(v5, v6) @signature `Ljava/lang/IllegalStateException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L2b05e8.  throw v5;
+  #L2b05ea.  call temp:= `getPostBody`(v7) @signature `Lcom/android/volley/Request;.getPostBody:()[B` @kind virtual;
+  #L2b05f0.  v2:= temp @kind object;
+  #L2b05f2.  if v2 == 0 then goto L2b062c;
+  #L2b05f6.  v3:= new `org.apache.http.client.methods.HttpPost`;
+  #L2b05fa.  call temp:= `getUrl`(v7) @signature `Lcom/android/volley/Request;.getUrl:()Ljava/lang/String;` @kind virtual;
+  #L2b0600.  v5:= temp @kind object;
+  #L2b0602.  call `<init>`(v3, v5) @signature `Lorg/apache/http/client/methods/HttpPost;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L2b0608.  v5:= "Content-Type" @kind object;
+  #L2b060c.  call temp:= `getPostBodyContentType`(v7) @signature `Lcom/android/volley/Request;.getPostBodyContentType:()Ljava/lang/String;` @kind virtual;
+  #L2b0612.  v6:= temp @kind object;
+  #L2b0614.  call `addHeader`(v3, v5, v6) @signature `Lorg/apache/http/client/methods/HttpPost;.addHeader:(Ljava/lang/String;Ljava/lang/String;)V` @kind virtual;
+  #L2b061a.  v0:= new `org.apache.http.entity.ByteArrayEntity`;
+  #L2b061e.  call `<init>`(v0, v2) @signature `Lorg/apache/http/entity/ByteArrayEntity;.<init>:([B)V` @kind direct;
+  #L2b0624.  call `setEntity`(v3, v0) @signature `Lorg/apache/http/client/methods/HttpPost;.setEntity:(Lorg/apache/http/HttpEntity;)V` @kind virtual;
+  #L2b062a.  return v3 @kind object;
+  #L2b062c.  v3:= new `org.apache.http.client.methods.HttpGet`;
+  #L2b0630.  call temp:= `getUrl`(v7) @signature `Lcom/android/volley/Request;.getUrl:()Ljava/lang/String;` @kind virtual;
+  #L2b0636.  v5:= temp @kind object;
+  #L2b0638.  call `<init>`(v3, v5) @signature `Lorg/apache/http/client/methods/HttpGet;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L2b063e.  goto L2b062a;
+  #L2b0640.  v3:= new `org.apache.http.client.methods.HttpGet`;
+  #L2b0644.  call temp:= `getUrl`(v7) @signature `Lcom/android/volley/Request;.getUrl:()Ljava/lang/String;` @kind virtual;
+  #L2b064a.  v5:= temp @kind object;
+  #L2b064c.  call `<init>`(v3, v5) @signature `Lorg/apache/http/client/methods/HttpGet;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L2b0652.  goto L2b062a;
+  #L2b0654.  v3:= new `org.apache.http.client.methods.HttpDelete`;
+  #L2b0658.  call temp:= `getUrl`(v7) @signature `Lcom/android/volley/Request;.getUrl:()Ljava/lang/String;` @kind virtual;
+  #L2b065e.  v5:= temp @kind object;
+  #L2b0660.  call `<init>`(v3, v5) @signature `Lorg/apache/http/client/methods/HttpDelete;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L2b0666.  goto L2b062a;
+  #L2b0668.  v3:= new `org.apache.http.client.methods.HttpPost`;
+  #L2b066c.  call temp:= `getUrl`(v7) @signature `Lcom/android/volley/Request;.getUrl:()Ljava/lang/String;` @kind virtual;
+  #L2b0672.  v5:= temp @kind object;
+  #L2b0674.  call `<init>`(v3, v5) @signature `Lorg/apache/http/client/methods/HttpPost;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L2b067a.  v5:= "Content-Type" @kind object;
+  #L2b067e.  call temp:= `getBodyContentType`(v7) @signature `Lcom/android/volley/Request;.getBodyContentType:()Ljava/lang/String;` @kind virtual;
+  #L2b0684.  v6:= temp @kind object;
+  #L2b0686.  call `addHeader`(v3, v5, v6) @signature `Lorg/apache/http/client/methods/HttpPost;.addHeader:(Ljava/lang/String;Ljava/lang/String;)V` @kind virtual;
+  #L2b068c.  call `setEntityIfNonEmptyBody`(v3, v7) @signature `Lcom/android/volley/toolbox/HttpClientStack;.setEntityIfNonEmptyBody:(Lorg/apache/http/client/methods/HttpEntityEnclosingRequestBase;Lcom/android/volley/Request;)V` @kind static;
+  #L2b0692.  goto L2b062a;
+  #L2b0694.  v4:= new `org.apache.http.client.methods.HttpPut`;
+  #L2b0698.  call temp:= `getUrl`(v7) @signature `Lcom/android/volley/Request;.getUrl:()Ljava/lang/String;` @kind virtual;
+  #L2b069e.  v5:= temp @kind object;
+  #L2b06a0.  call `<init>`(v4, v5) @signature `Lorg/apache/http/client/methods/HttpPut;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L2b06a6.  v5:= "Content-Type" @kind object;
+  #L2b06aa.  call temp:= `getBodyContentType`(v7) @signature `Lcom/android/volley/Request;.getBodyContentType:()Ljava/lang/String;` @kind virtual;
+  #L2b06b0.  v6:= temp @kind object;
+  #L2b06b2.  call `addHeader`(v4, v5, v6) @signature `Lorg/apache/http/client/methods/HttpPut;.addHeader:(Ljava/lang/String;Ljava/lang/String;)V` @kind virtual;
+  #L2b06b8.  call `setEntityIfNonEmptyBody`(v4, v7) @signature `Lcom/android/volley/toolbox/HttpClientStack;.setEntityIfNonEmptyBody:(Lorg/apache/http/client/methods/HttpEntityEnclosingRequestBase;Lcom/android/volley/Request;)V` @kind static;
+  #L2b06be.  v3:= v4 @kind object;
+  #L2b06c0.  goto L2b062a;
+  #L2b06c2.  v3:= new `org.apache.http.client.methods.HttpHead`;
+  #L2b06c6.  call temp:= `getUrl`(v7) @signature `Lcom/android/volley/Request;.getUrl:()Ljava/lang/String;` @kind virtual;
+  #L2b06cc.  v5:= temp @kind object;
+  #L2b06ce.  call `<init>`(v3, v5) @signature `Lorg/apache/http/client/methods/HttpHead;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L2b06d4.  goto L2b062a;
+  #L2b06d6.  v3:= new `org.apache.http.client.methods.HttpOptions`;
+  #L2b06da.  call temp:= `getUrl`(v7) @signature `Lcom/android/volley/Request;.getUrl:()Ljava/lang/String;` @kind virtual;
+  #L2b06e0.  v5:= temp @kind object;
+  #L2b06e2.  call `<init>`(v3, v5) @signature `Lorg/apache/http/client/methods/HttpOptions;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L2b06e8.  goto L2b062a;
+  #L2b06ea.  v3:= new `org.apache.http.client.methods.HttpTrace`;
+  #L2b06ee.  call temp:= `getUrl`(v7) @signature `Lcom/android/volley/Request;.getUrl:()Ljava/lang/String;` @kind virtual;
+  #L2b06f4.  v5:= temp @kind object;
+  #L2b06f6.  call `<init>`(v3, v5) @signature `Lorg/apache/http/client/methods/HttpTrace;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L2b06fc.  goto L2b062a;
+  #L2b06fe.  v1:= new `com.android.volley.toolbox.HttpClientStack$HttpPatch`;
+  #L2b0702.  call temp:= `getUrl`(v7) @signature `Lcom/android/volley/Request;.getUrl:()Ljava/lang/String;` @kind virtual;
+  #L2b0708.  v5:= temp @kind object;
+  #L2b070a.  call `<init>`(v1, v5) @signature `Lcom/android/volley/toolbox/HttpClientStack$HttpPatch;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L2b0710.  v5:= "Content-Type" @kind object;
+  #L2b0714.  call temp:= `getBodyContentType`(v7) @signature `Lcom/android/volley/Request;.getBodyContentType:()Ljava/lang/String;` @kind virtual;
+  #L2b071a.  v6:= temp @kind object;
+  #L2b071c.  call `addHeader`(v1, v5, v6) @signature `Lcom/android/volley/toolbox/HttpClientStack$HttpPatch;.addHeader:(Ljava/lang/String;Ljava/lang/String;)V` @kind virtual;
+  #L2b0722.  call `setEntityIfNonEmptyBody`(v1, v7) @signature `Lcom/android/volley/toolbox/HttpClientStack;.setEntityIfNonEmptyBody:(Lorg/apache/http/client/methods/HttpEntityEnclosingRequestBase;Lcom/android/volley/Request;)V` @kind static;
+  #L2b0728.  v3:= v1 @kind object;
+  #L2b072a.  goto L2b062a;
+  #L2b072c.  switch v5
+                  | -1 => goto L2b05ea
+                  | 0 => goto L2b0640
+                  | 1 => goto L2b0668
+                  | 2 => goto L2b0694
+                  | 3 => goto L2b0654
+                  | 4 => goto L2b06c2
+                  | 5 => goto L2b06d6
+                  | 6 => goto L2b06ea
+                  | 7 => goto L2b06fe
+                  | else => goto L2b05da;
+}
+procedure `java.util.List` `getPostParameterPairs`(`java.util.Map` v5 @kind object) @signature `Lcom/android/volley/toolbox/HttpClientStack;.getPostParameterPairs:(Ljava/util/Map;)Ljava/util/List;` @AccessFlag PRIVATE_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L2b0768.  v2:= new `java.util.ArrayList`;
+  #L2b076c.  call temp:= `size`(v5) @signature `Ljava/util/Map;.size:()I` @kind interface;
+  #L2b0772.  v3:= temp;
+  #L2b0774.  call `<init>`(v2, v3) @signature `Ljava/util/ArrayList;.<init>:(I)V` @kind direct;
+  #L2b077a.  call temp:= `keySet`(v5) @signature `Ljava/util/Map;.keySet:()Ljava/util/Set;` @kind interface;
+  #L2b0780.  v3:= temp @kind object;
+  #L2b0782.  call temp:= `iterator`(v3) @signature `Ljava/util/Set;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L2b0788.  v0:= temp @kind object;
+  #L2b078a.  call temp:= `hasNext`(v0) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L2b0790.  v3:= temp;
+  #L2b0792.  if v3 == 0 then goto L2b07c0;
+  #L2b0796.  call temp:= `next`(v0) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L2b079c.  v1:= temp @kind object;
+  #L2b079e.  v1:= (`java.lang.String`) v1 @kind object;
+  #L2b07a2.  v4:= new `org.apache.http.message.BasicNameValuePair`;
+  #L2b07a6.  call temp:= `get`(v5, v1) @signature `Ljava/util/Map;.get:(Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L2b07ac.  v3:= temp @kind object;
+  #L2b07ae.  v3:= (`java.lang.String`) v3 @kind object;
+  #L2b07b2.  call `<init>`(v4, v1, v3) @signature `Lorg/apache/http/message/BasicNameValuePair;.<init>:(Ljava/lang/String;Ljava/lang/String;)V` @kind direct;
+  #L2b07b8.  call temp:= `add`(v2, v4) @signature `Ljava/util/List;.add:(Ljava/lang/Object;)Z` @kind interface;
+  #L2b07be.  goto L2b078a;
+  #L2b07c0.  return v2 @kind object;
+}
+procedure `void` `setEntityIfNonEmptyBody`(`org.apache.http.client.methods.HttpEntityEnclosingRequestBase` v2 @kind object @name `httpRequest`, `com.android.volley.Request` v3 @kind object) @signature `Lcom/android/volley/toolbox/HttpClientStack;.setEntityIfNonEmptyBody:(Lorg/apache/http/client/methods/HttpEntityEnclosingRequestBase;Lcom/android/volley/Request;)V` @AccessFlag PRIVATE_STATIC {
+    temp;
+    v0;
+    v1;
+
+  #L2b07d4.  call temp:= `getBody`(v3) @signature `Lcom/android/volley/Request;.getBody:()[B` @kind virtual;
+  #L2b07da.  v0:= temp @kind object;
+  #L2b07dc.  if v0 == 0 then goto L2b07f0;
+  #L2b07e0.  v1:= new `org.apache.http.entity.ByteArrayEntity`;
+  #L2b07e4.  call `<init>`(v1, v0) @signature `Lorg/apache/http/entity/ByteArrayEntity;.<init>:([B)V` @kind direct;
+  #L2b07ea.  call `setEntity`(v2, v1) @signature `Lorg/apache/http/client/methods/HttpEntityEnclosingRequestBase;.setEntity:(Lorg/apache/http/HttpEntity;)V` @kind virtual;
+  #L2b07f0.  return @kind void;
+}
+procedure `void` `onPrepareRequest`(`com.android.volley.toolbox.HttpClientStack` v0 @kind this, `org.apache.http.client.methods.HttpUriRequest` v1 @kind object @name `request`) @signature `Lcom/android/volley/toolbox/HttpClientStack;.onPrepareRequest:(Lorg/apache/http/client/methods/HttpUriRequest;)V` @AccessFlag PROTECTED {
+    temp;
+
+  #L2b0804.  return @kind void;
+}
+procedure `org.apache.http.HttpResponse` `performRequest`(`com.android.volley.toolbox.HttpClientStack` v4 @kind this, `com.android.volley.Request` v5 @kind object, `java.util.Map` v6 @kind object) @signature `Lcom/android/volley/toolbox/HttpClientStack;.performRequest:(Lcom/android/volley/Request;Ljava/util/Map;)Lorg/apache/http/HttpResponse;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L2b0818.  call temp:= `createHttpRequest`(v5, v6) @signature `Lcom/android/volley/toolbox/HttpClientStack;.createHttpRequest:(Lcom/android/volley/Request;Ljava/util/Map;)Lorg/apache/http/client/methods/HttpUriRequest;` @kind static;
+  #L2b081e.  v1:= temp @kind object;
+  #L2b0820.  call `addHeaders`(v1, v6) @signature `Lcom/android/volley/toolbox/HttpClientStack;.addHeaders:(Lorg/apache/http/client/methods/HttpUriRequest;Ljava/util/Map;)V` @kind static;
+  #L2b0826.  call temp:= `getHeaders`(v5) @signature `Lcom/android/volley/Request;.getHeaders:()Ljava/util/Map;` @kind virtual;
+  #L2b082c.  v3:= temp @kind object;
+  #L2b082e.  call `addHeaders`(v1, v3) @signature `Lcom/android/volley/toolbox/HttpClientStack;.addHeaders:(Lorg/apache/http/client/methods/HttpUriRequest;Ljava/util/Map;)V` @kind static;
+  #L2b0834.  call `onPrepareRequest`(v4, v1) @signature `Lcom/android/volley/toolbox/HttpClientStack;.onPrepareRequest:(Lorg/apache/http/client/methods/HttpUriRequest;)V` @kind virtual;
+  #L2b083a.  call temp:= `getParams`(v1) @signature `Lorg/apache/http/client/methods/HttpUriRequest;.getParams:()Lorg/apache/http/params/HttpParams;` @kind interface;
+  #L2b0840.  v0:= temp @kind object;
+  #L2b0842.  call temp:= `getTimeoutMs`(v5) @signature `Lcom/android/volley/Request;.getTimeoutMs:()I` @kind virtual;
+  #L2b0848.  v2:= temp;
+  #L2b084a.  v3:= 5000I;
+  #L2b084e.  call `setConnectionTimeout`(v0, v3) @signature `Lorg/apache/http/params/HttpConnectionParams;.setConnectionTimeout:(Lorg/apache/http/params/HttpParams;I)V` @kind static;
+  #L2b0854.  call `setSoTimeout`(v0, v2) @signature `Lorg/apache/http/params/HttpConnectionParams;.setSoTimeout:(Lorg/apache/http/params/HttpParams;I)V` @kind static;
+  #L2b085a.  v3:= v4.`com.android.volley.toolbox.HttpClientStack.mClient` @type ^`org.apache.http.client.HttpClient` @kind object;
+  #L2b085e.  call temp:= `execute`(v3, v1) @signature `Lorg/apache/http/client/HttpClient;.execute:(Lorg/apache/http/client/methods/HttpUriRequest;)Lorg/apache/http/HttpResponse;` @kind interface;
+  #L2b0864.  v3:= temp @kind object;
+  #L2b0866.  return v3 @kind object;
+}

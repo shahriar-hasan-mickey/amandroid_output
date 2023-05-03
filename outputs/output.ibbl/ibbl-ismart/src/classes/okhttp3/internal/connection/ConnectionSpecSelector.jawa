@@ -1,0 +1,133 @@
+record `okhttp3.internal.connection.ConnectionSpecSelector` @kind class @AccessFlag PUBLIC_FINAL {
+  `java.util.List` `okhttp3.internal.connection.ConnectionSpecSelector.connectionSpecs` @AccessFlag PRIVATE_FINAL;
+  `boolean` `okhttp3.internal.connection.ConnectionSpecSelector.isFallback` @AccessFlag PRIVATE;
+  `boolean` `okhttp3.internal.connection.ConnectionSpecSelector.isFallbackPossible` @AccessFlag PRIVATE;
+  `int` `okhttp3.internal.connection.ConnectionSpecSelector.nextModeIndex` @AccessFlag PRIVATE;
+}
+procedure `void` `<init>`(`okhttp3.internal.connection.ConnectionSpecSelector` v1 @kind this, `java.util.List` v2 @kind object) @signature `Lokhttp3/internal/connection/ConnectionSpecSelector;.<init>:(Ljava/util/List;)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L237780.  call `<init>`(v1) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L237786.  v0:= 0I;
+  #L237788.  v1.`okhttp3.internal.connection.ConnectionSpecSelector.nextModeIndex` @type ^`int` := v0;
+  #L23778c.  v1.`okhttp3.internal.connection.ConnectionSpecSelector.connectionSpecs` @type ^`java.util.List` := v2 @kind object;
+  #L237790.  return @kind void;
+}
+procedure `boolean` `isFallbackPossible`(`okhttp3.internal.connection.ConnectionSpecSelector` v2 @kind this, `javax.net.ssl.SSLSocket` v3 @kind object) @signature `Lokhttp3/internal/connection/ConnectionSpecSelector;.isFallbackPossible:(Ljavax/net/ssl/SSLSocket;)Z` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+
+  #L237654.  v0:= v2.`okhttp3.internal.connection.ConnectionSpecSelector.nextModeIndex` @type ^`int`;
+  #L237658.  v1:= v2.`okhttp3.internal.connection.ConnectionSpecSelector.connectionSpecs` @type ^`java.util.List` @kind object;
+  #L23765c.  call temp:= `size`(v1) @signature `Ljava/util/List;.size:()I` @kind interface;
+  #L237662.  v1:= temp;
+  #L237664.  if v0 >= v1 then goto L23768e;
+  #L237668.  v1:= v2.`okhttp3.internal.connection.ConnectionSpecSelector.connectionSpecs` @type ^`java.util.List` @kind object;
+  #L23766c.  call temp:= `get`(v1, v0) @signature `Ljava/util/List;.get:(I)Ljava/lang/Object;` @kind interface;
+  #L237672.  v1:= temp @kind object;
+  #L237674.  v1:= (`okhttp3.ConnectionSpec`) v1 @kind object;
+  #L237678.  call temp:= `isCompatible`(v1, v3) @signature `Lokhttp3/ConnectionSpec;.isCompatible:(Ljavax/net/ssl/SSLSocket;)Z` @kind virtual;
+  #L23767e.  v1:= temp;
+  #L237680.  if v1 == 0 then goto L237688;
+  #L237684.  v3:= 1I;
+  #L237686.  return v3;
+  #L237688.  v0:= v0 + 1;
+  #L23768c.  goto L237658;
+  #L23768e.  v3:= 0I;
+  #L237690.  return v3;
+}
+procedure `okhttp3.ConnectionSpec` `configureSecureSocket`(`okhttp3.internal.connection.ConnectionSpecSelector` v4 @kind this, `javax.net.ssl.SSLSocket` v5 @kind object) @signature `Lokhttp3/internal/connection/ConnectionSpecSelector;.configureSecureSocket:(Ljavax/net/ssl/SSLSocket;)Lokhttp3/ConnectionSpec;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L2376a4.  v0:= v4.`okhttp3.internal.connection.ConnectionSpecSelector.nextModeIndex` @type ^`int`;
+  #L2376a8.  v1:= v4.`okhttp3.internal.connection.ConnectionSpecSelector.connectionSpecs` @type ^`java.util.List` @kind object;
+  #L2376ac.  call temp:= `size`(v1) @signature `Ljava/util/List;.size:()I` @kind interface;
+  #L2376b2.  v1:= temp;
+  #L2376b4.  if v0 >= v1 then goto L2376e4;
+  #L2376b8.  v2:= v4.`okhttp3.internal.connection.ConnectionSpecSelector.connectionSpecs` @type ^`java.util.List` @kind object;
+  #L2376bc.  call temp:= `get`(v2, v0) @signature `Ljava/util/List;.get:(I)Ljava/lang/Object;` @kind interface;
+  #L2376c2.  v2:= temp @kind object;
+  #L2376c4.  v2:= (`okhttp3.ConnectionSpec`) v2 @kind object;
+  #L2376c8.  call temp:= `isCompatible`(v2, v5) @signature `Lokhttp3/ConnectionSpec;.isCompatible:(Ljavax/net/ssl/SSLSocket;)Z` @kind virtual;
+  #L2376ce.  v3:= temp;
+  #L2376d0.  if v3 == 0 then goto L2376de;
+  #L2376d4.  v0:= v0 + 1;
+  #L2376d8.  v4.`okhttp3.internal.connection.ConnectionSpecSelector.nextModeIndex` @type ^`int` := v0;
+  #L2376dc.  goto L2376e6;
+  #L2376de.  v0:= v0 + 1;
+  #L2376e2.  goto L2376b4;
+  #L2376e4.  v2:= 0I;
+  #L2376e6.  if v2 == 0 then goto L237706;
+  #L2376ea.  call temp:= `isFallbackPossible`(v4, v5) @signature `Lokhttp3/internal/connection/ConnectionSpecSelector;.isFallbackPossible:(Ljavax/net/ssl/SSLSocket;)Z` @kind direct;
+  #L2376f0.  v0:= temp;
+  #L2376f2.  v4.`okhttp3.internal.connection.ConnectionSpecSelector.isFallbackPossible` @type ^`boolean` := v0 @kind boolean;
+  #L2376f6.  v0:= `@@okhttp3.internal.Internal.instance` @type ^`okhttp3.internal.Internal` @kind object;
+  #L2376fa.  v1:= v4.`okhttp3.internal.connection.ConnectionSpecSelector.isFallback` @type ^`boolean` @kind boolean;
+  #L2376fe.  call `apply`(v0, v2, v5, v1) @signature `Lokhttp3/internal/Internal;.apply:(Lokhttp3/ConnectionSpec;Ljavax/net/ssl/SSLSocket;Z)V` @kind virtual;
+  #L237704.  return v2 @kind object;
+  #L237706.  v0:= new `java.net.UnknownServiceException`;
+  #L23770a.  v1:= new `java.lang.StringBuilder`;
+  #L23770e.  call `<init>`(v1) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L237714.  v2:= "Unable to find acceptable protocols. isFallback=" @kind object;
+  #L237718.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L23771e.  v2:= v4.`okhttp3.internal.connection.ConnectionSpecSelector.isFallback` @type ^`boolean` @kind boolean;
+  #L237722.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(Z)Ljava/lang/StringBuilder;` @kind virtual;
+  #L237728.  v2:= ", modes=" @kind object;
+  #L23772c.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L237732.  v2:= v4.`okhttp3.internal.connection.ConnectionSpecSelector.connectionSpecs` @type ^`java.util.List` @kind object;
+  #L237736.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L23773c.  v2:= ", supported protocols=" @kind object;
+  #L237740.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L237746.  call temp:= `getEnabledProtocols`(v5) @signature `Ljavax/net/ssl/SSLSocket;.getEnabledProtocols:()[Ljava/lang/String;` @kind virtual;
+  #L23774c.  v5:= temp @kind object;
+  #L23774e.  call temp:= `toString`(v5) @signature `Ljava/util/Arrays;.toString:([Ljava/lang/Object;)Ljava/lang/String;` @kind static;
+  #L237754.  v5:= temp @kind object;
+  #L237756.  call temp:= `append`(v1, v5) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L23775c.  call temp:= `toString`(v1) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L237762.  v5:= temp @kind object;
+  #L237764.  call `<init>`(v0, v5) @signature `Ljava/net/UnknownServiceException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L23776a.  throw v0;
+  #L23776c.  return @kind void;
+}
+procedure `boolean` `connectionFailed`(`okhttp3.internal.connection.ConnectionSpecSelector` v4 @kind this, `java.io.IOException` v5 @kind object) @signature `Lokhttp3/internal/connection/ConnectionSpecSelector;.connectionFailed:(Ljava/io/IOException;)Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L2375e8.  v0:= 1I;
+  #L2375ea.  v4.`okhttp3.internal.connection.ConnectionSpecSelector.isFallback` @type ^`boolean` := v0 @kind boolean;
+  #L2375ee.  v1:= v4.`okhttp3.internal.connection.ConnectionSpecSelector.isFallbackPossible` @type ^`boolean` @kind boolean;
+  #L2375f2.  v2:= 0I;
+  #L2375f4.  if v1 != 0 then goto L2375fa;
+  #L2375f8.  return v2;
+  #L2375fa.  v1:= instanceof @variable v5 @type ^`java.net.ProtocolException` @kind boolean;
+  #L2375fe.  if v1 == 0 then goto L237604;
+  #L237602.  return v2;
+  #L237604.  v1:= instanceof @variable v5 @type ^`java.io.InterruptedIOException` @kind boolean;
+  #L237608.  if v1 == 0 then goto L23760e;
+  #L23760c.  return v2;
+  #L23760e.  v1:= instanceof @variable v5 @type ^`javax.net.ssl.SSLHandshakeException` @kind boolean;
+  #L237612.  if v1 == 0 then goto L237628;
+  #L237616.  call temp:= `getCause`(v5) @signature `Ljava/io/IOException;.getCause:()Ljava/lang/Throwable;` @kind virtual;
+  #L23761c.  v3:= temp @kind object;
+  #L23761e.  v3:= instanceof @variable v3 @type ^`java.security.cert.CertificateException` @kind boolean;
+  #L237622.  if v3 == 0 then goto L237628;
+  #L237626.  return v2;
+  #L237628.  v3:= instanceof @variable v5 @type ^`javax.net.ssl.SSLPeerUnverifiedException` @kind boolean;
+  #L23762c.  if v3 == 0 then goto L237632;
+  #L237630.  return v2;
+  #L237632.  if v1 != 0 then goto L237642;
+  #L237636.  v5:= instanceof @variable v5 @type ^`javax.net.ssl.SSLProtocolException` @kind boolean;
+  #L23763a.  if v5 == 0 then goto L237640;
+  #L23763e.  goto L237642;
+  #L237640.  v0:= 0I;
+  #L237642.  return v0;
+}

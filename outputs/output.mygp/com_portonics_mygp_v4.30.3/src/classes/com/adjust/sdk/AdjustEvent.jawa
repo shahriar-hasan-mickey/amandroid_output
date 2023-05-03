@@ -1,0 +1,209 @@
+record `com.adjust.sdk.AdjustEvent` @kind class @AccessFlag PUBLIC {
+  `java.lang.String` `com.adjust.sdk.AdjustEvent.callbackId` @AccessFlag PUBLIC;
+  `java.util.Map` `com.adjust.sdk.AdjustEvent.callbackParameters` @AccessFlag PUBLIC;
+  `java.lang.String` `com.adjust.sdk.AdjustEvent.currency` @AccessFlag PUBLIC;
+  `java.lang.String` `com.adjust.sdk.AdjustEvent.eventToken` @AccessFlag PUBLIC;
+  `java.lang.String` `com.adjust.sdk.AdjustEvent.orderId` @AccessFlag PUBLIC;
+  `java.util.Map` `com.adjust.sdk.AdjustEvent.partnerParameters` @AccessFlag PUBLIC;
+  `java.lang.Double` `com.adjust.sdk.AdjustEvent.revenue` @AccessFlag PUBLIC;
+}
+global `com.adjust.sdk.ILogger` `@@com.adjust.sdk.AdjustEvent.logger` @AccessFlag PRIVATE_STATIC;
+procedure `void` `<clinit>`() @signature `Lcom/adjust/sdk/AdjustEvent;.<clinit>:()V` @AccessFlag PUBLIC_STATIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L2d94d8.  call temp:= `getLogger`() @signature `Lcom/adjust/sdk/AdjustFactory;.getLogger:()Lcom/adjust/sdk/ILogger;` @kind static;
+  #L2d94de.  v0:= temp @kind object;
+  #L2d94e0.  `@@com.adjust.sdk.AdjustEvent.logger` @type ^`com.adjust.sdk.ILogger` := v0 @kind object;
+  #L2d94e4.  return @kind void;
+}
+procedure `void` `<init>`(`com.adjust.sdk.AdjustEvent` v1 @kind this, `java.lang.String` v2 @kind object) @signature `Lcom/adjust/sdk/AdjustEvent;.<init>:(Ljava/lang/String;)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L2d94f8.  call `<init>`(v1) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L2d94fe.  v0:= `@@com.adjust.sdk.AdjustEvent.logger` @type ^`com.adjust.sdk.ILogger` @kind object;
+  #L2d9502.  call temp:= `checkEventToken`(v2, v0) @signature `Lcom/adjust/sdk/AdjustEvent;.checkEventToken:(Ljava/lang/String;Lcom/adjust/sdk/ILogger;)Z` @kind static;
+  #L2d9508.  v0:= temp;
+  #L2d950a.  if v0 != 0 then goto L2d9510;
+  #L2d950e.  return @kind void;
+  #L2d9510.  v1.`com.adjust.sdk.AdjustEvent.eventToken` @type ^`java.lang.String` := v2 @kind object;
+  #L2d9514.  return @kind void;
+}
+procedure `boolean` `checkEventToken`(`java.lang.String` v2 @kind object, `com.adjust.sdk.ILogger` v3 @kind object) @signature `Lcom/adjust/sdk/AdjustEvent;.checkEventToken:(Ljava/lang/String;Lcom/adjust/sdk/ILogger;)Z` @AccessFlag PRIVATE_STATIC {
+    temp;
+    v0;
+    v1;
+
+  #L2d93d4.  v0:= 0I;
+  #L2d93d6.  if v2 != 0 then goto L2d93ea;
+  #L2d93da.  v2:= new `java.lang.Object`[v0];
+  #L2d93de.  v1:= "Missing Event Token" @kind object;
+  #L2d93e2.  call `error`(v3, v1, v2) @signature `Lcom/adjust/sdk/ILogger;.error:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L2d93e8.  return v0;
+  #L2d93ea.  call temp:= `length`(v2) @signature `Ljava/lang/String;.length:()I` @kind virtual;
+  #L2d93f0.  v2:= temp;
+  #L2d93f2.  if v2 > 0 then goto L2d9406;
+  #L2d93f6.  v2:= new `java.lang.Object`[v0];
+  #L2d93fa.  v1:= "Event Token can't be empty" @kind object;
+  #L2d93fe.  call `error`(v3, v1, v2) @signature `Lcom/adjust/sdk/ILogger;.error:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L2d9404.  return v0;
+  #L2d9406.  v2:= 1I;
+  #L2d9408.  return v2;
+}
+procedure `boolean` `checkRevenue`(`com.adjust.sdk.AdjustEvent` v7 @kind this, `java.lang.Double` v8 @kind object, `java.lang.String` v9 @kind object) @signature `Lcom/adjust/sdk/AdjustEvent;.checkRevenue:(Ljava/lang/Double;Ljava/lang/String;)Z` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+
+  #L2d941c.  v0:= 1I;
+  #L2d941e.  v1:= 0I;
+  #L2d9420.  if v8 == 0 then goto L2d948c;
+  #L2d9424.  call temp:= `doubleValue`(v8) @signature `Ljava/lang/Double;.doubleValue:()D` @kind virtual;
+  #L2d942a.  v2:= temp @kind wide;
+  #L2d942c.  v4:= 0L;
+  #L2d9430.  v6:= dcmpg(v2, v4);
+  #L2d9434.  if v6 >= 0 then goto L2d9450;
+  #L2d9438.  v9:= `@@com.adjust.sdk.AdjustEvent.logger` @type ^`com.adjust.sdk.ILogger` @kind object;
+  #L2d943c.  v0:= new `java.lang.Object`[v0];
+  #L2d9440.  v0[v1]:= v8 @kind object;
+  #L2d9444.  v8:= "Invalid amount %.5f" @kind object;
+  #L2d9448.  call `error`(v9, v8, v0) @signature `Lcom/adjust/sdk/ILogger;.error:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L2d944e.  return v1;
+  #L2d9450.  if v9 != 0 then goto L2d9468;
+  #L2d9454.  v8:= `@@com.adjust.sdk.AdjustEvent.logger` @type ^`com.adjust.sdk.ILogger` @kind object;
+  #L2d9458.  v9:= new `java.lang.Object`[v1];
+  #L2d945c.  v0:= "Currency must be set with revenue" @kind object;
+  #L2d9460.  call `error`(v8, v0, v9) @signature `Lcom/adjust/sdk/ILogger;.error:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L2d9466.  return v1;
+  #L2d9468.  v8:= "" @kind object;
+  #L2d946c.  call temp:= `equals`(v9, v8) @signature `Ljava/lang/String;.equals:(Ljava/lang/Object;)Z` @kind virtual;
+  #L2d9472.  v8:= temp;
+  #L2d9474.  if v8 == 0 then goto L2d94a4;
+  #L2d9478.  v8:= `@@com.adjust.sdk.AdjustEvent.logger` @type ^`com.adjust.sdk.ILogger` @kind object;
+  #L2d947c.  v9:= new `java.lang.Object`[v1];
+  #L2d9480.  v0:= "Currency is empty" @kind object;
+  #L2d9484.  call `error`(v8, v0, v9) @signature `Lcom/adjust/sdk/ILogger;.error:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L2d948a.  return v1;
+  #L2d948c.  if v9 == 0 then goto L2d94a4;
+  #L2d9490.  v8:= `@@com.adjust.sdk.AdjustEvent.logger` @type ^`com.adjust.sdk.ILogger` @kind object;
+  #L2d9494.  v9:= new `java.lang.Object`[v1];
+  #L2d9498.  v0:= "Revenue must be set with currency" @kind object;
+  #L2d949c.  call `error`(v8, v0, v9) @signature `Lcom/adjust/sdk/ILogger;.error:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L2d94a2.  return v1;
+  #L2d94a4.  return v0;
+}
+procedure `void` `addCallbackParameter`(`com.adjust.sdk.AdjustEvent` v2 @kind this, `java.lang.String` v3 @kind object, `java.lang.String` v4 @kind object) @signature `Lcom/adjust/sdk/AdjustEvent;.addCallbackParameter:(Ljava/lang/String;Ljava/lang/String;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L2d9528.  v0:= "key" @kind object;
+  #L2d952c.  v1:= "Callback" @kind object;
+  #L2d9530.  call temp:= `isValidParameter`(v3, v0, v1) @signature `Lcom/adjust/sdk/Util;.isValidParameter:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Z` @kind static;
+  #L2d9536.  v0:= temp;
+  #L2d9538.  if v0 != 0 then goto L2d953e;
+  #L2d953c.  return @kind void;
+  #L2d953e.  v0:= "value" @kind object;
+  #L2d9542.  call temp:= `isValidParameter`(v4, v0, v1) @signature `Lcom/adjust/sdk/Util;.isValidParameter:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Z` @kind static;
+  #L2d9548.  v0:= temp;
+  #L2d954a.  if v0 != 0 then goto L2d9550;
+  #L2d954e.  return @kind void;
+  #L2d9550.  v0:= v2.`com.adjust.sdk.AdjustEvent.callbackParameters` @type ^`java.util.Map` @kind object;
+  #L2d9554.  if v0 != 0 then goto L2d9566;
+  #L2d9558.  v0:= new `java.util.LinkedHashMap`;
+  #L2d955c.  call `<init>`(v0) @signature `Ljava/util/LinkedHashMap;.<init>:()V` @kind direct;
+  #L2d9562.  v2.`com.adjust.sdk.AdjustEvent.callbackParameters` @type ^`java.util.Map` := v0 @kind object;
+  #L2d9566.  v0:= v2.`com.adjust.sdk.AdjustEvent.callbackParameters` @type ^`java.util.Map` @kind object;
+  #L2d956a.  call temp:= `put`(v0, v3, v4) @signature `Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L2d9570.  v4:= temp @kind object;
+  #L2d9572.  v4:= (`java.lang.String`) v4 @kind object;
+  #L2d9576.  if v4 == 0 then goto L2d9594;
+  #L2d957a.  v4:= `@@com.adjust.sdk.AdjustEvent.logger` @type ^`com.adjust.sdk.ILogger` @kind object;
+  #L2d957e.  v0:= 1I;
+  #L2d9580.  v0:= new `java.lang.Object`[v0];
+  #L2d9584.  v1:= 0I;
+  #L2d9586.  v0[v1]:= v3 @kind object;
+  #L2d958a.  v3:= "Key %s was overwritten" @kind object;
+  #L2d958e.  call `warn`(v4, v3, v0) @signature `Lcom/adjust/sdk/ILogger;.warn:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L2d9594.  return @kind void;
+}
+procedure `void` `addPartnerParameter`(`com.adjust.sdk.AdjustEvent` v2 @kind this, `java.lang.String` v3 @kind object, `java.lang.String` v4 @kind object) @signature `Lcom/adjust/sdk/AdjustEvent;.addPartnerParameter:(Ljava/lang/String;Ljava/lang/String;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L2d95a8.  v0:= "key" @kind object;
+  #L2d95ac.  v1:= "Partner" @kind object;
+  #L2d95b0.  call temp:= `isValidParameter`(v3, v0, v1) @signature `Lcom/adjust/sdk/Util;.isValidParameter:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Z` @kind static;
+  #L2d95b6.  v0:= temp;
+  #L2d95b8.  if v0 != 0 then goto L2d95be;
+  #L2d95bc.  return @kind void;
+  #L2d95be.  v0:= "value" @kind object;
+  #L2d95c2.  call temp:= `isValidParameter`(v4, v0, v1) @signature `Lcom/adjust/sdk/Util;.isValidParameter:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Z` @kind static;
+  #L2d95c8.  v0:= temp;
+  #L2d95ca.  if v0 != 0 then goto L2d95d0;
+  #L2d95ce.  return @kind void;
+  #L2d95d0.  v0:= v2.`com.adjust.sdk.AdjustEvent.partnerParameters` @type ^`java.util.Map` @kind object;
+  #L2d95d4.  if v0 != 0 then goto L2d95e6;
+  #L2d95d8.  v0:= new `java.util.LinkedHashMap`;
+  #L2d95dc.  call `<init>`(v0) @signature `Ljava/util/LinkedHashMap;.<init>:()V` @kind direct;
+  #L2d95e2.  v2.`com.adjust.sdk.AdjustEvent.partnerParameters` @type ^`java.util.Map` := v0 @kind object;
+  #L2d95e6.  v0:= v2.`com.adjust.sdk.AdjustEvent.partnerParameters` @type ^`java.util.Map` @kind object;
+  #L2d95ea.  call temp:= `put`(v0, v3, v4) @signature `Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L2d95f0.  v4:= temp @kind object;
+  #L2d95f2.  v4:= (`java.lang.String`) v4 @kind object;
+  #L2d95f6.  if v4 == 0 then goto L2d9614;
+  #L2d95fa.  v4:= `@@com.adjust.sdk.AdjustEvent.logger` @type ^`com.adjust.sdk.ILogger` @kind object;
+  #L2d95fe.  v0:= 1I;
+  #L2d9600.  v0:= new `java.lang.Object`[v0];
+  #L2d9604.  v1:= 0I;
+  #L2d9606.  v0[v1]:= v3 @kind object;
+  #L2d960a.  v3:= "Key %s was overwritten" @kind object;
+  #L2d960e.  call `warn`(v4, v3, v0) @signature `Lcom/adjust/sdk/ILogger;.warn:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L2d9614.  return @kind void;
+}
+procedure `boolean` `isValid`(`com.adjust.sdk.AdjustEvent` v1 @kind this) @signature `Lcom/adjust/sdk/AdjustEvent;.isValid:()Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L2d94b8.  v0:= v1.`com.adjust.sdk.AdjustEvent.eventToken` @type ^`java.lang.String` @kind object;
+  #L2d94bc.  if v0 == 0 then goto L2d94c4;
+  #L2d94c0.  v0:= 1I;
+  #L2d94c2.  goto L2d94c6;
+  #L2d94c4.  v0:= 0I;
+  #L2d94c6.  return v0;
+}
+procedure `void` `setCallbackId`(`com.adjust.sdk.AdjustEvent` v0 @kind this, `java.lang.String` v1 @kind object) @signature `Lcom/adjust/sdk/AdjustEvent;.setCallbackId:(Ljava/lang/String;)V` @AccessFlag PUBLIC {
+    temp;
+
+  #L2d9628.  v0.`com.adjust.sdk.AdjustEvent.callbackId` @type ^`java.lang.String` := v1 @kind object;
+  #L2d962c.  return @kind void;
+}
+procedure `void` `setOrderId`(`com.adjust.sdk.AdjustEvent` v0 @kind this, `java.lang.String` v1 @kind object) @signature `Lcom/adjust/sdk/AdjustEvent;.setOrderId:(Ljava/lang/String;)V` @AccessFlag PUBLIC {
+    temp;
+
+  #L2d9640.  v0.`com.adjust.sdk.AdjustEvent.orderId` @type ^`java.lang.String` := v1 @kind object;
+  #L2d9644.  return @kind void;
+}
+procedure `void` `setRevenue`(`com.adjust.sdk.AdjustEvent` v1 @kind this, `double` v2 , `java.lang.String` v4 @kind object) @signature `Lcom/adjust/sdk/AdjustEvent;.setRevenue:(DLjava/lang/String;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L2d9658.  call temp:= `valueOf`(v2) @signature `Ljava/lang/Double;.valueOf:(D)Ljava/lang/Double;` @kind static;
+  #L2d965e.  v0:= temp @kind object;
+  #L2d9660.  call temp:= `checkRevenue`(v1, v0, v4) @signature `Lcom/adjust/sdk/AdjustEvent;.checkRevenue:(Ljava/lang/Double;Ljava/lang/String;)Z` @kind direct;
+  #L2d9666.  v0:= temp;
+  #L2d9668.  if v0 != 0 then goto L2d966e;
+  #L2d966c.  return @kind void;
+  #L2d966e.  call temp:= `valueOf`(v2) @signature `Ljava/lang/Double;.valueOf:(D)Ljava/lang/Double;` @kind static;
+  #L2d9674.  v2:= temp @kind object;
+  #L2d9676.  v1.`com.adjust.sdk.AdjustEvent.revenue` @type ^`java.lang.Double` := v2 @kind object;
+  #L2d967a.  v1.`com.adjust.sdk.AdjustEvent.currency` @type ^`java.lang.String` := v4 @kind object;
+  #L2d967e.  return @kind void;
+}

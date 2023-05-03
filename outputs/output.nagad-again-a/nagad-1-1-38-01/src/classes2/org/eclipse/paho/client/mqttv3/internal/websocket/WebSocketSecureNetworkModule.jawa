@@ -1,0 +1,149 @@
+record `org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketSecureNetworkModule` @kind class @AccessFlag PUBLIC extends `org.eclipse.paho.client.mqttv3.internal.SSLNetworkModule` @kind class {
+  `java.lang.String` `org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketSecureNetworkModule.host` @AccessFlag PRIVATE;
+  `java.io.ByteArrayOutputStream` `org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketSecureNetworkModule.outputStream` @AccessFlag PRIVATE;
+  `java.io.PipedInputStream` `org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketSecureNetworkModule.pipedInputStream` @AccessFlag PRIVATE;
+  `int` `org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketSecureNetworkModule.port` @AccessFlag PRIVATE;
+  `java.nio.ByteBuffer` `org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketSecureNetworkModule.recievedPayload` @AccessFlag ;
+  `java.lang.String` `org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketSecureNetworkModule.uri` @AccessFlag PRIVATE;
+  `org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver` `org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketSecureNetworkModule.webSocketReceiver` @AccessFlag PRIVATE;
+}
+global `java.lang.String` `@@org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketSecureNetworkModule.CLASS_NAME` @AccessFlag PRIVATE_STATIC_FINAL;
+global `org.eclipse.paho.client.mqttv3.logging.Logger` `@@org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketSecureNetworkModule.log` @AccessFlag PRIVATE_STATIC_FINAL;
+procedure `void` `<clinit>`() @signature `Lorg/eclipse/paho/client/mqttv3/internal/websocket/WebSocketSecureNetworkModule;.<clinit>:()V` @AccessFlag STATIC_CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+
+  #L234c38.  v0:= `@@org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketSecureNetworkModule.CLASS_NAME` @type ^`java.lang.String` @kind object;
+  #L234c3c.  v1:= "org.eclipse.paho.client.mqttv3.internal.nls.logcat" @kind object;
+  #L234c40.  call temp:= `getLogger`(v1, v0) @signature `Lorg/eclipse/paho/client/mqttv3/logging/LoggerFactory;.getLogger:(Ljava/lang/String;Ljava/lang/String;)Lorg/eclipse/paho/client/mqttv3/logging/Logger;` @kind static;
+  #L234c46.  v0:= temp @kind object;
+  #L234c48.  `@@org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketSecureNetworkModule.log` @type ^`org.eclipse.paho.client.mqttv3.logging.Logger` := v0 @kind object;
+  #L234c4c.  return @kind void;
+}
+procedure `void` `<init>`(`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketSecureNetworkModule` v0 @kind this, `javax.net.ssl.SSLSocketFactory` v1 @kind object, `java.lang.String` v2 @kind object, `java.lang.String` v3 @kind object, `int` v4 , `java.lang.String` v5 @kind object) @signature `Lorg/eclipse/paho/client/mqttv3/internal/websocket/WebSocketSecureNetworkModule;.<init>:(Ljavax/net/ssl/SSLSocketFactory;Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+
+  #L234c60.  call `<init>`(v0, v1, v3, v4, v5) @signature `Lorg/eclipse/paho/client/mqttv3/internal/SSLNetworkModule;.<init>:(Ljavax/net/ssl/SSLSocketFactory;Ljava/lang/String;ILjava/lang/String;)V` @kind direct;
+  #L234c66.  v1:= new `org.eclipse.paho.client.mqttv3.internal.websocket.ExtendedByteArrayOutputStream`;
+  #L234c6a.  call `<init>`(v1, v0) @signature `Lorg/eclipse/paho/client/mqttv3/internal/websocket/ExtendedByteArrayOutputStream;.<init>:(Lorg/eclipse/paho/client/mqttv3/internal/websocket/WebSocketSecureNetworkModule;)V` @kind direct;
+  #L234c70.  v0.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketSecureNetworkModule.outputStream` @type ^`java.io.ByteArrayOutputStream` := v1 @kind object;
+  #L234c74.  v0.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketSecureNetworkModule.uri` @type ^`java.lang.String` := v2 @kind object;
+  #L234c78.  v0.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketSecureNetworkModule.host` @type ^`java.lang.String` := v3 @kind object;
+  #L234c7c.  v0.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketSecureNetworkModule.port` @type ^`int` := v4;
+  #L234c80.  v1:= new `java.io.PipedInputStream`;
+  #L234c84.  call `<init>`(v1) @signature `Ljava/io/PipedInputStream;.<init>:()V` @kind direct;
+  #L234c8a.  v0.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketSecureNetworkModule.pipedInputStream` @type ^`java.io.PipedInputStream` := v1 @kind object;
+  #L234c8e.  v1:= `@@org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketSecureNetworkModule.log` @type ^`org.eclipse.paho.client.mqttv3.logging.Logger` @kind object;
+  #L234c92.  call `setResourceName`(v1, v5) @signature `Lorg/eclipse/paho/client/mqttv3/logging/Logger;.setResourceName:(Ljava/lang/String;)V` @kind interface;
+  #L234c98.  return @kind void;
+}
+procedure `java.io.InputStream` `getInputStream`(`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketSecureNetworkModule` v1 @kind this) @signature `Lorg/eclipse/paho/client/mqttv3/internal/websocket/WebSocketSecureNetworkModule;.getInputStream:()Ljava/io/InputStream;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L234b88.  v0:= v1.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketSecureNetworkModule.pipedInputStream` @type ^`java.io.PipedInputStream` @kind object;
+  #L234b8c.  return v0 @kind object;
+}
+procedure `java.io.OutputStream` `getOutputStream`(`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketSecureNetworkModule` v1 @kind this) @signature `Lorg/eclipse/paho/client/mqttv3/internal/websocket/WebSocketSecureNetworkModule;.getOutputStream:()Ljava/io/OutputStream;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L234bbc.  v0:= v1.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketSecureNetworkModule.outputStream` @type ^`java.io.ByteArrayOutputStream` @kind object;
+  #L234bc0.  return v0 @kind object;
+}
+procedure `java.lang.String` `getServerURI`(`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketSecureNetworkModule` v2 @kind this) @signature `Lorg/eclipse/paho/client/mqttv3/internal/websocket/WebSocketSecureNetworkModule;.getServerURI:()Ljava/lang/String;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L234bf0.  v0:= new `java.lang.StringBuilder`;
+  #L234bf4.  v1:= "wss://" @kind object;
+  #L234bf8.  call `<init>`(v0, v1) @signature `Ljava/lang/StringBuilder;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L234bfe.  v1:= v2.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketSecureNetworkModule.host` @type ^`java.lang.String` @kind object;
+  #L234c02.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L234c08.  v1:= ":" @kind object;
+  #L234c0c.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L234c12.  v1:= v2.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketSecureNetworkModule.port` @type ^`int`;
+  #L234c16.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder;` @kind virtual;
+  #L234c1c.  call temp:= `toString`(v0) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L234c22.  v0:= temp @kind object;
+  #L234c24.  return v0 @kind object;
+}
+procedure `java.io.InputStream` `getSocketInputStream`(`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketSecureNetworkModule` v1 @kind this) @signature `Lorg/eclipse/paho/client/mqttv3/internal/websocket/WebSocketSecureNetworkModule;.getSocketInputStream:()Ljava/io/InputStream;` @AccessFlag  {
+    temp;
+    v0;
+
+  #L234ba0.  call temp:= `getInputStream`(v1) @signature `Lorg/eclipse/paho/client/mqttv3/internal/TCPNetworkModule;.getInputStream:()Ljava/io/InputStream;` @kind super;
+  #L234ba6.  v0:= temp @kind object;
+  #L234ba8.  return v0 @kind object;
+}
+procedure `java.io.OutputStream` `getSocketOutputStream`(`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketSecureNetworkModule` v1 @kind this) @signature `Lorg/eclipse/paho/client/mqttv3/internal/websocket/WebSocketSecureNetworkModule;.getSocketOutputStream:()Ljava/io/OutputStream;` @AccessFlag  {
+    temp;
+    v0;
+
+  #L234bd4.  call temp:= `getOutputStream`(v1) @signature `Lorg/eclipse/paho/client/mqttv3/internal/TCPNetworkModule;.getOutputStream:()Ljava/io/OutputStream;` @kind super;
+  #L234bda.  v0:= temp @kind object;
+  #L234bdc.  return v0 @kind object;
+}
+procedure `void` `start`(`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketSecureNetworkModule` v7 @kind this) @signature `Lorg/eclipse/paho/client/mqttv3/internal/websocket/WebSocketSecureNetworkModule;.start:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+
+  #L234cac.  call `start`(v7) @signature `Lorg/eclipse/paho/client/mqttv3/internal/SSLNetworkModule;.start:()V` @kind super;
+  #L234cb2.  v6:= new `org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketHandshake`;
+  #L234cb6.  call temp:= `getInputStream`(v7) @signature `Lorg/eclipse/paho/client/mqttv3/internal/TCPNetworkModule;.getInputStream:()Ljava/io/InputStream;` @kind super;
+  #L234cbc.  v1:= temp @kind object;
+  #L234cbe.  call temp:= `getOutputStream`(v7) @signature `Lorg/eclipse/paho/client/mqttv3/internal/TCPNetworkModule;.getOutputStream:()Ljava/io/OutputStream;` @kind super;
+  #L234cc4.  v2:= temp @kind object;
+  #L234cc6.  v3:= v7.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketSecureNetworkModule.uri` @type ^`java.lang.String` @kind object;
+  #L234cca.  v4:= v7.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketSecureNetworkModule.host` @type ^`java.lang.String` @kind object;
+  #L234cce.  v5:= v7.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketSecureNetworkModule.port` @type ^`int`;
+  #L234cd2.  v0:= v6 @kind object;
+  #L234cd4.  call `<init>`(v0, v1, v2, v3, v4, v5) @signature `Lorg/eclipse/paho/client/mqttv3/internal/websocket/WebSocketHandshake;.<init>:(Ljava/io/InputStream;Ljava/io/OutputStream;Ljava/lang/String;Ljava/lang/String;I)V` @kind direct;
+  #L234cda.  call `execute`(v6) @signature `Lorg/eclipse/paho/client/mqttv3/internal/websocket/WebSocketHandshake;.execute:()V` @kind virtual;
+  #L234ce0.  v0:= new `org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver`;
+  #L234ce4.  call temp:= `getSocketInputStream`(v7) @signature `Lorg/eclipse/paho/client/mqttv3/internal/websocket/WebSocketSecureNetworkModule;.getSocketInputStream:()Ljava/io/InputStream;` @kind virtual;
+  #L234cea.  v1:= temp @kind object;
+  #L234cec.  v2:= v7.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketSecureNetworkModule.pipedInputStream` @type ^`java.io.PipedInputStream` @kind object;
+  #L234cf0.  call `<init>`(v0, v1, v2) @signature `Lorg/eclipse/paho/client/mqttv3/internal/websocket/WebSocketReceiver;.<init>:(Ljava/io/InputStream;Ljava/io/PipedInputStream;)V` @kind direct;
+  #L234cf6.  v7.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketSecureNetworkModule.webSocketReceiver` @type ^`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver` := v0 @kind object;
+  #L234cfa.  v0:= v7.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketSecureNetworkModule.webSocketReceiver` @type ^`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver` @kind object;
+  #L234cfe.  v1:= "WssSocketReceiver" @kind object;
+  #L234d02.  call `start`(v0, v1) @signature `Lorg/eclipse/paho/client/mqttv3/internal/websocket/WebSocketReceiver;.start:(Ljava/lang/String;)V` @kind virtual;
+  #L234d08.  return @kind void;
+}
+procedure `void` `stop`(`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketSecureNetworkModule` v4 @kind this) @signature `Lorg/eclipse/paho/client/mqttv3/internal/websocket/WebSocketSecureNetworkModule;.stop:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L234d1c.  v0:= new `org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketFrame`;
+  #L234d20.  v1:= "1000" @kind object;
+  #L234d24.  call temp:= `getBytes`(v1) @signature `Ljava/lang/String;.getBytes:()[B` @kind virtual;
+  #L234d2a.  v1:= temp @kind object;
+  #L234d2c.  v2:= 8I;
+  #L234d30.  v3:= 1I;
+  #L234d32.  call `<init>`(v0, v2, v3, v1) @signature `Lorg/eclipse/paho/client/mqttv3/internal/websocket/WebSocketFrame;.<init>:(BZ[B)V` @kind direct;
+  #L234d38.  call temp:= `encodeFrame`(v0) @signature `Lorg/eclipse/paho/client/mqttv3/internal/websocket/WebSocketFrame;.encodeFrame:()[B` @kind virtual;
+  #L234d3e.  v0:= temp @kind object;
+  #L234d40.  call temp:= `getSocketOutputStream`(v4) @signature `Lorg/eclipse/paho/client/mqttv3/internal/websocket/WebSocketSecureNetworkModule;.getSocketOutputStream:()Ljava/io/OutputStream;` @kind virtual;
+  #L234d46.  v1:= temp @kind object;
+  #L234d48.  call `write`(v1, v0) @signature `Ljava/io/OutputStream;.write:([B)V` @kind virtual;
+  #L234d4e.  call temp:= `getSocketOutputStream`(v4) @signature `Lorg/eclipse/paho/client/mqttv3/internal/websocket/WebSocketSecureNetworkModule;.getSocketOutputStream:()Ljava/io/OutputStream;` @kind virtual;
+  #L234d54.  v0:= temp @kind object;
+  #L234d56.  call `flush`(v0) @signature `Ljava/io/OutputStream;.flush:()V` @kind virtual;
+  #L234d5c.  v0:= v4.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketSecureNetworkModule.webSocketReceiver` @type ^`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketReceiver` @kind object;
+  #L234d60.  if v0 == 0 then goto L234d6a;
+  #L234d64.  call `stop`(v0) @signature `Lorg/eclipse/paho/client/mqttv3/internal/websocket/WebSocketReceiver;.stop:()V` @kind virtual;
+  #L234d6a.  call `stop`(v4) @signature `Lorg/eclipse/paho/client/mqttv3/internal/TCPNetworkModule;.stop:()V` @kind super;
+  #L234d70.  return @kind void;
+}

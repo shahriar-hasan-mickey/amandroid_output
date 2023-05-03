@@ -1,0 +1,1154 @@
+record `okio.ByteString` @kind class @AccessFlag PUBLIC extends `java.io.Serializable` @kind interface, `java.lang.Comparable` @kind interface {
+  `byte`[] `okio.ByteString.data` @AccessFlag FINAL;
+  `int` `okio.ByteString.hashCode` @AccessFlag TRANSIENT;
+  `java.lang.String` `okio.ByteString.utf8` @AccessFlag TRANSIENT;
+}
+global `okio.ByteString` `@@okio.ByteString.EMPTY` @AccessFlag PUBLIC_STATIC_FINAL;
+global `char`[] `@@okio.ByteString.HEX_DIGITS` @AccessFlag STATIC_FINAL;
+global `long` `@@okio.ByteString.serialVersionUID` @AccessFlag PRIVATE_STATIC_FINAL;
+procedure `void` `<clinit>`() @signature `Lokio/ByteString;.<clinit>:()V` @AccessFlag STATIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L250354.  v0:= 16I;
+  #L250358.  v0:= new `char`[v0];
+  #L25035c.  goto L25037c;
+  #L250362.  `@@okio.ByteString.HEX_DIGITS` @type ^`char`[] := v0 @kind object;
+  #L250366.  v0:= 0I;
+  #L250368.  v0:= new `byte`[v0];
+  #L25036c.  call temp:= `of`(v0) @signature `Lokio/ByteString;.of:([B)Lokio/ByteString;` @kind static;
+  #L250372.  v0:= temp @kind object;
+  #L250374.  `@@okio.ByteString.EMPTY` @type ^`okio.ByteString` := v0 @kind object;
+  #L250378.  return @kind void;
+  #L25037a.  
+  #L25037c.  v0:= (48I, 49I, 50I, 51I, 52I, 53I, 54I, 55I, 56I, 57I, 97I, 98I, 99I, 100I, 101I, 102I) @kind object;
+  #L2503a3.  goto L250362;
+}
+procedure `void` `<init>`(`okio.ByteString` v0 @kind this, `byte`[] v1 @kind object) @signature `Lokio/ByteString;.<init>:([B)V` @AccessFlag CONSTRUCTOR {
+    temp;
+
+  #L2503b4.  call `<init>`(v0) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L2503ba.  v0.`okio.ByteString.data` @type ^`byte`[] := v1 @kind object;
+  #L2503be.  return @kind void;
+}
+procedure `int` `codePointIndexToCharIndex`(`java.lang.String` v5 @kind object, `int` v6 ) @signature `Lokio/ByteString;.codePointIndexToCharIndex:(Ljava/lang/String;I)I` @AccessFlag STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L24f704.  call temp:= `length`(v5) @signature `Ljava/lang/String;.length:()I` @kind virtual;
+  #L24f70a.  v0:= temp;
+  #L24f70c.  v1:= 0I;
+  #L24f70e.  v2:= 0I;
+  #L24f710.  if v1 >= v0 then goto L24f75c;
+  #L24f714.  if v2 != v6 then goto L24f71a;
+  #L24f718.  return v1;
+  #L24f71a.  call temp:= `codePointAt`(v5, v1) @signature `Ljava/lang/String;.codePointAt:(I)I` @kind virtual;
+  #L24f720.  v3:= temp;
+  #L24f722.  call temp:= `isISOControl`(v3) @signature `Ljava/lang/Character;.isISOControl:(I)Z` @kind static;
+  #L24f728.  v4:= temp;
+  #L24f72a.  if v4 == 0 then goto L24f73e;
+  #L24f72e.  v4:= 10I;
+  #L24f732.  if v3 == v4 then goto L24f73e;
+  #L24f736.  v4:= 13I;
+  #L24f73a.  if v3 != v4 then goto L24f748;
+  #L24f73e.  v4:= 65533I;
+  #L24f744.  if v3 != v4 then goto L24f74c;
+  #L24f748.  v5:= -1I;
+  #L24f74a.  return v5;
+  #L24f74c.  v2:= v2 + 1;
+  #L24f750.  call temp:= `charCount`(v3) @signature `Ljava/lang/Character;.charCount:(I)I` @kind static;
+  #L24f756.  v3:= temp;
+  #L24f758.  v1:= v1 + v3 @kind int;
+  #L24f75a.  goto L24f710;
+  #L24f75c.  call temp:= `length`(v5) @signature `Ljava/lang/String;.length:()I` @kind virtual;
+  #L24f762.  v5:= temp;
+  #L24f764.  return v5;
+}
+procedure `okio.ByteString` `decodeBase64`(`java.lang.String` v1 @kind object) @signature `Lokio/ByteString;.decodeBase64:(Ljava/lang/String;)Lokio/ByteString;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+
+  #L24fcf8.  if v1 == 0 then goto L24fd18;
+  #L24fcfc.  call temp:= `decode`(v1) @signature `Lokio/Base64;.decode:(Ljava/lang/String;)[B` @kind static;
+  #L24fd02.  v1:= temp @kind object;
+  #L24fd04.  if v1 == 0 then goto L24fd14;
+  #L24fd08.  v0:= new `okio.ByteString`;
+  #L24fd0c.  call `<init>`(v0, v1) @signature `Lokio/ByteString;.<init>:([B)V` @kind direct;
+  #L24fd12.  goto L24fd16;
+  #L24fd14.  v0:= 0I;
+  #L24fd16.  return v0 @kind object;
+  #L24fd18.  v1:= new `java.lang.IllegalArgumentException`;
+  #L24fd1c.  v0:= "base64 == null" @kind object;
+  #L24fd20.  call `<init>`(v1, v0) @signature `Ljava/lang/IllegalArgumentException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L24fd26.  throw v1;
+}
+procedure `okio.ByteString` `decodeHex`(`java.lang.String` v4 @kind object) @signature `Lokio/ByteString;.decodeHex:(Ljava/lang/String;)Lokio/ByteString;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L24fd38.  if v4 == 0 then goto L24fdd6;
+  #L24fd3c.  call temp:= `length`(v4) @signature `Ljava/lang/String;.length:()I` @kind virtual;
+  #L24fd42.  v0:= temp;
+  #L24fd44.  v0:= v0 %% 2;
+  #L24fd48.  if v0 != 0 then goto L24fda8;
+  #L24fd4c.  call temp:= `length`(v4) @signature `Ljava/lang/String;.length:()I` @kind virtual;
+  #L24fd52.  v0:= temp;
+  #L24fd54.  v0:= v0 / 2;
+  #L24fd58.  v0:= new `byte`[v0];
+  #L24fd5c.  v1:= 0I;
+  #L24fd5e.  v2:= length @variable v0;
+  #L24fd60.  if v1 >= v2 then goto L24fd9e;
+  #L24fd64.  v2:= v1 * 2;
+  #L24fd68.  call temp:= `charAt`(v4, v2) @signature `Ljava/lang/String;.charAt:(I)C` @kind virtual;
+  #L24fd6e.  v3:= temp;
+  #L24fd70.  call temp:= `decodeHexDigit`(v3) @signature `Lokio/ByteString;.decodeHexDigit:(C)I` @kind static;
+  #L24fd76.  v3:= temp;
+  #L24fd78.  v3:= v3 ^< 4;
+  #L24fd7c.  v2:= v2 + 1;
+  #L24fd80.  call temp:= `charAt`(v4, v2) @signature `Ljava/lang/String;.charAt:(I)C` @kind virtual;
+  #L24fd86.  v2:= temp;
+  #L24fd88.  call temp:= `decodeHexDigit`(v2) @signature `Lokio/ByteString;.decodeHexDigit:(C)I` @kind static;
+  #L24fd8e.  v2:= temp;
+  #L24fd90.  v3:= v3 + v2 @kind int;
+  #L24fd92.  v2:= (`byte`) v3 @kind i2b;
+  #L24fd94.  v0[v1]:= v2 @kind byte;
+  #L24fd98.  v1:= v1 + 1;
+  #L24fd9c.  goto L24fd5e;
+  #L24fd9e.  call temp:= `of`(v0) @signature `Lokio/ByteString;.of:([B)Lokio/ByteString;` @kind static;
+  #L24fda4.  v4:= temp @kind object;
+  #L24fda6.  return v4 @kind object;
+  #L24fda8.  v0:= new `java.lang.IllegalArgumentException`;
+  #L24fdac.  v1:= new `java.lang.StringBuilder`;
+  #L24fdb0.  call `<init>`(v1) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L24fdb6.  v2:= "Unexpected hex string: " @kind object;
+  #L24fdba.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L24fdc0.  call temp:= `append`(v1, v4) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L24fdc6.  call temp:= `toString`(v1) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L24fdcc.  v4:= temp @kind object;
+  #L24fdce.  call `<init>`(v0, v4) @signature `Ljava/lang/IllegalArgumentException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L24fdd4.  throw v0;
+  #L24fdd6.  v4:= new `java.lang.IllegalArgumentException`;
+  #L24fdda.  v0:= "hex == null" @kind object;
+  #L24fdde.  call `<init>`(v4, v0) @signature `Ljava/lang/IllegalArgumentException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L24fde4.  throw v4;
+  #L24fde6.  return @kind void;
+}
+procedure `int` `decodeHexDigit`(`char` v3 ) @signature `Lokio/ByteString;.decodeHexDigit:(C)I` @AccessFlag PRIVATE_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L24f808.  v0:= 48I;
+  #L24f80c.  if v3 < v0 then goto L24f81c;
+  #L24f810.  v1:= 57I;
+  #L24f814.  if v3 > v1 then goto L24f81c;
+  #L24f818.  v3:= v3 - v0 @kind int;
+  #L24f81a.  return v3;
+  #L24f81c.  v0:= 97I;
+  #L24f820.  if v3 < v0 then goto L24f834;
+  #L24f824.  v1:= 102I;
+  #L24f828.  if v3 > v1 then goto L24f834;
+  #L24f82c.  v3:= v3 - v0 @kind int;
+  #L24f82e.  v3:= v3 + 10;
+  #L24f832.  return v3;
+  #L24f834.  v0:= 65I;
+  #L24f838.  if v3 < v0 then goto L24f84c;
+  #L24f83c.  v1:= 70I;
+  #L24f840.  if v3 > v1 then goto L24f84c;
+  #L24f844.  v3:= v3 - v0 @kind int;
+  #L24f846.  v3:= v3 + 10;
+  #L24f84a.  return v3;
+  #L24f84c.  v0:= new `java.lang.IllegalArgumentException`;
+  #L24f850.  v1:= new `java.lang.StringBuilder`;
+  #L24f854.  call `<init>`(v1) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L24f85a.  v2:= "Unexpected hex digit: " @kind object;
+  #L24f85e.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L24f864.  call temp:= `append`(v1, v3) @signature `Ljava/lang/StringBuilder;.append:(C)Ljava/lang/StringBuilder;` @kind virtual;
+  #L24f86a.  call temp:= `toString`(v1) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L24f870.  v3:= temp @kind object;
+  #L24f872.  call `<init>`(v0, v3) @signature `Ljava/lang/IllegalArgumentException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L24f878.  throw v0;
+}
+procedure `okio.ByteString` `digest`(`okio.ByteString` v1 @kind this, `java.lang.String` v2 @kind object) @signature `Lokio/ByteString;.digest:(Ljava/lang/String;)Lokio/ByteString;` @AccessFlag PRIVATE {
+    temp;
+    v0;
+
+  #L24fdf8.  call temp:= `getInstance`(v2) @signature `Ljava/security/MessageDigest;.getInstance:(Ljava/lang/String;)Ljava/security/MessageDigest;` @kind static;
+  #L24fdfe.  v2:= temp @kind object;
+  #L24fe00.  v0:= v1.`okio.ByteString.data` @type ^`byte`[] @kind object;
+  #L24fe04.  call temp:= `digest`(v2, v0) @signature `Ljava/security/MessageDigest;.digest:([B)[B` @kind virtual;
+  #L24fe0a.  v2:= temp @kind object;
+  #L24fe0c.  call temp:= `of`(v2) @signature `Lokio/ByteString;.of:([B)Lokio/ByteString;` @kind static;
+  #L24fe12.  v2:= temp @kind object;
+  #L24fe14.  return v2 @kind object;
+  #L24fe16.  v2:= Exception @type ^`java.security.NoSuchAlgorithmException` @kind object;
+  #L24fe18.  v0:= new `java.lang.AssertionError`;
+  #L24fe1c.  call `<init>`(v0, v2) @signature `Ljava/lang/AssertionError;.<init>:(Ljava/lang/Object;)V` @kind direct;
+  #L24fe22.  throw v0;
+  catch `java.security.NoSuchAlgorithmException` @[L24fdf8..L24fe14] goto L24fe16;
+}
+procedure `okio.ByteString` `encodeString`(`java.lang.String` v1 @kind object, `java.nio.charset.Charset` v2 @kind object) @signature `Lokio/ByteString;.encodeString:(Ljava/lang/String;Ljava/nio/charset/Charset;)Lokio/ByteString;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+
+  #L24fe44.  if v1 == 0 then goto L24fe70;
+  #L24fe48.  if v2 == 0 then goto L24fe60;
+  #L24fe4c.  v0:= new `okio.ByteString`;
+  #L24fe50.  call temp:= `getBytes`(v1, v2) @signature `Ljava/lang/String;.getBytes:(Ljava/nio/charset/Charset;)[B` @kind virtual;
+  #L24fe56.  v1:= temp @kind object;
+  #L24fe58.  call `<init>`(v0, v1) @signature `Lokio/ByteString;.<init>:([B)V` @kind direct;
+  #L24fe5e.  return v0 @kind object;
+  #L24fe60.  v1:= new `java.lang.IllegalArgumentException`;
+  #L24fe64.  v2:= "charset == null" @kind object;
+  #L24fe68.  call `<init>`(v1, v2) @signature `Ljava/lang/IllegalArgumentException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L24fe6e.  throw v1;
+  #L24fe70.  v1:= new `java.lang.IllegalArgumentException`;
+  #L24fe74.  v2:= "s == null" @kind object;
+  #L24fe78.  call `<init>`(v1, v2) @signature `Ljava/lang/IllegalArgumentException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L24fe7e.  throw v1;
+}
+procedure `okio.ByteString` `encodeUtf8`(`java.lang.String` v2 @kind object) @signature `Lokio/ByteString;.encodeUtf8:(Ljava/lang/String;)Lokio/ByteString;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+
+  #L24fe90.  if v2 == 0 then goto L24feb0;
+  #L24fe94.  v0:= new `okio.ByteString`;
+  #L24fe98.  v1:= `@@okio.Util.UTF_8` @type ^`java.nio.charset.Charset` @kind object;
+  #L24fe9c.  call temp:= `getBytes`(v2, v1) @signature `Ljava/lang/String;.getBytes:(Ljava/nio/charset/Charset;)[B` @kind virtual;
+  #L24fea2.  v1:= temp @kind object;
+  #L24fea4.  call `<init>`(v0, v1) @signature `Lokio/ByteString;.<init>:([B)V` @kind direct;
+  #L24feaa.  v0.`okio.ByteString.utf8` @type ^`java.lang.String` := v2 @kind object;
+  #L24feae.  return v0 @kind object;
+  #L24feb0.  v2:= new `java.lang.IllegalArgumentException`;
+  #L24feb4.  v0:= "s == null" @kind object;
+  #L24feb8.  call `<init>`(v2, v0) @signature `Ljava/lang/IllegalArgumentException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L24febe.  throw v2;
+}
+procedure `okio.ByteString` `hmac`(`okio.ByteString` v2 @kind this, `java.lang.String` v3 @kind object, `okio.ByteString` v4 @kind object) @signature `Lokio/ByteString;.hmac:(Ljava/lang/String;Lokio/ByteString;)Lokio/ByteString;` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+
+  #L24fed0.  call temp:= `getInstance`(v3) @signature `Ljavax/crypto/Mac;.getInstance:(Ljava/lang/String;)Ljavax/crypto/Mac;` @kind static;
+  #L24fed6.  v0:= temp @kind object;
+  #L24fed8.  v1:= new `javax.crypto.spec.SecretKeySpec`;
+  #L24fedc.  call temp:= `toByteArray`(v4) @signature `Lokio/ByteString;.toByteArray:()[B` @kind virtual;
+  #L24fee2.  v4:= temp @kind object;
+  #L24fee4.  call `<init>`(v1, v4, v3) @signature `Ljavax/crypto/spec/SecretKeySpec;.<init>:([BLjava/lang/String;)V` @kind direct;
+  #L24feea.  call `init`(v0, v1) @signature `Ljavax/crypto/Mac;.init:(Ljava/security/Key;)V` @kind virtual;
+  #L24fef0.  v3:= v2.`okio.ByteString.data` @type ^`byte`[] @kind object;
+  #L24fef4.  call temp:= `doFinal`(v0, v3) @signature `Ljavax/crypto/Mac;.doFinal:([B)[B` @kind virtual;
+  #L24fefa.  v3:= temp @kind object;
+  #L24fefc.  call temp:= `of`(v3) @signature `Lokio/ByteString;.of:([B)Lokio/ByteString;` @kind static;
+  #L24ff02.  v3:= temp @kind object;
+  #L24ff04.  return v3 @kind object;
+  #L24ff06.  v3:= Exception @type ^`java.security.InvalidKeyException` @kind object;
+  #L24ff08.  v4:= new `java.lang.IllegalArgumentException`;
+  #L24ff0c.  call `<init>`(v4, v3) @signature `Ljava/lang/IllegalArgumentException;.<init>:(Ljava/lang/Throwable;)V` @kind direct;
+  #L24ff12.  throw v4;
+  #L24ff14.  v3:= Exception @type ^`java.security.NoSuchAlgorithmException` @kind object;
+  #L24ff16.  v4:= new `java.lang.AssertionError`;
+  #L24ff1a.  call `<init>`(v4, v3) @signature `Ljava/lang/AssertionError;.<init>:(Ljava/lang/Object;)V` @kind direct;
+  #L24ff20.  throw v4;
+  catch `java.security.NoSuchAlgorithmException` @[L24fed0..L24ff04] goto L24ff14;
+  catch `java.security.InvalidKeyException` @[L24fed0..L24ff04] goto L24ff06;
+}
+procedure `okio.ByteString` `of`(`java.nio.ByteBuffer` v1 @kind object) @signature `Lokio/ByteString;.of:(Ljava/nio/ByteBuffer;)Lokio/ByteString;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+
+  #L25004c.  if v1 == 0 then goto L25006e;
+  #L250050.  call temp:= `remaining`(v1) @signature `Ljava/nio/ByteBuffer;.remaining:()I` @kind virtual;
+  #L250056.  v0:= temp;
+  #L250058.  v0:= new `byte`[v0];
+  #L25005c.  call temp:= `get`(v1, v0) @signature `Ljava/nio/ByteBuffer;.get:([B)Ljava/nio/ByteBuffer;` @kind virtual;
+  #L250062.  v1:= new `okio.ByteString`;
+  #L250066.  call `<init>`(v1, v0) @signature `Lokio/ByteString;.<init>:([B)V` @kind direct;
+  #L25006c.  return v1 @kind object;
+  #L25006e.  v1:= new `java.lang.IllegalArgumentException`;
+  #L250072.  v0:= "data == null" @kind object;
+  #L250076.  call `<init>`(v1, v0) @signature `Ljava/lang/IllegalArgumentException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L25007c.  throw v1;
+}
+procedure `okio.ByteString` `of`(`byte`[] v1 @kind object) @signature `Lokio/ByteString;.of:([B)Lokio/ByteString;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+
+  #L24ffc4.  if v1 == 0 then goto L24ffe0;
+  #L24ffc8.  v0:= new `okio.ByteString`;
+  #L24ffcc.  call temp:= `clone`(v1) @signature `[B.clone:()Ljava/lang/Object;` @kind virtual;
+  #L24ffd2.  v1:= temp @kind object;
+  #L24ffd4.  v1:= (`byte`[]) v1 @kind object;
+  #L24ffd8.  call `<init>`(v0, v1) @signature `Lokio/ByteString;.<init>:([B)V` @kind direct;
+  #L24ffde.  return v0 @kind object;
+  #L24ffe0.  v1:= new `java.lang.IllegalArgumentException`;
+  #L24ffe4.  v0:= "data == null" @kind object;
+  #L24ffe8.  call `<init>`(v1, v0) @signature `Ljava/lang/IllegalArgumentException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L24ffee.  throw v1;
+}
+procedure `okio.ByteString` `of`(`byte`[] v7 @kind object, `int` v8 , `int` v9 ) @signature `Lokio/ByteString;.of:([BII)Lokio/ByteString;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+
+  #L250000.  if v7 == 0 then goto L25002a;
+  #L250004.  v0:= length @variable v7;
+  #L250006.  v1:= (`long`) v0 @kind i2l;
+  #L250008.  v3:= (`long`) v8 @kind i2l;
+  #L25000a.  v5:= (`long`) v9 @kind i2l;
+  #L25000c.  call `checkOffsetAndCount`(v1, v3, v5) @signature `Lokio/Util;.checkOffsetAndCount:(JJJ)V` @kind static;
+  #L250012.  v0:= new `byte`[v9];
+  #L250016.  v1:= 0I;
+  #L250018.  call `arraycopy`(v7, v8, v0, v1, v9) @signature `Ljava/lang/System;.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V` @kind static;
+  #L25001e.  v7:= new `okio.ByteString`;
+  #L250022.  call `<init>`(v7, v0) @signature `Lokio/ByteString;.<init>:([B)V` @kind direct;
+  #L250028.  return v7 @kind object;
+  #L25002a.  v7:= new `java.lang.IllegalArgumentException`;
+  #L25002e.  v8:= "data == null" @kind object;
+  #L250032.  call `<init>`(v7, v8) @signature `Ljava/lang/IllegalArgumentException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L250038.  throw v7;
+}
+procedure `okio.ByteString` `read`(`java.io.InputStream` v4 @kind object, `int` v5 ) @signature `Lokio/ByteString;.read:(Ljava/io/InputStream;I)Lokio/ByteString;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L250090.  if v4 == 0 then goto L2500fe;
+  #L250094.  if v5 < 0 then goto L2500d0;
+  #L250098.  v0:= new `byte`[v5];
+  #L25009c.  v1:= 0I;
+  #L25009e.  if v1 >= v5 then goto L2500c4;
+  #L2500a2.  v2:= v5 - v1 @kind int;
+  #L2500a6.  call temp:= `read`(v4, v0, v1, v2) @signature `Ljava/io/InputStream;.read:([BII)I` @kind virtual;
+  #L2500ac.  v2:= temp;
+  #L2500ae.  v3:= -1I;
+  #L2500b0.  if v2 == v3 then goto L2500b8;
+  #L2500b4.  v1:= v1 + v2 @kind int;
+  #L2500b6.  goto L25009e;
+  #L2500b8.  v4:= new `java.io.EOFException`;
+  #L2500bc.  call `<init>`(v4) @signature `Ljava/io/EOFException;.<init>:()V` @kind direct;
+  #L2500c2.  throw v4;
+  #L2500c4.  v4:= new `okio.ByteString`;
+  #L2500c8.  call `<init>`(v4, v0) @signature `Lokio/ByteString;.<init>:([B)V` @kind direct;
+  #L2500ce.  return v4 @kind object;
+  #L2500d0.  v4:= new `java.lang.IllegalArgumentException`;
+  #L2500d4.  v0:= new `java.lang.StringBuilder`;
+  #L2500d8.  call `<init>`(v0) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L2500de.  v1:= "byteCount < 0: " @kind object;
+  #L2500e2.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2500e8.  call temp:= `append`(v0, v5) @signature `Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2500ee.  call temp:= `toString`(v0) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L2500f4.  v5:= temp @kind object;
+  #L2500f6.  call `<init>`(v4, v5) @signature `Ljava/lang/IllegalArgumentException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L2500fc.  throw v4;
+  #L2500fe.  v4:= new `java.lang.IllegalArgumentException`;
+  #L250102.  v5:= "in == null" @kind object;
+  #L250106.  call `<init>`(v4, v5) @signature `Ljava/lang/IllegalArgumentException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L25010c.  throw v4;
+  #L25010e.  return @kind void;
+}
+procedure `void` `readObject`(`okio.ByteString` v2 @kind this, `java.io.ObjectInputStream` v3 @kind object) @signature `Lokio/ByteString;.readObject:(Ljava/io/ObjectInputStream;)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+
+  #L2503d0.  call temp:= `readInt`(v3) @signature `Ljava/io/ObjectInputStream;.readInt:()I` @kind virtual;
+  #L2503d6.  v0:= temp;
+  #L2503d8.  call temp:= `read`(v3, v0) @signature `Lokio/ByteString;.read:(Ljava/io/InputStream;I)Lokio/ByteString;` @kind static;
+  #L2503de.  v3:= temp @kind object;
+  #L2503e0.  v0:= constclass @type ^`okio.ByteString` @kind object;
+  #L2503e4.  v1:= "data" @kind object;
+  #L2503e8.  call temp:= `getDeclaredField`(v0, v1) @signature `Ljava/lang/Class;.getDeclaredField:(Ljava/lang/String;)Ljava/lang/reflect/Field;` @kind virtual;
+  #L2503ee.  v0:= temp @kind object;
+  #L2503f0.  v1:= 1I;
+  #L2503f2.  call `setAccessible`(v0, v1) @signature `Ljava/lang/reflect/Field;.setAccessible:(Z)V` @kind virtual;
+  #L2503f8.  v3:= v3.`okio.ByteString.data` @type ^`byte`[] @kind object;
+  #L2503fc.  call `set`(v0, v2, v3) @signature `Ljava/lang/reflect/Field;.set:(Ljava/lang/Object;Ljava/lang/Object;)V` @kind virtual;
+  #L250402.  return @kind void;
+  #L250404.  v3:= new `java.lang.AssertionError`;
+  #L250408.  call `<init>`(v3) @signature `Ljava/lang/AssertionError;.<init>:()V` @kind direct;
+  #L25040e.  throw v3;
+  #L250410.  v3:= new `java.lang.AssertionError`;
+  #L250414.  call `<init>`(v3) @signature `Ljava/lang/AssertionError;.<init>:()V` @kind direct;
+  #L25041a.  throw v3;
+  catch `java.lang.NoSuchFieldException` @[L2503e0..L250402] goto L250410;
+  catch `java.lang.IllegalAccessException` @[L2503e0..L250402] goto L250404;
+}
+procedure `void` `writeObject`(`okio.ByteString` v1 @kind this, `java.io.ObjectOutputStream` v2 @kind object) @signature `Lokio/ByteString;.writeObject:(Ljava/io/ObjectOutputStream;)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+
+  #L25048c.  v0:= v1.`okio.ByteString.data` @type ^`byte`[] @kind object;
+  #L250490.  v0:= length @variable v0;
+  #L250492.  call `writeInt`(v2, v0) @signature `Ljava/io/ObjectOutputStream;.writeInt:(I)V` @kind virtual;
+  #L250498.  v0:= v1.`okio.ByteString.data` @type ^`byte`[] @kind object;
+  #L25049c.  call `write`(v2, v0) @signature `Ljava/io/ObjectOutputStream;.write:([B)V` @kind virtual;
+  #L2504a2.  return @kind void;
+}
+procedure `java.nio.ByteBuffer` `asByteBuffer`(`okio.ByteString` v1 @kind this) @signature `Lokio/ByteString;.asByteBuffer:()Ljava/nio/ByteBuffer;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L24fcd0.  v0:= v1.`okio.ByteString.data` @type ^`byte`[] @kind object;
+  #L24fcd4.  call temp:= `wrap`(v0) @signature `Ljava/nio/ByteBuffer;.wrap:([B)Ljava/nio/ByteBuffer;` @kind static;
+  #L24fcda.  v0:= temp @kind object;
+  #L24fcdc.  call temp:= `asReadOnlyBuffer`(v0) @signature `Ljava/nio/ByteBuffer;.asReadOnlyBuffer:()Ljava/nio/ByteBuffer;` @kind virtual;
+  #L24fce2.  v0:= temp @kind object;
+  #L24fce4.  return v0 @kind object;
+}
+procedure `java.lang.String` `base64`(`okio.ByteString` v1 @kind this) @signature `Lokio/ByteString;.base64:()Ljava/lang/String;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L24fa38.  v0:= v1.`okio.ByteString.data` @type ^`byte`[] @kind object;
+  #L24fa3c.  call temp:= `encode`(v0) @signature `Lokio/Base64;.encode:([B)Ljava/lang/String;` @kind static;
+  #L24fa42.  v0:= temp @kind object;
+  #L24fa44.  return v0 @kind object;
+}
+procedure `java.lang.String` `base64Url`(`okio.ByteString` v1 @kind this) @signature `Lokio/ByteString;.base64Url:()Ljava/lang/String;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L24fa58.  v0:= v1.`okio.ByteString.data` @type ^`byte`[] @kind object;
+  #L24fa5c.  call temp:= `encodeUrl`(v0) @signature `Lokio/Base64;.encodeUrl:([B)Ljava/lang/String;` @kind static;
+  #L24fa62.  v0:= temp @kind object;
+  #L24fa64.  return v0 @kind object;
+}
+procedure `int` `compareTo`(`okio.ByteString` v0 @kind this, `java.lang.Object` v1 @kind object) @signature `Lokio/ByteString;.compareTo:(Ljava/lang/Object;)I` @AccessFlag PUBLIC_SYNTHETIC {
+    temp;
+
+  #L24f778.  v1:= (`okio.ByteString`) v1 @kind object;
+  #L24f77c.  call temp:= `compareTo`(v0, v1) @signature `Lokio/ByteString;.compareTo:(Lokio/ByteString;)I` @kind virtual;
+  #L24f782.  v1:= temp;
+  #L24f784.  return v1;
+}
+procedure `int` `compareTo`(`okio.ByteString` v9 @kind this, `okio.ByteString` v10 @kind object) @signature `Lokio/ByteString;.compareTo:(Lokio/ByteString;)I` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+
+  #L24f798.  call temp:= `size`(v9) @signature `Lokio/ByteString;.size:()I` @kind virtual;
+  #L24f79e.  v0:= temp;
+  #L24f7a0.  call temp:= `size`(v10) @signature `Lokio/ByteString;.size:()I` @kind virtual;
+  #L24f7a6.  v1:= temp;
+  #L24f7a8.  call temp:= `min`(v0, v1) @signature `Ljava/lang/Math;.min:(II)I` @kind static;
+  #L24f7ae.  v2:= temp;
+  #L24f7b0.  v3:= 0I;
+  #L24f7b2.  v4:= 0I;
+  #L24f7b4.  v5:= -1I;
+  #L24f7b6.  v6:= 1I;
+  #L24f7b8.  if v4 >= v2 then goto L24f7e8;
+  #L24f7bc.  call temp:= `getByte`(v9, v4) @signature `Lokio/ByteString;.getByte:(I)B` @kind virtual;
+  #L24f7c2.  v7:= temp;
+  #L24f7c4.  v7:= v7 ^& 255;
+  #L24f7c8.  call temp:= `getByte`(v10, v4) @signature `Lokio/ByteString;.getByte:(I)B` @kind virtual;
+  #L24f7ce.  v8:= temp;
+  #L24f7d0.  v8:= v8 ^& 255;
+  #L24f7d4.  if v7 != v8 then goto L24f7de;
+  #L24f7d8.  v4:= v4 + 1;
+  #L24f7dc.  goto L24f7b4;
+  #L24f7de.  if v7 >= v8 then goto L24f7e4;
+  #L24f7e2.  goto L24f7e6;
+  #L24f7e4.  v5:= 1I;
+  #L24f7e6.  return v5;
+  #L24f7e8.  if v0 != v1 then goto L24f7ee;
+  #L24f7ec.  return v3;
+  #L24f7ee.  if v0 >= v1 then goto L24f7f4;
+  #L24f7f2.  goto L24f7f6;
+  #L24f7f4.  v5:= 1I;
+  #L24f7f6.  return v5;
+}
+procedure `boolean` `endsWith`(`okio.ByteString` v3 @kind this, `okio.ByteString` v4 @kind object) @signature `Lokio/ByteString;.endsWith:(Lokio/ByteString;)Z` @AccessFlag PUBLIC_FINAL {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L24f584.  call temp:= `size`(v3) @signature `Lokio/ByteString;.size:()I` @kind virtual;
+  #L24f58a.  v0:= temp;
+  #L24f58c.  call temp:= `size`(v4) @signature `Lokio/ByteString;.size:()I` @kind virtual;
+  #L24f592.  v1:= temp;
+  #L24f594.  v0:= v0 - v1 @kind int;
+  #L24f596.  call temp:= `size`(v4) @signature `Lokio/ByteString;.size:()I` @kind virtual;
+  #L24f59c.  v1:= temp;
+  #L24f59e.  v2:= 0I;
+  #L24f5a0.  call temp:= `rangeEquals`(v3, v0, v4, v2, v1) @signature `Lokio/ByteString;.rangeEquals:(ILokio/ByteString;II)Z` @kind virtual;
+  #L24f5a6.  v4:= temp;
+  #L24f5a8.  return v4;
+}
+procedure `boolean` `endsWith`(`okio.ByteString` v3 @kind this, `byte`[] v4 @kind object) @signature `Lokio/ByteString;.endsWith:([B)Z` @AccessFlag PUBLIC_FINAL {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L24f558.  call temp:= `size`(v3) @signature `Lokio/ByteString;.size:()I` @kind virtual;
+  #L24f55e.  v0:= temp;
+  #L24f560.  v1:= length @variable v4;
+  #L24f562.  v0:= v0 - v1 @kind int;
+  #L24f564.  v1:= length @variable v4;
+  #L24f566.  v2:= 0I;
+  #L24f568.  call temp:= `rangeEquals`(v3, v0, v4, v2, v1) @signature `Lokio/ByteString;.rangeEquals:(I[BII)Z` @kind virtual;
+  #L24f56e.  v4:= temp;
+  #L24f570.  return v4;
+}
+procedure `boolean` `equals`(`okio.ByteString` v5 @kind this, `java.lang.Object` v6 @kind object) @signature `Lokio/ByteString;.equals:(Ljava/lang/Object;)Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L24f5bc.  v0:= 1I;
+  #L24f5be.  if v6 != v5 then goto L24f5c4;
+  #L24f5c2.  return v0;
+  #L24f5c4.  v1:= instanceof @variable v6 @type ^`okio.ByteString` @kind boolean;
+  #L24f5c8.  v2:= 0I;
+  #L24f5ca.  if v1 == 0 then goto L24f5f4;
+  #L24f5ce.  v6:= (`okio.ByteString`) v6 @kind object;
+  #L24f5d2.  call temp:= `size`(v6) @signature `Lokio/ByteString;.size:()I` @kind virtual;
+  #L24f5d8.  v1:= temp;
+  #L24f5da.  v3:= v5.`okio.ByteString.data` @type ^`byte`[] @kind object;
+  #L24f5de.  v4:= length @variable v3;
+  #L24f5e0.  if v1 != v4 then goto L24f5f4;
+  #L24f5e4.  v1:= length @variable v3;
+  #L24f5e6.  call temp:= `rangeEquals`(v6, v2, v3, v2, v1) @signature `Lokio/ByteString;.rangeEquals:(I[BII)Z` @kind virtual;
+  #L24f5ec.  v6:= temp;
+  #L24f5ee.  if v6 == 0 then goto L24f5f4;
+  #L24f5f2.  goto L24f5f6;
+  #L24f5f4.  v0:= 0I;
+  #L24f5f6.  return v0;
+}
+procedure `byte` `getByte`(`okio.ByteString` v1 @kind this, `int` v2 ) @signature `Lokio/ByteString;.getByte:(I)B` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L24f6ac.  v0:= v1.`okio.ByteString.data` @type ^`byte`[] @kind object;
+  #L24f6b0.  v2:= v0[v2] @kind byte;
+  #L24f6b4.  return v2;
+}
+procedure `int` `hashCode`(`okio.ByteString` v1 @kind this) @signature `Lokio/ByteString;.hashCode:()I` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L24f88c.  v0:= v1.`okio.ByteString.hashCode` @type ^`int`;
+  #L24f890.  if v0 == 0 then goto L24f896;
+  #L24f894.  goto L24f8a6;
+  #L24f896.  v0:= v1.`okio.ByteString.data` @type ^`byte`[] @kind object;
+  #L24f89a.  call temp:= `hashCode`(v0) @signature `Ljava/util/Arrays;.hashCode:([B)I` @kind static;
+  #L24f8a0.  v0:= temp;
+  #L24f8a2.  v1.`okio.ByteString.hashCode` @type ^`int` := v0;
+  #L24f8a6.  return v0;
+}
+procedure `java.lang.String` `hex`(`okio.ByteString` v9 @kind this) @signature `Lokio/ByteString;.hex:()Ljava/lang/String;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+
+  #L24fa78.  v0:= v9.`okio.ByteString.data` @type ^`byte`[] @kind object;
+  #L24fa7c.  v1:= length @variable v0;
+  #L24fa7e.  v1:= v1 * 2;
+  #L24fa82.  v1:= new `char`[v1];
+  #L24fa86.  v2:= length @variable v0;
+  #L24fa88.  v3:= 0I;
+  #L24fa8a.  v4:= 0I;
+  #L24fa8c.  if v3 >= v2 then goto L24fac2;
+  #L24fa90.  v5:= v0[v3] @kind byte;
+  #L24fa94.  v6:= v4 + 1;
+  #L24fa98.  v7:= `@@okio.ByteString.HEX_DIGITS` @type ^`char`[] @kind object;
+  #L24fa9c.  v8:= v5 ^> 4;
+  #L24faa0.  v8:= v8 ^& 15;
+  #L24faa4.  v8:= v7[v8] @kind char;
+  #L24faa8.  v1[v4]:= v8 @kind char;
+  #L24faac.  v4:= v6 + 1;
+  #L24fab0.  v5:= v5 ^& 15;
+  #L24fab4.  v5:= v7[v5] @kind char;
+  #L24fab8.  v1[v6]:= v5 @kind char;
+  #L24fabc.  v3:= v3 + 1;
+  #L24fac0.  goto L24fa8c;
+  #L24fac2.  v0:= new `java.lang.String`;
+  #L24fac6.  call `<init>`(v0, v1) @signature `Ljava/lang/String;.<init>:([C)V` @kind direct;
+  #L24facc.  return v0 @kind object;
+}
+procedure `okio.ByteString` `hmacSha1`(`okio.ByteString` v1 @kind this, `okio.ByteString` v2 @kind object) @signature `Lokio/ByteString;.hmacSha1:(Lokio/ByteString;)Lokio/ByteString;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L24ff44.  v0:= "HmacSHA1" @kind object;
+  #L24ff48.  call temp:= `hmac`(v1, v0, v2) @signature `Lokio/ByteString;.hmac:(Ljava/lang/String;Lokio/ByteString;)Lokio/ByteString;` @kind direct;
+  #L24ff4e.  v2:= temp @kind object;
+  #L24ff50.  return v2 @kind object;
+}
+procedure `okio.ByteString` `hmacSha256`(`okio.ByteString` v1 @kind this, `okio.ByteString` v2 @kind object) @signature `Lokio/ByteString;.hmacSha256:(Lokio/ByteString;)Lokio/ByteString;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L24ff64.  v0:= "HmacSHA256" @kind object;
+  #L24ff68.  call temp:= `hmac`(v1, v0, v2) @signature `Lokio/ByteString;.hmac:(Ljava/lang/String;Lokio/ByteString;)Lokio/ByteString;` @kind direct;
+  #L24ff6e.  v2:= temp @kind object;
+  #L24ff70.  return v2 @kind object;
+}
+procedure `okio.ByteString` `hmacSha512`(`okio.ByteString` v1 @kind this, `okio.ByteString` v2 @kind object) @signature `Lokio/ByteString;.hmacSha512:(Lokio/ByteString;)Lokio/ByteString;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L24ff84.  v0:= "HmacSHA512" @kind object;
+  #L24ff88.  call temp:= `hmac`(v1, v0, v2) @signature `Lokio/ByteString;.hmac:(Ljava/lang/String;Lokio/ByteString;)Lokio/ByteString;` @kind direct;
+  #L24ff8e.  v2:= temp @kind object;
+  #L24ff90.  return v2 @kind object;
+}
+procedure `int` `indexOf`(`okio.ByteString` v1 @kind this, `okio.ByteString` v2 @kind object) @signature `Lokio/ByteString;.indexOf:(Lokio/ByteString;)I` @AccessFlag PUBLIC_FINAL {
+    temp;
+    v0;
+
+  #L24f91c.  call temp:= `internalArray`(v2) @signature `Lokio/ByteString;.internalArray:()[B` @kind virtual;
+  #L24f922.  v2:= temp @kind object;
+  #L24f924.  v0:= 0I;
+  #L24f926.  call temp:= `indexOf`(v1, v2, v0) @signature `Lokio/ByteString;.indexOf:([BI)I` @kind virtual;
+  #L24f92c.  v2:= temp;
+  #L24f92e.  return v2;
+}
+procedure `int` `indexOf`(`okio.ByteString` v0 @kind this, `okio.ByteString` v1 @kind object, `int` v2 ) @signature `Lokio/ByteString;.indexOf:(Lokio/ByteString;I)I` @AccessFlag PUBLIC_FINAL {
+    temp;
+
+  #L24f940.  call temp:= `internalArray`(v1) @signature `Lokio/ByteString;.internalArray:()[B` @kind virtual;
+  #L24f946.  v1:= temp @kind object;
+  #L24f948.  call temp:= `indexOf`(v0, v1, v2) @signature `Lokio/ByteString;.indexOf:([BI)I` @kind virtual;
+  #L24f94e.  v1:= temp;
+  #L24f950.  return v1;
+}
+procedure `int` `indexOf`(`okio.ByteString` v1 @kind this, `byte`[] v2 @kind object) @signature `Lokio/ByteString;.indexOf:([B)I` @AccessFlag PUBLIC_FINAL {
+    temp;
+    v0;
+
+  #L24f8b8.  v0:= 0I;
+  #L24f8ba.  call temp:= `indexOf`(v1, v2, v0) @signature `Lokio/ByteString;.indexOf:([BI)I` @kind virtual;
+  #L24f8c0.  v2:= temp;
+  #L24f8c2.  return v2;
+}
+procedure `int` `indexOf`(`okio.ByteString` v4 @kind this, `byte`[] v5 @kind object, `int` v6 ) @signature `Lokio/ByteString;.indexOf:([BI)I` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L24f8d4.  v0:= 0I;
+  #L24f8d6.  call temp:= `max`(v6, v0) @signature `Ljava/lang/Math;.max:(II)I` @kind static;
+  #L24f8dc.  v6:= temp;
+  #L24f8de.  v1:= v4.`okio.ByteString.data` @type ^`byte`[] @kind object;
+  #L24f8e2.  v1:= length @variable v1;
+  #L24f8e4.  v2:= length @variable v5;
+  #L24f8e6.  v1:= v1 - v2 @kind int;
+  #L24f8e8.  if v6 > v1 then goto L24f906;
+  #L24f8ec.  v2:= v4.`okio.ByteString.data` @type ^`byte`[] @kind object;
+  #L24f8f0.  v3:= length @variable v5;
+  #L24f8f2.  call temp:= `arrayRangeEquals`(v2, v6, v5, v0, v3) @signature `Lokio/Util;.arrayRangeEquals:([BI[BII)Z` @kind static;
+  #L24f8f8.  v2:= temp;
+  #L24f8fa.  if v2 == 0 then goto L24f900;
+  #L24f8fe.  return v6;
+  #L24f900.  v6:= v6 + 1;
+  #L24f904.  goto L24f8e8;
+  #L24f906.  v5:= -1I;
+  #L24f908.  return v5;
+}
+procedure `byte`[] `internalArray`(`okio.ByteString` v1 @kind this) @signature `Lokio/ByteString;.internalArray:()[B` @AccessFlag  {
+    temp;
+    v0;
+
+  #L24f6c8.  v0:= v1.`okio.ByteString.data` @type ^`byte`[] @kind object;
+  #L24f6cc.  return v0 @kind object;
+}
+procedure `int` `lastIndexOf`(`okio.ByteString` v1 @kind this, `okio.ByteString` v2 @kind object) @signature `Lokio/ByteString;.lastIndexOf:(Lokio/ByteString;)I` @AccessFlag PUBLIC_FINAL {
+    temp;
+    v0;
+
+  #L24f9d0.  call temp:= `internalArray`(v2) @signature `Lokio/ByteString;.internalArray:()[B` @kind virtual;
+  #L24f9d6.  v2:= temp @kind object;
+  #L24f9d8.  call temp:= `size`(v1) @signature `Lokio/ByteString;.size:()I` @kind virtual;
+  #L24f9de.  v0:= temp;
+  #L24f9e0.  call temp:= `lastIndexOf`(v1, v2, v0) @signature `Lokio/ByteString;.lastIndexOf:([BI)I` @kind virtual;
+  #L24f9e6.  v2:= temp;
+  #L24f9e8.  return v2;
+}
+procedure `int` `lastIndexOf`(`okio.ByteString` v0 @kind this, `okio.ByteString` v1 @kind object, `int` v2 ) @signature `Lokio/ByteString;.lastIndexOf:(Lokio/ByteString;I)I` @AccessFlag PUBLIC_FINAL {
+    temp;
+
+  #L24f9fc.  call temp:= `internalArray`(v1) @signature `Lokio/ByteString;.internalArray:()[B` @kind virtual;
+  #L24fa02.  v1:= temp @kind object;
+  #L24fa04.  call temp:= `lastIndexOf`(v0, v1, v2) @signature `Lokio/ByteString;.lastIndexOf:([BI)I` @kind virtual;
+  #L24fa0a.  v1:= temp;
+  #L24fa0c.  return v1;
+}
+procedure `int` `lastIndexOf`(`okio.ByteString` v1 @kind this, `byte`[] v2 @kind object) @signature `Lokio/ByteString;.lastIndexOf:([B)I` @AccessFlag PUBLIC_FINAL {
+    temp;
+    v0;
+
+  #L24f964.  call temp:= `size`(v1) @signature `Lokio/ByteString;.size:()I` @kind virtual;
+  #L24f96a.  v0:= temp;
+  #L24f96c.  call temp:= `lastIndexOf`(v1, v2, v0) @signature `Lokio/ByteString;.lastIndexOf:([BI)I` @kind virtual;
+  #L24f972.  v2:= temp;
+  #L24f974.  return v2;
+}
+procedure `int` `lastIndexOf`(`okio.ByteString` v3 @kind this, `byte`[] v4 @kind object, `int` v5 ) @signature `Lokio/ByteString;.lastIndexOf:([BI)I` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L24f988.  v0:= v3.`okio.ByteString.data` @type ^`byte`[] @kind object;
+  #L24f98c.  v0:= length @variable v0;
+  #L24f98e.  v1:= length @variable v4;
+  #L24f990.  v0:= v0 - v1 @kind int;
+  #L24f992.  call temp:= `min`(v5, v0) @signature `Ljava/lang/Math;.min:(II)I` @kind static;
+  #L24f998.  v5:= temp;
+  #L24f99a.  if v5 < 0 then goto L24f9ba;
+  #L24f99e.  v0:= v3.`okio.ByteString.data` @type ^`byte`[] @kind object;
+  #L24f9a2.  v1:= 0I;
+  #L24f9a4.  v2:= length @variable v4;
+  #L24f9a6.  call temp:= `arrayRangeEquals`(v0, v5, v4, v1, v2) @signature `Lokio/Util;.arrayRangeEquals:([BI[BII)Z` @kind static;
+  #L24f9ac.  v0:= temp;
+  #L24f9ae.  if v0 == 0 then goto L24f9b4;
+  #L24f9b2.  return v5;
+  #L24f9b4.  v5:= v5 + -1;
+  #L24f9b8.  goto L24f99a;
+  #L24f9ba.  v4:= -1I;
+  #L24f9bc.  return v4;
+}
+procedure `okio.ByteString` `md5`(`okio.ByteString` v1 @kind this) @signature `Lokio/ByteString;.md5:()Lokio/ByteString;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L24ffa4.  v0:= "MD5" @kind object;
+  #L24ffa8.  call temp:= `digest`(v1, v0) @signature `Lokio/ByteString;.digest:(Ljava/lang/String;)Lokio/ByteString;` @kind direct;
+  #L24ffae.  v0:= temp @kind object;
+  #L24ffb0.  return v0 @kind object;
+}
+procedure `boolean` `rangeEquals`(`okio.ByteString` v1 @kind this, `int` v2 , `okio.ByteString` v3 @kind object, `int` v4 , `int` v5 ) @signature `Lokio/ByteString;.rangeEquals:(ILokio/ByteString;II)Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L24f648.  v0:= v1.`okio.ByteString.data` @type ^`byte`[] @kind object;
+  #L24f64c.  call temp:= `rangeEquals`(v3, v4, v0, v2, v5) @signature `Lokio/ByteString;.rangeEquals:(I[BII)Z` @kind virtual;
+  #L24f652.  v2:= temp;
+  #L24f654.  return v2;
+}
+procedure `boolean` `rangeEquals`(`okio.ByteString` v2 @kind this, `int` v3 , `byte`[] v4 @kind object, `int` v5 , `int` v6 ) @signature `Lokio/ByteString;.rangeEquals:(I[BII)Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L24f608.  if v3 < 0 then goto L24f634;
+  #L24f60c.  v0:= v2.`okio.ByteString.data` @type ^`byte`[] @kind object;
+  #L24f610.  v1:= length @variable v0;
+  #L24f612.  v1:= v1 - v6 @kind int;
+  #L24f614.  if v3 > v1 then goto L24f634;
+  #L24f618.  if v5 < 0 then goto L24f634;
+  #L24f61c.  v1:= length @variable v4;
+  #L24f61e.  v1:= v1 - v6 @kind int;
+  #L24f620.  if v5 > v1 then goto L24f634;
+  #L24f624.  call temp:= `arrayRangeEquals`(v0, v3, v4, v5, v6) @signature `Lokio/Util;.arrayRangeEquals:([BI[BII)Z` @kind static;
+  #L24f62a.  v3:= temp;
+  #L24f62c.  if v3 == 0 then goto L24f634;
+  #L24f630.  v3:= 1I;
+  #L24f632.  goto L24f636;
+  #L24f634.  v3:= 0I;
+  #L24f636.  return v3;
+}
+procedure `okio.ByteString` `sha1`(`okio.ByteString` v1 @kind this) @signature `Lokio/ByteString;.sha1:()Lokio/ByteString;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L250120.  v0:= "SHA-1" @kind object;
+  #L250124.  call temp:= `digest`(v1, v0) @signature `Lokio/ByteString;.digest:(Ljava/lang/String;)Lokio/ByteString;` @kind direct;
+  #L25012a.  v0:= temp @kind object;
+  #L25012c.  return v0 @kind object;
+}
+procedure `okio.ByteString` `sha256`(`okio.ByteString` v1 @kind this) @signature `Lokio/ByteString;.sha256:()Lokio/ByteString;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L250140.  v0:= "SHA-256" @kind object;
+  #L250144.  call temp:= `digest`(v1, v0) @signature `Lokio/ByteString;.digest:(Ljava/lang/String;)Lokio/ByteString;` @kind direct;
+  #L25014a.  v0:= temp @kind object;
+  #L25014c.  return v0 @kind object;
+}
+procedure `okio.ByteString` `sha512`(`okio.ByteString` v1 @kind this) @signature `Lokio/ByteString;.sha512:()Lokio/ByteString;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L250160.  v0:= "SHA-512" @kind object;
+  #L250164.  call temp:= `digest`(v1, v0) @signature `Lokio/ByteString;.digest:(Ljava/lang/String;)Lokio/ByteString;` @kind direct;
+  #L25016a.  v0:= temp @kind object;
+  #L25016c.  return v0 @kind object;
+}
+procedure `int` `size`(`okio.ByteString` v1 @kind this) @signature `Lokio/ByteString;.size:()I` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L24fa20.  v0:= v1.`okio.ByteString.data` @type ^`byte`[] @kind object;
+  #L24fa24.  v0:= length @variable v0;
+  #L24fa26.  return v0;
+}
+procedure `boolean` `startsWith`(`okio.ByteString` v2 @kind this, `okio.ByteString` v3 @kind object) @signature `Lokio/ByteString;.startsWith:(Lokio/ByteString;)Z` @AccessFlag PUBLIC_FINAL {
+    temp;
+    v0;
+    v1;
+
+  #L24f688.  call temp:= `size`(v3) @signature `Lokio/ByteString;.size:()I` @kind virtual;
+  #L24f68e.  v0:= temp;
+  #L24f690.  v1:= 0I;
+  #L24f692.  call temp:= `rangeEquals`(v2, v1, v3, v1, v0) @signature `Lokio/ByteString;.rangeEquals:(ILokio/ByteString;II)Z` @kind virtual;
+  #L24f698.  v3:= temp;
+  #L24f69a.  return v3;
+}
+procedure `boolean` `startsWith`(`okio.ByteString` v2 @kind this, `byte`[] v3 @kind object) @signature `Lokio/ByteString;.startsWith:([B)Z` @AccessFlag PUBLIC_FINAL {
+    temp;
+    v0;
+    v1;
+
+  #L24f668.  v0:= length @variable v3;
+  #L24f66a.  v1:= 0I;
+  #L24f66c.  call temp:= `rangeEquals`(v2, v1, v3, v1, v0) @signature `Lokio/ByteString;.rangeEquals:(I[BII)Z` @kind virtual;
+  #L24f672.  v3:= temp;
+  #L24f674.  return v3;
+}
+procedure `java.lang.String` `string`(`okio.ByteString` v2 @kind this, `java.nio.charset.Charset` v3 @kind object) @signature `Lokio/ByteString;.string:(Ljava/nio/charset/Charset;)Ljava/lang/String;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L24fae0.  if v3 == 0 then goto L24faf4;
+  #L24fae4.  v0:= new `java.lang.String`;
+  #L24fae8.  v1:= v2.`okio.ByteString.data` @type ^`byte`[] @kind object;
+  #L24faec.  call `<init>`(v0, v1, v3) @signature `Ljava/lang/String;.<init>:([BLjava/nio/charset/Charset;)V` @kind direct;
+  #L24faf2.  return v0 @kind object;
+  #L24faf4.  v3:= new `java.lang.IllegalArgumentException`;
+  #L24faf8.  v0:= "charset == null" @kind object;
+  #L24fafc.  call `<init>`(v3, v0) @signature `Ljava/lang/IllegalArgumentException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L24fb02.  throw v3;
+}
+procedure `okio.ByteString` `substring`(`okio.ByteString` v1 @kind this, `int` v2 ) @signature `Lokio/ByteString;.substring:(I)Lokio/ByteString;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L250180.  v0:= v1.`okio.ByteString.data` @type ^`byte`[] @kind object;
+  #L250184.  v0:= length @variable v0;
+  #L250186.  call temp:= `substring`(v1, v2, v0) @signature `Lokio/ByteString;.substring:(II)Lokio/ByteString;` @kind virtual;
+  #L25018c.  v2:= temp @kind object;
+  #L25018e.  return v2 @kind object;
+}
+procedure `okio.ByteString` `substring`(`okio.ByteString` v3 @kind this, `int` v4 , `int` v5 ) @signature `Lokio/ByteString;.substring:(II)Lokio/ByteString;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L2501a0.  if v4 < 0 then goto L25022c;
+  #L2501a4.  v0:= v3.`okio.ByteString.data` @type ^`byte`[] @kind object;
+  #L2501a8.  v1:= length @variable v0;
+  #L2501aa.  if v5 > v1 then goto L2501ee;
+  #L2501ae.  v1:= v5 - v4 @kind int;
+  #L2501b2.  if v1 < 0 then goto L2501de;
+  #L2501b6.  if v4 != 0 then goto L2501c2;
+  #L2501ba.  v0:= length @variable v0;
+  #L2501bc.  if v5 != v0 then goto L2501c2;
+  #L2501c0.  return v3 @kind object;
+  #L2501c2.  v5:= new `byte`[v1];
+  #L2501c6.  v0:= v3.`okio.ByteString.data` @type ^`byte`[] @kind object;
+  #L2501ca.  v2:= 0I;
+  #L2501cc.  call `arraycopy`(v0, v4, v5, v2, v1) @signature `Ljava/lang/System;.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V` @kind static;
+  #L2501d2.  v4:= new `okio.ByteString`;
+  #L2501d6.  call `<init>`(v4, v5) @signature `Lokio/ByteString;.<init>:([B)V` @kind direct;
+  #L2501dc.  return v4 @kind object;
+  #L2501de.  v4:= new `java.lang.IllegalArgumentException`;
+  #L2501e2.  v5:= "endIndex < beginIndex" @kind object;
+  #L2501e6.  call `<init>`(v4, v5) @signature `Ljava/lang/IllegalArgumentException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L2501ec.  throw v4;
+  #L2501ee.  v4:= new `java.lang.IllegalArgumentException`;
+  #L2501f2.  v5:= new `java.lang.StringBuilder`;
+  #L2501f6.  call `<init>`(v5) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L2501fc.  v0:= "endIndex > length(" @kind object;
+  #L250200.  call temp:= `append`(v5, v0) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L250206.  v0:= v3.`okio.ByteString.data` @type ^`byte`[] @kind object;
+  #L25020a.  v0:= length @variable v0;
+  #L25020c.  call temp:= `append`(v5, v0) @signature `Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder;` @kind virtual;
+  #L250212.  v0:= ")" @kind object;
+  #L250216.  call temp:= `append`(v5, v0) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L25021c.  call temp:= `toString`(v5) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L250222.  v5:= temp @kind object;
+  #L250224.  call `<init>`(v4, v5) @signature `Ljava/lang/IllegalArgumentException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L25022a.  throw v4;
+  #L25022c.  v4:= new `java.lang.IllegalArgumentException`;
+  #L250230.  v5:= "beginIndex < 0" @kind object;
+  #L250234.  call `<init>`(v4, v5) @signature `Ljava/lang/IllegalArgumentException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L25023a.  throw v4;
+}
+procedure `okio.ByteString` `toAsciiLowercase`(`okio.ByteString` v6 @kind this) @signature `Lokio/ByteString;.toAsciiLowercase:()Lokio/ByteString;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L25024c.  v0:= 0I;
+  #L25024e.  v1:= v6.`okio.ByteString.data` @type ^`byte`[] @kind object;
+  #L250252.  v2:= length @variable v1;
+  #L250254.  if v0 >= v2 then goto L2502be;
+  #L250258.  v2:= v1[v0] @kind byte;
+  #L25025c.  v3:= 65I;
+  #L250260.  if v2 < v3 then goto L2502b8;
+  #L250264.  v4:= 90I;
+  #L250268.  if v2 <= v4 then goto L25026e;
+  #L25026c.  goto L2502b8;
+  #L25026e.  call temp:= `clone`(v1) @signature `[B.clone:()Ljava/lang/Object;` @kind virtual;
+  #L250274.  v1:= temp @kind object;
+  #L250276.  v1:= (`byte`[]) v1 @kind object;
+  #L25027a.  v5:= v0 + 1;
+  #L25027e.  v2:= v2 + 32;
+  #L250282.  v2:= (`byte`) v2 @kind i2b;
+  #L250284.  v1[v0]:= v2 @kind byte;
+  #L250288.  v0:= length @variable v1;
+  #L25028a.  if v5 >= v0 then goto L2502ac;
+  #L25028e.  v0:= v1[v5] @kind byte;
+  #L250292.  if v0 < v3 then goto L2502a6;
+  #L250296.  if v0 <= v4 then goto L25029c;
+  #L25029a.  goto L2502a6;
+  #L25029c.  v0:= v0 + 32;
+  #L2502a0.  v0:= (`byte`) v0 @kind i2b;
+  #L2502a2.  v1[v5]:= v0 @kind byte;
+  #L2502a6.  v5:= v5 + 1;
+  #L2502aa.  goto L250288;
+  #L2502ac.  v0:= new `okio.ByteString`;
+  #L2502b0.  call `<init>`(v0, v1) @signature `Lokio/ByteString;.<init>:([B)V` @kind direct;
+  #L2502b6.  return v0 @kind object;
+  #L2502b8.  v0:= v0 + 1;
+  #L2502bc.  goto L25024e;
+  #L2502be.  return v6 @kind object;
+}
+procedure `okio.ByteString` `toAsciiUppercase`(`okio.ByteString` v6 @kind this) @signature `Lokio/ByteString;.toAsciiUppercase:()Lokio/ByteString;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L2502d0.  v0:= 0I;
+  #L2502d2.  v1:= v6.`okio.ByteString.data` @type ^`byte`[] @kind object;
+  #L2502d6.  v2:= length @variable v1;
+  #L2502d8.  if v0 >= v2 then goto L250342;
+  #L2502dc.  v2:= v1[v0] @kind byte;
+  #L2502e0.  v3:= 97I;
+  #L2502e4.  if v2 < v3 then goto L25033c;
+  #L2502e8.  v4:= 122I;
+  #L2502ec.  if v2 <= v4 then goto L2502f2;
+  #L2502f0.  goto L25033c;
+  #L2502f2.  call temp:= `clone`(v1) @signature `[B.clone:()Ljava/lang/Object;` @kind virtual;
+  #L2502f8.  v1:= temp @kind object;
+  #L2502fa.  v1:= (`byte`[]) v1 @kind object;
+  #L2502fe.  v5:= v0 + 1;
+  #L250302.  v2:= v2 + -32;
+  #L250306.  v2:= (`byte`) v2 @kind i2b;
+  #L250308.  v1[v0]:= v2 @kind byte;
+  #L25030c.  v0:= length @variable v1;
+  #L25030e.  if v5 >= v0 then goto L250330;
+  #L250312.  v0:= v1[v5] @kind byte;
+  #L250316.  if v0 < v3 then goto L25032a;
+  #L25031a.  if v0 <= v4 then goto L250320;
+  #L25031e.  goto L25032a;
+  #L250320.  v0:= v0 + -32;
+  #L250324.  v0:= (`byte`) v0 @kind i2b;
+  #L250326.  v1[v5]:= v0 @kind byte;
+  #L25032a.  v5:= v5 + 1;
+  #L25032e.  goto L25030c;
+  #L250330.  v0:= new `okio.ByteString`;
+  #L250334.  call `<init>`(v0, v1) @signature `Lokio/ByteString;.<init>:([B)V` @kind direct;
+  #L25033a.  return v0 @kind object;
+  #L25033c.  v0:= v0 + 1;
+  #L250340.  goto L2502d2;
+  #L250342.  return v6 @kind object;
+}
+procedure `byte`[] `toByteArray`(`okio.ByteString` v1 @kind this) @signature `Lokio/ByteString;.toByteArray:()[B` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L24f6e0.  v0:= v1.`okio.ByteString.data` @type ^`byte`[] @kind object;
+  #L24f6e4.  call temp:= `clone`(v0) @signature `[B.clone:()Ljava/lang/Object;` @kind virtual;
+  #L24f6ea.  v0:= temp @kind object;
+  #L24f6ec.  v0:= (`byte`[]) v0 @kind object;
+  #L24f6f0.  return v0 @kind object;
+}
+procedure `java.lang.String` `toString`(`okio.ByteString` v5 @kind this) @signature `Lokio/ByteString;.toString:()Ljava/lang/String;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L24fb14.  v0:= v5.`okio.ByteString.data` @type ^`byte`[] @kind object;
+  #L24fb18.  v0:= length @variable v0;
+  #L24fb1a.  if v0 != 0 then goto L24fb24;
+  #L24fb1e.  v0:= "[size=0]" @kind object;
+  #L24fb22.  return v0 @kind object;
+  #L24fb24.  call temp:= `utf8`(v5) @signature `Lokio/ByteString;.utf8:()Ljava/lang/String;` @kind virtual;
+  #L24fb2a.  v0:= temp @kind object;
+  #L24fb2c.  v1:= 64I;
+  #L24fb30.  call temp:= `codePointIndexToCharIndex`(v0, v1) @signature `Lokio/ByteString;.codePointIndexToCharIndex:(Ljava/lang/String;I)I` @kind static;
+  #L24fb36.  v2:= temp;
+  #L24fb38.  v3:= -1I;
+  #L24fb3a.  v4:= 0I;
+  #L24fb3c.  if v2 != v3 then goto L24fbd4;
+  #L24fb40.  v0:= v5.`okio.ByteString.data` @type ^`byte`[] @kind object;
+  #L24fb44.  v0:= length @variable v0;
+  #L24fb46.  if v0 > v1 then goto L24fb80;
+  #L24fb4a.  v0:= new `java.lang.StringBuilder`;
+  #L24fb4e.  call `<init>`(v0) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L24fb54.  v1:= "[hex=" @kind object;
+  #L24fb58.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L24fb5e.  call temp:= `hex`(v5) @signature `Lokio/ByteString;.hex:()Ljava/lang/String;` @kind virtual;
+  #L24fb64.  v1:= temp @kind object;
+  #L24fb66.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L24fb6c.  v1:= "]" @kind object;
+  #L24fb70.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L24fb76.  call temp:= `toString`(v0) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L24fb7c.  v0:= temp @kind object;
+  #L24fb7e.  goto L24fbd2;
+  #L24fb80.  v0:= new `java.lang.StringBuilder`;
+  #L24fb84.  call `<init>`(v0) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L24fb8a.  v2:= "[size=" @kind object;
+  #L24fb8e.  call temp:= `append`(v0, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L24fb94.  v2:= v5.`okio.ByteString.data` @type ^`byte`[] @kind object;
+  #L24fb98.  v2:= length @variable v2;
+  #L24fb9a.  call temp:= `append`(v0, v2) @signature `Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder;` @kind virtual;
+  #L24fba0.  v2:= " hex=" @kind object;
+  #L24fba4.  call temp:= `append`(v0, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L24fbaa.  call temp:= `substring`(v5, v4, v1) @signature `Lokio/ByteString;.substring:(II)Lokio/ByteString;` @kind virtual;
+  #L24fbb0.  v1:= temp @kind object;
+  #L24fbb2.  call temp:= `hex`(v1) @signature `Lokio/ByteString;.hex:()Ljava/lang/String;` @kind virtual;
+  #L24fbb8.  v1:= temp @kind object;
+  #L24fbba.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L24fbc0.  v1:= "…]" @kind object;
+  #L24fbc4.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L24fbca.  call temp:= `toString`(v0) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L24fbd0.  v0:= temp @kind object;
+  #L24fbd2.  return v0 @kind object;
+  #L24fbd4.  call temp:= `substring`(v0, v4, v2) @signature `Ljava/lang/String;.substring:(II)Ljava/lang/String;` @kind virtual;
+  #L24fbda.  v1:= temp @kind object;
+  #L24fbdc.  v3:= "\\" @kind object;
+  #L24fbe0.  v4:= "\\\\" @kind object;
+  #L24fbe4.  call temp:= `replace`(v1, v3, v4) @signature `Ljava/lang/String;.replace:(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Ljava/lang/String;` @kind virtual;
+  #L24fbea.  v1:= temp @kind object;
+  #L24fbec.  v3:= "\n" @kind object;
+  #L24fbf0.  v4:= "\\n" @kind object;
+  #L24fbf4.  call temp:= `replace`(v1, v3, v4) @signature `Ljava/lang/String;.replace:(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Ljava/lang/String;` @kind virtual;
+  #L24fbfa.  v1:= temp @kind object;
+  #L24fbfc.  v3:= "\r" @kind object;
+  #L24fc00.  v4:= "\\r" @kind object;
+  #L24fc04.  call temp:= `replace`(v1, v3, v4) @signature `Ljava/lang/String;.replace:(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Ljava/lang/String;` @kind virtual;
+  #L24fc0a.  v1:= temp @kind object;
+  #L24fc0c.  call temp:= `length`(v0) @signature `Ljava/lang/String;.length:()I` @kind virtual;
+  #L24fc12.  v0:= temp;
+  #L24fc14.  if v2 >= v0 then goto L24fc5c;
+  #L24fc18.  v0:= new `java.lang.StringBuilder`;
+  #L24fc1c.  call `<init>`(v0) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L24fc22.  v2:= "[size=" @kind object;
+  #L24fc26.  call temp:= `append`(v0, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L24fc2c.  v2:= v5.`okio.ByteString.data` @type ^`byte`[] @kind object;
+  #L24fc30.  v2:= length @variable v2;
+  #L24fc32.  call temp:= `append`(v0, v2) @signature `Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder;` @kind virtual;
+  #L24fc38.  v2:= " text=" @kind object;
+  #L24fc3c.  call temp:= `append`(v0, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L24fc42.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L24fc48.  v1:= "…]" @kind object;
+  #L24fc4c.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L24fc52.  call temp:= `toString`(v0) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L24fc58.  v0:= temp @kind object;
+  #L24fc5a.  goto L24fc88;
+  #L24fc5c.  v0:= new `java.lang.StringBuilder`;
+  #L24fc60.  call `<init>`(v0) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L24fc66.  v2:= "[text=" @kind object;
+  #L24fc6a.  call temp:= `append`(v0, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L24fc70.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L24fc76.  v1:= "]" @kind object;
+  #L24fc7a.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L24fc80.  call temp:= `toString`(v0) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L24fc86.  v0:= temp @kind object;
+  #L24fc88.  return v0 @kind object;
+}
+procedure `java.lang.String` `utf8`(`okio.ByteString` v3 @kind this) @signature `Lokio/ByteString;.utf8:()Ljava/lang/String;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L24fc9c.  v0:= v3.`okio.ByteString.utf8` @type ^`java.lang.String` @kind object;
+  #L24fca0.  if v0 == 0 then goto L24fca6;
+  #L24fca4.  goto L24fcbc;
+  #L24fca6.  v0:= new `java.lang.String`;
+  #L24fcaa.  v1:= v3.`okio.ByteString.data` @type ^`byte`[] @kind object;
+  #L24fcae.  v2:= `@@okio.Util.UTF_8` @type ^`java.nio.charset.Charset` @kind object;
+  #L24fcb2.  call `<init>`(v0, v1, v2) @signature `Ljava/lang/String;.<init>:([BLjava/nio/charset/Charset;)V` @kind direct;
+  #L24fcb8.  v3.`okio.ByteString.utf8` @type ^`java.lang.String` := v0 @kind object;
+  #L24fcbc.  return v0 @kind object;
+}
+procedure `void` `write`(`okio.ByteString` v1 @kind this, `java.io.OutputStream` v2 @kind object) @signature `Lokio/ByteString;.write:(Ljava/io/OutputStream;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L25043c.  if v2 == 0 then goto L25044c;
+  #L250440.  v0:= v1.`okio.ByteString.data` @type ^`byte`[] @kind object;
+  #L250444.  call `write`(v2, v0) @signature `Ljava/io/OutputStream;.write:([B)V` @kind virtual;
+  #L25044a.  return @kind void;
+  #L25044c.  v2:= new `java.lang.IllegalArgumentException`;
+  #L250450.  v0:= "out == null" @kind object;
+  #L250454.  call `<init>`(v2, v0) @signature `Ljava/lang/IllegalArgumentException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L25045a.  throw v2;
+}
+procedure `void` `write`(`okio.ByteString` v3 @kind this, `okio.Buffer` v4 @kind object) @signature `Lokio/ByteString;.write:(Lokio/Buffer;)V` @AccessFlag  {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L25046c.  v0:= v3.`okio.ByteString.data` @type ^`byte`[] @kind object;
+  #L250470.  v1:= length @variable v0;
+  #L250472.  v2:= 0I;
+  #L250474.  call temp:= `write`(v4, v0, v2, v1) @signature `Lokio/Buffer;.write:([BII)Lokio/Buffer;` @kind virtual;
+  #L25047a.  return @kind void;
+}

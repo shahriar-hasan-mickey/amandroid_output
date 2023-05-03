@@ -1,0 +1,114 @@
+record `f0.a` @kind class @AccessFlag PUBLIC_ABSTRACT extends `android.content.BroadcastReceiver` @kind class {
+}
+global `java.lang.String` `@@f0.a.EXTRA_WAKE_LOCK_ID` @AccessFlag PRIVATE_STATIC_FINAL;
+global `int` `@@f0.a.mNextId` @AccessFlag PRIVATE_STATIC;
+global `android.util.SparseArray` `@@f0.a.sActiveWakeLocks` @AccessFlag PRIVATE_STATIC_FINAL;
+procedure `void` `<clinit>`() @signature `Lf0/a;.<clinit>:()V` @AccessFlag STATIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L4e59b0.  v0:= new `android.util.SparseArray`;
+  #L4e59b4.  call `<init>`(v0) @signature `Landroid/util/SparseArray;.<init>:()V` @kind direct;
+  #L4e59ba.  `@@f0.a.sActiveWakeLocks` @type ^`android.util.SparseArray` := v0 @kind object;
+  #L4e59be.  v0:= 1I;
+  #L4e59c0.  `@@f0.a.mNextId` @type ^`int` := v0;
+  #L4e59c4.  return @kind void;
+}
+procedure `void` `<init>`(`f0.a` v0 @kind this) @signature `Lf0/a;.<init>:()V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+
+  #L4e59d8.  call `<init>`(v0) @signature `Landroid/content/BroadcastReceiver;.<init>:()V` @kind direct;
+  #L4e59de.  return @kind void;
+}
+procedure `boolean` `completeWakefulIntent`(`android.content.Intent` v5 @kind object) @signature `Lf0/a;.completeWakefulIntent:(Landroid/content/Intent;)Z` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L4e5920.  v0:= "androidx.contentpager.content.wakelockid" @kind object;
+  #L4e5924.  v1:= 0I;
+  #L4e5926.  call temp:= `getIntExtra`(v5, v0, v1) @signature `Landroid/content/Intent;.getIntExtra:(Ljava/lang/String;I)I` @kind virtual;
+  #L4e592c.  v5:= temp;
+  #L4e592e.  if v5 != 0 then goto L4e5934;
+  #L4e5932.  return v1;
+  #L4e5934.  v0:= `@@f0.a.sActiveWakeLocks` @type ^`android.util.SparseArray` @kind object;
+  #L4e5938.  @monitorenter v0
+  #L4e593a.  call temp:= `get`(v0, v5) @signature `Landroid/util/SparseArray;.get:(I)Ljava/lang/Object;` @kind virtual;
+  #L4e5940.  v1:= temp @kind object;
+  #L4e5942.  v1:= (`android.os.PowerManager$WakeLock`) v1 @kind object;
+  #L4e5946.  v2:= 1I;
+  #L4e5948.  if v1 == 0 then goto L4e595c;
+  #L4e594c.  call `release`(v1) @signature `Landroid/os/PowerManager$WakeLock;.release:()V` @kind virtual;
+  #L4e5952.  call `remove`(v0, v5) @signature `Landroid/util/SparseArray;.remove:(I)V` @kind virtual;
+  #L4e5958.  @monitorexit v0
+  #L4e595a.  return v2;
+  #L4e595c.  v1:= "WakefulBroadcastReceiv." @kind object;
+  #L4e5960.  v3:= new `java.lang.StringBuilder`;
+  #L4e5964.  call `<init>`(v3) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L4e596a.  v4:= "No active wake lock id #" @kind object;
+  #L4e596e.  call temp:= `append`(v3, v4) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L4e5974.  call temp:= `append`(v3, v5) @signature `Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder;` @kind virtual;
+  #L4e597a.  call temp:= `toString`(v3) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L4e5980.  v5:= temp @kind object;
+  #L4e5982.  call temp:= `w`(v1, v5) @signature `Landroid/util/Log;.w:(Ljava/lang/String;Ljava/lang/String;)I` @kind static;
+  #L4e5988.  @monitorexit v0
+  #L4e598a.  return v2;
+  #L4e598c.  v5:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L4e598e.  @monitorexit v0
+  #L4e5990.  throw v5;
+  catch `java.lang.Throwable` @[L4e593a..L4e5990] goto L4e598c;
+}
+procedure `android.content.ComponentName` `startWakefulService`(`android.content.Context` v5 @kind object, `android.content.Intent` v6 @kind object) @signature `Lf0/a;.startWakefulService:(Landroid/content/Context;Landroid/content/Intent;)Landroid/content/ComponentName;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L4e5864.  v0:= `@@f0.a.sActiveWakeLocks` @type ^`android.util.SparseArray` @kind object;
+  #L4e5868.  @monitorenter v0
+  #L4e586a.  v1:= `@@f0.a.mNextId` @type ^`int`;
+  #L4e586e.  v2:= v1 + 1;
+  #L4e5872.  `@@f0.a.mNextId` @type ^`int` := v2;
+  #L4e5876.  v3:= 1I;
+  #L4e5878.  if v2 > 0 then goto L4e5880;
+  #L4e587c.  `@@f0.a.mNextId` @type ^`int` := v3;
+  #L4e5880.  v2:= "androidx.contentpager.content.wakelockid" @kind object;
+  #L4e5884.  call temp:= `putExtra`(v6, v2, v1) @signature `Landroid/content/Intent;.putExtra:(Ljava/lang/String;I)Landroid/content/Intent;` @kind virtual;
+  #L4e588a.  call temp:= `startService`(v5, v6) @signature `Landroid/content/Context;.startService:(Landroid/content/Intent;)Landroid/content/ComponentName;` @kind virtual;
+  #L4e5890.  v6:= temp @kind object;
+  #L4e5892.  if v6 != 0 then goto L4e589c;
+  #L4e5896.  v5:= 0I;
+  #L4e5898.  @monitorexit v0
+  #L4e589a.  return v5 @kind object;
+  #L4e589c.  v2:= "power" @kind object;
+  #L4e58a0.  call temp:= `getSystemService`(v5, v2) @signature `Landroid/content/Context;.getSystemService:(Ljava/lang/String;)Ljava/lang/Object;` @kind virtual;
+  #L4e58a6.  v5:= temp @kind object;
+  #L4e58a8.  v5:= (`android.os.PowerManager`) v5 @kind object;
+  #L4e58ac.  v2:= new `java.lang.StringBuilder`;
+  #L4e58b0.  call `<init>`(v2) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L4e58b6.  v4:= "androidx.core:wake:" @kind object;
+  #L4e58ba.  call temp:= `append`(v2, v4) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L4e58c0.  call temp:= `flattenToShortString`(v6) @signature `Landroid/content/ComponentName;.flattenToShortString:()Ljava/lang/String;` @kind virtual;
+  #L4e58c6.  v4:= temp @kind object;
+  #L4e58c8.  call temp:= `append`(v2, v4) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L4e58ce.  call temp:= `toString`(v2) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L4e58d4.  v2:= temp @kind object;
+  #L4e58d6.  call temp:= `newWakeLock`(v5, v3, v2) @signature `Landroid/os/PowerManager;.newWakeLock:(ILjava/lang/String;)Landroid/os/PowerManager$WakeLock;` @kind virtual;
+  #L4e58dc.  v5:= temp @kind object;
+  #L4e58de.  v2:= 0I;
+  #L4e58e0.  call `setReferenceCounted`(v5, v2) @signature `Landroid/os/PowerManager$WakeLock;.setReferenceCounted:(Z)V` @kind virtual;
+  #L4e58e6.  v2:= 60000L;
+  #L4e58ec.  call `acquire`(v5, v2) @signature `Landroid/os/PowerManager$WakeLock;.acquire:(J)V` @kind virtual;
+  #L4e58f2.  call `put`(v0, v1, v5) @signature `Landroid/util/SparseArray;.put:(ILjava/lang/Object;)V` @kind virtual;
+  #L4e58f8.  @monitorexit v0
+  #L4e58fa.  return v6 @kind object;
+  #L4e58fc.  v5:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L4e58fe.  @monitorexit v0
+  #L4e5900.  throw v5;
+  catch `java.lang.Throwable` @[L4e586a..L4e5900] goto L4e58fc;
+}

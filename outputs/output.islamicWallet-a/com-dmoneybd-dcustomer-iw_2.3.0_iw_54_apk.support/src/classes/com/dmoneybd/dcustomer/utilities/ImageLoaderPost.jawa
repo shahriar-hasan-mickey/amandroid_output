@@ -1,0 +1,425 @@
+record `com.dmoneybd.dcustomer.utilities.ImageLoaderPost` @kind class @AccessFlag PUBLIC {
+  `int` `com.dmoneybd.dcustomer.utilities.ImageLoaderPost.mBatchResponseDelayMs` @AccessFlag PRIVATE;
+  `java.util.HashMap` `com.dmoneybd.dcustomer.utilities.ImageLoaderPost.mBatchedResponses` @AccessFlag PRIVATE_FINAL;
+  `com.dmoneybd.dcustomer.utilities.ImageLoaderPost$ImageCache` `com.dmoneybd.dcustomer.utilities.ImageLoaderPost.mCache` @AccessFlag PRIVATE_FINAL;
+  `android.content.Context` `com.dmoneybd.dcustomer.utilities.ImageLoaderPost.mContext` @AccessFlag PRIVATE;
+  `android.os.Handler` `com.dmoneybd.dcustomer.utilities.ImageLoaderPost.mHandler` @AccessFlag PRIVATE_FINAL;
+  `java.util.HashMap` `com.dmoneybd.dcustomer.utilities.ImageLoaderPost.mInFlightRequests` @AccessFlag PRIVATE_FINAL;
+  `com.android.volley.RequestQueue` `com.dmoneybd.dcustomer.utilities.ImageLoaderPost.mRequestQueue` @AccessFlag PRIVATE_FINAL;
+  `java.lang.Runnable` `com.dmoneybd.dcustomer.utilities.ImageLoaderPost.mRunnable` @AccessFlag PRIVATE;
+}
+procedure `void` `<init>`(`com.dmoneybd.dcustomer.utilities.ImageLoaderPost` v2 @kind this, `android.content.Context` v3 @kind object, `com.android.volley.RequestQueue` v4 @kind object, `com.dmoneybd.dcustomer.utilities.ImageLoaderPost$ImageCache` v5 @kind object) @signature `Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost;.<init>:(Landroid/content/Context;Lcom/android/volley/RequestQueue;Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost$ImageCache;)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+
+  #L37f74c.  call `<init>`(v2) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L37f752.  v0:= 100I;
+  #L37f756.  v2.`com.dmoneybd.dcustomer.utilities.ImageLoaderPost.mBatchResponseDelayMs` @type ^`int` := v0;
+  #L37f75a.  v0:= new `java.util.HashMap`;
+  #L37f75e.  call `<init>`(v0) @signature `Ljava/util/HashMap;.<init>:()V` @kind direct;
+  #L37f764.  v2.`com.dmoneybd.dcustomer.utilities.ImageLoaderPost.mInFlightRequests` @type ^`java.util.HashMap` := v0 @kind object;
+  #L37f768.  v0:= new `java.util.HashMap`;
+  #L37f76c.  call `<init>`(v0) @signature `Ljava/util/HashMap;.<init>:()V` @kind direct;
+  #L37f772.  v2.`com.dmoneybd.dcustomer.utilities.ImageLoaderPost.mBatchedResponses` @type ^`java.util.HashMap` := v0 @kind object;
+  #L37f776.  v0:= new `android.os.Handler`;
+  #L37f77a.  call temp:= `getMainLooper`() @signature `Landroid/os/Looper;.getMainLooper:()Landroid/os/Looper;` @kind static;
+  #L37f780.  v1:= temp @kind object;
+  #L37f782.  call `<init>`(v0, v1) @signature `Landroid/os/Handler;.<init>:(Landroid/os/Looper;)V` @kind direct;
+  #L37f788.  v2.`com.dmoneybd.dcustomer.utilities.ImageLoaderPost.mHandler` @type ^`android.os.Handler` := v0 @kind object;
+  #L37f78c.  v2.`com.dmoneybd.dcustomer.utilities.ImageLoaderPost.mRequestQueue` @type ^`com.android.volley.RequestQueue` := v4 @kind object;
+  #L37f790.  v2.`com.dmoneybd.dcustomer.utilities.ImageLoaderPost.mCache` @type ^`com.dmoneybd.dcustomer.utilities.ImageLoaderPost$ImageCache` := v5 @kind object;
+  #L37f794.  v2.`com.dmoneybd.dcustomer.utilities.ImageLoaderPost.mContext` @type ^`android.content.Context` := v3 @kind object;
+  #L37f798.  return @kind void;
+}
+procedure `android.content.Context` `a`(`com.dmoneybd.dcustomer.utilities.ImageLoaderPost` v0 @kind object) @signature `Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost;.a:(Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost;)Landroid/content/Context;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L37f310.  v0:= v0.`com.dmoneybd.dcustomer.utilities.ImageLoaderPost.mContext` @type ^`android.content.Context` @kind object;
+  #L37f314.  return v0 @kind object;
+}
+procedure `java.util.HashMap` `b`(`com.dmoneybd.dcustomer.utilities.ImageLoaderPost` v0 @kind object, `android.content.Context` v1 @kind object) @signature `Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost;.b:(Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost;Landroid/content/Context;)Ljava/util/HashMap;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L37f63c.  call temp:= `getHeader`(v0, v1) @signature `Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost;.getHeader:(Landroid/content/Context;)Ljava/util/HashMap;` @kind direct;
+  #L37f642.  v0:= temp @kind object;
+  #L37f644.  return v0 @kind object;
+}
+procedure `void` `batchResponse`(`com.dmoneybd.dcustomer.utilities.ImageLoaderPost` v2 @kind this, `java.lang.String` v3 @kind object, `com.dmoneybd.dcustomer.utilities.ImageLoaderPost$BatchedImageRequest` v4 @kind object) @signature `Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost;.batchResponse:(Ljava/lang/String;Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost$BatchedImageRequest;)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+
+  #L37f7ac.  v0:= v2.`com.dmoneybd.dcustomer.utilities.ImageLoaderPost.mBatchedResponses` @type ^`java.util.HashMap` @kind object;
+  #L37f7b0.  call temp:= `put`(v0, v3, v4) @signature `Ljava/util/HashMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;` @kind virtual;
+  #L37f7b6.  v3:= v2.`com.dmoneybd.dcustomer.utilities.ImageLoaderPost.mRunnable` @type ^`java.lang.Runnable` @kind object;
+  #L37f7ba.  if v3 != 0 then goto L37f7dc;
+  #L37f7be.  v3:= new `com.dmoneybd.dcustomer.utilities.ImageLoaderPost$5`;
+  #L37f7c2.  call `<init>`(v3, v2) @signature `Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost$5;.<init>:(Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost;)V` @kind direct;
+  #L37f7c8.  v2.`com.dmoneybd.dcustomer.utilities.ImageLoaderPost.mRunnable` @type ^`java.lang.Runnable` := v3 @kind object;
+  #L37f7cc.  v4:= v2.`com.dmoneybd.dcustomer.utilities.ImageLoaderPost.mHandler` @type ^`android.os.Handler` @kind object;
+  #L37f7d0.  v0:= v2.`com.dmoneybd.dcustomer.utilities.ImageLoaderPost.mBatchResponseDelayMs` @type ^`int`;
+  #L37f7d4.  v0:= (`long`) v0 @kind i2l;
+  #L37f7d6.  call temp:= `postDelayed`(v4, v3, v0) @signature `Landroid/os/Handler;.postDelayed:(Ljava/lang/Runnable;J)Z` @kind virtual;
+  #L37f7dc.  return @kind void;
+}
+procedure `java.util.HashMap` `c`(`com.dmoneybd.dcustomer.utilities.ImageLoaderPost` v0 @kind object) @signature `Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost;.c:(Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost;)Ljava/util/HashMap;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L37f658.  v0:= v0.`com.dmoneybd.dcustomer.utilities.ImageLoaderPost.mInFlightRequests` @type ^`java.util.HashMap` @kind object;
+  #L37f65c.  return v0 @kind object;
+}
+procedure `java.util.HashMap` `d`(`com.dmoneybd.dcustomer.utilities.ImageLoaderPost` v0 @kind object) @signature `Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost;.d:(Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost;)Ljava/util/HashMap;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L37f670.  v0:= v0.`com.dmoneybd.dcustomer.utilities.ImageLoaderPost.mBatchedResponses` @type ^`java.util.HashMap` @kind object;
+  #L37f674.  return v0 @kind object;
+}
+procedure `java.lang.Runnable` `e`(`com.dmoneybd.dcustomer.utilities.ImageLoaderPost` v0 @kind object, `java.lang.Runnable` v1 @kind object) @signature `Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost;.e:(Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost;Ljava/lang/Runnable;)Ljava/lang/Runnable;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L37f5a4.  v0.`com.dmoneybd.dcustomer.utilities.ImageLoaderPost.mRunnable` @type ^`java.lang.Runnable` := v1 @kind object;
+  #L37f5a8.  return v1 @kind object;
+}
+procedure `java.lang.String` `getCacheKey`(`java.lang.String` v2 @kind object, `int` v3 , `int` v4 , `android.widget.ImageView$ScaleType` v5 @kind object, `java.lang.String` v6 @kind object) @signature `Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost;.getCacheKey:(Ljava/lang/String;IILandroid/widget/ImageView$ScaleType;Ljava/lang/String;)Ljava/lang/String;` @AccessFlag PRIVATE_STATIC {
+    temp;
+    v0;
+    v1;
+
+  #L37f5bc.  v0:= new `java.lang.StringBuilder`;
+  #L37f5c0.  call temp:= `length`(v2) @signature `Ljava/lang/String;.length:()I` @kind virtual;
+  #L37f5c6.  v1:= temp;
+  #L37f5c8.  v1:= v1 + 12;
+  #L37f5cc.  call `<init>`(v0, v1) @signature `Ljava/lang/StringBuilder;.<init>:(I)V` @kind direct;
+  #L37f5d2.  v1:= "#W" @kind object;
+  #L37f5d6.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L37f5dc.  call temp:= `append`(v0, v3) @signature `Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder;` @kind virtual;
+  #L37f5e2.  v3:= "#H" @kind object;
+  #L37f5e6.  call temp:= `append`(v0, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L37f5ec.  call temp:= `append`(v0, v4) @signature `Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder;` @kind virtual;
+  #L37f5f2.  v3:= "#S" @kind object;
+  #L37f5f6.  call temp:= `append`(v0, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L37f5fc.  call temp:= `ordinal`(v5) @signature `Landroid/widget/ImageView$ScaleType;.ordinal:()I` @kind virtual;
+  #L37f602.  v3:= temp;
+  #L37f604.  call temp:= `append`(v0, v3) @signature `Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder;` @kind virtual;
+  #L37f60a.  call temp:= `append`(v0, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L37f610.  v2:= "#J" @kind object;
+  #L37f614.  call temp:= `append`(v0, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L37f61a.  call temp:= `append`(v0, v6) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L37f620.  call temp:= `toString`(v0) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L37f626.  v2:= temp @kind object;
+  #L37f628.  return v2 @kind object;
+}
+procedure `java.util.HashMap` `getHeader`(`com.dmoneybd.dcustomer.utilities.ImageLoaderPost` v4 @kind this, `android.content.Context` v5 @kind object) @signature `Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost;.getHeader:(Landroid/content/Context;)Ljava/util/HashMap;` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L37f688.  v0:= new `java.util.HashMap`;
+  #L37f68c.  call `<init>`(v0) @signature `Ljava/util/HashMap;.<init>:()V` @kind direct;
+  #L37f692.  v1:= "Authorization" @kind object;
+  #L37f696.  v2:= new `java.lang.StringBuilder`;
+  #L37f69a.  call `<init>`(v2) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L37f6a0.  v3:= "bearer " @kind object;
+  #L37f6a4.  call temp:= `append`(v2, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L37f6aa.  v3:= "get access token" @kind object;
+  #L37f6ae.  call temp:= `getPreferences`(v5, v3) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.getPreferences:(Landroid/content/Context;Ljava/lang/String;)Ljava/lang/String;` @kind static;
+  #L37f6b4.  v5:= temp @kind object;
+  #L37f6b6.  call temp:= `append`(v2, v5) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L37f6bc.  call temp:= `toString`(v2) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L37f6c2.  v5:= temp @kind object;
+  #L37f6c4.  call temp:= `put`(v0, v1, v5) @signature `Ljava/util/HashMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;` @kind virtual;
+  #L37f6ca.  v5:= "productCode" @kind object;
+  #L37f6ce.  v1:= new `com.dmoneybd.dcustomer.network_module.requests.BaseRequest`;
+  #L37f6d2.  call `<init>`(v1) @signature `Lcom/dmoneybd/dcustomer/network_module/requests/BaseRequest;.<init>:()V` @kind direct;
+  #L37f6d8.  call temp:= `getProductCode`(v1) @signature `Lcom/dmoneybd/dcustomer/network_module/requests/BaseRequest;.getProductCode:()Ljava/lang/String;` @kind virtual;
+  #L37f6de.  v1:= temp @kind object;
+  #L37f6e0.  call temp:= `put`(v0, v5, v1) @signature `Ljava/util/HashMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;` @kind virtual;
+  #L37f6e6.  v5:= new `java.lang.StringBuilder`;
+  #L37f6ea.  call `<init>`(v5) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L37f6f0.  v1:= "Header : " @kind object;
+  #L37f6f4.  call temp:= `append`(v5, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L37f6fa.  call temp:= `toString`(v0) @signature `Ljava/util/HashMap;.toString:()Ljava/lang/String;` @kind virtual;
+  #L37f700.  v1:= temp @kind object;
+  #L37f702.  call temp:= `append`(v5, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L37f708.  call temp:= `toString`(v5) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L37f70e.  v5:= temp @kind object;
+  #L37f710.  call `showLog`(v5) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.showLog:(Ljava/lang/String;)V` @kind static;
+  #L37f716.  return v0 @kind object;
+  #L37f718.  v5:= Exception @type ^`java.lang.Exception` @kind object;
+  #L37f71a.  call temp:= `getMessage`(v5) @signature `Ljava/lang/Exception;.getMessage:()Ljava/lang/String;` @kind virtual;
+  #L37f720.  v5:= temp @kind object;
+  #L37f722.  call `showLog`(v5) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.showLog:(Ljava/lang/String;)V` @kind static;
+  #L37f728.  v5:= 0I;
+  #L37f72a.  return v5 @kind object;
+  catch `java.lang.Exception` @[L37f688..L37f716] goto L37f718;
+}
+procedure `com.dmoneybd.dcustomer.utilities.ImageLoaderPost$ImageListener` `getImageListener`(`android.widget.ImageView` v1 @kind object, `int` v2 , `int` v3 ) @signature `Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost;.getImageListener:(Landroid/widget/ImageView;II)Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost$ImageListener;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+
+  #L37f588.  v0:= new `com.dmoneybd.dcustomer.utilities.ImageLoaderPost$1`;
+  #L37f58c.  call `<init>`(v0, v3, v1, v2) @signature `Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost$1;.<init>:(ILandroid/widget/ImageView;I)V` @kind direct;
+  #L37f592.  return v0 @kind object;
+}
+procedure `void` `throwIfNotOnMainThread`(`com.dmoneybd.dcustomer.utilities.ImageLoaderPost` v2 @kind this) @signature `Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost;.throwIfNotOnMainThread:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+
+  #L37f878.  call temp:= `myLooper`() @signature `Landroid/os/Looper;.myLooper:()Landroid/os/Looper;` @kind static;
+  #L37f87e.  v0:= temp @kind object;
+  #L37f880.  call temp:= `getMainLooper`() @signature `Landroid/os/Looper;.getMainLooper:()Landroid/os/Looper;` @kind static;
+  #L37f886.  v1:= temp @kind object;
+  #L37f888.  if v0 != v1 then goto L37f88e;
+  #L37f88c.  return @kind void;
+  #L37f88e.  v0:= new `java.lang.IllegalStateException`;
+  #L37f892.  v1:= "ImageLoader must be invoked from the main thread." @kind object;
+  #L37f896.  call `<init>`(v0, v1) @signature `Ljava/lang/IllegalStateException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L37f89c.  throw v0;
+}
+procedure `com.dmoneybd.dcustomer.utilities.ImageLoaderPost$ImageContainer` `get`(`com.dmoneybd.dcustomer.utilities.ImageLoaderPost` v16 @kind this, `java.lang.String` v17 @kind object, `com.dmoneybd.dcustomer.utilities.ImageLoaderPost$ImageListener` v18 @kind object, `int` v19 , `int` v20 , `android.widget.ImageView$ScaleType` v21 @kind object, `org.json.JSONObject` v22 @kind object) @signature `Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost;.get:(Ljava/lang/String;Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost$ImageListener;IILandroid/widget/ImageView$ScaleType;Lorg/json/JSONObject;)Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost$ImageContainer;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+    v9;
+    v10;
+    v11;
+    v12;
+    v13;
+    v14;
+    v15;
+
+  #L37f40c.  v8:= v16 @kind object;
+  #L37f410.  v7:= v18 @kind object;
+  #L37f414.  call `throwIfNotOnMainThread`(v16) @signature `Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost;.throwIfNotOnMainThread:()V` @kind direct;
+  #L37f41a.  v0:= "fileName" @kind object;
+  #L37f41e.  v9:= v22 @kind object;
+  #L37f422.  call temp:= `getString`(v9, v0) @signature `Lorg/json/JSONObject;.getString:(Ljava/lang/String;)Ljava/lang/String;` @kind virtual;
+  #L37f428.  v0:= temp @kind object;
+  #L37f42a.  goto L37f43e;
+  #L37f42c.  v0:= Exception @type ^`org.json.JSONException` @kind object;
+  #L37f42e.  goto L37f436;
+  #L37f430.  v0:= Exception @type ^`org.json.JSONException` @kind object;
+  #L37f432.  v9:= v22 @kind object;
+  #L37f436.  call `printStackTrace`(v0) @signature `Lorg/json/JSONException;.printStackTrace:()V` @kind virtual;
+  #L37f43c.  v0:= 0I;
+  #L37f43e.  v10:= v17 @kind object;
+  #L37f442.  v11:= v19;
+  #L37f446.  v12:= v20;
+  #L37f44a.  v13:= v21 @kind object;
+  #L37f44e.  call temp:= `getCacheKey`(v10, v11, v12, v13, v0) @signature `Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost;.getCacheKey:(Ljava/lang/String;IILandroid/widget/ImageView$ScaleType;Ljava/lang/String;)Ljava/lang/String;` @kind static;
+  #L37f454.  v0:= temp @kind object;
+  #L37f456.  v1:= v8.`com.dmoneybd.dcustomer.utilities.ImageLoaderPost.mCache` @type ^`com.dmoneybd.dcustomer.utilities.ImageLoaderPost$ImageCache` @kind object;
+  #L37f45a.  call temp:= `getBitmap`(v1, v0) @signature `Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost$ImageCache;.getBitmap:(Ljava/lang/String;)Landroid/graphics/Bitmap;` @kind interface;
+  #L37f460.  v3:= temp @kind object;
+  #L37f462.  v14:= 1I;
+  #L37f464.  if v3 == 0 then goto L37f488;
+  #L37f468.  v0:= new `com.dmoneybd.dcustomer.utilities.ImageLoaderPost$ImageContainer`;
+  #L37f46c.  v5:= 0I;
+  #L37f46e.  v6:= 0I;
+  #L37f470.  v1:= v0 @kind object;
+  #L37f472.  v2:= v16 @kind object;
+  #L37f476.  v4:= v17 @kind object;
+  #L37f47a.  call `<init>`(v1, v2, v3, v4, v5, v6) @signature `Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost$ImageContainer;.<init>:(Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost;Landroid/graphics/Bitmap;Ljava/lang/String;Ljava/lang/String;Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost$ImageListener;)V` @kind direct;
+  #L37f480.  call `onResponse`(v7, v0, v14) @signature `Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost$ImageListener;.onResponse:(Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost$ImageContainer;Z)V` @kind interface;
+  #L37f486.  return v0 @kind object;
+  #L37f488.  v15:= new `com.dmoneybd.dcustomer.utilities.ImageLoaderPost$ImageContainer`;
+  #L37f48c.  v3:= 0I;
+  #L37f48e.  v1:= v15 @kind object;
+  #L37f490.  v2:= v16 @kind object;
+  #L37f494.  v4:= v17 @kind object;
+  #L37f498.  v5:= v0 @kind object;
+  #L37f49a.  v6:= v18 @kind object;
+  #L37f49e.  call `<init>`(v1, v2, v3, v4, v5, v6) @signature `Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost$ImageContainer;.<init>:(Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost;Landroid/graphics/Bitmap;Ljava/lang/String;Ljava/lang/String;Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost$ImageListener;)V` @kind direct;
+  #L37f4a4.  call `onResponse`(v7, v15, v14) @signature `Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost$ImageListener;.onResponse:(Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost$ImageContainer;Z)V` @kind interface;
+  #L37f4aa.  v1:= v8.`com.dmoneybd.dcustomer.utilities.ImageLoaderPost.mInFlightRequests` @type ^`java.util.HashMap` @kind object;
+  #L37f4ae.  call temp:= `get`(v1, v0) @signature `Ljava/util/HashMap;.get:(Ljava/lang/Object;)Ljava/lang/Object;` @kind virtual;
+  #L37f4b4.  v1:= temp @kind object;
+  #L37f4b6.  v1:= (`com.dmoneybd.dcustomer.utilities.ImageLoaderPost$BatchedImageRequest`) v1 @kind object;
+  #L37f4ba.  if v1 == 0 then goto L37f4c6;
+  #L37f4be.  call `addContainer`(v1, v15) @signature `Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost$BatchedImageRequest;.addContainer:(Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost$ImageContainer;)V` @kind virtual;
+  #L37f4c4.  return v15 @kind object;
+  #L37f4c6.  v1:= v16 @kind object;
+  #L37f4ca.  v2:= v17 @kind object;
+  #L37f4ce.  v3:= v19;
+  #L37f4d2.  v4:= v20;
+  #L37f4d6.  v5:= v21 @kind object;
+  #L37f4da.  v6:= v22 @kind object;
+  #L37f4de.  v7:= v0 @kind object;
+  #L37f4e0.  call temp:= `makeImageRequest`(v1, v2, v3, v4, v5, v6, v7) @signature `Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost;.makeImageRequest:(Ljava/lang/String;IILandroid/widget/ImageView$ScaleType;Lorg/json/JSONObject;Ljava/lang/String;)Lcom/android/volley/Request;` @kind virtual;
+  #L37f4e6.  v1:= temp @kind object;
+  #L37f4e8.  v2:= v8.`com.dmoneybd.dcustomer.utilities.ImageLoaderPost.mRequestQueue` @type ^`com.android.volley.RequestQueue` @kind object;
+  #L37f4ec.  call temp:= `add`(v2, v1) @signature `Lcom/android/volley/RequestQueue;.add:(Lcom/android/volley/Request;)Lcom/android/volley/Request;` @kind virtual;
+  #L37f4f2.  v2:= v8.`com.dmoneybd.dcustomer.utilities.ImageLoaderPost.mInFlightRequests` @type ^`java.util.HashMap` @kind object;
+  #L37f4f6.  v3:= new `com.dmoneybd.dcustomer.utilities.ImageLoaderPost$BatchedImageRequest`;
+  #L37f4fa.  call `<init>`(v3, v8, v1, v15) @signature `Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost$BatchedImageRequest;.<init>:(Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost;Lcom/android/volley/Request;Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost$ImageContainer;)V` @kind direct;
+  #L37f500.  call temp:= `put`(v2, v0, v3) @signature `Ljava/util/HashMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;` @kind virtual;
+  #L37f506.  return v15 @kind object;
+  catch `org.json.JSONException` @[L37f41a..L37f41e] goto L37f430;
+  catch `org.json.JSONException` @[L37f422..L37f42a] goto L37f42c;
+}
+procedure `com.dmoneybd.dcustomer.utilities.ImageLoaderPost$ImageContainer` `get`(`com.dmoneybd.dcustomer.utilities.ImageLoaderPost` v7 @kind this, `java.lang.String` v8 @kind object, `com.dmoneybd.dcustomer.utilities.ImageLoaderPost$ImageListener` v9 @kind object, `int` v10 , `int` v11 , `org.json.JSONObject` v12 @kind object) @signature `Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost;.get:(Ljava/lang/String;Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost$ImageListener;IILorg/json/JSONObject;)Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost$ImageContainer;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+
+  #L37f534.  v5:= `@@android.widget.ImageView$ScaleType.CENTER_INSIDE` @type ^`android.widget.ImageView$ScaleType` @kind object;
+  #L37f538.  v0:= v7 @kind object;
+  #L37f53a.  v1:= v8 @kind object;
+  #L37f53c.  v2:= v9 @kind object;
+  #L37f53e.  v3:= v10;
+  #L37f540.  v4:= v11;
+  #L37f542.  v6:= v12 @kind object;
+  #L37f544.  call temp:= `get`(v0, v1, v2, v3, v4, v5, v6) @signature `Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost;.get:(Ljava/lang/String;Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost$ImageListener;IILandroid/widget/ImageView$ScaleType;Lorg/json/JSONObject;)Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost$ImageContainer;` @kind virtual;
+  #L37f54a.  v8:= temp @kind object;
+  #L37f54c.  return v8 @kind object;
+}
+procedure `com.dmoneybd.dcustomer.utilities.ImageLoaderPost$ImageContainer` `get`(`com.dmoneybd.dcustomer.utilities.ImageLoaderPost` v6 @kind this, `java.lang.String` v7 @kind object, `com.dmoneybd.dcustomer.utilities.ImageLoaderPost$ImageListener` v8 @kind object, `org.json.JSONObject` v9 @kind object) @signature `Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost;.get:(Ljava/lang/String;Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost$ImageListener;Lorg/json/JSONObject;)Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost$ImageContainer;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L37f560.  v3:= 0I;
+  #L37f562.  v4:= 0I;
+  #L37f564.  v0:= v6 @kind object;
+  #L37f566.  v1:= v7 @kind object;
+  #L37f568.  v2:= v8 @kind object;
+  #L37f56a.  v5:= v9 @kind object;
+  #L37f56c.  call temp:= `get`(v0, v1, v2, v3, v4, v5) @signature `Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost;.get:(Ljava/lang/String;Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost$ImageListener;IILorg/json/JSONObject;)Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost$ImageContainer;` @kind virtual;
+  #L37f572.  v7:= temp @kind object;
+  #L37f574.  return v7 @kind object;
+}
+procedure `boolean` `isCached`(`com.dmoneybd.dcustomer.utilities.ImageLoaderPost` v1 @kind this, `java.lang.String` v2 @kind object, `int` v3 , `int` v4 , `android.widget.ImageView$ScaleType` v5 @kind object, `org.json.JSONObject` v6 @kind object) @signature `Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost;.isCached:(Ljava/lang/String;IILandroid/widget/ImageView$ScaleType;Lorg/json/JSONObject;)Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L37f328.  call `throwIfNotOnMainThread`(v1) @signature `Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost;.throwIfNotOnMainThread:()V` @kind direct;
+  #L37f32e.  v0:= "fileName" @kind object;
+  #L37f332.  call temp:= `getString`(v6, v0) @signature `Lorg/json/JSONObject;.getString:(Ljava/lang/String;)Ljava/lang/String;` @kind virtual;
+  #L37f338.  v6:= temp @kind object;
+  #L37f33a.  goto L37f346;
+  #L37f33c.  v6:= Exception @type ^`org.json.JSONException` @kind object;
+  #L37f33e.  call `printStackTrace`(v6) @signature `Lorg/json/JSONException;.printStackTrace:()V` @kind virtual;
+  #L37f344.  v6:= 0I;
+  #L37f346.  call temp:= `getCacheKey`(v2, v3, v4, v5, v6) @signature `Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost;.getCacheKey:(Ljava/lang/String;IILandroid/widget/ImageView$ScaleType;Ljava/lang/String;)Ljava/lang/String;` @kind static;
+  #L37f34c.  v2:= temp @kind object;
+  #L37f34e.  v3:= v1.`com.dmoneybd.dcustomer.utilities.ImageLoaderPost.mCache` @type ^`com.dmoneybd.dcustomer.utilities.ImageLoaderPost$ImageCache` @kind object;
+  #L37f352.  call temp:= `getBitmap`(v3, v2) @signature `Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost$ImageCache;.getBitmap:(Ljava/lang/String;)Landroid/graphics/Bitmap;` @kind interface;
+  #L37f358.  v2:= temp @kind object;
+  #L37f35a.  if v2 == 0 then goto L37f362;
+  #L37f35e.  v2:= 1I;
+  #L37f360.  goto L37f364;
+  #L37f362.  v2:= 0I;
+  #L37f364.  return v2;
+  catch `org.json.JSONException` @[L37f32e..L37f33a] goto L37f33c;
+}
+procedure `boolean` `isCached`(`com.dmoneybd.dcustomer.utilities.ImageLoaderPost` v6 @kind this, `java.lang.String` v7 @kind object, `int` v8 , `int` v9 , `org.json.JSONObject` v10 @kind object) @signature `Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost;.isCached:(Ljava/lang/String;IILorg/json/JSONObject;)Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L37f388.  v4:= `@@android.widget.ImageView$ScaleType.CENTER_INSIDE` @type ^`android.widget.ImageView$ScaleType` @kind object;
+  #L37f38c.  v0:= v6 @kind object;
+  #L37f38e.  v1:= v7 @kind object;
+  #L37f390.  v2:= v8;
+  #L37f392.  v3:= v9;
+  #L37f394.  v5:= v10 @kind object;
+  #L37f396.  call temp:= `isCached`(v0, v1, v2, v3, v4, v5) @signature `Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost;.isCached:(Ljava/lang/String;IILandroid/widget/ImageView$ScaleType;Lorg/json/JSONObject;)Z` @kind virtual;
+  #L37f39c.  v7:= temp;
+  #L37f39e.  return v7;
+}
+procedure `com.android.volley.Request` `makeImageRequest`(`com.dmoneybd.dcustomer.utilities.ImageLoaderPost` v12 @kind this, `java.lang.String` v13 @kind object, `int` v14 , `int` v15 , `android.widget.ImageView$ScaleType` v16 @kind object, `org.json.JSONObject` v17 @kind object, `java.lang.String` v18 @kind object) @signature `Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost;.makeImageRequest:(Ljava/lang/String;IILandroid/widget/ImageView$ScaleType;Lorg/json/JSONObject;Ljava/lang/String;)Lcom/android/volley/Request;` @AccessFlag PROTECTED {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+    v9;
+    v10;
+    v11;
+
+  #L37f3b0.  v10:= v12 @kind object;
+  #L37f3b2.  v0:= v18 @kind object;
+  #L37f3b6.  v11:= new `com.dmoneybd.dcustomer.utilities.ImageLoaderPost$4`;
+  #L37f3ba.  v3:= new `com.dmoneybd.dcustomer.utilities.ImageLoaderPost$2`;
+  #L37f3be.  call `<init>`(v3, v12, v0) @signature `Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost$2;.<init>:(Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost;Ljava/lang/String;)V` @kind direct;
+  #L37f3c4.  if v17 != 0 then goto L37f3cc;
+  #L37f3c8.  v1:= 0I;
+  #L37f3ca.  goto L37f3d4;
+  #L37f3cc.  call temp:= `toString`(v17) @signature `Lorg/json/JSONObject;.toString:()Ljava/lang/String;` @kind virtual;
+  #L37f3d2.  v1:= temp @kind object;
+  #L37f3d4.  v7:= v1 @kind object;
+  #L37f3d6.  v8:= `@@android.graphics.Bitmap$Config.RGB_565` @type ^`android.graphics.Bitmap$Config` @kind object;
+  #L37f3da.  v9:= new `com.dmoneybd.dcustomer.utilities.ImageLoaderPost$3`;
+  #L37f3de.  call `<init>`(v9, v12, v0) @signature `Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost$3;.<init>:(Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost;Ljava/lang/String;)V` @kind direct;
+  #L37f3e4.  v0:= v11 @kind object;
+  #L37f3e6.  v1:= v12 @kind object;
+  #L37f3e8.  v2:= v13 @kind object;
+  #L37f3ea.  v4:= v14;
+  #L37f3ec.  v5:= v15;
+  #L37f3ee.  v6:= v16 @kind object;
+  #L37f3f2.  call `<init>`(v0, v1, v2, v3, v4, v5, v6, v7, v8, v9) @signature `Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost$4;.<init>:(Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost;Ljava/lang/String;Lcom/android/volley/Response$Listener;IILandroid/widget/ImageView$ScaleType;Ljava/lang/String;Landroid/graphics/Bitmap$Config;Lcom/android/volley/Response$ErrorListener;)V` @kind direct;
+  #L37f3f8.  return v11 @kind object;
+}
+procedure `void` `onGetImageError`(`com.dmoneybd.dcustomer.utilities.ImageLoaderPost` v1 @kind this, `java.lang.String` v2 @kind object, `com.android.volley.VolleyError` v3 @kind object) @signature `Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost;.onGetImageError:(Ljava/lang/String;Lcom/android/volley/VolleyError;)V` @AccessFlag PROTECTED {
+    temp;
+    v0;
+
+  #L37f7f0.  v0:= v1.`com.dmoneybd.dcustomer.utilities.ImageLoaderPost.mInFlightRequests` @type ^`java.util.HashMap` @kind object;
+  #L37f7f4.  call temp:= `remove`(v0, v2) @signature `Ljava/util/HashMap;.remove:(Ljava/lang/Object;)Ljava/lang/Object;` @kind virtual;
+  #L37f7fa.  v0:= temp @kind object;
+  #L37f7fc.  v0:= (`com.dmoneybd.dcustomer.utilities.ImageLoaderPost$BatchedImageRequest`) v0 @kind object;
+  #L37f800.  if v0 == 0 then goto L37f810;
+  #L37f804.  call `setError`(v0, v3) @signature `Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost$BatchedImageRequest;.setError:(Lcom/android/volley/VolleyError;)V` @kind virtual;
+  #L37f80a.  call `batchResponse`(v1, v2, v0) @signature `Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost;.batchResponse:(Ljava/lang/String;Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost$BatchedImageRequest;)V` @kind direct;
+  #L37f810.  return @kind void;
+}
+procedure `void` `onGetImageSuccess`(`com.dmoneybd.dcustomer.utilities.ImageLoaderPost` v1 @kind this, `java.lang.String` v2 @kind object, `android.graphics.Bitmap` v3 @kind object) @signature `Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost;.onGetImageSuccess:(Ljava/lang/String;Landroid/graphics/Bitmap;)V` @AccessFlag PROTECTED {
+    temp;
+    v0;
+
+  #L37f824.  v0:= v1.`com.dmoneybd.dcustomer.utilities.ImageLoaderPost.mCache` @type ^`com.dmoneybd.dcustomer.utilities.ImageLoaderPost$ImageCache` @kind object;
+  #L37f828.  call `putBitmap`(v0, v2, v3) @signature `Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost$ImageCache;.putBitmap:(Ljava/lang/String;Landroid/graphics/Bitmap;)V` @kind interface;
+  #L37f82e.  v0:= v1.`com.dmoneybd.dcustomer.utilities.ImageLoaderPost.mInFlightRequests` @type ^`java.util.HashMap` @kind object;
+  #L37f832.  call temp:= `remove`(v0, v2) @signature `Ljava/util/HashMap;.remove:(Ljava/lang/Object;)Ljava/lang/Object;` @kind virtual;
+  #L37f838.  v0:= temp @kind object;
+  #L37f83a.  v0:= (`com.dmoneybd.dcustomer.utilities.ImageLoaderPost$BatchedImageRequest`) v0 @kind object;
+  #L37f83e.  if v0 == 0 then goto L37f84e;
+  #L37f842.  call temp:= `b`(v0, v3) @signature `Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost$BatchedImageRequest;.b:(Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost$BatchedImageRequest;Landroid/graphics/Bitmap;)Landroid/graphics/Bitmap;` @kind static;
+  #L37f848.  call `batchResponse`(v1, v2, v0) @signature `Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost;.batchResponse:(Ljava/lang/String;Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost$BatchedImageRequest;)V` @kind direct;
+  #L37f84e.  return @kind void;
+}
+procedure `void` `setBatchedResponseDelay`(`com.dmoneybd.dcustomer.utilities.ImageLoaderPost` v0 @kind this, `int` v1 ) @signature `Lcom/dmoneybd/dcustomer/utilities/ImageLoaderPost;.setBatchedResponseDelay:(I)V` @AccessFlag PUBLIC {
+    temp;
+
+  #L37f860.  v0.`com.dmoneybd.dcustomer.utilities.ImageLoaderPost.mBatchResponseDelayMs` @type ^`int` := v1;
+  #L37f864.  return @kind void;
+}

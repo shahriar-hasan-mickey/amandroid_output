@@ -1,0 +1,1 @@
+define(["underscore","Backbone","models/layout/preRequisiteCheckModel"],function(e,n,o){var t=n.Collection.extend({model:o,initialize:function(e,n){},url:function(){var e="";return e=appLocalContextPath+"environmentVariables.json"}});return t});

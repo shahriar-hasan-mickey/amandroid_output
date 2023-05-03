@@ -1,0 +1,92 @@
+record `okio.SegmentPool` @kind class @AccessFlag FINAL {
+}
+global `long` `@@okio.SegmentPool.MAX_SIZE` @AccessFlag STATIC_FINAL;
+global `long` `@@okio.SegmentPool.byteCount` @AccessFlag STATIC;
+global `okio.Segment` `@@okio.SegmentPool.next` @AccessFlag STATIC;
+procedure `void` `<init>`(`okio.SegmentPool` v0 @kind this) @signature `Lokio/SegmentPool;.<init>:()V` @AccessFlag PRIVATE_CONSTRUCTOR {
+    temp;
+
+  #L2541cc.  call `<init>`(v0) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L2541d2.  return @kind void;
+}
+procedure `void` `recycle`(`okio.Segment` v8 @kind object) @signature `Lokio/SegmentPool;.recycle:(Lokio/Segment;)V` @AccessFlag STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+
+  #L2541e4.  v0:= v8.`okio.Segment.next` @type ^`okio.Segment` @kind object;
+  #L2541e8.  if v0 != 0 then goto L25424a;
+  #L2541ec.  v0:= v8.`okio.Segment.prev` @type ^`okio.Segment` @kind object;
+  #L2541f0.  if v0 != 0 then goto L25424a;
+  #L2541f4.  v0:= v8.`okio.Segment.shared` @type ^`boolean` @kind boolean;
+  #L2541f8.  if v0 == 0 then goto L2541fe;
+  #L2541fc.  return @kind void;
+  #L2541fe.  v0:= constclass @type ^`okio.SegmentPool` @kind object;
+  #L254202.  @monitorenter v0
+  #L254204.  v1:= `@@okio.SegmentPool.byteCount` @type ^`long` @kind wide;
+  #L254208.  v3:= 8192L;
+  #L25420c.  v1:= v1 + v3 @kind long;
+  #L25420e.  v5:= 65536L;
+  #L254214.  v7:= lcmp(v1, v5);
+  #L254218.  if v7 <= 0 then goto L254220;
+  #L25421c.  @monitorexit v0
+  #L25421e.  return @kind void;
+  #L254220.  v1:= `@@okio.SegmentPool.byteCount` @type ^`long` @kind wide;
+  #L254224.  v1:= v1 + v3 @kind long;
+  #L254226.  `@@okio.SegmentPool.byteCount` @type ^`long` := v1 @kind wide;
+  #L25422a.  v1:= `@@okio.SegmentPool.next` @type ^`okio.Segment` @kind object;
+  #L25422e.  v8.`okio.Segment.next` @type ^`okio.Segment` := v1 @kind object;
+  #L254232.  v1:= 0I;
+  #L254234.  v8.`okio.Segment.limit` @type ^`int` := v1;
+  #L254238.  v8.`okio.Segment.pos` @type ^`int` := v1;
+  #L25423c.  `@@okio.SegmentPool.next` @type ^`okio.Segment` := v8 @kind object;
+  #L254240.  @monitorexit v0
+  #L254242.  return @kind void;
+  #L254244.  v8:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L254246.  @monitorexit v0
+  #L254248.  throw v8;
+  #L25424a.  v8:= new `java.lang.IllegalArgumentException`;
+  #L25424e.  call `<init>`(v8) @signature `Ljava/lang/IllegalArgumentException;.<init>:()V` @kind direct;
+  #L254254.  throw v8;
+  catch `java.lang.Throwable` @[L254204..L254248] goto L254244;
+}
+procedure `okio.Segment` `take`() @signature `Lokio/SegmentPool;.take:()Lokio/Segment;` @AccessFlag STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L254160.  v0:= constclass @type ^`okio.SegmentPool` @kind object;
+  #L254164.  @monitorenter v0
+  #L254166.  v1:= `@@okio.SegmentPool.next` @type ^`okio.Segment` @kind object;
+  #L25416a.  if v1 == 0 then goto L254192;
+  #L25416e.  v1:= `@@okio.SegmentPool.next` @type ^`okio.Segment` @kind object;
+  #L254172.  v2:= v1.`okio.Segment.next` @type ^`okio.Segment` @kind object;
+  #L254176.  `@@okio.SegmentPool.next` @type ^`okio.Segment` := v2 @kind object;
+  #L25417a.  v2:= 0I;
+  #L25417c.  v1.`okio.Segment.next` @type ^`okio.Segment` := v2 @kind object;
+  #L254180.  v2:= `@@okio.SegmentPool.byteCount` @type ^`long` @kind wide;
+  #L254184.  v4:= 8192L;
+  #L254188.  v2:= v2 - v4 @kind long;
+  #L25418a.  `@@okio.SegmentPool.byteCount` @type ^`long` := v2 @kind wide;
+  #L25418e.  @monitorexit v0
+  #L254190.  return v1 @kind object;
+  #L254192.  @monitorexit v0
+  #L254194.  v0:= new `okio.Segment`;
+  #L254198.  call `<init>`(v0) @signature `Lokio/Segment;.<init>:()V` @kind direct;
+  #L25419e.  return v0 @kind object;
+  #L2541a0.  v1:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L2541a2.  @monitorexit v0
+  #L2541a4.  throw v1;
+  catch `java.lang.Throwable` @[L254166..L254194] goto L2541a0;
+  catch `java.lang.Throwable` @[L2541a2..L2541a4] goto L2541a0;
+}

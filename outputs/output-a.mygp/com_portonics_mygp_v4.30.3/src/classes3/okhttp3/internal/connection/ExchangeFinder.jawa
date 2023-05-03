@@ -1,0 +1,409 @@
+record `okhttp3.internal.connection.ExchangeFinder` @kind class @AccessFlag FINAL {
+  `okhttp3.Address` `okhttp3.internal.connection.ExchangeFinder.address` @AccessFlag PRIVATE_FINAL;
+  `okhttp3.Call` `okhttp3.internal.connection.ExchangeFinder.call` @AccessFlag PRIVATE_FINAL;
+  `okhttp3.internal.connection.RealConnection` `okhttp3.internal.connection.ExchangeFinder.connectingConnection` @AccessFlag PRIVATE;
+  `okhttp3.internal.connection.RealConnectionPool` `okhttp3.internal.connection.ExchangeFinder.connectionPool` @AccessFlag PRIVATE_FINAL;
+  `okhttp3.EventListener` `okhttp3.internal.connection.ExchangeFinder.eventListener` @AccessFlag PRIVATE_FINAL;
+  `boolean` `okhttp3.internal.connection.ExchangeFinder.hasStreamFailure` @AccessFlag PRIVATE;
+  `okhttp3.Route` `okhttp3.internal.connection.ExchangeFinder.nextRouteToTry` @AccessFlag PRIVATE;
+  `okhttp3.internal.connection.RouteSelector$Selection` `okhttp3.internal.connection.ExchangeFinder.routeSelection` @AccessFlag PRIVATE;
+  `okhttp3.internal.connection.RouteSelector` `okhttp3.internal.connection.ExchangeFinder.routeSelector` @AccessFlag PRIVATE_FINAL;
+  `okhttp3.internal.connection.Transmitter` `okhttp3.internal.connection.ExchangeFinder.transmitter` @AccessFlag PRIVATE_FINAL;
+}
+global `boolean` `@@okhttp3.internal.connection.ExchangeFinder.$assertionsDisabled` @AccessFlag STATIC_FINAL_SYNTHETIC;
+procedure `void` `<clinit>`() @signature `Lokhttp3/internal/connection/ExchangeFinder;.<clinit>:()V` @AccessFlag STATIC_CONSTRUCTOR {
+    temp;
+
+  #L30596c.  return @kind void;
+}
+procedure `void` `<init>`(`okhttp3.internal.connection.ExchangeFinder` v0 @kind this, `okhttp3.internal.connection.Transmitter` v1 @kind object, `okhttp3.internal.connection.RealConnectionPool` v2 @kind object, `okhttp3.Address` v3 @kind object, `okhttp3.Call` v4 @kind object, `okhttp3.EventListener` v5 @kind object) @signature `Lokhttp3/internal/connection/ExchangeFinder;.<init>:(Lokhttp3/internal/connection/Transmitter;Lokhttp3/internal/connection/RealConnectionPool;Lokhttp3/Address;Lokhttp3/Call;Lokhttp3/EventListener;)V` @AccessFlag CONSTRUCTOR {
+    temp;
+
+  #L305980.  call `<init>`(v0) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L305986.  v0.`okhttp3.internal.connection.ExchangeFinder.transmitter` @type ^`okhttp3.internal.connection.Transmitter` := v1 @kind object;
+  #L30598a.  v0.`okhttp3.internal.connection.ExchangeFinder.connectionPool` @type ^`okhttp3.internal.connection.RealConnectionPool` := v2 @kind object;
+  #L30598e.  v0.`okhttp3.internal.connection.ExchangeFinder.address` @type ^`okhttp3.Address` := v3 @kind object;
+  #L305992.  v0.`okhttp3.internal.connection.ExchangeFinder.call` @type ^`okhttp3.Call` := v4 @kind object;
+  #L305996.  v0.`okhttp3.internal.connection.ExchangeFinder.eventListener` @type ^`okhttp3.EventListener` := v5 @kind object;
+  #L30599a.  v1:= new `okhttp3.internal.connection.RouteSelector`;
+  #L30599e.  v2:= v2.`okhttp3.internal.connection.RealConnectionPool.routeDatabase` @type ^`okhttp3.internal.connection.RouteDatabase` @kind object;
+  #L3059a2.  call `<init>`(v1, v3, v2, v4, v5) @signature `Lokhttp3/internal/connection/RouteSelector;.<init>:(Lokhttp3/Address;Lokhttp3/internal/connection/RouteDatabase;Lokhttp3/Call;Lokhttp3/EventListener;)V` @kind direct;
+  #L3059a8.  v0.`okhttp3.internal.connection.ExchangeFinder.routeSelector` @type ^`okhttp3.internal.connection.RouteSelector` := v1 @kind object;
+  #L3059ac.  return @kind void;
+}
+procedure `okhttp3.internal.connection.RealConnection` `findConnection`(`okhttp3.internal.connection.ExchangeFinder` v18 @kind this, `int` v19 , `int` v20 , `int` v21 , `int` v22 , `boolean` v23 ) @signature `Lokhttp3/internal/connection/ExchangeFinder;.findConnection:(IIIIZ)Lokhttp3/internal/connection/RealConnection;` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+    v9;
+    v10;
+    v11;
+    v12;
+    v13;
+    v14;
+    v15;
+    v16;
+    v17;
+
+  #L3055c4.  v1:= v18 @kind object;
+  #L3055c8.  v2:= v1.`okhttp3.internal.connection.ExchangeFinder.connectionPool` @type ^`okhttp3.internal.connection.RealConnectionPool` @kind object;
+  #L3055cc.  @monitorenter v2
+  #L3055ce.  v0:= v1.`okhttp3.internal.connection.ExchangeFinder.transmitter` @type ^`okhttp3.internal.connection.Transmitter` @kind object;
+  #L3055d2.  call temp:= `isCanceled`(v0) @signature `Lokhttp3/internal/connection/Transmitter;.isCanceled:()Z` @kind virtual;
+  #L3055d8.  v0:= temp;
+  #L3055da.  if v0 != 0 then goto L305820;
+  #L3055de.  v0:= 0I;
+  #L3055e0.  v1.`okhttp3.internal.connection.ExchangeFinder.hasStreamFailure` @type ^`boolean` := v0 @kind boolean;
+  #L3055e4.  v3:= v1.`okhttp3.internal.connection.ExchangeFinder.transmitter` @type ^`okhttp3.internal.connection.Transmitter` @kind object;
+  #L3055e8.  v4:= v3.`okhttp3.internal.connection.Transmitter.connection` @type ^`okhttp3.internal.connection.RealConnection` @kind object;
+  #L3055ec.  v5:= 0I;
+  #L3055ee.  if v4 == 0 then goto L305604;
+  #L3055f2.  v6:= v4.`okhttp3.internal.connection.RealConnection.noNewExchanges` @type ^`boolean` @kind boolean;
+  #L3055f6.  if v6 == 0 then goto L305604;
+  #L3055fa.  call temp:= `releaseConnectionNoEvents`(v3) @signature `Lokhttp3/internal/connection/Transmitter;.releaseConnectionNoEvents:()Ljava/net/Socket;` @kind virtual;
+  #L305600.  v3:= temp @kind object;
+  #L305602.  goto L305606;
+  #L305604.  v3:= v5 @kind object;
+  #L305606.  v6:= v1.`okhttp3.internal.connection.ExchangeFinder.transmitter` @type ^`okhttp3.internal.connection.Transmitter` @kind object;
+  #L30560a.  v7:= v6.`okhttp3.internal.connection.Transmitter.connection` @type ^`okhttp3.internal.connection.RealConnection` @kind object;
+  #L30560e.  if v7 == 0 then goto L305616;
+  #L305612.  v4:= v5 @kind object;
+  #L305614.  goto L305618;
+  #L305616.  v7:= v5 @kind object;
+  #L305618.  v8:= 1I;
+  #L30561a.  if v7 != 0 then goto L30566c;
+  #L30561e.  v9:= v1.`okhttp3.internal.connection.ExchangeFinder.connectionPool` @type ^`okhttp3.internal.connection.RealConnectionPool` @kind object;
+  #L305622.  v10:= v1.`okhttp3.internal.connection.ExchangeFinder.address` @type ^`okhttp3.Address` @kind object;
+  #L305626.  call temp:= `transmitterAcquirePooledConnection`(v9, v10, v6, v5, v0) @signature `Lokhttp3/internal/connection/RealConnectionPool;.transmitterAcquirePooledConnection:(Lokhttp3/Address;Lokhttp3/internal/connection/Transmitter;Ljava/util/List;Z)Z` @kind virtual;
+  #L30562c.  v6:= temp;
+  #L30562e.  if v6 == 0 then goto L305640;
+  #L305632.  v6:= v1.`okhttp3.internal.connection.ExchangeFinder.transmitter` @type ^`okhttp3.internal.connection.Transmitter` @kind object;
+  #L305636.  v7:= v6.`okhttp3.internal.connection.Transmitter.connection` @type ^`okhttp3.internal.connection.RealConnection` @kind object;
+  #L30563a.  v6:= v5 @kind object;
+  #L30563c.  v9:= 1I;
+  #L30563e.  goto L305670;
+  #L305640.  v6:= v1.`okhttp3.internal.connection.ExchangeFinder.nextRouteToTry` @type ^`okhttp3.Route` @kind object;
+  #L305644.  if v6 == 0 then goto L30564e;
+  #L305648.  v1.`okhttp3.internal.connection.ExchangeFinder.nextRouteToTry` @type ^`okhttp3.Route` := v5 @kind object;
+  #L30564c.  goto L30566e;
+  #L30564e.  call temp:= `retryCurrentRoute`(v18) @signature `Lokhttp3/internal/connection/ExchangeFinder;.retryCurrentRoute:()Z` @kind direct;
+  #L305654.  v6:= temp;
+  #L305656.  if v6 == 0 then goto L30566c;
+  #L30565a.  v6:= v1.`okhttp3.internal.connection.ExchangeFinder.transmitter` @type ^`okhttp3.internal.connection.Transmitter` @kind object;
+  #L30565e.  v6:= v6.`okhttp3.internal.connection.Transmitter.connection` @type ^`okhttp3.internal.connection.RealConnection` @kind object;
+  #L305662.  call temp:= `route`(v6) @signature `Lokhttp3/internal/connection/RealConnection;.route:()Lokhttp3/Route;` @kind virtual;
+  #L305668.  v6:= temp @kind object;
+  #L30566a.  goto L30566e;
+  #L30566c.  v6:= v5 @kind object;
+  #L30566e.  v9:= 0I;
+  #L305670.  @monitorexit v2
+  #L305672.  call `closeQuietly`(v3) @signature `Lokhttp3/internal/Util;.closeQuietly:(Ljava/net/Socket;)V` @kind static;
+  #L305678.  if v4 == 0 then goto L30568a;
+  #L30567c.  v2:= v1.`okhttp3.internal.connection.ExchangeFinder.eventListener` @type ^`okhttp3.EventListener` @kind object;
+  #L305680.  v3:= v1.`okhttp3.internal.connection.ExchangeFinder.call` @type ^`okhttp3.Call` @kind object;
+  #L305684.  call `connectionReleased`(v2, v3, v4) @signature `Lokhttp3/EventListener;.connectionReleased:(Lokhttp3/Call;Lokhttp3/Connection;)V` @kind virtual;
+  #L30568a.  if v9 == 0 then goto L30569c;
+  #L30568e.  v2:= v1.`okhttp3.internal.connection.ExchangeFinder.eventListener` @type ^`okhttp3.EventListener` @kind object;
+  #L305692.  v3:= v1.`okhttp3.internal.connection.ExchangeFinder.call` @type ^`okhttp3.Call` @kind object;
+  #L305696.  call `connectionAcquired`(v2, v3, v7) @signature `Lokhttp3/EventListener;.connectionAcquired:(Lokhttp3/Call;Lokhttp3/Connection;)V` @kind virtual;
+  #L30569c.  if v7 == 0 then goto L3056a2;
+  #L3056a0.  return v7 @kind object;
+  #L3056a2.  if v6 != 0 then goto L3056ce;
+  #L3056a6.  v2:= v1.`okhttp3.internal.connection.ExchangeFinder.routeSelection` @type ^`okhttp3.internal.connection.RouteSelector$Selection` @kind object;
+  #L3056aa.  if v2 == 0 then goto L3056ba;
+  #L3056ae.  call temp:= `hasNext`(v2) @signature `Lokhttp3/internal/connection/RouteSelector$Selection;.hasNext:()Z` @kind virtual;
+  #L3056b4.  v2:= temp;
+  #L3056b6.  if v2 != 0 then goto L3056ce;
+  #L3056ba.  v2:= v1.`okhttp3.internal.connection.ExchangeFinder.routeSelector` @type ^`okhttp3.internal.connection.RouteSelector` @kind object;
+  #L3056be.  call temp:= `next`(v2) @signature `Lokhttp3/internal/connection/RouteSelector;.next:()Lokhttp3/internal/connection/RouteSelector$Selection;` @kind virtual;
+  #L3056c4.  v2:= temp @kind object;
+  #L3056c6.  v1.`okhttp3.internal.connection.ExchangeFinder.routeSelection` @type ^`okhttp3.internal.connection.RouteSelector$Selection` := v2 @kind object;
+  #L3056ca.  v2:= 1I;
+  #L3056cc.  goto L3056d0;
+  #L3056ce.  v2:= 0I;
+  #L3056d0.  v3:= v1.`okhttp3.internal.connection.ExchangeFinder.connectionPool` @type ^`okhttp3.internal.connection.RealConnectionPool` @kind object;
+  #L3056d4.  @monitorenter v3
+  #L3056d6.  v4:= v1.`okhttp3.internal.connection.ExchangeFinder.transmitter` @type ^`okhttp3.internal.connection.Transmitter` @kind object;
+  #L3056da.  call temp:= `isCanceled`(v4) @signature `Lokhttp3/internal/connection/Transmitter;.isCanceled:()Z` @kind virtual;
+  #L3056e0.  v4:= temp;
+  #L3056e2.  if v4 != 0 then goto L30580a;
+  #L3056e6.  if v2 == 0 then goto L30571a;
+  #L3056ea.  v2:= v1.`okhttp3.internal.connection.ExchangeFinder.routeSelection` @type ^`okhttp3.internal.connection.RouteSelector$Selection` @kind object;
+  #L3056ee.  call temp:= `getAll`(v2) @signature `Lokhttp3/internal/connection/RouteSelector$Selection;.getAll:()Ljava/util/List;` @kind virtual;
+  #L3056f4.  v2:= temp @kind object;
+  #L3056f6.  v4:= v1.`okhttp3.internal.connection.ExchangeFinder.connectionPool` @type ^`okhttp3.internal.connection.RealConnectionPool` @kind object;
+  #L3056fa.  v10:= v1.`okhttp3.internal.connection.ExchangeFinder.address` @type ^`okhttp3.Address` @kind object;
+  #L3056fe.  v11:= v1.`okhttp3.internal.connection.ExchangeFinder.transmitter` @type ^`okhttp3.internal.connection.Transmitter` @kind object;
+  #L305702.  call temp:= `transmitterAcquirePooledConnection`(v4, v10, v11, v2, v0) @signature `Lokhttp3/internal/connection/RealConnectionPool;.transmitterAcquirePooledConnection:(Lokhttp3/Address;Lokhttp3/internal/connection/Transmitter;Ljava/util/List;Z)Z` @kind virtual;
+  #L305708.  v0:= temp;
+  #L30570a.  if v0 == 0 then goto L30571c;
+  #L30570e.  v0:= v1.`okhttp3.internal.connection.ExchangeFinder.transmitter` @type ^`okhttp3.internal.connection.Transmitter` @kind object;
+  #L305712.  v7:= v0.`okhttp3.internal.connection.Transmitter.connection` @type ^`okhttp3.internal.connection.RealConnection` @kind object;
+  #L305716.  v9:= 1I;
+  #L305718.  goto L30571c;
+  #L30571a.  v2:= v5 @kind object;
+  #L30571c.  if v9 != 0 then goto L305744;
+  #L305720.  if v6 != 0 then goto L305732;
+  #L305724.  v0:= v1.`okhttp3.internal.connection.ExchangeFinder.routeSelection` @type ^`okhttp3.internal.connection.RouteSelector$Selection` @kind object;
+  #L305728.  call temp:= `next`(v0) @signature `Lokhttp3/internal/connection/RouteSelector$Selection;.next:()Lokhttp3/Route;` @kind virtual;
+  #L30572e.  v0:= temp @kind object;
+  #L305730.  v6:= v0 @kind object;
+  #L305732.  v7:= new `okhttp3.internal.connection.RealConnection`;
+  #L305736.  v0:= v1.`okhttp3.internal.connection.ExchangeFinder.connectionPool` @type ^`okhttp3.internal.connection.RealConnectionPool` @kind object;
+  #L30573a.  call `<init>`(v7, v0, v6) @signature `Lokhttp3/internal/connection/RealConnection;.<init>:(Lokhttp3/internal/connection/RealConnectionPool;Lokhttp3/Route;)V` @kind direct;
+  #L305740.  v1.`okhttp3.internal.connection.ExchangeFinder.connectingConnection` @type ^`okhttp3.internal.connection.RealConnection` := v7 @kind object;
+  #L305744.  @monitorexit v3
+  #L305746.  if v9 == 0 then goto L30575a;
+  #L30574a.  v0:= v1.`okhttp3.internal.connection.ExchangeFinder.eventListener` @type ^`okhttp3.EventListener` @kind object;
+  #L30574e.  v2:= v1.`okhttp3.internal.connection.ExchangeFinder.call` @type ^`okhttp3.Call` @kind object;
+  #L305752.  call `connectionAcquired`(v0, v2, v7) @signature `Lokhttp3/EventListener;.connectionAcquired:(Lokhttp3/Call;Lokhttp3/Connection;)V` @kind virtual;
+  #L305758.  return v7 @kind object;
+  #L30575a.  v0:= v1.`okhttp3.internal.connection.ExchangeFinder.call` @type ^`okhttp3.Call` @kind object;
+  #L30575e.  v3:= v1.`okhttp3.internal.connection.ExchangeFinder.eventListener` @type ^`okhttp3.EventListener` @kind object;
+  #L305762.  v10:= v7 @kind object;
+  #L305764.  v11:= v19;
+  #L305768.  v12:= v20;
+  #L30576c.  v13:= v21;
+  #L305770.  v14:= v22;
+  #L305774.  v15:= v23;
+  #L305778.  v16:= v0 @kind object;
+  #L30577c.  v17:= v3 @kind object;
+  #L305780.  call `connect`(v10, v11, v12, v13, v14, v15, v16, v17) @signature `Lokhttp3/internal/connection/RealConnection;.connect:(IIIIZLokhttp3/Call;Lokhttp3/EventListener;)V` @kind virtual;
+  #L305786.  v0:= v1.`okhttp3.internal.connection.ExchangeFinder.connectionPool` @type ^`okhttp3.internal.connection.RealConnectionPool` @kind object;
+  #L30578a.  v0:= v0.`okhttp3.internal.connection.RealConnectionPool.routeDatabase` @type ^`okhttp3.internal.connection.RouteDatabase` @kind object;
+  #L30578e.  call temp:= `route`(v7) @signature `Lokhttp3/internal/connection/RealConnection;.route:()Lokhttp3/Route;` @kind virtual;
+  #L305794.  v3:= temp @kind object;
+  #L305796.  call `connected`(v0, v3) @signature `Lokhttp3/internal/connection/RouteDatabase;.connected:(Lokhttp3/Route;)V` @kind virtual;
+  #L30579c.  v4:= v1.`okhttp3.internal.connection.ExchangeFinder.connectionPool` @type ^`okhttp3.internal.connection.RealConnectionPool` @kind object;
+  #L3057a0.  @monitorenter v4
+  #L3057a2.  v1.`okhttp3.internal.connection.ExchangeFinder.connectingConnection` @type ^`okhttp3.internal.connection.RealConnection` := v5 @kind object;
+  #L3057a6.  v0:= v1.`okhttp3.internal.connection.ExchangeFinder.connectionPool` @type ^`okhttp3.internal.connection.RealConnectionPool` @kind object;
+  #L3057aa.  v3:= v1.`okhttp3.internal.connection.ExchangeFinder.address` @type ^`okhttp3.Address` @kind object;
+  #L3057ae.  v9:= v1.`okhttp3.internal.connection.ExchangeFinder.transmitter` @type ^`okhttp3.internal.connection.Transmitter` @kind object;
+  #L3057b2.  call temp:= `transmitterAcquirePooledConnection`(v0, v3, v9, v2, v8) @signature `Lokhttp3/internal/connection/RealConnectionPool;.transmitterAcquirePooledConnection:(Lokhttp3/Address;Lokhttp3/internal/connection/Transmitter;Ljava/util/List;Z)Z` @kind virtual;
+  #L3057b8.  v0:= temp;
+  #L3057ba.  if v0 == 0 then goto L3057d8;
+  #L3057be.  v7.`okhttp3.internal.connection.RealConnection.noNewExchanges` @type ^`boolean` := v8 @kind boolean;
+  #L3057c2.  call temp:= `socket`(v7) @signature `Lokhttp3/internal/connection/RealConnection;.socket:()Ljava/net/Socket;` @kind virtual;
+  #L3057c8.  v5:= temp @kind object;
+  #L3057ca.  v0:= v1.`okhttp3.internal.connection.ExchangeFinder.transmitter` @type ^`okhttp3.internal.connection.Transmitter` @kind object;
+  #L3057ce.  v7:= v0.`okhttp3.internal.connection.Transmitter.connection` @type ^`okhttp3.internal.connection.RealConnection` @kind object;
+  #L3057d2.  v1.`okhttp3.internal.connection.ExchangeFinder.nextRouteToTry` @type ^`okhttp3.Route` := v6 @kind object;
+  #L3057d6.  goto L3057ec;
+  #L3057d8.  v0:= v1.`okhttp3.internal.connection.ExchangeFinder.connectionPool` @type ^`okhttp3.internal.connection.RealConnectionPool` @kind object;
+  #L3057dc.  call `put`(v0, v7) @signature `Lokhttp3/internal/connection/RealConnectionPool;.put:(Lokhttp3/internal/connection/RealConnection;)V` @kind virtual;
+  #L3057e2.  v0:= v1.`okhttp3.internal.connection.ExchangeFinder.transmitter` @type ^`okhttp3.internal.connection.Transmitter` @kind object;
+  #L3057e6.  call `acquireConnectionNoEvents`(v0, v7) @signature `Lokhttp3/internal/connection/Transmitter;.acquireConnectionNoEvents:(Lokhttp3/internal/connection/RealConnection;)V` @kind virtual;
+  #L3057ec.  @monitorexit v4
+  #L3057ee.  call `closeQuietly`(v5) @signature `Lokhttp3/internal/Util;.closeQuietly:(Ljava/net/Socket;)V` @kind static;
+  #L3057f4.  v0:= v1.`okhttp3.internal.connection.ExchangeFinder.eventListener` @type ^`okhttp3.EventListener` @kind object;
+  #L3057f8.  v2:= v1.`okhttp3.internal.connection.ExchangeFinder.call` @type ^`okhttp3.Call` @kind object;
+  #L3057fc.  call `connectionAcquired`(v0, v2, v7) @signature `Lokhttp3/EventListener;.connectionAcquired:(Lokhttp3/Call;Lokhttp3/Connection;)V` @kind virtual;
+  #L305802.  return v7 @kind object;
+  #L305804.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L305806.  @monitorexit v4
+  #L305808.  throw v0;
+  #L30580a.  v0:= new `java.io.IOException`;
+  #L30580e.  v2:= "Canceled" @kind object;
+  #L305812.  call `<init>`(v0, v2) @signature `Ljava/io/IOException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L305818.  throw v0;
+  #L30581a.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L30581c.  @monitorexit v3
+  #L30581e.  throw v0;
+  #L305820.  v0:= new `java.io.IOException`;
+  #L305824.  v3:= "Canceled" @kind object;
+  #L305828.  call `<init>`(v0, v3) @signature `Ljava/io/IOException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L30582e.  throw v0;
+  #L305830.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L305832.  @monitorexit v2
+  #L305834.  throw v0;
+  catch `java.lang.Throwable` @[L3055ce..L305672] goto L305830;
+  catch `java.lang.Throwable` @[L3056d6..L305746] goto L30581a;
+  catch `java.lang.Throwable` @[L3057a2..L3057ee] goto L305804;
+  catch `java.lang.Throwable` @[L305806..L305808] goto L305804;
+  catch `java.lang.Throwable` @[L30580a..L30581e] goto L30581a;
+  catch `java.lang.Throwable` @[L305820..L305834] goto L305830;
+}
+procedure `okhttp3.internal.connection.RealConnection` `findHealthyConnection`(`okhttp3.internal.connection.ExchangeFinder` v3 @kind this, `int` v4 , `int` v5 , `int` v6 , `int` v7 , `boolean` v8 , `boolean` v9 ) @signature `Lokhttp3/internal/connection/ExchangeFinder;.findHealthyConnection:(IIIIZZ)Lokhttp3/internal/connection/RealConnection;` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L305884.  call temp:= `findConnection`(v3, v4, v5, v6, v7, v8) @signature `Lokhttp3/internal/connection/ExchangeFinder;.findConnection:(IIIIZ)Lokhttp3/internal/connection/RealConnection;` @kind direct;
+  #L30588a.  v0:= temp @kind object;
+  #L30588c.  v1:= v3.`okhttp3.internal.connection.ExchangeFinder.connectionPool` @type ^`okhttp3.internal.connection.RealConnectionPool` @kind object;
+  #L305890.  @monitorenter v1
+  #L305892.  v2:= v0.`okhttp3.internal.connection.RealConnection.successCount` @type ^`int`;
+  #L305896.  if v2 != 0 then goto L3058aa;
+  #L30589a.  call temp:= `isMultiplexed`(v0) @signature `Lokhttp3/internal/connection/RealConnection;.isMultiplexed:()Z` @kind virtual;
+  #L3058a0.  v2:= temp;
+  #L3058a2.  if v2 != 0 then goto L3058aa;
+  #L3058a6.  @monitorexit v1
+  #L3058a8.  return v0 @kind object;
+  #L3058aa.  @monitorexit v1
+  #L3058ac.  call temp:= `isHealthy`(v0, v9) @signature `Lokhttp3/internal/connection/RealConnection;.isHealthy:(Z)Z` @kind virtual;
+  #L3058b2.  v1:= temp;
+  #L3058b4.  if v1 != 0 then goto L3058c0;
+  #L3058b8.  call `noNewExchanges`(v0) @signature `Lokhttp3/internal/connection/RealConnection;.noNewExchanges:()V` @kind virtual;
+  #L3058be.  goto L305884;
+  #L3058c0.  return v0 @kind object;
+  #L3058c2.  v4:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3058c4.  @monitorexit v1
+  #L3058c6.  goto L3058ca;
+  #L3058c8.  throw v4;
+  #L3058ca.  goto L3058c8;
+  catch `java.lang.Throwable` @[L305892..L3058ac] goto L3058c2;
+  catch `java.lang.Throwable` @[L3058c4..L3058c6] goto L3058c2;
+}
+procedure `boolean` `retryCurrentRoute`(`okhttp3.internal.connection.ExchangeFinder` v2 @kind this) @signature `Lokhttp3/internal/connection/ExchangeFinder;.retryCurrentRoute:()Z` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+
+  #L305550.  v0:= v2.`okhttp3.internal.connection.ExchangeFinder.transmitter` @type ^`okhttp3.internal.connection.Transmitter` @kind object;
+  #L305554.  v0:= v0.`okhttp3.internal.connection.Transmitter.connection` @type ^`okhttp3.internal.connection.RealConnection` @kind object;
+  #L305558.  if v0 == 0 then goto L305598;
+  #L30555c.  v1:= v0.`okhttp3.internal.connection.RealConnection.routeFailureCount` @type ^`int`;
+  #L305560.  if v1 != 0 then goto L305598;
+  #L305564.  call temp:= `route`(v0) @signature `Lokhttp3/internal/connection/RealConnection;.route:()Lokhttp3/Route;` @kind virtual;
+  #L30556a.  v0:= temp @kind object;
+  #L30556c.  call temp:= `address`(v0) @signature `Lokhttp3/Route;.address:()Lokhttp3/Address;` @kind virtual;
+  #L305572.  v0:= temp @kind object;
+  #L305574.  call temp:= `url`(v0) @signature `Lokhttp3/Address;.url:()Lokhttp3/HttpUrl;` @kind virtual;
+  #L30557a.  v0:= temp @kind object;
+  #L30557c.  v1:= v2.`okhttp3.internal.connection.ExchangeFinder.address` @type ^`okhttp3.Address` @kind object;
+  #L305580.  call temp:= `url`(v1) @signature `Lokhttp3/Address;.url:()Lokhttp3/HttpUrl;` @kind virtual;
+  #L305586.  v1:= temp @kind object;
+  #L305588.  call temp:= `sameConnection`(v0, v1) @signature `Lokhttp3/internal/Util;.sameConnection:(Lokhttp3/HttpUrl;Lokhttp3/HttpUrl;)Z` @kind static;
+  #L30558e.  v0:= temp;
+  #L305590.  if v0 == 0 then goto L305598;
+  #L305594.  v0:= 1I;
+  #L305596.  goto L30559a;
+  #L305598.  v0:= 0I;
+  #L30559a.  return v0;
+}
+procedure `okhttp3.internal.connection.RealConnection` `connectingConnection`(`okhttp3.internal.connection.ExchangeFinder` v1 @kind this) @signature `Lokhttp3/internal/connection/ExchangeFinder;.connectingConnection:()Lokhttp3/internal/connection/RealConnection;` @AccessFlag  {
+    temp;
+    v0;
+
+  #L3055ac.  v0:= v1.`okhttp3.internal.connection.ExchangeFinder.connectingConnection` @type ^`okhttp3.internal.connection.RealConnection` @kind object;
+  #L3055b0.  return v0 @kind object;
+}
+procedure `okhttp3.internal.http.ExchangeCodec` `find`(`okhttp3.internal.connection.ExchangeFinder` v7 @kind this, `okhttp3.OkHttpClient` v8 @kind object, `okhttp3.Interceptor$Chain` v9 @kind object, `boolean` v10 ) @signature `Lokhttp3/internal/connection/ExchangeFinder;.find:(Lokhttp3/OkHttpClient;Lokhttp3/Interceptor$Chain;Z)Lokhttp3/internal/http/ExchangeCodec;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+
+  #L3058f0.  call temp:= `connectTimeoutMillis`(v9) @signature `Lokhttp3/Interceptor$Chain;.connectTimeoutMillis:()I` @kind interface;
+  #L3058f6.  v1:= temp;
+  #L3058f8.  call temp:= `readTimeoutMillis`(v9) @signature `Lokhttp3/Interceptor$Chain;.readTimeoutMillis:()I` @kind interface;
+  #L3058fe.  v2:= temp;
+  #L305900.  call temp:= `writeTimeoutMillis`(v9) @signature `Lokhttp3/Interceptor$Chain;.writeTimeoutMillis:()I` @kind interface;
+  #L305906.  v3:= temp;
+  #L305908.  call temp:= `pingIntervalMillis`(v8) @signature `Lokhttp3/OkHttpClient;.pingIntervalMillis:()I` @kind virtual;
+  #L30590e.  v4:= temp;
+  #L305910.  call temp:= `retryOnConnectionFailure`(v8) @signature `Lokhttp3/OkHttpClient;.retryOnConnectionFailure:()Z` @kind virtual;
+  #L305916.  v5:= temp;
+  #L305918.  v0:= v7 @kind object;
+  #L30591a.  v6:= v10;
+  #L30591c.  call temp:= `findHealthyConnection`(v0, v1, v2, v3, v4, v5, v6) @signature `Lokhttp3/internal/connection/ExchangeFinder;.findHealthyConnection:(IIIIZZ)Lokhttp3/internal/connection/RealConnection;` @kind direct;
+  #L305922.  v10:= temp @kind object;
+  #L305924.  call temp:= `newCodec`(v10, v8, v9) @signature `Lokhttp3/internal/connection/RealConnection;.newCodec:(Lokhttp3/OkHttpClient;Lokhttp3/Interceptor$Chain;)Lokhttp3/internal/http/ExchangeCodec;` @kind virtual;
+  #L30592a.  v8:= temp @kind object;
+  #L30592c.  return v8 @kind object;
+  #L30592e.  v8:= Exception @type ^`java.io.IOException` @kind object;
+  #L305930.  call `trackFailure`(v7) @signature `Lokhttp3/internal/connection/ExchangeFinder;.trackFailure:()V` @kind virtual;
+  #L305936.  v9:= new `okhttp3.internal.connection.RouteException`;
+  #L30593a.  call `<init>`(v9, v8) @signature `Lokhttp3/internal/connection/RouteException;.<init>:(Ljava/io/IOException;)V` @kind direct;
+  #L305940.  throw v9;
+  #L305942.  v8:= Exception @type ^`okhttp3.internal.connection.RouteException` @kind object;
+  #L305944.  call `trackFailure`(v7) @signature `Lokhttp3/internal/connection/ExchangeFinder;.trackFailure:()V` @kind virtual;
+  #L30594a.  throw v8;
+  catch `okhttp3.internal.connection.RouteException` @[L30591c..L30592c] goto L305942;
+  catch `java.io.IOException` @[L30591c..L30592c] goto L30592e;
+}
+procedure `boolean` `hasRouteToTry`(`okhttp3.internal.connection.ExchangeFinder` v3 @kind this) @signature `Lokhttp3/internal/connection/ExchangeFinder;.hasRouteToTry:()Z` @AccessFlag  {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L305498.  v0:= v3.`okhttp3.internal.connection.ExchangeFinder.connectionPool` @type ^`okhttp3.internal.connection.RealConnectionPool` @kind object;
+  #L30549c.  @monitorenter v0
+  #L30549e.  v1:= v3.`okhttp3.internal.connection.ExchangeFinder.nextRouteToTry` @type ^`okhttp3.Route` @kind object;
+  #L3054a2.  v2:= 1I;
+  #L3054a4.  if v1 == 0 then goto L3054ac;
+  #L3054a8.  @monitorexit v0
+  #L3054aa.  return v2;
+  #L3054ac.  call temp:= `retryCurrentRoute`(v3) @signature `Lokhttp3/internal/connection/ExchangeFinder;.retryCurrentRoute:()Z` @kind direct;
+  #L3054b2.  v1:= temp;
+  #L3054b4.  if v1 == 0 then goto L3054d0;
+  #L3054b8.  v1:= v3.`okhttp3.internal.connection.ExchangeFinder.transmitter` @type ^`okhttp3.internal.connection.Transmitter` @kind object;
+  #L3054bc.  v1:= v1.`okhttp3.internal.connection.Transmitter.connection` @type ^`okhttp3.internal.connection.RealConnection` @kind object;
+  #L3054c0.  call temp:= `route`(v1) @signature `Lokhttp3/internal/connection/RealConnection;.route:()Lokhttp3/Route;` @kind virtual;
+  #L3054c6.  v1:= temp @kind object;
+  #L3054c8.  v3.`okhttp3.internal.connection.ExchangeFinder.nextRouteToTry` @type ^`okhttp3.Route` := v1 @kind object;
+  #L3054cc.  @monitorexit v0
+  #L3054ce.  return v2;
+  #L3054d0.  v1:= v3.`okhttp3.internal.connection.ExchangeFinder.routeSelection` @type ^`okhttp3.internal.connection.RouteSelector$Selection` @kind object;
+  #L3054d4.  if v1 == 0 then goto L3054e4;
+  #L3054d8.  call temp:= `hasNext`(v1) @signature `Lokhttp3/internal/connection/RouteSelector$Selection;.hasNext:()Z` @kind virtual;
+  #L3054de.  v1:= temp;
+  #L3054e0.  if v1 != 0 then goto L3054f8;
+  #L3054e4.  v1:= v3.`okhttp3.internal.connection.ExchangeFinder.routeSelector` @type ^`okhttp3.internal.connection.RouteSelector` @kind object;
+  #L3054e8.  call temp:= `hasNext`(v1) @signature `Lokhttp3/internal/connection/RouteSelector;.hasNext:()Z` @kind virtual;
+  #L3054ee.  v1:= temp;
+  #L3054f0.  if v1 == 0 then goto L3054f6;
+  #L3054f4.  goto L3054f8;
+  #L3054f6.  v2:= 0I;
+  #L3054f8.  @monitorexit v0
+  #L3054fa.  return v2;
+  #L3054fc.  v1:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3054fe.  @monitorexit v0
+  #L305500.  throw v1;
+  catch `java.lang.Throwable` @[L30549e..L305500] goto L3054fc;
+}
+procedure `boolean` `hasStreamFailure`(`okhttp3.internal.connection.ExchangeFinder` v2 @kind this) @signature `Lokhttp3/internal/connection/ExchangeFinder;.hasStreamFailure:()Z` @AccessFlag  {
+    temp;
+    v0;
+    v1;
+
+  #L305520.  v0:= v2.`okhttp3.internal.connection.ExchangeFinder.connectionPool` @type ^`okhttp3.internal.connection.RealConnectionPool` @kind object;
+  #L305524.  @monitorenter v0
+  #L305526.  v1:= v2.`okhttp3.internal.connection.ExchangeFinder.hasStreamFailure` @type ^`boolean` @kind boolean;
+  #L30552a.  @monitorexit v0
+  #L30552c.  return v1;
+  #L30552e.  v1:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L305530.  @monitorexit v0
+  #L305532.  throw v1;
+  catch `java.lang.Throwable` @[L305526..L305532] goto L30552e;
+}
+procedure `void` `trackFailure`(`okhttp3.internal.connection.ExchangeFinder` v2 @kind this) @signature `Lokhttp3/internal/connection/ExchangeFinder;.trackFailure:()V` @AccessFlag  {
+    temp;
+    v0;
+    v1;
+
+  #L3059c0.  v0:= v2.`okhttp3.internal.connection.ExchangeFinder.connectionPool` @type ^`okhttp3.internal.connection.RealConnectionPool` @kind object;
+  #L3059c4.  @monitorenter v0
+  #L3059c6.  v1:= 1I;
+  #L3059c8.  v2.`okhttp3.internal.connection.ExchangeFinder.hasStreamFailure` @type ^`boolean` := v1 @kind boolean;
+  #L3059cc.  @monitorexit v0
+  #L3059ce.  return @kind void;
+  #L3059d0.  v1:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3059d2.  @monitorexit v0
+  #L3059d4.  throw v1;
+  catch `java.lang.Throwable` @[L3059c8..L3059d4] goto L3059d0;
+}

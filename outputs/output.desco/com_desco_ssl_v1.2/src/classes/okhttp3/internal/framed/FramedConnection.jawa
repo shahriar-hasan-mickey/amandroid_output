@@ -1,0 +1,1340 @@
+record `okhttp3.internal.framed.FramedConnection` @kind class @AccessFlag PUBLIC_FINAL extends `java.io.Closeable` @kind interface {
+  `long` `okhttp3.internal.framed.FramedConnection.bytesLeftInWriteWindow` @AccessFlag ;
+  `boolean` `okhttp3.internal.framed.FramedConnection.client` @AccessFlag FINAL;
+  `java.util.Set` `okhttp3.internal.framed.FramedConnection.currentPushRequests` @AccessFlag PRIVATE_FINAL;
+  `okhttp3.internal.framed.FrameWriter` `okhttp3.internal.framed.FramedConnection.frameWriter` @AccessFlag FINAL;
+  `java.lang.String` `okhttp3.internal.framed.FramedConnection.hostname` @AccessFlag PRIVATE_FINAL;
+  `long` `okhttp3.internal.framed.FramedConnection.idleStartTimeNs` @AccessFlag PRIVATE;
+  `int` `okhttp3.internal.framed.FramedConnection.lastGoodStreamId` @AccessFlag PRIVATE;
+  `okhttp3.internal.framed.FramedConnection$Listener` `okhttp3.internal.framed.FramedConnection.listener` @AccessFlag PRIVATE_FINAL;
+  `int` `okhttp3.internal.framed.FramedConnection.nextPingId` @AccessFlag PRIVATE;
+  `int` `okhttp3.internal.framed.FramedConnection.nextStreamId` @AccessFlag PRIVATE;
+  `okhttp3.internal.framed.Settings` `okhttp3.internal.framed.FramedConnection.okHttpSettings` @AccessFlag ;
+  `okhttp3.internal.framed.Settings` `okhttp3.internal.framed.FramedConnection.peerSettings` @AccessFlag FINAL;
+  `java.util.Map` `okhttp3.internal.framed.FramedConnection.pings` @AccessFlag PRIVATE;
+  `okhttp3.Protocol` `okhttp3.internal.framed.FramedConnection.protocol` @AccessFlag FINAL;
+  `java.util.concurrent.ExecutorService` `okhttp3.internal.framed.FramedConnection.pushExecutor` @AccessFlag PRIVATE_FINAL;
+  `okhttp3.internal.framed.PushObserver` `okhttp3.internal.framed.FramedConnection.pushObserver` @AccessFlag PRIVATE_FINAL;
+  `okhttp3.internal.framed.FramedConnection$Reader` `okhttp3.internal.framed.FramedConnection.readerRunnable` @AccessFlag FINAL;
+  `boolean` `okhttp3.internal.framed.FramedConnection.receivedInitialPeerSettings` @AccessFlag PRIVATE;
+  `boolean` `okhttp3.internal.framed.FramedConnection.shutdown` @AccessFlag PRIVATE;
+  `java.net.Socket` `okhttp3.internal.framed.FramedConnection.socket` @AccessFlag FINAL;
+  `java.util.Map` `okhttp3.internal.framed.FramedConnection.streams` @AccessFlag PRIVATE_FINAL;
+  `long` `okhttp3.internal.framed.FramedConnection.unacknowledgedBytesRead` @AccessFlag ;
+  `okhttp3.internal.framed.Variant` `okhttp3.internal.framed.FramedConnection.variant` @AccessFlag FINAL;
+}
+global `boolean` `@@okhttp3.internal.framed.FramedConnection.$assertionsDisabled` @AccessFlag STATIC_FINAL_SYNTHETIC;
+global `int` `@@okhttp3.internal.framed.FramedConnection.OKHTTP_CLIENT_WINDOW_SIZE` @AccessFlag PRIVATE_STATIC_FINAL;
+global `java.util.concurrent.ExecutorService` `@@okhttp3.internal.framed.FramedConnection.executor` @AccessFlag PRIVATE_STATIC_FINAL;
+procedure `void` `<clinit>`() @signature `Lokhttp3/internal/framed/FramedConnection;.<clinit>:()V` @AccessFlag STATIC_CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+
+  #L24379c.  v8:= 1I;
+  #L24379e.  v2:= 0I;
+  #L2437a0.  v0:= constclass @type ^`okhttp3.internal.framed.FramedConnection` @kind object;
+  #L2437a4.  call temp:= `desiredAssertionStatus`(v0) @signature `Ljava/lang/Class;.desiredAssertionStatus:()Z` @kind virtual;
+  #L2437aa.  v0:= temp;
+  #L2437ac.  if v0 != 0 then goto L2437ea;
+  #L2437b0.  v0:= v8;
+  #L2437b2.  `@@okhttp3.internal.framed.FramedConnection.$assertionsDisabled` @type ^`boolean` := v0 @kind boolean;
+  #L2437b6.  v1:= new `java.util.concurrent.ThreadPoolExecutor`;
+  #L2437ba.  v3:= 2147483647I;
+  #L2437c0.  v4:= 60L;
+  #L2437c4.  v6:= `@@java.util.concurrent.TimeUnit.SECONDS` @type ^`java.util.concurrent.TimeUnit` @kind object;
+  #L2437c8.  v7:= new `java.util.concurrent.SynchronousQueue`;
+  #L2437cc.  call `<init>`(v7) @signature `Ljava/util/concurrent/SynchronousQueue;.<init>:()V` @kind direct;
+  #L2437d2.  v0:= "OkHttp FramedConnection" @kind object;
+  #L2437d6.  call temp:= `threadFactory`(v0, v8) @signature `Lokhttp3/internal/Util;.threadFactory:(Ljava/lang/String;Z)Ljava/util/concurrent/ThreadFactory;` @kind static;
+  #L2437dc.  v8:= temp @kind object;
+  #L2437de.  call `<init>`(v1, v2, v3, v4, v6, v7, v8) @signature `Ljava/util/concurrent/ThreadPoolExecutor;.<init>:(IIJLjava/util/concurrent/TimeUnit;Ljava/util/concurrent/BlockingQueue;Ljava/util/concurrent/ThreadFactory;)V` @kind direct;
+  #L2437e4.  `@@okhttp3.internal.framed.FramedConnection.executor` @type ^`java.util.concurrent.ExecutorService` := v1 @kind object;
+  #L2437e8.  return @kind void;
+  #L2437ea.  v0:= v2;
+  #L2437ec.  goto L2437b2;
+}
+procedure `void` `<init>`(`okhttp3.internal.framed.FramedConnection` v12 @kind this, `okhttp3.internal.framed.FramedConnection$Builder` v13 @kind object @name `builder`) @signature `Lokhttp3/internal/framed/FramedConnection;.<init>:(Lokhttp3/internal/framed/FramedConnection$Builder;)V` @AccessFlag PRIVATE_CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+    v9;
+    v10;
+    v11;
+
+  #L243800.  v11:= 0I;
+  #L243802.  v10:= 7I;
+  #L243804.  v1:= 2I;
+  #L243806.  v3:= 1I;
+  #L243808.  v2:= 0I;
+  #L24380a.  call `<init>`(v12) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L243810.  v0:= new `java.util.HashMap`;
+  #L243814.  call `<init>`(v0) @signature `Ljava/util/HashMap;.<init>:()V` @kind direct;
+  #L24381a.  v12.`okhttp3.internal.framed.FramedConnection.streams` @type ^`java.util.Map` := v0 @kind object;
+  #L24381e.  call temp:= `nanoTime`() @signature `Ljava/lang/System;.nanoTime:()J` @kind static;
+  #L243824.  v4:= temp @kind wide;
+  #L243826.  v12.`okhttp3.internal.framed.FramedConnection.idleStartTimeNs` @type ^`long` := v4 @kind wide;
+  #L24382a.  v4:= 0L;
+  #L24382e.  v12.`okhttp3.internal.framed.FramedConnection.unacknowledgedBytesRead` @type ^`long` := v4 @kind wide;
+  #L243832.  v0:= new `okhttp3.internal.framed.Settings`;
+  #L243836.  call `<init>`(v0) @signature `Lokhttp3/internal/framed/Settings;.<init>:()V` @kind direct;
+  #L24383c.  v12.`okhttp3.internal.framed.FramedConnection.okHttpSettings` @type ^`okhttp3.internal.framed.Settings` := v0 @kind object;
+  #L243840.  v0:= new `okhttp3.internal.framed.Settings`;
+  #L243844.  call `<init>`(v0) @signature `Lokhttp3/internal/framed/Settings;.<init>:()V` @kind direct;
+  #L24384a.  v12.`okhttp3.internal.framed.FramedConnection.peerSettings` @type ^`okhttp3.internal.framed.Settings` := v0 @kind object;
+  #L24384e.  v12.`okhttp3.internal.framed.FramedConnection.receivedInitialPeerSettings` @type ^`boolean` := v2 @kind boolean;
+  #L243852.  v0:= new `java.util.LinkedHashSet`;
+  #L243856.  call `<init>`(v0) @signature `Ljava/util/LinkedHashSet;.<init>:()V` @kind direct;
+  #L24385c.  v12.`okhttp3.internal.framed.FramedConnection.currentPushRequests` @type ^`java.util.Set` := v0 @kind object;
+  #L243860.  call temp:= `access$000`(v13) @signature `Lokhttp3/internal/framed/FramedConnection$Builder;.access$000:(Lokhttp3/internal/framed/FramedConnection$Builder;)Lokhttp3/Protocol;` @kind static;
+  #L243866.  v0:= temp @kind object;
+  #L243868.  v12.`okhttp3.internal.framed.FramedConnection.protocol` @type ^`okhttp3.Protocol` := v0 @kind object;
+  #L24386c.  call temp:= `access$100`(v13) @signature `Lokhttp3/internal/framed/FramedConnection$Builder;.access$100:(Lokhttp3/internal/framed/FramedConnection$Builder;)Lokhttp3/internal/framed/PushObserver;` @kind static;
+  #L243872.  v0:= temp @kind object;
+  #L243874.  v12.`okhttp3.internal.framed.FramedConnection.pushObserver` @type ^`okhttp3.internal.framed.PushObserver` := v0 @kind object;
+  #L243878.  call temp:= `access$200`(v13) @signature `Lokhttp3/internal/framed/FramedConnection$Builder;.access$200:(Lokhttp3/internal/framed/FramedConnection$Builder;)Z` @kind static;
+  #L24387e.  v0:= temp;
+  #L243880.  v12.`okhttp3.internal.framed.FramedConnection.client` @type ^`boolean` := v0 @kind boolean;
+  #L243884.  call temp:= `access$300`(v13) @signature `Lokhttp3/internal/framed/FramedConnection$Builder;.access$300:(Lokhttp3/internal/framed/FramedConnection$Builder;)Lokhttp3/internal/framed/FramedConnection$Listener;` @kind static;
+  #L24388a.  v0:= temp @kind object;
+  #L24388c.  v12.`okhttp3.internal.framed.FramedConnection.listener` @type ^`okhttp3.internal.framed.FramedConnection$Listener` := v0 @kind object;
+  #L243890.  call temp:= `access$200`(v13) @signature `Lokhttp3/internal/framed/FramedConnection$Builder;.access$200:(Lokhttp3/internal/framed/FramedConnection$Builder;)Z` @kind static;
+  #L243896.  v0:= temp;
+  #L243898.  if v0 == 0 then goto L2439de;
+  #L24389c.  v0:= v3;
+  #L24389e.  v12.`okhttp3.internal.framed.FramedConnection.nextStreamId` @type ^`int` := v0;
+  #L2438a2.  call temp:= `access$200`(v13) @signature `Lokhttp3/internal/framed/FramedConnection$Builder;.access$200:(Lokhttp3/internal/framed/FramedConnection$Builder;)Z` @kind static;
+  #L2438a8.  v0:= temp;
+  #L2438aa.  if v0 == 0 then goto L2438c6;
+  #L2438ae.  v0:= v12.`okhttp3.internal.framed.FramedConnection.protocol` @type ^`okhttp3.Protocol` @kind object;
+  #L2438b2.  v4:= `@@okhttp3.Protocol.HTTP_2` @type ^`okhttp3.Protocol` @kind object;
+  #L2438b6.  if v0 != v4 then goto L2438c6;
+  #L2438ba.  v0:= v12.`okhttp3.internal.framed.FramedConnection.nextStreamId` @type ^`int`;
+  #L2438be.  v0:= v0 + 2;
+  #L2438c2.  v12.`okhttp3.internal.framed.FramedConnection.nextStreamId` @type ^`int` := v0;
+  #L2438c6.  call temp:= `access$200`(v13) @signature `Lokhttp3/internal/framed/FramedConnection$Builder;.access$200:(Lokhttp3/internal/framed/FramedConnection$Builder;)Z` @kind static;
+  #L2438cc.  v0:= temp;
+  #L2438ce.  if v0 == 0 then goto L2438d4;
+  #L2438d2.  v1:= v3;
+  #L2438d4.  v12.`okhttp3.internal.framed.FramedConnection.nextPingId` @type ^`int` := v1;
+  #L2438d8.  call temp:= `access$200`(v13) @signature `Lokhttp3/internal/framed/FramedConnection$Builder;.access$200:(Lokhttp3/internal/framed/FramedConnection$Builder;)Z` @kind static;
+  #L2438de.  v0:= temp;
+  #L2438e0.  if v0 == 0 then goto L2438f2;
+  #L2438e4.  v0:= v12.`okhttp3.internal.framed.FramedConnection.okHttpSettings` @type ^`okhttp3.internal.framed.Settings` @kind object;
+  #L2438e8.  v1:= 16777216I;
+  #L2438ec.  call temp:= `set`(v0, v10, v2, v1) @signature `Lokhttp3/internal/framed/Settings;.set:(III)Lokhttp3/internal/framed/Settings;` @kind virtual;
+  #L2438f2.  call temp:= `access$400`(v13) @signature `Lokhttp3/internal/framed/FramedConnection$Builder;.access$400:(Lokhttp3/internal/framed/FramedConnection$Builder;)Ljava/lang/String;` @kind static;
+  #L2438f8.  v0:= temp @kind object;
+  #L2438fa.  v12.`okhttp3.internal.framed.FramedConnection.hostname` @type ^`java.lang.String` := v0 @kind object;
+  #L2438fe.  v0:= v12.`okhttp3.internal.framed.FramedConnection.protocol` @type ^`okhttp3.Protocol` @kind object;
+  #L243902.  v1:= `@@okhttp3.Protocol.HTTP_2` @type ^`okhttp3.Protocol` @kind object;
+  #L243906.  if v0 != v1 then goto L2439e4;
+  #L24390a.  v0:= new `okhttp3.internal.framed.Http2`;
+  #L24390e.  call `<init>`(v0) @signature `Lokhttp3/internal/framed/Http2;.<init>:()V` @kind direct;
+  #L243914.  v12.`okhttp3.internal.framed.FramedConnection.variant` @type ^`okhttp3.internal.framed.Variant` := v0 @kind object;
+  #L243918.  v1:= new `java.util.concurrent.ThreadPoolExecutor`;
+  #L24391c.  v4:= 60L;
+  #L243920.  v6:= `@@java.util.concurrent.TimeUnit.SECONDS` @type ^`java.util.concurrent.TimeUnit` @kind object;
+  #L243924.  v7:= new `java.util.concurrent.LinkedBlockingQueue`;
+  #L243928.  call `<init>`(v7) @signature `Ljava/util/concurrent/LinkedBlockingQueue;.<init>:()V` @kind direct;
+  #L24392e.  v0:= "OkHttp %s Push Observer" @kind object;
+  #L243932.  v8:= new `java.lang.Object`[v3];
+  #L243936.  v9:= v12.`okhttp3.internal.framed.FramedConnection.hostname` @type ^`java.lang.String` @kind object;
+  #L24393a.  v8[v2]:= v9 @kind object;
+  #L24393e.  call temp:= `format`(v0, v8) @signature `Lokhttp3/internal/Util;.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;` @kind static;
+  #L243944.  v0:= temp @kind object;
+  #L243946.  call temp:= `threadFactory`(v0, v3) @signature `Lokhttp3/internal/Util;.threadFactory:(Ljava/lang/String;Z)Ljava/util/concurrent/ThreadFactory;` @kind static;
+  #L24394c.  v8:= temp @kind object;
+  #L24394e.  call `<init>`(v1, v2, v3, v4, v6, v7, v8) @signature `Ljava/util/concurrent/ThreadPoolExecutor;.<init>:(IIJLjava/util/concurrent/TimeUnit;Ljava/util/concurrent/BlockingQueue;Ljava/util/concurrent/ThreadFactory;)V` @kind direct;
+  #L243954.  v12.`okhttp3.internal.framed.FramedConnection.pushExecutor` @type ^`java.util.concurrent.ExecutorService` := v1 @kind object;
+  #L243958.  v0:= v12.`okhttp3.internal.framed.FramedConnection.peerSettings` @type ^`okhttp3.internal.framed.Settings` @kind object;
+  #L24395c.  v1:= 65535I;
+  #L243962.  call temp:= `set`(v0, v10, v2, v1) @signature `Lokhttp3/internal/framed/Settings;.set:(III)Lokhttp3/internal/framed/Settings;` @kind virtual;
+  #L243968.  v0:= v12.`okhttp3.internal.framed.FramedConnection.peerSettings` @type ^`okhttp3.internal.framed.Settings` @kind object;
+  #L24396c.  v1:= 5I;
+  #L24396e.  v3:= 16384I;
+  #L243972.  call temp:= `set`(v0, v1, v2, v3) @signature `Lokhttp3/internal/framed/Settings;.set:(III)Lokhttp3/internal/framed/Settings;` @kind virtual;
+  #L243978.  v0:= v12.`okhttp3.internal.framed.FramedConnection.peerSettings` @type ^`okhttp3.internal.framed.Settings` @kind object;
+  #L24397c.  v1:= 65536I;
+  #L243980.  call temp:= `getInitialWindowSize`(v0, v1) @signature `Lokhttp3/internal/framed/Settings;.getInitialWindowSize:(I)I` @kind virtual;
+  #L243986.  v0:= temp;
+  #L243988.  v0:= (`long`) v0 @kind i2l;
+  #L24398a.  v12.`okhttp3.internal.framed.FramedConnection.bytesLeftInWriteWindow` @type ^`long` := v0 @kind wide;
+  #L24398e.  call temp:= `access$500`(v13) @signature `Lokhttp3/internal/framed/FramedConnection$Builder;.access$500:(Lokhttp3/internal/framed/FramedConnection$Builder;)Ljava/net/Socket;` @kind static;
+  #L243994.  v0:= temp @kind object;
+  #L243996.  v12.`okhttp3.internal.framed.FramedConnection.socket` @type ^`java.net.Socket` := v0 @kind object;
+  #L24399a.  v0:= v12.`okhttp3.internal.framed.FramedConnection.variant` @type ^`okhttp3.internal.framed.Variant` @kind object;
+  #L24399e.  call temp:= `access$600`(v13) @signature `Lokhttp3/internal/framed/FramedConnection$Builder;.access$600:(Lokhttp3/internal/framed/FramedConnection$Builder;)Lokio/BufferedSink;` @kind static;
+  #L2439a4.  v1:= temp @kind object;
+  #L2439a6.  v2:= v12.`okhttp3.internal.framed.FramedConnection.client` @type ^`boolean` @kind boolean;
+  #L2439aa.  call temp:= `newWriter`(v0, v1, v2) @signature `Lokhttp3/internal/framed/Variant;.newWriter:(Lokio/BufferedSink;Z)Lokhttp3/internal/framed/FrameWriter;` @kind interface;
+  #L2439b0.  v0:= temp @kind object;
+  #L2439b2.  v12.`okhttp3.internal.framed.FramedConnection.frameWriter` @type ^`okhttp3.internal.framed.FrameWriter` := v0 @kind object;
+  #L2439b6.  v0:= new `okhttp3.internal.framed.FramedConnection$Reader`;
+  #L2439ba.  v1:= v12.`okhttp3.internal.framed.FramedConnection.variant` @type ^`okhttp3.internal.framed.Variant` @kind object;
+  #L2439be.  call temp:= `access$700`(v13) @signature `Lokhttp3/internal/framed/FramedConnection$Builder;.access$700:(Lokhttp3/internal/framed/FramedConnection$Builder;)Lokio/BufferedSource;` @kind static;
+  #L2439c4.  v2:= temp @kind object;
+  #L2439c6.  v3:= v12.`okhttp3.internal.framed.FramedConnection.client` @type ^`boolean` @kind boolean;
+  #L2439ca.  call temp:= `newReader`(v1, v2, v3) @signature `Lokhttp3/internal/framed/Variant;.newReader:(Lokio/BufferedSource;Z)Lokhttp3/internal/framed/FrameReader;` @kind interface;
+  #L2439d0.  v1:= temp @kind object;
+  #L2439d2.  call `<init>`(v0, v12, v1, v11) @signature `Lokhttp3/internal/framed/FramedConnection$Reader;.<init>:(Lokhttp3/internal/framed/FramedConnection;Lokhttp3/internal/framed/FrameReader;Lokhttp3/internal/framed/FramedConnection$1;)V` @kind direct;
+  #L2439d8.  v12.`okhttp3.internal.framed.FramedConnection.readerRunnable` @type ^`okhttp3.internal.framed.FramedConnection$Reader` := v0 @kind object;
+  #L2439dc.  return @kind void;
+  #L2439de.  v0:= v1;
+  #L2439e0.  goto L24389e;
+  #L2439e4.  v0:= v12.`okhttp3.internal.framed.FramedConnection.protocol` @type ^`okhttp3.Protocol` @kind object;
+  #L2439e8.  v1:= `@@okhttp3.Protocol.SPDY_3` @type ^`okhttp3.Protocol` @kind object;
+  #L2439ec.  if v0 != v1 then goto L243a04;
+  #L2439f0.  v0:= new `okhttp3.internal.framed.Spdy3`;
+  #L2439f4.  call `<init>`(v0) @signature `Lokhttp3/internal/framed/Spdy3;.<init>:()V` @kind direct;
+  #L2439fa.  v12.`okhttp3.internal.framed.FramedConnection.variant` @type ^`okhttp3.internal.framed.Variant` := v0 @kind object;
+  #L2439fe.  v12.`okhttp3.internal.framed.FramedConnection.pushExecutor` @type ^`java.util.concurrent.ExecutorService` := v11 @kind object;
+  #L243a02.  goto L243978;
+  #L243a04.  v0:= new `java.lang.AssertionError`;
+  #L243a08.  v1:= v12.`okhttp3.internal.framed.FramedConnection.protocol` @type ^`okhttp3.Protocol` @kind object;
+  #L243a0c.  call `<init>`(v0, v1) @signature `Ljava/lang/AssertionError;.<init>:(Ljava/lang/Object;)V` @kind direct;
+  #L243a12.  throw v0;
+}
+procedure `void` `<init>`(`okhttp3.internal.framed.FramedConnection` v0 @kind this, `okhttp3.internal.framed.FramedConnection$Builder` v1 @kind object @name `x0`, `okhttp3.internal.framed.FramedConnection$1` v2 @kind object @name `x1`) @signature `Lokhttp3/internal/framed/FramedConnection;.<init>:(Lokhttp3/internal/framed/FramedConnection$Builder;Lokhttp3/internal/framed/FramedConnection$1;)V` @AccessFlag SYNTHETIC_CONSTRUCTOR {
+    temp;
+
+  #L243a24.  call `<init>`(v0, v1) @signature `Lokhttp3/internal/framed/FramedConnection;.<init>:(Lokhttp3/internal/framed/FramedConnection$Builder;)V` @kind direct;
+  #L243a2a.  return @kind void;
+}
+procedure `java.lang.String` `access$1100`(`okhttp3.internal.framed.FramedConnection` v1 @kind object @name `x0`) @signature `Lokhttp3/internal/framed/FramedConnection;.access$1100:(Lokhttp3/internal/framed/FramedConnection;)Ljava/lang/String;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+    v0;
+
+  #L243a3c.  v0:= v1.`okhttp3.internal.framed.FramedConnection.hostname` @type ^`java.lang.String` @kind object;
+  #L243a40.  return v0 @kind object;
+}
+procedure `void` `access$1200`(`okhttp3.internal.framed.FramedConnection` v0 @kind object @name `x0`, `okhttp3.internal.framed.ErrorCode` v1 @kind object @name `x1`, `okhttp3.internal.framed.ErrorCode` v2 @kind object @name `x2`) @signature `Lokhttp3/internal/framed/FramedConnection;.access$1200:(Lokhttp3/internal/framed/FramedConnection;Lokhttp3/internal/framed/ErrorCode;Lokhttp3/internal/framed/ErrorCode;)V` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L243a54.  call `close`(v0, v1, v2) @signature `Lokhttp3/internal/framed/FramedConnection;.close:(Lokhttp3/internal/framed/ErrorCode;Lokhttp3/internal/framed/ErrorCode;)V` @kind direct;
+  #L243a5a.  return @kind void;
+}
+procedure `boolean` `access$1300`(`okhttp3.internal.framed.FramedConnection` v1 @kind object @name `x0`, `int` v2 @name `x1`) @signature `Lokhttp3/internal/framed/FramedConnection;.access$1300:(Lokhttp3/internal/framed/FramedConnection;I)Z` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+    v0;
+
+  #L243a6c.  call temp:= `pushedStream`(v1, v2) @signature `Lokhttp3/internal/framed/FramedConnection;.pushedStream:(I)Z` @kind direct;
+  #L243a72.  v0:= temp;
+  #L243a74.  return v0;
+}
+procedure `void` `access$1400`(`okhttp3.internal.framed.FramedConnection` v0 @kind object @name `x0`, `int` v1 @name `x1`, `okio.BufferedSource` v2 @kind object @name `x2`, `int` v3 @name `x3`, `boolean` v4 @name `x4`) @signature `Lokhttp3/internal/framed/FramedConnection;.access$1400:(Lokhttp3/internal/framed/FramedConnection;ILokio/BufferedSource;IZ)V` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L243a88.  call `pushDataLater`(v0, v1, v2, v3, v4) @signature `Lokhttp3/internal/framed/FramedConnection;.pushDataLater:(ILokio/BufferedSource;IZ)V` @kind direct;
+  #L243a8e.  return @kind void;
+}
+procedure `void` `access$1500`(`okhttp3.internal.framed.FramedConnection` v0 @kind object @name `x0`, `int` v1 @name `x1`, `java.util.List` v2 @kind object @name `x2`, `boolean` v3 @name `x3`) @signature `Lokhttp3/internal/framed/FramedConnection;.access$1500:(Lokhttp3/internal/framed/FramedConnection;ILjava/util/List;Z)V` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L243aa0.  call `pushHeadersLater`(v0, v1, v2, v3) @signature `Lokhttp3/internal/framed/FramedConnection;.pushHeadersLater:(ILjava/util/List;Z)V` @kind direct;
+  #L243aa6.  return @kind void;
+}
+procedure `boolean` `access$1600`(`okhttp3.internal.framed.FramedConnection` v1 @kind object @name `x0`) @signature `Lokhttp3/internal/framed/FramedConnection;.access$1600:(Lokhttp3/internal/framed/FramedConnection;)Z` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+    v0;
+
+  #L243ab8.  v0:= v1.`okhttp3.internal.framed.FramedConnection.shutdown` @type ^`boolean` @kind boolean;
+  #L243abc.  return v0;
+}
+procedure `boolean` `access$1602`(`okhttp3.internal.framed.FramedConnection` v0 @kind object @name `x0`, `boolean` v1 @name `x1`) @signature `Lokhttp3/internal/framed/FramedConnection;.access$1602:(Lokhttp3/internal/framed/FramedConnection;Z)Z` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L243ad0.  v0.`okhttp3.internal.framed.FramedConnection.shutdown` @type ^`boolean` := v1 @kind boolean;
+  #L243ad4.  return v1;
+}
+procedure `int` `access$1700`(`okhttp3.internal.framed.FramedConnection` v1 @kind object @name `x0`) @signature `Lokhttp3/internal/framed/FramedConnection;.access$1700:(Lokhttp3/internal/framed/FramedConnection;)I` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+    v0;
+
+  #L243ae8.  v0:= v1.`okhttp3.internal.framed.FramedConnection.lastGoodStreamId` @type ^`int`;
+  #L243aec.  return v0;
+}
+procedure `int` `access$1702`(`okhttp3.internal.framed.FramedConnection` v0 @kind object @name `x0`, `int` v1 @name `x1`) @signature `Lokhttp3/internal/framed/FramedConnection;.access$1702:(Lokhttp3/internal/framed/FramedConnection;I)I` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L243b00.  v0.`okhttp3.internal.framed.FramedConnection.lastGoodStreamId` @type ^`int` := v1;
+  #L243b04.  return v1;
+}
+procedure `int` `access$1800`(`okhttp3.internal.framed.FramedConnection` v1 @kind object @name `x0`) @signature `Lokhttp3/internal/framed/FramedConnection;.access$1800:(Lokhttp3/internal/framed/FramedConnection;)I` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+    v0;
+
+  #L243b18.  v0:= v1.`okhttp3.internal.framed.FramedConnection.nextStreamId` @type ^`int`;
+  #L243b1c.  return v0;
+}
+procedure `java.util.Map` `access$1900`(`okhttp3.internal.framed.FramedConnection` v1 @kind object @name `x0`) @signature `Lokhttp3/internal/framed/FramedConnection;.access$1900:(Lokhttp3/internal/framed/FramedConnection;)Ljava/util/Map;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+    v0;
+
+  #L243b30.  v0:= v1.`okhttp3.internal.framed.FramedConnection.streams` @type ^`java.util.Map` @kind object;
+  #L243b34.  return v0 @kind object;
+}
+procedure `okhttp3.internal.framed.FramedConnection$Listener` `access$2000`(`okhttp3.internal.framed.FramedConnection` v1 @kind object @name `x0`) @signature `Lokhttp3/internal/framed/FramedConnection;.access$2000:(Lokhttp3/internal/framed/FramedConnection;)Lokhttp3/internal/framed/FramedConnection$Listener;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+    v0;
+
+  #L243b48.  v0:= v1.`okhttp3.internal.framed.FramedConnection.listener` @type ^`okhttp3.internal.framed.FramedConnection$Listener` @kind object;
+  #L243b4c.  return v0 @kind object;
+}
+procedure `java.util.concurrent.ExecutorService` `access$2100`() @signature `Lokhttp3/internal/framed/FramedConnection;.access$2100:()Ljava/util/concurrent/ExecutorService;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+    v0;
+
+  #L243b60.  v0:= `@@okhttp3.internal.framed.FramedConnection.executor` @type ^`java.util.concurrent.ExecutorService` @kind object;
+  #L243b64.  return v0 @kind object;
+}
+procedure `void` `access$2200`(`okhttp3.internal.framed.FramedConnection` v0 @kind object @name `x0`, `int` v1 @name `x1`, `okhttp3.internal.framed.ErrorCode` v2 @kind object @name `x2`) @signature `Lokhttp3/internal/framed/FramedConnection;.access$2200:(Lokhttp3/internal/framed/FramedConnection;ILokhttp3/internal/framed/ErrorCode;)V` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L243b78.  call `pushResetLater`(v0, v1, v2) @signature `Lokhttp3/internal/framed/FramedConnection;.pushResetLater:(ILokhttp3/internal/framed/ErrorCode;)V` @kind direct;
+  #L243b7e.  return @kind void;
+}
+procedure `boolean` `access$2300`(`okhttp3.internal.framed.FramedConnection` v1 @kind object @name `x0`) @signature `Lokhttp3/internal/framed/FramedConnection;.access$2300:(Lokhttp3/internal/framed/FramedConnection;)Z` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+    v0;
+
+  #L243b90.  v0:= v1.`okhttp3.internal.framed.FramedConnection.receivedInitialPeerSettings` @type ^`boolean` @kind boolean;
+  #L243b94.  return v0;
+}
+procedure `boolean` `access$2302`(`okhttp3.internal.framed.FramedConnection` v0 @kind object @name `x0`, `boolean` v1 @name `x1`) @signature `Lokhttp3/internal/framed/FramedConnection;.access$2302:(Lokhttp3/internal/framed/FramedConnection;Z)Z` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L243ba8.  v0.`okhttp3.internal.framed.FramedConnection.receivedInitialPeerSettings` @type ^`boolean` := v1 @kind boolean;
+  #L243bac.  return v1;
+}
+procedure `okhttp3.internal.framed.Ping` `access$2400`(`okhttp3.internal.framed.FramedConnection` v1 @kind object @name `x0`, `int` v2 @name `x1`) @signature `Lokhttp3/internal/framed/FramedConnection;.access$2400:(Lokhttp3/internal/framed/FramedConnection;I)Lokhttp3/internal/framed/Ping;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+    v0;
+
+  #L243bc0.  call temp:= `removePing`(v1, v2) @signature `Lokhttp3/internal/framed/FramedConnection;.removePing:(I)Lokhttp3/internal/framed/Ping;` @kind direct;
+  #L243bc6.  v0:= temp @kind object;
+  #L243bc8.  return v0 @kind object;
+}
+procedure `void` `access$2500`(`okhttp3.internal.framed.FramedConnection` v0 @kind object @name `x0`, `boolean` v1 @name `x1`, `int` v2 @name `x2`, `int` v3 @name `x3`, `okhttp3.internal.framed.Ping` v4 @kind object @name `x4`) @signature `Lokhttp3/internal/framed/FramedConnection;.access$2500:(Lokhttp3/internal/framed/FramedConnection;ZIILokhttp3/internal/framed/Ping;)V` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L243bdc.  call `writePingLater`(v0, v1, v2, v3, v4) @signature `Lokhttp3/internal/framed/FramedConnection;.writePingLater:(ZIILokhttp3/internal/framed/Ping;)V` @kind direct;
+  #L243be2.  return @kind void;
+}
+procedure `void` `access$2600`(`okhttp3.internal.framed.FramedConnection` v0 @kind object @name `x0`, `int` v1 @name `x1`, `java.util.List` v2 @kind object @name `x2`) @signature `Lokhttp3/internal/framed/FramedConnection;.access$2600:(Lokhttp3/internal/framed/FramedConnection;ILjava/util/List;)V` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L243bf4.  call `pushRequestLater`(v0, v1, v2) @signature `Lokhttp3/internal/framed/FramedConnection;.pushRequestLater:(ILjava/util/List;)V` @kind direct;
+  #L243bfa.  return @kind void;
+}
+procedure `okhttp3.internal.framed.PushObserver` `access$2700`(`okhttp3.internal.framed.FramedConnection` v1 @kind object @name `x0`) @signature `Lokhttp3/internal/framed/FramedConnection;.access$2700:(Lokhttp3/internal/framed/FramedConnection;)Lokhttp3/internal/framed/PushObserver;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+    v0;
+
+  #L243c0c.  v0:= v1.`okhttp3.internal.framed.FramedConnection.pushObserver` @type ^`okhttp3.internal.framed.PushObserver` @kind object;
+  #L243c10.  return v0 @kind object;
+}
+procedure `java.util.Set` `access$2800`(`okhttp3.internal.framed.FramedConnection` v1 @kind object @name `x0`) @signature `Lokhttp3/internal/framed/FramedConnection;.access$2800:(Lokhttp3/internal/framed/FramedConnection;)Ljava/util/Set;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+    v0;
+
+  #L243c24.  v0:= v1.`okhttp3.internal.framed.FramedConnection.currentPushRequests` @type ^`java.util.Set` @kind object;
+  #L243c28.  return v0 @kind object;
+}
+procedure `void` `access$900`(`okhttp3.internal.framed.FramedConnection` v0 @kind object @name `x0`, `boolean` v1 @name `x1`, `int` v2 @name `x2`, `int` v3 @name `x3`, `okhttp3.internal.framed.Ping` v4 @kind object @name `x4`) @signature `Lokhttp3/internal/framed/FramedConnection;.access$900:(Lokhttp3/internal/framed/FramedConnection;ZIILokhttp3/internal/framed/Ping;)V` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L243c3c.  call `writePing`(v0, v1, v2, v3, v4) @signature `Lokhttp3/internal/framed/FramedConnection;.writePing:(ZIILokhttp3/internal/framed/Ping;)V` @kind direct;
+  #L243c42.  return @kind void;
+}
+procedure `void` `close`(`okhttp3.internal.framed.FramedConnection` v10 @kind this, `okhttp3.internal.framed.ErrorCode` v11 @kind object @name `connectionCode`, `okhttp3.internal.framed.ErrorCode` v12 @kind object @name `streamCode`) @signature `Lokhttp3/internal/framed/FramedConnection;.close:(Lokhttp3/internal/framed/ErrorCode;Lokhttp3/internal/framed/ErrorCode;)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+    v9;
+
+  #L243c54.  v8:= 0I;
+  #L243c56.  v7:= `@@okhttp3.internal.framed.FramedConnection.$assertionsDisabled` @type ^`boolean` @kind boolean;
+  #L243c5a.  if v7 != 0 then goto L243c76;
+  #L243c5e.  call temp:= `holdsLock`(v10) @signature `Ljava/lang/Thread;.holdsLock:(Ljava/lang/Object;)Z` @kind static;
+  #L243c64.  v7:= temp;
+  #L243c66.  if v7 == 0 then goto L243c76;
+  #L243c6a.  v7:= new `java.lang.AssertionError`;
+  #L243c6e.  call `<init>`(v7) @signature `Ljava/lang/AssertionError;.<init>:()V` @kind direct;
+  #L243c74.  throw v7;
+  #L243c76.  v6:= 0I;
+  #L243c78.  call `shutdown`(v10, v11) @signature `Lokhttp3/internal/framed/FramedConnection;.shutdown:(Lokhttp3/internal/framed/ErrorCode;)V` @kind virtual;
+  #L243c7e.  v5:= 0I;
+  #L243c80.  v3:= 0I;
+  #L243c82.  @monitorenter v10
+  #L243c84.  v7:= v10.`okhttp3.internal.framed.FramedConnection.streams` @type ^`java.util.Map` @kind object;
+  #L243c88.  call temp:= `isEmpty`(v7) @signature `Ljava/util/Map;.isEmpty:()Z` @kind interface;
+  #L243c8e.  v7:= temp;
+  #L243c90.  if v7 != 0 then goto L243cd2;
+  #L243c94.  v7:= v10.`okhttp3.internal.framed.FramedConnection.streams` @type ^`java.util.Map` @kind object;
+  #L243c98.  call temp:= `values`(v7) @signature `Ljava/util/Map;.values:()Ljava/util/Collection;` @kind interface;
+  #L243c9e.  v7:= temp @kind object;
+  #L243ca0.  v9:= v10.`okhttp3.internal.framed.FramedConnection.streams` @type ^`java.util.Map` @kind object;
+  #L243ca4.  call temp:= `size`(v9) @signature `Ljava/util/Map;.size:()I` @kind interface;
+  #L243caa.  v9:= temp;
+  #L243cac.  v9:= new `okhttp3.internal.framed.FramedStream`[v9];
+  #L243cb0.  call temp:= `toArray`(v7, v9) @signature `Ljava/util/Collection;.toArray:([Ljava/lang/Object;)[Ljava/lang/Object;` @kind interface;
+  #L243cb6.  v7:= temp @kind object;
+  #L243cb8.  v0:= v7 @kind object;
+  #L243cba.  v0:= (`okhttp3.internal.framed.FramedStream`[]) v0 @kind object;
+  #L243cbe.  v5:= v0 @kind object;
+  #L243cc0.  v7:= v10.`okhttp3.internal.framed.FramedConnection.streams` @type ^`java.util.Map` @kind object;
+  #L243cc4.  call `clear`(v7) @signature `Ljava/util/Map;.clear:()V` @kind interface;
+  #L243cca.  v7:= 0I;
+  #L243ccc.  call `setIdle`(v10, v7) @signature `Lokhttp3/internal/framed/FramedConnection;.setIdle:(Z)V` @kind direct;
+  #L243cd2.  v7:= v10.`okhttp3.internal.framed.FramedConnection.pings` @type ^`java.util.Map` @kind object;
+  #L243cd6.  if v7 == 0 then goto L243d0c;
+  #L243cda.  v7:= v10.`okhttp3.internal.framed.FramedConnection.pings` @type ^`java.util.Map` @kind object;
+  #L243cde.  call temp:= `values`(v7) @signature `Ljava/util/Map;.values:()Ljava/util/Collection;` @kind interface;
+  #L243ce4.  v7:= temp @kind object;
+  #L243ce6.  v9:= v10.`okhttp3.internal.framed.FramedConnection.pings` @type ^`java.util.Map` @kind object;
+  #L243cea.  call temp:= `size`(v9) @signature `Ljava/util/Map;.size:()I` @kind interface;
+  #L243cf0.  v9:= temp;
+  #L243cf2.  v9:= new `okhttp3.internal.framed.Ping`[v9];
+  #L243cf6.  call temp:= `toArray`(v7, v9) @signature `Ljava/util/Collection;.toArray:([Ljava/lang/Object;)[Ljava/lang/Object;` @kind interface;
+  #L243cfc.  v7:= temp @kind object;
+  #L243cfe.  v0:= v7 @kind object;
+  #L243d00.  v0:= (`okhttp3.internal.framed.Ping`[]) v0 @kind object;
+  #L243d04.  v3:= v0 @kind object;
+  #L243d06.  v7:= 0I;
+  #L243d08.  v10.`okhttp3.internal.framed.FramedConnection.pings` @type ^`java.util.Map` := v7 @kind object;
+  #L243d0c.  @monitorexit v10
+  #L243d0e.  if v5 == 0 then goto L243d40;
+  #L243d12.  v9:= length @variable v5;
+  #L243d14.  v7:= v8;
+  #L243d16.  if v7 >= v9 then goto L243d40;
+  #L243d1a.  v4:= v5[v7] @kind object;
+  #L243d1e.  call `close`(v4, v12) @signature `Lokhttp3/internal/framed/FramedStream;.close:(Lokhttp3/internal/framed/ErrorCode;)V` @kind virtual;
+  #L243d24.  v7:= v7 + 1;
+  #L243d28.  goto L243d16;
+  #L243d2a.  v1:= Exception @type ^`java.io.IOException` @kind object;
+  #L243d2c.  v6:= v1 @kind object;
+  #L243d2e.  goto L243c7e;
+  #L243d30.  v7:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L243d32.  @monitorexit v10
+  #L243d34.  throw v7;
+  #L243d36.  v1:= Exception @type ^`java.io.IOException` @kind object;
+  #L243d38.  if v6 == 0 then goto L243d24;
+  #L243d3c.  v6:= v1 @kind object;
+  #L243d3e.  goto L243d24;
+  #L243d40.  if v3 == 0 then goto L243d5c;
+  #L243d44.  v9:= length @variable v3;
+  #L243d46.  v7:= v8;
+  #L243d48.  if v7 >= v9 then goto L243d5c;
+  #L243d4c.  v2:= v3[v7] @kind object;
+  #L243d50.  call `cancel`(v2) @signature `Lokhttp3/internal/framed/Ping;.cancel:()V` @kind virtual;
+  #L243d56.  v7:= v7 + 1;
+  #L243d5a.  goto L243d48;
+  #L243d5c.  v7:= v10.`okhttp3.internal.framed.FramedConnection.frameWriter` @type ^`okhttp3.internal.framed.FrameWriter` @kind object;
+  #L243d60.  call `close`(v7) @signature `Lokhttp3/internal/framed/FrameWriter;.close:()V` @kind interface;
+  #L243d66.  v7:= v10.`okhttp3.internal.framed.FramedConnection.socket` @type ^`java.net.Socket` @kind object;
+  #L243d6a.  call `close`(v7) @signature `Ljava/net/Socket;.close:()V` @kind virtual;
+  #L243d70.  if v6 == 0 then goto L243d86;
+  #L243d74.  throw v6;
+  #L243d76.  v1:= Exception @type ^`java.io.IOException` @kind object;
+  #L243d78.  if v6 != 0 then goto L243d66;
+  #L243d7c.  v6:= v1 @kind object;
+  #L243d7e.  goto L243d66;
+  #L243d80.  v1:= Exception @type ^`java.io.IOException` @kind object;
+  #L243d82.  v6:= v1 @kind object;
+  #L243d84.  goto L243d70;
+  #L243d86.  return @kind void;
+  catch `java.io.IOException` @[L243c78..L243c7e] goto L243d2a;
+  catch `java.lang.Throwable` @[L243c84..L243d0e] goto L243d30;
+  catch `java.io.IOException` @[L243d1e..L243d24] goto L243d36;
+  catch `java.lang.Throwable` @[L243d32..L243d34] goto L243d30;
+  catch `java.io.IOException` @[L243d5c..L243d66] goto L243d76;
+  catch `java.io.IOException` @[L243d66..L243d70] goto L243d80;
+}
+procedure `okhttp3.internal.framed.FramedStream` `newStream`(`okhttp3.internal.framed.FramedConnection` v12 @kind this, `int` v13 @name `associatedStreamId`, `java.util.List` v14 @kind object, `boolean` v15 @name `out`, `boolean` v16 @name `in`) @signature `Lokhttp3/internal/framed/FramedConnection;.newStream:(ILjava/util/List;ZZ)Lokhttp3/internal/framed/FramedStream;` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+    v9;
+    v10;
+    v11;
+
+  #L243de0.  if v15 != 0 then goto L243e18;
+  #L243de4.  v3:= 1I;
+  #L243de6.  if v16 != 0 then goto L243e1c;
+  #L243dea.  v4:= 1I;
+  #L243dec.  v9:= v12.`okhttp3.internal.framed.FramedConnection.frameWriter` @type ^`okhttp3.internal.framed.FrameWriter` @kind object;
+  #L243df0.  @monitorenter v9
+  #L243df2.  @monitorenter v12
+  #L243df4.  v2:= v12.`okhttp3.internal.framed.FramedConnection.shutdown` @type ^`boolean` @kind boolean;
+  #L243df8.  if v2 == 0 then goto L243e20;
+  #L243dfc.  v2:= new `java.io.IOException`;
+  #L243e00.  v5:= "shutdown" @kind object;
+  #L243e04.  call `<init>`(v2, v5) @signature `Ljava/io/IOException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L243e0a.  throw v2;
+  #L243e0c.  v2:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L243e0e.  @monitorexit v12
+  #L243e10.  throw v2;
+  #L243e12.  v2:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L243e14.  @monitorexit v9
+  #L243e16.  throw v2;
+  #L243e18.  v3:= 0I;
+  #L243e1a.  goto L243de6;
+  #L243e1c.  v4:= 0I;
+  #L243e1e.  goto L243dec;
+  #L243e20.  v1:= v12.`okhttp3.internal.framed.FramedConnection.nextStreamId` @type ^`int`;
+  #L243e24.  v2:= v12.`okhttp3.internal.framed.FramedConnection.nextStreamId` @type ^`int`;
+  #L243e28.  v2:= v2 + 2;
+  #L243e2c.  v12.`okhttp3.internal.framed.FramedConnection.nextStreamId` @type ^`int` := v2;
+  #L243e30.  v0:= new `okhttp3.internal.framed.FramedStream`;
+  #L243e34.  v2:= v12 @kind object;
+  #L243e36.  v5:= v14 @kind object;
+  #L243e38.  call `<init>`(v0, v1, v2, v3, v4, v5) @signature `Lokhttp3/internal/framed/FramedStream;.<init>:(ILokhttp3/internal/framed/FramedConnection;ZZLjava/util/List;)V` @kind direct;
+  #L243e3e.  if v15 == 0 then goto L243e62;
+  #L243e42.  v6:= v12.`okhttp3.internal.framed.FramedConnection.bytesLeftInWriteWindow` @type ^`long` @kind wide;
+  #L243e46.  v10:= 0L;
+  #L243e4a.  v2:= lcmp(v6, v10);
+  #L243e4e.  if v2 == 0 then goto L243e62;
+  #L243e52.  v6:= v0.`okhttp3.internal.framed.FramedStream.bytesLeftInWriteWindow` @type ^`long` @kind wide;
+  #L243e56.  v10:= 0L;
+  #L243e5a.  v2:= lcmp(v6, v10);
+  #L243e5e.  if v2 != 0 then goto L243eb2;
+  #L243e62.  v8:= 1I;
+  #L243e64.  call temp:= `isOpen`(v0) @signature `Lokhttp3/internal/framed/FramedStream;.isOpen:()Z` @kind virtual;
+  #L243e6a.  v2:= temp;
+  #L243e6c.  if v2 == 0 then goto L243e8a;
+  #L243e70.  v2:= v12.`okhttp3.internal.framed.FramedConnection.streams` @type ^`java.util.Map` @kind object;
+  #L243e74.  call temp:= `valueOf`(v1) @signature `Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer;` @kind static;
+  #L243e7a.  v5:= temp @kind object;
+  #L243e7c.  call temp:= `put`(v2, v5, v0) @signature `Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L243e82.  v2:= 0I;
+  #L243e84.  call `setIdle`(v12, v2) @signature `Lokhttp3/internal/framed/FramedConnection;.setIdle:(Z)V` @kind direct;
+  #L243e8a.  @monitorexit v12
+  #L243e8c.  if v13 != 0 then goto L243eb6;
+  #L243e90.  v2:= v12.`okhttp3.internal.framed.FramedConnection.frameWriter` @type ^`okhttp3.internal.framed.FrameWriter` @kind object;
+  #L243e94.  v5:= v1;
+  #L243e96.  v6:= v13;
+  #L243e98.  v7:= v14 @kind object;
+  #L243e9a.  call `synStream`(v2, v3, v4, v5, v6, v7) @signature `Lokhttp3/internal/framed/FrameWriter;.synStream:(ZZIILjava/util/List;)V` @kind interface;
+  #L243ea0.  @monitorexit v9
+  #L243ea2.  if v8 == 0 then goto L243eb0;
+  #L243ea6.  v2:= v12.`okhttp3.internal.framed.FramedConnection.frameWriter` @type ^`okhttp3.internal.framed.FrameWriter` @kind object;
+  #L243eaa.  call `flush`(v2) @signature `Lokhttp3/internal/framed/FrameWriter;.flush:()V` @kind interface;
+  #L243eb0.  return v0 @kind object;
+  #L243eb2.  v8:= 0I;
+  #L243eb4.  goto L243e64;
+  #L243eb6.  v2:= v12.`okhttp3.internal.framed.FramedConnection.client` @type ^`boolean` @kind boolean;
+  #L243eba.  if v2 == 0 then goto L243ece;
+  #L243ebe.  v2:= new `java.lang.IllegalArgumentException`;
+  #L243ec2.  v5:= "client streams shouldn't have associated stream IDs" @kind object;
+  #L243ec6.  call `<init>`(v2, v5) @signature `Ljava/lang/IllegalArgumentException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L243ecc.  throw v2;
+  #L243ece.  v2:= v12.`okhttp3.internal.framed.FramedConnection.frameWriter` @type ^`okhttp3.internal.framed.FrameWriter` @kind object;
+  #L243ed2.  call `pushPromise`(v2, v13, v1, v14) @signature `Lokhttp3/internal/framed/FrameWriter;.pushPromise:(IILjava/util/List;)V` @kind interface;
+  #L243ed8.  goto L243ea0;
+  catch `java.lang.Throwable` @[L243df2..L243df4] goto L243e12;
+  catch `java.lang.Throwable` @[L243df4..L243e10] goto L243e0c;
+  catch `java.lang.Throwable` @[L243e10..L243e16] goto L243e12;
+  catch `java.lang.Throwable` @[L243e20..L243e8c] goto L243e0c;
+  catch `java.lang.Throwable` @[L243e90..L243ea2] goto L243e12;
+  catch `java.lang.Throwable` @[L243eb6..L243ed8] goto L243e12;
+}
+procedure `void` `pushDataLater`(`okhttp3.internal.framed.FramedConnection` v9 @kind this, `int` v10 @name `streamId`, `okio.BufferedSource` v11 @kind object @name `source`, `int` v12 @name `byteCount`, `boolean` v13 @name `inFinished`) @signature `Lokhttp3/internal/framed/FramedConnection;.pushDataLater:(ILokio/BufferedSource;IZ)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+
+  #L243f24.  v5:= new `okio.Buffer`;
+  #L243f28.  call `<init>`(v5) @signature `Lokio/Buffer;.<init>:()V` @kind direct;
+  #L243f2e.  v0:= (`long`) v12 @kind i2l;
+  #L243f30.  call `require`(v11, v0) @signature `Lokio/BufferedSource;.require:(J)V` @kind interface;
+  #L243f36.  v0:= (`long`) v12 @kind i2l;
+  #L243f38.  call temp:= `read`(v11, v5, v0) @signature `Lokio/BufferedSource;.read:(Lokio/Buffer;J)J` @kind interface;
+  #L243f3e.  call temp:= `size`(v5) @signature `Lokio/Buffer;.size:()J` @kind virtual;
+  #L243f44.  v0:= temp @kind wide;
+  #L243f46.  v2:= (`long`) v12 @kind i2l;
+  #L243f48.  v0:= lcmp(v0, v2);
+  #L243f4c.  if v0 == 0 then goto L243f92;
+  #L243f50.  v0:= new `java.io.IOException`;
+  #L243f54.  v1:= new `java.lang.StringBuilder`;
+  #L243f58.  call `<init>`(v1) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L243f5e.  call temp:= `size`(v5) @signature `Lokio/Buffer;.size:()J` @kind virtual;
+  #L243f64.  v2:= temp @kind wide;
+  #L243f66.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(J)Ljava/lang/StringBuilder;` @kind virtual;
+  #L243f6c.  v1:= temp @kind object;
+  #L243f6e.  v2:= " != " @kind object;
+  #L243f72.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L243f78.  v1:= temp @kind object;
+  #L243f7a.  call temp:= `append`(v1, v12) @signature `Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder;` @kind virtual;
+  #L243f80.  v1:= temp @kind object;
+  #L243f82.  call temp:= `toString`(v1) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L243f88.  v1:= temp @kind object;
+  #L243f8a.  call `<init>`(v0, v1) @signature `Ljava/io/IOException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L243f90.  throw v0;
+  #L243f92.  v8:= v9.`okhttp3.internal.framed.FramedConnection.pushExecutor` @type ^`java.util.concurrent.ExecutorService` @kind object;
+  #L243f96.  v0:= new `okhttp3.internal.framed.FramedConnection$6`;
+  #L243f9a.  v2:= "OkHttp %s Push Data[%s]" @kind object;
+  #L243f9e.  v1:= 2I;
+  #L243fa0.  v3:= new `java.lang.Object`[v1];
+  #L243fa4.  v1:= 0I;
+  #L243fa6.  v4:= v9.`okhttp3.internal.framed.FramedConnection.hostname` @type ^`java.lang.String` @kind object;
+  #L243faa.  v3[v1]:= v4 @kind object;
+  #L243fae.  v1:= 1I;
+  #L243fb0.  call temp:= `valueOf`(v10) @signature `Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer;` @kind static;
+  #L243fb6.  v4:= temp @kind object;
+  #L243fb8.  v3[v1]:= v4 @kind object;
+  #L243fbc.  v1:= v9 @kind object;
+  #L243fbe.  v4:= v10;
+  #L243fc0.  v6:= v12;
+  #L243fc2.  v7:= v13;
+  #L243fc4.  call `<init>`(v0, v1, v2, v3, v4, v5, v6, v7) @signature `Lokhttp3/internal/framed/FramedConnection$6;.<init>:(Lokhttp3/internal/framed/FramedConnection;Ljava/lang/String;[Ljava/lang/Object;ILokio/Buffer;IZ)V` @kind direct;
+  #L243fca.  call `execute`(v8, v0) @signature `Ljava/util/concurrent/ExecutorService;.execute:(Ljava/lang/Runnable;)V` @kind interface;
+  #L243fd0.  return @kind void;
+}
+procedure `void` `pushHeadersLater`(`okhttp3.internal.framed.FramedConnection` v8 @kind this, `int` v9 @name `streamId`, `java.util.List` v10 @kind object, `boolean` v11 @name `inFinished`) @signature `Lokhttp3/internal/framed/FramedConnection;.pushHeadersLater:(ILjava/util/List;Z)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+
+  #L243fe4.  v7:= v8.`okhttp3.internal.framed.FramedConnection.pushExecutor` @type ^`java.util.concurrent.ExecutorService` @kind object;
+  #L243fe8.  v0:= new `okhttp3.internal.framed.FramedConnection$5`;
+  #L243fec.  v2:= "OkHttp %s Push Headers[%s]" @kind object;
+  #L243ff0.  v1:= 2I;
+  #L243ff2.  v3:= new `java.lang.Object`[v1];
+  #L243ff6.  v1:= 0I;
+  #L243ff8.  v4:= v8.`okhttp3.internal.framed.FramedConnection.hostname` @type ^`java.lang.String` @kind object;
+  #L243ffc.  v3[v1]:= v4 @kind object;
+  #L244000.  v1:= 1I;
+  #L244002.  call temp:= `valueOf`(v9) @signature `Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer;` @kind static;
+  #L244008.  v4:= temp @kind object;
+  #L24400a.  v3[v1]:= v4 @kind object;
+  #L24400e.  v1:= v8 @kind object;
+  #L244010.  v4:= v9;
+  #L244012.  v5:= v10 @kind object;
+  #L244014.  v6:= v11;
+  #L244016.  call `<init>`(v0, v1, v2, v3, v4, v5, v6) @signature `Lokhttp3/internal/framed/FramedConnection$5;.<init>:(Lokhttp3/internal/framed/FramedConnection;Ljava/lang/String;[Ljava/lang/Object;ILjava/util/List;Z)V` @kind direct;
+  #L24401c.  call `execute`(v7, v0) @signature `Ljava/util/concurrent/ExecutorService;.execute:(Ljava/lang/Runnable;)V` @kind interface;
+  #L244022.  return @kind void;
+}
+procedure `void` `pushRequestLater`(`okhttp3.internal.framed.FramedConnection` v7 @kind this, `int` v8 @name `streamId`, `java.util.List` v9 @kind object) @signature `Lokhttp3/internal/framed/FramedConnection;.pushRequestLater:(ILjava/util/List;)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+
+  #L244034.  @monitorenter v7
+  #L244036.  v0:= v7.`okhttp3.internal.framed.FramedConnection.currentPushRequests` @type ^`java.util.Set` @kind object;
+  #L24403a.  call temp:= `valueOf`(v8) @signature `Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer;` @kind static;
+  #L244040.  v1:= temp @kind object;
+  #L244042.  call temp:= `contains`(v0, v1) @signature `Ljava/util/Set;.contains:(Ljava/lang/Object;)Z` @kind interface;
+  #L244048.  v0:= temp;
+  #L24404a.  if v0 == 0 then goto L24405c;
+  #L24404e.  v0:= `@@okhttp3.internal.framed.ErrorCode.PROTOCOL_ERROR` @type ^`okhttp3.internal.framed.ErrorCode` @kind object;
+  #L244052.  call `writeSynResetLater`(v7, v8, v0) @signature `Lokhttp3/internal/framed/FramedConnection;.writeSynResetLater:(ILokhttp3/internal/framed/ErrorCode;)V` @kind virtual;
+  #L244058.  @monitorexit v7
+  #L24405a.  return @kind void;
+  #L24405c.  v0:= v7.`okhttp3.internal.framed.FramedConnection.currentPushRequests` @type ^`java.util.Set` @kind object;
+  #L244060.  call temp:= `valueOf`(v8) @signature `Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer;` @kind static;
+  #L244066.  v1:= temp @kind object;
+  #L244068.  call temp:= `add`(v0, v1) @signature `Ljava/util/Set;.add:(Ljava/lang/Object;)Z` @kind interface;
+  #L24406e.  @monitorexit v7
+  #L244070.  v6:= v7.`okhttp3.internal.framed.FramedConnection.pushExecutor` @type ^`java.util.concurrent.ExecutorService` @kind object;
+  #L244074.  v0:= new `okhttp3.internal.framed.FramedConnection$4`;
+  #L244078.  v2:= "OkHttp %s Push Request[%s]" @kind object;
+  #L24407c.  v1:= 2I;
+  #L24407e.  v3:= new `java.lang.Object`[v1];
+  #L244082.  v1:= 0I;
+  #L244084.  v4:= v7.`okhttp3.internal.framed.FramedConnection.hostname` @type ^`java.lang.String` @kind object;
+  #L244088.  v3[v1]:= v4 @kind object;
+  #L24408c.  v1:= 1I;
+  #L24408e.  call temp:= `valueOf`(v8) @signature `Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer;` @kind static;
+  #L244094.  v4:= temp @kind object;
+  #L244096.  v3[v1]:= v4 @kind object;
+  #L24409a.  v1:= v7 @kind object;
+  #L24409c.  v4:= v8;
+  #L24409e.  v5:= v9 @kind object;
+  #L2440a0.  call `<init>`(v0, v1, v2, v3, v4, v5) @signature `Lokhttp3/internal/framed/FramedConnection$4;.<init>:(Lokhttp3/internal/framed/FramedConnection;Ljava/lang/String;[Ljava/lang/Object;ILjava/util/List;)V` @kind direct;
+  #L2440a6.  call `execute`(v6, v0) @signature `Ljava/util/concurrent/ExecutorService;.execute:(Ljava/lang/Runnable;)V` @kind interface;
+  #L2440ac.  goto L24405a;
+  #L2440ae.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L2440b0.  @monitorexit v7
+  #L2440b2.  throw v0;
+  catch `java.lang.Throwable` @[L244036..L244070] goto L2440ae;
+  catch `java.lang.Throwable` @[L2440b0..L2440b2] goto L2440ae;
+}
+procedure `void` `pushResetLater`(`okhttp3.internal.framed.FramedConnection` v7 @kind this, `int` v8 @name `streamId`, `okhttp3.internal.framed.ErrorCode` v9 @kind object @name `errorCode`) @signature `Lokhttp3/internal/framed/FramedConnection;.pushResetLater:(ILokhttp3/internal/framed/ErrorCode;)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+
+  #L2440d8.  v6:= v7.`okhttp3.internal.framed.FramedConnection.pushExecutor` @type ^`java.util.concurrent.ExecutorService` @kind object;
+  #L2440dc.  v0:= new `okhttp3.internal.framed.FramedConnection$7`;
+  #L2440e0.  v2:= "OkHttp %s Push Reset[%s]" @kind object;
+  #L2440e4.  v1:= 2I;
+  #L2440e6.  v3:= new `java.lang.Object`[v1];
+  #L2440ea.  v1:= 0I;
+  #L2440ec.  v4:= v7.`okhttp3.internal.framed.FramedConnection.hostname` @type ^`java.lang.String` @kind object;
+  #L2440f0.  v3[v1]:= v4 @kind object;
+  #L2440f4.  v1:= 1I;
+  #L2440f6.  call temp:= `valueOf`(v8) @signature `Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer;` @kind static;
+  #L2440fc.  v4:= temp @kind object;
+  #L2440fe.  v3[v1]:= v4 @kind object;
+  #L244102.  v1:= v7 @kind object;
+  #L244104.  v4:= v8;
+  #L244106.  v5:= v9 @kind object;
+  #L244108.  call `<init>`(v0, v1, v2, v3, v4, v5) @signature `Lokhttp3/internal/framed/FramedConnection$7;.<init>:(Lokhttp3/internal/framed/FramedConnection;Ljava/lang/String;[Ljava/lang/Object;ILokhttp3/internal/framed/ErrorCode;)V` @kind direct;
+  #L24410e.  call `execute`(v6, v0) @signature `Ljava/util/concurrent/ExecutorService;.execute:(Ljava/lang/Runnable;)V` @kind interface;
+  #L244114.  return @kind void;
+}
+procedure `boolean` `pushedStream`(`okhttp3.internal.framed.FramedConnection` v2 @kind this, `int` v3 @name `streamId`) @signature `Lokhttp3/internal/framed/FramedConnection;.pushedStream:(I)Z` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+
+  #L244128.  v0:= v2.`okhttp3.internal.framed.FramedConnection.protocol` @type ^`okhttp3.Protocol` @kind object;
+  #L24412c.  v1:= `@@okhttp3.Protocol.HTTP_2` @type ^`okhttp3.Protocol` @kind object;
+  #L244130.  if v0 != v1 then goto L244144;
+  #L244134.  if v3 == 0 then goto L244144;
+  #L244138.  v0:= v3 ^& 1;
+  #L24413c.  if v0 != 0 then goto L244144;
+  #L244140.  v0:= 1I;
+  #L244142.  return v0;
+  #L244144.  v0:= 0I;
+  #L244146.  goto L244142;
+}
+procedure `okhttp3.internal.framed.Ping` `removePing`(`okhttp3.internal.framed.FramedConnection` v2 @kind this, `int` v3 @name `id`) @signature `Lokhttp3/internal/framed/FramedConnection;.removePing:(I)Lokhttp3/internal/framed/Ping;` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+
+  #L244158.  @monitorenter v2
+  #L24415a.  v0:= v2.`okhttp3.internal.framed.FramedConnection.pings` @type ^`java.util.Map` @kind object;
+  #L24415e.  if v0 == 0 then goto L24417e;
+  #L244162.  v0:= v2.`okhttp3.internal.framed.FramedConnection.pings` @type ^`java.util.Map` @kind object;
+  #L244166.  call temp:= `valueOf`(v3) @signature `Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer;` @kind static;
+  #L24416c.  v1:= temp @kind object;
+  #L24416e.  call temp:= `remove`(v0, v1) @signature `Ljava/util/Map;.remove:(Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L244174.  v0:= temp @kind object;
+  #L244176.  v0:= (`okhttp3.internal.framed.Ping`) v0 @kind object;
+  #L24417a.  @monitorexit v2
+  #L24417c.  return v0 @kind object;
+  #L24417e.  v0:= 0I;
+  #L244180.  goto L24417a;
+  #L244182.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L244184.  @monitorexit v2
+  #L244186.  throw v0;
+  catch `java.lang.Throwable` @[L24415a..L24417a] goto L244182;
+}
+procedure `void` `setIdle`(`okhttp3.internal.framed.FramedConnection` v2 @kind this, `boolean` v3 @name `value`) @signature `Lokhttp3/internal/framed/FramedConnection;.setIdle:(Z)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+
+  #L2441a4.  @monitorenter v2
+  #L2441a6.  if v3 == 0 then goto L2441ba;
+  #L2441aa.  call temp:= `nanoTime`() @signature `Ljava/lang/System;.nanoTime:()J` @kind static;
+  #L2441b0.  v0:= temp @kind wide;
+  #L2441b2.  v2.`okhttp3.internal.framed.FramedConnection.idleStartTimeNs` @type ^`long` := v0 @kind wide;
+  #L2441b6.  @monitorexit v2
+  #L2441b8.  return @kind void;
+  #L2441ba.  v0:= 9223372036854775807L;
+  #L2441c4.  goto L2441b2;
+  #L2441c6.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L2441c8.  @monitorexit v2
+  #L2441ca.  throw v0;
+  catch `java.lang.Throwable` @[L2441aa..L2441b6] goto L2441c6;
+}
+procedure `void` `writePing`(`okhttp3.internal.framed.FramedConnection` v2 @kind this, `boolean` v3 @name `reply`, `int` v4 @name `payload1`, `int` v5 @name `payload2`, `okhttp3.internal.framed.Ping` v6 @kind object @name `ping`) @signature `Lokhttp3/internal/framed/FramedConnection;.writePing:(ZIILokhttp3/internal/framed/Ping;)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+
+  #L2441e8.  v1:= v2.`okhttp3.internal.framed.FramedConnection.frameWriter` @type ^`okhttp3.internal.framed.FrameWriter` @kind object;
+  #L2441ec.  @monitorenter v1
+  #L2441ee.  if v6 == 0 then goto L2441f8;
+  #L2441f2.  call `send`(v6) @signature `Lokhttp3/internal/framed/Ping;.send:()V` @kind virtual;
+  #L2441f8.  v0:= v2.`okhttp3.internal.framed.FramedConnection.frameWriter` @type ^`okhttp3.internal.framed.FrameWriter` @kind object;
+  #L2441fc.  call `ping`(v0, v3, v4, v5) @signature `Lokhttp3/internal/framed/FrameWriter;.ping:(ZII)V` @kind interface;
+  #L244202.  @monitorexit v1
+  #L244204.  return @kind void;
+  #L244206.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L244208.  @monitorexit v1
+  #L24420a.  throw v0;
+  catch `java.lang.Throwable` @[L2441f2..L24420a] goto L244206;
+}
+procedure `void` `writePingLater`(`okhttp3.internal.framed.FramedConnection` v9 @kind this, `boolean` v10 @name `reply`, `int` v11 @name `payload1`, `int` v12 @name `payload2`, `okhttp3.internal.framed.Ping` v13 @kind object @name `ping`) @signature `Lokhttp3/internal/framed/FramedConnection;.writePingLater:(ZIILokhttp3/internal/framed/Ping;)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+
+  #L244228.  v8:= `@@okhttp3.internal.framed.FramedConnection.executor` @type ^`java.util.concurrent.ExecutorService` @kind object;
+  #L24422c.  v0:= new `okhttp3.internal.framed.FramedConnection$3`;
+  #L244230.  v2:= "OkHttp %s ping %08x%08x" @kind object;
+  #L244234.  v1:= 3I;
+  #L244236.  v3:= new `java.lang.Object`[v1];
+  #L24423a.  v1:= 0I;
+  #L24423c.  v4:= v9.`okhttp3.internal.framed.FramedConnection.hostname` @type ^`java.lang.String` @kind object;
+  #L244240.  v3[v1]:= v4 @kind object;
+  #L244244.  v1:= 1I;
+  #L244246.  call temp:= `valueOf`(v11) @signature `Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer;` @kind static;
+  #L24424c.  v4:= temp @kind object;
+  #L24424e.  v3[v1]:= v4 @kind object;
+  #L244252.  v1:= 2I;
+  #L244254.  call temp:= `valueOf`(v12) @signature `Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer;` @kind static;
+  #L24425a.  v4:= temp @kind object;
+  #L24425c.  v3[v1]:= v4 @kind object;
+  #L244260.  v1:= v9 @kind object;
+  #L244262.  v4:= v10;
+  #L244264.  v5:= v11;
+  #L244266.  v6:= v12;
+  #L244268.  v7:= v13 @kind object;
+  #L24426a.  call `<init>`(v0, v1, v2, v3, v4, v5, v6, v7) @signature `Lokhttp3/internal/framed/FramedConnection$3;.<init>:(Lokhttp3/internal/framed/FramedConnection;Ljava/lang/String;[Ljava/lang/Object;ZIILokhttp3/internal/framed/Ping;)V` @kind direct;
+  #L244270.  call `execute`(v8, v0) @signature `Ljava/util/concurrent/ExecutorService;.execute:(Ljava/lang/Runnable;)V` @kind interface;
+  #L244276.  return @kind void;
+}
+procedure `void` `addBytesToWriteWindow`(`okhttp3.internal.framed.FramedConnection` v3 @kind this, `long` v4 @name `delta`) @signature `Lokhttp3/internal/framed/FramedConnection;.addBytesToWriteWindow:(J)V` @AccessFlag  {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L244288.  v0:= v3.`okhttp3.internal.framed.FramedConnection.bytesLeftInWriteWindow` @type ^`long` @kind wide;
+  #L24428c.  v0:= v0 + v4 @kind long;
+  #L24428e.  v3.`okhttp3.internal.framed.FramedConnection.bytesLeftInWriteWindow` @type ^`long` := v0 @kind wide;
+  #L244292.  v0:= 0L;
+  #L244296.  v0:= lcmp(v4, v0);
+  #L24429a.  if v0 <= 0 then goto L2442a4;
+  #L24429e.  call `notifyAll`(v3) @signature `Ljava/lang/Object;.notifyAll:()V` @kind virtual;
+  #L2442a4.  return @kind void;
+}
+procedure `void` `close`(`okhttp3.internal.framed.FramedConnection` v2 @kind this) @signature `Lokhttp3/internal/framed/FramedConnection;.close:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L2442b8.  v0:= `@@okhttp3.internal.framed.ErrorCode.NO_ERROR` @type ^`okhttp3.internal.framed.ErrorCode` @kind object;
+  #L2442bc.  v1:= `@@okhttp3.internal.framed.ErrorCode.CANCEL` @type ^`okhttp3.internal.framed.ErrorCode` @kind object;
+  #L2442c0.  call `close`(v2, v0, v1) @signature `Lokhttp3/internal/framed/FramedConnection;.close:(Lokhttp3/internal/framed/ErrorCode;Lokhttp3/internal/framed/ErrorCode;)V` @kind direct;
+  #L2442c6.  return @kind void;
+}
+procedure `void` `flush`(`okhttp3.internal.framed.FramedConnection` v1 @kind this) @signature `Lokhttp3/internal/framed/FramedConnection;.flush:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L2442d8.  v0:= v1.`okhttp3.internal.framed.FramedConnection.frameWriter` @type ^`okhttp3.internal.framed.FrameWriter` @kind object;
+  #L2442dc.  call `flush`(v0) @signature `Lokhttp3/internal/framed/FrameWriter;.flush:()V` @kind interface;
+  #L2442e2.  return @kind void;
+}
+procedure `long` `getIdleStartTimeNs`(`okhttp3.internal.framed.FramedConnection` v2 @kind this) @signature `Lokhttp3/internal/framed/FramedConnection;.getIdleStartTimeNs:()J` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L2442f4.  @monitorenter v2
+  #L2442f6.  v0:= v2.`okhttp3.internal.framed.FramedConnection.idleStartTimeNs` @type ^`long` @kind wide;
+  #L2442fa.  @monitorexit v2
+  #L2442fc.  return v0 @kind wide;
+  #L2442fe.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L244300.  @monitorexit v2
+  #L244302.  throw v0;
+  catch `java.lang.Throwable` @[L2442f6..L2442fa] goto L2442fe;
+}
+procedure `okhttp3.Protocol` `getProtocol`(`okhttp3.internal.framed.FramedConnection` v1 @kind this) @signature `Lokhttp3/internal/framed/FramedConnection;.getProtocol:()Lokhttp3/Protocol;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L244320.  v0:= v1.`okhttp3.internal.framed.FramedConnection.protocol` @type ^`okhttp3.Protocol` @kind object;
+  #L244324.  return v0 @kind object;
+}
+procedure `okhttp3.internal.framed.FramedStream` `getStream`(`okhttp3.internal.framed.FramedConnection` v2 @kind this, `int` v3 @name `id`) @signature `Lokhttp3/internal/framed/FramedConnection;.getStream:(I)Lokhttp3/internal/framed/FramedStream;` @AccessFlag  {
+    temp;
+    v0;
+    v1;
+
+  #L244338.  @monitorenter v2
+  #L24433a.  v0:= v2.`okhttp3.internal.framed.FramedConnection.streams` @type ^`java.util.Map` @kind object;
+  #L24433e.  call temp:= `valueOf`(v3) @signature `Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer;` @kind static;
+  #L244344.  v1:= temp @kind object;
+  #L244346.  call temp:= `get`(v0, v1) @signature `Ljava/util/Map;.get:(Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L24434c.  v0:= temp @kind object;
+  #L24434e.  v0:= (`okhttp3.internal.framed.FramedStream`) v0 @kind object;
+  #L244352.  @monitorexit v2
+  #L244354.  return v0 @kind object;
+  #L244356.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L244358.  @monitorexit v2
+  #L24435a.  throw v0;
+  catch `java.lang.Throwable` @[L24433a..L244352] goto L244356;
+}
+procedure `boolean` `isIdle`(`okhttp3.internal.framed.FramedConnection` v4 @kind this) @signature `Lokhttp3/internal/framed/FramedConnection;.isIdle:()Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L244378.  @monitorenter v4
+  #L24437a.  v0:= v4.`okhttp3.internal.framed.FramedConnection.idleStartTimeNs` @type ^`long` @kind wide;
+  #L24437e.  v2:= 9223372036854775807L;
+  #L244388.  v0:= lcmp(v0, v2);
+  #L24438c.  if v0 == 0 then goto L244396;
+  #L244390.  v0:= 1I;
+  #L244392.  @monitorexit v4
+  #L244394.  return v0;
+  #L244396.  v0:= 0I;
+  #L244398.  goto L244392;
+  #L24439a.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L24439c.  @monitorexit v4
+  #L24439e.  throw v0;
+  catch `java.lang.Throwable` @[L24437a..L24437e] goto L24439a;
+}
+procedure `int` `maxConcurrentStreams`(`okhttp3.internal.framed.FramedConnection` v2 @kind this) @signature `Lokhttp3/internal/framed/FramedConnection;.maxConcurrentStreams:()I` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L2443bc.  @monitorenter v2
+  #L2443be.  v0:= v2.`okhttp3.internal.framed.FramedConnection.peerSettings` @type ^`okhttp3.internal.framed.Settings` @kind object;
+  #L2443c2.  v1:= 2147483647I;
+  #L2443c8.  call temp:= `getMaxConcurrentStreams`(v0, v1) @signature `Lokhttp3/internal/framed/Settings;.getMaxConcurrentStreams:(I)I` @kind virtual;
+  #L2443ce.  v0:= temp;
+  #L2443d0.  @monitorexit v2
+  #L2443d2.  return v0;
+  #L2443d4.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L2443d6.  @monitorexit v2
+  #L2443d8.  throw v0;
+  catch `java.lang.Throwable` @[L2443be..L2443ce] goto L2443d4;
+}
+procedure `okhttp3.internal.framed.FramedStream` `newStream`(`okhttp3.internal.framed.FramedConnection` v1 @kind this, `java.util.List` v2 @kind object, `boolean` v3 @name `out`, `boolean` v4 @name `in`) @signature `Lokhttp3/internal/framed/FramedConnection;.newStream:(Ljava/util/List;ZZ)Lokhttp3/internal/framed/FramedStream;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L2443f8.  v0:= 0I;
+  #L2443fa.  call temp:= `newStream`(v1, v0, v2, v3, v4) @signature `Lokhttp3/internal/framed/FramedConnection;.newStream:(ILjava/util/List;ZZ)Lokhttp3/internal/framed/FramedStream;` @kind direct;
+  #L244400.  v0:= temp @kind object;
+  #L244402.  return v0 @kind object;
+}
+procedure `int` `openStreamCount`(`okhttp3.internal.framed.FramedConnection` v1 @kind this) @signature `Lokhttp3/internal/framed/FramedConnection;.openStreamCount:()I` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L244414.  @monitorenter v1
+  #L244416.  v0:= v1.`okhttp3.internal.framed.FramedConnection.streams` @type ^`java.util.Map` @kind object;
+  #L24441a.  call temp:= `size`(v0) @signature `Ljava/util/Map;.size:()I` @kind interface;
+  #L244420.  v0:= temp;
+  #L244422.  @monitorexit v1
+  #L244424.  return v0;
+  #L244426.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L244428.  @monitorexit v1
+  #L24442a.  throw v0;
+  catch `java.lang.Throwable` @[L244416..L244420] goto L244426;
+}
+procedure `okhttp3.internal.framed.Ping` `ping`(`okhttp3.internal.framed.FramedConnection` v4 @kind this) @signature `Lokhttp3/internal/framed/FramedConnection;.ping:()Lokhttp3/internal/framed/Ping;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L244448.  v0:= new `okhttp3.internal.framed.Ping`;
+  #L24444c.  call `<init>`(v0) @signature `Lokhttp3/internal/framed/Ping;.<init>:()V` @kind direct;
+  #L244452.  @monitorenter v4
+  #L244454.  v2:= v4.`okhttp3.internal.framed.FramedConnection.shutdown` @type ^`boolean` @kind boolean;
+  #L244458.  if v2 == 0 then goto L244472;
+  #L24445c.  v2:= new `java.io.IOException`;
+  #L244460.  v3:= "shutdown" @kind object;
+  #L244464.  call `<init>`(v2, v3) @signature `Ljava/io/IOException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L24446a.  throw v2;
+  #L24446c.  v2:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L24446e.  @monitorexit v4
+  #L244470.  throw v2;
+  #L244472.  v1:= v4.`okhttp3.internal.framed.FramedConnection.nextPingId` @type ^`int`;
+  #L244476.  v2:= v4.`okhttp3.internal.framed.FramedConnection.nextPingId` @type ^`int`;
+  #L24447a.  v2:= v2 + 2;
+  #L24447e.  v4.`okhttp3.internal.framed.FramedConnection.nextPingId` @type ^`int` := v2;
+  #L244482.  v2:= v4.`okhttp3.internal.framed.FramedConnection.pings` @type ^`java.util.Map` @kind object;
+  #L244486.  if v2 != 0 then goto L244498;
+  #L24448a.  v2:= new `java.util.HashMap`;
+  #L24448e.  call `<init>`(v2) @signature `Ljava/util/HashMap;.<init>:()V` @kind direct;
+  #L244494.  v4.`okhttp3.internal.framed.FramedConnection.pings` @type ^`java.util.Map` := v2 @kind object;
+  #L244498.  v2:= v4.`okhttp3.internal.framed.FramedConnection.pings` @type ^`java.util.Map` @kind object;
+  #L24449c.  call temp:= `valueOf`(v1) @signature `Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer;` @kind static;
+  #L2444a2.  v3:= temp @kind object;
+  #L2444a4.  call temp:= `put`(v2, v3, v0) @signature `Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L2444aa.  @monitorexit v4
+  #L2444ac.  v2:= 0I;
+  #L2444ae.  v3:= 1330343787I;
+  #L2444b4.  call `writePing`(v4, v2, v1, v3, v0) @signature `Lokhttp3/internal/framed/FramedConnection;.writePing:(ZIILokhttp3/internal/framed/Ping;)V` @kind direct;
+  #L2444ba.  return v0 @kind object;
+  catch `java.lang.Throwable` @[L244454..L244470] goto L24446c;
+  catch `java.lang.Throwable` @[L244472..L2444ac] goto L24446c;
+}
+procedure `okhttp3.internal.framed.FramedStream` `pushStream`(`okhttp3.internal.framed.FramedConnection` v2 @kind this, `int` v3 @name `associatedStreamId`, `java.util.List` v4 @kind object, `boolean` v5 @name `out`) @signature `Lokhttp3/internal/framed/FramedConnection;.pushStream:(ILjava/util/List;Z)Lokhttp3/internal/framed/FramedStream;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L2444e0.  v0:= v2.`okhttp3.internal.framed.FramedConnection.client` @type ^`boolean` @kind boolean;
+  #L2444e4.  if v0 == 0 then goto L2444f8;
+  #L2444e8.  v0:= new `java.lang.IllegalStateException`;
+  #L2444ec.  v1:= "Client cannot push requests." @kind object;
+  #L2444f0.  call `<init>`(v0, v1) @signature `Ljava/lang/IllegalStateException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L2444f6.  throw v0;
+  #L2444f8.  v0:= v2.`okhttp3.internal.framed.FramedConnection.protocol` @type ^`okhttp3.Protocol` @kind object;
+  #L2444fc.  v1:= `@@okhttp3.Protocol.HTTP_2` @type ^`okhttp3.Protocol` @kind object;
+  #L244500.  if v0 == v1 then goto L244514;
+  #L244504.  v0:= new `java.lang.IllegalStateException`;
+  #L244508.  v1:= "protocol != HTTP_2" @kind object;
+  #L24450c.  call `<init>`(v0, v1) @signature `Ljava/lang/IllegalStateException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L244512.  throw v0;
+  #L244514.  v0:= 0I;
+  #L244516.  call temp:= `newStream`(v2, v3, v4, v5, v0) @signature `Lokhttp3/internal/framed/FramedConnection;.newStream:(ILjava/util/List;ZZ)Lokhttp3/internal/framed/FramedStream;` @kind direct;
+  #L24451c.  v0:= temp @kind object;
+  #L24451e.  return v0 @kind object;
+}
+procedure `okhttp3.internal.framed.FramedStream` `removeStream`(`okhttp3.internal.framed.FramedConnection` v3 @kind this, `int` v4 @name `streamId`) @signature `Lokhttp3/internal/framed/FramedConnection;.removeStream:(I)Lokhttp3/internal/framed/FramedStream;` @AccessFlag  {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L244530.  @monitorenter v3
+  #L244532.  v1:= v3.`okhttp3.internal.framed.FramedConnection.streams` @type ^`java.util.Map` @kind object;
+  #L244536.  call temp:= `valueOf`(v4) @signature `Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer;` @kind static;
+  #L24453c.  v2:= temp @kind object;
+  #L24453e.  call temp:= `remove`(v1, v2) @signature `Ljava/util/Map;.remove:(Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L244544.  v0:= temp @kind object;
+  #L244546.  v0:= (`okhttp3.internal.framed.FramedStream`) v0 @kind object;
+  #L24454a.  if v0 == 0 then goto L244566;
+  #L24454e.  v1:= v3.`okhttp3.internal.framed.FramedConnection.streams` @type ^`java.util.Map` @kind object;
+  #L244552.  call temp:= `isEmpty`(v1) @signature `Ljava/util/Map;.isEmpty:()Z` @kind interface;
+  #L244558.  v1:= temp;
+  #L24455a.  if v1 == 0 then goto L244566;
+  #L24455e.  v1:= 1I;
+  #L244560.  call `setIdle`(v3, v1) @signature `Lokhttp3/internal/framed/FramedConnection;.setIdle:(Z)V` @kind direct;
+  #L244566.  call `notifyAll`(v3) @signature `Ljava/lang/Object;.notifyAll:()V` @kind virtual;
+  #L24456c.  @monitorexit v3
+  #L24456e.  return v0 @kind object;
+  #L244570.  v1:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L244572.  @monitorexit v3
+  #L244574.  throw v1;
+  catch `java.lang.Throwable` @[L244532..L24456c] goto L244570;
+}
+procedure `void` `setSettings`(`okhttp3.internal.framed.FramedConnection` v3 @kind this, `okhttp3.internal.framed.Settings` v4 @kind object @name `settings`) @signature `Lokhttp3/internal/framed/FramedConnection;.setSettings:(Lokhttp3/internal/framed/Settings;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L244594.  v1:= v3.`okhttp3.internal.framed.FramedConnection.frameWriter` @type ^`okhttp3.internal.framed.FrameWriter` @kind object;
+  #L244598.  @monitorenter v1
+  #L24459a.  @monitorenter v3
+  #L24459c.  v0:= v3.`okhttp3.internal.framed.FramedConnection.shutdown` @type ^`boolean` @kind boolean;
+  #L2445a0.  if v0 == 0 then goto L2445c0;
+  #L2445a4.  v0:= new `java.io.IOException`;
+  #L2445a8.  v2:= "shutdown" @kind object;
+  #L2445ac.  call `<init>`(v0, v2) @signature `Ljava/io/IOException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L2445b2.  throw v0;
+  #L2445b4.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L2445b6.  @monitorexit v3
+  #L2445b8.  throw v0;
+  #L2445ba.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L2445bc.  @monitorexit v1
+  #L2445be.  throw v0;
+  #L2445c0.  v0:= v3.`okhttp3.internal.framed.FramedConnection.okHttpSettings` @type ^`okhttp3.internal.framed.Settings` @kind object;
+  #L2445c4.  call `merge`(v0, v4) @signature `Lokhttp3/internal/framed/Settings;.merge:(Lokhttp3/internal/framed/Settings;)V` @kind virtual;
+  #L2445ca.  v0:= v3.`okhttp3.internal.framed.FramedConnection.frameWriter` @type ^`okhttp3.internal.framed.FrameWriter` @kind object;
+  #L2445ce.  call `settings`(v0, v4) @signature `Lokhttp3/internal/framed/FrameWriter;.settings:(Lokhttp3/internal/framed/Settings;)V` @kind interface;
+  #L2445d4.  @monitorexit v3
+  #L2445d6.  @monitorexit v1
+  #L2445d8.  return @kind void;
+  catch `java.lang.Throwable` @[L24459a..L24459c] goto L2445ba;
+  catch `java.lang.Throwable` @[L24459c..L2445b8] goto L2445b4;
+  catch `java.lang.Throwable` @[L2445b8..L2445be] goto L2445ba;
+  catch `java.lang.Throwable` @[L2445c0..L2445d6] goto L2445b4;
+  catch `java.lang.Throwable` @[L2445d6..L2445d8] goto L2445ba;
+}
+procedure `void` `shutdown`(`okhttp3.internal.framed.FramedConnection` v4 @kind this, `okhttp3.internal.framed.ErrorCode` v5 @kind object @name `statusCode`) @signature `Lokhttp3/internal/framed/FramedConnection;.shutdown:(Lokhttp3/internal/framed/ErrorCode;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L24461c.  v2:= v4.`okhttp3.internal.framed.FramedConnection.frameWriter` @type ^`okhttp3.internal.framed.FrameWriter` @kind object;
+  #L244620.  @monitorenter v2
+  #L244622.  @monitorenter v4
+  #L244624.  v1:= v4.`okhttp3.internal.framed.FramedConnection.shutdown` @type ^`boolean` @kind boolean;
+  #L244628.  if v1 == 0 then goto L244632;
+  #L24462c.  @monitorexit v4
+  #L24462e.  @monitorexit v2
+  #L244630.  return @kind void;
+  #L244632.  v1:= 1I;
+  #L244634.  v4.`okhttp3.internal.framed.FramedConnection.shutdown` @type ^`boolean` := v1 @kind boolean;
+  #L244638.  v0:= v4.`okhttp3.internal.framed.FramedConnection.lastGoodStreamId` @type ^`int`;
+  #L24463c.  @monitorexit v4
+  #L24463e.  v1:= v4.`okhttp3.internal.framed.FramedConnection.frameWriter` @type ^`okhttp3.internal.framed.FrameWriter` @kind object;
+  #L244642.  v3:= `@@okhttp3.internal.Util.EMPTY_BYTE_ARRAY` @type ^`byte`[] @kind object;
+  #L244646.  call `goAway`(v1, v0, v5, v3) @signature `Lokhttp3/internal/framed/FrameWriter;.goAway:(ILokhttp3/internal/framed/ErrorCode;[B)V` @kind interface;
+  #L24464c.  @monitorexit v2
+  #L24464e.  goto L244630;
+  #L244650.  v1:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L244652.  @monitorexit v2
+  #L244654.  throw v1;
+  #L244656.  v1:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L244658.  @monitorexit v4
+  #L24465a.  throw v1;
+  catch `java.lang.Throwable` @[L244622..L244624] goto L244650;
+  catch `java.lang.Throwable` @[L244624..L24462e] goto L244656;
+  catch `java.lang.Throwable` @[L24462e..L244630] goto L244650;
+  catch `java.lang.Throwable` @[L244634..L24463e] goto L244656;
+  catch `java.lang.Throwable` @[L24463e..L244654] goto L244650;
+  catch `java.lang.Throwable` @[L244658..L24465a] goto L244656;
+  catch `java.lang.Throwable` @[L24465a..L24465c] goto L244650;
+}
+procedure `void` `start`(`okhttp3.internal.framed.FramedConnection` v1 @kind this) @signature `Lokhttp3/internal/framed/FramedConnection;.start:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L2446ac.  v0:= 1I;
+  #L2446ae.  call `start`(v1, v0) @signature `Lokhttp3/internal/framed/FramedConnection;.start:(Z)V` @kind virtual;
+  #L2446b4.  return @kind void;
+}
+procedure `void` `start`(`okhttp3.internal.framed.FramedConnection` v6 @kind this, `boolean` v7 @name `sendConnectionPreface`) @signature `Lokhttp3/internal/framed/FramedConnection;.start:(Z)V` @AccessFlag  {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L2446c8.  v3:= 65536I;
+  #L2446cc.  if v7 == 0 then goto L24470a;
+  #L2446d0.  v1:= v6.`okhttp3.internal.framed.FramedConnection.frameWriter` @type ^`okhttp3.internal.framed.FrameWriter` @kind object;
+  #L2446d4.  call `connectionPreface`(v1) @signature `Lokhttp3/internal/framed/FrameWriter;.connectionPreface:()V` @kind interface;
+  #L2446da.  v1:= v6.`okhttp3.internal.framed.FramedConnection.frameWriter` @type ^`okhttp3.internal.framed.FrameWriter` @kind object;
+  #L2446de.  v2:= v6.`okhttp3.internal.framed.FramedConnection.okHttpSettings` @type ^`okhttp3.internal.framed.Settings` @kind object;
+  #L2446e2.  call `settings`(v1, v2) @signature `Lokhttp3/internal/framed/FrameWriter;.settings:(Lokhttp3/internal/framed/Settings;)V` @kind interface;
+  #L2446e8.  v1:= v6.`okhttp3.internal.framed.FramedConnection.okHttpSettings` @type ^`okhttp3.internal.framed.Settings` @kind object;
+  #L2446ec.  call temp:= `getInitialWindowSize`(v1, v3) @signature `Lokhttp3/internal/framed/Settings;.getInitialWindowSize:(I)I` @kind virtual;
+  #L2446f2.  v0:= temp;
+  #L2446f4.  if v0 == v3 then goto L24470a;
+  #L2446f8.  v1:= v6.`okhttp3.internal.framed.FramedConnection.frameWriter` @type ^`okhttp3.internal.framed.FrameWriter` @kind object;
+  #L2446fc.  v2:= 0I;
+  #L2446fe.  v3:= v0 - v3 @kind int;
+  #L244702.  v4:= (`long`) v3 @kind i2l;
+  #L244704.  call `windowUpdate`(v1, v2, v4) @signature `Lokhttp3/internal/framed/FrameWriter;.windowUpdate:(IJ)V` @kind interface;
+  #L24470a.  v1:= new `java.lang.Thread`;
+  #L24470e.  v2:= v6.`okhttp3.internal.framed.FramedConnection.readerRunnable` @type ^`okhttp3.internal.framed.FramedConnection$Reader` @kind object;
+  #L244712.  call `<init>`(v1, v2) @signature `Ljava/lang/Thread;.<init>:(Ljava/lang/Runnable;)V` @kind direct;
+  #L244718.  call `start`(v1) @signature `Ljava/lang/Thread;.start:()V` @kind virtual;
+  #L24471e.  return @kind void;
+}
+procedure `void` `writeData`(`okhttp3.internal.framed.FramedConnection` v10 @kind this, `int` v11 @name `streamId`, `boolean` v12 @name `outFinished`, `okio.Buffer` v13 @kind object @name `buffer`, `long` v14 @name `byteCount`) @signature `Lokhttp3/internal/framed/FramedConnection;.writeData:(IZLokio/Buffer;J)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+    v9;
+
+  #L244730.  v3:= 0I;
+  #L244732.  v8:= 0L;
+  #L244736.  v2:= lcmp(v14, v8);
+  #L24473a.  if v2 != 0 then goto L244796;
+  #L24473e.  v2:= v10.`okhttp3.internal.framed.FramedConnection.frameWriter` @type ^`okhttp3.internal.framed.FrameWriter` @kind object;
+  #L244742.  call `data`(v2, v12, v11, v13, v3) @signature `Lokhttp3/internal/framed/FrameWriter;.data:(ZILokio/Buffer;I)V` @kind interface;
+  #L244748.  return @kind void;
+  #L24474a.  v4:= v10.`okhttp3.internal.framed.FramedConnection.bytesLeftInWriteWindow` @type ^`long` @kind wide;
+  #L24474e.  call temp:= `min`(v14, v4) @signature `Ljava/lang/Math;.min:(JJ)J` @kind static;
+  #L244754.  v4:= temp @kind wide;
+  #L244756.  v1:= (`int`) v4 @kind l2i;
+  #L244758.  v2:= v10.`okhttp3.internal.framed.FramedConnection.frameWriter` @type ^`okhttp3.internal.framed.FrameWriter` @kind object;
+  #L24475c.  call temp:= `maxDataLength`(v2) @signature `Lokhttp3/internal/framed/FrameWriter;.maxDataLength:()I` @kind interface;
+  #L244762.  v2:= temp;
+  #L244764.  call temp:= `min`(v1, v2) @signature `Ljava/lang/Math;.min:(II)I` @kind static;
+  #L24476a.  v1:= temp;
+  #L24476c.  v4:= v10.`okhttp3.internal.framed.FramedConnection.bytesLeftInWriteWindow` @type ^`long` @kind wide;
+  #L244770.  v6:= (`long`) v1 @kind i2l;
+  #L244772.  v4:= v4 - v6 @kind long;
+  #L244774.  v10.`okhttp3.internal.framed.FramedConnection.bytesLeftInWriteWindow` @type ^`long` := v4 @kind wide;
+  #L244778.  @monitorexit v10
+  #L24477a.  v4:= (`long`) v1 @kind i2l;
+  #L24477c.  v14:= v14 - v4 @kind long;
+  #L24477e.  v4:= v10.`okhttp3.internal.framed.FramedConnection.frameWriter` @type ^`okhttp3.internal.framed.FrameWriter` @kind object;
+  #L244782.  if v12 == 0 then goto L2447f0;
+  #L244786.  v2:= lcmp(v14, v8);
+  #L24478a.  if v2 != 0 then goto L2447f0;
+  #L24478e.  v2:= 1I;
+  #L244790.  call `data`(v4, v2, v11, v13, v1) @signature `Lokhttp3/internal/framed/FrameWriter;.data:(ZILokio/Buffer;I)V` @kind interface;
+  #L244796.  v2:= lcmp(v14, v8);
+  #L24479a.  if v2 <= 0 then goto L244748;
+  #L24479e.  @monitorenter v10
+  #L2447a0.  v4:= v10.`okhttp3.internal.framed.FramedConnection.bytesLeftInWriteWindow` @type ^`long` @kind wide;
+  #L2447a4.  v2:= lcmp(v4, v8);
+  #L2447a8.  if v2 > 0 then goto L24474a;
+  #L2447ac.  v2:= v10.`okhttp3.internal.framed.FramedConnection.streams` @type ^`java.util.Map` @kind object;
+  #L2447b0.  call temp:= `valueOf`(v11) @signature `Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer;` @kind static;
+  #L2447b6.  v4:= temp @kind object;
+  #L2447b8.  call temp:= `containsKey`(v2, v4) @signature `Ljava/util/Map;.containsKey:(Ljava/lang/Object;)Z` @kind interface;
+  #L2447be.  v2:= temp;
+  #L2447c0.  if v2 != 0 then goto L2447e8;
+  #L2447c4.  v2:= new `java.io.IOException`;
+  #L2447c8.  v3:= "stream closed" @kind object;
+  #L2447cc.  call `<init>`(v2, v3) @signature `Ljava/io/IOException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L2447d2.  throw v2;
+  #L2447d4.  v0:= Exception @type ^`java.lang.InterruptedException` @kind object;
+  #L2447d6.  v2:= new `java.io.InterruptedIOException`;
+  #L2447da.  call `<init>`(v2) @signature `Ljava/io/InterruptedIOException;.<init>:()V` @kind direct;
+  #L2447e0.  throw v2;
+  #L2447e2.  v2:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L2447e4.  @monitorexit v10
+  #L2447e6.  throw v2;
+  #L2447e8.  call `wait`(v10) @signature `Ljava/lang/Object;.wait:()V` @kind virtual;
+  #L2447ee.  goto L2447a0;
+  #L2447f0.  v2:= v3;
+  #L2447f2.  goto L244790;
+  catch `java.lang.Throwable` @[L24474a..L24477a] goto L2447e2;
+  catch `java.lang.InterruptedException` @[L2447a0..L2447d4] goto L2447d4;
+  catch `java.lang.Throwable` @[L2447a0..L2447d4] goto L2447e2;
+  catch `java.lang.Throwable` @[L2447d6..L2447e6] goto L2447e2;
+  catch `java.lang.InterruptedException` @[L2447e8..L2447ee] goto L2447d4;
+  catch `java.lang.Throwable` @[L2447e8..L2447ee] goto L2447e2;
+}
+procedure `void` `writeSynReply`(`okhttp3.internal.framed.FramedConnection` v1 @kind this, `int` v2 @name `streamId`, `boolean` v3 @name `outFinished`, `java.util.List` v4 @kind object) @signature `Lokhttp3/internal/framed/FramedConnection;.writeSynReply:(IZLjava/util/List;)V` @AccessFlag  {
+    temp;
+    v0;
+
+  #L24482c.  v0:= v1.`okhttp3.internal.framed.FramedConnection.frameWriter` @type ^`okhttp3.internal.framed.FrameWriter` @kind object;
+  #L244830.  call `synReply`(v0, v3, v2, v4) @signature `Lokhttp3/internal/framed/FrameWriter;.synReply:(ZILjava/util/List;)V` @kind interface;
+  #L244836.  return @kind void;
+}
+procedure `void` `writeSynReset`(`okhttp3.internal.framed.FramedConnection` v1 @kind this, `int` v2 @name `streamId`, `okhttp3.internal.framed.ErrorCode` v3 @kind object @name `statusCode`) @signature `Lokhttp3/internal/framed/FramedConnection;.writeSynReset:(ILokhttp3/internal/framed/ErrorCode;)V` @AccessFlag  {
+    temp;
+    v0;
+
+  #L244848.  v0:= v1.`okhttp3.internal.framed.FramedConnection.frameWriter` @type ^`okhttp3.internal.framed.FrameWriter` @kind object;
+  #L24484c.  call `rstStream`(v0, v2, v3) @signature `Lokhttp3/internal/framed/FrameWriter;.rstStream:(ILokhttp3/internal/framed/ErrorCode;)V` @kind interface;
+  #L244852.  return @kind void;
+}
+procedure `void` `writeSynResetLater`(`okhttp3.internal.framed.FramedConnection` v7 @kind this, `int` v8 @name `streamId`, `okhttp3.internal.framed.ErrorCode` v9 @kind object @name `errorCode`) @signature `Lokhttp3/internal/framed/FramedConnection;.writeSynResetLater:(ILokhttp3/internal/framed/ErrorCode;)V` @AccessFlag  {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+
+  #L244864.  v6:= `@@okhttp3.internal.framed.FramedConnection.executor` @type ^`java.util.concurrent.ExecutorService` @kind object;
+  #L244868.  v0:= new `okhttp3.internal.framed.FramedConnection$1`;
+  #L24486c.  v2:= "OkHttp %s stream %d" @kind object;
+  #L244870.  v1:= 2I;
+  #L244872.  v3:= new `java.lang.Object`[v1];
+  #L244876.  v1:= 0I;
+  #L244878.  v4:= v7.`okhttp3.internal.framed.FramedConnection.hostname` @type ^`java.lang.String` @kind object;
+  #L24487c.  v3[v1]:= v4 @kind object;
+  #L244880.  v1:= 1I;
+  #L244882.  call temp:= `valueOf`(v8) @signature `Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer;` @kind static;
+  #L244888.  v4:= temp @kind object;
+  #L24488a.  v3[v1]:= v4 @kind object;
+  #L24488e.  v1:= v7 @kind object;
+  #L244890.  v4:= v8;
+  #L244892.  v5:= v9 @kind object;
+  #L244894.  call `<init>`(v0, v1, v2, v3, v4, v5) @signature `Lokhttp3/internal/framed/FramedConnection$1;.<init>:(Lokhttp3/internal/framed/FramedConnection;Ljava/lang/String;[Ljava/lang/Object;ILokhttp3/internal/framed/ErrorCode;)V` @kind direct;
+  #L24489a.  call temp:= `submit`(v6, v0) @signature `Ljava/util/concurrent/ExecutorService;.submit:(Ljava/lang/Runnable;)Ljava/util/concurrent/Future;` @kind interface;
+  #L2448a0.  return @kind void;
+}
+procedure `void` `writeWindowUpdateLater`(`okhttp3.internal.framed.FramedConnection` v8 @kind this, `int` v9 @name `streamId`, `long` v10 @name `unacknowledgedBytesRead`) @signature `Lokhttp3/internal/framed/FramedConnection;.writeWindowUpdateLater:(IJ)V` @AccessFlag  {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+
+  #L2448b4.  v0:= `@@okhttp3.internal.framed.FramedConnection.executor` @type ^`java.util.concurrent.ExecutorService` @kind object;
+  #L2448b8.  v1:= new `okhttp3.internal.framed.FramedConnection$2`;
+  #L2448bc.  v3:= "OkHttp Window Update %s stream %d" @kind object;
+  #L2448c0.  v2:= 2I;
+  #L2448c2.  v4:= new `java.lang.Object`[v2];
+  #L2448c6.  v2:= 0I;
+  #L2448c8.  v5:= v8.`okhttp3.internal.framed.FramedConnection.hostname` @type ^`java.lang.String` @kind object;
+  #L2448cc.  v4[v2]:= v5 @kind object;
+  #L2448d0.  v2:= 1I;
+  #L2448d2.  call temp:= `valueOf`(v9) @signature `Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer;` @kind static;
+  #L2448d8.  v5:= temp @kind object;
+  #L2448da.  v4[v2]:= v5 @kind object;
+  #L2448de.  v2:= v8 @kind object;
+  #L2448e0.  v5:= v9;
+  #L2448e2.  v6:= v10 @kind wide;
+  #L2448e4.  call `<init>`(v1, v2, v3, v4, v5, v6) @signature `Lokhttp3/internal/framed/FramedConnection$2;.<init>:(Lokhttp3/internal/framed/FramedConnection;Ljava/lang/String;[Ljava/lang/Object;IJ)V` @kind direct;
+  #L2448ea.  call `execute`(v0, v1) @signature `Ljava/util/concurrent/ExecutorService;.execute:(Ljava/lang/Runnable;)V` @kind interface;
+  #L2448f0.  return @kind void;
+}

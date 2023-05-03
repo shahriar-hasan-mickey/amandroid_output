@@ -1,0 +1,302 @@
+record `okio.Segment` @kind class @AccessFlag PUBLIC_FINAL {
+  `byte`[] `okio.Segment.data` @AccessFlag PUBLIC_FINAL;
+  `int` `okio.Segment.limit` @AccessFlag PUBLIC;
+  `okio.Segment` `okio.Segment.next` @AccessFlag PUBLIC;
+  `boolean` `okio.Segment.owner` @AccessFlag PUBLIC;
+  `int` `okio.Segment.pos` @AccessFlag PUBLIC;
+  `okio.Segment` `okio.Segment.prev` @AccessFlag PUBLIC;
+  `boolean` `okio.Segment.shared` @AccessFlag PUBLIC;
+}
+global `okio.Segment$Companion` `@@okio.Segment.Companion` @AccessFlag PUBLIC_STATIC_FINAL;
+global `int` `@@okio.Segment.SHARE_MINIMUM` @AccessFlag PUBLIC_STATIC_FINAL;
+global `int` `@@okio.Segment.SIZE` @AccessFlag PUBLIC_STATIC_FINAL;
+procedure `void` `<clinit>`() @signature `Lokio/Segment;.<clinit>:()V` @AccessFlag STATIC_CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+
+  #L16c93c.  v0:= new `okio.Segment$Companion`;
+  #L16c940.  v1:= 0I;
+  #L16c942.  call `<init>`(v0, v1) @signature `Lokio/Segment$Companion;.<init>:(Lkotlin/jvm/internal/DefaultConstructorMarker;)V` @kind direct;
+  #L16c948.  `@@okio.Segment.Companion` @type ^`okio.Segment$Companion` := v0 @kind object;
+  #L16c94c.  return @kind void;
+}
+procedure `void` `<init>`(`okio.Segment` v1 @kind this) @signature `Lokio/Segment;.<init>:()V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L16c960.  call `<init>`(v1) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L16c966.  v0:= 8192I;
+  #L16c96a.  v0:= new `byte`[v0];
+  #L16c96e.  v1.`okio.Segment.data` @type ^`byte`[] := v0 @kind object;
+  #L16c972.  v0:= 1I;
+  #L16c974.  v1.`okio.Segment.owner` @type ^`boolean` := v0 @kind boolean;
+  #L16c978.  v0:= 0I;
+  #L16c97a.  v1.`okio.Segment.shared` @type ^`boolean` := v0 @kind boolean;
+  #L16c97e.  return @kind void;
+}
+procedure `void` `<init>`(`okio.Segment` v1 @kind this, `byte`[] v2 @kind object, `int` v3 , `int` v4 , `boolean` v5 , `boolean` v6 ) @signature `Lokio/Segment;.<init>:([BIIZZ)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L16c990.  v0:= "data" @kind object;
+  #L16c994.  call `checkNotNullParameter`(v2, v0) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V` @kind static;
+  #L16c99a.  call `<init>`(v1) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L16c9a0.  v1.`okio.Segment.data` @type ^`byte`[] := v2 @kind object;
+  #L16c9a4.  v1.`okio.Segment.pos` @type ^`int` := v3;
+  #L16c9a8.  v1.`okio.Segment.limit` @type ^`int` := v4;
+  #L16c9ac.  v1.`okio.Segment.shared` @type ^`boolean` := v5 @kind boolean;
+  #L16c9b0.  v1.`okio.Segment.owner` @type ^`boolean` := v6 @kind boolean;
+  #L16c9b4.  return @kind void;
+}
+procedure `void` `compact`(`okio.Segment` v4 @kind this) @signature `Lokio/Segment;.compact:()V` @AccessFlag PUBLIC_FINAL {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L16c9c8.  v0:= v4.`okio.Segment.prev` @type ^`okio.Segment` @kind object;
+  #L16c9cc.  v1:= 0I;
+  #L16c9ce.  if v0 == v4 then goto L16c9d6;
+  #L16c9d2.  v2:= 1I;
+  #L16c9d4.  goto L16c9d8;
+  #L16c9d6.  v2:= 0I;
+  #L16c9d8.  if v2 == 0 then goto L16ca50;
+  #L16c9dc.  call `checkNotNull`(v0) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNull:(Ljava/lang/Object;)V` @kind static;
+  #L16c9e2.  v0:= v0.`okio.Segment.owner` @type ^`boolean` @kind boolean;
+  #L16c9e6.  if v0 != 0 then goto L16c9ec;
+  #L16c9ea.  return @kind void;
+  #L16c9ec.  v0:= v4.`okio.Segment.limit` @type ^`int`;
+  #L16c9f0.  v2:= v4.`okio.Segment.pos` @type ^`int`;
+  #L16c9f4.  v0:= v0 - v2 @kind int;
+  #L16c9f6.  v2:= v4.`okio.Segment.prev` @type ^`okio.Segment` @kind object;
+  #L16c9fa.  call `checkNotNull`(v2) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNull:(Ljava/lang/Object;)V` @kind static;
+  #L16ca00.  v2:= v2.`okio.Segment.limit` @type ^`int`;
+  #L16ca04.  v2:= v2 - 8192;
+  #L16ca08.  v3:= v4.`okio.Segment.prev` @type ^`okio.Segment` @kind object;
+  #L16ca0c.  call `checkNotNull`(v3) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNull:(Ljava/lang/Object;)V` @kind static;
+  #L16ca12.  v3:= v3.`okio.Segment.shared` @type ^`boolean` @kind boolean;
+  #L16ca16.  if v3 == 0 then goto L16ca1c;
+  #L16ca1a.  goto L16ca2a;
+  #L16ca1c.  v1:= v4.`okio.Segment.prev` @type ^`okio.Segment` @kind object;
+  #L16ca20.  call `checkNotNull`(v1) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNull:(Ljava/lang/Object;)V` @kind static;
+  #L16ca26.  v1:= v1.`okio.Segment.pos` @type ^`int`;
+  #L16ca2a.  v2:= v2 + v1 @kind int;
+  #L16ca2c.  if v0 <= v2 then goto L16ca32;
+  #L16ca30.  return @kind void;
+  #L16ca32.  v1:= v4.`okio.Segment.prev` @type ^`okio.Segment` @kind object;
+  #L16ca36.  call `checkNotNull`(v1) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNull:(Ljava/lang/Object;)V` @kind static;
+  #L16ca3c.  call `writeTo`(v4, v1, v0) @signature `Lokio/Segment;.writeTo:(Lokio/Segment;I)V` @kind virtual;
+  #L16ca42.  call temp:= `pop`(v4) @signature `Lokio/Segment;.pop:()Lokio/Segment;` @kind virtual;
+  #L16ca48.  call `recycle`(v4) @signature `Lokio/SegmentPool;.recycle:(Lokio/Segment;)V` @kind static;
+  #L16ca4e.  return @kind void;
+  #L16ca50.  v0:= new `java.lang.IllegalStateException`;
+  #L16ca54.  v1:= "cannot compact" @kind object;
+  #L16ca58.  call temp:= `toString`(v1) @signature `Ljava/lang/Object;.toString:()Ljava/lang/String;` @kind virtual;
+  #L16ca5e.  v1:= temp @kind object;
+  #L16ca60.  call `<init>`(v0, v1) @signature `Ljava/lang/IllegalStateException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L16ca66.  throw v0;
+}
+procedure `okio.Segment` `pop`(`okio.Segment` v4 @kind this) @signature `Lokio/Segment;.pop:()Lokio/Segment;` @AccessFlag PUBLIC_FINAL {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L16c79c.  v0:= v4.`okio.Segment.next` @type ^`okio.Segment` @kind object;
+  #L16c7a0.  v1:= 0I;
+  #L16c7a2.  if v0 == v4 then goto L16c7a8;
+  #L16c7a6.  goto L16c7aa;
+  #L16c7a8.  v0:= v1 @kind object;
+  #L16c7aa.  v2:= v4.`okio.Segment.prev` @type ^`okio.Segment` @kind object;
+  #L16c7ae.  call `checkNotNull`(v2) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNull:(Ljava/lang/Object;)V` @kind static;
+  #L16c7b4.  v3:= v4.`okio.Segment.next` @type ^`okio.Segment` @kind object;
+  #L16c7b8.  v2.`okio.Segment.next` @type ^`okio.Segment` := v3 @kind object;
+  #L16c7bc.  v2:= v4.`okio.Segment.next` @type ^`okio.Segment` @kind object;
+  #L16c7c0.  call `checkNotNull`(v2) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNull:(Ljava/lang/Object;)V` @kind static;
+  #L16c7c6.  v3:= v4.`okio.Segment.prev` @type ^`okio.Segment` @kind object;
+  #L16c7ca.  v2.`okio.Segment.prev` @type ^`okio.Segment` := v3 @kind object;
+  #L16c7ce.  v4.`okio.Segment.next` @type ^`okio.Segment` := v1 @kind object;
+  #L16c7d2.  v4.`okio.Segment.prev` @type ^`okio.Segment` := v1 @kind object;
+  #L16c7d6.  return v0 @kind object;
+}
+procedure `okio.Segment` `push`(`okio.Segment` v1 @kind this, `okio.Segment` v2 @kind object) @signature `Lokio/Segment;.push:(Lokio/Segment;)Lokio/Segment;` @AccessFlag PUBLIC_FINAL {
+    temp;
+    v0;
+
+  #L16c7e8.  v0:= "segment" @kind object;
+  #L16c7ec.  call `checkNotNullParameter`(v2, v0) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V` @kind static;
+  #L16c7f2.  v2.`okio.Segment.prev` @type ^`okio.Segment` := v1 @kind object;
+  #L16c7f6.  v0:= v1.`okio.Segment.next` @type ^`okio.Segment` @kind object;
+  #L16c7fa.  v2.`okio.Segment.next` @type ^`okio.Segment` := v0 @kind object;
+  #L16c7fe.  v0:= v1.`okio.Segment.next` @type ^`okio.Segment` @kind object;
+  #L16c802.  call `checkNotNull`(v0) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNull:(Ljava/lang/Object;)V` @kind static;
+  #L16c808.  v0.`okio.Segment.prev` @type ^`okio.Segment` := v2 @kind object;
+  #L16c80c.  v1.`okio.Segment.next` @type ^`okio.Segment` := v2 @kind object;
+  #L16c810.  return v2 @kind object;
+}
+procedure `okio.Segment` `sharedCopy`(`okio.Segment` v7 @kind this) @signature `Lokio/Segment;.sharedCopy:()Lokio/Segment;` @AccessFlag PUBLIC_FINAL {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+
+  #L16c824.  v0:= 1I;
+  #L16c826.  v7.`okio.Segment.shared` @type ^`boolean` := v0 @kind boolean;
+  #L16c82a.  v0:= new `okio.Segment`;
+  #L16c82e.  v2:= v7.`okio.Segment.data` @type ^`byte`[] @kind object;
+  #L16c832.  v3:= v7.`okio.Segment.pos` @type ^`int`;
+  #L16c836.  v4:= v7.`okio.Segment.limit` @type ^`int`;
+  #L16c83a.  v5:= 1I;
+  #L16c83c.  v6:= 0I;
+  #L16c83e.  v1:= v0 @kind object;
+  #L16c840.  call `<init>`(v1, v2, v3, v4, v5, v6) @signature `Lokio/Segment;.<init>:([BIIZZ)V` @kind direct;
+  #L16c846.  return v0 @kind object;
+}
+procedure `okio.Segment` `split`(`okio.Segment` v8 @kind this, `int` v9 ) @signature `Lokio/Segment;.split:(I)Lokio/Segment;` @AccessFlag PUBLIC_FINAL {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+
+  #L16c858.  if v9 <= 0 then goto L16c86e;
+  #L16c85c.  v0:= v8.`okio.Segment.limit` @type ^`int`;
+  #L16c860.  v1:= v8.`okio.Segment.pos` @type ^`int`;
+  #L16c864.  v0:= v0 - v1 @kind int;
+  #L16c866.  if v9 > v0 then goto L16c86e;
+  #L16c86a.  v0:= 1I;
+  #L16c86c.  goto L16c870;
+  #L16c86e.  v0:= 0I;
+  #L16c870.  if v0 == 0 then goto L16c8d0;
+  #L16c874.  v0:= 1024I;
+  #L16c878.  if v9 < v0 then goto L16c886;
+  #L16c87c.  call temp:= `sharedCopy`(v8) @signature `Lokio/Segment;.sharedCopy:()Lokio/Segment;` @kind virtual;
+  #L16c882.  v0:= temp @kind object;
+  #L16c884.  goto L16c8aa;
+  #L16c886.  call temp:= `take`() @signature `Lokio/SegmentPool;.take:()Lokio/Segment;` @kind static;
+  #L16c88c.  v0:= temp @kind object;
+  #L16c88e.  v1:= v8.`okio.Segment.data` @type ^`byte`[] @kind object;
+  #L16c892.  v2:= v0.`okio.Segment.data` @type ^`byte`[] @kind object;
+  #L16c896.  v3:= 0I;
+  #L16c898.  v4:= v8.`okio.Segment.pos` @type ^`int`;
+  #L16c89c.  v5:= v4 + v9 @kind int;
+  #L16c8a0.  v6:= 2I;
+  #L16c8a2.  v7:= 0I;
+  #L16c8a4.  call temp:= `copyInto$default`(v1, v2, v3, v4, v5, v6, v7) @signature `Lkotlin/collections/ArraysKt;.copyInto$default:([B[BIIIILjava/lang/Object;)[B` @kind static;
+  #L16c8aa.  v1:= v0.`okio.Segment.pos` @type ^`int`;
+  #L16c8ae.  v1:= v1 + v9 @kind int;
+  #L16c8b0.  v0.`okio.Segment.limit` @type ^`int` := v1;
+  #L16c8b4.  v1:= v8.`okio.Segment.pos` @type ^`int`;
+  #L16c8b8.  v1:= v1 + v9 @kind int;
+  #L16c8ba.  v8.`okio.Segment.pos` @type ^`int` := v1;
+  #L16c8be.  v9:= v8.`okio.Segment.prev` @type ^`okio.Segment` @kind object;
+  #L16c8c2.  call `checkNotNull`(v9) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNull:(Ljava/lang/Object;)V` @kind static;
+  #L16c8c8.  call temp:= `push`(v9, v0) @signature `Lokio/Segment;.push:(Lokio/Segment;)Lokio/Segment;` @kind virtual;
+  #L16c8ce.  return v0 @kind object;
+  #L16c8d0.  v9:= new `java.lang.IllegalArgumentException`;
+  #L16c8d4.  v0:= "byteCount out of range" @kind object;
+  #L16c8d8.  call temp:= `toString`(v0) @signature `Ljava/lang/Object;.toString:()Ljava/lang/String;` @kind virtual;
+  #L16c8de.  v0:= temp @kind object;
+  #L16c8e0.  call `<init>`(v9, v0) @signature `Ljava/lang/IllegalArgumentException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L16c8e6.  throw v9;
+}
+procedure `okio.Segment` `unsharedCopy`(`okio.Segment` v7 @kind this) @signature `Lokio/Segment;.unsharedCopy:()Lokio/Segment;` @AccessFlag PUBLIC_FINAL {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+
+  #L16c8f8.  v6:= new `okio.Segment`;
+  #L16c8fc.  v0:= v7.`okio.Segment.data` @type ^`byte`[] @kind object;
+  #L16c900.  v1:= length @variable v0;
+  #L16c902.  call temp:= `copyOf`(v0, v1) @signature `Ljava/util/Arrays;.copyOf:([BI)[B` @kind static;
+  #L16c908.  v1:= temp @kind object;
+  #L16c90a.  v0:= "java.util.Arrays.copyOf(this, size)" @kind object;
+  #L16c90e.  call `checkNotNullExpressionValue`(v1, v0) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V` @kind static;
+  #L16c914.  v2:= v7.`okio.Segment.pos` @type ^`int`;
+  #L16c918.  v3:= v7.`okio.Segment.limit` @type ^`int`;
+  #L16c91c.  v4:= 0I;
+  #L16c91e.  v5:= 1I;
+  #L16c920.  v0:= v6 @kind object;
+  #L16c922.  call `<init>`(v0, v1, v2, v3, v4, v5) @signature `Lokio/Segment;.<init>:([BIIZZ)V` @kind direct;
+  #L16c928.  return v6 @kind object;
+}
+procedure `void` `writeTo`(`okio.Segment` v8 @kind this, `okio.Segment` v9 @kind object, `int` v10 ) @signature `Lokio/Segment;.writeTo:(Lokio/Segment;I)V` @AccessFlag PUBLIC_FINAL {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+
+  #L16ca78.  v0:= "sink" @kind object;
+  #L16ca7c.  call `checkNotNullParameter`(v9, v0) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V` @kind static;
+  #L16ca82.  v0:= v9.`okio.Segment.owner` @type ^`boolean` @kind boolean;
+  #L16ca86.  if v0 == 0 then goto L16cb20;
+  #L16ca8a.  v5:= v9.`okio.Segment.limit` @type ^`int`;
+  #L16ca8e.  v0:= v5 + v10 @kind int;
+  #L16ca92.  v1:= 8192I;
+  #L16ca96.  if v0 <= v1 then goto L16caf0;
+  #L16ca9a.  v0:= v9.`okio.Segment.shared` @type ^`boolean` @kind boolean;
+  #L16ca9e.  if v0 != 0 then goto L16cae4;
+  #L16caa2.  v0:= v5 + v10 @kind int;
+  #L16caa6.  v4:= v9.`okio.Segment.pos` @type ^`int`;
+  #L16caaa.  v0:= v0 - v4 @kind int;
+  #L16caac.  if v0 > v1 then goto L16cad8;
+  #L16cab0.  v2:= v9.`okio.Segment.data` @type ^`byte`[] @kind object;
+  #L16cab4.  v3:= 0I;
+  #L16cab6.  v6:= 2I;
+  #L16cab8.  v7:= 0I;
+  #L16caba.  v1:= v2 @kind object;
+  #L16cabc.  call temp:= `copyInto$default`(v1, v2, v3, v4, v5, v6, v7) @signature `Lkotlin/collections/ArraysKt;.copyInto$default:([B[BIIIILjava/lang/Object;)[B` @kind static;
+  #L16cac2.  v0:= v9.`okio.Segment.limit` @type ^`int`;
+  #L16cac6.  v1:= v9.`okio.Segment.pos` @type ^`int`;
+  #L16caca.  v0:= v0 - v1 @kind int;
+  #L16cacc.  v9.`okio.Segment.limit` @type ^`int` := v0;
+  #L16cad0.  v0:= 0I;
+  #L16cad2.  v9.`okio.Segment.pos` @type ^`int` := v0;
+  #L16cad6.  goto L16caf0;
+  #L16cad8.  v9:= new `java.lang.IllegalArgumentException`;
+  #L16cadc.  call `<init>`(v9) @signature `Ljava/lang/IllegalArgumentException;.<init>:()V` @kind direct;
+  #L16cae2.  throw v9;
+  #L16cae4.  v9:= new `java.lang.IllegalArgumentException`;
+  #L16cae8.  call `<init>`(v9) @signature `Ljava/lang/IllegalArgumentException;.<init>:()V` @kind direct;
+  #L16caee.  throw v9;
+  #L16caf0.  v0:= v8.`okio.Segment.data` @type ^`byte`[] @kind object;
+  #L16caf4.  v1:= v9.`okio.Segment.data` @type ^`byte`[] @kind object;
+  #L16caf8.  v2:= v9.`okio.Segment.limit` @type ^`int`;
+  #L16cafc.  v3:= v8.`okio.Segment.pos` @type ^`int`;
+  #L16cb00.  v4:= v3 + v10 @kind int;
+  #L16cb04.  call temp:= `copyInto`(v0, v1, v2, v3, v4) @signature `Lkotlin/collections/ArraysKt;.copyInto:([B[BIII)[B` @kind static;
+  #L16cb0a.  v0:= v9.`okio.Segment.limit` @type ^`int`;
+  #L16cb0e.  v0:= v0 + v10 @kind int;
+  #L16cb10.  v9.`okio.Segment.limit` @type ^`int` := v0;
+  #L16cb14.  v9:= v8.`okio.Segment.pos` @type ^`int`;
+  #L16cb18.  v9:= v9 + v10 @kind int;
+  #L16cb1a.  v8.`okio.Segment.pos` @type ^`int` := v9;
+  #L16cb1e.  return @kind void;
+  #L16cb20.  v9:= new `java.lang.IllegalStateException`;
+  #L16cb24.  v10:= "only owner can write" @kind object;
+  #L16cb28.  call temp:= `toString`(v10) @signature `Ljava/lang/Object;.toString:()Ljava/lang/String;` @kind virtual;
+  #L16cb2e.  v10:= temp @kind object;
+  #L16cb30.  call `<init>`(v9, v10) @signature `Ljava/lang/IllegalStateException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L16cb36.  throw v9;
+}

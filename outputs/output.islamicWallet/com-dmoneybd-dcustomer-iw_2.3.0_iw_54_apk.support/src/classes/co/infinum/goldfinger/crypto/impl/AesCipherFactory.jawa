@@ -1,0 +1,217 @@
+record `co.infinum.goldfinger.crypto.impl.AesCipherFactory` @kind class @AccessFlag PUBLIC extends `co.infinum.goldfinger.crypto.CipherFactory` @kind interface {
+  `javax.crypto.KeyGenerator` `co.infinum.goldfinger.crypto.impl.AesCipherFactory.keyGenerator` @AccessFlag PRIVATE;
+  `java.security.KeyStore` `co.infinum.goldfinger.crypto.impl.AesCipherFactory.keyStore` @AccessFlag PRIVATE;
+  `android.content.SharedPreferences` `co.infinum.goldfinger.crypto.impl.AesCipherFactory.sharedPrefs` @AccessFlag PRIVATE_FINAL;
+}
+global `java.lang.String` `@@co.infinum.goldfinger.crypto.impl.AesCipherFactory.CIPHER_TRANSFORMATION` @AccessFlag PRIVATE_STATIC_FINAL;
+global `java.lang.String` `@@co.infinum.goldfinger.crypto.impl.AesCipherFactory.KEY_KEYSTORE` @AccessFlag PRIVATE_STATIC_FINAL;
+global `java.lang.String` `@@co.infinum.goldfinger.crypto.impl.AesCipherFactory.KEY_SHARED_PREFS` @AccessFlag PRIVATE_STATIC_FINAL;
+procedure `void` `<clinit>`() @signature `Lco/infinum/goldfinger/crypto/impl/AesCipherFactory;.<clinit>:()V` @AccessFlag STATIC_CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L2b0dc4.  v0:= 3I;
+  #L2b0dc6.  v0:= new `java.lang.Object`[v0];
+  #L2b0dca.  v1:= 0I;
+  #L2b0dcc.  v2:= "AES" @kind object;
+  #L2b0dd0.  v0[v1]:= v2 @kind object;
+  #L2b0dd4.  v1:= 1I;
+  #L2b0dd6.  v2:= "CBC" @kind object;
+  #L2b0dda.  v0[v1]:= v2 @kind object;
+  #L2b0dde.  v1:= 2I;
+  #L2b0de0.  v2:= "PKCS7Padding" @kind object;
+  #L2b0de4.  v0[v1]:= v2 @kind object;
+  #L2b0de8.  v1:= "%s/%s/%s" @kind object;
+  #L2b0dec.  call temp:= `format`(v1, v0) @signature `Ljava/lang/String;.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;` @kind static;
+  #L2b0df2.  v0:= temp @kind object;
+  #L2b0df4.  `@@co.infinum.goldfinger.crypto.impl.AesCipherFactory.CIPHER_TRANSFORMATION` @type ^`java.lang.String` := v0 @kind object;
+  #L2b0df8.  return @kind void;
+}
+procedure `void` `<init>`(`co.infinum.goldfinger.crypto.impl.AesCipherFactory` v3 @kind this, `android.content.Context` v4 @kind object) @signature `Lco/infinum/goldfinger/crypto/impl/AesCipherFactory;.<init>:(Landroid/content/Context;)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L2b0e0c.  v0:= "AndroidKeyStore" @kind object;
+  #L2b0e10.  call `<init>`(v3) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L2b0e16.  v1:= "<Goldfinger IV>" @kind object;
+  #L2b0e1a.  v2:= 0I;
+  #L2b0e1c.  call temp:= `getSharedPreferences`(v4, v1, v2) @signature `Landroid/content/Context;.getSharedPreferences:(Ljava/lang/String;I)Landroid/content/SharedPreferences;` @kind virtual;
+  #L2b0e22.  v4:= temp @kind object;
+  #L2b0e24.  v3.`co.infinum.goldfinger.crypto.impl.AesCipherFactory.sharedPrefs` @type ^`android.content.SharedPreferences` := v4 @kind object;
+  #L2b0e28.  call temp:= `getInstance`(v0) @signature `Ljava/security/KeyStore;.getInstance:(Ljava/lang/String;)Ljava/security/KeyStore;` @kind static;
+  #L2b0e2e.  v4:= temp @kind object;
+  #L2b0e30.  v3.`co.infinum.goldfinger.crypto.impl.AesCipherFactory.keyStore` @type ^`java.security.KeyStore` := v4 @kind object;
+  #L2b0e34.  v4:= "AES" @kind object;
+  #L2b0e38.  call temp:= `getInstance`(v4, v0) @signature `Ljavax/crypto/KeyGenerator;.getInstance:(Ljava/lang/String;Ljava/lang/String;)Ljavax/crypto/KeyGenerator;` @kind static;
+  #L2b0e3e.  v4:= temp @kind object;
+  #L2b0e40.  v3.`co.infinum.goldfinger.crypto.impl.AesCipherFactory.keyGenerator` @type ^`javax.crypto.KeyGenerator` := v4 @kind object;
+  #L2b0e44.  return @kind void;
+  catch `java.lang.Exception` @[L2b0e28..L2b0e44] goto L2b0e44;
+}
+procedure `java.security.Key` `createKey`(`co.infinum.goldfinger.crypto.impl.AesCipherFactory` v5 @kind this, `java.lang.String` v6 @kind object) @signature `Lco/infinum/goldfinger/crypto/impl/AesCipherFactory;.createKey:(Ljava/lang/String;)Ljava/security/Key;` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L2b0c34.  v0:= new `android.security.keystore.KeyGenParameterSpec$Builder`;
+  #L2b0c38.  v1:= 3I;
+  #L2b0c3a.  call `<init>`(v0, v6, v1) @signature `Landroid/security/keystore/KeyGenParameterSpec$Builder;.<init>:(Ljava/lang/String;I)V` @kind direct;
+  #L2b0c40.  v1:= 1I;
+  #L2b0c42.  v2:= new `java.lang.String`[v1];
+  #L2b0c46.  v3:= "CBC" @kind object;
+  #L2b0c4a.  v4:= 0I;
+  #L2b0c4c.  v2[v4]:= v3 @kind object;
+  #L2b0c50.  call temp:= `setBlockModes`(v0, v2) @signature `Landroid/security/keystore/KeyGenParameterSpec$Builder;.setBlockModes:([Ljava/lang/String;)Landroid/security/keystore/KeyGenParameterSpec$Builder;` @kind virtual;
+  #L2b0c56.  v0:= temp @kind object;
+  #L2b0c58.  v1:= new `java.lang.String`[v1];
+  #L2b0c5c.  v2:= "PKCS7Padding" @kind object;
+  #L2b0c60.  v1[v4]:= v2 @kind object;
+  #L2b0c64.  call temp:= `setEncryptionPaddings`(v0, v1) @signature `Landroid/security/keystore/KeyGenParameterSpec$Builder;.setEncryptionPaddings:([Ljava/lang/String;)Landroid/security/keystore/KeyGenParameterSpec$Builder;` @kind virtual;
+  #L2b0c6a.  v0:= temp @kind object;
+  #L2b0c6c.  call temp:= `isUserAuthRequired`(v5) @signature `Lco/infinum/goldfinger/crypto/impl/AesCipherFactory;.isUserAuthRequired:()Z` @kind virtual;
+  #L2b0c72.  v1:= temp;
+  #L2b0c74.  call temp:= `setUserAuthenticationRequired`(v0, v1) @signature `Landroid/security/keystore/KeyGenParameterSpec$Builder;.setUserAuthenticationRequired:(Z)Landroid/security/keystore/KeyGenParameterSpec$Builder;` @kind virtual;
+  #L2b0c7a.  v0:= temp @kind object;
+  #L2b0c7c.  v1:= `@@android.os.Build$VERSION.SDK_INT` @type ^`int`;
+  #L2b0c80.  v2:= 24I;
+  #L2b0c84.  if v1 < v2 then goto L2b0c96;
+  #L2b0c88.  call temp:= `isUserAuthRequired`(v5) @signature `Lco/infinum/goldfinger/crypto/impl/AesCipherFactory;.isUserAuthRequired:()Z` @kind virtual;
+  #L2b0c8e.  v1:= temp;
+  #L2b0c90.  call temp:= `setInvalidatedByBiometricEnrollment`(v0, v1) @signature `Landroid/security/keystore/KeyGenParameterSpec$Builder;.setInvalidatedByBiometricEnrollment:(Z)Landroid/security/keystore/KeyGenParameterSpec$Builder;` @kind virtual;
+  #L2b0c96.  v1:= v5.`co.infinum.goldfinger.crypto.impl.AesCipherFactory.keyGenerator` @type ^`javax.crypto.KeyGenerator` @kind object;
+  #L2b0c9a.  call temp:= `build`(v0) @signature `Landroid/security/keystore/KeyGenParameterSpec$Builder;.build:()Landroid/security/keystore/KeyGenParameterSpec;` @kind virtual;
+  #L2b0ca0.  v0:= temp @kind object;
+  #L2b0ca2.  call `init`(v1, v0) @signature `Ljavax/crypto/KeyGenerator;.init:(Ljava/security/spec/AlgorithmParameterSpec;)V` @kind virtual;
+  #L2b0ca8.  v0:= v5.`co.infinum.goldfinger.crypto.impl.AesCipherFactory.keyGenerator` @type ^`javax.crypto.KeyGenerator` @kind object;
+  #L2b0cac.  call temp:= `generateKey`(v0) @signature `Ljavax/crypto/KeyGenerator;.generateKey:()Ljavax/crypto/SecretKey;` @kind virtual;
+  #L2b0cb2.  call temp:= `loadKey`(v5, v6) @signature `Lco/infinum/goldfinger/crypto/impl/AesCipherFactory;.loadKey:(Ljava/lang/String;)Ljava/security/Key;` @kind direct;
+  #L2b0cb8.  v6:= temp @kind object;
+  #L2b0cba.  return v6 @kind object;
+}
+procedure `byte`[] `loadIv`(`co.infinum.goldfinger.crypto.impl.AesCipherFactory` v2 @kind this, `java.lang.String` v3 @kind object) @signature `Lco/infinum/goldfinger/crypto/impl/AesCipherFactory;.loadIv:(Ljava/lang/String;)[B` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+
+  #L2b0bd0.  v0:= v2.`co.infinum.goldfinger.crypto.impl.AesCipherFactory.sharedPrefs` @type ^`android.content.SharedPreferences` @kind object;
+  #L2b0bd4.  v1:= "" @kind object;
+  #L2b0bd8.  call temp:= `getString`(v0, v3, v1) @signature `Landroid/content/SharedPreferences;.getString:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;` @kind interface;
+  #L2b0bde.  v3:= temp @kind object;
+  #L2b0be0.  v0:= 0I;
+  #L2b0be2.  call temp:= `decode`(v3, v0) @signature `Landroid/util/Base64;.decode:(Ljava/lang/String;I)[B` @kind static;
+  #L2b0be8.  v3:= temp @kind object;
+  #L2b0bea.  return v3 @kind object;
+}
+procedure `java.security.Key` `loadKey`(`co.infinum.goldfinger.crypto.impl.AesCipherFactory` v2 @kind this, `java.lang.String` v3 @kind object) @signature `Lco/infinum/goldfinger/crypto/impl/AesCipherFactory;.loadKey:(Ljava/lang/String;)Ljava/security/Key;` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+
+  #L2b0ccc.  v0:= v2.`co.infinum.goldfinger.crypto.impl.AesCipherFactory.keyStore` @type ^`java.security.KeyStore` @kind object;
+  #L2b0cd0.  v1:= 0I;
+  #L2b0cd2.  call `load`(v0, v1) @signature `Ljava/security/KeyStore;.load:(Ljava/security/KeyStore$LoadStoreParameter;)V` @kind virtual;
+  #L2b0cd8.  v0:= v2.`co.infinum.goldfinger.crypto.impl.AesCipherFactory.keyStore` @type ^`java.security.KeyStore` @kind object;
+  #L2b0cdc.  call temp:= `getKey`(v0, v3, v1) @signature `Ljava/security/KeyStore;.getKey:(Ljava/lang/String;[C)Ljava/security/Key;` @kind virtual;
+  #L2b0ce2.  v3:= temp @kind object;
+  #L2b0ce4.  return v3 @kind object;
+}
+procedure `void` `saveIv`(`co.infinum.goldfinger.crypto.impl.AesCipherFactory` v2 @kind this, `java.lang.String` v3 @kind object, `byte`[] v4 @kind object) @signature `Lco/infinum/goldfinger/crypto/impl/AesCipherFactory;.saveIv:(Ljava/lang/String;[B)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+
+  #L2b0e68.  v0:= v2.`co.infinum.goldfinger.crypto.impl.AesCipherFactory.sharedPrefs` @type ^`android.content.SharedPreferences` @kind object;
+  #L2b0e6c.  call temp:= `edit`(v0) @signature `Landroid/content/SharedPreferences;.edit:()Landroid/content/SharedPreferences$Editor;` @kind interface;
+  #L2b0e72.  v0:= temp @kind object;
+  #L2b0e74.  v1:= 0I;
+  #L2b0e76.  call temp:= `encodeToString`(v4, v1) @signature `Landroid/util/Base64;.encodeToString:([BI)Ljava/lang/String;` @kind static;
+  #L2b0e7c.  v4:= temp @kind object;
+  #L2b0e7e.  call temp:= `putString`(v0, v3, v4) @signature `Landroid/content/SharedPreferences$Editor;.putString:(Ljava/lang/String;Ljava/lang/String;)Landroid/content/SharedPreferences$Editor;` @kind interface;
+  #L2b0e84.  v3:= temp @kind object;
+  #L2b0e86.  call `apply`(v3) @signature `Landroid/content/SharedPreferences$Editor;.apply:()V` @kind interface;
+  #L2b0e8c.  return @kind void;
+}
+procedure `java.lang.Object` `createDecryptionCrypter`(`co.infinum.goldfinger.crypto.impl.AesCipherFactory` v0 @kind this, `java.lang.String` v1 @kind object) @signature `Lco/infinum/goldfinger/crypto/impl/AesCipherFactory;.createDecryptionCrypter:(Ljava/lang/String;)Ljava/lang/Object;` @AccessFlag PUBLIC_SYNTHETIC {
+    temp;
+
+  #L2b0bfc.  call temp:= `createDecryptionCrypter`(v0, v1) @signature `Lco/infinum/goldfinger/crypto/impl/AesCipherFactory;.createDecryptionCrypter:(Ljava/lang/String;)Ljavax/crypto/Cipher;` @kind virtual;
+  #L2b0c02.  v1:= temp @kind object;
+  #L2b0c04.  return v1 @kind object;
+}
+procedure `javax.crypto.Cipher` `createDecryptionCrypter`(`co.infinum.goldfinger.crypto.impl.AesCipherFactory` v5 @kind this, `java.lang.String` v6 @kind object) @signature `Lco/infinum/goldfinger/crypto/impl/AesCipherFactory;.createDecryptionCrypter:(Ljava/lang/String;)Ljavax/crypto/Cipher;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L2b0cf8.  v0:= v5.`co.infinum.goldfinger.crypto.impl.AesCipherFactory.keyStore` @type ^`java.security.KeyStore` @kind object;
+  #L2b0cfc.  v1:= 0I;
+  #L2b0cfe.  if v0 == 0 then goto L2b0d3c;
+  #L2b0d02.  v0:= v5.`co.infinum.goldfinger.crypto.impl.AesCipherFactory.keyGenerator` @type ^`javax.crypto.KeyGenerator` @kind object;
+  #L2b0d06.  if v0 != 0 then goto L2b0d0c;
+  #L2b0d0a.  goto L2b0d3c;
+  #L2b0d0c.  call temp:= `loadKey`(v5, v6) @signature `Lco/infinum/goldfinger/crypto/impl/AesCipherFactory;.loadKey:(Ljava/lang/String;)Ljava/security/Key;` @kind direct;
+  #L2b0d12.  v0:= temp @kind object;
+  #L2b0d14.  v2:= `@@co.infinum.goldfinger.crypto.impl.AesCipherFactory.CIPHER_TRANSFORMATION` @type ^`java.lang.String` @kind object;
+  #L2b0d18.  call temp:= `getInstance`(v2) @signature `Ljavax/crypto/Cipher;.getInstance:(Ljava/lang/String;)Ljavax/crypto/Cipher;` @kind static;
+  #L2b0d1e.  v2:= temp @kind object;
+  #L2b0d20.  call temp:= `loadIv`(v5, v6) @signature `Lco/infinum/goldfinger/crypto/impl/AesCipherFactory;.loadIv:(Ljava/lang/String;)[B` @kind direct;
+  #L2b0d26.  v6:= temp @kind object;
+  #L2b0d28.  v3:= 2I;
+  #L2b0d2a.  v4:= new `javax.crypto.spec.IvParameterSpec`;
+  #L2b0d2e.  call `<init>`(v4, v6) @signature `Ljavax/crypto/spec/IvParameterSpec;.<init>:([B)V` @kind direct;
+  #L2b0d34.  call `init`(v2, v3, v0, v4) @signature `Ljavax/crypto/Cipher;.init:(ILjava/security/Key;Ljava/security/spec/AlgorithmParameterSpec;)V` @kind virtual;
+  #L2b0d3a.  return v2 @kind object;
+  #L2b0d3c.  return v1 @kind object;
+  catch `java.lang.Exception` @[L2b0d0c..L2b0d3a] goto L2b0d3c;
+}
+procedure `java.lang.Object` `createEncryptionCrypter`(`co.infinum.goldfinger.crypto.impl.AesCipherFactory` v0 @kind this, `java.lang.String` v1 @kind object) @signature `Lco/infinum/goldfinger/crypto/impl/AesCipherFactory;.createEncryptionCrypter:(Ljava/lang/String;)Ljava/lang/Object;` @AccessFlag PUBLIC_SYNTHETIC {
+    temp;
+
+  #L2b0c18.  call temp:= `createEncryptionCrypter`(v0, v1) @signature `Lco/infinum/goldfinger/crypto/impl/AesCipherFactory;.createEncryptionCrypter:(Ljava/lang/String;)Ljavax/crypto/Cipher;` @kind virtual;
+  #L2b0c1e.  v1:= temp @kind object;
+  #L2b0c20.  return v1 @kind object;
+}
+procedure `javax.crypto.Cipher` `createEncryptionCrypter`(`co.infinum.goldfinger.crypto.impl.AesCipherFactory` v4 @kind this, `java.lang.String` v5 @kind object) @signature `Lco/infinum/goldfinger/crypto/impl/AesCipherFactory;.createEncryptionCrypter:(Ljava/lang/String;)Ljavax/crypto/Cipher;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L2b0d60.  v0:= v4.`co.infinum.goldfinger.crypto.impl.AesCipherFactory.keyStore` @type ^`java.security.KeyStore` @kind object;
+  #L2b0d64.  v1:= 0I;
+  #L2b0d66.  if v0 == 0 then goto L2b0da0;
+  #L2b0d6a.  v0:= v4.`co.infinum.goldfinger.crypto.impl.AesCipherFactory.keyGenerator` @type ^`javax.crypto.KeyGenerator` @kind object;
+  #L2b0d6e.  if v0 != 0 then goto L2b0d74;
+  #L2b0d72.  goto L2b0da0;
+  #L2b0d74.  call temp:= `createKey`(v4, v5) @signature `Lco/infinum/goldfinger/crypto/impl/AesCipherFactory;.createKey:(Ljava/lang/String;)Ljava/security/Key;` @kind direct;
+  #L2b0d7a.  v0:= temp @kind object;
+  #L2b0d7c.  v2:= `@@co.infinum.goldfinger.crypto.impl.AesCipherFactory.CIPHER_TRANSFORMATION` @type ^`java.lang.String` @kind object;
+  #L2b0d80.  call temp:= `getInstance`(v2) @signature `Ljavax/crypto/Cipher;.getInstance:(Ljava/lang/String;)Ljavax/crypto/Cipher;` @kind static;
+  #L2b0d86.  v2:= temp @kind object;
+  #L2b0d88.  v3:= 1I;
+  #L2b0d8a.  call `init`(v2, v3, v0) @signature `Ljavax/crypto/Cipher;.init:(ILjava/security/Key;)V` @kind virtual;
+  #L2b0d90.  call temp:= `getIV`(v2) @signature `Ljavax/crypto/Cipher;.getIV:()[B` @kind virtual;
+  #L2b0d96.  v0:= temp @kind object;
+  #L2b0d98.  call `saveIv`(v4, v5, v0) @signature `Lco/infinum/goldfinger/crypto/impl/AesCipherFactory;.saveIv:(Ljava/lang/String;[B)V` @kind direct;
+  #L2b0d9e.  return v2 @kind object;
+  #L2b0da0.  return v1 @kind object;
+  catch `java.lang.Exception` @[L2b0d74..L2b0d9e] goto L2b0da0;
+}
+procedure `boolean` `isUserAuthRequired`(`co.infinum.goldfinger.crypto.impl.AesCipherFactory` v1 @kind this) @signature `Lco/infinum/goldfinger/crypto/impl/AesCipherFactory;.isUserAuthRequired:()Z` @AccessFlag PROTECTED {
+    temp;
+    v0;
+
+  #L2b0bbc.  v0:= 1I;
+  #L2b0bbe.  return v0;
+}

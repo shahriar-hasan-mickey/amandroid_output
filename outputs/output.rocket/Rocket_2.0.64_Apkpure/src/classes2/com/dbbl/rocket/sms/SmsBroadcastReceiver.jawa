@@ -1,0 +1,65 @@
+record `com.dbbl.rocket.sms.SmsBroadcastReceiver` @kind class @AccessFlag PUBLIC extends `android.content.BroadcastReceiver` @kind class {
+  `com.dbbl.rocket.sms.OtpReceivedInterface` `com.dbbl.rocket.sms.SmsBroadcastReceiver.a` @AccessFlag ;
+}
+procedure `void` `<init>`(`com.dbbl.rocket.sms.SmsBroadcastReceiver` v1 @kind this) @signature `Lcom/dbbl/rocket/sms/SmsBroadcastReceiver;.<init>:()V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L186b30.  call `<init>`(v1) @signature `Landroid/content/BroadcastReceiver;.<init>:()V` @kind direct;
+  #L186b36.  v0:= 0I;
+  #L186b38.  v1.`com.dbbl.rocket.sms.SmsBroadcastReceiver.a` @type ^`com.dbbl.rocket.sms.OtpReceivedInterface` := v0 @kind object;
+  #L186b3c.  return @kind void;
+}
+procedure `void` `onReceive`(`com.dbbl.rocket.sms.SmsBroadcastReceiver` v1 @kind this, `android.content.Context` v2 @kind object, `android.content.Intent` v3 @kind object) @signature `Lcom/dbbl/rocket/sms/SmsBroadcastReceiver;.onReceive:(Landroid/content/Context;Landroid/content/Intent;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L186b50.  call temp:= `getAction`(v3) @signature `Landroid/content/Intent;.getAction:()Ljava/lang/String;` @kind virtual;
+  #L186b56.  v2:= temp @kind object;
+  #L186b58.  v0:= "com.google.android.gms.auth.api.phone.SMS_RETRIEVED" @kind object;
+  #L186b5c.  call temp:= `equals`(v0, v2) @signature `Ljava/lang/String;.equals:(Ljava/lang/Object;)Z` @kind virtual;
+  #L186b62.  v2:= temp;
+  #L186b64.  if v2 == 0 then goto L186bf2;
+  #L186b68.  call temp:= `getExtras`(v3) @signature `Landroid/content/Intent;.getExtras:()Landroid/os/Bundle;` @kind virtual;
+  #L186b6e.  v2:= temp @kind object;
+  #L186b70.  v3:= "com.google.android.gms.auth.api.phone.EXTRA_STATUS" @kind object;
+  #L186b74.  call temp:= `get`(v2, v3) @signature `Landroid/os/Bundle;.get:(Ljava/lang/String;)Ljava/lang/Object;` @kind virtual;
+  #L186b7a.  v3:= temp @kind object;
+  #L186b7c.  v3:= (`com.google.android.gms.common.api.Status`) v3 @kind object;
+  #L186b80.  call temp:= `getStatusCode`(v3) @signature `Lcom/google/android/gms/common/api/Status;.getStatusCode:()I` @kind virtual;
+  #L186b86.  v3:= temp;
+  #L186b88.  if v3 == 0 then goto L186ba6;
+  #L186b8c.  v2:= 15I;
+  #L186b90.  if v3 == v2 then goto L186b96;
+  #L186b94.  goto L186bf2;
+  #L186b96.  v2:= v1.`com.dbbl.rocket.sms.SmsBroadcastReceiver.a` @type ^`com.dbbl.rocket.sms.OtpReceivedInterface` @kind object;
+  #L186b9a.  if v2 == 0 then goto L186bf2;
+  #L186b9e.  call `onOtpTimeout`(v2) @signature `Lcom/dbbl/rocket/sms/OtpReceivedInterface;.onOtpTimeout:()V` @kind interface;
+  #L186ba4.  goto L186bf2;
+  #L186ba6.  v3:= "com.google.android.gms.auth.api.phone.EXTRA_SMS_MESSAGE" @kind object;
+  #L186baa.  call temp:= `get`(v2, v3) @signature `Landroid/os/Bundle;.get:(Ljava/lang/String;)Ljava/lang/Object;` @kind virtual;
+  #L186bb0.  v2:= temp @kind object;
+  #L186bb2.  v2:= (`java.lang.String`) v2 @kind object;
+  #L186bb6.  v3:= v1.`com.dbbl.rocket.sms.SmsBroadcastReceiver.a` @type ^`com.dbbl.rocket.sms.OtpReceivedInterface` @kind object;
+  #L186bba.  if v3 == 0 then goto L186bf2;
+  #L186bbe.  v3:= "(\\d{6})" @kind object;
+  #L186bc2.  call temp:= `compile`(v3) @signature `Ljava/util/regex/Pattern;.compile:(Ljava/lang/String;)Ljava/util/regex/Pattern;` @kind static;
+  #L186bc8.  v3:= temp @kind object;
+  #L186bca.  call temp:= `matcher`(v3, v2) @signature `Ljava/util/regex/Pattern;.matcher:(Ljava/lang/CharSequence;)Ljava/util/regex/Matcher;` @kind virtual;
+  #L186bd0.  v2:= temp @kind object;
+  #L186bd2.  call temp:= `find`(v2) @signature `Ljava/util/regex/Matcher;.find:()Z` @kind virtual;
+  #L186bd8.  v3:= temp;
+  #L186bda.  if v3 == 0 then goto L186bf2;
+  #L186bde.  v3:= v1.`com.dbbl.rocket.sms.SmsBroadcastReceiver.a` @type ^`com.dbbl.rocket.sms.OtpReceivedInterface` @kind object;
+  #L186be2.  v0:= 0I;
+  #L186be4.  call temp:= `group`(v2, v0) @signature `Ljava/util/regex/Matcher;.group:(I)Ljava/lang/String;` @kind virtual;
+  #L186bea.  v2:= temp @kind object;
+  #L186bec.  call `onOtpReceived`(v3, v2) @signature `Lcom/dbbl/rocket/sms/OtpReceivedInterface;.onOtpReceived:(Ljava/lang/String;)V` @kind interface;
+  #L186bf2.  return @kind void;
+}
+procedure `void` `setOnOtpListeners`(`com.dbbl.rocket.sms.SmsBroadcastReceiver` v0 @kind this, `com.dbbl.rocket.sms.OtpReceivedInterface` v1 @kind object) @signature `Lcom/dbbl/rocket/sms/SmsBroadcastReceiver;.setOnOtpListeners:(Lcom/dbbl/rocket/sms/OtpReceivedInterface;)V` @AccessFlag PUBLIC {
+    temp;
+
+  #L186c04.  v0.`com.dbbl.rocket.sms.SmsBroadcastReceiver.a` @type ^`com.dbbl.rocket.sms.OtpReceivedInterface` := v1 @kind object;
+  #L186c08.  return @kind void;
+}

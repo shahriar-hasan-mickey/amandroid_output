@@ -1,0 +1,38 @@
+record `co.infinum.goldfinger.AsyncCryptoObjectFactory` @kind class @AccessFlag  {
+  `co.infinum.goldfinger.CryptoObjectFactory` `co.infinum.goldfinger.AsyncCryptoObjectFactory.cryptoObjectFactory` @AccessFlag PRIVATE_FINAL;
+  `java.util.concurrent.ExecutorService` `co.infinum.goldfinger.AsyncCryptoObjectFactory.executor` @AccessFlag PRIVATE_FINAL;
+  `java.util.concurrent.Future` `co.infinum.goldfinger.AsyncCryptoObjectFactory.task` @AccessFlag PRIVATE;
+}
+procedure `void` `<init>`(`co.infinum.goldfinger.AsyncCryptoObjectFactory` v0 @kind this, `co.infinum.goldfinger.CryptoObjectFactory` v1 @kind object) @signature `Lco/infinum/goldfinger/AsyncCryptoObjectFactory;.<init>:(Lco/infinum/goldfinger/CryptoObjectFactory;)V` @AccessFlag CONSTRUCTOR {
+    temp;
+
+  #L2ae390.  call `<init>`(v0) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L2ae396.  v0.`co.infinum.goldfinger.AsyncCryptoObjectFactory.cryptoObjectFactory` @type ^`co.infinum.goldfinger.CryptoObjectFactory` := v1 @kind object;
+  #L2ae39a.  call temp:= `newSingleThreadExecutor`() @signature `Ljava/util/concurrent/Executors;.newSingleThreadExecutor:()Ljava/util/concurrent/ExecutorService;` @kind static;
+  #L2ae3a0.  v1:= temp @kind object;
+  #L2ae3a2.  v0.`co.infinum.goldfinger.AsyncCryptoObjectFactory.executor` @type ^`java.util.concurrent.ExecutorService` := v1 @kind object;
+  #L2ae3a6.  return @kind void;
+}
+procedure `void` `a`(`co.infinum.goldfinger.AsyncCryptoObjectFactory` v3 @kind this, `co.infinum.goldfinger.Mode` v4 @kind object, `java.lang.String` v5 @kind object, `co.infinum.goldfinger.AsyncCryptoObjectFactory$Callback` v6 @kind object) @signature `Lco/infinum/goldfinger/AsyncCryptoObjectFactory;.a:(Lco/infinum/goldfinger/Mode;Ljava/lang/String;Lco/infinum/goldfinger/AsyncCryptoObjectFactory$Callback;)V` @AccessFlag  {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L2ae3b8.  v0:= v3.`co.infinum.goldfinger.AsyncCryptoObjectFactory.task` @type ^`java.util.concurrent.Future` @kind object;
+  #L2ae3bc.  if v0 == 0 then goto L2ae3d8;
+  #L2ae3c0.  call temp:= `isDone`(v0) @signature `Ljava/util/concurrent/Future;.isDone:()Z` @kind interface;
+  #L2ae3c6.  v0:= temp;
+  #L2ae3c8.  if v0 != 0 then goto L2ae3d8;
+  #L2ae3cc.  v0:= v3.`co.infinum.goldfinger.AsyncCryptoObjectFactory.task` @type ^`java.util.concurrent.Future` @kind object;
+  #L2ae3d0.  v1:= 1I;
+  #L2ae3d2.  call temp:= `cancel`(v0, v1) @signature `Ljava/util/concurrent/Future;.cancel:(Z)Z` @kind interface;
+  #L2ae3d8.  v0:= v3.`co.infinum.goldfinger.AsyncCryptoObjectFactory.executor` @type ^`java.util.concurrent.ExecutorService` @kind object;
+  #L2ae3dc.  v1:= new `co.infinum.goldfinger.CryptoObjectInitRunnable`;
+  #L2ae3e0.  v2:= v3.`co.infinum.goldfinger.AsyncCryptoObjectFactory.cryptoObjectFactory` @type ^`co.infinum.goldfinger.CryptoObjectFactory` @kind object;
+  #L2ae3e4.  call `<init>`(v1, v2, v4, v5, v6) @signature `Lco/infinum/goldfinger/CryptoObjectInitRunnable;.<init>:(Lco/infinum/goldfinger/CryptoObjectFactory;Lco/infinum/goldfinger/Mode;Ljava/lang/String;Lco/infinum/goldfinger/AsyncCryptoObjectFactory$Callback;)V` @kind direct;
+  #L2ae3ea.  call temp:= `submit`(v0, v1) @signature `Ljava/util/concurrent/ExecutorService;.submit:(Ljava/lang/Runnable;)Ljava/util/concurrent/Future;` @kind interface;
+  #L2ae3f0.  v4:= temp @kind object;
+  #L2ae3f2.  v3.`co.infinum.goldfinger.AsyncCryptoObjectFactory.task` @type ^`java.util.concurrent.Future` := v4 @kind object;
+  #L2ae3f6.  return @kind void;
+}

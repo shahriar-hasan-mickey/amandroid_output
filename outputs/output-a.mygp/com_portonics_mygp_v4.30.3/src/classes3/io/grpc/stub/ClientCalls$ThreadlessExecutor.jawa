@@ -1,0 +1,86 @@
+record `io.grpc.stub.ClientCalls$ThreadlessExecutor` @kind class @AccessFlag FINAL extends `java.util.concurrent.ConcurrentLinkedQueue` @kind class, `java.util.concurrent.Executor` @kind interface {
+  `java.lang.Thread` `io.grpc.stub.ClientCalls$ThreadlessExecutor.waiter` @AccessFlag PRIVATE_VOLATILE;
+}
+global `java.util.logging.Logger` `@@io.grpc.stub.ClientCalls$ThreadlessExecutor.b` @AccessFlag PRIVATE_STATIC_FINAL;
+procedure `void` `<clinit>`() @signature `Lio/grpc/stub/ClientCalls$ThreadlessExecutor;.<clinit>:()V` @AccessFlag STATIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L23a724.  v0:= constclass @type ^`io.grpc.stub.ClientCalls$ThreadlessExecutor` @kind object;
+  #L23a728.  call temp:= `getName`(v0) @signature `Ljava/lang/Class;.getName:()Ljava/lang/String;` @kind virtual;
+  #L23a72e.  v0:= temp @kind object;
+  #L23a730.  call temp:= `getLogger`(v0) @signature `Ljava/util/logging/Logger;.getLogger:(Ljava/lang/String;)Ljava/util/logging/Logger;` @kind static;
+  #L23a736.  v0:= temp @kind object;
+  #L23a738.  `@@io.grpc.stub.ClientCalls$ThreadlessExecutor.b` @type ^`java.util.logging.Logger` := v0 @kind object;
+  #L23a73c.  return @kind void;
+}
+procedure `void` `<init>`(`io.grpc.stub.ClientCalls$ThreadlessExecutor` v0 @kind this) @signature `Lio/grpc/stub/ClientCalls$ThreadlessExecutor;.<init>:()V` @AccessFlag CONSTRUCTOR {
+    temp;
+
+  #L23a750.  call `<init>`(v0) @signature `Ljava/util/concurrent/ConcurrentLinkedQueue;.<init>:()V` @kind direct;
+  #L23a756.  return @kind void;
+}
+procedure `void` `a`(`java.lang.Thread` v0 @kind object) @signature `Lio/grpc/stub/ClientCalls$ThreadlessExecutor;.a:(Ljava/lang/Thread;)V` @AccessFlag PRIVATE_STATIC {
+    temp;
+
+  #L23a78c.  call temp:= `isInterrupted`(v0) @signature `Ljava/lang/Thread;.isInterrupted:()Z` @kind virtual;
+  #L23a792.  v0:= temp;
+  #L23a794.  if v0 != 0 then goto L23a79a;
+  #L23a798.  return @kind void;
+  #L23a79a.  v0:= new `java.lang.InterruptedException`;
+  #L23a79e.  call `<init>`(v0) @signature `Ljava/lang/InterruptedException;.<init>:()V` @kind direct;
+  #L23a7a4.  throw v0;
+}
+procedure `void` `execute`(`io.grpc.stub.ClientCalls$ThreadlessExecutor` v0 @kind this, `java.lang.Runnable` v1 @kind object) @signature `Lio/grpc/stub/ClientCalls$ThreadlessExecutor;.execute:(Ljava/lang/Runnable;)V` @AccessFlag PUBLIC {
+    temp;
+
+  #L23a768.  call temp:= `add`(v0, v1) @signature `Ljava/util/concurrent/ConcurrentLinkedQueue;.add:(Ljava/lang/Object;)Z` @kind virtual;
+  #L23a76e.  v1:= v0.`io.grpc.stub.ClientCalls$ThreadlessExecutor.waiter` @type ^`java.lang.Thread` @kind object;
+  #L23a772.  call `unpark`(v1) @signature `Ljava/util/concurrent/locks/LockSupport;.unpark:(Ljava/lang/Thread;)V` @kind static;
+  #L23a778.  return @kind void;
+}
+procedure `void` `waitAndDrain`(`io.grpc.stub.ClientCalls$ThreadlessExecutor` v4 @kind this) @signature `Lio/grpc/stub/ClientCalls$ThreadlessExecutor;.waitAndDrain:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L23a7b8.  call temp:= `currentThread`() @signature `Ljava/lang/Thread;.currentThread:()Ljava/lang/Thread;` @kind static;
+  #L23a7be.  v0:= temp @kind object;
+  #L23a7c0.  call `a`(v0) @signature `Lio/grpc/stub/ClientCalls$ThreadlessExecutor;.a:(Ljava/lang/Thread;)V` @kind static;
+  #L23a7c6.  call temp:= `poll`(v4) @signature `Ljava/util/concurrent/ConcurrentLinkedQueue;.poll:()Ljava/lang/Object;` @kind virtual;
+  #L23a7cc.  v1:= temp @kind object;
+  #L23a7ce.  v1:= (`java.lang.Runnable`) v1 @kind object;
+  #L23a7d2.  if v1 != 0 then goto L23a80a;
+  #L23a7d6.  v4.`io.grpc.stub.ClientCalls$ThreadlessExecutor.waiter` @type ^`java.lang.Thread` := v0 @kind object;
+  #L23a7da.  v1:= 0I;
+  #L23a7dc.  call temp:= `poll`(v4) @signature `Ljava/util/concurrent/ConcurrentLinkedQueue;.poll:()Ljava/lang/Object;` @kind virtual;
+  #L23a7e2.  v2:= temp @kind object;
+  #L23a7e4.  v2:= (`java.lang.Runnable`) v2 @kind object;
+  #L23a7e8.  if v2 != 0 then goto L23a7fa;
+  #L23a7ec.  call `park`(v4) @signature `Ljava/util/concurrent/locks/LockSupport;.park:(Ljava/lang/Object;)V` @kind static;
+  #L23a7f2.  call `a`(v0) @signature `Lio/grpc/stub/ClientCalls$ThreadlessExecutor;.a:(Ljava/lang/Thread;)V` @kind static;
+  #L23a7f8.  goto L23a7da;
+  #L23a7fa.  v4.`io.grpc.stub.ClientCalls$ThreadlessExecutor.waiter` @type ^`java.lang.Thread` := v1 @kind object;
+  #L23a7fe.  v1:= v2 @kind object;
+  #L23a800.  goto L23a80a;
+  #L23a802.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L23a804.  v4.`io.grpc.stub.ClientCalls$ThreadlessExecutor.waiter` @type ^`java.lang.Thread` := v1 @kind object;
+  #L23a808.  throw v0;
+  #L23a80a.  call `run`(v1) @signature `Ljava/lang/Runnable;.run:()V` @kind interface;
+  #L23a810.  goto L23a826;
+  #L23a812.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L23a814.  v1:= `@@io.grpc.stub.ClientCalls$ThreadlessExecutor.b` @type ^`java.util.logging.Logger` @kind object;
+  #L23a818.  v2:= `@@java.util.logging.Level.WARNING` @type ^`java.util.logging.Level` @kind object;
+  #L23a81c.  v3:= "Runnable threw exception" @kind object;
+  #L23a820.  call `log`(v1, v2, v3, v0) @signature `Ljava/util/logging/Logger;.log:(Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V` @kind virtual;
+  #L23a826.  call temp:= `poll`(v4) @signature `Ljava/util/concurrent/ConcurrentLinkedQueue;.poll:()Ljava/lang/Object;` @kind virtual;
+  #L23a82c.  v0:= temp @kind object;
+  #L23a82e.  v1:= v0 @kind object;
+  #L23a830.  v1:= (`java.lang.Runnable`) v1 @kind object;
+  #L23a834.  if v1 != 0 then goto L23a80a;
+  #L23a838.  return @kind void;
+  catch `java.lang.Throwable` @[L23a7dc..L23a7f8] goto L23a802;
+  catch `java.lang.Throwable` @[L23a80a..L23a810] goto L23a812;
+}

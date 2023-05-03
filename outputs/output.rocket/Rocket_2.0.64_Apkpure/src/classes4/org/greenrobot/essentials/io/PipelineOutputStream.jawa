@@ -1,0 +1,133 @@
+record `org.greenrobot.essentials.io.PipelineOutputStream` @kind class @AccessFlag PUBLIC extends `java.io.OutputStream` @kind class {
+  `org.greenrobot.essentials.io.PipelineOutputStream$PipelineInputStream` `org.greenrobot.essentials.io.PipelineOutputStream.a` @AccessFlag PRIVATE_FINAL;
+  `org.greenrobot.essentials.io.CircularByteBuffer` `org.greenrobot.essentials.io.PipelineOutputStream.b` @AccessFlag FINAL;
+  `boolean` `org.greenrobot.essentials.io.PipelineOutputStream.c` @AccessFlag ;
+  `boolean` `org.greenrobot.essentials.io.PipelineOutputStream.d` @AccessFlag ;
+}
+procedure `void` `<init>`(`org.greenrobot.essentials.io.PipelineOutputStream` v1 @kind this) @signature `Lorg/greenrobot/essentials/io/PipelineOutputStream;.<init>:()V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L19ee0c.  v0:= 8192I;
+  #L19ee10.  call `<init>`(v1, v0) @signature `Lorg/greenrobot/essentials/io/PipelineOutputStream;.<init>:(I)V` @kind direct;
+  #L19ee16.  return @kind void;
+}
+procedure `void` `<init>`(`org.greenrobot.essentials.io.PipelineOutputStream` v1 @kind this, `int` v2 ) @signature `Lorg/greenrobot/essentials/io/PipelineOutputStream;.<init>:(I)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L19ee28.  call `<init>`(v1) @signature `Ljava/io/OutputStream;.<init>:()V` @kind direct;
+  #L19ee2e.  v0:= new `org.greenrobot.essentials.io.CircularByteBuffer`;
+  #L19ee32.  call `<init>`(v0, v2) @signature `Lorg/greenrobot/essentials/io/CircularByteBuffer;.<init>:(I)V` @kind direct;
+  #L19ee38.  v1.`org.greenrobot.essentials.io.PipelineOutputStream.b` @type ^`org.greenrobot.essentials.io.CircularByteBuffer` := v0 @kind object;
+  #L19ee3c.  v2:= new `org.greenrobot.essentials.io.PipelineOutputStream$PipelineInputStream`;
+  #L19ee40.  call `<init>`(v2, v1) @signature `Lorg/greenrobot/essentials/io/PipelineOutputStream$PipelineInputStream;.<init>:(Lorg/greenrobot/essentials/io/PipelineOutputStream;)V` @kind direct;
+  #L19ee46.  v1.`org.greenrobot.essentials.io.PipelineOutputStream.a` @type ^`org.greenrobot.essentials.io.PipelineOutputStream$PipelineInputStream` := v2 @kind object;
+  #L19ee4a.  return @kind void;
+}
+procedure `void` `a`(`org.greenrobot.essentials.io.PipelineOutputStream` v2 @kind this) @signature `Lorg/greenrobot/essentials/io/PipelineOutputStream;.a:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+
+  #L19ee5c.  v0:= v2.`org.greenrobot.essentials.io.PipelineOutputStream.d` @type ^`boolean` @kind boolean;
+  #L19ee60.  if v0 != 0 then goto L19ee66;
+  #L19ee64.  return @kind void;
+  #L19ee66.  v0:= new `java.io.IOException`;
+  #L19ee6a.  v1:= "PipelineInputStream was closed (broken pipeline)" @kind object;
+  #L19ee6e.  call `<init>`(v0, v1) @signature `Ljava/io/IOException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L19ee74.  throw v0;
+}
+procedure `void` `b`(`org.greenrobot.essentials.io.PipelineOutputStream` v0 @kind this) @signature `Lorg/greenrobot/essentials/io/PipelineOutputStream;.b:()V` @AccessFlag  {
+    temp;
+
+  #L19eebc.  call `notifyAll`(v0) @signature `Ljava/lang/Object;.notifyAll:()V` @kind virtual;
+  #L19eec2.  return @kind void;
+}
+procedure `void` `c`(`org.greenrobot.essentials.io.PipelineOutputStream` v2 @kind this) @signature `Lorg/greenrobot/essentials/io/PipelineOutputStream;.c:()V` @AccessFlag  {
+    temp;
+    v0;
+    v1;
+
+  #L19eed4.  call `wait`(v2) @signature `Ljava/lang/Object;.wait:()V` @kind virtual;
+  #L19eeda.  return @kind void;
+  #L19eedc.  v0:= Exception @type ^`java.lang.InterruptedException` @kind object;
+  #L19eede.  v1:= new `java.io.IOException`;
+  #L19eee2.  call `<init>`(v1, v0) @signature `Ljava/io/IOException;.<init>:(Ljava/lang/Throwable;)V` @kind direct;
+  #L19eee8.  throw v1;
+  catch `java.lang.InterruptedException` @[L19eed4..L19eeda] goto L19eedc;
+}
+procedure `void` `close`(`org.greenrobot.essentials.io.PipelineOutputStream` v1 @kind this) @signature `Lorg/greenrobot/essentials/io/PipelineOutputStream;.close:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L19ee88.  @monitorenter v1
+  #L19ee8a.  v0:= 1I;
+  #L19ee8c.  v1.`org.greenrobot.essentials.io.PipelineOutputStream.c` @type ^`boolean` := v0 @kind boolean;
+  #L19ee90.  call `b`(v1) @signature `Lorg/greenrobot/essentials/io/PipelineOutputStream;.b:()V` @kind virtual;
+  #L19ee96.  @monitorexit v1
+  #L19ee98.  return @kind void;
+  #L19ee9a.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L19ee9c.  @monitorexit v1
+  #L19ee9e.  throw v0;
+  catch `java.lang.Throwable` @[L19ee8c..L19ee96] goto L19ee9a;
+}
+procedure `java.io.InputStream` `getInputStream`(`org.greenrobot.essentials.io.PipelineOutputStream` v1 @kind this) @signature `Lorg/greenrobot/essentials/io/PipelineOutputStream;.getInputStream:()Ljava/io/InputStream;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L19edf4.  v0:= v1.`org.greenrobot.essentials.io.PipelineOutputStream.a` @type ^`org.greenrobot.essentials.io.PipelineOutputStream$PipelineInputStream` @kind object;
+  #L19edf8.  return v0 @kind object;
+}
+procedure `void` `write`(`org.greenrobot.essentials.io.PipelineOutputStream` v2 @kind this, `int` v3 ) @signature `Lorg/greenrobot/essentials/io/PipelineOutputStream;.write:(I)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L19ef6c.  @monitorenter v2
+  #L19ef6e.  call `a`(v2) @signature `Lorg/greenrobot/essentials/io/PipelineOutputStream;.a:()V` @kind direct;
+  #L19ef74.  v0:= v2.`org.greenrobot.essentials.io.PipelineOutputStream.b` @type ^`org.greenrobot.essentials.io.CircularByteBuffer` @kind object;
+  #L19ef78.  v1:= (`byte`) v3 @kind i2b;
+  #L19ef7a.  call temp:= `put`(v0, v1) @signature `Lorg/greenrobot/essentials/io/CircularByteBuffer;.put:(B)Z` @kind virtual;
+  #L19ef80.  v0:= temp;
+  #L19ef82.  if v0 != 0 then goto L19ef94;
+  #L19ef86.  call `c`(v2) @signature `Lorg/greenrobot/essentials/io/PipelineOutputStream;.c:()V` @kind virtual;
+  #L19ef8c.  call `a`(v2) @signature `Lorg/greenrobot/essentials/io/PipelineOutputStream;.a:()V` @kind direct;
+  #L19ef92.  goto L19ef74;
+  #L19ef94.  call `b`(v2) @signature `Lorg/greenrobot/essentials/io/PipelineOutputStream;.b:()V` @kind virtual;
+  #L19ef9a.  @monitorexit v2
+  #L19ef9c.  return @kind void;
+  #L19ef9e.  v3:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L19efa0.  @monitorexit v2
+  #L19efa2.  throw v3;
+  catch `java.lang.Throwable` @[L19ef6e..L19ef9a] goto L19ef9e;
+}
+procedure `void` `write`(`org.greenrobot.essentials.io.PipelineOutputStream` v4 @kind this, `byte`[] v5 @kind object, `int` v6 , `int` v7 ) @signature `Lorg/greenrobot/essentials/io/PipelineOutputStream;.write:([BII)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L19ef0c.  @monitorenter v4
+  #L19ef0e.  v0:= 0I;
+  #L19ef10.  if v0 == v7 then goto L19ef4a;
+  #L19ef14.  call `a`(v4) @signature `Lorg/greenrobot/essentials/io/PipelineOutputStream;.a:()V` @kind direct;
+  #L19ef1a.  v1:= v4.`org.greenrobot.essentials.io.PipelineOutputStream.b` @type ^`org.greenrobot.essentials.io.CircularByteBuffer` @kind object;
+  #L19ef1e.  v2:= v6 + v0 @kind int;
+  #L19ef22.  v3:= v7 - v0 @kind int;
+  #L19ef26.  call temp:= `put`(v1, v5, v2, v3) @signature `Lorg/greenrobot/essentials/io/CircularByteBuffer;.put:([BII)I` @kind virtual;
+  #L19ef2c.  v1:= temp;
+  #L19ef2e.  if v1 <= 0 then goto L19ef3c;
+  #L19ef32.  v0:= v0 + v1 @kind int;
+  #L19ef34.  call `b`(v4) @signature `Lorg/greenrobot/essentials/io/PipelineOutputStream;.b:()V` @kind virtual;
+  #L19ef3a.  goto L19ef10;
+  #L19ef3c.  call `c`(v4) @signature `Lorg/greenrobot/essentials/io/PipelineOutputStream;.c:()V` @kind virtual;
+  #L19ef42.  goto L19ef10;
+  #L19ef44.  v5:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L19ef46.  @monitorexit v4
+  #L19ef48.  throw v5;
+  #L19ef4a.  @monitorexit v4
+  #L19ef4c.  return @kind void;
+  catch `java.lang.Throwable` @[L19ef14..L19ef42] goto L19ef44;
+}

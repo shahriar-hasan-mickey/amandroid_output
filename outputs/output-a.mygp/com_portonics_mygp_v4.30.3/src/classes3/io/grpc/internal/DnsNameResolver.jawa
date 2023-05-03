@@ -1,0 +1,934 @@
+record `io.grpc.internal.DnsNameResolver` @kind class @AccessFlag FINAL extends `io.grpc.y2` @kind class {
+  `boolean` `io.grpc.internal.DnsNameResolver.A` @AccessFlag PRIVATE;
+  `io.grpc.u2` `io.grpc.internal.DnsNameResolver.B` @AccessFlag PRIVATE;
+  `io.grpc.i3` `io.grpc.internal.DnsNameResolver.m` @AccessFlag FINAL;
+  `java.util.Random` `io.grpc.internal.DnsNameResolver.n` @AccessFlag PRIVATE_FINAL;
+  `io.grpc.internal.DnsNameResolver$a` `io.grpc.internal.DnsNameResolver.o` @AccessFlag PRIVATE_VOLATILE;
+  `java.util.concurrent.atomic.AtomicReference` `io.grpc.internal.DnsNameResolver.p` @AccessFlag PRIVATE_FINAL;
+  `java.lang.String` `io.grpc.internal.DnsNameResolver.q` @AccessFlag PRIVATE_FINAL;
+  `java.lang.String` `io.grpc.internal.DnsNameResolver.r` @AccessFlag PRIVATE_FINAL;
+  `int` `io.grpc.internal.DnsNameResolver.s` @AccessFlag PRIVATE_FINAL;
+  `io.grpc.internal.m9` `io.grpc.internal.DnsNameResolver.t` @AccessFlag PRIVATE_FINAL;
+  `long` `io.grpc.internal.DnsNameResolver.u` @AccessFlag PRIVATE_FINAL;
+  `io.grpc.v3` `io.grpc.internal.DnsNameResolver.v` @AccessFlag PRIVATE_FINAL;
+  `com.google.common.base.j0` `io.grpc.internal.DnsNameResolver.w` @AccessFlag PRIVATE_FINAL;
+  `io.grpc.internal.e3` `io.grpc.internal.DnsNameResolver.x` @AccessFlag PRIVATE;
+  `boolean` `io.grpc.internal.DnsNameResolver.y` @AccessFlag PRIVATE;
+  `java.util.concurrent.Executor` `io.grpc.internal.DnsNameResolver.z` @AccessFlag PRIVATE;
+}
+global `java.util.logging.Logger` `@@io.grpc.internal.DnsNameResolver.a` @AccessFlag PRIVATE_STATIC_FINAL;
+global `java.util.Set` `@@io.grpc.internal.DnsNameResolver.b` @AccessFlag PRIVATE_STATIC_FINAL;
+global `java.lang.String` `@@io.grpc.internal.DnsNameResolver.c` @AccessFlag PRIVATE_STATIC_FINAL;
+global `java.lang.String` `@@io.grpc.internal.DnsNameResolver.d` @AccessFlag PRIVATE_STATIC_FINAL;
+global `java.lang.String` `@@io.grpc.internal.DnsNameResolver.e` @AccessFlag PRIVATE_STATIC_FINAL;
+global `java.lang.String` `@@io.grpc.internal.DnsNameResolver.f` @AccessFlag PRIVATE_STATIC_FINAL;
+global `boolean` `@@io.grpc.internal.DnsNameResolver.g` @AccessFlag STATIC;
+global `boolean` `@@io.grpc.internal.DnsNameResolver.h` @AccessFlag STATIC;
+global `boolean` `@@io.grpc.internal.DnsNameResolver.i` @AccessFlag STATIC;
+global `boolean` `@@io.grpc.internal.DnsNameResolver.j` @AccessFlag STATIC;
+global `io.grpc.internal.j3` `@@io.grpc.internal.DnsNameResolver.k` @AccessFlag PRIVATE_STATIC_FINAL;
+global `java.lang.String` `@@io.grpc.internal.DnsNameResolver.l` @AccessFlag PRIVATE_STATIC;
+procedure `void` `<clinit>`() @signature `Lio/grpc/internal/DnsNameResolver;.<clinit>:()V` @AccessFlag STATIC_CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L21bf90.  v0:= constclass @type ^`io.grpc.internal.DnsNameResolver` @kind object;
+  #L21bf94.  call temp:= `getName`(v0) @signature `Ljava/lang/Class;.getName:()Ljava/lang/String;` @kind virtual;
+  #L21bf9a.  v1:= temp @kind object;
+  #L21bf9c.  call temp:= `getLogger`(v1) @signature `Ljava/util/logging/Logger;.getLogger:(Ljava/lang/String;)Ljava/util/logging/Logger;` @kind static;
+  #L21bfa2.  v1:= temp @kind object;
+  #L21bfa4.  `@@io.grpc.internal.DnsNameResolver.a` @type ^`java.util.logging.Logger` := v1 @kind object;
+  #L21bfa8.  v1:= new `java.util.HashSet`;
+  #L21bfac.  v2:= "clientLanguage" @kind object;
+  #L21bfb0.  v3:= "percentage" @kind object;
+  #L21bfb4.  v4:= "clientHostname" @kind object;
+  #L21bfb8.  v5:= "serviceConfig" @kind object;
+  #L21bfbc.  temp:= new `java.lang.String`[v2, v3, v4, v5];
+  #L21bfc2.  v2:= temp @kind object;
+  #L21bfc4.  call temp:= `asList`(v2) @signature `Ljava/util/Arrays;.asList:([Ljava/lang/Object;)Ljava/util/List;` @kind static;
+  #L21bfca.  v2:= temp @kind object;
+  #L21bfcc.  call `<init>`(v1, v2) @signature `Ljava/util/HashSet;.<init>:(Ljava/util/Collection;)V` @kind direct;
+  #L21bfd2.  call temp:= `unmodifiableSet`(v1) @signature `Ljava/util/Collections;.unmodifiableSet:(Ljava/util/Set;)Ljava/util/Set;` @kind static;
+  #L21bfd8.  v1:= temp @kind object;
+  #L21bfda.  `@@io.grpc.internal.DnsNameResolver.b` @type ^`java.util.Set` := v1 @kind object;
+  #L21bfde.  v1:= "io.grpc.internal.DnsNameResolverProvider.enable_jndi" @kind object;
+  #L21bfe2.  v2:= "true" @kind object;
+  #L21bfe6.  call temp:= `getProperty`(v1, v2) @signature `Ljava/lang/System;.getProperty:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;` @kind static;
+  #L21bfec.  v1:= temp @kind object;
+  #L21bfee.  `@@io.grpc.internal.DnsNameResolver.c` @type ^`java.lang.String` := v1 @kind object;
+  #L21bff2.  v2:= "io.grpc.internal.DnsNameResolverProvider.enable_jndi_localhost" @kind object;
+  #L21bff6.  v3:= "false" @kind object;
+  #L21bffa.  call temp:= `getProperty`(v2, v3) @signature `Ljava/lang/System;.getProperty:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;` @kind static;
+  #L21c000.  v2:= temp @kind object;
+  #L21c002.  `@@io.grpc.internal.DnsNameResolver.d` @type ^`java.lang.String` := v2 @kind object;
+  #L21c006.  v4:= "io.grpc.internal.DnsNameResolverProvider.enable_grpclb" @kind object;
+  #L21c00a.  call temp:= `getProperty`(v4, v3) @signature `Ljava/lang/System;.getProperty:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;` @kind static;
+  #L21c010.  v4:= temp @kind object;
+  #L21c012.  `@@io.grpc.internal.DnsNameResolver.e` @type ^`java.lang.String` := v4 @kind object;
+  #L21c016.  v5:= "io.grpc.internal.DnsNameResolverProvider.enable_service_config" @kind object;
+  #L21c01a.  call temp:= `getProperty`(v5, v3) @signature `Ljava/lang/System;.getProperty:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;` @kind static;
+  #L21c020.  v3:= temp @kind object;
+  #L21c022.  `@@io.grpc.internal.DnsNameResolver.f` @type ^`java.lang.String` := v3 @kind object;
+  #L21c026.  call temp:= `parseBoolean`(v1) @signature `Ljava/lang/Boolean;.parseBoolean:(Ljava/lang/String;)Z` @kind static;
+  #L21c02c.  v1:= temp;
+  #L21c02e.  `@@io.grpc.internal.DnsNameResolver.g` @type ^`boolean` := v1 @kind boolean;
+  #L21c032.  call temp:= `parseBoolean`(v2) @signature `Ljava/lang/Boolean;.parseBoolean:(Ljava/lang/String;)Z` @kind static;
+  #L21c038.  v1:= temp;
+  #L21c03a.  `@@io.grpc.internal.DnsNameResolver.h` @type ^`boolean` := v1 @kind boolean;
+  #L21c03e.  call temp:= `parseBoolean`(v4) @signature `Ljava/lang/Boolean;.parseBoolean:(Ljava/lang/String;)Z` @kind static;
+  #L21c044.  v1:= temp;
+  #L21c046.  `@@io.grpc.internal.DnsNameResolver.i` @type ^`boolean` := v1 @kind boolean;
+  #L21c04a.  call temp:= `parseBoolean`(v3) @signature `Ljava/lang/Boolean;.parseBoolean:(Ljava/lang/String;)Z` @kind static;
+  #L21c050.  v1:= temp;
+  #L21c052.  `@@io.grpc.internal.DnsNameResolver.j` @type ^`boolean` := v1 @kind boolean;
+  #L21c056.  call temp:= `getClassLoader`(v0) @signature `Ljava/lang/Class;.getClassLoader:()Ljava/lang/ClassLoader;` @kind virtual;
+  #L21c05c.  v0:= temp @kind object;
+  #L21c05e.  call temp:= `x`(v0) @signature `Lio/grpc/internal/DnsNameResolver;.x:(Ljava/lang/ClassLoader;)Lio/grpc/internal/j3;` @kind static;
+  #L21c064.  v0:= temp @kind object;
+  #L21c066.  `@@io.grpc.internal.DnsNameResolver.k` @type ^`io.grpc.internal.j3` := v0 @kind object;
+  #L21c06a.  return @kind void;
+}
+procedure `void` `<init>`(`io.grpc.internal.DnsNameResolver` v1 @kind this, `java.lang.String` v2 @kind object, `java.lang.String` v3 @kind object, `io.grpc.r2` v4 @kind object, `io.grpc.internal.m9` v5 @kind object, `com.google.common.base.j0` v6 @kind object, `boolean` v7 ) @signature `Lio/grpc/internal/DnsNameResolver;.<init>:(Ljava/lang/String;Ljava/lang/String;Lio/grpc/r2;Lio/grpc/internal/m9;Lcom/google/common/base/j0;Z)V` @AccessFlag CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L21c07c.  call `<init>`(v1) @signature `Lio/grpc/y2;.<init>:()V` @kind direct;
+  #L21c082.  v2:= new `java.util.Random`;
+  #L21c086.  call `<init>`(v2) @signature `Ljava/util/Random;.<init>:()V` @kind direct;
+  #L21c08c.  v1.`io.grpc.internal.DnsNameResolver.n` @type ^`java.util.Random` := v2 @kind object;
+  #L21c090.  v2:= `@@io.grpc.internal.DnsNameResolver$JdkAddressResolver.INSTANCE` @type ^`io.grpc.internal.DnsNameResolver$JdkAddressResolver` @kind object;
+  #L21c094.  v1.`io.grpc.internal.DnsNameResolver.o` @type ^`io.grpc.internal.DnsNameResolver$a` := v2 @kind object;
+  #L21c098.  v2:= new `java.util.concurrent.atomic.AtomicReference`;
+  #L21c09c.  call `<init>`(v2) @signature `Ljava/util/concurrent/atomic/AtomicReference;.<init>:()V` @kind direct;
+  #L21c0a2.  v1.`io.grpc.internal.DnsNameResolver.p` @type ^`java.util.concurrent.atomic.AtomicReference` := v2 @kind object;
+  #L21c0a6.  v2:= "args" @kind object;
+  #L21c0aa.  call temp:= `s`(v4, v2) @signature `Lcom/google/common/base/b0;.s:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;` @kind static;
+  #L21c0b0.  v1.`io.grpc.internal.DnsNameResolver.t` @type ^`io.grpc.internal.m9` := v5 @kind object;
+  #L21c0b4.  v2:= new `java.lang.StringBuilder`;
+  #L21c0b8.  call `<init>`(v2) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L21c0be.  v5:= "//" @kind object;
+  #L21c0c2.  call temp:= `append`(v2, v5) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L21c0c8.  v5:= "name" @kind object;
+  #L21c0cc.  call temp:= `s`(v3, v5) @signature `Lcom/google/common/base/b0;.s:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;` @kind static;
+  #L21c0d2.  v5:= temp @kind object;
+  #L21c0d4.  v5:= (`java.lang.String`) v5 @kind object;
+  #L21c0d8.  call temp:= `append`(v2, v5) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L21c0de.  call temp:= `toString`(v2) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L21c0e4.  v2:= temp @kind object;
+  #L21c0e6.  call temp:= `create`(v2) @signature `Ljava/net/URI;.create:(Ljava/lang/String;)Ljava/net/URI;` @kind static;
+  #L21c0ec.  v2:= temp @kind object;
+  #L21c0ee.  call temp:= `getHost`(v2) @signature `Ljava/net/URI;.getHost:()Ljava/lang/String;` @kind virtual;
+  #L21c0f4.  v5:= temp @kind object;
+  #L21c0f6.  if v5 == 0 then goto L21c0fe;
+  #L21c0fa.  v5:= 1I;
+  #L21c0fc.  goto L21c100;
+  #L21c0fe.  v5:= 0I;
+  #L21c100.  v0:= "Invalid DNS name: %s" @kind object;
+  #L21c104.  call `m`(v5, v0, v3) @signature `Lcom/google/common/base/b0;.m:(ZLjava/lang/String;Ljava/lang/Object;)V` @kind static;
+  #L21c10a.  call temp:= `getAuthority`(v2) @signature `Ljava/net/URI;.getAuthority:()Ljava/lang/String;` @kind virtual;
+  #L21c110.  v3:= temp @kind object;
+  #L21c112.  v5:= "nameUri (%s) doesn't have an authority" @kind object;
+  #L21c116.  call temp:= `t`(v3, v5, v2) @signature `Lcom/google/common/base/b0;.t:(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/Object;)Ljava/lang/Object;` @kind static;
+  #L21c11c.  v3:= temp @kind object;
+  #L21c11e.  v3:= (`java.lang.String`) v3 @kind object;
+  #L21c122.  v1.`io.grpc.internal.DnsNameResolver.q` @type ^`java.lang.String` := v3 @kind object;
+  #L21c126.  call temp:= `getHost`(v2) @signature `Ljava/net/URI;.getHost:()Ljava/lang/String;` @kind virtual;
+  #L21c12c.  v3:= temp @kind object;
+  #L21c12e.  v1.`io.grpc.internal.DnsNameResolver.r` @type ^`java.lang.String` := v3 @kind object;
+  #L21c132.  call temp:= `getPort`(v2) @signature `Ljava/net/URI;.getPort:()I` @kind virtual;
+  #L21c138.  v3:= temp;
+  #L21c13a.  v5:= -1I;
+  #L21c13c.  if v3 != v5 then goto L21c14e;
+  #L21c140.  call temp:= `a`(v4) @signature `Lio/grpc/r2;.a:()I` @kind virtual;
+  #L21c146.  v2:= temp;
+  #L21c148.  v1.`io.grpc.internal.DnsNameResolver.s` @type ^`int` := v2;
+  #L21c14c.  goto L21c15a;
+  #L21c14e.  call temp:= `getPort`(v2) @signature `Ljava/net/URI;.getPort:()I` @kind virtual;
+  #L21c154.  v2:= temp;
+  #L21c156.  v1.`io.grpc.internal.DnsNameResolver.s` @type ^`int` := v2;
+  #L21c15a.  call temp:= `b`(v4) @signature `Lio/grpc/r2;.b:()Lio/grpc/i3;` @kind virtual;
+  #L21c160.  v2:= temp @kind object;
+  #L21c162.  v3:= "proxyDetector" @kind object;
+  #L21c166.  call temp:= `s`(v2, v3) @signature `Lcom/google/common/base/b0;.s:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;` @kind static;
+  #L21c16c.  v2:= temp @kind object;
+  #L21c16e.  v2:= (`io.grpc.i3`) v2 @kind object;
+  #L21c172.  v1.`io.grpc.internal.DnsNameResolver.m` @type ^`io.grpc.i3` := v2 @kind object;
+  #L21c176.  call temp:= `u`(v7) @signature `Lio/grpc/internal/DnsNameResolver;.u:(Z)J` @kind static;
+  #L21c17c.  v2:= temp @kind wide;
+  #L21c17e.  v1.`io.grpc.internal.DnsNameResolver.u` @type ^`long` := v2 @kind wide;
+  #L21c182.  v2:= "stopwatch" @kind object;
+  #L21c186.  call temp:= `s`(v6, v2) @signature `Lcom/google/common/base/b0;.s:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;` @kind static;
+  #L21c18c.  v2:= temp @kind object;
+  #L21c18e.  v2:= (`com.google.common.base.j0`) v2 @kind object;
+  #L21c192.  v1.`io.grpc.internal.DnsNameResolver.w` @type ^`com.google.common.base.j0` := v2 @kind object;
+  #L21c196.  call temp:= `c`(v4) @signature `Lio/grpc/r2;.c:()Lio/grpc/v3;` @kind virtual;
+  #L21c19c.  v2:= temp @kind object;
+  #L21c19e.  v3:= "syncContext" @kind object;
+  #L21c1a2.  call temp:= `s`(v2, v3) @signature `Lcom/google/common/base/b0;.s:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;` @kind static;
+  #L21c1a8.  v2:= temp @kind object;
+  #L21c1aa.  v2:= (`io.grpc.v3`) v2 @kind object;
+  #L21c1ae.  v1.`io.grpc.internal.DnsNameResolver.v` @type ^`io.grpc.v3` := v2 @kind object;
+  #L21c1b2.  return @kind void;
+}
+procedure `java.util.List` `A`(`java.util.List` v6 @kind object) @signature `Lio/grpc/internal/DnsNameResolver;.A:(Ljava/util/List;)Ljava/util/List;` @AccessFlag STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L21bc70.  v0:= new `java.util.ArrayList`;
+  #L21bc74.  call `<init>`(v0) @signature `Ljava/util/ArrayList;.<init>:()V` @kind direct;
+  #L21bc7a.  call temp:= `iterator`(v6) @signature `Ljava/util/List;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L21bc80.  v6:= temp @kind object;
+  #L21bc82.  call temp:= `hasNext`(v6) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L21bc88.  v1:= temp;
+  #L21bc8a.  if v1 == 0 then goto L21bd28;
+  #L21bc8e.  call temp:= `next`(v6) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L21bc94.  v1:= temp @kind object;
+  #L21bc96.  v1:= (`java.lang.String`) v1 @kind object;
+  #L21bc9a.  v2:= "grpc_config=" @kind object;
+  #L21bc9e.  call temp:= `startsWith`(v1, v2) @signature `Ljava/lang/String;.startsWith:(Ljava/lang/String;)Z` @kind virtual;
+  #L21bca4.  v2:= temp;
+  #L21bca6.  if v2 != 0 then goto L21bcca;
+  #L21bcaa.  v2:= `@@io.grpc.internal.DnsNameResolver.a` @type ^`java.util.logging.Logger` @kind object;
+  #L21bcae.  v3:= `@@java.util.logging.Level.FINE` @type ^`java.util.logging.Level` @kind object;
+  #L21bcb2.  v4:= 1I;
+  #L21bcb4.  v4:= new `java.lang.Object`[v4];
+  #L21bcb8.  v5:= 0I;
+  #L21bcba.  v4[v5]:= v1 @kind object;
+  #L21bcbe.  v1:= "Ignoring non service config {0}" @kind object;
+  #L21bcc2.  call `log`(v2, v3, v1, v4) @signature `Ljava/util/logging/Logger;.log:(Ljava/util/logging/Level;Ljava/lang/String;[Ljava/lang/Object;)V` @kind virtual;
+  #L21bcc8.  goto L21bc82;
+  #L21bcca.  v2:= 12I;
+  #L21bcce.  call temp:= `substring`(v1, v2) @signature `Ljava/lang/String;.substring:(I)Ljava/lang/String;` @kind virtual;
+  #L21bcd4.  v1:= temp @kind object;
+  #L21bcd6.  call temp:= `a`(v1) @signature `Lio/grpc/internal/h5;.a:(Ljava/lang/String;)Ljava/lang/Object;` @kind static;
+  #L21bcdc.  v1:= temp @kind object;
+  #L21bcde.  v2:= instanceof @variable v1 @type ^`java.util.List` @kind boolean;
+  #L21bce2.  if v2 == 0 then goto L21bcfa;
+  #L21bce6.  v1:= (`java.util.List`) v1 @kind object;
+  #L21bcea.  call temp:= `a`(v1) @signature `Lio/grpc/internal/i9;.a:(Ljava/util/List;)Ljava/util/List;` @kind static;
+  #L21bcf0.  v1:= temp @kind object;
+  #L21bcf2.  call temp:= `addAll`(v0, v1) @signature `Ljava/util/List;.addAll:(Ljava/util/Collection;)Z` @kind interface;
+  #L21bcf8.  goto L21bc82;
+  #L21bcfa.  v6:= new `java.lang.ClassCastException`;
+  #L21bcfe.  v0:= new `java.lang.StringBuilder`;
+  #L21bd02.  call `<init>`(v0) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L21bd08.  v2:= "wrong type " @kind object;
+  #L21bd0c.  call temp:= `append`(v0, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L21bd12.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L21bd18.  call temp:= `toString`(v0) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L21bd1e.  v0:= temp @kind object;
+  #L21bd20.  call `<init>`(v6, v0) @signature `Ljava/lang/ClassCastException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L21bd26.  throw v6;
+  #L21bd28.  return v0 @kind object;
+}
+procedure `void` `B`(`io.grpc.internal.DnsNameResolver` v3 @kind this) @signature `Lio/grpc/internal/DnsNameResolver;.B:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L21c1f4.  v0:= v3.`io.grpc.internal.DnsNameResolver.A` @type ^`boolean` @kind boolean;
+  #L21c1f8.  if v0 != 0 then goto L21c230;
+  #L21c1fc.  v0:= v3.`io.grpc.internal.DnsNameResolver.y` @type ^`boolean` @kind boolean;
+  #L21c200.  if v0 != 0 then goto L21c230;
+  #L21c204.  call temp:= `q`(v3) @signature `Lio/grpc/internal/DnsNameResolver;.q:()Z` @kind direct;
+  #L21c20a.  v0:= temp;
+  #L21c20c.  if v0 != 0 then goto L21c212;
+  #L21c210.  goto L21c230;
+  #L21c212.  v0:= 1I;
+  #L21c214.  v3.`io.grpc.internal.DnsNameResolver.A` @type ^`boolean` := v0 @kind boolean;
+  #L21c218.  v0:= v3.`io.grpc.internal.DnsNameResolver.z` @type ^`java.util.concurrent.Executor` @kind object;
+  #L21c21c.  v1:= new `io.grpc.internal.h3`;
+  #L21c220.  v2:= v3.`io.grpc.internal.DnsNameResolver.B` @type ^`io.grpc.u2` @kind object;
+  #L21c224.  call `<init>`(v1, v3, v2) @signature `Lio/grpc/internal/h3;.<init>:(Lio/grpc/internal/DnsNameResolver;Lio/grpc/u2;)V` @kind direct;
+  #L21c22a.  call `execute`(v0, v1) @signature `Ljava/util/concurrent/Executor;.execute:(Ljava/lang/Runnable;)V` @kind interface;
+  #L21c230.  return @kind void;
+}
+procedure `io.grpc.internal.e3` `C`(`io.grpc.internal.DnsNameResolver$a` v8 @kind object, `io.grpc.internal.i3` v9 @kind object, `boolean` v10 , `boolean` v11 , `java.lang.String` v12 @kind object) @signature `Lio/grpc/internal/DnsNameResolver;.C:(Lio/grpc/internal/DnsNameResolver$a;Lio/grpc/internal/i3;ZZLjava/lang/String;)Lio/grpc/internal/e3;` @AccessFlag STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+
+  #L21b85c.  call temp:= `emptyList`() @signature `Ljava/util/Collections;.emptyList:()Ljava/util/List;` @kind static;
+  #L21b862.  v0:= temp @kind object;
+  #L21b864.  call temp:= `emptyList`() @signature `Ljava/util/Collections;.emptyList:()Ljava/util/List;` @kind static;
+  #L21b86a.  v1:= temp @kind object;
+  #L21b86c.  call temp:= `emptyList`() @signature `Ljava/util/Collections;.emptyList:()Ljava/util/List;` @kind static;
+  #L21b872.  v2:= temp @kind object;
+  #L21b874.  v3:= 0I;
+  #L21b876.  call temp:= `resolveAddress`(v8, v12) @signature `Lio/grpc/internal/DnsNameResolver$a;.resolveAddress:(Ljava/lang/String;)Ljava/util/List;` @kind interface;
+  #L21b87c.  v0:= temp @kind object;
+  #L21b87e.  v4:= v3 @kind object;
+  #L21b880.  goto L21b884;
+  #L21b882.  v4:= Exception @type ^`java.lang.Exception` @kind object;
+  #L21b884.  if v9 == 0 then goto L21b91c;
+  #L21b888.  if v10 == 0 then goto L21b8bc;
+  #L21b88c.  v5:= new `java.lang.StringBuilder`;
+  #L21b890.  call `<init>`(v5) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L21b896.  v6:= "_grpclb._tcp." @kind object;
+  #L21b89a.  call temp:= `append`(v5, v6) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L21b8a0.  call temp:= `append`(v5, v12) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L21b8a6.  call temp:= `toString`(v5) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L21b8ac.  v5:= temp @kind object;
+  #L21b8ae.  call temp:= `b`(v9, v8, v5) @signature `Lio/grpc/internal/i3;.b:(Lio/grpc/internal/DnsNameResolver$a;Ljava/lang/String;)Ljava/util/List;` @kind interface;
+  #L21b8b4.  v1:= temp @kind object;
+  #L21b8b6.  goto L21b8bc;
+  #L21b8b8.  v8:= Exception @type ^`java.lang.Exception` @kind object;
+  #L21b8ba.  goto L21b8be;
+  #L21b8bc.  v8:= v3 @kind object;
+  #L21b8be.  if v11 == 0 then goto L21b914;
+  #L21b8c2.  v11:= 0I;
+  #L21b8c4.  v5:= 1I;
+  #L21b8c6.  if v10 == 0 then goto L21b8d4;
+  #L21b8ca.  if v8 == 0 then goto L21b8d0;
+  #L21b8ce.  goto L21b8d4;
+  #L21b8d0.  v10:= 0I;
+  #L21b8d2.  goto L21b8d6;
+  #L21b8d4.  v10:= 1I;
+  #L21b8d6.  if v4 == 0 then goto L21b8e0;
+  #L21b8da.  if v10 == 0 then goto L21b8e0;
+  #L21b8de.  v11:= 1I;
+  #L21b8e0.  if v11 != 0 then goto L21b914;
+  #L21b8e4.  v10:= new `java.lang.StringBuilder`;
+  #L21b8e8.  call `<init>`(v10) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L21b8ee.  v11:= "_grpc_config." @kind object;
+  #L21b8f2.  call temp:= `append`(v10, v11) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L21b8f8.  call temp:= `append`(v10, v12) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L21b8fe.  call temp:= `toString`(v10) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L21b904.  v10:= temp @kind object;
+  #L21b906.  call temp:= `a`(v9, v10) @signature `Lio/grpc/internal/i3;.a:(Ljava/lang/String;)Ljava/util/List;` @kind interface;
+  #L21b90c.  v2:= temp @kind object;
+  #L21b90e.  goto L21b914;
+  #L21b910.  v9:= Exception @type ^`java.lang.Exception` @kind object;
+  #L21b912.  v3:= v9 @kind object;
+  #L21b914.  v7:= v3 @kind object;
+  #L21b916.  v3:= v8 @kind object;
+  #L21b918.  v8:= v7 @kind object;
+  #L21b91a.  goto L21b91e;
+  #L21b91c.  v8:= v3 @kind object;
+  #L21b91e.  v9:= "ServiceConfig resolution failure" @kind object;
+  #L21b922.  v10:= "Balancer resolution failure" @kind object;
+  #L21b926.  v11:= "Address resolution failure" @kind object;
+  #L21b92a.  if v4 == 0 then goto L21b978;
+  #L21b92e.  if v3 != 0 then goto L21b940;
+  #L21b932.  call temp:= `isEmpty`(v1) @signature `Ljava/util/List;.isEmpty:()Z` @kind interface;
+  #L21b938.  v12:= temp;
+  #L21b93a.  if v12 != 0 then goto L21b940;
+  #L21b93e.  goto L21b978;
+  #L21b940.  call `g`(v4) @signature `Lcom/google/common/base/m0;.g:(Ljava/lang/Throwable;)V` @kind static;
+  #L21b946.  v12:= new `java.lang.RuntimeException`;
+  #L21b94a.  call `<init>`(v12, v4) @signature `Ljava/lang/RuntimeException;.<init>:(Ljava/lang/Throwable;)V` @kind direct;
+  #L21b950.  throw v12;
+  #L21b952.  v12:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L21b954.  v0:= `@@io.grpc.internal.DnsNameResolver.a` @type ^`java.util.logging.Logger` @kind object;
+  #L21b958.  v1:= `@@java.util.logging.Level.FINE` @type ^`java.util.logging.Level` @kind object;
+  #L21b95c.  call `log`(v0, v1, v11, v4) @signature `Ljava/util/logging/Logger;.log:(Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V` @kind virtual;
+  #L21b962.  if v3 == 0 then goto L21b96c;
+  #L21b966.  call `log`(v0, v1, v10, v3) @signature `Ljava/util/logging/Logger;.log:(Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V` @kind virtual;
+  #L21b96c.  if v8 == 0 then goto L21b976;
+  #L21b970.  call `log`(v0, v1, v9, v8) @signature `Ljava/util/logging/Logger;.log:(Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V` @kind virtual;
+  #L21b976.  throw v12;
+  #L21b978.  if v4 == 0 then goto L21b98a;
+  #L21b97c.  v12:= `@@io.grpc.internal.DnsNameResolver.a` @type ^`java.util.logging.Logger` @kind object;
+  #L21b980.  v5:= `@@java.util.logging.Level.FINE` @type ^`java.util.logging.Level` @kind object;
+  #L21b984.  call `log`(v12, v5, v11, v4) @signature `Ljava/util/logging/Logger;.log:(Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V` @kind virtual;
+  #L21b98a.  if v3 == 0 then goto L21b99c;
+  #L21b98e.  v11:= `@@io.grpc.internal.DnsNameResolver.a` @type ^`java.util.logging.Logger` @kind object;
+  #L21b992.  v12:= `@@java.util.logging.Level.FINE` @type ^`java.util.logging.Level` @kind object;
+  #L21b996.  call `log`(v11, v12, v10, v3) @signature `Ljava/util/logging/Logger;.log:(Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V` @kind virtual;
+  #L21b99c.  if v8 == 0 then goto L21b9ae;
+  #L21b9a0.  v10:= `@@io.grpc.internal.DnsNameResolver.a` @type ^`java.util.logging.Logger` @kind object;
+  #L21b9a4.  v11:= `@@java.util.logging.Level.FINE` @type ^`java.util.logging.Level` @kind object;
+  #L21b9a8.  call `log`(v10, v11, v9, v8) @signature `Ljava/util/logging/Logger;.log:(Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V` @kind virtual;
+  #L21b9ae.  v8:= new `io.grpc.internal.e3`;
+  #L21b9b2.  call `<init>`(v8, v0, v2, v1) @signature `Lio/grpc/internal/e3;.<init>:(Ljava/util/List;Ljava/util/List;Ljava/util/List;)V` @kind direct;
+  #L21b9b8.  return v8 @kind object;
+  catch `java.lang.Exception` @[L21b876..L21b87e] goto L21b882;
+  catch `java.lang.Exception` @[L21b88c..L21b8b6] goto L21b8b8;
+  catch `java.lang.Exception` @[L21b8e4..L21b90e] goto L21b910;
+  catch `java.lang.Throwable` @[L21b932..L21b952] goto L21b952;
+}
+procedure `boolean` `D`(`boolean` v4 , `boolean` v5 , `java.lang.String` v6 @kind object) @signature `Lio/grpc/internal/DnsNameResolver;.D:(ZZLjava/lang/String;)Z` @AccessFlag STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L21b6a0.  v0:= 0I;
+  #L21b6a2.  if v4 != 0 then goto L21b6a8;
+  #L21b6a6.  return v0;
+  #L21b6a8.  v4:= "localhost" @kind object;
+  #L21b6ac.  call temp:= `equalsIgnoreCase`(v4, v6) @signature `Ljava/lang/String;.equalsIgnoreCase:(Ljava/lang/String;)Z` @kind virtual;
+  #L21b6b2.  v4:= temp;
+  #L21b6b4.  if v4 == 0 then goto L21b6ba;
+  #L21b6b8.  return v5;
+  #L21b6ba.  v4:= ":" @kind object;
+  #L21b6be.  call temp:= `contains`(v6, v4) @signature `Ljava/lang/String;.contains:(Ljava/lang/CharSequence;)Z` @kind virtual;
+  #L21b6c4.  v4:= temp;
+  #L21b6c6.  if v4 == 0 then goto L21b6cc;
+  #L21b6ca.  return v0;
+  #L21b6cc.  v4:= 1I;
+  #L21b6ce.  v5:= 0I;
+  #L21b6d0.  v1:= 1I;
+  #L21b6d2.  call temp:= `length`(v6) @signature `Ljava/lang/String;.length:()I` @kind virtual;
+  #L21b6d8.  v2:= temp;
+  #L21b6da.  if v5 >= v2 then goto L21b70c;
+  #L21b6de.  call temp:= `charAt`(v6, v5) @signature `Ljava/lang/String;.charAt:(I)C` @kind virtual;
+  #L21b6e4.  v2:= temp;
+  #L21b6e6.  v3:= 46I;
+  #L21b6ea.  if v2 == v3 then goto L21b706;
+  #L21b6ee.  v3:= 48I;
+  #L21b6f2.  if v2 < v3 then goto L21b702;
+  #L21b6f6.  v3:= 57I;
+  #L21b6fa.  if v2 > v3 then goto L21b702;
+  #L21b6fe.  v2:= 1I;
+  #L21b700.  goto L21b704;
+  #L21b702.  v2:= 0I;
+  #L21b704.  v1:= v1 ^& v2 @kind int;
+  #L21b706.  v5:= v5 + 1;
+  #L21b70a.  goto L21b6d2;
+  #L21b70c.  v4:= v4 ^~ v1 @kind int;
+  #L21b70e.  return v4;
+}
+procedure `java.util.logging.Logger` `e`() @signature `Lio/grpc/internal/DnsNameResolver;.e:()Ljava/util/logging/Logger;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+    v0;
+
+  #L21bed0.  v0:= `@@io.grpc.internal.DnsNameResolver.a` @type ^`java.util.logging.Logger` @kind object;
+  #L21bed4.  return v0 @kind object;
+}
+procedure `java.lang.String` `f`(`io.grpc.internal.DnsNameResolver` v0 @kind object) @signature `Lio/grpc/internal/DnsNameResolver;.f:(Lio/grpc/internal/DnsNameResolver;)Ljava/lang/String;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L21bb60.  v0:= v0.`io.grpc.internal.DnsNameResolver.r` @type ^`java.lang.String` @kind object;
+  #L21bb64.  return v0 @kind object;
+}
+procedure `java.util.Random` `g`(`io.grpc.internal.DnsNameResolver` v0 @kind object) @signature `Lio/grpc/internal/DnsNameResolver;.g:(Lio/grpc/internal/DnsNameResolver;)Ljava/util/Random;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L21beb8.  v0:= v0.`io.grpc.internal.DnsNameResolver.n` @type ^`java.util.Random` @kind object;
+  #L21bebc.  return v0 @kind object;
+}
+procedure `java.lang.String` `h`() @signature `Lio/grpc/internal/DnsNameResolver;.h:()Ljava/lang/String;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+    v0;
+
+  #L21bb78.  call temp:= `t`() @signature `Lio/grpc/internal/DnsNameResolver;.t:()Ljava/lang/String;` @kind static;
+  #L21bb7e.  v0:= temp @kind object;
+  #L21bb80.  return v0 @kind object;
+}
+procedure `boolean` `i`(`io.grpc.internal.DnsNameResolver` v0 @kind object, `boolean` v1 ) @signature `Lio/grpc/internal/DnsNameResolver;.i:(Lio/grpc/internal/DnsNameResolver;Z)Z` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L21b630.  v0.`io.grpc.internal.DnsNameResolver.A` @type ^`boolean` := v1 @kind boolean;
+  #L21b634.  return v1;
+}
+procedure `io.grpc.v3` `j`(`io.grpc.internal.DnsNameResolver` v0 @kind object) @signature `Lio/grpc/internal/DnsNameResolver;.j:(Lio/grpc/internal/DnsNameResolver;)Lio/grpc/v3;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L21b814.  v0:= v0.`io.grpc.internal.DnsNameResolver.v` @type ^`io.grpc.v3` @kind object;
+  #L21b818.  return v0 @kind object;
+}
+procedure `int` `k`(`io.grpc.internal.DnsNameResolver` v0 @kind object) @signature `Lio/grpc/internal/DnsNameResolver;.k:(Lio/grpc/internal/DnsNameResolver;)I` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L21b738.  v0:= v0.`io.grpc.internal.DnsNameResolver.s` @type ^`int`;
+  #L21b73c.  return v0;
+}
+procedure `io.grpc.internal.i3` `l`(`io.grpc.internal.DnsNameResolver` v0 @kind object) @signature `Lio/grpc/internal/DnsNameResolver;.l:(Lio/grpc/internal/DnsNameResolver;)Lio/grpc/internal/i3;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L21b9fc.  call temp:= `w`(v0) @signature `Lio/grpc/internal/DnsNameResolver;.w:()Lio/grpc/internal/i3;` @kind direct;
+  #L21ba02.  v0:= temp @kind object;
+  #L21ba04.  return v0 @kind object;
+}
+procedure `io.grpc.internal.DnsNameResolver$a` `m`(`io.grpc.internal.DnsNameResolver` v0 @kind object) @signature `Lio/grpc/internal/DnsNameResolver;.m:(Lio/grpc/internal/DnsNameResolver;)Lio/grpc/internal/DnsNameResolver$a;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L21b82c.  v0:= v0.`io.grpc.internal.DnsNameResolver.o` @type ^`io.grpc.internal.DnsNameResolver$a` @kind object;
+  #L21b830.  return v0 @kind object;
+}
+procedure `io.grpc.internal.e3` `n`(`io.grpc.internal.DnsNameResolver` v0 @kind object, `io.grpc.internal.e3` v1 @kind object) @signature `Lio/grpc/internal/DnsNameResolver;.n:(Lio/grpc/internal/DnsNameResolver;Lio/grpc/internal/e3;)Lio/grpc/internal/e3;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L21b844.  v0.`io.grpc.internal.DnsNameResolver.x` @type ^`io.grpc.internal.e3` := v1 @kind object;
+  #L21b848.  return v1 @kind object;
+}
+procedure `long` `o`(`io.grpc.internal.DnsNameResolver` v2 @kind object) @signature `Lio/grpc/internal/DnsNameResolver;.o:(Lio/grpc/internal/DnsNameResolver;)J` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+    v0;
+    v1;
+
+  #L21bee8.  v0:= v2.`io.grpc.internal.DnsNameResolver.u` @type ^`long` @kind wide;
+  #L21beec.  return v0 @kind wide;
+}
+procedure `com.google.common.base.j0` `p`(`io.grpc.internal.DnsNameResolver` v0 @kind object) @signature `Lio/grpc/internal/DnsNameResolver;.p:(Lio/grpc/internal/DnsNameResolver;)Lcom/google/common/base/j0;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L21b720.  v0:= v0.`io.grpc.internal.DnsNameResolver.w` @type ^`com.google.common.base.j0` @kind object;
+  #L21b724.  return v0 @kind object;
+}
+procedure `boolean` `q`(`io.grpc.internal.DnsNameResolver` v5 @kind this) @signature `Lio/grpc/internal/DnsNameResolver;.q:()Z` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L21b648.  v0:= v5.`io.grpc.internal.DnsNameResolver.x` @type ^`io.grpc.internal.e3` @kind object;
+  #L21b64c.  if v0 == 0 then goto L21b68a;
+  #L21b650.  v0:= v5.`io.grpc.internal.DnsNameResolver.u` @type ^`long` @kind wide;
+  #L21b654.  v2:= 0L;
+  #L21b658.  v4:= lcmp(v0, v2);
+  #L21b65c.  if v4 == 0 then goto L21b68a;
+  #L21b660.  v4:= lcmp(v0, v2);
+  #L21b664.  if v4 <= 0 then goto L21b686;
+  #L21b668.  v0:= v5.`io.grpc.internal.DnsNameResolver.w` @type ^`com.google.common.base.j0` @kind object;
+  #L21b66c.  v1:= `@@java.util.concurrent.TimeUnit.NANOSECONDS` @type ^`java.util.concurrent.TimeUnit` @kind object;
+  #L21b670.  call temp:= `e`(v0, v1) @signature `Lcom/google/common/base/j0;.e:(Ljava/util/concurrent/TimeUnit;)J` @kind virtual;
+  #L21b676.  v0:= temp @kind wide;
+  #L21b678.  v2:= v5.`io.grpc.internal.DnsNameResolver.u` @type ^`long` @kind wide;
+  #L21b67c.  v4:= lcmp(v0, v2);
+  #L21b680.  if v4 <= 0 then goto L21b686;
+  #L21b684.  goto L21b68a;
+  #L21b686.  v0:= 0I;
+  #L21b688.  goto L21b68c;
+  #L21b68a.  v0:= 1I;
+  #L21b68c.  return v0;
+}
+procedure `java.util.List` `r`(`java.util.Map` v2 @kind object) @signature `Lio/grpc/internal/DnsNameResolver;.r:(Ljava/util/Map;)Ljava/util/List;` @AccessFlag PRIVATE_STATIC_FINAL {
+    temp;
+    v0;
+    v1;
+
+  #L21bc00.  v0:= "clientLanguage" @kind object;
+  #L21bc04.  call temp:= `containsKey`(v2, v0) @signature `Ljava/util/Map;.containsKey:(Ljava/lang/Object;)Z` @kind interface;
+  #L21bc0a.  v1:= temp;
+  #L21bc0c.  if v1 != 0 then goto L21bc14;
+  #L21bc10.  v2:= 0I;
+  #L21bc12.  return v2 @kind object;
+  #L21bc14.  call temp:= `j`(v2, v0) @signature `Lio/grpc/internal/i9;.j:(Ljava/util/Map;Ljava/lang/String;)Ljava/util/List;` @kind static;
+  #L21bc1a.  v2:= temp @kind object;
+  #L21bc1c.  call temp:= `b`(v2) @signature `Lio/grpc/internal/i9;.b:(Ljava/util/List;)Ljava/util/List;` @kind static;
+  #L21bc22.  v2:= temp @kind object;
+  #L21bc24.  return v2 @kind object;
+}
+procedure `java.util.List` `s`(`java.util.Map` v2 @kind object) @signature `Lio/grpc/internal/DnsNameResolver;.s:(Ljava/util/Map;)Ljava/util/List;` @AccessFlag PRIVATE_STATIC_FINAL {
+    temp;
+    v0;
+    v1;
+
+  #L21bc38.  v0:= "clientHostname" @kind object;
+  #L21bc3c.  call temp:= `containsKey`(v2, v0) @signature `Ljava/util/Map;.containsKey:(Ljava/lang/Object;)Z` @kind interface;
+  #L21bc42.  v1:= temp;
+  #L21bc44.  if v1 != 0 then goto L21bc4c;
+  #L21bc48.  v2:= 0I;
+  #L21bc4a.  return v2 @kind object;
+  #L21bc4c.  call temp:= `j`(v2, v0) @signature `Lio/grpc/internal/i9;.j:(Ljava/util/Map;Ljava/lang/String;)Ljava/util/List;` @kind static;
+  #L21bc52.  v2:= temp @kind object;
+  #L21bc54.  call temp:= `b`(v2) @signature `Lio/grpc/internal/i9;.b:(Ljava/util/List;)Ljava/util/List;` @kind static;
+  #L21bc5a.  v2:= temp @kind object;
+  #L21bc5c.  return v2 @kind object;
+}
+procedure `java.lang.String` `t`() @signature `Lio/grpc/internal/DnsNameResolver;.t:()Ljava/lang/String;` @AccessFlag PRIVATE_STATIC {
+    temp;
+    v0;
+    v1;
+
+  #L21bb94.  v0:= `@@io.grpc.internal.DnsNameResolver.l` @type ^`java.lang.String` @kind object;
+  #L21bb98.  if v0 != 0 then goto L21bbc0;
+  #L21bb9c.  call temp:= `getLocalHost`() @signature `Ljava/net/InetAddress;.getLocalHost:()Ljava/net/InetAddress;` @kind static;
+  #L21bba2.  v0:= temp @kind object;
+  #L21bba4.  call temp:= `getHostName`(v0) @signature `Ljava/net/InetAddress;.getHostName:()Ljava/lang/String;` @kind virtual;
+  #L21bbaa.  v0:= temp @kind object;
+  #L21bbac.  `@@io.grpc.internal.DnsNameResolver.l` @type ^`java.lang.String` := v0 @kind object;
+  #L21bbb0.  goto L21bbc0;
+  #L21bbb2.  v0:= Exception @type ^`java.net.UnknownHostException` @kind object;
+  #L21bbb4.  v1:= new `java.lang.RuntimeException`;
+  #L21bbb8.  call `<init>`(v1, v0) @signature `Ljava/lang/RuntimeException;.<init>:(Ljava/lang/Throwable;)V` @kind direct;
+  #L21bbbe.  throw v1;
+  #L21bbc0.  v0:= `@@io.grpc.internal.DnsNameResolver.l` @type ^`java.lang.String` @kind object;
+  #L21bbc4.  return v0 @kind object;
+  catch `java.net.UnknownHostException` @[L21bb9c..L21bbb0] goto L21bbb2;
+}
+procedure `long` `u`(`boolean` v9 ) @signature `Lio/grpc/internal/DnsNameResolver;.u:(Z)J` @AccessFlag PRIVATE_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+
+  #L21bf00.  v0:= 0L;
+  #L21bf04.  if v9 == 0 then goto L21bf0a;
+  #L21bf08.  return v0 @kind wide;
+  #L21bf0a.  v9:= "networkaddress.cache.ttl" @kind object;
+  #L21bf0e.  call temp:= `getProperty`(v9) @signature `Ljava/lang/System;.getProperty:(Ljava/lang/String;)Ljava/lang/String;` @kind static;
+  #L21bf14.  v2:= temp @kind object;
+  #L21bf16.  v3:= 30L;
+  #L21bf1a.  if v2 == 0 then goto L21bf5a;
+  #L21bf1e.  call temp:= `parseLong`(v2) @signature `Ljava/lang/Long;.parseLong:(Ljava/lang/String;)J` @kind static;
+  #L21bf24.  v3:= temp @kind wide;
+  #L21bf26.  goto L21bf5a;
+  #L21bf28.  v5:= `@@io.grpc.internal.DnsNameResolver.a` @type ^`java.util.logging.Logger` @kind object;
+  #L21bf2c.  v6:= `@@java.util.logging.Level.WARNING` @type ^`java.util.logging.Level` @kind object;
+  #L21bf30.  v7:= 3I;
+  #L21bf32.  v7:= new `java.lang.Object`[v7];
+  #L21bf36.  v8:= 0I;
+  #L21bf38.  v7[v8]:= v9 @kind object;
+  #L21bf3c.  v9:= 1I;
+  #L21bf3e.  v7[v9]:= v2 @kind object;
+  #L21bf42.  v9:= 2I;
+  #L21bf44.  call temp:= `valueOf`(v3) @signature `Ljava/lang/Long;.valueOf:(J)Ljava/lang/Long;` @kind static;
+  #L21bf4a.  v2:= temp @kind object;
+  #L21bf4c.  v7[v9]:= v2 @kind object;
+  #L21bf50.  v9:= "Property({0}) valid is not valid number format({1}), fall back to default({2})" @kind object;
+  #L21bf54.  call `log`(v5, v6, v9, v7) @signature `Ljava/util/logging/Logger;.log:(Ljava/util/logging/Level;Ljava/lang/String;[Ljava/lang/Object;)V` @kind virtual;
+  #L21bf5a.  v9:= lcmp(v3, v0);
+  #L21bf5e.  if v9 <= 0 then goto L21bf6e;
+  #L21bf62.  v9:= `@@java.util.concurrent.TimeUnit.SECONDS` @type ^`java.util.concurrent.TimeUnit` @kind object;
+  #L21bf66.  call temp:= `toNanos`(v9, v3) @signature `Ljava/util/concurrent/TimeUnit;.toNanos:(J)J` @kind virtual;
+  #L21bf6c.  v3:= temp @kind wide;
+  #L21bf6e.  return v3 @kind wide;
+  catch `java.lang.NumberFormatException` @[L21bf1e..L21bf26] goto L21bf28;
+}
+procedure `java.lang.Double` `v`(`java.util.Map` v2 @kind object) @signature `Lio/grpc/internal/DnsNameResolver;.v:(Ljava/util/Map;)Ljava/lang/Double;` @AccessFlag PRIVATE_STATIC_FINAL {
+    temp;
+    v0;
+    v1;
+
+  #L21bb30.  v0:= "percentage" @kind object;
+  #L21bb34.  call temp:= `containsKey`(v2, v0) @signature `Ljava/util/Map;.containsKey:(Ljava/lang/Object;)Z` @kind interface;
+  #L21bb3a.  v1:= temp;
+  #L21bb3c.  if v1 != 0 then goto L21bb44;
+  #L21bb40.  v2:= 0I;
+  #L21bb42.  return v2 @kind object;
+  #L21bb44.  call temp:= `f`(v2, v0) @signature `Lio/grpc/internal/i9;.f:(Ljava/util/Map;Ljava/lang/String;)Ljava/lang/Double;` @kind static;
+  #L21bb4a.  v2:= temp @kind object;
+  #L21bb4c.  return v2 @kind object;
+}
+procedure `io.grpc.internal.i3` `w`(`io.grpc.internal.DnsNameResolver` v2 @kind this) @signature `Lio/grpc/internal/DnsNameResolver;.w:()Lio/grpc/internal/i3;` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+
+  #L21ba18.  v0:= v2.`io.grpc.internal.DnsNameResolver.p` @type ^`java.util.concurrent.atomic.AtomicReference` @kind object;
+  #L21ba1c.  call temp:= `get`(v0) @signature `Ljava/util/concurrent/atomic/AtomicReference;.get:()Ljava/lang/Object;` @kind virtual;
+  #L21ba22.  v0:= temp @kind object;
+  #L21ba24.  v0:= (`io.grpc.internal.i3`) v0 @kind object;
+  #L21ba28.  if v0 != 0 then goto L21ba3c;
+  #L21ba2c.  v1:= `@@io.grpc.internal.DnsNameResolver.k` @type ^`io.grpc.internal.j3` @kind object;
+  #L21ba30.  if v1 == 0 then goto L21ba3c;
+  #L21ba34.  call temp:= `a`(v1) @signature `Lio/grpc/internal/j3;.a:()Lio/grpc/internal/i3;` @kind interface;
+  #L21ba3a.  v0:= temp @kind object;
+  #L21ba3c.  return v0 @kind object;
+}
+procedure `io.grpc.internal.j3` `x`(`java.lang.ClassLoader` v4 @kind object) @signature `Lio/grpc/internal/DnsNameResolver;.x:(Ljava/lang/ClassLoader;)Lio/grpc/internal/j3;` @AccessFlag STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L21ba50.  v0:= 0I;
+  #L21ba52.  v1:= "io.grpc.internal.f5" @kind object;
+  #L21ba56.  v2:= 1I;
+  #L21ba58.  call temp:= `forName`(v1, v2, v4) @signature `Ljava/lang/Class;.forName:(Ljava/lang/String;ZLjava/lang/ClassLoader;)Ljava/lang/Class;` @kind static;
+  #L21ba5e.  v4:= temp @kind object;
+  #L21ba60.  v1:= constclass @type ^`io.grpc.internal.j3` @kind object;
+  #L21ba64.  call temp:= `asSubclass`(v4, v1) @signature `Ljava/lang/Class;.asSubclass:(Ljava/lang/Class;)Ljava/lang/Class;` @kind virtual;
+  #L21ba6a.  v4:= temp @kind object;
+  #L21ba6c.  v1:= 0I;
+  #L21ba6e.  v2:= new `java.lang.Class`[v1];
+  #L21ba72.  call temp:= `getConstructor`(v4, v2) @signature `Ljava/lang/Class;.getConstructor:([Ljava/lang/Class;)Ljava/lang/reflect/Constructor;` @kind virtual;
+  #L21ba78.  v4:= temp @kind object;
+  #L21ba7a.  v1:= new `java.lang.Object`[v1];
+  #L21ba7e.  call temp:= `newInstance`(v4, v1) @signature `Ljava/lang/reflect/Constructor;.newInstance:([Ljava/lang/Object;)Ljava/lang/Object;` @kind virtual;
+  #L21ba84.  v4:= temp @kind object;
+  #L21ba86.  v4:= (`io.grpc.internal.j3`) v4 @kind object;
+  #L21ba8a.  call temp:= `b`(v4) @signature `Lio/grpc/internal/j3;.b:()Ljava/lang/Throwable;` @kind interface;
+  #L21ba90.  v1:= temp @kind object;
+  #L21ba92.  if v1 == 0 then goto L21bab2;
+  #L21ba96.  v1:= `@@io.grpc.internal.DnsNameResolver.a` @type ^`java.util.logging.Logger` @kind object;
+  #L21ba9a.  v2:= `@@java.util.logging.Level.FINE` @type ^`java.util.logging.Level` @kind object;
+  #L21ba9e.  call temp:= `b`(v4) @signature `Lio/grpc/internal/j3;.b:()Ljava/lang/Throwable;` @kind interface;
+  #L21baa4.  v4:= temp @kind object;
+  #L21baa6.  v3:= "JndiResourceResolverFactory not available, skipping." @kind object;
+  #L21baaa.  call `log`(v1, v2, v3, v4) @signature `Ljava/util/logging/Logger;.log:(Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V` @kind virtual;
+  #L21bab0.  return v0 @kind object;
+  #L21bab2.  return v4 @kind object;
+  #L21bab4.  v4:= Exception @type ^`java.lang.Exception` @kind object;
+  #L21bab6.  v1:= `@@io.grpc.internal.DnsNameResolver.a` @type ^`java.util.logging.Logger` @kind object;
+  #L21baba.  v2:= `@@java.util.logging.Level.FINE` @type ^`java.util.logging.Level` @kind object;
+  #L21babe.  v3:= "Can't construct JndiResourceResolverFactory, skipping." @kind object;
+  #L21bac2.  call `log`(v1, v2, v3, v4) @signature `Ljava/util/logging/Logger;.log:(Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V` @kind virtual;
+  #L21bac8.  return v0 @kind object;
+  #L21baca.  v4:= Exception @type ^`java.lang.Exception` @kind object;
+  #L21bacc.  v1:= `@@io.grpc.internal.DnsNameResolver.a` @type ^`java.util.logging.Logger` @kind object;
+  #L21bad0.  v2:= `@@java.util.logging.Level.FINE` @type ^`java.util.logging.Level` @kind object;
+  #L21bad4.  v3:= "Can't find JndiResourceResolverFactory ctor, skipping." @kind object;
+  #L21bad8.  call `log`(v1, v2, v3, v4) @signature `Ljava/util/logging/Logger;.log:(Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V` @kind virtual;
+  #L21bade.  return v0 @kind object;
+  #L21bae0.  v4:= Exception @type ^`java.lang.ClassNotFoundException` @kind object;
+  #L21bae2.  v1:= `@@io.grpc.internal.DnsNameResolver.a` @type ^`java.util.logging.Logger` @kind object;
+  #L21bae6.  v2:= `@@java.util.logging.Level.FINE` @type ^`java.util.logging.Level` @kind object;
+  #L21baea.  v3:= "Unable to find JndiResourceResolverFactory, skipping." @kind object;
+  #L21baee.  call `log`(v1, v2, v3, v4) @signature `Ljava/util/logging/Logger;.log:(Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V` @kind virtual;
+  #L21baf4.  return v0 @kind object;
+  catch `java.lang.ClassNotFoundException` @[L21ba52..L21ba6c] goto L21bae0;
+  catch `java.lang.Exception` @[L21ba6e..L21ba7a] goto L21baca;
+  catch `java.lang.Exception` @[L21ba7a..L21ba8a] goto L21bab4;
+}
+procedure `java.util.Map` `y`(`java.util.Map` v8 @kind object, `java.util.Random` v9 @kind object, `java.lang.String` v10 @kind object) @signature `Lio/grpc/internal/DnsNameResolver;.y:(Ljava/util/Map;Ljava/util/Random;Ljava/lang/String;)Ljava/util/Map;` @AccessFlag STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+
+  #L21bd3c.  call temp:= `entrySet`(v8) @signature `Ljava/util/Map;.entrySet:()Ljava/util/Set;` @kind interface;
+  #L21bd42.  v0:= temp @kind object;
+  #L21bd44.  call temp:= `iterator`(v0) @signature `Ljava/util/Set;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L21bd4a.  v0:= temp @kind object;
+  #L21bd4c.  call temp:= `hasNext`(v0) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L21bd52.  v1:= temp;
+  #L21bd54.  if v1 == 0 then goto L21bd84;
+  #L21bd58.  call temp:= `next`(v0) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L21bd5e.  v1:= temp @kind object;
+  #L21bd60.  v1:= (`java.util.Map$Entry`) v1 @kind object;
+  #L21bd64.  v2:= `@@io.grpc.internal.DnsNameResolver.b` @type ^`java.util.Set` @kind object;
+  #L21bd68.  call temp:= `getKey`(v1) @signature `Ljava/util/Map$Entry;.getKey:()Ljava/lang/Object;` @kind interface;
+  #L21bd6e.  v3:= temp @kind object;
+  #L21bd70.  call temp:= `contains`(v2, v3) @signature `Ljava/util/Set;.contains:(Ljava/lang/Object;)Z` @kind interface;
+  #L21bd76.  v2:= temp;
+  #L21bd78.  v3:= "Bad key: %s" @kind object;
+  #L21bd7c.  call `a`(v2, v3, v1) @signature `Lcom/google/common/base/p0;.a:(ZLjava/lang/String;Ljava/lang/Object;)V` @kind static;
+  #L21bd82.  goto L21bd4c;
+  #L21bd84.  call temp:= `r`(v8) @signature `Lio/grpc/internal/DnsNameResolver;.r:(Ljava/util/Map;)Ljava/util/List;` @kind static;
+  #L21bd8a.  v0:= temp @kind object;
+  #L21bd8c.  v1:= 0I;
+  #L21bd8e.  v2:= 1I;
+  #L21bd90.  v3:= 0I;
+  #L21bd92.  if v0 == 0 then goto L21bdde;
+  #L21bd96.  call temp:= `isEmpty`(v0) @signature `Ljava/util/List;.isEmpty:()Z` @kind interface;
+  #L21bd9c.  v4:= temp;
+  #L21bd9e.  if v4 != 0 then goto L21bdde;
+  #L21bda2.  call temp:= `iterator`(v0) @signature `Ljava/util/List;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L21bda8.  v0:= temp @kind object;
+  #L21bdaa.  call temp:= `hasNext`(v0) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L21bdb0.  v4:= temp;
+  #L21bdb2.  if v4 == 0 then goto L21bdd6;
+  #L21bdb6.  call temp:= `next`(v0) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L21bdbc.  v4:= temp @kind object;
+  #L21bdbe.  v4:= (`java.lang.String`) v4 @kind object;
+  #L21bdc2.  v5:= "java" @kind object;
+  #L21bdc6.  call temp:= `equalsIgnoreCase`(v5, v4) @signature `Ljava/lang/String;.equalsIgnoreCase:(Ljava/lang/String;)Z` @kind virtual;
+  #L21bdcc.  v4:= temp;
+  #L21bdce.  if v4 == 0 then goto L21bdaa;
+  #L21bdd2.  v0:= 1I;
+  #L21bdd4.  goto L21bdd8;
+  #L21bdd6.  v0:= 0I;
+  #L21bdd8.  if v0 != 0 then goto L21bdde;
+  #L21bddc.  return v1 @kind object;
+  #L21bdde.  call temp:= `v`(v8) @signature `Lio/grpc/internal/DnsNameResolver;.v:(Ljava/util/Map;)Ljava/lang/Double;` @kind static;
+  #L21bde4.  v0:= temp @kind object;
+  #L21bde6.  if v0 == 0 then goto L21be1c;
+  #L21bdea.  call temp:= `intValue`(v0) @signature `Ljava/lang/Double;.intValue:()I` @kind virtual;
+  #L21bdf0.  v4:= temp;
+  #L21bdf2.  v5:= 100I;
+  #L21bdf6.  if v4 < 0 then goto L21be02;
+  #L21bdfa.  if v4 > v5 then goto L21be02;
+  #L21bdfe.  v6:= 1I;
+  #L21be00.  goto L21be04;
+  #L21be02.  v6:= 0I;
+  #L21be04.  v7:= "Bad percentage: %s" @kind object;
+  #L21be08.  call `a`(v6, v7, v0) @signature `Lcom/google/common/base/p0;.a:(ZLjava/lang/String;Ljava/lang/Object;)V` @kind static;
+  #L21be0e.  call temp:= `nextInt`(v9, v5) @signature `Ljava/util/Random;.nextInt:(I)I` @kind virtual;
+  #L21be14.  v9:= temp;
+  #L21be16.  if v9 < v4 then goto L21be1c;
+  #L21be1a.  return v1 @kind object;
+  #L21be1c.  call temp:= `s`(v8) @signature `Lio/grpc/internal/DnsNameResolver;.s:(Ljava/util/Map;)Ljava/util/List;` @kind static;
+  #L21be22.  v9:= temp @kind object;
+  #L21be24.  if v9 == 0 then goto L21be6c;
+  #L21be28.  call temp:= `isEmpty`(v9) @signature `Ljava/util/List;.isEmpty:()Z` @kind interface;
+  #L21be2e.  v0:= temp;
+  #L21be30.  if v0 != 0 then goto L21be6c;
+  #L21be34.  call temp:= `iterator`(v9) @signature `Ljava/util/List;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L21be3a.  v9:= temp @kind object;
+  #L21be3c.  call temp:= `hasNext`(v9) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L21be42.  v0:= temp;
+  #L21be44.  if v0 == 0 then goto L21be64;
+  #L21be48.  call temp:= `next`(v9) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L21be4e.  v0:= temp @kind object;
+  #L21be50.  v0:= (`java.lang.String`) v0 @kind object;
+  #L21be54.  call temp:= `equals`(v0, v10) @signature `Ljava/lang/String;.equals:(Ljava/lang/Object;)Z` @kind virtual;
+  #L21be5a.  v0:= temp;
+  #L21be5c.  if v0 == 0 then goto L21be3c;
+  #L21be60.  v9:= 1I;
+  #L21be62.  goto L21be66;
+  #L21be64.  v9:= 0I;
+  #L21be66.  if v9 != 0 then goto L21be6c;
+  #L21be6a.  return v1 @kind object;
+  #L21be6c.  v9:= "serviceConfig" @kind object;
+  #L21be70.  call temp:= `u`(v8, v9) @signature `Lio/grpc/internal/i9;.u:(Ljava/util/Map;Ljava/lang/String;)Ljava/util/Map;` @kind static;
+  #L21be76.  v10:= temp @kind object;
+  #L21be78.  if v10 == 0 then goto L21be7e;
+  #L21be7c.  return v10 @kind object;
+  #L21be7e.  v10:= new `com.google.common.base.VerifyException`;
+  #L21be82.  v0:= 2I;
+  #L21be84.  v0:= new `java.lang.Object`[v0];
+  #L21be88.  v0[v3]:= v8 @kind object;
+  #L21be8c.  v0[v2]:= v9 @kind object;
+  #L21be90.  v8:= "key '%s' missing in '%s'" @kind object;
+  #L21be94.  call temp:= `format`(v8, v0) @signature `Ljava/lang/String;.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;` @kind static;
+  #L21be9a.  v8:= temp @kind object;
+  #L21be9c.  call `<init>`(v10, v8) @signature `Lcom/google/common/base/VerifyException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L21bea2.  goto L21bea6;
+  #L21bea4.  throw v10;
+  #L21bea6.  goto L21bea4;
+}
+procedure `io.grpc.s2` `z`(`java.util.List` v3 @kind object, `java.util.Random` v4 @kind object, `java.lang.String` v5 @kind object) @signature `Lio/grpc/internal/DnsNameResolver;.z:(Ljava/util/List;Ljava/util/Random;Ljava/lang/String;)Lio/grpc/s2;` @AccessFlag STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L21b750.  call temp:= `A`(v3) @signature `Lio/grpc/internal/DnsNameResolver;.A:(Ljava/util/List;)Ljava/util/List;` @kind static;
+  #L21b756.  v3:= temp @kind object;
+  #L21b758.  call temp:= `iterator`(v3) @signature `Ljava/util/List;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L21b75e.  v3:= temp @kind object;
+  #L21b760.  v0:= 0I;
+  #L21b762.  v1:= v0 @kind object;
+  #L21b764.  call temp:= `hasNext`(v3) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L21b76a.  v2:= temp;
+  #L21b76c.  if v2 == 0 then goto L21b7ae;
+  #L21b770.  call temp:= `next`(v3) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L21b776.  v1:= temp @kind object;
+  #L21b778.  v1:= (`java.util.Map`) v1 @kind object;
+  #L21b77c.  call temp:= `y`(v1, v4, v5) @signature `Lio/grpc/internal/DnsNameResolver;.y:(Ljava/util/Map;Ljava/util/Random;Ljava/lang/String;)Ljava/util/Map;` @kind static;
+  #L21b782.  v1:= temp @kind object;
+  #L21b784.  if v1 == 0 then goto L21b764;
+  #L21b788.  goto L21b7ae;
+  #L21b78a.  v3:= Exception @type ^`java.lang.RuntimeException` @kind object;
+  #L21b78c.  v4:= `@@io.grpc.Status.e` @type ^`io.grpc.Status` @kind object;
+  #L21b790.  v5:= "failed to pick service config choice" @kind object;
+  #L21b794.  call temp:= `r`(v4, v5) @signature `Lio/grpc/Status;.r:(Ljava/lang/String;)Lio/grpc/Status;` @kind virtual;
+  #L21b79a.  v4:= temp @kind object;
+  #L21b79c.  call temp:= `q`(v4, v3) @signature `Lio/grpc/Status;.q:(Ljava/lang/Throwable;)Lio/grpc/Status;` @kind virtual;
+  #L21b7a2.  v3:= temp @kind object;
+  #L21b7a4.  call temp:= `b`(v3) @signature `Lio/grpc/s2;.b:(Lio/grpc/Status;)Lio/grpc/s2;` @kind static;
+  #L21b7aa.  v3:= temp @kind object;
+  #L21b7ac.  return v3 @kind object;
+  #L21b7ae.  if v1 != 0 then goto L21b7b4;
+  #L21b7b2.  return v0 @kind object;
+  #L21b7b4.  call temp:= `a`(v1) @signature `Lio/grpc/s2;.a:(Ljava/lang/Object;)Lio/grpc/s2;` @kind static;
+  #L21b7ba.  v3:= temp @kind object;
+  #L21b7bc.  return v3 @kind object;
+  #L21b7be.  v3:= Exception @type ^`java.lang.RuntimeException` @kind object;
+  #L21b7c0.  goto L21b7c4;
+  #L21b7c2.  v3:= Exception @type ^`java.io.IOException` @kind object;
+  #L21b7c4.  v4:= `@@io.grpc.Status.e` @type ^`io.grpc.Status` @kind object;
+  #L21b7c8.  v5:= "failed to parse TXT records" @kind object;
+  #L21b7cc.  call temp:= `r`(v4, v5) @signature `Lio/grpc/Status;.r:(Ljava/lang/String;)Lio/grpc/Status;` @kind virtual;
+  #L21b7d2.  v4:= temp @kind object;
+  #L21b7d4.  call temp:= `q`(v4, v3) @signature `Lio/grpc/Status;.q:(Ljava/lang/Throwable;)Lio/grpc/Status;` @kind virtual;
+  #L21b7da.  v3:= temp @kind object;
+  #L21b7dc.  call temp:= `b`(v3) @signature `Lio/grpc/s2;.b:(Lio/grpc/Status;)Lio/grpc/s2;` @kind static;
+  #L21b7e2.  v3:= temp @kind object;
+  #L21b7e4.  return v3 @kind object;
+  catch `java.io.IOException` @[L21b750..L21b758] goto L21b7c2;
+  catch `java.lang.RuntimeException` @[L21b750..L21b758] goto L21b7be;
+  catch `java.lang.RuntimeException` @[L21b77c..L21b784] goto L21b78a;
+}
+procedure `java.lang.String` `a`(`io.grpc.internal.DnsNameResolver` v1 @kind this) @signature `Lio/grpc/internal/DnsNameResolver;.a:()Ljava/lang/String;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L21bbe8.  v0:= v1.`io.grpc.internal.DnsNameResolver.q` @type ^`java.lang.String` @kind object;
+  #L21bbec.  return v0 @kind object;
+}
+procedure `void` `b`(`io.grpc.internal.DnsNameResolver` v2 @kind this) @signature `Lio/grpc/internal/DnsNameResolver;.b:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L21c1c4.  v0:= v2.`io.grpc.internal.DnsNameResolver.B` @type ^`io.grpc.u2` @kind object;
+  #L21c1c8.  if v0 == 0 then goto L21c1d0;
+  #L21c1cc.  v0:= 1I;
+  #L21c1ce.  goto L21c1d2;
+  #L21c1d0.  v0:= 0I;
+  #L21c1d2.  v1:= "not started" @kind object;
+  #L21c1d6.  call `z`(v0, v1) @signature `Lcom/google/common/base/b0;.z:(ZLjava/lang/Object;)V` @kind static;
+  #L21c1dc.  call `B`(v2) @signature `Lio/grpc/internal/DnsNameResolver;.B:()V` @kind direct;
+  #L21c1e2.  return @kind void;
+}
+procedure `void` `c`(`io.grpc.internal.DnsNameResolver` v2 @kind this) @signature `Lio/grpc/internal/DnsNameResolver;.c:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L21c244.  v0:= v2.`io.grpc.internal.DnsNameResolver.y` @type ^`boolean` @kind boolean;
+  #L21c248.  if v0 == 0 then goto L21c24e;
+  #L21c24c.  return @kind void;
+  #L21c24e.  v0:= 1I;
+  #L21c250.  v2.`io.grpc.internal.DnsNameResolver.y` @type ^`boolean` := v0 @kind boolean;
+  #L21c254.  v0:= v2.`io.grpc.internal.DnsNameResolver.z` @type ^`java.util.concurrent.Executor` @kind object;
+  #L21c258.  if v0 == 0 then goto L21c270;
+  #L21c25c.  v1:= v2.`io.grpc.internal.DnsNameResolver.t` @type ^`io.grpc.internal.m9` @kind object;
+  #L21c260.  call temp:= `f`(v1, v0) @signature `Lio/grpc/internal/o9;.f:(Lio/grpc/internal/m9;Ljava/lang/Object;)Ljava/lang/Object;` @kind static;
+  #L21c266.  v0:= temp @kind object;
+  #L21c268.  v0:= (`java.util.concurrent.Executor`) v0 @kind object;
+  #L21c26c.  v2.`io.grpc.internal.DnsNameResolver.z` @type ^`java.util.concurrent.Executor` := v0 @kind object;
+  #L21c270.  return @kind void;
+}
+procedure `void` `d`(`io.grpc.internal.DnsNameResolver` v2 @kind this, `io.grpc.u2` v3 @kind object) @signature `Lio/grpc/internal/DnsNameResolver;.d:(Lio/grpc/u2;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L21c284.  v0:= v2.`io.grpc.internal.DnsNameResolver.B` @type ^`io.grpc.u2` @kind object;
+  #L21c288.  if v0 != 0 then goto L21c290;
+  #L21c28c.  v0:= 1I;
+  #L21c28e.  goto L21c292;
+  #L21c290.  v0:= 0I;
+  #L21c292.  v1:= "already started" @kind object;
+  #L21c296.  call `z`(v0, v1) @signature `Lcom/google/common/base/b0;.z:(ZLjava/lang/Object;)V` @kind static;
+  #L21c29c.  v0:= v2.`io.grpc.internal.DnsNameResolver.t` @type ^`io.grpc.internal.m9` @kind object;
+  #L21c2a0.  call temp:= `d`(v0) @signature `Lio/grpc/internal/o9;.d:(Lio/grpc/internal/m9;)Ljava/lang/Object;` @kind static;
+  #L21c2a6.  v0:= temp @kind object;
+  #L21c2a8.  v0:= (`java.util.concurrent.Executor`) v0 @kind object;
+  #L21c2ac.  v2.`io.grpc.internal.DnsNameResolver.z` @type ^`java.util.concurrent.Executor` := v0 @kind object;
+  #L21c2b0.  v0:= "listener" @kind object;
+  #L21c2b4.  call temp:= `s`(v3, v0) @signature `Lcom/google/common/base/b0;.s:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;` @kind static;
+  #L21c2ba.  v3:= temp @kind object;
+  #L21c2bc.  v3:= (`io.grpc.u2`) v3 @kind object;
+  #L21c2c0.  v2.`io.grpc.internal.DnsNameResolver.B` @type ^`io.grpc.u2` := v3 @kind object;
+  #L21c2c4.  call `B`(v2) @signature `Lio/grpc/internal/DnsNameResolver;.B:()V` @kind direct;
+  #L21c2ca.  return @kind void;
+}

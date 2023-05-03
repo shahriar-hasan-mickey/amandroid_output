@@ -1,0 +1,1091 @@
+record `io.objectbox.Box` @kind class @AccessFlag PUBLIC {
+  `io.objectbox.BoxStore` `io.objectbox.Box.a` @AccessFlag PRIVATE_FINAL;
+  `java.lang.Class` `io.objectbox.Box.b` @AccessFlag PRIVATE_FINAL;
+  `java.lang.ThreadLocal` `io.objectbox.Box.c` @AccessFlag FINAL;
+  `java.lang.ThreadLocal` `io.objectbox.Box.d` @AccessFlag PRIVATE_FINAL;
+  `io.objectbox.internal.IdGetter` `io.objectbox.Box.e` @AccessFlag PRIVATE_FINAL;
+  `io.objectbox.EntityInfo` `io.objectbox.Box.f` @AccessFlag PRIVATE;
+  `java.lang.reflect.Field` `io.objectbox.Box.g` @AccessFlag PRIVATE_VOLATILE;
+}
+procedure `void` `<init>`(`io.objectbox.Box` v1 @kind this, `io.objectbox.BoxStore` v2 @kind object, `java.lang.Class` v3 @kind object) @signature `Lio/objectbox/Box;.<init>:(Lio/objectbox/BoxStore;Ljava/lang/Class;)V` @AccessFlag CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L3e0050.  call `<init>`(v1) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L3e0056.  v0:= new `java.lang.ThreadLocal`;
+  #L3e005a.  call `<init>`(v0) @signature `Ljava/lang/ThreadLocal;.<init>:()V` @kind direct;
+  #L3e0060.  v1.`io.objectbox.Box.c` @type ^`java.lang.ThreadLocal` := v0 @kind object;
+  #L3e0064.  v0:= new `java.lang.ThreadLocal`;
+  #L3e0068.  call `<init>`(v0) @signature `Ljava/lang/ThreadLocal;.<init>:()V` @kind direct;
+  #L3e006e.  v1.`io.objectbox.Box.d` @type ^`java.lang.ThreadLocal` := v0 @kind object;
+  #L3e0072.  v1.`io.objectbox.Box.a` @type ^`io.objectbox.BoxStore` := v2 @kind object;
+  #L3e0076.  v1.`io.objectbox.Box.b` @type ^`java.lang.Class` := v3 @kind object;
+  #L3e007a.  call temp:= `j`(v2, v3) @signature `Lio/objectbox/BoxStore;.j:(Ljava/lang/Class;)Lio/objectbox/EntityInfo;` @kind virtual;
+  #L3e0080.  v2:= temp @kind object;
+  #L3e0082.  call temp:= `getIdGetter`(v2) @signature `Lio/objectbox/EntityInfo;.getIdGetter:()Lio/objectbox/internal/IdGetter;` @kind interface;
+  #L3e0088.  v2:= temp @kind object;
+  #L3e008a.  v1.`io.objectbox.Box.e` @type ^`io.objectbox.internal.IdGetter` := v2 @kind object;
+  #L3e008e.  return @kind void;
+}
+procedure `void` `a`(`io.objectbox.Box` v1 @kind this, `io.objectbox.Cursor` v2 @kind object) @signature `Lio/objectbox/Box;.a:(Lio/objectbox/Cursor;)V` @AccessFlag  {
+    temp;
+    v0;
+
+  #L3e0188.  v0:= v1.`io.objectbox.Box.c` @type ^`java.lang.ThreadLocal` @kind object;
+  #L3e018c.  call temp:= `get`(v0) @signature `Ljava/lang/ThreadLocal;.get:()Ljava/lang/Object;` @kind virtual;
+  #L3e0192.  v0:= temp @kind object;
+  #L3e0194.  if v0 != 0 then goto L3e01ac;
+  #L3e0198.  call `close`(v2) @signature `Lio/objectbox/Cursor;.close:()V` @kind virtual;
+  #L3e019e.  call temp:= `getTx`(v2) @signature `Lio/objectbox/Cursor;.getTx:()Lio/objectbox/Transaction;` @kind virtual;
+  #L3e01a4.  v2:= temp @kind object;
+  #L3e01a6.  call `commitAndClose`(v2) @signature `Lio/objectbox/Transaction;.commitAndClose:()V` @kind virtual;
+  #L3e01ac.  return @kind void;
+}
+procedure `void` `attach`(`io.objectbox.Box` v3 @kind this, `java.lang.Object` v4 @kind object) @signature `Lio/objectbox/Box;.attach:(Ljava/lang/Object;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L3e00a0.  v0:= v3.`io.objectbox.Box.g` @type ^`java.lang.reflect.Field` @kind object;
+  #L3e00a4.  if v0 != 0 then goto L3e00fa;
+  #L3e00a8.  call temp:= `getInstance`() @signature `Lio/objectbox/internal/ReflectionCache;.getInstance:()Lio/objectbox/internal/ReflectionCache;` @kind static;
+  #L3e00ae.  v0:= temp @kind object;
+  #L3e00b0.  v1:= v3.`io.objectbox.Box.b` @type ^`java.lang.Class` @kind object;
+  #L3e00b4.  v2:= "__boxStore" @kind object;
+  #L3e00b8.  call temp:= `getField`(v0, v1, v2) @signature `Lio/objectbox/internal/ReflectionCache;.getField:(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/reflect/Field;` @kind virtual;
+  #L3e00be.  v0:= temp @kind object;
+  #L3e00c0.  v3.`io.objectbox.Box.g` @type ^`java.lang.reflect.Field` := v0 @kind object;
+  #L3e00c4.  goto L3e00fa;
+  #L3e00c6.  v4:= Exception @type ^`java.lang.Exception` @kind object;
+  #L3e00c8.  v0:= new `io.objectbox.exception.DbException`;
+  #L3e00cc.  v1:= new `java.lang.StringBuilder`;
+  #L3e00d0.  call `<init>`(v1) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L3e00d6.  v2:= "Entity cannot be attached - only active entities with relationships support attaching (class has no __boxStore field(?)) : " @kind object;
+  #L3e00da.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3e00e0.  v2:= v3.`io.objectbox.Box.b` @type ^`java.lang.Class` @kind object;
+  #L3e00e4.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3e00ea.  call temp:= `toString`(v1) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L3e00f0.  v1:= temp @kind object;
+  #L3e00f2.  call `<init>`(v0, v1, v4) @signature `Lio/objectbox/exception/DbException;.<init>:(Ljava/lang/String;Ljava/lang/Throwable;)V` @kind direct;
+  #L3e00f8.  throw v0;
+  #L3e00fa.  v0:= v3.`io.objectbox.Box.g` @type ^`java.lang.reflect.Field` @kind object;
+  #L3e00fe.  v1:= v3.`io.objectbox.Box.a` @type ^`io.objectbox.BoxStore` @kind object;
+  #L3e0102.  call `set`(v0, v4, v1) @signature `Ljava/lang/reflect/Field;.set:(Ljava/lang/Object;Ljava/lang/Object;)V` @kind virtual;
+  #L3e0108.  return @kind void;
+  #L3e010a.  v4:= Exception @type ^`java.lang.IllegalAccessException` @kind object;
+  #L3e010c.  v0:= new `java.lang.RuntimeException`;
+  #L3e0110.  call `<init>`(v0, v4) @signature `Ljava/lang/RuntimeException;.<init>:(Ljava/lang/Throwable;)V` @kind direct;
+  #L3e0116.  throw v0;
+  catch `java.lang.Exception` @[L3e00a8..L3e00c4] goto L3e00c6;
+  catch `java.lang.IllegalAccessException` @[L3e00fa..L3e0108] goto L3e010a;
+}
+procedure `io.objectbox.Cursor` `b`(`io.objectbox.Box` v3 @kind this) @signature `Lio/objectbox/Box;.b:()Lio/objectbox/Cursor;` @AccessFlag  {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L3df880.  v0:= v3.`io.objectbox.Box.a` @type ^`io.objectbox.BoxStore` @kind object;
+  #L3df884.  v0:= v0.`io.objectbox.BoxStore.p` @type ^`java.lang.ThreadLocal` @kind object;
+  #L3df888.  call temp:= `get`(v0) @signature `Ljava/lang/ThreadLocal;.get:()Ljava/lang/Object;` @kind virtual;
+  #L3df88e.  v0:= temp @kind object;
+  #L3df890.  v0:= (`io.objectbox.Transaction`) v0 @kind object;
+  #L3df894.  if v0 == 0 then goto L3df8f4;
+  #L3df898.  call temp:= `isClosed`(v0) @signature `Lio/objectbox/Transaction;.isClosed:()Z` @kind virtual;
+  #L3df89e.  v1:= temp;
+  #L3df8a0.  if v1 != 0 then goto L3df8e4;
+  #L3df8a4.  v1:= v3.`io.objectbox.Box.c` @type ^`java.lang.ThreadLocal` @kind object;
+  #L3df8a8.  call temp:= `get`(v1) @signature `Ljava/lang/ThreadLocal;.get:()Ljava/lang/Object;` @kind virtual;
+  #L3df8ae.  v1:= temp @kind object;
+  #L3df8b0.  v1:= (`io.objectbox.Cursor`) v1 @kind object;
+  #L3df8b4.  if v1 == 0 then goto L3df8cc;
+  #L3df8b8.  call temp:= `getTx`(v1) @signature `Lio/objectbox/Cursor;.getTx:()Lio/objectbox/Transaction;` @kind virtual;
+  #L3df8be.  v2:= temp @kind object;
+  #L3df8c0.  call temp:= `isClosed`(v2) @signature `Lio/objectbox/Transaction;.isClosed:()Z` @kind virtual;
+  #L3df8c6.  v2:= temp;
+  #L3df8c8.  if v2 == 0 then goto L3df8e2;
+  #L3df8cc.  v1:= v3.`io.objectbox.Box.b` @type ^`java.lang.Class` @kind object;
+  #L3df8d0.  call temp:= `createCursor`(v0, v1) @signature `Lio/objectbox/Transaction;.createCursor:(Ljava/lang/Class;)Lio/objectbox/Cursor;` @kind virtual;
+  #L3df8d6.  v1:= temp @kind object;
+  #L3df8d8.  v0:= v3.`io.objectbox.Box.c` @type ^`java.lang.ThreadLocal` @kind object;
+  #L3df8dc.  call `set`(v0, v1) @signature `Ljava/lang/ThreadLocal;.set:(Ljava/lang/Object;)V` @kind virtual;
+  #L3df8e2.  return v1 @kind object;
+  #L3df8e4.  v0:= new `java.lang.IllegalStateException`;
+  #L3df8e8.  v1:= "Active TX is closed" @kind object;
+  #L3df8ec.  call `<init>`(v0, v1) @signature `Ljava/lang/IllegalStateException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L3df8f2.  throw v0;
+  #L3df8f4.  v0:= 0I;
+  #L3df8f6.  return v0 @kind object;
+}
+procedure `io.objectbox.Cursor` `c`(`io.objectbox.Box` v3 @kind this) @signature `Lio/objectbox/Box;.c:()Lio/objectbox/Cursor;` @AccessFlag  {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L3df908.  call temp:= `b`(v3) @signature `Lio/objectbox/Box;.b:()Lio/objectbox/Cursor;` @kind virtual;
+  #L3df90e.  v0:= temp @kind object;
+  #L3df910.  if v0 == 0 then goto L3df916;
+  #L3df914.  return v0 @kind object;
+  #L3df916.  v0:= v3.`io.objectbox.Box.d` @type ^`java.lang.ThreadLocal` @kind object;
+  #L3df91a.  call temp:= `get`(v0) @signature `Ljava/lang/ThreadLocal;.get:()Ljava/lang/Object;` @kind virtual;
+  #L3df920.  v0:= temp @kind object;
+  #L3df922.  v0:= (`io.objectbox.Cursor`) v0 @kind object;
+  #L3df926.  if v0 == 0 then goto L3df964;
+  #L3df92a.  v1:= v0.`io.objectbox.Cursor.tx` @type ^`io.objectbox.Transaction` @kind object;
+  #L3df92e.  call temp:= `isClosed`(v1) @signature `Lio/objectbox/Transaction;.isClosed:()Z` @kind virtual;
+  #L3df934.  v2:= temp;
+  #L3df936.  if v2 != 0 then goto L3df954;
+  #L3df93a.  call temp:= `isRecycled`(v1) @signature `Lio/objectbox/Transaction;.isRecycled:()Z` @kind virtual;
+  #L3df940.  v2:= temp;
+  #L3df942.  if v2 == 0 then goto L3df954;
+  #L3df946.  call `renew`(v1) @signature `Lio/objectbox/Transaction;.renew:()V` @kind virtual;
+  #L3df94c.  call `renew`(v0) @signature `Lio/objectbox/Cursor;.renew:()V` @kind virtual;
+  #L3df952.  goto L3df986;
+  #L3df954.  v0:= new `java.lang.IllegalStateException`;
+  #L3df958.  v1:= "Illegal reader TX state" @kind object;
+  #L3df95c.  call `<init>`(v0, v1) @signature `Ljava/lang/IllegalStateException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L3df962.  throw v0;
+  #L3df964.  v0:= v3.`io.objectbox.Box.a` @type ^`io.objectbox.BoxStore` @kind object;
+  #L3df968.  call temp:= `beginReadTx`(v0) @signature `Lio/objectbox/BoxStore;.beginReadTx:()Lio/objectbox/Transaction;` @kind virtual;
+  #L3df96e.  v0:= temp @kind object;
+  #L3df970.  v1:= v3.`io.objectbox.Box.b` @type ^`java.lang.Class` @kind object;
+  #L3df974.  call temp:= `createCursor`(v0, v1) @signature `Lio/objectbox/Transaction;.createCursor:(Ljava/lang/Class;)Lio/objectbox/Cursor;` @kind virtual;
+  #L3df97a.  v0:= temp @kind object;
+  #L3df97c.  v1:= v3.`io.objectbox.Box.d` @type ^`java.lang.ThreadLocal` @kind object;
+  #L3df980.  call `set`(v1, v0) @signature `Ljava/lang/ThreadLocal;.set:(Ljava/lang/Object;)V` @kind virtual;
+  #L3df986.  return v0 @kind object;
+}
+procedure `void` `closeThreadResources`(`io.objectbox.Box` v1 @kind this) @signature `Lio/objectbox/Box;.closeThreadResources:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L3e0144.  v0:= v1.`io.objectbox.Box.d` @type ^`java.lang.ThreadLocal` @kind object;
+  #L3e0148.  call temp:= `get`(v0) @signature `Ljava/lang/ThreadLocal;.get:()Ljava/lang/Object;` @kind virtual;
+  #L3e014e.  v0:= temp @kind object;
+  #L3e0150.  v0:= (`io.objectbox.Cursor`) v0 @kind object;
+  #L3e0154.  if v0 == 0 then goto L3e0176;
+  #L3e0158.  call `close`(v0) @signature `Lio/objectbox/Cursor;.close:()V` @kind virtual;
+  #L3e015e.  call temp:= `getTx`(v0) @signature `Lio/objectbox/Cursor;.getTx:()Lio/objectbox/Transaction;` @kind virtual;
+  #L3e0164.  v0:= temp @kind object;
+  #L3e0166.  call `close`(v0) @signature `Lio/objectbox/Transaction;.close:()V` @kind virtual;
+  #L3e016c.  v0:= v1.`io.objectbox.Box.d` @type ^`java.lang.ThreadLocal` @kind object;
+  #L3e0170.  call `remove`(v0) @signature `Ljava/lang/ThreadLocal;.remove:()V` @kind virtual;
+  #L3e0176.  return @kind void;
+}
+procedure `boolean` `contains`(`io.objectbox.Box` v1 @kind this, `long` v2 ) @signature `Lio/objectbox/Box;.contains:(J)Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L3df768.  call temp:= `c`(v1) @signature `Lio/objectbox/Box;.c:()Lio/objectbox/Cursor;` @kind virtual;
+  #L3df76e.  v0:= temp @kind object;
+  #L3df770.  call temp:= `seek`(v0, v2) @signature `Lio/objectbox/Cursor;.seek:(J)Z` @kind virtual;
+  #L3df776.  v2:= temp;
+  #L3df778.  call `f`(v1, v0) @signature `Lio/objectbox/Box;.f:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3df77e.  return v2;
+  #L3df780.  v2:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3df782.  call `f`(v1, v0) @signature `Lio/objectbox/Box;.f:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3df788.  throw v2;
+  catch `java.lang.Throwable` @[L3df770..L3df778] goto L3df780;
+}
+procedure `long` `count`(`io.objectbox.Box` v2 @kind this) @signature `Lio/objectbox/Box;.count:()J` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L3dfeb4.  v0:= 0L;
+  #L3dfeb8.  call temp:= `count`(v2, v0) @signature `Lio/objectbox/Box;.count:(J)J` @kind virtual;
+  #L3dfebe.  v0:= temp @kind wide;
+  #L3dfec0.  return v0 @kind wide;
+}
+procedure `long` `count`(`io.objectbox.Box` v1 @kind this, `long` v2 ) @signature `Lio/objectbox/Box;.count:(J)J` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L3dfed4.  call temp:= `c`(v1) @signature `Lio/objectbox/Box;.c:()Lio/objectbox/Cursor;` @kind virtual;
+  #L3dfeda.  v0:= temp @kind object;
+  #L3dfedc.  call temp:= `count`(v0, v2) @signature `Lio/objectbox/Cursor;.count:(J)J` @kind virtual;
+  #L3dfee2.  v2:= temp @kind wide;
+  #L3dfee4.  call `f`(v1, v0) @signature `Lio/objectbox/Box;.f:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3dfeea.  return v2 @kind wide;
+  #L3dfeec.  v2:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3dfeee.  call `f`(v1, v0) @signature `Lio/objectbox/Box;.f:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3dfef4.  throw v2;
+  catch `java.lang.Throwable` @[L3dfedc..L3dfee4] goto L3dfeec;
+}
+procedure `io.objectbox.Cursor` `d`(`io.objectbox.Box` v2 @kind this) @signature `Lio/objectbox/Box;.d:()Lio/objectbox/Cursor;` @AccessFlag  {
+    temp;
+    v0;
+    v1;
+
+  #L3df998.  call temp:= `b`(v2) @signature `Lio/objectbox/Box;.b:()Lio/objectbox/Cursor;` @kind virtual;
+  #L3df99e.  v0:= temp @kind object;
+  #L3df9a0.  if v0 == 0 then goto L3df9a6;
+  #L3df9a4.  return v0 @kind object;
+  #L3df9a6.  v0:= v2.`io.objectbox.Box.a` @type ^`io.objectbox.BoxStore` @kind object;
+  #L3df9aa.  call temp:= `beginTx`(v0) @signature `Lio/objectbox/BoxStore;.beginTx:()Lio/objectbox/Transaction;` @kind virtual;
+  #L3df9b0.  v0:= temp @kind object;
+  #L3df9b2.  v1:= v2.`io.objectbox.Box.b` @type ^`java.lang.Class` @kind object;
+  #L3df9b6.  call temp:= `createCursor`(v0, v1) @signature `Lio/objectbox/Transaction;.createCursor:(Ljava/lang/Class;)Lio/objectbox/Cursor;` @kind virtual;
+  #L3df9bc.  v0:= temp @kind object;
+  #L3df9be.  return v0 @kind object;
+  #L3df9c0.  v1:= Exception @type ^`java.lang.RuntimeException` @kind object;
+  #L3df9c2.  call `close`(v0) @signature `Lio/objectbox/Transaction;.close:()V` @kind virtual;
+  #L3df9c8.  throw v1;
+  catch `java.lang.RuntimeException` @[L3df9b2..L3df9be] goto L3df9c0;
+}
+procedure `void` `e`(`io.objectbox.Box` v2 @kind this, `io.objectbox.Transaction` v3 @kind object) @signature `Lio/objectbox/Box;.e:(Lio/objectbox/Transaction;)V` @AccessFlag  {
+    temp;
+    v0;
+    v1;
+
+  #L3e034c.  v0:= v2.`io.objectbox.Box.c` @type ^`java.lang.ThreadLocal` @kind object;
+  #L3e0350.  call temp:= `get`(v0) @signature `Ljava/lang/ThreadLocal;.get:()Ljava/lang/Object;` @kind virtual;
+  #L3e0356.  v0:= temp @kind object;
+  #L3e0358.  v0:= (`io.objectbox.Cursor`) v0 @kind object;
+  #L3e035c.  if v0 == 0 then goto L3e037c;
+  #L3e0360.  call temp:= `getTx`(v0) @signature `Lio/objectbox/Cursor;.getTx:()Lio/objectbox/Transaction;` @kind virtual;
+  #L3e0366.  v1:= temp @kind object;
+  #L3e0368.  if v1 != v3 then goto L3e037c;
+  #L3e036c.  v3:= v2.`io.objectbox.Box.c` @type ^`java.lang.ThreadLocal` @kind object;
+  #L3e0370.  call `remove`(v3) @signature `Ljava/lang/ThreadLocal;.remove:()V` @kind virtual;
+  #L3e0376.  call `close`(v0) @signature `Lio/objectbox/Cursor;.close:()V` @kind virtual;
+  #L3e037c.  return @kind void;
+}
+procedure `void` `f`(`io.objectbox.Box` v1 @kind this, `io.objectbox.Cursor` v2 @kind object) @signature `Lio/objectbox/Box;.f:(Lio/objectbox/Cursor;)V` @AccessFlag  {
+    temp;
+    v0;
+
+  #L3e0390.  v0:= v1.`io.objectbox.Box.c` @type ^`java.lang.ThreadLocal` @kind object;
+  #L3e0394.  call temp:= `get`(v0) @signature `Ljava/lang/ThreadLocal;.get:()Ljava/lang/Object;` @kind virtual;
+  #L3e039a.  v0:= temp @kind object;
+  #L3e039c.  if v0 != 0 then goto L3e03e4;
+  #L3e03a0.  call temp:= `getTx`(v2) @signature `Lio/objectbox/Cursor;.getTx:()Lio/objectbox/Transaction;` @kind virtual;
+  #L3e03a6.  v2:= temp @kind object;
+  #L3e03a8.  call temp:= `isClosed`(v2) @signature `Lio/objectbox/Transaction;.isClosed:()Z` @kind virtual;
+  #L3e03ae.  v0:= temp;
+  #L3e03b0.  if v0 != 0 then goto L3e03d4;
+  #L3e03b4.  call temp:= `isRecycled`(v2) @signature `Lio/objectbox/Transaction;.isRecycled:()Z` @kind virtual;
+  #L3e03ba.  v0:= temp;
+  #L3e03bc.  if v0 != 0 then goto L3e03d4;
+  #L3e03c0.  call temp:= `isReadOnly`(v2) @signature `Lio/objectbox/Transaction;.isReadOnly:()Z` @kind virtual;
+  #L3e03c6.  v0:= temp;
+  #L3e03c8.  if v0 == 0 then goto L3e03d4;
+  #L3e03cc.  call `recycle`(v2) @signature `Lio/objectbox/Transaction;.recycle:()V` @kind virtual;
+  #L3e03d2.  goto L3e03e4;
+  #L3e03d4.  v2:= new `java.lang.IllegalStateException`;
+  #L3e03d8.  v0:= "Illegal reader TX state" @kind object;
+  #L3e03dc.  call `<init>`(v2, v0) @signature `Ljava/lang/IllegalStateException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L3e03e2.  throw v2;
+  #L3e03e4.  return @kind void;
+}
+procedure `void` `g`(`io.objectbox.Box` v2 @kind this, `io.objectbox.Cursor` v3 @kind object) @signature `Lio/objectbox/Box;.g:(Lio/objectbox/Cursor;)V` @AccessFlag  {
+    temp;
+    v0;
+    v1;
+
+  #L3e03f8.  v0:= v2.`io.objectbox.Box.c` @type ^`java.lang.ThreadLocal` @kind object;
+  #L3e03fc.  call temp:= `get`(v0) @signature `Ljava/lang/ThreadLocal;.get:()Ljava/lang/Object;` @kind virtual;
+  #L3e0402.  v0:= temp @kind object;
+  #L3e0404.  if v0 != 0 then goto L3e042e;
+  #L3e0408.  call temp:= `getTx`(v3) @signature `Lio/objectbox/Cursor;.getTx:()Lio/objectbox/Transaction;` @kind virtual;
+  #L3e040e.  v0:= temp @kind object;
+  #L3e0410.  call temp:= `isClosed`(v0) @signature `Lio/objectbox/Transaction;.isClosed:()Z` @kind virtual;
+  #L3e0416.  v1:= temp;
+  #L3e0418.  if v1 != 0 then goto L3e042e;
+  #L3e041c.  call `close`(v3) @signature `Lio/objectbox/Cursor;.close:()V` @kind virtual;
+  #L3e0422.  call `abort`(v0) @signature `Lio/objectbox/Transaction;.abort:()V` @kind virtual;
+  #L3e0428.  call `close`(v0) @signature `Lio/objectbox/Transaction;.close:()V` @kind virtual;
+  #L3e042e.  return @kind void;
+}
+procedure `java.lang.Object` `get`(`io.objectbox.Box` v1 @kind this, `long` v2 ) @signature `Lio/objectbox/Box;.get:(J)Ljava/lang/Object;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L3dfaac.  call temp:= `c`(v1) @signature `Lio/objectbox/Box;.c:()Lio/objectbox/Cursor;` @kind virtual;
+  #L3dfab2.  v0:= temp @kind object;
+  #L3dfab4.  call temp:= `get`(v0, v2) @signature `Lio/objectbox/Cursor;.get:(J)Ljava/lang/Object;` @kind virtual;
+  #L3dfaba.  v2:= temp @kind object;
+  #L3dfabc.  call `f`(v1, v0) @signature `Lio/objectbox/Box;.f:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3dfac2.  return v2 @kind object;
+  #L3dfac4.  v2:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3dfac6.  call `f`(v1, v0) @signature `Lio/objectbox/Box;.f:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3dfacc.  throw v2;
+  catch `java.lang.Throwable` @[L3dfab4..L3dfabc] goto L3dfac4;
+}
+procedure `java.util.List` `get`(`io.objectbox.Box` v4 @kind this, `java.lang.Iterable` v5 @kind object) @signature `Lio/objectbox/Box;.get:(Ljava/lang/Iterable;)Ljava/util/List;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L3dfc04.  v0:= new `java.util.ArrayList`;
+  #L3dfc08.  call `<init>`(v0) @signature `Ljava/util/ArrayList;.<init>:()V` @kind direct;
+  #L3dfc0e.  call temp:= `c`(v4) @signature `Lio/objectbox/Box;.c:()Lio/objectbox/Cursor;` @kind virtual;
+  #L3dfc14.  v1:= temp @kind object;
+  #L3dfc16.  call temp:= `iterator`(v5) @signature `Ljava/lang/Iterable;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L3dfc1c.  v5:= temp @kind object;
+  #L3dfc1e.  call temp:= `hasNext`(v5) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L3dfc24.  v2:= temp;
+  #L3dfc26.  if v2 == 0 then goto L3dfc52;
+  #L3dfc2a.  call temp:= `next`(v5) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L3dfc30.  v2:= temp @kind object;
+  #L3dfc32.  v2:= (`java.lang.Long`) v2 @kind object;
+  #L3dfc36.  call temp:= `longValue`(v2) @signature `Ljava/lang/Long;.longValue:()J` @kind virtual;
+  #L3dfc3c.  v2:= temp @kind wide;
+  #L3dfc3e.  call temp:= `get`(v1, v2) @signature `Lio/objectbox/Cursor;.get:(J)Ljava/lang/Object;` @kind virtual;
+  #L3dfc44.  v2:= temp @kind object;
+  #L3dfc46.  if v2 == 0 then goto L3dfc1e;
+  #L3dfc4a.  call temp:= `add`(v0, v2) @signature `Ljava/util/ArrayList;.add:(Ljava/lang/Object;)Z` @kind virtual;
+  #L3dfc50.  goto L3dfc1e;
+  #L3dfc52.  call `f`(v4, v1) @signature `Lio/objectbox/Box;.f:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3dfc58.  return v0 @kind object;
+  #L3dfc5a.  v5:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3dfc5c.  call `f`(v4, v1) @signature `Lio/objectbox/Box;.f:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3dfc62.  throw v5;
+  catch `java.lang.Throwable` @[L3dfc16..L3dfc50] goto L3dfc5a;
+}
+procedure `java.util.List` `get`(`io.objectbox.Box` v6 @kind this, `long`[] v7 @kind object) @signature `Lio/objectbox/Box;.get:([J)Ljava/util/List;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L3dfc80.  v0:= new `java.util.ArrayList`;
+  #L3dfc84.  v1:= length @variable v7;
+  #L3dfc86.  call `<init>`(v0, v1) @signature `Ljava/util/ArrayList;.<init>:(I)V` @kind direct;
+  #L3dfc8c.  call temp:= `c`(v6) @signature `Lio/objectbox/Box;.c:()Lio/objectbox/Cursor;` @kind virtual;
+  #L3dfc92.  v1:= temp @kind object;
+  #L3dfc94.  v2:= length @variable v7;
+  #L3dfc96.  v3:= 0I;
+  #L3dfc98.  if v3 >= v2 then goto L3dfcc8;
+  #L3dfc9c.  v4:= v7[v3] @kind wide;
+  #L3dfca0.  call temp:= `valueOf`(v4) @signature `Ljava/lang/Long;.valueOf:(J)Ljava/lang/Long;` @kind static;
+  #L3dfca6.  v4:= temp @kind object;
+  #L3dfca8.  call temp:= `longValue`(v4) @signature `Ljava/lang/Long;.longValue:()J` @kind virtual;
+  #L3dfcae.  v4:= temp @kind wide;
+  #L3dfcb0.  call temp:= `get`(v1, v4) @signature `Lio/objectbox/Cursor;.get:(J)Ljava/lang/Object;` @kind virtual;
+  #L3dfcb6.  v4:= temp @kind object;
+  #L3dfcb8.  if v4 == 0 then goto L3dfcc2;
+  #L3dfcbc.  call temp:= `add`(v0, v4) @signature `Ljava/util/ArrayList;.add:(Ljava/lang/Object;)Z` @kind virtual;
+  #L3dfcc2.  v3:= v3 + 1;
+  #L3dfcc6.  goto L3dfc98;
+  #L3dfcc8.  call `f`(v6, v1) @signature `Lio/objectbox/Box;.f:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3dfcce.  return v0 @kind object;
+  #L3dfcd0.  v7:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3dfcd2.  call `f`(v6, v1) @signature `Lio/objectbox/Box;.f:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3dfcd8.  throw v7;
+  catch `java.lang.Throwable` @[L3dfc94..L3dfcc2] goto L3dfcd0;
+}
+procedure `java.util.List` `getAll`(`io.objectbox.Box` v3 @kind this) @signature `Lio/objectbox/Box;.getAll:()Ljava/util/List;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L3dfcf8.  v0:= new `java.util.ArrayList`;
+  #L3dfcfc.  call `<init>`(v0) @signature `Ljava/util/ArrayList;.<init>:()V` @kind direct;
+  #L3dfd02.  call temp:= `c`(v3) @signature `Lio/objectbox/Box;.c:()Lio/objectbox/Cursor;` @kind virtual;
+  #L3dfd08.  v1:= temp @kind object;
+  #L3dfd0a.  call temp:= `first`(v1) @signature `Lio/objectbox/Cursor;.first:()Ljava/lang/Object;` @kind virtual;
+  #L3dfd10.  v2:= temp @kind object;
+  #L3dfd12.  if v2 == 0 then goto L3dfd26;
+  #L3dfd16.  call temp:= `add`(v0, v2) @signature `Ljava/util/ArrayList;.add:(Ljava/lang/Object;)Z` @kind virtual;
+  #L3dfd1c.  call temp:= `next`(v1) @signature `Lio/objectbox/Cursor;.next:()Ljava/lang/Object;` @kind virtual;
+  #L3dfd22.  v2:= temp @kind object;
+  #L3dfd24.  goto L3dfd12;
+  #L3dfd26.  call `f`(v3, v1) @signature `Lio/objectbox/Box;.f:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3dfd2c.  return v0 @kind object;
+  #L3dfd2e.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3dfd30.  call `f`(v3, v1) @signature `Lio/objectbox/Box;.f:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3dfd36.  throw v0;
+  catch `java.lang.Throwable` @[L3dfd0a..L3dfd24] goto L3dfd2e;
+}
+procedure `java.lang.Class` `getEntityClass`(`io.objectbox.Box` v1 @kind this) @signature `Lio/objectbox/Box;.getEntityClass:()Ljava/lang/Class;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L3dfa94.  v0:= v1.`io.objectbox.Box.b` @type ^`java.lang.Class` @kind object;
+  #L3dfa98.  return v0 @kind object;
+}
+procedure `io.objectbox.EntityInfo` `getEntityInfo`(`io.objectbox.Box` v2 @kind this) @signature `Lio/objectbox/Box;.getEntityInfo:()Lio/objectbox/EntityInfo;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L3df9ec.  @monitorenter v2
+  #L3df9ee.  v0:= v2.`io.objectbox.Box.f` @type ^`io.objectbox.EntityInfo` @kind object;
+  #L3df9f2.  if v0 != 0 then goto L3dfa1c;
+  #L3df9f6.  call temp:= `c`(v2) @signature `Lio/objectbox/Box;.c:()Lio/objectbox/Cursor;` @kind virtual;
+  #L3df9fc.  v0:= temp @kind object;
+  #L3df9fe.  call temp:= `getEntityInfo`(v0) @signature `Lio/objectbox/Cursor;.getEntityInfo:()Lio/objectbox/EntityInfo;` @kind virtual;
+  #L3dfa04.  v1:= temp @kind object;
+  #L3dfa06.  v2.`io.objectbox.Box.f` @type ^`io.objectbox.EntityInfo` := v1 @kind object;
+  #L3dfa0a.  call `f`(v2, v0) @signature `Lio/objectbox/Box;.f:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3dfa10.  goto L3dfa1c;
+  #L3dfa12.  v1:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3dfa14.  call `f`(v2, v0) @signature `Lio/objectbox/Box;.f:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3dfa1a.  throw v1;
+  #L3dfa1c.  v0:= v2.`io.objectbox.Box.f` @type ^`io.objectbox.EntityInfo` @kind object;
+  #L3dfa20.  @monitorexit v2
+  #L3dfa22.  return v0 @kind object;
+  #L3dfa24.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3dfa26.  @monitorexit v2
+  #L3dfa28.  throw v0;
+  catch `java.lang.Throwable` @[L3df9ee..L3df9fe] goto L3dfa24;
+  catch `java.lang.Throwable` @[L3df9fe..L3dfa0a] goto L3dfa12;
+  catch `java.lang.Throwable` @[L3dfa0a..L3dfa20] goto L3dfa24;
+}
+procedure `long` `getId`(`io.objectbox.Box` v2 @kind this, `java.lang.Object` v3 @kind object) @signature `Lio/objectbox/Box;.getId:(Ljava/lang/Object;)J` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L3dff14.  v0:= v2.`io.objectbox.Box.e` @type ^`io.objectbox.internal.IdGetter` @kind object;
+  #L3dff18.  call temp:= `getId`(v0, v3) @signature `Lio/objectbox/internal/IdGetter;.getId:(Ljava/lang/Object;)J` @kind interface;
+  #L3dff1e.  v0:= temp @kind wide;
+  #L3dff20.  return v0 @kind wide;
+}
+procedure `java.util.Map` `getMap`(`io.objectbox.Box` v5 @kind this, `java.lang.Iterable` v6 @kind object) @signature `Lio/objectbox/Box;.getMap:(Ljava/lang/Iterable;)Ljava/util/Map;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L3dfe3c.  v0:= new `java.util.HashMap`;
+  #L3dfe40.  call `<init>`(v0) @signature `Ljava/util/HashMap;.<init>:()V` @kind direct;
+  #L3dfe46.  call temp:= `c`(v5) @signature `Lio/objectbox/Box;.c:()Lio/objectbox/Cursor;` @kind virtual;
+  #L3dfe4c.  v1:= temp @kind object;
+  #L3dfe4e.  call temp:= `iterator`(v6) @signature `Ljava/lang/Iterable;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L3dfe54.  v6:= temp @kind object;
+  #L3dfe56.  call temp:= `hasNext`(v6) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L3dfe5c.  v2:= temp;
+  #L3dfe5e.  if v2 == 0 then goto L3dfe86;
+  #L3dfe62.  call temp:= `next`(v6) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L3dfe68.  v2:= temp @kind object;
+  #L3dfe6a.  v2:= (`java.lang.Long`) v2 @kind object;
+  #L3dfe6e.  call temp:= `longValue`(v2) @signature `Ljava/lang/Long;.longValue:()J` @kind virtual;
+  #L3dfe74.  v3:= temp @kind wide;
+  #L3dfe76.  call temp:= `get`(v1, v3) @signature `Lio/objectbox/Cursor;.get:(J)Ljava/lang/Object;` @kind virtual;
+  #L3dfe7c.  v3:= temp @kind object;
+  #L3dfe7e.  call temp:= `put`(v0, v2, v3) @signature `Ljava/util/HashMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;` @kind virtual;
+  #L3dfe84.  goto L3dfe56;
+  #L3dfe86.  call `f`(v5, v1) @signature `Lio/objectbox/Box;.f:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3dfe8c.  return v0 @kind object;
+  #L3dfe8e.  v6:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3dfe90.  call `f`(v5, v1) @signature `Lio/objectbox/Box;.f:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3dfe96.  throw v6;
+  catch `java.lang.Throwable` @[L3dfe4e..L3dfe84] goto L3dfe8e;
+}
+procedure `java.lang.String` `getReaderDebugInfo`(`io.objectbox.Box` v3 @kind this) @signature `Lio/objectbox/Box;.getReaderDebugInfo:()Ljava/lang/String;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L3dfb80.  call temp:= `c`(v3) @signature `Lio/objectbox/Box;.c:()Lio/objectbox/Cursor;` @kind virtual;
+  #L3dfb86.  v0:= temp @kind object;
+  #L3dfb88.  v1:= new `java.lang.StringBuilder`;
+  #L3dfb8c.  call `<init>`(v1) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L3dfb92.  call temp:= `append`(v1, v0) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3dfb98.  v2:= " with " @kind object;
+  #L3dfb9c.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3dfba2.  call temp:= `getTx`(v0) @signature `Lio/objectbox/Cursor;.getTx:()Lio/objectbox/Transaction;` @kind virtual;
+  #L3dfba8.  v2:= temp @kind object;
+  #L3dfbaa.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3dfbb0.  v2:= "; store's commit count: " @kind object;
+  #L3dfbb4.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3dfbba.  call temp:= `getStore`(v3) @signature `Lio/objectbox/Box;.getStore:()Lio/objectbox/BoxStore;` @kind virtual;
+  #L3dfbc0.  v2:= temp @kind object;
+  #L3dfbc2.  v2:= v2.`io.objectbox.BoxStore.s` @type ^`int`;
+  #L3dfbc6.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3dfbcc.  call temp:= `toString`(v1) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L3dfbd2.  v1:= temp @kind object;
+  #L3dfbd4.  call `f`(v3, v0) @signature `Lio/objectbox/Box;.f:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3dfbda.  return v1 @kind object;
+  #L3dfbdc.  v1:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3dfbde.  call `f`(v3, v0) @signature `Lio/objectbox/Box;.f:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3dfbe4.  throw v1;
+  catch `java.lang.Throwable` @[L3dfb88..L3dfbd4] goto L3dfbdc;
+}
+procedure `java.util.List` `getRelationBacklinkEntities`(`io.objectbox.Box` v7 @kind this, `io.objectbox.relation.RelationInfo` v8 @kind object, `long` v9 ) @signature `Lio/objectbox/Box;.getRelationBacklinkEntities:(Lio/objectbox/relation/RelationInfo;J)Ljava/util/List;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+
+  #L3dfd54.  v0:= v8.`io.objectbox.relation.RelationInfo.sourceInfo` @type ^`io.objectbox.EntityInfo` @kind object;
+  #L3dfd58.  call temp:= `getEntityId`(v0) @signature `Lio/objectbox/EntityInfo;.getEntityId:()I` @kind interface;
+  #L3dfd5e.  v2:= temp;
+  #L3dfd60.  v3:= v8.`io.objectbox.relation.RelationInfo.relationId` @type ^`int`;
+  #L3dfd64.  v6:= 1I;
+  #L3dfd66.  v1:= v7 @kind object;
+  #L3dfd68.  v4:= v9 @kind wide;
+  #L3dfd6a.  call temp:= `internalGetRelationEntities`(v1, v2, v3, v4, v6) @signature `Lio/objectbox/Box;.internalGetRelationEntities:(IIJZ)Ljava/util/List;` @kind virtual;
+  #L3dfd70.  v8:= temp @kind object;
+  #L3dfd72.  return v8 @kind object;
+}
+procedure `long`[] `getRelationBacklinkIds`(`io.objectbox.Box` v7 @kind this, `io.objectbox.relation.RelationInfo` v8 @kind object, `long` v9 ) @signature `Lio/objectbox/Box;.getRelationBacklinkIds:(Lio/objectbox/relation/RelationInfo;J)[J` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+
+  #L3dffa8.  v0:= v8.`io.objectbox.relation.RelationInfo.sourceInfo` @type ^`io.objectbox.EntityInfo` @kind object;
+  #L3dffac.  call temp:= `getEntityId`(v0) @signature `Lio/objectbox/EntityInfo;.getEntityId:()I` @kind interface;
+  #L3dffb2.  v2:= temp;
+  #L3dffb4.  v3:= v8.`io.objectbox.relation.RelationInfo.relationId` @type ^`int`;
+  #L3dffb8.  v6:= 1I;
+  #L3dffba.  v1:= v7 @kind object;
+  #L3dffbc.  v4:= v9 @kind wide;
+  #L3dffbe.  call temp:= `internalGetRelationIds`(v1, v2, v3, v4, v6) @signature `Lio/objectbox/Box;.internalGetRelationIds:(IIJZ)[J` @kind virtual;
+  #L3dffc4.  v8:= temp @kind object;
+  #L3dffc6.  return v8 @kind object;
+}
+procedure `java.util.List` `getRelationEntities`(`io.objectbox.Box` v7 @kind this, `io.objectbox.relation.RelationInfo` v8 @kind object, `long` v9 ) @signature `Lio/objectbox/Box;.getRelationEntities:(Lio/objectbox/relation/RelationInfo;J)Ljava/util/List;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+
+  #L3dfd84.  v0:= v8.`io.objectbox.relation.RelationInfo.sourceInfo` @type ^`io.objectbox.EntityInfo` @kind object;
+  #L3dfd88.  call temp:= `getEntityId`(v0) @signature `Lio/objectbox/EntityInfo;.getEntityId:()I` @kind interface;
+  #L3dfd8e.  v2:= temp;
+  #L3dfd90.  v3:= v8.`io.objectbox.relation.RelationInfo.relationId` @type ^`int`;
+  #L3dfd94.  v6:= 0I;
+  #L3dfd96.  v1:= v7 @kind object;
+  #L3dfd98.  v4:= v9 @kind wide;
+  #L3dfd9a.  call temp:= `internalGetRelationEntities`(v1, v2, v3, v4, v6) @signature `Lio/objectbox/Box;.internalGetRelationEntities:(IIJZ)Ljava/util/List;` @kind virtual;
+  #L3dfda0.  v8:= temp @kind object;
+  #L3dfda2.  return v8 @kind object;
+}
+procedure `long`[] `getRelationIds`(`io.objectbox.Box` v7 @kind this, `io.objectbox.relation.RelationInfo` v8 @kind object, `long` v9 ) @signature `Lio/objectbox/Box;.getRelationIds:(Lio/objectbox/relation/RelationInfo;J)[J` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+
+  #L3dffd8.  v0:= v8.`io.objectbox.relation.RelationInfo.sourceInfo` @type ^`io.objectbox.EntityInfo` @kind object;
+  #L3dffdc.  call temp:= `getEntityId`(v0) @signature `Lio/objectbox/EntityInfo;.getEntityId:()I` @kind interface;
+  #L3dffe2.  v2:= temp;
+  #L3dffe4.  v3:= v8.`io.objectbox.relation.RelationInfo.relationId` @type ^`int`;
+  #L3dffe8.  v6:= 0I;
+  #L3dffea.  v1:= v7 @kind object;
+  #L3dffec.  v4:= v9 @kind wide;
+  #L3dffee.  call temp:= `internalGetRelationIds`(v1, v2, v3, v4, v6) @signature `Lio/objectbox/Box;.internalGetRelationIds:(IIJZ)[J` @kind virtual;
+  #L3dfff4.  v8:= temp @kind object;
+  #L3dfff6.  return v8 @kind object;
+}
+procedure `io.objectbox.BoxStore` `getStore`(`io.objectbox.Box` v1 @kind this) @signature `Lio/objectbox/Box;.getStore:()Lio/objectbox/BoxStore;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L3df868.  v0:= v1.`io.objectbox.Box.a` @type ^`io.objectbox.BoxStore` @kind object;
+  #L3df86c.  return v0 @kind object;
+}
+procedure `void` `h`(`io.objectbox.Box` v1 @kind this, `io.objectbox.Transaction` v2 @kind object) @signature `Lio/objectbox/Box;.h:(Lio/objectbox/Transaction;)V` @AccessFlag  {
+    temp;
+    v0;
+
+  #L3e0668.  v2:= v1.`io.objectbox.Box.c` @type ^`java.lang.ThreadLocal` @kind object;
+  #L3e066c.  call temp:= `get`(v2) @signature `Ljava/lang/ThreadLocal;.get:()Ljava/lang/Object;` @kind virtual;
+  #L3e0672.  v2:= temp @kind object;
+  #L3e0674.  v2:= (`io.objectbox.Cursor`) v2 @kind object;
+  #L3e0678.  if v2 == 0 then goto L3e068c;
+  #L3e067c.  v0:= v1.`io.objectbox.Box.c` @type ^`java.lang.ThreadLocal` @kind object;
+  #L3e0680.  call `remove`(v0) @signature `Ljava/lang/ThreadLocal;.remove:()V` @kind virtual;
+  #L3e0686.  call `close`(v2) @signature `Lio/objectbox/Cursor;.close:()V` @kind virtual;
+  #L3e068c.  return @kind void;
+}
+procedure `java.lang.Object` `internalCallWithReaderHandle`(`io.objectbox.Box` v3 @kind this, `io.objectbox.internal.CallWithHandle` v4 @kind object) @signature `Lio/objectbox/Box;.internalCallWithReaderHandle:(Lio/objectbox/internal/CallWithHandle;)Ljava/lang/Object;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L3dfaec.  call temp:= `c`(v3) @signature `Lio/objectbox/Box;.c:()Lio/objectbox/Cursor;` @kind virtual;
+  #L3dfaf2.  v0:= temp @kind object;
+  #L3dfaf4.  call temp:= `internalHandle`(v0) @signature `Lio/objectbox/Cursor;.internalHandle:()J` @kind virtual;
+  #L3dfafa.  v1:= temp @kind wide;
+  #L3dfafc.  call temp:= `call`(v4, v1) @signature `Lio/objectbox/internal/CallWithHandle;.call:(J)Ljava/lang/Object;` @kind interface;
+  #L3dfb02.  v4:= temp @kind object;
+  #L3dfb04.  call `f`(v3, v0) @signature `Lio/objectbox/Box;.f:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3dfb0a.  return v4 @kind object;
+  #L3dfb0c.  v4:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3dfb0e.  call `f`(v3, v0) @signature `Lio/objectbox/Box;.f:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3dfb14.  throw v4;
+  catch `java.lang.Throwable` @[L3dfaf4..L3dfb04] goto L3dfb0c;
+}
+procedure `java.lang.Object` `internalCallWithWriterHandle`(`io.objectbox.Box` v3 @kind this, `io.objectbox.internal.CallWithHandle` v4 @kind object) @signature `Lio/objectbox/Box;.internalCallWithWriterHandle:(Lio/objectbox/internal/CallWithHandle;)Ljava/lang/Object;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L3dfb34.  call temp:= `d`(v3) @signature `Lio/objectbox/Box;.d:()Lio/objectbox/Cursor;` @kind virtual;
+  #L3dfb3a.  v0:= temp @kind object;
+  #L3dfb3c.  call temp:= `internalHandle`(v0) @signature `Lio/objectbox/Cursor;.internalHandle:()J` @kind virtual;
+  #L3dfb42.  v1:= temp @kind wide;
+  #L3dfb44.  call temp:= `call`(v4, v1) @signature `Lio/objectbox/internal/CallWithHandle;.call:(J)Ljava/lang/Object;` @kind interface;
+  #L3dfb4a.  v4:= temp @kind object;
+  #L3dfb4c.  call `a`(v3, v0) @signature `Lio/objectbox/Box;.a:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3dfb52.  call `g`(v3, v0) @signature `Lio/objectbox/Box;.g:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3dfb58.  return v4 @kind object;
+  #L3dfb5a.  v4:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3dfb5c.  call `g`(v3, v0) @signature `Lio/objectbox/Box;.g:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3dfb62.  throw v4;
+  catch `java.lang.Throwable` @[L3dfb3c..L3dfb52] goto L3dfb5a;
+}
+procedure `java.util.List` `internalGetBacklinkEntities`(`io.objectbox.Box` v1 @kind this, `int` v2 , `io.objectbox.Property` v3 @kind object, `long` v4 ) @signature `Lio/objectbox/Box;.internalGetBacklinkEntities:(ILio/objectbox/Property;J)Ljava/util/List;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L3dfdb4.  call temp:= `c`(v1) @signature `Lio/objectbox/Box;.c:()Lio/objectbox/Cursor;` @kind virtual;
+  #L3dfdba.  v0:= temp @kind object;
+  #L3dfdbc.  call temp:= `getBacklinkEntities`(v0, v2, v3, v4) @signature `Lio/objectbox/Cursor;.getBacklinkEntities:(ILio/objectbox/Property;J)Ljava/util/List;` @kind virtual;
+  #L3dfdc2.  v2:= temp @kind object;
+  #L3dfdc4.  call `f`(v1, v0) @signature `Lio/objectbox/Box;.f:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3dfdca.  return v2 @kind object;
+  #L3dfdcc.  v2:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3dfdce.  call `f`(v1, v0) @signature `Lio/objectbox/Box;.f:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3dfdd4.  throw v2;
+  catch `java.lang.Throwable` @[L3dfdbc..L3dfdc4] goto L3dfdcc;
+}
+procedure `java.util.List` `internalGetRelationEntities`(`io.objectbox.Box` v7 @kind this, `int` v8 , `int` v9 , `long` v10 , `boolean` v12 ) @signature `Lio/objectbox/Box;.internalGetRelationEntities:(IIJZ)Ljava/util/List;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+
+  #L3dfdf4.  call temp:= `c`(v7) @signature `Lio/objectbox/Box;.c:()Lio/objectbox/Cursor;` @kind virtual;
+  #L3dfdfa.  v6:= temp @kind object;
+  #L3dfdfc.  v0:= v6 @kind object;
+  #L3dfdfe.  v1:= v8;
+  #L3dfe00.  v2:= v9;
+  #L3dfe02.  v3:= v10 @kind wide;
+  #L3dfe04.  v5:= v12;
+  #L3dfe06.  call temp:= `getRelationEntities`(v0, v1, v2, v3, v5) @signature `Lio/objectbox/Cursor;.getRelationEntities:(IIJZ)Ljava/util/List;` @kind virtual;
+  #L3dfe0c.  v8:= temp @kind object;
+  #L3dfe0e.  call `f`(v7, v6) @signature `Lio/objectbox/Box;.f:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3dfe14.  return v8 @kind object;
+  #L3dfe16.  v8:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3dfe18.  call `f`(v7, v6) @signature `Lio/objectbox/Box;.f:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3dfe1e.  throw v8;
+  catch `java.lang.Throwable` @[L3dfe06..L3dfe0e] goto L3dfe16;
+}
+procedure `long`[] `internalGetRelationIds`(`io.objectbox.Box` v7 @kind this, `int` v8 , `int` v9 , `long` v10 , `boolean` v12 ) @signature `Lio/objectbox/Box;.internalGetRelationIds:(IIJZ)[J` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+
+  #L3e0008.  call temp:= `c`(v7) @signature `Lio/objectbox/Box;.c:()Lio/objectbox/Cursor;` @kind virtual;
+  #L3e000e.  v6:= temp @kind object;
+  #L3e0010.  v0:= v6 @kind object;
+  #L3e0012.  v1:= v8;
+  #L3e0014.  v2:= v9;
+  #L3e0016.  v3:= v10 @kind wide;
+  #L3e0018.  v5:= v12;
+  #L3e001a.  call temp:= `getRelationIds`(v0, v1, v2, v3, v5) @signature `Lio/objectbox/Cursor;.getRelationIds:(IIJZ)[J` @kind virtual;
+  #L3e0020.  v8:= temp @kind object;
+  #L3e0022.  call `f`(v7, v6) @signature `Lio/objectbox/Box;.f:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3e0028.  return v8 @kind object;
+  #L3e002a.  v8:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3e002c.  call `f`(v7, v6) @signature `Lio/objectbox/Box;.f:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3e0032.  throw v8;
+  catch `java.lang.Throwable` @[L3e001a..L3e0022] goto L3e002a;
+}
+procedure `boolean` `isEmpty`(`io.objectbox.Box` v5 @kind this) @signature `Lio/objectbox/Box;.isEmpty:()Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L3df7a8.  v0:= 1L;
+  #L3df7ac.  call temp:= `count`(v5, v0) @signature `Lio/objectbox/Box;.count:(J)J` @kind virtual;
+  #L3df7b2.  v0:= temp @kind wide;
+  #L3df7b4.  v2:= 0L;
+  #L3df7b8.  v4:= lcmp(v0, v2);
+  #L3df7bc.  if v4 != 0 then goto L3df7c4;
+  #L3df7c0.  v0:= 1I;
+  #L3df7c2.  goto L3df7c6;
+  #L3df7c4.  v0:= 0I;
+  #L3df7c6.  return v0;
+}
+procedure `long` `panicModeRemoveAll`(`io.objectbox.Box` v2 @kind this) @signature `Lio/objectbox/Box;.panicModeRemoveAll:()J` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L3dff34.  v0:= v2.`io.objectbox.Box.a` @type ^`io.objectbox.BoxStore` @kind object;
+  #L3dff38.  call temp:= `getEntityInfo`(v2) @signature `Lio/objectbox/Box;.getEntityInfo:()Lio/objectbox/EntityInfo;` @kind virtual;
+  #L3dff3e.  v1:= temp @kind object;
+  #L3dff40.  call temp:= `getEntityId`(v1) @signature `Lio/objectbox/EntityInfo;.getEntityId:()I` @kind interface;
+  #L3dff46.  v1:= temp;
+  #L3dff48.  call temp:= `r`(v0, v1) @signature `Lio/objectbox/BoxStore;.r:(I)J` @kind virtual;
+  #L3dff4e.  v0:= temp @kind wide;
+  #L3dff50.  return v0 @kind wide;
+}
+procedure `long` `put`(`io.objectbox.Box` v3 @kind this, `java.lang.Object` v4 @kind object) @signature `Lio/objectbox/Box;.put:(Ljava/lang/Object;)J` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L3dff64.  call temp:= `d`(v3) @signature `Lio/objectbox/Box;.d:()Lio/objectbox/Cursor;` @kind virtual;
+  #L3dff6a.  v0:= temp @kind object;
+  #L3dff6c.  call temp:= `put`(v0, v4) @signature `Lio/objectbox/Cursor;.put:(Ljava/lang/Object;)J` @kind virtual;
+  #L3dff72.  v1:= temp @kind wide;
+  #L3dff74.  call `a`(v3, v0) @signature `Lio/objectbox/Box;.a:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3dff7a.  call `g`(v3, v0) @signature `Lio/objectbox/Box;.g:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3dff80.  return v1 @kind wide;
+  #L3dff82.  v4:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3dff84.  call `g`(v3, v0) @signature `Lio/objectbox/Box;.g:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3dff8a.  throw v4;
+  catch `java.lang.Throwable` @[L3dff6c..L3dff7a] goto L3dff82;
+}
+procedure `void` `put`(`io.objectbox.Box` v2 @kind this, `java.util.Collection` v3 @kind object) @signature `Lio/objectbox/Box;.put:(Ljava/util/Collection;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L3e0224.  if v3 == 0 then goto L3e027a;
+  #L3e0228.  call temp:= `isEmpty`(v3) @signature `Ljava/util/Collection;.isEmpty:()Z` @kind interface;
+  #L3e022e.  v0:= temp;
+  #L3e0230.  if v0 == 0 then goto L3e0236;
+  #L3e0234.  goto L3e027a;
+  #L3e0236.  call temp:= `d`(v2) @signature `Lio/objectbox/Box;.d:()Lio/objectbox/Cursor;` @kind virtual;
+  #L3e023c.  v0:= temp @kind object;
+  #L3e023e.  call temp:= `iterator`(v3) @signature `Ljava/util/Collection;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L3e0244.  v3:= temp @kind object;
+  #L3e0246.  call temp:= `hasNext`(v3) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L3e024c.  v1:= temp;
+  #L3e024e.  if v1 == 0 then goto L3e0262;
+  #L3e0252.  call temp:= `next`(v3) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L3e0258.  v1:= temp @kind object;
+  #L3e025a.  call temp:= `put`(v0, v1) @signature `Lio/objectbox/Cursor;.put:(Ljava/lang/Object;)J` @kind virtual;
+  #L3e0260.  goto L3e0246;
+  #L3e0262.  call `a`(v2, v0) @signature `Lio/objectbox/Box;.a:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3e0268.  call `g`(v2, v0) @signature `Lio/objectbox/Box;.g:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3e026e.  return @kind void;
+  #L3e0270.  v3:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3e0272.  call `g`(v2, v0) @signature `Lio/objectbox/Box;.g:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3e0278.  throw v3;
+  #L3e027a.  return @kind void;
+  catch `java.lang.Throwable` @[L3e023e..L3e0268] goto L3e0270;
+}
+procedure `void` `put`(`io.objectbox.Box` v4 @kind this, `java.lang.Object`[] v5 @kind object) @signature `Lio/objectbox/Box;.put:([Ljava/lang/Object;)V` @AccessFlag PUBLIC_FINAL {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L3e01c0.  if v5 == 0 then goto L3e0204;
+  #L3e01c4.  v0:= length @variable v5;
+  #L3e01c6.  if v0 != 0 then goto L3e01cc;
+  #L3e01ca.  goto L3e0204;
+  #L3e01cc.  call temp:= `d`(v4) @signature `Lio/objectbox/Box;.d:()Lio/objectbox/Cursor;` @kind virtual;
+  #L3e01d2.  v0:= temp @kind object;
+  #L3e01d4.  v1:= length @variable v5;
+  #L3e01d6.  v2:= 0I;
+  #L3e01d8.  if v2 >= v1 then goto L3e01ec;
+  #L3e01dc.  v3:= v5[v2] @kind object;
+  #L3e01e0.  call temp:= `put`(v0, v3) @signature `Lio/objectbox/Cursor;.put:(Ljava/lang/Object;)J` @kind virtual;
+  #L3e01e6.  v2:= v2 + 1;
+  #L3e01ea.  goto L3e01d8;
+  #L3e01ec.  call `a`(v4, v0) @signature `Lio/objectbox/Box;.a:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3e01f2.  call `g`(v4, v0) @signature `Lio/objectbox/Box;.g:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3e01f8.  return @kind void;
+  #L3e01fa.  v5:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3e01fc.  call `g`(v4, v0) @signature `Lio/objectbox/Box;.g:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3e0202.  throw v5;
+  #L3e0204.  return @kind void;
+  catch `java.lang.Throwable` @[L3e01d4..L3e01f2] goto L3e01fa;
+}
+procedure `void` `putBatched`(`io.objectbox.Box` v3 @kind this, `java.util.Collection` v4 @kind object, `int` v5 ) @signature `Lio/objectbox/Box;.putBatched:(Ljava/util/Collection;I)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L3e0298.  v0:= 1I;
+  #L3e029a.  if v5 < v0 then goto L3e0302;
+  #L3e029e.  if v4 != 0 then goto L3e02a4;
+  #L3e02a2.  return @kind void;
+  #L3e02a4.  call temp:= `iterator`(v4) @signature `Ljava/util/Collection;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L3e02aa.  v4:= temp @kind object;
+  #L3e02ac.  call temp:= `hasNext`(v4) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L3e02b2.  v0:= temp;
+  #L3e02b4.  if v0 == 0 then goto L3e0300;
+  #L3e02b8.  call temp:= `d`(v3) @signature `Lio/objectbox/Box;.d:()Lio/objectbox/Cursor;` @kind virtual;
+  #L3e02be.  v0:= temp @kind object;
+  #L3e02c0.  v1:= 0I;
+  #L3e02c2.  v2:= v1 + 1;
+  #L3e02c6.  if v1 >= v5 then goto L3e02e8;
+  #L3e02ca.  call temp:= `hasNext`(v4) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L3e02d0.  v1:= temp;
+  #L3e02d2.  if v1 == 0 then goto L3e02e8;
+  #L3e02d6.  call temp:= `next`(v4) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L3e02dc.  v1:= temp @kind object;
+  #L3e02de.  call temp:= `put`(v0, v1) @signature `Lio/objectbox/Cursor;.put:(Ljava/lang/Object;)J` @kind virtual;
+  #L3e02e4.  v1:= v2;
+  #L3e02e6.  goto L3e02c2;
+  #L3e02e8.  call `a`(v3, v0) @signature `Lio/objectbox/Box;.a:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3e02ee.  call `g`(v3, v0) @signature `Lio/objectbox/Box;.g:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3e02f4.  goto L3e02ac;
+  #L3e02f6.  v4:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3e02f8.  call `g`(v3, v0) @signature `Lio/objectbox/Box;.g:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3e02fe.  throw v4;
+  #L3e0300.  return @kind void;
+  #L3e0302.  v4:= new `java.lang.IllegalArgumentException`;
+  #L3e0306.  v0:= new `java.lang.StringBuilder`;
+  #L3e030a.  call `<init>`(v0) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L3e0310.  v1:= "Batch size must be 1 or greater but was " @kind object;
+  #L3e0314.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3e031a.  call temp:= `append`(v0, v5) @signature `Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3e0320.  call temp:= `toString`(v0) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L3e0326.  v5:= temp @kind object;
+  #L3e0328.  call `<init>`(v4, v5) @signature `Ljava/lang/IllegalArgumentException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L3e032e.  throw v4;
+  catch `java.lang.Throwable` @[L3e02ca..L3e02ee] goto L3e02f6;
+}
+procedure `io.objectbox.query.QueryBuilder` `query`(`io.objectbox.Box` v5 @kind this) @signature `Lio/objectbox/Box;.query:()Lio/objectbox/query/QueryBuilder;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L3dfa5c.  v0:= new `io.objectbox.query.QueryBuilder`;
+  #L3dfa60.  v1:= v5.`io.objectbox.Box.a` @type ^`io.objectbox.BoxStore` @kind object;
+  #L3dfa64.  call temp:= `l`(v1) @signature `Lio/objectbox/BoxStore;.l:()J` @kind virtual;
+  #L3dfa6a.  v1:= temp @kind wide;
+  #L3dfa6c.  v3:= v5.`io.objectbox.Box.a` @type ^`io.objectbox.BoxStore` @kind object;
+  #L3dfa70.  v4:= v5.`io.objectbox.Box.b` @type ^`java.lang.Class` @kind object;
+  #L3dfa74.  call temp:= `h`(v3, v4) @signature `Lio/objectbox/BoxStore;.h:(Ljava/lang/Class;)Ljava/lang/String;` @kind virtual;
+  #L3dfa7a.  v3:= temp @kind object;
+  #L3dfa7c.  call `<init>`(v0, v5, v1, v3) @signature `Lio/objectbox/query/QueryBuilder;.<init>:(Lio/objectbox/Box;JLjava/lang/String;)V` @kind direct;
+  #L3dfa82.  return v0 @kind object;
+}
+procedure `void` `remove`(`io.objectbox.Box` v3 @kind this, `java.util.Collection` v4 @kind object) @signature `Lio/objectbox/Box;.remove:(Ljava/util/Collection;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L3e04ac.  if v4 == 0 then goto L3e050a;
+  #L3e04b0.  call temp:= `isEmpty`(v4) @signature `Ljava/util/Collection;.isEmpty:()Z` @kind interface;
+  #L3e04b6.  v0:= temp;
+  #L3e04b8.  if v0 == 0 then goto L3e04be;
+  #L3e04bc.  goto L3e050a;
+  #L3e04be.  call temp:= `d`(v3) @signature `Lio/objectbox/Box;.d:()Lio/objectbox/Cursor;` @kind virtual;
+  #L3e04c4.  v0:= temp @kind object;
+  #L3e04c6.  call temp:= `iterator`(v4) @signature `Ljava/util/Collection;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L3e04cc.  v4:= temp @kind object;
+  #L3e04ce.  call temp:= `hasNext`(v4) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L3e04d4.  v1:= temp;
+  #L3e04d6.  if v1 == 0 then goto L3e04f2;
+  #L3e04da.  call temp:= `next`(v4) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L3e04e0.  v1:= temp @kind object;
+  #L3e04e2.  call temp:= `getId`(v0, v1) @signature `Lio/objectbox/Cursor;.getId:(Ljava/lang/Object;)J` @kind virtual;
+  #L3e04e8.  v1:= temp @kind wide;
+  #L3e04ea.  call temp:= `deleteEntity`(v0, v1) @signature `Lio/objectbox/Cursor;.deleteEntity:(J)Z` @kind virtual;
+  #L3e04f0.  goto L3e04ce;
+  #L3e04f2.  call `a`(v3, v0) @signature `Lio/objectbox/Box;.a:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3e04f8.  call `g`(v3, v0) @signature `Lio/objectbox/Box;.g:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3e04fe.  return @kind void;
+  #L3e0500.  v4:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3e0502.  call `g`(v3, v0) @signature `Lio/objectbox/Box;.g:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3e0508.  throw v4;
+  #L3e050a.  return @kind void;
+  catch `java.lang.Throwable` @[L3e04c6..L3e04f8] goto L3e0500;
+}
+procedure `void` `remove`(`io.objectbox.Box` v5 @kind this, `long`[] v6 @kind object) @signature `Lio/objectbox/Box;.remove:([J)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L3e0528.  if v6 == 0 then goto L3e056c;
+  #L3e052c.  v0:= length @variable v6;
+  #L3e052e.  if v0 != 0 then goto L3e0534;
+  #L3e0532.  goto L3e056c;
+  #L3e0534.  call temp:= `d`(v5) @signature `Lio/objectbox/Box;.d:()Lio/objectbox/Cursor;` @kind virtual;
+  #L3e053a.  v0:= temp @kind object;
+  #L3e053c.  v1:= length @variable v6;
+  #L3e053e.  v2:= 0I;
+  #L3e0540.  if v2 >= v1 then goto L3e0554;
+  #L3e0544.  v3:= v6[v2] @kind wide;
+  #L3e0548.  call temp:= `deleteEntity`(v0, v3) @signature `Lio/objectbox/Cursor;.deleteEntity:(J)Z` @kind virtual;
+  #L3e054e.  v2:= v2 + 1;
+  #L3e0552.  goto L3e0540;
+  #L3e0554.  call `a`(v5, v0) @signature `Lio/objectbox/Box;.a:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3e055a.  call `g`(v5, v0) @signature `Lio/objectbox/Box;.g:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3e0560.  return @kind void;
+  #L3e0562.  v6:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3e0564.  call `g`(v5, v0) @signature `Lio/objectbox/Box;.g:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3e056a.  throw v6;
+  #L3e056c.  return @kind void;
+  catch `java.lang.Throwable` @[L3e053c..L3e055a] goto L3e0562;
+}
+procedure `void` `remove`(`io.objectbox.Box` v5 @kind this, `java.lang.Object`[] v6 @kind object) @signature `Lio/objectbox/Box;.remove:([Ljava/lang/Object;)V` @AccessFlag PUBLIC_FINAL {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L3e0440.  if v6 == 0 then goto L3e048c;
+  #L3e0444.  v0:= length @variable v6;
+  #L3e0446.  if v0 != 0 then goto L3e044c;
+  #L3e044a.  goto L3e048c;
+  #L3e044c.  call temp:= `d`(v5) @signature `Lio/objectbox/Box;.d:()Lio/objectbox/Cursor;` @kind virtual;
+  #L3e0452.  v0:= temp @kind object;
+  #L3e0454.  v1:= length @variable v6;
+  #L3e0456.  v2:= 0I;
+  #L3e0458.  if v2 >= v1 then goto L3e0474;
+  #L3e045c.  v3:= v6[v2] @kind object;
+  #L3e0460.  call temp:= `getId`(v0, v3) @signature `Lio/objectbox/Cursor;.getId:(Ljava/lang/Object;)J` @kind virtual;
+  #L3e0466.  v3:= temp @kind wide;
+  #L3e0468.  call temp:= `deleteEntity`(v0, v3) @signature `Lio/objectbox/Cursor;.deleteEntity:(J)Z` @kind virtual;
+  #L3e046e.  v2:= v2 + 1;
+  #L3e0472.  goto L3e0458;
+  #L3e0474.  call `a`(v5, v0) @signature `Lio/objectbox/Box;.a:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3e047a.  call `g`(v5, v0) @signature `Lio/objectbox/Box;.g:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3e0480.  return @kind void;
+  #L3e0482.  v6:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3e0484.  call `g`(v5, v0) @signature `Lio/objectbox/Box;.g:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3e048a.  throw v6;
+  #L3e048c.  return @kind void;
+  catch `java.lang.Throwable` @[L3e0454..L3e047a] goto L3e0482;
+}
+procedure `boolean` `remove`(`io.objectbox.Box` v1 @kind this, `long` v2 ) @signature `Lio/objectbox/Box;.remove:(J)Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L3df824.  call temp:= `d`(v1) @signature `Lio/objectbox/Box;.d:()Lio/objectbox/Cursor;` @kind virtual;
+  #L3df82a.  v0:= temp @kind object;
+  #L3df82c.  call temp:= `deleteEntity`(v0, v2) @signature `Lio/objectbox/Cursor;.deleteEntity:(J)Z` @kind virtual;
+  #L3df832.  v2:= temp;
+  #L3df834.  call `a`(v1, v0) @signature `Lio/objectbox/Box;.a:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3df83a.  call `g`(v1, v0) @signature `Lio/objectbox/Box;.g:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3df840.  return v2;
+  #L3df842.  v2:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3df844.  call `g`(v1, v0) @signature `Lio/objectbox/Box;.g:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3df84a.  throw v2;
+  catch `java.lang.Throwable` @[L3df82c..L3df83a] goto L3df842;
+}
+procedure `boolean` `remove`(`io.objectbox.Box` v3 @kind this, `java.lang.Object` v4 @kind object) @signature `Lio/objectbox/Box;.remove:(Ljava/lang/Object;)Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L3df7d8.  call temp:= `d`(v3) @signature `Lio/objectbox/Box;.d:()Lio/objectbox/Cursor;` @kind virtual;
+  #L3df7de.  v0:= temp @kind object;
+  #L3df7e0.  call temp:= `getId`(v0, v4) @signature `Lio/objectbox/Cursor;.getId:(Ljava/lang/Object;)J` @kind virtual;
+  #L3df7e6.  v1:= temp @kind wide;
+  #L3df7e8.  call temp:= `deleteEntity`(v0, v1) @signature `Lio/objectbox/Cursor;.deleteEntity:(J)Z` @kind virtual;
+  #L3df7ee.  v4:= temp;
+  #L3df7f0.  call `a`(v3, v0) @signature `Lio/objectbox/Box;.a:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3df7f6.  call `g`(v3, v0) @signature `Lio/objectbox/Box;.g:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3df7fc.  return v4;
+  #L3df7fe.  v4:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3df800.  call `g`(v3, v0) @signature `Lio/objectbox/Box;.g:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3df806.  throw v4;
+  catch `java.lang.Throwable` @[L3df7e0..L3df7f6] goto L3df7fe;
+}
+procedure `void` `removeAll`(`io.objectbox.Box` v2 @kind this) @signature `Lio/objectbox/Box;.removeAll:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L3e058c.  call temp:= `d`(v2) @signature `Lio/objectbox/Box;.d:()Lio/objectbox/Cursor;` @kind virtual;
+  #L3e0592.  v0:= temp @kind object;
+  #L3e0594.  call `deleteAll`(v0) @signature `Lio/objectbox/Cursor;.deleteAll:()V` @kind virtual;
+  #L3e059a.  call `a`(v2, v0) @signature `Lio/objectbox/Box;.a:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3e05a0.  call `g`(v2, v0) @signature `Lio/objectbox/Box;.g:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3e05a6.  return @kind void;
+  #L3e05a8.  v1:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3e05aa.  call `g`(v2, v0) @signature `Lio/objectbox/Box;.g:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3e05b0.  throw v1;
+  catch `java.lang.Throwable` @[L3e0594..L3e05a0] goto L3e05a8;
+}
+procedure `void` `removeByIds`(`io.objectbox.Box` v3 @kind this, `java.util.Collection` v4 @kind object) @signature `Lio/objectbox/Box;.removeByIds:(Ljava/util/Collection;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L3e05d0.  if v4 == 0 then goto L3e0632;
+  #L3e05d4.  call temp:= `isEmpty`(v4) @signature `Ljava/util/Collection;.isEmpty:()Z` @kind interface;
+  #L3e05da.  v0:= temp;
+  #L3e05dc.  if v0 == 0 then goto L3e05e2;
+  #L3e05e0.  goto L3e0632;
+  #L3e05e2.  call temp:= `d`(v3) @signature `Lio/objectbox/Box;.d:()Lio/objectbox/Cursor;` @kind virtual;
+  #L3e05e8.  v0:= temp @kind object;
+  #L3e05ea.  call temp:= `iterator`(v4) @signature `Ljava/util/Collection;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L3e05f0.  v4:= temp @kind object;
+  #L3e05f2.  call temp:= `hasNext`(v4) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L3e05f8.  v1:= temp;
+  #L3e05fa.  if v1 == 0 then goto L3e061a;
+  #L3e05fe.  call temp:= `next`(v4) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L3e0604.  v1:= temp @kind object;
+  #L3e0606.  v1:= (`java.lang.Long`) v1 @kind object;
+  #L3e060a.  call temp:= `longValue`(v1) @signature `Ljava/lang/Long;.longValue:()J` @kind virtual;
+  #L3e0610.  v1:= temp @kind wide;
+  #L3e0612.  call temp:= `deleteEntity`(v0, v1) @signature `Lio/objectbox/Cursor;.deleteEntity:(J)Z` @kind virtual;
+  #L3e0618.  goto L3e05f2;
+  #L3e061a.  call `a`(v3, v0) @signature `Lio/objectbox/Box;.a:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3e0620.  call `g`(v3, v0) @signature `Lio/objectbox/Box;.g:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3e0626.  return @kind void;
+  #L3e0628.  v4:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3e062a.  call `g`(v3, v0) @signature `Lio/objectbox/Box;.g:(Lio/objectbox/Cursor;)V` @kind virtual;
+  #L3e0630.  throw v4;
+  #L3e0632.  return @kind void;
+  catch `java.lang.Throwable` @[L3e05ea..L3e0620] goto L3e0628;
+}
+procedure `void` `removeByKeys`(`io.objectbox.Box` v0 @kind this, `java.util.Collection` v1 @kind object) @signature `Lio/objectbox/Box;.removeByKeys:(Ljava/util/Collection;)V` @AccessFlag PUBLIC {
+    temp;
+
+  #L3e0650.  call `removeByIds`(v0, v1) @signature `Lio/objectbox/Box;.removeByIds:(Ljava/util/Collection;)V` @kind virtual;
+  #L3e0656.  return @kind void;
+}

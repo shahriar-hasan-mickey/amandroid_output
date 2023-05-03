@@ -1,0 +1,208 @@
+record `io.reactivex.internal.queue.SpscArrayQueue` @kind class @AccessFlag PUBLIC_FINAL extends `java.util.concurrent.atomic.AtomicReferenceArray` @kind class, `io.reactivex.e0.a.i` @kind interface {
+  `java.util.concurrent.atomic.AtomicLong` `io.reactivex.internal.queue.SpscArrayQueue.consumerIndex` @AccessFlag FINAL;
+  `int` `io.reactivex.internal.queue.SpscArrayQueue.lookAheadStep` @AccessFlag FINAL;
+  `int` `io.reactivex.internal.queue.SpscArrayQueue.mask` @AccessFlag FINAL;
+  `java.util.concurrent.atomic.AtomicLong` `io.reactivex.internal.queue.SpscArrayQueue.producerIndex` @AccessFlag FINAL;
+  `long` `io.reactivex.internal.queue.SpscArrayQueue.producerLookAhead` @AccessFlag ;
+}
+global `java.lang.Integer` `@@io.reactivex.internal.queue.SpscArrayQueue.b` @AccessFlag PRIVATE_STATIC_FINAL;
+global `long` `@@io.reactivex.internal.queue.SpscArrayQueue.serialVersionUID` @AccessFlag PRIVATE_STATIC_FINAL;
+procedure `void` `<clinit>`() @signature `Lio/reactivex/internal/queue/SpscArrayQueue;.<clinit>:()V` @AccessFlag STATIC_CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+
+  #L28aa58.  v0:= "jctools.spsc.max.lookahead.step" @kind object;
+  #L28aa5c.  v1:= 4096I;
+  #L28aa60.  call temp:= `getInteger`(v0, v1) @signature `Ljava/lang/Integer;.getInteger:(Ljava/lang/String;I)Ljava/lang/Integer;` @kind static;
+  #L28aa66.  v0:= temp @kind object;
+  #L28aa68.  `@@io.reactivex.internal.queue.SpscArrayQueue.b` @type ^`java.lang.Integer` := v0 @kind object;
+  #L28aa6c.  return @kind void;
+}
+procedure `void` `<init>`(`io.reactivex.internal.queue.SpscArrayQueue` v1 @kind this, `int` v2 ) @signature `Lio/reactivex/internal/queue/SpscArrayQueue;.<init>:(I)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L28aa80.  call temp:= `a`(v2) @signature `Lio/reactivex/internal/util/j;.a:(I)I` @kind static;
+  #L28aa86.  v0:= temp;
+  #L28aa88.  call `<init>`(v1, v0) @signature `Ljava/util/concurrent/atomic/AtomicReferenceArray;.<init>:(I)V` @kind direct;
+  #L28aa8e.  call temp:= `length`(v1) @signature `Ljava/util/concurrent/atomic/AtomicReferenceArray;.length:()I` @kind virtual;
+  #L28aa94.  v0:= temp;
+  #L28aa96.  v0:= v0 + -1;
+  #L28aa9a.  v1.`io.reactivex.internal.queue.SpscArrayQueue.mask` @type ^`int` := v0;
+  #L28aa9e.  v0:= new `java.util.concurrent.atomic.AtomicLong`;
+  #L28aaa2.  call `<init>`(v0) @signature `Ljava/util/concurrent/atomic/AtomicLong;.<init>:()V` @kind direct;
+  #L28aaa8.  v1.`io.reactivex.internal.queue.SpscArrayQueue.producerIndex` @type ^`java.util.concurrent.atomic.AtomicLong` := v0 @kind object;
+  #L28aaac.  v0:= new `java.util.concurrent.atomic.AtomicLong`;
+  #L28aab0.  call `<init>`(v0) @signature `Ljava/util/concurrent/atomic/AtomicLong;.<init>:()V` @kind direct;
+  #L28aab6.  v1.`io.reactivex.internal.queue.SpscArrayQueue.consumerIndex` @type ^`java.util.concurrent.atomic.AtomicLong` := v0 @kind object;
+  #L28aaba.  v2:= v2 / 4;
+  #L28aabe.  v0:= `@@io.reactivex.internal.queue.SpscArrayQueue.b` @type ^`java.lang.Integer` @kind object;
+  #L28aac2.  call temp:= `intValue`(v0) @signature `Ljava/lang/Integer;.intValue:()I` @kind virtual;
+  #L28aac8.  v0:= temp;
+  #L28aaca.  call temp:= `min`(v2, v0) @signature `Ljava/lang/Math;.min:(II)I` @kind static;
+  #L28aad0.  v2:= temp;
+  #L28aad2.  v1.`io.reactivex.internal.queue.SpscArrayQueue.lookAheadStep` @type ^`int` := v2;
+  #L28aad6.  return @kind void;
+}
+procedure `int` `calcElementOffset`(`io.reactivex.internal.queue.SpscArrayQueue` v0 @kind this, `long` v1 ) @signature `Lio/reactivex/internal/queue/SpscArrayQueue;.calcElementOffset:(J)I` @AccessFlag  {
+    temp;
+
+  #L28a9c0.  v2:= (`int`) v1 @kind l2i;
+  #L28a9c2.  v1:= v0.`io.reactivex.internal.queue.SpscArrayQueue.mask` @type ^`int`;
+  #L28a9c6.  v1:= v1 ^& v2 @kind int;
+  #L28a9c8.  return v1;
+}
+procedure `int` `calcElementOffset`(`io.reactivex.internal.queue.SpscArrayQueue` v0 @kind this, `long` v1 , `int` v3 ) @signature `Lio/reactivex/internal/queue/SpscArrayQueue;.calcElementOffset:(JI)I` @AccessFlag  {
+    temp;
+
+  #L28a9dc.  v2:= (`int`) v1 @kind l2i;
+  #L28a9de.  v1:= v2 ^& v3 @kind int;
+  #L28a9e2.  return v1;
+}
+procedure `void` `clear`(`io.reactivex.internal.queue.SpscArrayQueue` v1 @kind this) @signature `Lio/reactivex/internal/queue/SpscArrayQueue;.clear:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L28aae8.  call temp:= `poll`(v1) @signature `Lio/reactivex/internal/queue/SpscArrayQueue;.poll:()Ljava/lang/Object;` @kind virtual;
+  #L28aaee.  v0:= temp @kind object;
+  #L28aaf0.  if v0 != 0 then goto L28aae8;
+  #L28aaf4.  call temp:= `isEmpty`(v1) @signature `Lio/reactivex/internal/queue/SpscArrayQueue;.isEmpty:()Z` @kind virtual;
+  #L28aafa.  v0:= temp;
+  #L28aafc.  if v0 != 0 then goto L28ab02;
+  #L28ab00.  goto L28aae8;
+  #L28ab02.  return @kind void;
+}
+procedure `boolean` `isEmpty`(`io.reactivex.internal.queue.SpscArrayQueue` v5 @kind this) @signature `Lio/reactivex/internal/queue/SpscArrayQueue;.isEmpty:()Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L28a8d0.  v0:= v5.`io.reactivex.internal.queue.SpscArrayQueue.producerIndex` @type ^`java.util.concurrent.atomic.AtomicLong` @kind object;
+  #L28a8d4.  call temp:= `get`(v0) @signature `Ljava/util/concurrent/atomic/AtomicLong;.get:()J` @kind virtual;
+  #L28a8da.  v0:= temp @kind wide;
+  #L28a8dc.  v2:= v5.`io.reactivex.internal.queue.SpscArrayQueue.consumerIndex` @type ^`java.util.concurrent.atomic.AtomicLong` @kind object;
+  #L28a8e0.  call temp:= `get`(v2) @signature `Ljava/util/concurrent/atomic/AtomicLong;.get:()J` @kind virtual;
+  #L28a8e6.  v2:= temp @kind wide;
+  #L28a8e8.  v4:= lcmp(v0, v2);
+  #L28a8ec.  if v4 != 0 then goto L28a8f4;
+  #L28a8f0.  v0:= 1I;
+  #L28a8f2.  goto L28a8f6;
+  #L28a8f4.  v0:= 0I;
+  #L28a8f6.  return v0;
+}
+procedure `java.lang.Object` `lvElement`(`io.reactivex.internal.queue.SpscArrayQueue` v0 @kind this, `int` v1 ) @signature `Lio/reactivex/internal/queue/SpscArrayQueue;.lvElement:(I)Ljava/lang/Object;` @AccessFlag  {
+    temp;
+
+  #L28a9f4.  call temp:= `get`(v0, v1) @signature `Ljava/util/concurrent/atomic/AtomicReferenceArray;.get:(I)Ljava/lang/Object;` @kind virtual;
+  #L28a9fa.  v1:= temp @kind object;
+  #L28a9fc.  return v1 @kind object;
+}
+procedure `boolean` `offer`(`io.reactivex.internal.queue.SpscArrayQueue` v7 @kind this, `java.lang.Object` v8 @kind object) @signature `Lio/reactivex/internal/queue/SpscArrayQueue;.offer:(Ljava/lang/Object;)Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+
+  #L28a908.  v0:= "Null is not a valid element" @kind object;
+  #L28a90c.  call temp:= `requireNonNull`(v8, v0) @signature `Ljava/util/Objects;.requireNonNull:(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/Object;` @kind static;
+  #L28a912.  v0:= v7.`io.reactivex.internal.queue.SpscArrayQueue.mask` @type ^`int`;
+  #L28a916.  v1:= v7.`io.reactivex.internal.queue.SpscArrayQueue.producerIndex` @type ^`java.util.concurrent.atomic.AtomicLong` @kind object;
+  #L28a91a.  call temp:= `get`(v1) @signature `Ljava/util/concurrent/atomic/AtomicLong;.get:()J` @kind virtual;
+  #L28a920.  v1:= temp @kind wide;
+  #L28a922.  call temp:= `calcElementOffset`(v7, v1, v0) @signature `Lio/reactivex/internal/queue/SpscArrayQueue;.calcElementOffset:(JI)I` @kind virtual;
+  #L28a928.  v3:= temp;
+  #L28a92a.  v4:= v7.`io.reactivex.internal.queue.SpscArrayQueue.producerLookAhead` @type ^`long` @kind wide;
+  #L28a92e.  v6:= lcmp(v1, v4);
+  #L28a932.  if v6 < 0 then goto L28a968;
+  #L28a936.  v4:= v7.`io.reactivex.internal.queue.SpscArrayQueue.lookAheadStep` @type ^`int`;
+  #L28a93a.  v4:= (`long`) v4 @kind i2l;
+  #L28a93c.  v4:= v4 + v1 @kind long;
+  #L28a93e.  call temp:= `calcElementOffset`(v7, v4, v0) @signature `Lio/reactivex/internal/queue/SpscArrayQueue;.calcElementOffset:(JI)I` @kind virtual;
+  #L28a944.  v0:= temp;
+  #L28a946.  call temp:= `lvElement`(v7, v0) @signature `Lio/reactivex/internal/queue/SpscArrayQueue;.lvElement:(I)Ljava/lang/Object;` @kind virtual;
+  #L28a94c.  v0:= temp @kind object;
+  #L28a94e.  if v0 != 0 then goto L28a958;
+  #L28a952.  v7.`io.reactivex.internal.queue.SpscArrayQueue.producerLookAhead` @type ^`long` := v4 @kind wide;
+  #L28a956.  goto L28a968;
+  #L28a958.  call temp:= `lvElement`(v7, v3) @signature `Lio/reactivex/internal/queue/SpscArrayQueue;.lvElement:(I)Ljava/lang/Object;` @kind virtual;
+  #L28a95e.  v0:= temp @kind object;
+  #L28a960.  if v0 == 0 then goto L28a968;
+  #L28a964.  v8:= 0I;
+  #L28a966.  return v8;
+  #L28a968.  call `soElement`(v7, v3, v8) @signature `Lio/reactivex/internal/queue/SpscArrayQueue;.soElement:(ILjava/lang/Object;)V` @kind virtual;
+  #L28a96e.  v3:= 1L;
+  #L28a972.  v1:= v1 + v3 @kind long;
+  #L28a974.  call `soProducerIndex`(v7, v1) @signature `Lio/reactivex/internal/queue/SpscArrayQueue;.soProducerIndex:(J)V` @kind virtual;
+  #L28a97a.  v8:= 1I;
+  #L28a97c.  return v8;
+}
+procedure `boolean` `offer`(`io.reactivex.internal.queue.SpscArrayQueue` v0 @kind this, `java.lang.Object` v1 @kind object, `java.lang.Object` v2 @kind object) @signature `Lio/reactivex/internal/queue/SpscArrayQueue;.offer:(Ljava/lang/Object;Ljava/lang/Object;)Z` @AccessFlag PUBLIC {
+    temp;
+
+  #L28a990.  call temp:= `offer`(v0, v1) @signature `Lio/reactivex/internal/queue/SpscArrayQueue;.offer:(Ljava/lang/Object;)Z` @kind virtual;
+  #L28a996.  v1:= temp;
+  #L28a998.  if v1 == 0 then goto L28a9ac;
+  #L28a99c.  call temp:= `offer`(v0, v2) @signature `Lio/reactivex/internal/queue/SpscArrayQueue;.offer:(Ljava/lang/Object;)Z` @kind virtual;
+  #L28a9a2.  v1:= temp;
+  #L28a9a4.  if v1 == 0 then goto L28a9ac;
+  #L28a9a8.  v1:= 1I;
+  #L28a9aa.  goto L28a9ae;
+  #L28a9ac.  v1:= 0I;
+  #L28a9ae.  return v1;
+}
+procedure `java.lang.Object` `poll`(`io.reactivex.internal.queue.SpscArrayQueue` v7 @kind this) @signature `Lio/reactivex/internal/queue/SpscArrayQueue;.poll:()Ljava/lang/Object;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+
+  #L28aa10.  v0:= v7.`io.reactivex.internal.queue.SpscArrayQueue.consumerIndex` @type ^`java.util.concurrent.atomic.AtomicLong` @kind object;
+  #L28aa14.  call temp:= `get`(v0) @signature `Ljava/util/concurrent/atomic/AtomicLong;.get:()J` @kind virtual;
+  #L28aa1a.  v0:= temp @kind wide;
+  #L28aa1c.  call temp:= `calcElementOffset`(v7, v0) @signature `Lio/reactivex/internal/queue/SpscArrayQueue;.calcElementOffset:(J)I` @kind virtual;
+  #L28aa22.  v2:= temp;
+  #L28aa24.  call temp:= `lvElement`(v7, v2) @signature `Lio/reactivex/internal/queue/SpscArrayQueue;.lvElement:(I)Ljava/lang/Object;` @kind virtual;
+  #L28aa2a.  v3:= temp @kind object;
+  #L28aa2c.  v4:= 0I;
+  #L28aa2e.  if v3 != 0 then goto L28aa34;
+  #L28aa32.  return v4 @kind object;
+  #L28aa34.  v5:= 1L;
+  #L28aa38.  v0:= v0 + v5 @kind long;
+  #L28aa3a.  call `soConsumerIndex`(v7, v0) @signature `Lio/reactivex/internal/queue/SpscArrayQueue;.soConsumerIndex:(J)V` @kind virtual;
+  #L28aa40.  call `soElement`(v7, v2, v4) @signature `Lio/reactivex/internal/queue/SpscArrayQueue;.soElement:(ILjava/lang/Object;)V` @kind virtual;
+  #L28aa46.  return v3 @kind object;
+}
+procedure `void` `soConsumerIndex`(`io.reactivex.internal.queue.SpscArrayQueue` v1 @kind this, `long` v2 ) @signature `Lio/reactivex/internal/queue/SpscArrayQueue;.soConsumerIndex:(J)V` @AccessFlag  {
+    temp;
+    v0;
+
+  #L28ab14.  v0:= v1.`io.reactivex.internal.queue.SpscArrayQueue.consumerIndex` @type ^`java.util.concurrent.atomic.AtomicLong` @kind object;
+  #L28ab18.  call `lazySet`(v0, v2) @signature `Ljava/util/concurrent/atomic/AtomicLong;.lazySet:(J)V` @kind virtual;
+  #L28ab1e.  return @kind void;
+}
+procedure `void` `soElement`(`io.reactivex.internal.queue.SpscArrayQueue` v0 @kind this, `int` v1 , `java.lang.Object` v2 @kind object) @signature `Lio/reactivex/internal/queue/SpscArrayQueue;.soElement:(ILjava/lang/Object;)V` @AccessFlag  {
+    temp;
+
+  #L28ab30.  call `lazySet`(v0, v1, v2) @signature `Ljava/util/concurrent/atomic/AtomicReferenceArray;.lazySet:(ILjava/lang/Object;)V` @kind virtual;
+  #L28ab36.  return @kind void;
+}
+procedure `void` `soProducerIndex`(`io.reactivex.internal.queue.SpscArrayQueue` v1 @kind this, `long` v2 ) @signature `Lio/reactivex/internal/queue/SpscArrayQueue;.soProducerIndex:(J)V` @AccessFlag  {
+    temp;
+    v0;
+
+  #L28ab48.  v0:= v1.`io.reactivex.internal.queue.SpscArrayQueue.producerIndex` @type ^`java.util.concurrent.atomic.AtomicLong` @kind object;
+  #L28ab4c.  call `lazySet`(v0, v2) @signature `Ljava/util/concurrent/atomic/AtomicLong;.lazySet:(J)V` @kind virtual;
+  #L28ab52.  return @kind void;
+}

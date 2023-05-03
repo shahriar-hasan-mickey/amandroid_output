@@ -1,0 +1,143 @@
+record `okhttp3.internal.platform.ConscryptPlatform` @kind class @AccessFlag PUBLIC extends `okhttp3.internal.platform.Platform` @kind class {
+}
+procedure `void` `<init>`(`okhttp3.internal.platform.ConscryptPlatform` v0 @kind this) @signature `Lokhttp3/internal/platform/ConscryptPlatform;.<init>:()V` @AccessFlag PRIVATE_CONSTRUCTOR {
+    temp;
+
+  #L506200.  call `<init>`(v0) @signature `Lokhttp3/internal/platform/Platform;.<init>:()V` @kind direct;
+  #L506206.  return @kind void;
+}
+procedure `okhttp3.internal.platform.ConscryptPlatform` `buildIfSupported`() @signature `Lokhttp3/internal/platform/ConscryptPlatform;.buildIfSupported:()Lokhttp3/internal/platform/ConscryptPlatform;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+
+  #L5061b8.  v0:= 0I;
+  #L5061ba.  v1:= "org.conscrypt.Conscrypt" @kind object;
+  #L5061be.  call temp:= `forName`(v1) @signature `Ljava/lang/Class;.forName:(Ljava/lang/String;)Ljava/lang/Class;` @kind static;
+  #L5061c4.  call temp:= `isAvailable`() @signature `Lorg/conscrypt/Conscrypt;.isAvailable:()Z` @kind static;
+  #L5061ca.  v1:= temp;
+  #L5061cc.  if v1 != 0 then goto L5061d2;
+  #L5061d0.  return v0 @kind object;
+  #L5061d2.  v1:= new `okhttp3.internal.platform.ConscryptPlatform`;
+  #L5061d6.  call `<init>`(v1) @signature `Lokhttp3/internal/platform/ConscryptPlatform;.<init>:()V` @kind direct;
+  #L5061dc.  return v1 @kind object;
+  #L5061de.  return v0 @kind object;
+  catch `java.lang.ClassNotFoundException` @[L5061ba..L5061dc] goto L5061de;
+}
+procedure `java.security.Provider` `getProvider`(`okhttp3.internal.platform.ConscryptPlatform` v1 @kind this) @signature `Lokhttp3/internal/platform/ConscryptPlatform;.getProvider:()Ljava/security/Provider;` @AccessFlag PRIVATE {
+    temp;
+    v0;
+
+  #L5060a8.  call temp:= `newProviderBuilder`() @signature `Lorg/conscrypt/Conscrypt;.newProviderBuilder:()Lorg/conscrypt/Conscrypt$ProviderBuilder;` @kind static;
+  #L5060ae.  v0:= temp @kind object;
+  #L5060b0.  call temp:= `provideTrustManager`(v0) @signature `Lorg/conscrypt/Conscrypt$ProviderBuilder;.provideTrustManager:()Lorg/conscrypt/Conscrypt$ProviderBuilder;` @kind virtual;
+  #L5060b6.  v0:= temp @kind object;
+  #L5060b8.  call temp:= `build`(v0) @signature `Lorg/conscrypt/Conscrypt$ProviderBuilder;.build:()Ljava/security/Provider;` @kind virtual;
+  #L5060be.  v0:= temp @kind object;
+  #L5060c0.  return v0 @kind object;
+}
+procedure `void` `configureSslSocketFactory`(`okhttp3.internal.platform.ConscryptPlatform` v1 @kind this, `javax.net.ssl.SSLSocketFactory` v2 @kind object) @signature `Lokhttp3/internal/platform/ConscryptPlatform;.configureSslSocketFactory:(Ljavax/net/ssl/SSLSocketFactory;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L506218.  call temp:= `isConscrypt`(v2) @signature `Lorg/conscrypt/Conscrypt;.isConscrypt:(Ljavax/net/ssl/SSLSocketFactory;)Z` @kind static;
+  #L50621e.  v0:= temp;
+  #L506220.  if v0 == 0 then goto L50622c;
+  #L506224.  v0:= 1I;
+  #L506226.  call `setUseEngineSocket`(v2, v0) @signature `Lorg/conscrypt/Conscrypt;.setUseEngineSocket:(Ljavax/net/ssl/SSLSocketFactory;Z)V` @kind static;
+  #L50622c.  return @kind void;
+}
+procedure `void` `configureTlsExtensions`(`okhttp3.internal.platform.ConscryptPlatform` v1 @kind this, `javax.net.ssl.SSLSocket` v2 @kind object, `java.lang.String` v3 @kind object, `java.util.List` v4 @kind object) @signature `Lokhttp3/internal/platform/ConscryptPlatform;.configureTlsExtensions:(Ljavax/net/ssl/SSLSocket;Ljava/lang/String;Ljava/util/List;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L506240.  call temp:= `isConscrypt`(v2) @signature `Lorg/conscrypt/Conscrypt;.isConscrypt:(Ljavax/net/ssl/SSLSocket;)Z` @kind static;
+  #L506246.  v0:= temp;
+  #L506248.  if v0 == 0 then goto L506280;
+  #L50624c.  if v3 == 0 then goto L50625e;
+  #L506250.  v0:= 1I;
+  #L506252.  call `setUseSessionTickets`(v2, v0) @signature `Lorg/conscrypt/Conscrypt;.setUseSessionTickets:(Ljavax/net/ssl/SSLSocket;Z)V` @kind static;
+  #L506258.  call `setHostname`(v2, v3) @signature `Lorg/conscrypt/Conscrypt;.setHostname:(Ljavax/net/ssl/SSLSocket;Ljava/lang/String;)V` @kind static;
+  #L50625e.  call temp:= `alpnProtocolNames`(v4) @signature `Lokhttp3/internal/platform/Platform;.alpnProtocolNames:(Ljava/util/List;)Ljava/util/List;` @kind static;
+  #L506264.  v3:= temp @kind object;
+  #L506266.  v4:= 0I;
+  #L506268.  v4:= new `java.lang.String`[v4];
+  #L50626c.  call temp:= `toArray`(v3, v4) @signature `Ljava/util/List;.toArray:([Ljava/lang/Object;)[Ljava/lang/Object;` @kind interface;
+  #L506272.  v3:= temp @kind object;
+  #L506274.  v3:= (`java.lang.String`[]) v3 @kind object;
+  #L506278.  call `setApplicationProtocols`(v2, v3) @signature `Lorg/conscrypt/Conscrypt;.setApplicationProtocols:(Ljavax/net/ssl/SSLSocket;[Ljava/lang/String;)V` @kind static;
+  #L50627e.  goto L506286;
+  #L506280.  call `configureTlsExtensions`(v1, v2, v3, v4) @signature `Lokhttp3/internal/platform/Platform;.configureTlsExtensions:(Ljavax/net/ssl/SSLSocket;Ljava/lang/String;Ljava/util/List;)V` @kind super;
+  #L506286.  return @kind void;
+}
+procedure `javax.net.ssl.SSLContext` `getSSLContext`(`okhttp3.internal.platform.ConscryptPlatform` v3 @kind this) @signature `Lokhttp3/internal/platform/ConscryptPlatform;.getSSLContext:()Ljavax/net/ssl/SSLContext;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L5060d4.  v0:= "TLSv1.3" @kind object;
+  #L5060d8.  call temp:= `getProvider`(v3) @signature `Lokhttp3/internal/platform/ConscryptPlatform;.getProvider:()Ljava/security/Provider;` @kind direct;
+  #L5060de.  v1:= temp @kind object;
+  #L5060e0.  call temp:= `getInstance`(v0, v1) @signature `Ljavax/net/ssl/SSLContext;.getInstance:(Ljava/lang/String;Ljava/security/Provider;)Ljavax/net/ssl/SSLContext;` @kind static;
+  #L5060e6.  v0:= temp @kind object;
+  #L5060e8.  return v0 @kind object;
+  #L5060ea.  v0:= Exception @type ^`java.security.NoSuchAlgorithmException` @kind object;
+  #L5060ec.  v1:= "TLS" @kind object;
+  #L5060f0.  call temp:= `getProvider`(v3) @signature `Lokhttp3/internal/platform/ConscryptPlatform;.getProvider:()Ljava/security/Provider;` @kind direct;
+  #L5060f6.  v2:= temp @kind object;
+  #L5060f8.  call temp:= `getInstance`(v1, v2) @signature `Ljavax/net/ssl/SSLContext;.getInstance:(Ljava/lang/String;Ljava/security/Provider;)Ljavax/net/ssl/SSLContext;` @kind static;
+  #L5060fe.  v0:= temp @kind object;
+  #L506100.  return v0 @kind object;
+  #L506102.  v1:= new `java.lang.IllegalStateException`;
+  #L506106.  v2:= "No TLS provider" @kind object;
+  #L50610a.  call `<init>`(v1, v2, v0) @signature `Ljava/lang/IllegalStateException;.<init>:(Ljava/lang/String;Ljava/lang/Throwable;)V` @kind direct;
+  #L506110.  throw v1;
+  catch `java.security.NoSuchAlgorithmException` @[L5060d4..L5060e8] goto L5060ea;
+  catch `java.security.NoSuchAlgorithmException` @[L5060ec..L506100] goto L506102;
+}
+procedure `java.lang.String` `getSelectedProtocol`(`okhttp3.internal.platform.ConscryptPlatform` v1 @kind this, `javax.net.ssl.SSLSocket` v2 @kind object) @signature `Lokhttp3/internal/platform/ConscryptPlatform;.getSelectedProtocol:(Ljavax/net/ssl/SSLSocket;)Ljava/lang/String;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L506078.  call temp:= `isConscrypt`(v2) @signature `Lorg/conscrypt/Conscrypt;.isConscrypt:(Ljavax/net/ssl/SSLSocket;)Z` @kind static;
+  #L50607e.  v0:= temp;
+  #L506080.  if v0 == 0 then goto L50608e;
+  #L506084.  call temp:= `getApplicationProtocol`(v2) @signature `Lorg/conscrypt/Conscrypt;.getApplicationProtocol:(Ljavax/net/ssl/SSLSocket;)Ljava/lang/String;` @kind static;
+  #L50608a.  v2:= temp @kind object;
+  #L50608c.  return v2 @kind object;
+  #L50608e.  call temp:= `getSelectedProtocol`(v1, v2) @signature `Lokhttp3/internal/platform/Platform;.getSelectedProtocol:(Ljavax/net/ssl/SSLSocket;)Ljava/lang/String;` @kind super;
+  #L506094.  v2:= temp @kind object;
+  #L506096.  return v2 @kind object;
+}
+procedure `javax.net.ssl.X509TrustManager` `trustManager`(`okhttp3.internal.platform.ConscryptPlatform` v2 @kind this, `javax.net.ssl.SSLSocketFactory` v3 @kind object) @signature `Lokhttp3/internal/platform/ConscryptPlatform;.trustManager:(Ljavax/net/ssl/SSLSocketFactory;)Ljavax/net/ssl/X509TrustManager;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L506140.  call temp:= `isConscrypt`(v3) @signature `Lorg/conscrypt/Conscrypt;.isConscrypt:(Ljavax/net/ssl/SSLSocketFactory;)Z` @kind static;
+  #L506146.  v0:= temp;
+  #L506148.  if v0 != 0 then goto L506156;
+  #L50614c.  call temp:= `trustManager`(v2, v3) @signature `Lokhttp3/internal/platform/Platform;.trustManager:(Ljavax/net/ssl/SSLSocketFactory;)Ljavax/net/ssl/X509TrustManager;` @kind super;
+  #L506152.  v3:= temp @kind object;
+  #L506154.  return v3 @kind object;
+  #L506156.  v0:= constclass @type ^`java.lang.Object` @kind object;
+  #L50615a.  v1:= "sslParameters" @kind object;
+  #L50615e.  call temp:= `b`(v3, v0, v1) @signature `Lokhttp3/internal/platform/Platform;.b:(Ljava/lang/Object;Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/Object;` @kind static;
+  #L506164.  v3:= temp @kind object;
+  #L506166.  if v3 == 0 then goto L506180;
+  #L50616a.  v0:= constclass @type ^`javax.net.ssl.X509TrustManager` @kind object;
+  #L50616e.  v1:= "x509TrustManager" @kind object;
+  #L506172.  call temp:= `b`(v3, v0, v1) @signature `Lokhttp3/internal/platform/Platform;.b:(Ljava/lang/Object;Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/Object;` @kind static;
+  #L506178.  v3:= temp @kind object;
+  #L50617a.  v3:= (`javax.net.ssl.X509TrustManager`) v3 @kind object;
+  #L50617e.  return v3 @kind object;
+  #L506180.  v3:= 0I;
+  #L506182.  return v3 @kind object;
+  #L506184.  v3:= Exception @type ^`java.lang.Exception` @kind object;
+  #L506186.  v0:= new `java.lang.UnsupportedOperationException`;
+  #L50618a.  v1:= "clientBuilder.sslSocketFactory(SSLSocketFactory) not supported on Conscrypt" @kind object;
+  #L50618e.  call `<init>`(v0, v1, v3) @signature `Ljava/lang/UnsupportedOperationException;.<init>:(Ljava/lang/String;Ljava/lang/Throwable;)V` @kind direct;
+  #L506194.  throw v0;
+  catch `java.lang.Exception` @[L506156..L50617e] goto L506184;
+}

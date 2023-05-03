@@ -1,0 +1,398 @@
+record `org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketFrame` @kind class @AccessFlag PUBLIC {
+  `boolean` `org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketFrame.closeFlag` @AccessFlag PRIVATE;
+  `boolean` `org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketFrame.fin` @AccessFlag PRIVATE;
+  `byte` `org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketFrame.opcode` @AccessFlag PRIVATE;
+  `byte`[] `org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketFrame.payload` @AccessFlag PRIVATE;
+}
+global `int` `@@org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketFrame.frameLengthOverhead` @AccessFlag PUBLIC_STATIC_FINAL;
+procedure `void` `<init>`(`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketFrame` v1 @kind this, `byte` v2 , `boolean` v3 , `byte`[] v4 @kind object) @signature `Lorg/eclipse/paho/client/mqttv3/internal/websocket/WebSocketFrame;.<init>:(BZ[B)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L233de0.  call `<init>`(v1) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L233de6.  v0:= 0I;
+  #L233de8.  v1.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketFrame.closeFlag` @type ^`boolean` := v0 @kind boolean;
+  #L233dec.  v1.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketFrame.opcode` @type ^`byte` := v2 @kind byte;
+  #L233df0.  v1.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketFrame.fin` @type ^`boolean` := v3 @kind boolean;
+  #L233df4.  v1.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketFrame.payload` @type ^`byte`[] := v4 @kind object;
+  #L233df8.  return @kind void;
+}
+procedure `void` `<init>`(`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketFrame` v7 @kind this, `java.io.InputStream` v8 @kind object) @signature `Lorg/eclipse/paho/client/mqttv3/internal/websocket/WebSocketFrame;.<init>:(Ljava/io/InputStream;)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+
+  #L233ee4.  call `<init>`(v7) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L233eea.  v0:= 0I;
+  #L233eec.  v7.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketFrame.closeFlag` @type ^`boolean` := v0 @kind boolean;
+  #L233ef0.  call temp:= `read`(v8) @signature `Ljava/io/InputStream;.read:()I` @kind virtual;
+  #L233ef6.  v1:= temp;
+  #L233ef8.  v1:= (`byte`) v1 @kind i2b;
+  #L233efa.  call `setFinAndOpCode`(v7, v1) @signature `Lorg/eclipse/paho/client/mqttv3/internal/websocket/WebSocketFrame;.setFinAndOpCode:(B)V` @kind direct;
+  #L233f00.  v1:= v7.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketFrame.opcode` @type ^`byte` @kind byte;
+  #L233f04.  v2:= 2I;
+  #L233f06.  v3:= 1I;
+  #L233f08.  v4:= 8I;
+  #L233f0c.  if v1 != v2 then goto L233fd0;
+  #L233f10.  call temp:= `read`(v8) @signature `Ljava/io/InputStream;.read:()I` @kind virtual;
+  #L233f16.  v1:= temp;
+  #L233f18.  v1:= (`byte`) v1 @kind i2b;
+  #L233f1a.  v5:= v1 ^& 128;
+  #L233f1e.  if v5 == 0 then goto L233f26;
+  #L233f22.  v5:= 1I;
+  #L233f24.  goto L233f28;
+  #L233f26.  v5:= 0I;
+  #L233f28.  v3:= 127I;
+  #L233f2c.  v1:= v1 ^& v3 @kind int;
+  #L233f2e.  v1:= (`byte`) v1 @kind i2b;
+  #L233f30.  if v1 != v3 then goto L233f3a;
+  #L233f34.  v2:= 8I;
+  #L233f38.  goto L233f46;
+  #L233f3a.  v3:= 126I;
+  #L233f3e.  if v1 != v3 then goto L233f44;
+  #L233f42.  goto L233f46;
+  #L233f44.  v2:= 0I;
+  #L233f46.  if v2 <= 0 then goto L233f4c;
+  #L233f4a.  v1:= 0I;
+  #L233f4c.  v2:= v2 + -1;
+  #L233f50.  if v2 >= 0 then goto L233fb8;
+  #L233f54.  v2:= 0I;
+  #L233f56.  if v5 == 0 then goto L233f68;
+  #L233f5a.  v2:= 4I;
+  #L233f5c.  v3:= new `byte`[v2];
+  #L233f60.  call temp:= `read`(v8, v3, v0, v2) @signature `Ljava/io/InputStream;.read:([BII)I` @kind virtual;
+  #L233f66.  goto L233f6a;
+  #L233f68.  v3:= v2 @kind object;
+  #L233f6a.  v2:= new `byte`[v1];
+  #L233f6e.  v7.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketFrame.payload` @type ^`byte`[] := v2 @kind object;
+  #L233f72.  v4:= v1;
+  #L233f74.  v2:= 0I;
+  #L233f76.  if v2 != v1 then goto L233fa6;
+  #L233f7a.  if v5 == 0 then goto L233fa4;
+  #L233f7e.  v8:= v7.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketFrame.payload` @type ^`byte`[] @kind object;
+  #L233f82.  v1:= length @variable v8;
+  #L233f84.  if v0 < v1 then goto L233f8a;
+  #L233f88.  goto L233fa4;
+  #L233f8a.  v1:= v8[v0] @kind byte;
+  #L233f8e.  v2:= v0 %% 4;
+  #L233f92.  v2:= v3[v2] @kind byte;
+  #L233f96.  v1:= v1 ^~ v2 @kind int;
+  #L233f98.  v1:= (`byte`) v1 @kind i2b;
+  #L233f9a.  v8[v0]:= v1 @kind byte;
+  #L233f9e.  v0:= v0 + 1;
+  #L233fa2.  goto L233f7e;
+  #L233fa4.  return @kind void;
+  #L233fa6.  v6:= v7.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketFrame.payload` @type ^`byte`[] @kind object;
+  #L233faa.  call temp:= `read`(v8, v6, v2, v4) @signature `Ljava/io/InputStream;.read:([BII)I` @kind virtual;
+  #L233fb0.  v6:= temp;
+  #L233fb2.  v2:= v2 + v6 @kind int;
+  #L233fb4.  v4:= v4 - v6 @kind int;
+  #L233fb6.  goto L233f76;
+  #L233fb8.  call temp:= `read`(v8) @signature `Ljava/io/InputStream;.read:()I` @kind virtual;
+  #L233fbe.  v3:= temp;
+  #L233fc0.  v3:= (`byte`) v3 @kind i2b;
+  #L233fc2.  v3:= v3 ^& 255;
+  #L233fc6.  v4:= v2 * 8;
+  #L233fca.  v3:= v3 ^< v4 @kind int;
+  #L233fcc.  v1:= v1 ^| v3 @kind int;
+  #L233fce.  goto L233f4c;
+  #L233fd0.  if v1 != v4 then goto L233fda;
+  #L233fd4.  v7.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketFrame.closeFlag` @type ^`boolean` := v3 @kind boolean;
+  #L233fd8.  return @kind void;
+  #L233fda.  v8:= new `java.io.IOException`;
+  #L233fde.  v0:= new `java.lang.StringBuilder`;
+  #L233fe2.  v1:= "Invalid Frame: Opcode: " @kind object;
+  #L233fe6.  call `<init>`(v0, v1) @signature `Ljava/lang/StringBuilder;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L233fec.  v1:= v7.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketFrame.opcode` @type ^`byte` @kind byte;
+  #L233ff0.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder;` @kind virtual;
+  #L233ff6.  call temp:= `toString`(v0) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L233ffc.  v0:= temp @kind object;
+  #L233ffe.  call `<init>`(v8, v0) @signature `Ljava/io/IOException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L234004.  throw v8;
+}
+procedure `void` `<init>`(`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketFrame` v6 @kind this, `byte`[] v7 @kind object) @signature `Lorg/eclipse/paho/client/mqttv3/internal/websocket/WebSocketFrame;.<init>:([B)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L233e0c.  call `<init>`(v6) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L233e12.  v0:= 0I;
+  #L233e14.  v6.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketFrame.closeFlag` @type ^`boolean` := v0 @kind boolean;
+  #L233e18.  call temp:= `wrap`(v7) @signature `Ljava/nio/ByteBuffer;.wrap:([B)Ljava/nio/ByteBuffer;` @kind static;
+  #L233e1e.  v7:= temp @kind object;
+  #L233e20.  call temp:= `get`(v7) @signature `Ljava/nio/ByteBuffer;.get:()B` @kind virtual;
+  #L233e26.  v1:= temp;
+  #L233e28.  call `setFinAndOpCode`(v6, v1) @signature `Lorg/eclipse/paho/client/mqttv3/internal/websocket/WebSocketFrame;.setFinAndOpCode:(B)V` @kind direct;
+  #L233e2e.  call temp:= `get`(v7) @signature `Ljava/nio/ByteBuffer;.get:()B` @kind virtual;
+  #L233e34.  v1:= temp;
+  #L233e36.  v2:= v1 ^& 128;
+  #L233e3a.  if v2 == 0 then goto L233e42;
+  #L233e3e.  v2:= 1I;
+  #L233e40.  goto L233e44;
+  #L233e42.  v2:= 0I;
+  #L233e44.  v3:= 127I;
+  #L233e48.  v1:= v1 ^& v3 @kind int;
+  #L233e4a.  v1:= (`byte`) v1 @kind i2b;
+  #L233e4c.  if v1 != v3 then goto L233e56;
+  #L233e50.  v3:= 8I;
+  #L233e54.  goto L233e64;
+  #L233e56.  v3:= 126I;
+  #L233e5a.  if v1 != v3 then goto L233e62;
+  #L233e5e.  v3:= 2I;
+  #L233e60.  goto L233e64;
+  #L233e62.  v3:= 0I;
+  #L233e64.  v3:= v3 + -1;
+  #L233e68.  if v3 > 0 then goto L233ebe;
+  #L233e6c.  v3:= 0I;
+  #L233e6e.  if v2 == 0 then goto L233e80;
+  #L233e72.  v3:= 4I;
+  #L233e74.  v4:= new `byte`[v3];
+  #L233e78.  call temp:= `get`(v7, v4, v0, v3) @signature `Ljava/nio/ByteBuffer;.get:([BII)Ljava/nio/ByteBuffer;` @kind virtual;
+  #L233e7e.  v3:= v4 @kind object;
+  #L233e80.  v4:= new `byte`[v1];
+  #L233e84.  v6.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketFrame.payload` @type ^`byte`[] := v4 @kind object;
+  #L233e88.  v4:= v6.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketFrame.payload` @type ^`byte`[] @kind object;
+  #L233e8c.  call temp:= `get`(v7, v4, v0, v1) @signature `Ljava/nio/ByteBuffer;.get:([BII)Ljava/nio/ByteBuffer;` @kind virtual;
+  #L233e92.  if v2 == 0 then goto L233ebc;
+  #L233e96.  v7:= v6.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketFrame.payload` @type ^`byte`[] @kind object;
+  #L233e9a.  v1:= length @variable v7;
+  #L233e9c.  if v0 < v1 then goto L233ea2;
+  #L233ea0.  goto L233ebc;
+  #L233ea2.  v1:= v7[v0] @kind byte;
+  #L233ea6.  v2:= v0 %% 4;
+  #L233eaa.  v2:= v3[v2] @kind byte;
+  #L233eae.  v1:= v1 ^~ v2 @kind int;
+  #L233eb0.  v1:= (`byte`) v1 @kind i2b;
+  #L233eb2.  v7[v0]:= v1 @kind byte;
+  #L233eb6.  v0:= v0 + 1;
+  #L233eba.  goto L233e96;
+  #L233ebc.  return @kind void;
+  #L233ebe.  call temp:= `get`(v7) @signature `Ljava/nio/ByteBuffer;.get:()B` @kind virtual;
+  #L233ec4.  v4:= temp;
+  #L233ec6.  v4:= v4 ^& 255;
+  #L233eca.  v5:= v3 * 8;
+  #L233ece.  v4:= v4 ^< v5 @kind int;
+  #L233ed0.  v1:= v1 ^| v4 @kind int;
+  #L233ed2.  goto L233e64;
+}
+procedure `void` `appendFinAndOpCode`(`java.nio.ByteBuffer` v0 @kind object, `byte` v1 , `boolean` v2 ) @signature `Lorg/eclipse/paho/client/mqttv3/internal/websocket/WebSocketFrame;.appendFinAndOpCode:(Ljava/nio/ByteBuffer;BZ)V` @AccessFlag PUBLIC_STATIC {
+    temp;
+
+  #L234018.  if v2 == 0 then goto L234024;
+  #L23401c.  v2:= 128I;
+  #L234020.  v2:= (`byte`) v2 @kind i2b;
+  #L234022.  goto L234026;
+  #L234024.  v2:= 0I;
+  #L234026.  v1:= v1 ^& 15;
+  #L23402a.  v1:= v1 ^| v2 @kind int;
+  #L23402c.  v1:= (`byte`) v1 @kind i2b;
+  #L23402e.  call temp:= `put`(v0, v1) @signature `Ljava/nio/ByteBuffer;.put:(B)Ljava/nio/ByteBuffer;` @kind virtual;
+  #L234034.  return @kind void;
+}
+procedure `void` `appendLength`(`java.nio.ByteBuffer` v2 @kind object, `int` v3 , `boolean` v4 ) @signature `Lorg/eclipse/paho/client/mqttv3/internal/websocket/WebSocketFrame;.appendLength:(Ljava/nio/ByteBuffer;IZ)V` @AccessFlag PRIVATE_STATIC {
+    temp;
+    v0;
+    v1;
+
+  #L234048.  if v3 < 0 then goto L2340fe;
+  #L23404c.  v0:= 0I;
+  #L23404e.  if v4 == 0 then goto L234058;
+  #L234052.  v4:= -128I;
+  #L234056.  goto L23405a;
+  #L234058.  v4:= 0I;
+  #L23405a.  v1:= 65535I;
+  #L234060.  if v3 <= v1 then goto L2340c6;
+  #L234064.  v4:= v4 ^| 127;
+  #L234068.  v4:= (`byte`) v4 @kind i2b;
+  #L23406a.  call temp:= `put`(v2, v4) @signature `Ljava/nio/ByteBuffer;.put:(B)Ljava/nio/ByteBuffer;` @kind virtual;
+  #L234070.  call temp:= `put`(v2, v0) @signature `Ljava/nio/ByteBuffer;.put:(B)Ljava/nio/ByteBuffer;` @kind virtual;
+  #L234076.  call temp:= `put`(v2, v0) @signature `Ljava/nio/ByteBuffer;.put:(B)Ljava/nio/ByteBuffer;` @kind virtual;
+  #L23407c.  call temp:= `put`(v2, v0) @signature `Ljava/nio/ByteBuffer;.put:(B)Ljava/nio/ByteBuffer;` @kind virtual;
+  #L234082.  call temp:= `put`(v2, v0) @signature `Ljava/nio/ByteBuffer;.put:(B)Ljava/nio/ByteBuffer;` @kind virtual;
+  #L234088.  v4:= v3 ^> 24;
+  #L23408c.  v4:= v4 ^& 255;
+  #L234090.  v4:= (`byte`) v4 @kind i2b;
+  #L234092.  call temp:= `put`(v2, v4) @signature `Ljava/nio/ByteBuffer;.put:(B)Ljava/nio/ByteBuffer;` @kind virtual;
+  #L234098.  v4:= v3 ^> 16;
+  #L23409c.  v4:= v4 ^& 255;
+  #L2340a0.  v4:= (`byte`) v4 @kind i2b;
+  #L2340a2.  call temp:= `put`(v2, v4) @signature `Ljava/nio/ByteBuffer;.put:(B)Ljava/nio/ByteBuffer;` @kind virtual;
+  #L2340a8.  v4:= v3 ^> 8;
+  #L2340ac.  v4:= v4 ^& 255;
+  #L2340b0.  v4:= (`byte`) v4 @kind i2b;
+  #L2340b2.  call temp:= `put`(v2, v4) @signature `Ljava/nio/ByteBuffer;.put:(B)Ljava/nio/ByteBuffer;` @kind virtual;
+  #L2340b8.  v3:= v3 ^& 255;
+  #L2340bc.  v3:= (`byte`) v3 @kind i2b;
+  #L2340be.  call temp:= `put`(v2, v3) @signature `Ljava/nio/ByteBuffer;.put:(B)Ljava/nio/ByteBuffer;` @kind virtual;
+  #L2340c4.  goto L2340fc;
+  #L2340c6.  v0:= 126I;
+  #L2340ca.  if v3 < v0 then goto L2340f2;
+  #L2340ce.  v4:= v4 ^| v0 @kind int;
+  #L2340d0.  v4:= (`byte`) v4 @kind i2b;
+  #L2340d2.  call temp:= `put`(v2, v4) @signature `Ljava/nio/ByteBuffer;.put:(B)Ljava/nio/ByteBuffer;` @kind virtual;
+  #L2340d8.  v4:= v3 ^> 8;
+  #L2340dc.  v4:= (`byte`) v4 @kind i2b;
+  #L2340de.  call temp:= `put`(v2, v4) @signature `Ljava/nio/ByteBuffer;.put:(B)Ljava/nio/ByteBuffer;` @kind virtual;
+  #L2340e4.  v3:= v3 ^& 255;
+  #L2340e8.  v3:= (`byte`) v3 @kind i2b;
+  #L2340ea.  call temp:= `put`(v2, v3) @signature `Ljava/nio/ByteBuffer;.put:(B)Ljava/nio/ByteBuffer;` @kind virtual;
+  #L2340f0.  goto L2340fc;
+  #L2340f2.  v3:= v3 ^| v4 @kind int;
+  #L2340f4.  v3:= (`byte`) v3 @kind i2b;
+  #L2340f6.  call temp:= `put`(v2, v3) @signature `Ljava/nio/ByteBuffer;.put:(B)Ljava/nio/ByteBuffer;` @kind virtual;
+  #L2340fc.  return @kind void;
+  #L2340fe.  v2:= new `java.lang.IllegalArgumentException`;
+  #L234102.  v3:= "Length cannot be negative" @kind object;
+  #L234106.  call `<init>`(v2, v3) @signature `Ljava/lang/IllegalArgumentException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L23410c.  throw v2;
+}
+procedure `void` `appendLengthAndMask`(`java.nio.ByteBuffer` v1 @kind object, `int` v2 , `byte`[] v3 @kind object) @signature `Lorg/eclipse/paho/client/mqttv3/internal/websocket/WebSocketFrame;.appendLengthAndMask:(Ljava/nio/ByteBuffer;I[B)V` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+
+  #L234120.  if v3 == 0 then goto L234134;
+  #L234124.  v0:= 1I;
+  #L234126.  call `appendLength`(v1, v2, v0) @signature `Lorg/eclipse/paho/client/mqttv3/internal/websocket/WebSocketFrame;.appendLength:(Ljava/nio/ByteBuffer;IZ)V` @kind static;
+  #L23412c.  call temp:= `put`(v1, v3) @signature `Ljava/nio/ByteBuffer;.put:([B)Ljava/nio/ByteBuffer;` @kind virtual;
+  #L234132.  goto L23413c;
+  #L234134.  v3:= 0I;
+  #L234136.  call `appendLength`(v1, v2, v3) @signature `Lorg/eclipse/paho/client/mqttv3/internal/websocket/WebSocketFrame;.appendLength:(Ljava/nio/ByteBuffer;IZ)V` @kind static;
+  #L23413c.  return @kind void;
+}
+procedure `byte`[] `generateMaskingKey`() @signature `Lorg/eclipse/paho/client/mqttv3/internal/websocket/WebSocketFrame;.generateMaskingKey:()[B` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L233d60.  v0:= new `java.security.SecureRandom`;
+  #L233d64.  call `<init>`(v0) @signature `Ljava/security/SecureRandom;.<init>:()V` @kind direct;
+  #L233d6a.  v1:= 255I;
+  #L233d6e.  call temp:= `nextInt`(v0, v1) @signature `Ljava/security/SecureRandom;.nextInt:(I)I` @kind virtual;
+  #L233d74.  v2:= temp;
+  #L233d76.  call temp:= `nextInt`(v0, v1) @signature `Ljava/security/SecureRandom;.nextInt:(I)I` @kind virtual;
+  #L233d7c.  v3:= temp;
+  #L233d7e.  call temp:= `nextInt`(v0, v1) @signature `Ljava/security/SecureRandom;.nextInt:(I)I` @kind virtual;
+  #L233d84.  v4:= temp;
+  #L233d86.  call temp:= `nextInt`(v0, v1) @signature `Ljava/security/SecureRandom;.nextInt:(I)I` @kind virtual;
+  #L233d8c.  v0:= temp;
+  #L233d8e.  v1:= 4I;
+  #L233d90.  v1:= new `byte`[v1];
+  #L233d94.  v2:= (`byte`) v2 @kind i2b;
+  #L233d96.  v5:= 0I;
+  #L233d98.  v1[v5]:= v2 @kind byte;
+  #L233d9c.  v2:= (`byte`) v3 @kind i2b;
+  #L233d9e.  v3:= 1I;
+  #L233da0.  v1[v3]:= v2 @kind byte;
+  #L233da4.  v2:= (`byte`) v4 @kind i2b;
+  #L233da6.  v3:= 2I;
+  #L233da8.  v1[v3]:= v2 @kind byte;
+  #L233dac.  v0:= (`byte`) v0 @kind i2b;
+  #L233dae.  v2:= 3I;
+  #L233db0.  v1[v2]:= v0 @kind byte;
+  #L233db4.  return v1 @kind object;
+}
+procedure `void` `setFinAndOpCode`(`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketFrame` v1 @kind this, `byte` v2 ) @signature `Lorg/eclipse/paho/client/mqttv3/internal/websocket/WebSocketFrame;.setFinAndOpCode:(B)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+
+  #L234150.  v0:= v2 ^& 128;
+  #L234154.  if v0 == 0 then goto L23415c;
+  #L234158.  v0:= 1I;
+  #L23415a.  goto L23415e;
+  #L23415c.  v0:= 0I;
+  #L23415e.  v1.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketFrame.fin` @type ^`boolean` := v0 @kind boolean;
+  #L234162.  v2:= v2 ^& 15;
+  #L234166.  v2:= (`byte`) v2 @kind i2b;
+  #L234168.  v1.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketFrame.opcode` @type ^`byte` := v2 @kind byte;
+  #L23416c.  return @kind void;
+}
+procedure `byte`[] `encodeFrame`(`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketFrame` v6 @kind this) @signature `Lorg/eclipse/paho/client/mqttv3/internal/websocket/WebSocketFrame;.encodeFrame:()[B` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L233cc0.  v0:= v6.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketFrame.payload` @type ^`byte`[] @kind object;
+  #L233cc4.  v1:= length @variable v0;
+  #L233cc6.  v1:= v1 + 6;
+  #L233cca.  v2:= length @variable v0;
+  #L233ccc.  v3:= 65535I;
+  #L233cd2.  if v2 <= v3 then goto L233cdc;
+  #L233cd6.  v1:= v1 + 8;
+  #L233cda.  goto L233cea;
+  #L233cdc.  v0:= length @variable v0;
+  #L233cde.  v2:= 126I;
+  #L233ce2.  if v0 < v2 then goto L233cea;
+  #L233ce6.  v1:= v1 + 2;
+  #L233cea.  call temp:= `allocate`(v1) @signature `Ljava/nio/ByteBuffer;.allocate:(I)Ljava/nio/ByteBuffer;` @kind static;
+  #L233cf0.  v0:= temp @kind object;
+  #L233cf2.  v1:= v6.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketFrame.opcode` @type ^`byte` @kind byte;
+  #L233cf6.  v2:= v6.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketFrame.fin` @type ^`boolean` @kind boolean;
+  #L233cfa.  call `appendFinAndOpCode`(v0, v1, v2) @signature `Lorg/eclipse/paho/client/mqttv3/internal/websocket/WebSocketFrame;.appendFinAndOpCode:(Ljava/nio/ByteBuffer;BZ)V` @kind static;
+  #L233d00.  call temp:= `generateMaskingKey`() @signature `Lorg/eclipse/paho/client/mqttv3/internal/websocket/WebSocketFrame;.generateMaskingKey:()[B` @kind static;
+  #L233d06.  v1:= temp @kind object;
+  #L233d08.  v2:= v6.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketFrame.payload` @type ^`byte`[] @kind object;
+  #L233d0c.  v2:= length @variable v2;
+  #L233d0e.  call `appendLengthAndMask`(v0, v2, v1) @signature `Lorg/eclipse/paho/client/mqttv3/internal/websocket/WebSocketFrame;.appendLengthAndMask:(Ljava/nio/ByteBuffer;I[B)V` @kind static;
+  #L233d14.  v2:= 0I;
+  #L233d16.  v3:= v6.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketFrame.payload` @type ^`byte`[] @kind object;
+  #L233d1a.  v4:= length @variable v3;
+  #L233d1c.  if v2 < v4 then goto L233d30;
+  #L233d20.  call temp:= `flip`(v0) @signature `Ljava/nio/ByteBuffer;.flip:()Ljava/nio/Buffer;` @kind virtual;
+  #L233d26.  call temp:= `array`(v0) @signature `Ljava/nio/ByteBuffer;.array:()[B` @kind virtual;
+  #L233d2c.  v0:= temp @kind object;
+  #L233d2e.  return v0 @kind object;
+  #L233d30.  v4:= v3[v2] @kind byte;
+  #L233d34.  v5:= v2 %% 4;
+  #L233d38.  v5:= v1[v5] @kind byte;
+  #L233d3c.  v4:= v4 ^~ v5 @kind int;
+  #L233d3e.  v4:= (`byte`) v4 @kind i2b;
+  #L233d40.  v3[v2]:= v4 @kind byte;
+  #L233d44.  call temp:= `put`(v0, v4) @signature `Ljava/nio/ByteBuffer;.put:(B)Ljava/nio/ByteBuffer;` @kind virtual;
+  #L233d4a.  v2:= v2 + 1;
+  #L233d4e.  goto L233d16;
+}
+procedure `byte` `getOpcode`(`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketFrame` v1 @kind this) @signature `Lorg/eclipse/paho/client/mqttv3/internal/websocket/WebSocketFrame;.getOpcode:()B` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L233ca8.  v0:= v1.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketFrame.opcode` @type ^`byte` @kind byte;
+  #L233cac.  return v0;
+}
+procedure `byte`[] `getPayload`(`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketFrame` v1 @kind this) @signature `Lorg/eclipse/paho/client/mqttv3/internal/websocket/WebSocketFrame;.getPayload:()[B` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L233dc8.  v0:= v1.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketFrame.payload` @type ^`byte`[] @kind object;
+  #L233dcc.  return v0 @kind object;
+}
+procedure `boolean` `isCloseFlag`(`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketFrame` v1 @kind this) @signature `Lorg/eclipse/paho/client/mqttv3/internal/websocket/WebSocketFrame;.isCloseFlag:()Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L233c78.  v0:= v1.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketFrame.closeFlag` @type ^`boolean` @kind boolean;
+  #L233c7c.  return v0;
+}
+procedure `boolean` `isFin`(`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketFrame` v1 @kind this) @signature `Lorg/eclipse/paho/client/mqttv3/internal/websocket/WebSocketFrame;.isFin:()Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L233c90.  v0:= v1.`org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketFrame.fin` @type ^`boolean` @kind boolean;
+  #L233c94.  return v0;
+}

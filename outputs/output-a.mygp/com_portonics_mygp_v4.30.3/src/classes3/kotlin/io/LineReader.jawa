@@ -1,0 +1,321 @@
+record `kotlin.io.LineReader` @kind class @AccessFlag PUBLIC_FINAL {
+}
+global `int` `@@kotlin.io.LineReader.BUFFER_SIZE` @AccessFlag PRIVATE_STATIC_FINAL;
+global `kotlin.io.LineReader` `@@kotlin.io.LineReader.INSTANCE` @AccessFlag PUBLIC_STATIC_FINAL;
+global `java.nio.ByteBuffer` `@@kotlin.io.LineReader.byteBuf` @AccessFlag PRIVATE_STATIC_FINAL;
+global `byte`[] `@@kotlin.io.LineReader.bytes` @AccessFlag PRIVATE_STATIC_FINAL;
+global `java.nio.CharBuffer` `@@kotlin.io.LineReader.charBuf` @AccessFlag PRIVATE_STATIC_FINAL;
+global `char`[] `@@kotlin.io.LineReader.chars` @AccessFlag PRIVATE_STATIC_FINAL;
+global `java.nio.charset.CharsetDecoder` `@@kotlin.io.LineReader.decoder` @AccessFlag PRIVATE_STATIC;
+global `boolean` `@@kotlin.io.LineReader.directEOL` @AccessFlag PRIVATE_STATIC;
+global `java.lang.StringBuilder` `@@kotlin.io.LineReader.sb` @AccessFlag PRIVATE_STATIC_FINAL;
+procedure `void` `<clinit>`() @signature `Lkotlin/io/LineReader;.<clinit>:()V` @AccessFlag STATIC_CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L2b197c.  v0:= new `kotlin.io.LineReader`;
+  #L2b1980.  call `<init>`(v0) @signature `Lkotlin/io/LineReader;.<init>:()V` @kind direct;
+  #L2b1986.  `@@kotlin.io.LineReader.INSTANCE` @type ^`kotlin.io.LineReader` := v0 @kind object;
+  #L2b198a.  v0:= 32I;
+  #L2b198e.  v1:= new `byte`[v0];
+  #L2b1992.  `@@kotlin.io.LineReader.bytes` @type ^`byte`[] := v1 @kind object;
+  #L2b1996.  v0:= new `char`[v0];
+  #L2b199a.  `@@kotlin.io.LineReader.chars` @type ^`char`[] := v0 @kind object;
+  #L2b199e.  call temp:= `wrap`(v1) @signature `Ljava/nio/ByteBuffer;.wrap:([B)Ljava/nio/ByteBuffer;` @kind static;
+  #L2b19a4.  v1:= temp @kind object;
+  #L2b19a6.  v2:= "wrap(bytes)" @kind object;
+  #L2b19aa.  call `checkNotNullExpressionValue`(v1, v2) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V` @kind static;
+  #L2b19b0.  `@@kotlin.io.LineReader.byteBuf` @type ^`java.nio.ByteBuffer` := v1 @kind object;
+  #L2b19b4.  call temp:= `wrap`(v0) @signature `Ljava/nio/CharBuffer;.wrap:([C)Ljava/nio/CharBuffer;` @kind static;
+  #L2b19ba.  v0:= temp @kind object;
+  #L2b19bc.  v1:= "wrap(chars)" @kind object;
+  #L2b19c0.  call `checkNotNullExpressionValue`(v0, v1) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V` @kind static;
+  #L2b19c6.  `@@kotlin.io.LineReader.charBuf` @type ^`java.nio.CharBuffer` := v0 @kind object;
+  #L2b19ca.  v0:= new `java.lang.StringBuilder`;
+  #L2b19ce.  call `<init>`(v0) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L2b19d4.  `@@kotlin.io.LineReader.sb` @type ^`java.lang.StringBuilder` := v0 @kind object;
+  #L2b19d8.  return @kind void;
+}
+procedure `void` `<init>`(`kotlin.io.LineReader` v0 @kind this) @signature `Lkotlin/io/LineReader;.<init>:()V` @AccessFlag PRIVATE_CONSTRUCTOR {
+    temp;
+
+  #L2b19ec.  call `<init>`(v0) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L2b19f2.  return @kind void;
+}
+procedure `int` `compactBytes`(`kotlin.io.LineReader` v3 @kind this) @signature `Lkotlin/io/LineReader;.compactBytes:()I` @AccessFlag PRIVATE_FINAL {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L2b1690.  v0:= `@@kotlin.io.LineReader.byteBuf` @type ^`java.nio.ByteBuffer` @kind object;
+  #L2b1694.  call temp:= `compact`(v0) @signature `Ljava/nio/ByteBuffer;.compact:()Ljava/nio/ByteBuffer;` @kind virtual;
+  #L2b169a.  call temp:= `position`(v0) @signature `Ljava/nio/ByteBuffer;.position:()I` @kind virtual;
+  #L2b16a0.  v1:= temp;
+  #L2b16a2.  v2:= 0I;
+  #L2b16a4.  call temp:= `position`(v0, v2) @signature `Ljava/nio/ByteBuffer;.position:(I)Ljava/nio/Buffer;` @kind virtual;
+  #L2b16aa.  return v1;
+}
+procedure `int` `decode`(`kotlin.io.LineReader` v5 @kind this, `boolean` v6 ) @signature `Lkotlin/io/LineReader;.decode:(Z)I` @AccessFlag PRIVATE_FINAL {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L2b16bc.  v0:= `@@kotlin.io.LineReader.decoder` @type ^`java.nio.charset.CharsetDecoder` @kind object;
+  #L2b16c0.  if v0 != 0 then goto L2b16d0;
+  #L2b16c4.  v0:= "decoder" @kind object;
+  #L2b16c8.  call `throwUninitializedPropertyAccessException`(v0) @signature `Lkotlin/jvm/internal/Intrinsics;.throwUninitializedPropertyAccessException:(Ljava/lang/String;)V` @kind static;
+  #L2b16ce.  v0:= 0I;
+  #L2b16d0.  v1:= `@@kotlin.io.LineReader.byteBuf` @type ^`java.nio.ByteBuffer` @kind object;
+  #L2b16d4.  v2:= `@@kotlin.io.LineReader.charBuf` @type ^`java.nio.CharBuffer` @kind object;
+  #L2b16d8.  call temp:= `decode`(v0, v1, v2, v6) @signature `Ljava/nio/charset/CharsetDecoder;.decode:(Ljava/nio/ByteBuffer;Ljava/nio/CharBuffer;Z)Ljava/nio/charset/CoderResult;` @kind virtual;
+  #L2b16de.  v0:= temp @kind object;
+  #L2b16e0.  v1:= "decoder.decode(byteBuf, charBuf, endOfInput)" @kind object;
+  #L2b16e4.  call `checkNotNullExpressionValue`(v0, v1) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V` @kind static;
+  #L2b16ea.  call temp:= `isError`(v0) @signature `Ljava/nio/charset/CoderResult;.isError:()Z` @kind virtual;
+  #L2b16f0.  v1:= temp;
+  #L2b16f2.  if v1 == 0 then goto L2b1702;
+  #L2b16f6.  call `resetAll`(v5) @signature `Lkotlin/io/LineReader;.resetAll:()V` @kind direct;
+  #L2b16fc.  call `throwException`(v0) @signature `Ljava/nio/charset/CoderResult;.throwException:()V` @kind virtual;
+  #L2b1702.  call temp:= `position`(v2) @signature `Ljava/nio/CharBuffer;.position:()I` @kind virtual;
+  #L2b1708.  v1:= temp;
+  #L2b170a.  call temp:= `isOverflow`(v0) @signature `Ljava/nio/charset/CoderResult;.isOverflow:()Z` @kind virtual;
+  #L2b1710.  v0:= temp;
+  #L2b1712.  if v0 != 0 then goto L2b1718;
+  #L2b1716.  return v1;
+  #L2b1718.  v0:= `@@kotlin.io.LineReader.sb` @type ^`java.lang.StringBuilder` @kind object;
+  #L2b171c.  v3:= `@@kotlin.io.LineReader.chars` @type ^`char`[] @kind object;
+  #L2b1720.  v1:= v1 + -1;
+  #L2b1724.  v4:= 0I;
+  #L2b1726.  call temp:= `append`(v0, v3, v4, v1) @signature `Ljava/lang/StringBuilder;.append:([CII)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2b172c.  call temp:= `position`(v2, v4) @signature `Ljava/nio/CharBuffer;.position:(I)Ljava/nio/Buffer;` @kind virtual;
+  #L2b1732.  v0:= 32I;
+  #L2b1736.  call temp:= `limit`(v2, v0) @signature `Ljava/nio/CharBuffer;.limit:(I)Ljava/nio/Buffer;` @kind virtual;
+  #L2b173c.  v0:= v3[v1] @kind char;
+  #L2b1740.  call temp:= `put`(v2, v0) @signature `Ljava/nio/CharBuffer;.put:(C)Ljava/nio/CharBuffer;` @kind virtual;
+  #L2b1746.  goto L2b16bc;
+}
+procedure `int` `decodeEndOfInput`(`kotlin.io.LineReader` v1 @kind this, `int` v2 , `int` v3 ) @signature `Lkotlin/io/LineReader;.decodeEndOfInput:(II)I` @AccessFlag PRIVATE_FINAL {
+    temp;
+    v0;
+
+  #L2b1758.  v0:= `@@kotlin.io.LineReader.byteBuf` @type ^`java.nio.ByteBuffer` @kind object;
+  #L2b175c.  call temp:= `limit`(v0, v2) @signature `Ljava/nio/ByteBuffer;.limit:(I)Ljava/nio/Buffer;` @kind virtual;
+  #L2b1762.  v2:= `@@kotlin.io.LineReader.charBuf` @type ^`java.nio.CharBuffer` @kind object;
+  #L2b1766.  call temp:= `position`(v2, v3) @signature `Ljava/nio/CharBuffer;.position:(I)Ljava/nio/Buffer;` @kind virtual;
+  #L2b176c.  v2:= 1I;
+  #L2b176e.  call temp:= `decode`(v1, v2) @signature `Lkotlin/io/LineReader;.decode:(Z)I` @kind direct;
+  #L2b1774.  v2:= temp;
+  #L2b1776.  v3:= `@@kotlin.io.LineReader.decoder` @type ^`java.nio.charset.CharsetDecoder` @kind object;
+  #L2b177a.  if v3 != 0 then goto L2b178a;
+  #L2b177e.  v3:= "decoder" @kind object;
+  #L2b1782.  call `throwUninitializedPropertyAccessException`(v3) @signature `Lkotlin/jvm/internal/Intrinsics;.throwUninitializedPropertyAccessException:(Ljava/lang/String;)V` @kind static;
+  #L2b1788.  v3:= 0I;
+  #L2b178a.  call temp:= `reset`(v3) @signature `Ljava/nio/charset/CharsetDecoder;.reset:()Ljava/nio/charset/CharsetDecoder;` @kind virtual;
+  #L2b1790.  v3:= 0I;
+  #L2b1792.  call temp:= `position`(v0, v3) @signature `Ljava/nio/ByteBuffer;.position:(I)Ljava/nio/Buffer;` @kind virtual;
+  #L2b1798.  return v2;
+}
+procedure `void` `resetAll`(`kotlin.io.LineReader` v2 @kind this) @signature `Lkotlin/io/LineReader;.resetAll:()V` @AccessFlag PRIVATE_FINAL {
+    temp;
+    v0;
+    v1;
+
+  #L2b1a04.  v0:= `@@kotlin.io.LineReader.decoder` @type ^`java.nio.charset.CharsetDecoder` @kind object;
+  #L2b1a08.  if v0 != 0 then goto L2b1a18;
+  #L2b1a0c.  v0:= "decoder" @kind object;
+  #L2b1a10.  call `throwUninitializedPropertyAccessException`(v0) @signature `Lkotlin/jvm/internal/Intrinsics;.throwUninitializedPropertyAccessException:(Ljava/lang/String;)V` @kind static;
+  #L2b1a16.  v0:= 0I;
+  #L2b1a18.  call temp:= `reset`(v0) @signature `Ljava/nio/charset/CharsetDecoder;.reset:()Ljava/nio/charset/CharsetDecoder;` @kind virtual;
+  #L2b1a1e.  v0:= `@@kotlin.io.LineReader.byteBuf` @type ^`java.nio.ByteBuffer` @kind object;
+  #L2b1a22.  v1:= 0I;
+  #L2b1a24.  call temp:= `position`(v0, v1) @signature `Ljava/nio/ByteBuffer;.position:(I)Ljava/nio/Buffer;` @kind virtual;
+  #L2b1a2a.  v0:= `@@kotlin.io.LineReader.sb` @type ^`java.lang.StringBuilder` @kind object;
+  #L2b1a2e.  call `setLength`(v0, v1) @signature `Ljava/lang/StringBuilder;.setLength:(I)V` @kind virtual;
+  #L2b1a34.  return @kind void;
+}
+procedure `void` `trimStringBuilder`(`kotlin.io.LineReader` v2 @kind this) @signature `Lkotlin/io/LineReader;.trimStringBuilder:()V` @AccessFlag PRIVATE_FINAL {
+    temp;
+    v0;
+    v1;
+
+  #L2b1a48.  v0:= `@@kotlin.io.LineReader.sb` @type ^`java.lang.StringBuilder` @kind object;
+  #L2b1a4c.  v1:= 32I;
+  #L2b1a50.  call `setLength`(v0, v1) @signature `Ljava/lang/StringBuilder;.setLength:(I)V` @kind virtual;
+  #L2b1a56.  call `trimToSize`(v0) @signature `Ljava/lang/StringBuilder;.trimToSize:()V` @kind virtual;
+  #L2b1a5c.  return @kind void;
+}
+procedure `void` `updateCharset`(`kotlin.io.LineReader` v4 @kind this, `java.nio.charset.Charset` v5 @kind object) @signature `Lkotlin/io/LineReader;.updateCharset:(Ljava/nio/charset/Charset;)V` @AccessFlag PRIVATE_FINAL {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L2b1a70.  call temp:= `newDecoder`(v5) @signature `Ljava/nio/charset/Charset;.newDecoder:()Ljava/nio/charset/CharsetDecoder;` @kind virtual;
+  #L2b1a76.  v5:= temp @kind object;
+  #L2b1a78.  v0:= "charset.newDecoder()" @kind object;
+  #L2b1a7c.  call `checkNotNullExpressionValue`(v5, v0) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V` @kind static;
+  #L2b1a82.  `@@kotlin.io.LineReader.decoder` @type ^`java.nio.charset.CharsetDecoder` := v5 @kind object;
+  #L2b1a86.  v5:= `@@kotlin.io.LineReader.byteBuf` @type ^`java.nio.ByteBuffer` @kind object;
+  #L2b1a8a.  call temp:= `clear`(v5) @signature `Ljava/nio/ByteBuffer;.clear:()Ljava/nio/Buffer;` @kind virtual;
+  #L2b1a90.  v0:= `@@kotlin.io.LineReader.charBuf` @type ^`java.nio.CharBuffer` @kind object;
+  #L2b1a94.  call temp:= `clear`(v0) @signature `Ljava/nio/CharBuffer;.clear:()Ljava/nio/Buffer;` @kind virtual;
+  #L2b1a9a.  v1:= 10I;
+  #L2b1a9e.  v2:= (`byte`) v1 @kind i2b;
+  #L2b1aa0.  call temp:= `put`(v5, v2) @signature `Ljava/nio/ByteBuffer;.put:(B)Ljava/nio/ByteBuffer;` @kind virtual;
+  #L2b1aa6.  call temp:= `flip`(v5) @signature `Ljava/nio/ByteBuffer;.flip:()Ljava/nio/Buffer;` @kind virtual;
+  #L2b1aac.  v2:= `@@kotlin.io.LineReader.decoder` @type ^`java.nio.charset.CharsetDecoder` @kind object;
+  #L2b1ab0.  if v2 != 0 then goto L2b1ac0;
+  #L2b1ab4.  v2:= "decoder" @kind object;
+  #L2b1ab8.  call `throwUninitializedPropertyAccessException`(v2) @signature `Lkotlin/jvm/internal/Intrinsics;.throwUninitializedPropertyAccessException:(Ljava/lang/String;)V` @kind static;
+  #L2b1abe.  v2:= 0I;
+  #L2b1ac0.  v3:= 0I;
+  #L2b1ac2.  call temp:= `decode`(v2, v5, v0, v3) @signature `Ljava/nio/charset/CharsetDecoder;.decode:(Ljava/nio/ByteBuffer;Ljava/nio/CharBuffer;Z)Ljava/nio/charset/CoderResult;` @kind virtual;
+  #L2b1ac8.  call temp:= `position`(v0) @signature `Ljava/nio/CharBuffer;.position:()I` @kind virtual;
+  #L2b1ace.  v5:= temp;
+  #L2b1ad0.  v2:= 1I;
+  #L2b1ad2.  if v5 != v2 then goto L2b1ae4;
+  #L2b1ad6.  call temp:= `get`(v0, v3) @signature `Ljava/nio/CharBuffer;.get:(I)C` @kind virtual;
+  #L2b1adc.  v5:= temp;
+  #L2b1ade.  if v5 != v1 then goto L2b1ae4;
+  #L2b1ae2.  v3:= 1I;
+  #L2b1ae4.  `@@kotlin.io.LineReader.directEOL` @type ^`boolean` := v3 @kind boolean;
+  #L2b1ae8.  call `resetAll`(v4) @signature `Lkotlin/io/LineReader;.resetAll:()V` @kind direct;
+  #L2b1aee.  return @kind void;
+}
+procedure `java.lang.String` `readLine`(`kotlin.io.LineReader` v10 @kind this, `java.io.InputStream` v11 @kind object, `java.nio.charset.Charset` v12 @kind object) @signature `Lkotlin/io/LineReader;.readLine:(Ljava/io/InputStream;Ljava/nio/charset/Charset;)Ljava/lang/String;` @AccessFlag PUBLIC_FINAL {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+    v9;
+
+  #L2b17ac.  @monitorenter v10
+  #L2b17ae.  v0:= "inputStream" @kind object;
+  #L2b17b2.  call `checkNotNullParameter`(v11, v0) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V` @kind static;
+  #L2b17b8.  v0:= "charset" @kind object;
+  #L2b17bc.  call `checkNotNullParameter`(v12, v0) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V` @kind static;
+  #L2b17c2.  v0:= `@@kotlin.io.LineReader.decoder` @type ^`java.nio.charset.CharsetDecoder` @kind object;
+  #L2b17c6.  v1:= 0I;
+  #L2b17c8.  if v0 == 0 then goto L2b17f0;
+  #L2b17cc.  if v0 != 0 then goto L2b17dc;
+  #L2b17d0.  v0:= "decoder" @kind object;
+  #L2b17d4.  call `throwUninitializedPropertyAccessException`(v0) @signature `Lkotlin/jvm/internal/Intrinsics;.throwUninitializedPropertyAccessException:(Ljava/lang/String;)V` @kind static;
+  #L2b17da.  v0:= v1 @kind object;
+  #L2b17dc.  call temp:= `charset`(v0) @signature `Ljava/nio/charset/CharsetDecoder;.charset:()Ljava/nio/charset/Charset;` @kind virtual;
+  #L2b17e2.  v0:= temp @kind object;
+  #L2b17e4.  call temp:= `areEqual`(v0, v12) @signature `Lkotlin/jvm/internal/Intrinsics;.areEqual:(Ljava/lang/Object;Ljava/lang/Object;)Z` @kind static;
+  #L2b17ea.  v0:= temp;
+  #L2b17ec.  if v0 != 0 then goto L2b17f6;
+  #L2b17f0.  call `updateCharset`(v10, v12) @signature `Lkotlin/io/LineReader;.updateCharset:(Ljava/nio/charset/Charset;)V` @kind direct;
+  #L2b17f6.  v12:= 0I;
+  #L2b17f8.  v0:= 0I;
+  #L2b17fa.  v2:= 0I;
+  #L2b17fc.  call temp:= `read`(v11) @signature `Ljava/io/InputStream;.read:()I` @kind virtual;
+  #L2b1802.  v3:= temp;
+  #L2b1804.  v4:= 32I;
+  #L2b1808.  v5:= 10I;
+  #L2b180c.  v6:= -1I;
+  #L2b180e.  v7:= 1I;
+  #L2b1810.  if v3 != v6 then goto L2b1844;
+  #L2b1814.  v11:= `@@kotlin.io.LineReader.sb` @type ^`java.lang.StringBuilder` @kind object;
+  #L2b1818.  call temp:= `length`(v11) @signature `Ljava/lang/CharSequence;.length:()I` @kind interface;
+  #L2b181e.  v11:= temp;
+  #L2b1820.  if v11 != 0 then goto L2b1828;
+  #L2b1824.  v11:= 1I;
+  #L2b1826.  goto L2b182a;
+  #L2b1828.  v11:= 0I;
+  #L2b182a.  if v11 == 0 then goto L2b183a;
+  #L2b182e.  if v0 != 0 then goto L2b183a;
+  #L2b1832.  if v2 != 0 then goto L2b183a;
+  #L2b1836.  @monitorexit v10
+  #L2b1838.  return v1 @kind object;
+  #L2b183a.  call temp:= `decodeEndOfInput`(v10, v0, v2) @signature `Lkotlin/io/LineReader;.decodeEndOfInput:(II)I` @kind direct;
+  #L2b1840.  v11:= temp;
+  #L2b1842.  goto L2b18a0;
+  #L2b1844.  v6:= `@@kotlin.io.LineReader.bytes` @type ^`byte`[] @kind object;
+  #L2b1848.  v8:= v0 + 1;
+  #L2b184c.  v9:= (`byte`) v3 @kind i2b;
+  #L2b184e.  v6[v0]:= v9 @kind byte;
+  #L2b1852.  if v3 == v5 then goto L2b1868;
+  #L2b1856.  if v8 == v4 then goto L2b1868;
+  #L2b185a.  v0:= `@@kotlin.io.LineReader.directEOL` @type ^`boolean` @kind boolean;
+  #L2b185e.  if v0 != 0 then goto L2b1864;
+  #L2b1862.  goto L2b1868;
+  #L2b1864.  v0:= v8;
+  #L2b1866.  goto L2b17fc;
+  #L2b1868.  v0:= `@@kotlin.io.LineReader.byteBuf` @type ^`java.nio.ByteBuffer` @kind object;
+  #L2b186c.  call temp:= `limit`(v0, v8) @signature `Ljava/nio/ByteBuffer;.limit:(I)Ljava/nio/Buffer;` @kind virtual;
+  #L2b1872.  v3:= `@@kotlin.io.LineReader.charBuf` @type ^`java.nio.CharBuffer` @kind object;
+  #L2b1876.  call temp:= `position`(v3, v2) @signature `Ljava/nio/CharBuffer;.position:(I)Ljava/nio/Buffer;` @kind virtual;
+  #L2b187c.  call temp:= `decode`(v10, v12) @signature `Lkotlin/io/LineReader;.decode:(Z)I` @kind direct;
+  #L2b1882.  v2:= temp;
+  #L2b1884.  if v2 <= 0 then goto L2b1932;
+  #L2b1888.  v3:= `@@kotlin.io.LineReader.chars` @type ^`char`[] @kind object;
+  #L2b188c.  v6:= v2 + -1;
+  #L2b1890.  v3:= v3[v6] @kind char;
+  #L2b1894.  if v3 != v5 then goto L2b1932;
+  #L2b1898.  call temp:= `position`(v0, v12) @signature `Ljava/nio/ByteBuffer;.position:(I)Ljava/nio/Buffer;` @kind virtual;
+  #L2b189e.  v11:= v2;
+  #L2b18a0.  if v11 <= 0 then goto L2b18d0;
+  #L2b18a4.  v0:= `@@kotlin.io.LineReader.chars` @type ^`char`[] @kind object;
+  #L2b18a8.  v1:= v11 + -1;
+  #L2b18ac.  v1:= v0[v1] @kind char;
+  #L2b18b0.  if v1 != v5 then goto L2b18d0;
+  #L2b18b4.  v11:= v11 + -1;
+  #L2b18b8.  if v11 <= 0 then goto L2b18d0;
+  #L2b18bc.  v1:= v11 + -1;
+  #L2b18c0.  v0:= v0[v1] @kind char;
+  #L2b18c4.  v1:= 13I;
+  #L2b18c8.  if v0 != v1 then goto L2b18d0;
+  #L2b18cc.  v11:= v11 + -1;
+  #L2b18d0.  v0:= `@@kotlin.io.LineReader.sb` @type ^`java.lang.StringBuilder` @kind object;
+  #L2b18d4.  call temp:= `length`(v0) @signature `Ljava/lang/CharSequence;.length:()I` @kind interface;
+  #L2b18da.  v1:= temp;
+  #L2b18dc.  if v1 != 0 then goto L2b18e2;
+  #L2b18e0.  goto L2b18e4;
+  #L2b18e2.  v7:= 0I;
+  #L2b18e4.  if v7 == 0 then goto L2b18fa;
+  #L2b18e8.  v0:= new `java.lang.String`;
+  #L2b18ec.  v1:= `@@kotlin.io.LineReader.chars` @type ^`char`[] @kind object;
+  #L2b18f0.  call `<init>`(v0, v1, v12, v11) @signature `Ljava/lang/String;.<init>:([CII)V` @kind direct;
+  #L2b18f6.  @monitorexit v10
+  #L2b18f8.  return v0 @kind object;
+  #L2b18fa.  v1:= `@@kotlin.io.LineReader.chars` @type ^`char`[] @kind object;
+  #L2b18fe.  call temp:= `append`(v0, v1, v12, v11) @signature `Ljava/lang/StringBuilder;.append:([CII)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2b1904.  call temp:= `toString`(v0) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L2b190a.  v11:= temp @kind object;
+  #L2b190c.  v1:= "sb.toString()" @kind object;
+  #L2b1910.  call `checkNotNullExpressionValue`(v11, v1) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V` @kind static;
+  #L2b1916.  call temp:= `length`(v0) @signature `Ljava/lang/StringBuilder;.length:()I` @kind virtual;
+  #L2b191c.  v1:= temp;
+  #L2b191e.  if v1 <= v4 then goto L2b1928;
+  #L2b1922.  call `trimStringBuilder`(v10) @signature `Lkotlin/io/LineReader;.trimStringBuilder:()V` @kind direct;
+  #L2b1928.  call `setLength`(v0, v12) @signature `Ljava/lang/StringBuilder;.setLength:(I)V` @kind virtual;
+  #L2b192e.  @monitorexit v10
+  #L2b1930.  return v11 @kind object;
+  #L2b1932.  call temp:= `compactBytes`(v10) @signature `Lkotlin/io/LineReader;.compactBytes:()I` @kind direct;
+  #L2b1938.  v0:= temp;
+  #L2b193a.  goto L2b17fc;
+  #L2b193e.  v11:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L2b1940.  @monitorexit v10
+  #L2b1942.  goto L2b1946;
+  #L2b1944.  throw v11;
+  #L2b1946.  goto L2b1944;
+  catch `java.lang.Throwable` @[L2b17ae..L2b1820] goto L2b193e;
+  catch `java.lang.Throwable` @[L2b183a..L2b18f6] goto L2b193e;
+  catch `java.lang.Throwable` @[L2b18fa..L2b192e] goto L2b193e;
+  catch `java.lang.Throwable` @[L2b1932..L2b193a] goto L2b193e;
+}

@@ -1,0 +1,59 @@
+record `com.dmoneybd.dcustomer.base.TransactionTypeSyncService` @kind class @AccessFlag PUBLIC extends `com.dmoneybd.dcustomer.network_module.INetworkCallBack` @kind interface {
+  `android.content.Context` `com.dmoneybd.dcustomer.base.TransactionTypeSyncService.a` @AccessFlag ;
+}
+procedure `void` `<init>`(`com.dmoneybd.dcustomer.base.TransactionTypeSyncService` v0 @kind this, `android.content.Context` v1 @kind object) @signature `Lcom/dmoneybd/dcustomer/base/TransactionTypeSyncService;.<init>:(Landroid/content/Context;)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+
+  #L2dbc88.  call `<init>`(v0) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L2dbc8e.  v0.`com.dmoneybd.dcustomer.base.TransactionTypeSyncService.a` @type ^`android.content.Context` := v1 @kind object;
+  #L2dbc92.  call `getTransactionTypes`(v0) @signature `Lcom/dmoneybd/dcustomer/base/TransactionTypeSyncService;.getTransactionTypes:()V` @kind virtual;
+  #L2dbc98.  return @kind void;
+}
+procedure `void` `getTransactionTypes`(`com.dmoneybd.dcustomer.base.TransactionTypeSyncService` v2 @kind this) @signature `Lcom/dmoneybd/dcustomer/base/TransactionTypeSyncService;.getTransactionTypes:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L2dbcac.  v0:= new `com.dmoneybd.dcustomer.network_module.UserNetworkModuleImpl`;
+  #L2dbcb0.  v1:= v2.`com.dmoneybd.dcustomer.base.TransactionTypeSyncService.a` @type ^`android.content.Context` @kind object;
+  #L2dbcb4.  call `<init>`(v0, v1, v2) @signature `Lcom/dmoneybd/dcustomer/network_module/UserNetworkModuleImpl;.<init>:(Landroid/content/Context;Lcom/dmoneybd/dcustomer/network_module/INetworkCallBack;)V` @kind direct;
+  #L2dbcba.  v1:= new `com.dmoneybd.dcustomer.network_module.requests.BaseRequest`;
+  #L2dbcbe.  call `<init>`(v1) @signature `Lcom/dmoneybd/dcustomer/network_module/requests/BaseRequest;.<init>:()V` @kind direct;
+  #L2dbcc4.  call `getTransactionProfile`(v0, v1) @signature `Lcom/dmoneybd/dcustomer/network_module/IUserNetworkModule;.getTransactionProfile:(Lcom/dmoneybd/dcustomer/network_module/requests/BaseRequest;)V` @kind interface;
+  #L2dbcca.  return @kind void;
+}
+procedure `void` `onError`(`com.dmoneybd.dcustomer.base.TransactionTypeSyncService` v2 @kind this, `com.dmoneybd.dcustomer.network_module.requests.ErrorObject` v3 @kind object) @signature `Lcom/dmoneybd/dcustomer/base/TransactionTypeSyncService;.onError:(Lcom/dmoneybd/dcustomer/network_module/requests/ErrorObject;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L2dbcdc.  call temp:= `getErrorMessage`(v3) @signature `Lcom/dmoneybd/dcustomer/network_module/requests/ErrorObject;.getErrorMessage:()Ljava/lang/String;` @kind virtual;
+  #L2dbce2.  v0:= temp @kind object;
+  #L2dbce4.  v1:= "SYNC" @kind object;
+  #L2dbce8.  call `showLog`(v1, v0) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.showLog:(Ljava/lang/String;Ljava/lang/String;)V` @kind static;
+  #L2dbcee.  v0:= v2.`com.dmoneybd.dcustomer.base.TransactionTypeSyncService.a` @type ^`android.content.Context` @kind object;
+  #L2dbcf2.  v0:= (`android.app.Activity`) v0 @kind object;
+  #L2dbcf6.  call temp:= `isSessionOut`(v0, v3) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.isSessionOut:(Landroid/app/Activity;Lcom/dmoneybd/dcustomer/network_module/requests/ErrorObject;)Z` @kind static;
+  #L2dbcfc.  return @kind void;
+}
+procedure `void` `onSuccessResponse`(`com.dmoneybd.dcustomer.base.TransactionTypeSyncService` v2 @kind this, `java.lang.Object` v3 @kind object) @signature `Lcom/dmoneybd/dcustomer/base/TransactionTypeSyncService;.onSuccessResponse:(Ljava/lang/Object;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L2dbd10.  if v3 == 0 then goto L2dbd44;
+  #L2dbd14.  v3:= (`java.util.ArrayList`) v3 @kind object;
+  #L2dbd18.  call temp:= `size`(v3) @signature `Ljava/util/ArrayList;.size:()I` @kind virtual;
+  #L2dbd1e.  v0:= temp;
+  #L2dbd20.  if v0 <= 0 then goto L2dbd44;
+  #L2dbd24.  v0:= v2.`com.dmoneybd.dcustomer.base.TransactionTypeSyncService.a` @type ^`android.content.Context` @kind object;
+  #L2dbd28.  v1:= "TRANSACTION_TYPES" @kind object;
+  #L2dbd2c.  call `saveArrayListPreferences`(v0, v1, v3) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.saveArrayListPreferences:(Landroid/content/Context;Ljava/lang/String;Ljava/util/ArrayList;)V` @kind static;
+  #L2dbd32.  goto L2dbd44;
+  #L2dbd34.  v3:= Exception @type ^`java.lang.Exception` @kind object;
+  #L2dbd36.  call temp:= `getMessage`(v3) @signature `Ljava/lang/Exception;.getMessage:()Ljava/lang/String;` @kind virtual;
+  #L2dbd3c.  v3:= temp @kind object;
+  #L2dbd3e.  call `showLog`(v3) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.showLog:(Ljava/lang/String;)V` @kind static;
+  #L2dbd44.  return @kind void;
+  catch `java.lang.Exception` @[L2dbd14..L2dbd32] goto L2dbd34;
+}

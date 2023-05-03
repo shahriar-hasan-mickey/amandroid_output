@@ -1,0 +1,431 @@
+record `com.google.android.material.datepicker.MonthAdapter` @kind class @AccessFlag  extends `android.widget.BaseAdapter` @kind class {
+  `com.google.android.material.datepicker.CalendarConstraints` `com.google.android.material.datepicker.MonthAdapter.calendarConstraints` @AccessFlag FINAL;
+  `com.google.android.material.datepicker.CalendarStyle` `com.google.android.material.datepicker.MonthAdapter.calendarStyle` @AccessFlag ;
+  `com.google.android.material.datepicker.DateSelector` `com.google.android.material.datepicker.MonthAdapter.dateSelector` @AccessFlag FINAL;
+  `com.google.android.material.datepicker.Month` `com.google.android.material.datepicker.MonthAdapter.month` @AccessFlag FINAL;
+  `java.util.Collection` `com.google.android.material.datepicker.MonthAdapter.previouslySelectedDates` @AccessFlag PRIVATE;
+}
+global `int` `@@com.google.android.material.datepicker.MonthAdapter.MAXIMUM_GRID_CELLS` @AccessFlag PRIVATE_STATIC_FINAL;
+global `int` `@@com.google.android.material.datepicker.MonthAdapter.MAXIMUM_WEEKS` @AccessFlag STATIC_FINAL;
+procedure `void` `<clinit>`() @signature `Lcom/google/android/material/datepicker/MonthAdapter;.<clinit>:()V` @AccessFlag STATIC_CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L48d9d4.  call temp:= `getUtcCalendar`() @signature `Lcom/google/android/material/datepicker/UtcDates;.getUtcCalendar:()Ljava/util/Calendar;` @kind static;
+  #L48d9da.  v0:= temp @kind object;
+  #L48d9dc.  v1:= 4I;
+  #L48d9de.  call temp:= `getMaximum`(v0, v1) @signature `Ljava/util/Calendar;.getMaximum:(I)I` @kind virtual;
+  #L48d9e4.  v0:= temp;
+  #L48d9e6.  `@@com.google.android.material.datepicker.MonthAdapter.MAXIMUM_WEEKS` @type ^`int` := v0;
+  #L48d9ea.  call temp:= `getUtcCalendar`() @signature `Lcom/google/android/material/datepicker/UtcDates;.getUtcCalendar:()Ljava/util/Calendar;` @kind static;
+  #L48d9f0.  v0:= temp @kind object;
+  #L48d9f2.  v1:= 5I;
+  #L48d9f4.  call temp:= `getMaximum`(v0, v1) @signature `Ljava/util/Calendar;.getMaximum:(I)I` @kind virtual;
+  #L48d9fa.  v0:= temp;
+  #L48d9fc.  call temp:= `getUtcCalendar`() @signature `Lcom/google/android/material/datepicker/UtcDates;.getUtcCalendar:()Ljava/util/Calendar;` @kind static;
+  #L48da02.  v1:= temp @kind object;
+  #L48da04.  v2:= 7I;
+  #L48da06.  call temp:= `getMaximum`(v1, v2) @signature `Ljava/util/Calendar;.getMaximum:(I)I` @kind virtual;
+  #L48da0c.  v1:= temp;
+  #L48da0e.  v0:= v0 + v1 @kind int;
+  #L48da10.  v0:= v0 + -1;
+  #L48da14.  `@@com.google.android.material.datepicker.MonthAdapter.MAXIMUM_GRID_CELLS` @type ^`int` := v0;
+  #L48da18.  return @kind void;
+}
+procedure `void` `<init>`(`com.google.android.material.datepicker.MonthAdapter` v0 @kind this, `com.google.android.material.datepicker.Month` v1 @kind object, `com.google.android.material.datepicker.DateSelector` v2 @kind object, `com.google.android.material.datepicker.CalendarConstraints` v3 @kind object) @signature `Lcom/google/android/material/datepicker/MonthAdapter;.<init>:(Lcom/google/android/material/datepicker/Month;Lcom/google/android/material/datepicker/DateSelector;Lcom/google/android/material/datepicker/CalendarConstraints;)V` @AccessFlag CONSTRUCTOR {
+    temp;
+
+  #L48da2c.  call `<init>`(v0) @signature `Landroid/widget/BaseAdapter;.<init>:()V` @kind direct;
+  #L48da32.  v0.`com.google.android.material.datepicker.MonthAdapter.month` @type ^`com.google.android.material.datepicker.Month` := v1 @kind object;
+  #L48da36.  v0.`com.google.android.material.datepicker.MonthAdapter.dateSelector` @type ^`com.google.android.material.datepicker.DateSelector` := v2 @kind object;
+  #L48da3a.  v0.`com.google.android.material.datepicker.MonthAdapter.calendarConstraints` @type ^`com.google.android.material.datepicker.CalendarConstraints` := v3 @kind object;
+  #L48da3e.  call temp:= `getSelectedDays`(v2) @signature `Lcom/google/android/material/datepicker/DateSelector;.getSelectedDays:()Ljava/util/Collection;` @kind interface;
+  #L48da44.  v1:= temp @kind object;
+  #L48da46.  v0.`com.google.android.material.datepicker.MonthAdapter.previouslySelectedDates` @type ^`java.util.Collection` := v1 @kind object;
+  #L48da4a.  return @kind void;
+}
+procedure `void` `initializeStyles`(`com.google.android.material.datepicker.MonthAdapter` v1 @kind this, `android.content.Context` v2 @kind object) @signature `Lcom/google/android/material/datepicker/MonthAdapter;.initializeStyles:(Landroid/content/Context;)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+
+  #L48da5c.  v0:= v1.`com.google.android.material.datepicker.MonthAdapter.calendarStyle` @type ^`com.google.android.material.datepicker.CalendarStyle` @kind object;
+  #L48da60.  if v0 != 0 then goto L48da72;
+  #L48da64.  v0:= new `com.google.android.material.datepicker.CalendarStyle`;
+  #L48da68.  call `<init>`(v0, v2) @signature `Lcom/google/android/material/datepicker/CalendarStyle;.<init>:(Landroid/content/Context;)V` @kind direct;
+  #L48da6e.  v1.`com.google.android.material.datepicker.MonthAdapter.calendarStyle` @type ^`com.google.android.material.datepicker.CalendarStyle` := v0 @kind object;
+  #L48da72.  return @kind void;
+}
+procedure `boolean` `isSelected`(`com.google.android.material.datepicker.MonthAdapter` v6 @kind this, `long` v7 ) @signature `Lcom/google/android/material/datepicker/MonthAdapter;.isSelected:(J)Z` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L48d80c.  v0:= v6.`com.google.android.material.datepicker.MonthAdapter.dateSelector` @type ^`com.google.android.material.datepicker.DateSelector` @kind object;
+  #L48d810.  call temp:= `getSelectedDays`(v0) @signature `Lcom/google/android/material/datepicker/DateSelector;.getSelectedDays:()Ljava/util/Collection;` @kind interface;
+  #L48d816.  v0:= temp @kind object;
+  #L48d818.  call temp:= `iterator`(v0) @signature `Ljava/util/Collection;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L48d81e.  v0:= temp @kind object;
+  #L48d820.  call temp:= `hasNext`(v0) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L48d826.  v1:= temp;
+  #L48d828.  if v1 == 0 then goto L48d85c;
+  #L48d82c.  call temp:= `next`(v0) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L48d832.  v1:= temp @kind object;
+  #L48d834.  v1:= (`java.lang.Long`) v1 @kind object;
+  #L48d838.  call temp:= `longValue`(v1) @signature `Ljava/lang/Long;.longValue:()J` @kind virtual;
+  #L48d83e.  v1:= temp @kind wide;
+  #L48d840.  call temp:= `canonicalYearMonthDay`(v7) @signature `Lcom/google/android/material/datepicker/UtcDates;.canonicalYearMonthDay:(J)J` @kind static;
+  #L48d846.  v3:= temp @kind wide;
+  #L48d848.  call temp:= `canonicalYearMonthDay`(v1) @signature `Lcom/google/android/material/datepicker/UtcDates;.canonicalYearMonthDay:(J)J` @kind static;
+  #L48d84e.  v1:= temp @kind wide;
+  #L48d850.  v5:= lcmp(v3, v1);
+  #L48d854.  if v5 != 0 then goto L48d820;
+  #L48d858.  v7:= 1I;
+  #L48d85a.  return v7;
+  #L48d85c.  v7:= 0I;
+  #L48d85e.  return v7;
+}
+procedure `void` `updateSelectedState`(`com.google.android.material.datepicker.MonthAdapter` v3 @kind this, `android.widget.TextView` v4 @kind object, `long` v5 ) @signature `Lcom/google/android/material/datepicker/MonthAdapter;.updateSelectedState:(Landroid/widget/TextView;J)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L48da84.  if v4 != 0 then goto L48da8a;
+  #L48da88.  return @kind void;
+  #L48da8a.  v0:= v3.`com.google.android.material.datepicker.MonthAdapter.calendarConstraints` @type ^`com.google.android.material.datepicker.CalendarConstraints` @kind object;
+  #L48da8e.  call temp:= `getDateValidator`(v0) @signature `Lcom/google/android/material/datepicker/CalendarConstraints;.getDateValidator:()Lcom/google/android/material/datepicker/CalendarConstraints$DateValidator;` @kind virtual;
+  #L48da94.  v0:= temp @kind object;
+  #L48da96.  call temp:= `isValid`(v0, v5) @signature `Lcom/google/android/material/datepicker/CalendarConstraints$DateValidator;.isValid:(J)Z` @kind interface;
+  #L48da9c.  v0:= temp;
+  #L48da9e.  if v0 == 0 then goto L48daec;
+  #L48daa2.  v0:= 1I;
+  #L48daa4.  call `setEnabled`(v4, v0) @signature `Landroid/widget/TextView;.setEnabled:(Z)V` @kind virtual;
+  #L48daaa.  call temp:= `isSelected`(v3, v5) @signature `Lcom/google/android/material/datepicker/MonthAdapter;.isSelected:(J)Z` @kind direct;
+  #L48dab0.  v0:= temp;
+  #L48dab2.  if v0 == 0 then goto L48dac0;
+  #L48dab6.  v5:= v3.`com.google.android.material.datepicker.MonthAdapter.calendarStyle` @type ^`com.google.android.material.datepicker.CalendarStyle` @kind object;
+  #L48daba.  v5:= v5.`com.google.android.material.datepicker.CalendarStyle.selectedDay` @type ^`com.google.android.material.datepicker.CalendarItemStyle` @kind object;
+  #L48dabe.  goto L48dafc;
+  #L48dac0.  call temp:= `getTodayCalendar`() @signature `Lcom/google/android/material/datepicker/UtcDates;.getTodayCalendar:()Ljava/util/Calendar;` @kind static;
+  #L48dac6.  v0:= temp @kind object;
+  #L48dac8.  call temp:= `getTimeInMillis`(v0) @signature `Ljava/util/Calendar;.getTimeInMillis:()J` @kind virtual;
+  #L48dace.  v0:= temp @kind wide;
+  #L48dad0.  v2:= lcmp(v0, v5);
+  #L48dad4.  if v2 != 0 then goto L48dae2;
+  #L48dad8.  v5:= v3.`com.google.android.material.datepicker.MonthAdapter.calendarStyle` @type ^`com.google.android.material.datepicker.CalendarStyle` @kind object;
+  #L48dadc.  v5:= v5.`com.google.android.material.datepicker.CalendarStyle.todayDay` @type ^`com.google.android.material.datepicker.CalendarItemStyle` @kind object;
+  #L48dae0.  goto L48dafc;
+  #L48dae2.  v5:= v3.`com.google.android.material.datepicker.MonthAdapter.calendarStyle` @type ^`com.google.android.material.datepicker.CalendarStyle` @kind object;
+  #L48dae6.  v5:= v5.`com.google.android.material.datepicker.CalendarStyle.day` @type ^`com.google.android.material.datepicker.CalendarItemStyle` @kind object;
+  #L48daea.  goto L48dafc;
+  #L48daec.  v5:= 0I;
+  #L48daee.  call `setEnabled`(v4, v5) @signature `Landroid/widget/TextView;.setEnabled:(Z)V` @kind virtual;
+  #L48daf4.  v5:= v3.`com.google.android.material.datepicker.MonthAdapter.calendarStyle` @type ^`com.google.android.material.datepicker.CalendarStyle` @kind object;
+  #L48daf8.  v5:= v5.`com.google.android.material.datepicker.CalendarStyle.invalidDay` @type ^`com.google.android.material.datepicker.CalendarItemStyle` @kind object;
+  #L48dafc.  call `styleItem`(v5, v4) @signature `Lcom/google/android/material/datepicker/CalendarItemStyle;.styleItem:(Landroid/widget/TextView;)V` @kind virtual;
+  #L48db02.  return @kind void;
+}
+procedure `void` `updateSelectedStateForDate`(`com.google.android.material.datepicker.MonthAdapter` v2 @kind this, `com.google.android.material.datepicker.MaterialCalendarGridView` v3 @kind object, `long` v4 ) @signature `Lcom/google/android/material/datepicker/MonthAdapter;.updateSelectedStateForDate:(Lcom/google/android/material/datepicker/MaterialCalendarGridView;J)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+
+  #L48db14.  call temp:= `create`(v4) @signature `Lcom/google/android/material/datepicker/Month;.create:(J)Lcom/google/android/material/datepicker/Month;` @kind static;
+  #L48db1a.  v0:= temp @kind object;
+  #L48db1c.  v1:= v2.`com.google.android.material.datepicker.MonthAdapter.month` @type ^`com.google.android.material.datepicker.Month` @kind object;
+  #L48db20.  call temp:= `equals`(v0, v1) @signature `Lcom/google/android/material/datepicker/Month;.equals:(Ljava/lang/Object;)Z` @kind virtual;
+  #L48db26.  v0:= temp;
+  #L48db28.  if v0 == 0 then goto L48db64;
+  #L48db2c.  v0:= v2.`com.google.android.material.datepicker.MonthAdapter.month` @type ^`com.google.android.material.datepicker.Month` @kind object;
+  #L48db30.  call temp:= `getDayOfMonth`(v0, v4) @signature `Lcom/google/android/material/datepicker/Month;.getDayOfMonth:(J)I` @kind virtual;
+  #L48db36.  v0:= temp;
+  #L48db38.  call temp:= `getAdapter`(v3) @signature `Lcom/google/android/material/datepicker/MaterialCalendarGridView;.getAdapter:()Lcom/google/android/material/datepicker/MonthAdapter;` @kind virtual;
+  #L48db3e.  v1:= temp @kind object;
+  #L48db40.  call temp:= `dayToPosition`(v1, v0) @signature `Lcom/google/android/material/datepicker/MonthAdapter;.dayToPosition:(I)I` @kind virtual;
+  #L48db46.  v0:= temp;
+  #L48db48.  call temp:= `getFirstVisiblePosition`(v3) @signature `Landroid/widget/GridView;.getFirstVisiblePosition:()I` @kind virtual;
+  #L48db4e.  v1:= temp;
+  #L48db50.  v0:= v0 - v1 @kind int;
+  #L48db52.  call temp:= `getChildAt`(v3, v0) @signature `Landroid/widget/GridView;.getChildAt:(I)Landroid/view/View;` @kind virtual;
+  #L48db58.  v3:= temp @kind object;
+  #L48db5a.  v3:= (`android.widget.TextView`) v3 @kind object;
+  #L48db5e.  call `updateSelectedState`(v2, v3, v4) @signature `Lcom/google/android/material/datepicker/MonthAdapter;.updateSelectedState:(Landroid/widget/TextView;J)V` @kind direct;
+  #L48db64.  return @kind void;
+}
+procedure `int` `dayToPosition`(`com.google.android.material.datepicker.MonthAdapter` v1 @kind this, `int` v2 ) @signature `Lcom/google/android/material/datepicker/MonthAdapter;.dayToPosition:(I)I` @AccessFlag  {
+    temp;
+    v0;
+
+  #L48d8a0.  v2:= v2 + -1;
+  #L48d8a4.  call temp:= `firstPositionInMonth`(v1) @signature `Lcom/google/android/material/datepicker/MonthAdapter;.firstPositionInMonth:()I` @kind virtual;
+  #L48d8aa.  v0:= temp;
+  #L48d8ac.  v0:= v0 + v2 @kind int;
+  #L48d8ae.  return v0;
+}
+procedure `int` `firstPositionInMonth`(`com.google.android.material.datepicker.MonthAdapter` v2 @kind this) @signature `Lcom/google/android/material/datepicker/MonthAdapter;.firstPositionInMonth:()I` @AccessFlag  {
+    temp;
+    v0;
+    v1;
+
+  #L48d8c0.  v0:= v2.`com.google.android.material.datepicker.MonthAdapter.month` @type ^`com.google.android.material.datepicker.Month` @kind object;
+  #L48d8c4.  v1:= v2.`com.google.android.material.datepicker.MonthAdapter.calendarConstraints` @type ^`com.google.android.material.datepicker.CalendarConstraints` @kind object;
+  #L48d8c8.  call temp:= `getFirstDayOfWeek`(v1) @signature `Lcom/google/android/material/datepicker/CalendarConstraints;.getFirstDayOfWeek:()I` @kind virtual;
+  #L48d8ce.  v1:= temp;
+  #L48d8d0.  call temp:= `daysFromStartOfWeekToFirstOfMonth`(v0, v1) @signature `Lcom/google/android/material/datepicker/Month;.daysFromStartOfWeekToFirstOfMonth:(I)I` @kind virtual;
+  #L48d8d6.  v0:= temp;
+  #L48d8d8.  return v0;
+}
+procedure `int` `getCount`(`com.google.android.material.datepicker.MonthAdapter` v1 @kind this) @signature `Lcom/google/android/material/datepicker/MonthAdapter;.getCount:()I` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L48d8ec.  v0:= `@@com.google.android.material.datepicker.MonthAdapter.MAXIMUM_GRID_CELLS` @type ^`int`;
+  #L48d8f0.  return v0;
+}
+procedure `java.lang.Long` `getItem`(`com.google.android.material.datepicker.MonthAdapter` v2 @kind this, `int` v3 ) @signature `Lcom/google/android/material/datepicker/MonthAdapter;.getItem:(I)Ljava/lang/Long;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L48d94c.  call temp:= `firstPositionInMonth`(v2) @signature `Lcom/google/android/material/datepicker/MonthAdapter;.firstPositionInMonth:()I` @kind virtual;
+  #L48d952.  v0:= temp;
+  #L48d954.  if v3 < v0 then goto L48d984;
+  #L48d958.  call temp:= `lastPositionInMonth`(v2) @signature `Lcom/google/android/material/datepicker/MonthAdapter;.lastPositionInMonth:()I` @kind virtual;
+  #L48d95e.  v0:= temp;
+  #L48d960.  if v3 <= v0 then goto L48d966;
+  #L48d964.  goto L48d984;
+  #L48d966.  v0:= v2.`com.google.android.material.datepicker.MonthAdapter.month` @type ^`com.google.android.material.datepicker.Month` @kind object;
+  #L48d96a.  call temp:= `positionToDay`(v2, v3) @signature `Lcom/google/android/material/datepicker/MonthAdapter;.positionToDay:(I)I` @kind virtual;
+  #L48d970.  v3:= temp;
+  #L48d972.  call temp:= `getDay`(v0, v3) @signature `Lcom/google/android/material/datepicker/Month;.getDay:(I)J` @kind virtual;
+  #L48d978.  v0:= temp @kind wide;
+  #L48d97a.  call temp:= `valueOf`(v0) @signature `Ljava/lang/Long;.valueOf:(J)Ljava/lang/Long;` @kind static;
+  #L48d980.  v3:= temp @kind object;
+  #L48d982.  return v3 @kind object;
+  #L48d984.  v3:= 0I;
+  #L48d986.  return v3 @kind object;
+}
+procedure `java.lang.Object` `getItem`(`com.google.android.material.datepicker.MonthAdapter` v0 @kind this, `int` v1 ) @signature `Lcom/google/android/material/datepicker/MonthAdapter;.getItem:(I)Ljava/lang/Object;` @AccessFlag PUBLIC_SYNTHETIC {
+    temp;
+
+  #L48d998.  call temp:= `getItem`(v0, v1) @signature `Lcom/google/android/material/datepicker/MonthAdapter;.getItem:(I)Ljava/lang/Long;` @kind virtual;
+  #L48d99e.  v1:= temp @kind object;
+  #L48d9a0.  return v1 @kind object;
+}
+procedure `long` `getItemId`(`com.google.android.material.datepicker.MonthAdapter` v2 @kind this, `int` v3 ) @signature `Lcom/google/android/material/datepicker/MonthAdapter;.getItemId:(I)J` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L48d9b4.  v0:= v2.`com.google.android.material.datepicker.MonthAdapter.month` @type ^`com.google.android.material.datepicker.Month` @kind object;
+  #L48d9b8.  v0:= v0.`com.google.android.material.datepicker.Month.daysInWeek` @type ^`int`;
+  #L48d9bc.  v3:= v3 / v0 @kind int;
+  #L48d9be.  v0:= (`long`) v3 @kind i2l;
+  #L48d9c0.  return v0 @kind wide;
+}
+procedure `android.view.View` `getView`(`com.google.android.material.datepicker.MonthAdapter` v0 @kind this, `int` v1 , `android.view.View` v2 @kind object, `android.view.ViewGroup` v3 @kind object) @signature `Lcom/google/android/material/datepicker/MonthAdapter;.getView:(ILandroid/view/View;Landroid/view/ViewGroup;)Landroid/view/View;` @AccessFlag PUBLIC_SYNTHETIC {
+    temp;
+
+  #L48d664.  call temp:= `getView`(v0, v1, v2, v3) @signature `Lcom/google/android/material/datepicker/MonthAdapter;.getView:(ILandroid/view/View;Landroid/view/ViewGroup;)Landroid/widget/TextView;` @kind virtual;
+  #L48d66a.  v1:= temp @kind object;
+  #L48d66c.  return v1 @kind object;
+}
+procedure `android.widget.TextView` `getView`(`com.google.android.material.datepicker.MonthAdapter` v5 @kind this, `int` v6 , `android.view.View` v7 @kind object, `android.view.ViewGroup` v8 @kind object) @signature `Lcom/google/android/material/datepicker/MonthAdapter;.getView:(ILandroid/view/View;Landroid/view/ViewGroup;)Landroid/widget/TextView;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L48d680.  call temp:= `getContext`(v8) @signature `Landroid/view/ViewGroup;.getContext:()Landroid/content/Context;` @kind virtual;
+  #L48d686.  v0:= temp @kind object;
+  #L48d688.  call `initializeStyles`(v5, v0) @signature `Lcom/google/android/material/datepicker/MonthAdapter;.initializeStyles:(Landroid/content/Context;)V` @kind direct;
+  #L48d68e.  v0:= v7 @kind object;
+  #L48d690.  v0:= (`android.widget.TextView`) v0 @kind object;
+  #L48d694.  v1:= 0I;
+  #L48d696.  if v7 != 0 then goto L48d6bc;
+  #L48d69a.  call temp:= `getContext`(v8) @signature `Landroid/view/ViewGroup;.getContext:()Landroid/content/Context;` @kind virtual;
+  #L48d6a0.  v7:= temp @kind object;
+  #L48d6a2.  call temp:= `from`(v7) @signature `Landroid/view/LayoutInflater;.from:(Landroid/content/Context;)Landroid/view/LayoutInflater;` @kind static;
+  #L48d6a8.  v7:= temp @kind object;
+  #L48d6aa.  v0:= `@@com.google.android.material.R$layout.mtrl_calendar_day` @type ^`int`;
+  #L48d6ae.  call temp:= `inflate`(v7, v0, v8, v1) @signature `Landroid/view/LayoutInflater;.inflate:(ILandroid/view/ViewGroup;Z)Landroid/view/View;` @kind virtual;
+  #L48d6b4.  v7:= temp @kind object;
+  #L48d6b6.  v0:= v7 @kind object;
+  #L48d6b8.  v0:= (`android.widget.TextView`) v0 @kind object;
+  #L48d6bc.  call temp:= `firstPositionInMonth`(v5) @signature `Lcom/google/android/material/datepicker/MonthAdapter;.firstPositionInMonth:()I` @kind virtual;
+  #L48d6c2.  v7:= temp;
+  #L48d6c4.  v7:= v6 - v7 @kind int;
+  #L48d6c8.  if v7 < 0 then goto L48d76a;
+  #L48d6cc.  v8:= v5.`com.google.android.material.datepicker.MonthAdapter.month` @type ^`com.google.android.material.datepicker.Month` @kind object;
+  #L48d6d0.  v2:= v8.`com.google.android.material.datepicker.Month.daysInMonth` @type ^`int`;
+  #L48d6d4.  if v7 < v2 then goto L48d6da;
+  #L48d6d8.  goto L48d76a;
+  #L48d6da.  v2:= 1I;
+  #L48d6dc.  v7:= v7 + v2 @kind int;
+  #L48d6de.  call `setTag`(v0, v8) @signature `Landroid/widget/TextView;.setTag:(Ljava/lang/Object;)V` @kind virtual;
+  #L48d6e4.  call temp:= `getResources`(v0) @signature `Landroid/widget/TextView;.getResources:()Landroid/content/res/Resources;` @kind virtual;
+  #L48d6ea.  v8:= temp @kind object;
+  #L48d6ec.  call temp:= `getConfiguration`(v8) @signature `Landroid/content/res/Resources;.getConfiguration:()Landroid/content/res/Configuration;` @kind virtual;
+  #L48d6f2.  v8:= temp @kind object;
+  #L48d6f4.  v8:= v8.`android.content.res.Configuration.locale` @type ^`java.util.Locale` @kind object;
+  #L48d6f8.  v3:= new `java.lang.Object`[v2];
+  #L48d6fc.  call temp:= `valueOf`(v7) @signature `Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer;` @kind static;
+  #L48d702.  v4:= temp @kind object;
+  #L48d704.  v3[v1]:= v4 @kind object;
+  #L48d708.  v4:= "%d" @kind object;
+  #L48d70c.  call temp:= `format`(v8, v4, v3) @signature `Ljava/lang/String;.format:(Ljava/util/Locale;Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;` @kind static;
+  #L48d712.  v8:= temp @kind object;
+  #L48d714.  call `setText`(v0, v8) @signature `Landroid/widget/TextView;.setText:(Ljava/lang/CharSequence;)V` @kind virtual;
+  #L48d71a.  v8:= v5.`com.google.android.material.datepicker.MonthAdapter.month` @type ^`com.google.android.material.datepicker.Month` @kind object;
+  #L48d71e.  call temp:= `getDay`(v8, v7) @signature `Lcom/google/android/material/datepicker/Month;.getDay:(I)J` @kind virtual;
+  #L48d724.  v7:= temp @kind wide;
+  #L48d726.  v3:= v5.`com.google.android.material.datepicker.MonthAdapter.month` @type ^`com.google.android.material.datepicker.Month` @kind object;
+  #L48d72a.  v3:= v3.`com.google.android.material.datepicker.Month.year` @type ^`int`;
+  #L48d72e.  call temp:= `current`() @signature `Lcom/google/android/material/datepicker/Month;.current:()Lcom/google/android/material/datepicker/Month;` @kind static;
+  #L48d734.  v4:= temp @kind object;
+  #L48d736.  v4:= v4.`com.google.android.material.datepicker.Month.year` @type ^`int`;
+  #L48d73a.  if v3 != v4 then goto L48d74e;
+  #L48d73e.  call temp:= `getMonthDayOfWeekDay`(v7) @signature `Lcom/google/android/material/datepicker/DateStrings;.getMonthDayOfWeekDay:(J)Ljava/lang/String;` @kind static;
+  #L48d744.  v7:= temp @kind object;
+  #L48d746.  call `setContentDescription`(v0, v7) @signature `Landroid/widget/TextView;.setContentDescription:(Ljava/lang/CharSequence;)V` @kind virtual;
+  #L48d74c.  goto L48d75c;
+  #L48d74e.  call temp:= `getYearMonthDayOfWeekDay`(v7) @signature `Lcom/google/android/material/datepicker/DateStrings;.getYearMonthDayOfWeekDay:(J)Ljava/lang/String;` @kind static;
+  #L48d754.  v7:= temp @kind object;
+  #L48d756.  call `setContentDescription`(v0, v7) @signature `Landroid/widget/TextView;.setContentDescription:(Ljava/lang/CharSequence;)V` @kind virtual;
+  #L48d75c.  call `setVisibility`(v0, v1) @signature `Landroid/widget/TextView;.setVisibility:(I)V` @kind virtual;
+  #L48d762.  call `setEnabled`(v0, v2) @signature `Landroid/widget/TextView;.setEnabled:(Z)V` @kind virtual;
+  #L48d768.  goto L48d77a;
+  #L48d76a.  v7:= 8I;
+  #L48d76e.  call `setVisibility`(v0, v7) @signature `Landroid/widget/TextView;.setVisibility:(I)V` @kind virtual;
+  #L48d774.  call `setEnabled`(v0, v1) @signature `Landroid/widget/TextView;.setEnabled:(Z)V` @kind virtual;
+  #L48d77a.  call temp:= `getItem`(v5, v6) @signature `Lcom/google/android/material/datepicker/MonthAdapter;.getItem:(I)Ljava/lang/Long;` @kind virtual;
+  #L48d780.  v6:= temp @kind object;
+  #L48d782.  if v6 != 0 then goto L48d788;
+  #L48d786.  return v0 @kind object;
+  #L48d788.  call temp:= `longValue`(v6) @signature `Ljava/lang/Long;.longValue:()J` @kind virtual;
+  #L48d78e.  v6:= temp @kind wide;
+  #L48d790.  call `updateSelectedState`(v5, v0, v6) @signature `Lcom/google/android/material/datepicker/MonthAdapter;.updateSelectedState:(Landroid/widget/TextView;J)V` @kind direct;
+  #L48d796.  return v0 @kind object;
+}
+procedure `boolean` `hasStableIds`(`com.google.android.material.datepicker.MonthAdapter` v1 @kind this) @signature `Lcom/google/android/material/datepicker/MonthAdapter;.hasStableIds:()Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L48d7a8.  v0:= 1I;
+  #L48d7aa.  return v0;
+}
+procedure `boolean` `isFirstInRow`(`com.google.android.material.datepicker.MonthAdapter` v1 @kind this, `int` v2 ) @signature `Lcom/google/android/material/datepicker/MonthAdapter;.isFirstInRow:(I)Z` @AccessFlag  {
+    temp;
+    v0;
+
+  #L48d7bc.  v0:= v1.`com.google.android.material.datepicker.MonthAdapter.month` @type ^`com.google.android.material.datepicker.Month` @kind object;
+  #L48d7c0.  v0:= v0.`com.google.android.material.datepicker.Month.daysInWeek` @type ^`int`;
+  #L48d7c4.  v2:= v2 %% v0 @kind int;
+  #L48d7c6.  if v2 != 0 then goto L48d7ce;
+  #L48d7ca.  v2:= 1I;
+  #L48d7cc.  goto L48d7d0;
+  #L48d7ce.  v2:= 0I;
+  #L48d7d0.  return v2;
+}
+procedure `boolean` `isLastInRow`(`com.google.android.material.datepicker.MonthAdapter` v2 @kind this, `int` v3 ) @signature `Lcom/google/android/material/datepicker/MonthAdapter;.isLastInRow:(I)Z` @AccessFlag  {
+    temp;
+    v0;
+    v1;
+
+  #L48d7e4.  v0:= 1I;
+  #L48d7e6.  v3:= v3 + v0 @kind int;
+  #L48d7e8.  v1:= v2.`com.google.android.material.datepicker.MonthAdapter.month` @type ^`com.google.android.material.datepicker.Month` @kind object;
+  #L48d7ec.  v1:= v1.`com.google.android.material.datepicker.Month.daysInWeek` @type ^`int`;
+  #L48d7f0.  v3:= v3 %% v1 @kind int;
+  #L48d7f2.  if v3 != 0 then goto L48d7f8;
+  #L48d7f6.  goto L48d7fa;
+  #L48d7f8.  v0:= 0I;
+  #L48d7fa.  return v0;
+}
+procedure `int` `lastPositionInMonth`(`com.google.android.material.datepicker.MonthAdapter` v2 @kind this) @signature `Lcom/google/android/material/datepicker/MonthAdapter;.lastPositionInMonth:()I` @AccessFlag  {
+    temp;
+    v0;
+    v1;
+
+  #L48d904.  call temp:= `firstPositionInMonth`(v2) @signature `Lcom/google/android/material/datepicker/MonthAdapter;.firstPositionInMonth:()I` @kind virtual;
+  #L48d90a.  v0:= temp;
+  #L48d90c.  v1:= v2.`com.google.android.material.datepicker.MonthAdapter.month` @type ^`com.google.android.material.datepicker.Month` @kind object;
+  #L48d910.  v1:= v1.`com.google.android.material.datepicker.Month.daysInMonth` @type ^`int`;
+  #L48d914.  v0:= v0 + v1 @kind int;
+  #L48d916.  v0:= v0 + -1;
+  #L48d91a.  return v0;
+}
+procedure `int` `positionToDay`(`com.google.android.material.datepicker.MonthAdapter` v1 @kind this, `int` v2 ) @signature `Lcom/google/android/material/datepicker/MonthAdapter;.positionToDay:(I)I` @AccessFlag  {
+    temp;
+    v0;
+
+  #L48d92c.  call temp:= `firstPositionInMonth`(v1) @signature `Lcom/google/android/material/datepicker/MonthAdapter;.firstPositionInMonth:()I` @kind virtual;
+  #L48d932.  v0:= temp;
+  #L48d934.  v2:= v2 - v0 @kind int;
+  #L48d936.  v2:= v2 + 1;
+  #L48d93a.  return v2;
+}
+procedure `void` `updateSelectedStates`(`com.google.android.material.datepicker.MonthAdapter` v3 @kind this, `com.google.android.material.datepicker.MaterialCalendarGridView` v4 @kind object) @signature `Lcom/google/android/material/datepicker/MonthAdapter;.updateSelectedStates:(Lcom/google/android/material/datepicker/MaterialCalendarGridView;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L48db78.  v0:= v3.`com.google.android.material.datepicker.MonthAdapter.previouslySelectedDates` @type ^`java.util.Collection` @kind object;
+  #L48db7c.  call temp:= `iterator`(v0) @signature `Ljava/util/Collection;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L48db82.  v0:= temp @kind object;
+  #L48db84.  call temp:= `hasNext`(v0) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L48db8a.  v1:= temp;
+  #L48db8c.  if v1 == 0 then goto L48dbac;
+  #L48db90.  call temp:= `next`(v0) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L48db96.  v1:= temp @kind object;
+  #L48db98.  v1:= (`java.lang.Long`) v1 @kind object;
+  #L48db9c.  call temp:= `longValue`(v1) @signature `Ljava/lang/Long;.longValue:()J` @kind virtual;
+  #L48dba2.  v1:= temp @kind wide;
+  #L48dba4.  call `updateSelectedStateForDate`(v3, v4, v1) @signature `Lcom/google/android/material/datepicker/MonthAdapter;.updateSelectedStateForDate:(Lcom/google/android/material/datepicker/MaterialCalendarGridView;J)V` @kind direct;
+  #L48dbaa.  goto L48db84;
+  #L48dbac.  v0:= v3.`com.google.android.material.datepicker.MonthAdapter.dateSelector` @type ^`com.google.android.material.datepicker.DateSelector` @kind object;
+  #L48dbb0.  if v0 == 0 then goto L48dbfc;
+  #L48dbb4.  call temp:= `getSelectedDays`(v0) @signature `Lcom/google/android/material/datepicker/DateSelector;.getSelectedDays:()Ljava/util/Collection;` @kind interface;
+  #L48dbba.  v0:= temp @kind object;
+  #L48dbbc.  call temp:= `iterator`(v0) @signature `Ljava/util/Collection;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L48dbc2.  v0:= temp @kind object;
+  #L48dbc4.  call temp:= `hasNext`(v0) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L48dbca.  v1:= temp;
+  #L48dbcc.  if v1 == 0 then goto L48dbec;
+  #L48dbd0.  call temp:= `next`(v0) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L48dbd6.  v1:= temp @kind object;
+  #L48dbd8.  v1:= (`java.lang.Long`) v1 @kind object;
+  #L48dbdc.  call temp:= `longValue`(v1) @signature `Ljava/lang/Long;.longValue:()J` @kind virtual;
+  #L48dbe2.  v1:= temp @kind wide;
+  #L48dbe4.  call `updateSelectedStateForDate`(v3, v4, v1) @signature `Lcom/google/android/material/datepicker/MonthAdapter;.updateSelectedStateForDate:(Lcom/google/android/material/datepicker/MaterialCalendarGridView;J)V` @kind direct;
+  #L48dbea.  goto L48dbc4;
+  #L48dbec.  v4:= v3.`com.google.android.material.datepicker.MonthAdapter.dateSelector` @type ^`com.google.android.material.datepicker.DateSelector` @kind object;
+  #L48dbf0.  call temp:= `getSelectedDays`(v4) @signature `Lcom/google/android/material/datepicker/DateSelector;.getSelectedDays:()Ljava/util/Collection;` @kind interface;
+  #L48dbf6.  v4:= temp @kind object;
+  #L48dbf8.  v3.`com.google.android.material.datepicker.MonthAdapter.previouslySelectedDates` @type ^`java.util.Collection` := v4 @kind object;
+  #L48dbfc.  return @kind void;
+}
+procedure `boolean` `withinMonth`(`com.google.android.material.datepicker.MonthAdapter` v1 @kind this, `int` v2 ) @signature `Lcom/google/android/material/datepicker/MonthAdapter;.withinMonth:(I)Z` @AccessFlag  {
+    temp;
+    v0;
+
+  #L48d870.  call temp:= `firstPositionInMonth`(v1) @signature `Lcom/google/android/material/datepicker/MonthAdapter;.firstPositionInMonth:()I` @kind virtual;
+  #L48d876.  v0:= temp;
+  #L48d878.  if v2 < v0 then goto L48d88c;
+  #L48d87c.  call temp:= `lastPositionInMonth`(v1) @signature `Lcom/google/android/material/datepicker/MonthAdapter;.lastPositionInMonth:()I` @kind virtual;
+  #L48d882.  v0:= temp;
+  #L48d884.  if v2 > v0 then goto L48d88c;
+  #L48d888.  v2:= 1I;
+  #L48d88a.  goto L48d88e;
+  #L48d88c.  v2:= 0I;
+  #L48d88e.  return v2;
+}

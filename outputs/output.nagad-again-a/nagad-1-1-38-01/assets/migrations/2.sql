@@ -1,0 +1,1 @@
+ALTER TABLE ServiceProfileModel ADD COLUMN par TEXT

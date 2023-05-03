@@ -1,0 +1,892 @@
+record `com.android.volley.toolbox.DiskBasedCache` @kind class @AccessFlag PUBLIC extends `com.android.volley.Cache` @kind interface {
+  `java.util.Map` `com.android.volley.toolbox.DiskBasedCache.mEntries` @AccessFlag PRIVATE_FINAL;
+  `int` `com.android.volley.toolbox.DiskBasedCache.mMaxCacheSizeInBytes` @AccessFlag PRIVATE_FINAL;
+  `java.io.File` `com.android.volley.toolbox.DiskBasedCache.mRootDirectory` @AccessFlag PRIVATE_FINAL;
+  `long` `com.android.volley.toolbox.DiskBasedCache.mTotalSize` @AccessFlag PRIVATE;
+}
+global `int` `@@com.android.volley.toolbox.DiskBasedCache.CACHE_MAGIC` @AccessFlag PRIVATE_STATIC_FINAL;
+global `int` `@@com.android.volley.toolbox.DiskBasedCache.DEFAULT_DISK_USAGE_BYTES` @AccessFlag PRIVATE_STATIC_FINAL;
+global `float` `@@com.android.volley.toolbox.DiskBasedCache.HYSTERESIS_FACTOR` @AccessFlag PRIVATE_STATIC_FINAL;
+procedure `void` `<init>`(`com.android.volley.toolbox.DiskBasedCache` v1 @kind this, `java.io.File` v2 @kind object) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.<init>:(Ljava/io/File;)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L2b4b70.  v0:= 5242880I;
+  #L2b4b74.  call `<init>`(v1, v2, v0) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.<init>:(Ljava/io/File;I)V` @kind direct;
+  #L2b4b7a.  return @kind void;
+}
+procedure `void` `<init>`(`com.android.volley.toolbox.DiskBasedCache` v4 @kind this, `java.io.File` v5 @kind object, `int` v6 ) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.<init>:(Ljava/io/File;I)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L2b4b8c.  call `<init>`(v4) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L2b4b92.  v0:= new `java.util.LinkedHashMap`;
+  #L2b4b96.  v1:= 16I;
+  #L2b4b9a.  v2:= 0.75F;
+  #L2b4b9e.  v3:= 1I;
+  #L2b4ba0.  call `<init>`(v0, v1, v2, v3) @signature `Ljava/util/LinkedHashMap;.<init>:(IFZ)V` @kind direct;
+  #L2b4ba6.  v4.`com.android.volley.toolbox.DiskBasedCache.mEntries` @type ^`java.util.Map` := v0 @kind object;
+  #L2b4baa.  v0:= 0L;
+  #L2b4bae.  v4.`com.android.volley.toolbox.DiskBasedCache.mTotalSize` @type ^`long` := v0 @kind wide;
+  #L2b4bb2.  v4.`com.android.volley.toolbox.DiskBasedCache.mRootDirectory` @type ^`java.io.File` := v5 @kind object;
+  #L2b4bb6.  v4.`com.android.volley.toolbox.DiskBasedCache.mMaxCacheSizeInBytes` @type ^`int` := v6;
+  #L2b4bba.  return @kind void;
+}
+procedure `java.util.List` `c`(`com.android.volley.toolbox.DiskBasedCache$CountingInputStream` v6 @kind object) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.c:(Lcom/android/volley/toolbox/DiskBasedCache$CountingInputStream;)Ljava/util/List;` @AccessFlag STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L2b4a48.  call temp:= `d`(v6) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.d:(Ljava/io/InputStream;)I` @kind static;
+  #L2b4a4e.  v0:= temp;
+  #L2b4a50.  if v0 != 0 then goto L2b4a5e;
+  #L2b4a54.  call temp:= `emptyList`() @signature `Ljava/util/Collections;.emptyList:()Ljava/util/List;` @kind static;
+  #L2b4a5a.  v1:= temp @kind object;
+  #L2b4a5c.  goto L2b4a68;
+  #L2b4a5e.  v1:= new `java.util.ArrayList`;
+  #L2b4a62.  call `<init>`(v1, v0) @signature `Ljava/util/ArrayList;.<init>:(I)V` @kind direct;
+  #L2b4a68.  v2:= 0I;
+  #L2b4a6a.  if v2 >= v0 then goto L2b4aa4;
+  #L2b4a6e.  call temp:= `f`(v6) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.f:(Lcom/android/volley/toolbox/DiskBasedCache$CountingInputStream;)Ljava/lang/String;` @kind static;
+  #L2b4a74.  v3:= temp @kind object;
+  #L2b4a76.  call temp:= `intern`(v3) @signature `Ljava/lang/String;.intern:()Ljava/lang/String;` @kind virtual;
+  #L2b4a7c.  v3:= temp @kind object;
+  #L2b4a7e.  call temp:= `f`(v6) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.f:(Lcom/android/volley/toolbox/DiskBasedCache$CountingInputStream;)Ljava/lang/String;` @kind static;
+  #L2b4a84.  v4:= temp @kind object;
+  #L2b4a86.  call temp:= `intern`(v4) @signature `Ljava/lang/String;.intern:()Ljava/lang/String;` @kind virtual;
+  #L2b4a8c.  v4:= temp @kind object;
+  #L2b4a8e.  v5:= new `com.android.volley.Header`;
+  #L2b4a92.  call `<init>`(v5, v3, v4) @signature `Lcom/android/volley/Header;.<init>:(Ljava/lang/String;Ljava/lang/String;)V` @kind direct;
+  #L2b4a98.  call temp:= `add`(v1, v5) @signature `Ljava/util/List;.add:(Ljava/lang/Object;)Z` @kind interface;
+  #L2b4a9e.  v2:= v2 + 1;
+  #L2b4aa2.  goto L2b4a6a;
+  #L2b4aa4.  return v1 @kind object;
+}
+procedure `int` `d`(`java.io.InputStream` v2 @kind object) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.d:(Ljava/io/InputStream;)I` @AccessFlag STATIC {
+    temp;
+    v0;
+    v1;
+
+  #L2b48fc.  call temp:= `read`(v2) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.read:(Ljava/io/InputStream;)I` @kind static;
+  #L2b4902.  v0:= temp;
+  #L2b4904.  v0:= v0 ^< 0;
+  #L2b4908.  v0:= v0 ^| 0;
+  #L2b490c.  call temp:= `read`(v2) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.read:(Ljava/io/InputStream;)I` @kind static;
+  #L2b4912.  v1:= temp;
+  #L2b4914.  v1:= v1 ^< 8;
+  #L2b4918.  v0:= v0 ^| v1 @kind int;
+  #L2b491a.  call temp:= `read`(v2) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.read:(Ljava/io/InputStream;)I` @kind static;
+  #L2b4920.  v1:= temp;
+  #L2b4922.  v1:= v1 ^< 16;
+  #L2b4926.  v0:= v0 ^| v1 @kind int;
+  #L2b4928.  call temp:= `read`(v2) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.read:(Ljava/io/InputStream;)I` @kind static;
+  #L2b492e.  v2:= temp;
+  #L2b4930.  v2:= v2 ^< 24;
+  #L2b4934.  v2:= v2 ^| v0 @kind int;
+  #L2b4936.  return v2;
+}
+procedure `long` `e`(`java.io.InputStream` v7 @kind object) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.e:(Ljava/io/InputStream;)J` @AccessFlag STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+
+  #L2b4ab8.  call temp:= `read`(v7) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.read:(Ljava/io/InputStream;)I` @kind static;
+  #L2b4abe.  v0:= temp;
+  #L2b4ac0.  v0:= (`long`) v0 @kind i2l;
+  #L2b4ac2.  v2:= 255L;
+  #L2b4ac6.  v0:= v0 ^& v2 @kind long;
+  #L2b4ac8.  v4:= 0I;
+  #L2b4aca.  v0:= v0 ^< v4 @kind long;
+  #L2b4acc.  v4:= 0L;
+  #L2b4ad0.  v0:= v0 ^| v4 @kind long;
+  #L2b4ad2.  call temp:= `read`(v7) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.read:(Ljava/io/InputStream;)I` @kind static;
+  #L2b4ad8.  v4:= temp;
+  #L2b4ada.  v4:= (`long`) v4 @kind i2l;
+  #L2b4adc.  v4:= v4 ^& v2 @kind long;
+  #L2b4ade.  v6:= 8I;
+  #L2b4ae2.  v4:= v4 ^< v6 @kind long;
+  #L2b4ae4.  v0:= v0 ^| v4 @kind long;
+  #L2b4ae6.  call temp:= `read`(v7) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.read:(Ljava/io/InputStream;)I` @kind static;
+  #L2b4aec.  v4:= temp;
+  #L2b4aee.  v4:= (`long`) v4 @kind i2l;
+  #L2b4af0.  v4:= v4 ^& v2 @kind long;
+  #L2b4af2.  v6:= 16I;
+  #L2b4af6.  v4:= v4 ^< v6 @kind long;
+  #L2b4af8.  v0:= v0 ^| v4 @kind long;
+  #L2b4afa.  call temp:= `read`(v7) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.read:(Ljava/io/InputStream;)I` @kind static;
+  #L2b4b00.  v4:= temp;
+  #L2b4b02.  v4:= (`long`) v4 @kind i2l;
+  #L2b4b04.  v4:= v4 ^& v2 @kind long;
+  #L2b4b06.  v6:= 24I;
+  #L2b4b0a.  v4:= v4 ^< v6 @kind long;
+  #L2b4b0c.  v0:= v0 ^| v4 @kind long;
+  #L2b4b0e.  call temp:= `read`(v7) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.read:(Ljava/io/InputStream;)I` @kind static;
+  #L2b4b14.  v4:= temp;
+  #L2b4b16.  v4:= (`long`) v4 @kind i2l;
+  #L2b4b18.  v4:= v4 ^& v2 @kind long;
+  #L2b4b1a.  v6:= 32I;
+  #L2b4b1e.  v4:= v4 ^< v6 @kind long;
+  #L2b4b20.  v0:= v0 ^| v4 @kind long;
+  #L2b4b22.  call temp:= `read`(v7) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.read:(Ljava/io/InputStream;)I` @kind static;
+  #L2b4b28.  v4:= temp;
+  #L2b4b2a.  v4:= (`long`) v4 @kind i2l;
+  #L2b4b2c.  v4:= v4 ^& v2 @kind long;
+  #L2b4b2e.  v6:= 40I;
+  #L2b4b32.  v4:= v4 ^< v6 @kind long;
+  #L2b4b34.  v0:= v0 ^| v4 @kind long;
+  #L2b4b36.  call temp:= `read`(v7) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.read:(Ljava/io/InputStream;)I` @kind static;
+  #L2b4b3c.  v4:= temp;
+  #L2b4b3e.  v4:= (`long`) v4 @kind i2l;
+  #L2b4b40.  v4:= v4 ^& v2 @kind long;
+  #L2b4b42.  v6:= 48I;
+  #L2b4b46.  v4:= v4 ^< v6 @kind long;
+  #L2b4b48.  v0:= v0 ^| v4 @kind long;
+  #L2b4b4a.  call temp:= `read`(v7) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.read:(Ljava/io/InputStream;)I` @kind static;
+  #L2b4b50.  v7:= temp;
+  #L2b4b52.  v4:= (`long`) v7 @kind i2l;
+  #L2b4b54.  v2:= v2 ^& v4 @kind long;
+  #L2b4b56.  v7:= 56I;
+  #L2b4b5a.  v2:= v2 ^< v7 @kind long;
+  #L2b4b5c.  v0:= v0 ^| v2 @kind long;
+  #L2b4b5e.  return v0 @kind wide;
+}
+procedure `java.lang.String` `f`(`com.android.volley.toolbox.DiskBasedCache$CountingInputStream` v2 @kind object) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.f:(Lcom/android/volley/toolbox/DiskBasedCache$CountingInputStream;)Ljava/lang/String;` @AccessFlag STATIC {
+    temp;
+    v0;
+    v1;
+
+  #L2b4a18.  call temp:= `e`(v2) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.e:(Ljava/io/InputStream;)J` @kind static;
+  #L2b4a1e.  v0:= temp @kind wide;
+  #L2b4a20.  call temp:= `g`(v2, v0) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.g:(Lcom/android/volley/toolbox/DiskBasedCache$CountingInputStream;J)[B` @kind static;
+  #L2b4a26.  v2:= temp @kind object;
+  #L2b4a28.  v0:= new `java.lang.String`;
+  #L2b4a2c.  v1:= "UTF-8" @kind object;
+  #L2b4a30.  call `<init>`(v0, v2, v1) @signature `Ljava/lang/String;.<init>:([BLjava/lang/String;)V` @kind direct;
+  #L2b4a36.  return v0 @kind object;
+}
+procedure `byte`[] `g`(`com.android.volley.toolbox.DiskBasedCache$CountingInputStream` v6 @kind object, `long` v7 ) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.g:(Lcom/android/volley/toolbox/DiskBasedCache$CountingInputStream;J)[B` @AccessFlag STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L2b46dc.  call temp:= `a`(v6) @signature `Lcom/android/volley/toolbox/DiskBasedCache$CountingInputStream;.a:()J` @kind virtual;
+  #L2b46e2.  v0:= temp @kind wide;
+  #L2b46e4.  v2:= 0L;
+  #L2b46e8.  v4:= lcmp(v7, v2);
+  #L2b46ec.  if v4 < 0 then goto L2b471a;
+  #L2b46f0.  v2:= lcmp(v7, v0);
+  #L2b46f4.  if v2 > 0 then goto L2b471a;
+  #L2b46f8.  v2:= (`int`) v7 @kind l2i;
+  #L2b46fa.  v3:= (`long`) v2 @kind i2l;
+  #L2b46fc.  v5:= lcmp(v3, v7);
+  #L2b4700.  if v5 != 0 then goto L2b471a;
+  #L2b4704.  v7:= new `byte`[v2];
+  #L2b4708.  v8:= new `java.io.DataInputStream`;
+  #L2b470c.  call `<init>`(v8, v6) @signature `Ljava/io/DataInputStream;.<init>:(Ljava/io/InputStream;)V` @kind direct;
+  #L2b4712.  call `readFully`(v8, v7) @signature `Ljava/io/DataInputStream;.readFully:([B)V` @kind virtual;
+  #L2b4718.  return v7 @kind object;
+  #L2b471a.  v6:= new `java.io.IOException`;
+  #L2b471e.  v2:= new `java.lang.StringBuilder`;
+  #L2b4722.  call `<init>`(v2) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L2b4728.  v3:= "streamToBytes length=" @kind object;
+  #L2b472c.  call temp:= `append`(v2, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2b4732.  call temp:= `append`(v2, v7) @signature `Ljava/lang/StringBuilder;.append:(J)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2b4738.  v7:= ", maxLength=" @kind object;
+  #L2b473c.  call temp:= `append`(v2, v7) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2b4742.  call temp:= `append`(v2, v0) @signature `Ljava/lang/StringBuilder;.append:(J)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2b4748.  call temp:= `toString`(v2) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L2b474e.  v7:= temp @kind object;
+  #L2b4750.  call `<init>`(v6, v7) @signature `Ljava/io/IOException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L2b4756.  throw v6;
+}
+procedure `java.lang.String` `getFilenameForKey`(`com.android.volley.toolbox.DiskBasedCache` v3 @kind this, `java.lang.String` v4 @kind object) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.getFilenameForKey:(Ljava/lang/String;)Ljava/lang/String;` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L2b49a8.  call temp:= `length`(v4) @signature `Ljava/lang/String;.length:()I` @kind virtual;
+  #L2b49ae.  v0:= temp;
+  #L2b49b0.  v0:= v0 / 2;
+  #L2b49b4.  v1:= 0I;
+  #L2b49b6.  call temp:= `substring`(v4, v1, v0) @signature `Ljava/lang/String;.substring:(II)Ljava/lang/String;` @kind virtual;
+  #L2b49bc.  v1:= temp @kind object;
+  #L2b49be.  call temp:= `hashCode`(v1) @signature `Ljava/lang/String;.hashCode:()I` @kind virtual;
+  #L2b49c4.  v1:= temp;
+  #L2b49c6.  call temp:= `valueOf`(v1) @signature `Ljava/lang/String;.valueOf:(I)Ljava/lang/String;` @kind static;
+  #L2b49cc.  v1:= temp @kind object;
+  #L2b49ce.  v2:= new `java.lang.StringBuilder`;
+  #L2b49d2.  call `<init>`(v2) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L2b49d8.  call temp:= `append`(v2, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2b49de.  call temp:= `substring`(v4, v0) @signature `Ljava/lang/String;.substring:(I)Ljava/lang/String;` @kind virtual;
+  #L2b49e4.  v4:= temp @kind object;
+  #L2b49e6.  call temp:= `hashCode`(v4) @signature `Ljava/lang/String;.hashCode:()I` @kind virtual;
+  #L2b49ec.  v4:= temp;
+  #L2b49ee.  call temp:= `valueOf`(v4) @signature `Ljava/lang/String;.valueOf:(I)Ljava/lang/String;` @kind static;
+  #L2b49f4.  v4:= temp @kind object;
+  #L2b49f6.  call temp:= `append`(v2, v4) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2b49fc.  call temp:= `toString`(v2) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L2b4a02.  v4:= temp @kind object;
+  #L2b4a04.  return v4 @kind object;
+}
+procedure `void` `h`(`java.util.List` v2 @kind object, `java.io.OutputStream` v3 @kind object) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.h:(Ljava/util/List;Ljava/io/OutputStream;)V` @AccessFlag STATIC {
+    temp;
+    v0;
+    v1;
+
+  #L2b5100.  if v2 == 0 then goto L2b5150;
+  #L2b5104.  call temp:= `size`(v2) @signature `Ljava/util/List;.size:()I` @kind interface;
+  #L2b510a.  v0:= temp;
+  #L2b510c.  call `i`(v3, v0) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.i:(Ljava/io/OutputStream;I)V` @kind static;
+  #L2b5112.  call temp:= `iterator`(v2) @signature `Ljava/util/List;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L2b5118.  v2:= temp @kind object;
+  #L2b511a.  call temp:= `hasNext`(v2) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L2b5120.  v0:= temp;
+  #L2b5122.  if v0 == 0 then goto L2b5158;
+  #L2b5126.  call temp:= `next`(v2) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L2b512c.  v0:= temp @kind object;
+  #L2b512e.  v0:= (`com.android.volley.Header`) v0 @kind object;
+  #L2b5132.  call temp:= `getName`(v0) @signature `Lcom/android/volley/Header;.getName:()Ljava/lang/String;` @kind virtual;
+  #L2b5138.  v1:= temp @kind object;
+  #L2b513a.  call `k`(v3, v1) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.k:(Ljava/io/OutputStream;Ljava/lang/String;)V` @kind static;
+  #L2b5140.  call temp:= `getValue`(v0) @signature `Lcom/android/volley/Header;.getValue:()Ljava/lang/String;` @kind virtual;
+  #L2b5146.  v0:= temp @kind object;
+  #L2b5148.  call `k`(v3, v0) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.k:(Ljava/io/OutputStream;Ljava/lang/String;)V` @kind static;
+  #L2b514e.  goto L2b511a;
+  #L2b5150.  v2:= 0I;
+  #L2b5152.  call `i`(v3, v2) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.i:(Ljava/io/OutputStream;I)V` @kind static;
+  #L2b5158.  return @kind void;
+}
+procedure `void` `i`(`java.io.OutputStream` v1 @kind object, `int` v2 ) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.i:(Ljava/io/OutputStream;I)V` @AccessFlag STATIC {
+    temp;
+    v0;
+
+  #L2b516c.  v0:= v2 ^> 0;
+  #L2b5170.  v0:= v0 ^& 255;
+  #L2b5174.  call `write`(v1, v0) @signature `Ljava/io/OutputStream;.write:(I)V` @kind virtual;
+  #L2b517a.  v0:= v2 ^> 8;
+  #L2b517e.  v0:= v0 ^& 255;
+  #L2b5182.  call `write`(v1, v0) @signature `Ljava/io/OutputStream;.write:(I)V` @kind virtual;
+  #L2b5188.  v0:= v2 ^> 16;
+  #L2b518c.  v0:= v0 ^& 255;
+  #L2b5190.  call `write`(v1, v0) @signature `Ljava/io/OutputStream;.write:(I)V` @kind virtual;
+  #L2b5196.  v2:= v2 ^> 24;
+  #L2b519a.  v2:= v2 ^& 255;
+  #L2b519e.  call `write`(v1, v2) @signature `Ljava/io/OutputStream;.write:(I)V` @kind virtual;
+  #L2b51a4.  return @kind void;
+}
+procedure `void` `j`(`java.io.OutputStream` v2 @kind object, `long` v3 ) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.j:(Ljava/io/OutputStream;J)V` @AccessFlag STATIC {
+    temp;
+    v0;
+    v1;
+
+  #L2b51b8.  v0:= 0I;
+  #L2b51ba.  v0:= v3 ^>> v0 @kind long;
+  #L2b51be.  v1:= (`int`) v0 @kind l2i;
+  #L2b51c0.  v0:= (`byte`) v1 @kind i2b;
+  #L2b51c2.  call `write`(v2, v0) @signature `Ljava/io/OutputStream;.write:(I)V` @kind virtual;
+  #L2b51c8.  v0:= 8I;
+  #L2b51cc.  v0:= v3 ^>> v0 @kind long;
+  #L2b51d0.  v1:= (`int`) v0 @kind l2i;
+  #L2b51d2.  v0:= (`byte`) v1 @kind i2b;
+  #L2b51d4.  call `write`(v2, v0) @signature `Ljava/io/OutputStream;.write:(I)V` @kind virtual;
+  #L2b51da.  v0:= 16I;
+  #L2b51de.  v0:= v3 ^>> v0 @kind long;
+  #L2b51e2.  v1:= (`int`) v0 @kind l2i;
+  #L2b51e4.  v0:= (`byte`) v1 @kind i2b;
+  #L2b51e6.  call `write`(v2, v0) @signature `Ljava/io/OutputStream;.write:(I)V` @kind virtual;
+  #L2b51ec.  v0:= 24I;
+  #L2b51f0.  v0:= v3 ^>> v0 @kind long;
+  #L2b51f4.  v1:= (`int`) v0 @kind l2i;
+  #L2b51f6.  v0:= (`byte`) v1 @kind i2b;
+  #L2b51f8.  call `write`(v2, v0) @signature `Ljava/io/OutputStream;.write:(I)V` @kind virtual;
+  #L2b51fe.  v0:= 32I;
+  #L2b5202.  v0:= v3 ^>> v0 @kind long;
+  #L2b5206.  v1:= (`int`) v0 @kind l2i;
+  #L2b5208.  v0:= (`byte`) v1 @kind i2b;
+  #L2b520a.  call `write`(v2, v0) @signature `Ljava/io/OutputStream;.write:(I)V` @kind virtual;
+  #L2b5210.  v0:= 40I;
+  #L2b5214.  v0:= v3 ^>> v0 @kind long;
+  #L2b5218.  v1:= (`int`) v0 @kind l2i;
+  #L2b521a.  v0:= (`byte`) v1 @kind i2b;
+  #L2b521c.  call `write`(v2, v0) @signature `Ljava/io/OutputStream;.write:(I)V` @kind virtual;
+  #L2b5222.  v0:= 48I;
+  #L2b5226.  v0:= v3 ^>> v0 @kind long;
+  #L2b522a.  v1:= (`int`) v0 @kind l2i;
+  #L2b522c.  v0:= (`byte`) v1 @kind i2b;
+  #L2b522e.  call `write`(v2, v0) @signature `Ljava/io/OutputStream;.write:(I)V` @kind virtual;
+  #L2b5234.  v0:= 56I;
+  #L2b5238.  v3:= v3 ^>> v0 @kind long;
+  #L2b523a.  v4:= (`int`) v3 @kind l2i;
+  #L2b523c.  v3:= (`byte`) v4 @kind i2b;
+  #L2b523e.  call `write`(v2, v3) @signature `Ljava/io/OutputStream;.write:(I)V` @kind virtual;
+  #L2b5244.  return @kind void;
+}
+procedure `void` `k`(`java.io.OutputStream` v2 @kind object, `java.lang.String` v3 @kind object) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.k:(Ljava/io/OutputStream;Ljava/lang/String;)V` @AccessFlag STATIC {
+    temp;
+    v0;
+    v1;
+
+  #L2b5258.  v0:= "UTF-8" @kind object;
+  #L2b525c.  call temp:= `getBytes`(v3, v0) @signature `Ljava/lang/String;.getBytes:(Ljava/lang/String;)[B` @kind virtual;
+  #L2b5262.  v3:= temp @kind object;
+  #L2b5264.  v0:= length @variable v3;
+  #L2b5266.  v0:= (`long`) v0 @kind i2l;
+  #L2b5268.  call `j`(v2, v0) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.j:(Ljava/io/OutputStream;J)V` @kind static;
+  #L2b526e.  v0:= length @variable v3;
+  #L2b5270.  v1:= 0I;
+  #L2b5272.  call `write`(v2, v3, v1, v0) @signature `Ljava/io/OutputStream;.write:([BII)V` @kind virtual;
+  #L2b5278.  return @kind void;
+}
+procedure `void` `pruneIfNeeded`(`com.android.volley.toolbox.DiskBasedCache` v17 @kind this, `int` v18 ) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.pruneIfNeeded:(I)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+    v9;
+    v10;
+    v11;
+    v12;
+    v13;
+    v14;
+    v15;
+    v16;
+
+  #L2b4db0.  v0:= v17 @kind object;
+  #L2b4db4.  v1:= v0.`com.android.volley.toolbox.DiskBasedCache.mTotalSize` @type ^`long` @kind wide;
+  #L2b4db8.  v3:= v18;
+  #L2b4dbc.  v3:= (`long`) v3 @kind i2l;
+  #L2b4dbe.  v1:= v1 + v3 @kind long;
+  #L2b4dc0.  v5:= v0.`com.android.volley.toolbox.DiskBasedCache.mMaxCacheSizeInBytes` @type ^`int`;
+  #L2b4dc4.  v5:= (`long`) v5 @kind i2l;
+  #L2b4dc6.  v7:= lcmp(v1, v5);
+  #L2b4dca.  if v7 >= 0 then goto L2b4dd0;
+  #L2b4dce.  return @kind void;
+  #L2b4dd0.  v1:= `@@com.android.volley.VolleyLog.DEBUG` @type ^`boolean` @kind boolean;
+  #L2b4dd4.  v2:= 0I;
+  #L2b4dd6.  if v1 == 0 then goto L2b4de8;
+  #L2b4dda.  v1:= new `java.lang.Object`[v2];
+  #L2b4dde.  v5:= "Pruning old cache entries." @kind object;
+  #L2b4de2.  call `v`(v5, v1) @signature `Lcom/android/volley/VolleyLog;.v:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind static;
+  #L2b4de8.  v5:= v0.`com.android.volley.toolbox.DiskBasedCache.mTotalSize` @type ^`long` @kind wide;
+  #L2b4dec.  call temp:= `elapsedRealtime`() @signature `Landroid/os/SystemClock;.elapsedRealtime:()J` @kind static;
+  #L2b4df2.  v7:= temp @kind wide;
+  #L2b4df4.  v1:= v0.`com.android.volley.toolbox.DiskBasedCache.mEntries` @type ^`java.util.Map` @kind object;
+  #L2b4df8.  call temp:= `entrySet`(v1) @signature `Ljava/util/Map;.entrySet:()Ljava/util/Set;` @kind interface;
+  #L2b4dfe.  v1:= temp @kind object;
+  #L2b4e00.  call temp:= `iterator`(v1) @signature `Ljava/util/Set;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L2b4e06.  v1:= temp @kind object;
+  #L2b4e08.  v9:= 0I;
+  #L2b4e0a.  call temp:= `hasNext`(v1) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L2b4e10.  v10:= temp;
+  #L2b4e12.  v11:= 2I;
+  #L2b4e14.  v12:= 1I;
+  #L2b4e16.  if v10 == 0 then goto L2b4eb4;
+  #L2b4e1a.  call temp:= `next`(v1) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L2b4e20.  v10:= temp @kind object;
+  #L2b4e22.  v10:= (`java.util.Map$Entry`) v10 @kind object;
+  #L2b4e26.  call temp:= `getValue`(v10) @signature `Ljava/util/Map$Entry;.getValue:()Ljava/lang/Object;` @kind interface;
+  #L2b4e2c.  v10:= temp @kind object;
+  #L2b4e2e.  v10:= (`com.android.volley.toolbox.DiskBasedCache$CacheHeader`) v10 @kind object;
+  #L2b4e32.  v13:= v10.`com.android.volley.toolbox.DiskBasedCache$CacheHeader.b` @type ^`java.lang.String` @kind object;
+  #L2b4e36.  call temp:= `getFileForKey`(v0, v13) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.getFileForKey:(Ljava/lang/String;)Ljava/io/File;` @kind virtual;
+  #L2b4e3c.  v13:= temp @kind object;
+  #L2b4e3e.  call temp:= `delete`(v13) @signature `Ljava/io/File;.delete:()Z` @kind virtual;
+  #L2b4e44.  v13:= temp;
+  #L2b4e46.  if v13 == 0 then goto L2b4e5c;
+  #L2b4e4a.  v13:= v0.`com.android.volley.toolbox.DiskBasedCache.mTotalSize` @type ^`long` @kind wide;
+  #L2b4e4e.  v15:= v3 @kind wide;
+  #L2b4e50.  v2:= v10.`com.android.volley.toolbox.DiskBasedCache$CacheHeader.a` @type ^`long` @kind wide;
+  #L2b4e54.  v13:= v13 - v2 @kind long;
+  #L2b4e56.  v0.`com.android.volley.toolbox.DiskBasedCache.mTotalSize` @type ^`long` := v13 @kind wide;
+  #L2b4e5a.  goto L2b4e82;
+  #L2b4e5c.  v15:= v3 @kind wide;
+  #L2b4e5e.  v2:= new `java.lang.Object`[v11];
+  #L2b4e62.  v3:= v10.`com.android.volley.toolbox.DiskBasedCache$CacheHeader.b` @type ^`java.lang.String` @kind object;
+  #L2b4e66.  v4:= 0I;
+  #L2b4e68.  v2[v4]:= v3 @kind object;
+  #L2b4e6c.  call temp:= `getFilenameForKey`(v0, v3) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.getFilenameForKey:(Ljava/lang/String;)Ljava/lang/String;` @kind direct;
+  #L2b4e72.  v3:= temp @kind object;
+  #L2b4e74.  v2[v12]:= v3 @kind object;
+  #L2b4e78.  v3:= "Could not delete cache entry for key=%s, filename=%s" @kind object;
+  #L2b4e7c.  call `d`(v3, v2) @signature `Lcom/android/volley/VolleyLog;.d:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind static;
+  #L2b4e82.  call `remove`(v1) @signature `Ljava/util/Iterator;.remove:()V` @kind interface;
+  #L2b4e88.  v9:= v9 + 1;
+  #L2b4e8c.  v2:= v0.`com.android.volley.toolbox.DiskBasedCache.mTotalSize` @type ^`long` @kind wide;
+  #L2b4e90.  v2:= v2 + v15 @kind long;
+  #L2b4e92.  v2:= (`float`) v2 @kind l2f;
+  #L2b4e94.  v3:= v0.`com.android.volley.toolbox.DiskBasedCache.mMaxCacheSizeInBytes` @type ^`int`;
+  #L2b4e98.  v3:= (`float`) v3 @kind i2f;
+  #L2b4e9a.  v4:= 1063675494I;
+  #L2b4ea0.  v3:= v3 * v4 @kind float;
+  #L2b4ea4.  v2:= fcmpg(v2, v3);
+  #L2b4ea8.  if v2 >= 0 then goto L2b4eae;
+  #L2b4eac.  goto L2b4eb4;
+  #L2b4eae.  v3:= v15 @kind wide;
+  #L2b4eb0.  v2:= 0I;
+  #L2b4eb2.  goto L2b4e0a;
+  #L2b4eb4.  v1:= `@@com.android.volley.VolleyLog.DEBUG` @type ^`boolean` @kind boolean;
+  #L2b4eb8.  if v1 == 0 then goto L2b4f02;
+  #L2b4ebc.  v1:= 3I;
+  #L2b4ebe.  v1:= new `java.lang.Object`[v1];
+  #L2b4ec2.  call temp:= `valueOf`(v9) @signature `Ljava/lang/Integer;.valueOf:(I)Ljava/lang/Integer;` @kind static;
+  #L2b4ec8.  v2:= temp @kind object;
+  #L2b4eca.  v3:= 0I;
+  #L2b4ecc.  v1[v3]:= v2 @kind object;
+  #L2b4ed0.  v2:= v0.`com.android.volley.toolbox.DiskBasedCache.mTotalSize` @type ^`long` @kind wide;
+  #L2b4ed4.  v2:= v2 - v5 @kind long;
+  #L2b4ed6.  call temp:= `valueOf`(v2) @signature `Ljava/lang/Long;.valueOf:(J)Ljava/lang/Long;` @kind static;
+  #L2b4edc.  v2:= temp @kind object;
+  #L2b4ede.  v1[v12]:= v2 @kind object;
+  #L2b4ee2.  call temp:= `elapsedRealtime`() @signature `Landroid/os/SystemClock;.elapsedRealtime:()J` @kind static;
+  #L2b4ee8.  v2:= temp @kind wide;
+  #L2b4eea.  v2:= v2 - v7 @kind long;
+  #L2b4eec.  call temp:= `valueOf`(v2) @signature `Ljava/lang/Long;.valueOf:(J)Ljava/lang/Long;` @kind static;
+  #L2b4ef2.  v2:= temp @kind object;
+  #L2b4ef4.  v1[v11]:= v2 @kind object;
+  #L2b4ef8.  v2:= "pruned %d files, %d bytes, %d ms" @kind object;
+  #L2b4efc.  call `v`(v2, v1) @signature `Lcom/android/volley/VolleyLog;.v:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind static;
+  #L2b4f02.  return @kind void;
+}
+procedure `void` `putEntry`(`com.android.volley.toolbox.DiskBasedCache` v7 @kind this, `java.lang.String` v8 @kind object, `com.android.volley.toolbox.DiskBasedCache$CacheHeader` v9 @kind object) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.putEntry:(Ljava/lang/String;Lcom/android/volley/toolbox/DiskBasedCache$CacheHeader;)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+
+  #L2b5004.  v0:= v7.`com.android.volley.toolbox.DiskBasedCache.mEntries` @type ^`java.util.Map` @kind object;
+  #L2b5008.  call temp:= `containsKey`(v0, v8) @signature `Ljava/util/Map;.containsKey:(Ljava/lang/Object;)Z` @kind interface;
+  #L2b500e.  v0:= temp;
+  #L2b5010.  if v0 != 0 then goto L2b5024;
+  #L2b5014.  v0:= v7.`com.android.volley.toolbox.DiskBasedCache.mTotalSize` @type ^`long` @kind wide;
+  #L2b5018.  v2:= v9.`com.android.volley.toolbox.DiskBasedCache$CacheHeader.a` @type ^`long` @kind wide;
+  #L2b501c.  v0:= v0 + v2 @kind long;
+  #L2b501e.  v7.`com.android.volley.toolbox.DiskBasedCache.mTotalSize` @type ^`long` := v0 @kind wide;
+  #L2b5022.  goto L2b5048;
+  #L2b5024.  v0:= v7.`com.android.volley.toolbox.DiskBasedCache.mEntries` @type ^`java.util.Map` @kind object;
+  #L2b5028.  call temp:= `get`(v0, v8) @signature `Ljava/util/Map;.get:(Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L2b502e.  v0:= temp @kind object;
+  #L2b5030.  v0:= (`com.android.volley.toolbox.DiskBasedCache$CacheHeader`) v0 @kind object;
+  #L2b5034.  v1:= v7.`com.android.volley.toolbox.DiskBasedCache.mTotalSize` @type ^`long` @kind wide;
+  #L2b5038.  v3:= v9.`com.android.volley.toolbox.DiskBasedCache$CacheHeader.a` @type ^`long` @kind wide;
+  #L2b503c.  v5:= v0.`com.android.volley.toolbox.DiskBasedCache$CacheHeader.a` @type ^`long` @kind wide;
+  #L2b5040.  v3:= v3 - v5 @kind long;
+  #L2b5042.  v1:= v1 + v3 @kind long;
+  #L2b5044.  v7.`com.android.volley.toolbox.DiskBasedCache.mTotalSize` @type ^`long` := v1 @kind wide;
+  #L2b5048.  v0:= v7.`com.android.volley.toolbox.DiskBasedCache.mEntries` @type ^`java.util.Map` @kind object;
+  #L2b504c.  call temp:= `put`(v0, v8, v9) @signature `Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L2b5052.  return @kind void;
+}
+procedure `int` `read`(`java.io.InputStream` v1 @kind object) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.read:(Ljava/io/InputStream;)I` @AccessFlag PRIVATE_STATIC {
+    temp;
+    v0;
+
+  #L2b48d0.  call temp:= `read`(v1) @signature `Ljava/io/InputStream;.read:()I` @kind virtual;
+  #L2b48d6.  v1:= temp;
+  #L2b48d8.  v0:= -1I;
+  #L2b48da.  if v1 == v0 then goto L2b48e0;
+  #L2b48de.  return v1;
+  #L2b48e0.  v1:= new `java.io.EOFException`;
+  #L2b48e4.  call `<init>`(v1) @signature `Ljava/io/EOFException;.<init>:()V` @kind direct;
+  #L2b48ea.  throw v1;
+}
+procedure `void` `removeEntry`(`com.android.volley.toolbox.DiskBasedCache` v4 @kind this, `java.lang.String` v5 @kind object) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.removeEntry:(Ljava/lang/String;)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L2b50cc.  v0:= v4.`com.android.volley.toolbox.DiskBasedCache.mEntries` @type ^`java.util.Map` @kind object;
+  #L2b50d0.  call temp:= `remove`(v0, v5) @signature `Ljava/util/Map;.remove:(Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L2b50d6.  v5:= temp @kind object;
+  #L2b50d8.  v5:= (`com.android.volley.toolbox.DiskBasedCache$CacheHeader`) v5 @kind object;
+  #L2b50dc.  if v5 == 0 then goto L2b50ee;
+  #L2b50e0.  v0:= v4.`com.android.volley.toolbox.DiskBasedCache.mTotalSize` @type ^`long` @kind wide;
+  #L2b50e4.  v2:= v5.`com.android.volley.toolbox.DiskBasedCache$CacheHeader.a` @type ^`long` @kind wide;
+  #L2b50e8.  v0:= v0 - v2 @kind long;
+  #L2b50ea.  v4.`com.android.volley.toolbox.DiskBasedCache.mTotalSize` @type ^`long` := v0 @kind wide;
+  #L2b50ee.  return @kind void;
+}
+procedure `java.io.InputStream` `a`(`com.android.volley.toolbox.DiskBasedCache` v1 @kind this, `java.io.File` v2 @kind object) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.a:(Ljava/io/File;)Ljava/io/InputStream;` @AccessFlag  {
+    temp;
+    v0;
+
+  #L2b4970.  v0:= new `java.io.FileInputStream`;
+  #L2b4974.  call `<init>`(v0, v2) @signature `Ljava/io/FileInputStream;.<init>:(Ljava/io/File;)V` @kind direct;
+  #L2b497a.  return v0 @kind object;
+}
+procedure `java.io.OutputStream` `b`(`com.android.volley.toolbox.DiskBasedCache` v1 @kind this, `java.io.File` v2 @kind object) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.b:(Ljava/io/File;)Ljava/io/OutputStream;` @AccessFlag  {
+    temp;
+    v0;
+
+  #L2b498c.  v0:= new `java.io.FileOutputStream`;
+  #L2b4990.  call `<init>`(v0, v2) @signature `Ljava/io/FileOutputStream;.<init>:(Ljava/io/File;)V` @kind direct;
+  #L2b4996.  return v0 @kind object;
+}
+procedure `void` `clear`(`com.android.volley.toolbox.DiskBasedCache` v5 @kind this) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.clear:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L2b4bcc.  @monitorenter v5
+  #L2b4bce.  v0:= v5.`com.android.volley.toolbox.DiskBasedCache.mRootDirectory` @type ^`java.io.File` @kind object;
+  #L2b4bd2.  call temp:= `listFiles`(v0) @signature `Ljava/io/File;.listFiles:()[Ljava/io/File;` @kind virtual;
+  #L2b4bd8.  v0:= temp @kind object;
+  #L2b4bda.  v1:= 0I;
+  #L2b4bdc.  if v0 == 0 then goto L2b4bf8;
+  #L2b4be0.  v2:= length @variable v0;
+  #L2b4be2.  v3:= 0I;
+  #L2b4be4.  if v3 >= v2 then goto L2b4bf8;
+  #L2b4be8.  v4:= v0[v3] @kind object;
+  #L2b4bec.  call temp:= `delete`(v4) @signature `Ljava/io/File;.delete:()Z` @kind virtual;
+  #L2b4bf2.  v3:= v3 + 1;
+  #L2b4bf6.  goto L2b4be4;
+  #L2b4bf8.  v0:= v5.`com.android.volley.toolbox.DiskBasedCache.mEntries` @type ^`java.util.Map` @kind object;
+  #L2b4bfc.  call `clear`(v0) @signature `Ljava/util/Map;.clear:()V` @kind interface;
+  #L2b4c02.  v2:= 0L;
+  #L2b4c06.  v5.`com.android.volley.toolbox.DiskBasedCache.mTotalSize` @type ^`long` := v2 @kind wide;
+  #L2b4c0a.  v0:= "Cache cleared." @kind object;
+  #L2b4c0e.  v1:= new `java.lang.Object`[v1];
+  #L2b4c12.  call `d`(v0, v1) @signature `Lcom/android/volley/VolleyLog;.d:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind static;
+  #L2b4c18.  @monitorexit v5
+  #L2b4c1a.  return @kind void;
+  #L2b4c1c.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L2b4c1e.  @monitorexit v5
+  #L2b4c20.  goto L2b4c24;
+  #L2b4c22.  throw v0;
+  #L2b4c24.  goto L2b4c22;
+  catch `java.lang.Throwable` @[L2b4bce..L2b4c18] goto L2b4c1c;
+}
+procedure `com.android.volley.Cache$Entry` `get`(`com.android.volley.toolbox.DiskBasedCache` v10 @kind this, `java.lang.String` v11 @kind object) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.get:(Ljava/lang/String;)Lcom/android/volley/Cache$Entry;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+    v9;
+
+  #L2b4768.  @monitorenter v10
+  #L2b476a.  v0:= v10.`com.android.volley.toolbox.DiskBasedCache.mEntries` @type ^`java.util.Map` @kind object;
+  #L2b476e.  call temp:= `get`(v0, v11) @signature `Ljava/util/Map;.get:(Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L2b4774.  v0:= temp @kind object;
+  #L2b4776.  v0:= (`com.android.volley.toolbox.DiskBasedCache$CacheHeader`) v0 @kind object;
+  #L2b477a.  v1:= 0I;
+  #L2b477c.  if v0 != 0 then goto L2b4784;
+  #L2b4780.  @monitorexit v10
+  #L2b4782.  return v1 @kind object;
+  #L2b4784.  call temp:= `getFileForKey`(v10, v11) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.getFileForKey:(Ljava/lang/String;)Ljava/io/File;` @kind virtual;
+  #L2b478a.  v2:= temp @kind object;
+  #L2b478c.  v3:= 1I;
+  #L2b478e.  v4:= 0I;
+  #L2b4790.  v5:= 2I;
+  #L2b4792.  v6:= new `com.android.volley.toolbox.DiskBasedCache$CountingInputStream`;
+  #L2b4796.  v7:= new `java.io.BufferedInputStream`;
+  #L2b479a.  call temp:= `a`(v10, v2) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.a:(Ljava/io/File;)Ljava/io/InputStream;` @kind virtual;
+  #L2b47a0.  v8:= temp @kind object;
+  #L2b47a2.  call `<init>`(v7, v8) @signature `Ljava/io/BufferedInputStream;.<init>:(Ljava/io/InputStream;)V` @kind direct;
+  #L2b47a8.  call temp:= `length`(v2) @signature `Ljava/io/File;.length:()J` @kind virtual;
+  #L2b47ae.  v8:= temp @kind wide;
+  #L2b47b0.  call `<init>`(v6, v7, v8) @signature `Lcom/android/volley/toolbox/DiskBasedCache$CountingInputStream;.<init>:(Ljava/io/InputStream;J)V` @kind direct;
+  #L2b47b6.  call temp:= `a`(v6) @signature `Lcom/android/volley/toolbox/DiskBasedCache$CacheHeader;.a:(Lcom/android/volley/toolbox/DiskBasedCache$CountingInputStream;)Lcom/android/volley/toolbox/DiskBasedCache$CacheHeader;` @kind static;
+  #L2b47bc.  v7:= temp @kind object;
+  #L2b47be.  v8:= v7.`com.android.volley.toolbox.DiskBasedCache$CacheHeader.b` @type ^`java.lang.String` @kind object;
+  #L2b47c2.  call temp:= `equals`(v11, v8) @signature `Landroid/text/TextUtils;.equals:(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Z` @kind static;
+  #L2b47c8.  v8:= temp;
+  #L2b47ca.  if v8 != 0 then goto L2b4806;
+  #L2b47ce.  v0:= "%s: key=%s, found=%s" @kind object;
+  #L2b47d2.  v8:= 3I;
+  #L2b47d4.  v8:= new `java.lang.Object`[v8];
+  #L2b47d8.  call temp:= `getAbsolutePath`(v2) @signature `Ljava/io/File;.getAbsolutePath:()Ljava/lang/String;` @kind virtual;
+  #L2b47de.  v9:= temp @kind object;
+  #L2b47e0.  v8[v4]:= v9 @kind object;
+  #L2b47e4.  v8[v3]:= v11 @kind object;
+  #L2b47e8.  v7:= v7.`com.android.volley.toolbox.DiskBasedCache$CacheHeader.b` @type ^`java.lang.String` @kind object;
+  #L2b47ec.  v8[v5]:= v7 @kind object;
+  #L2b47f0.  call `d`(v0, v8) @signature `Lcom/android/volley/VolleyLog;.d:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind static;
+  #L2b47f6.  call `removeEntry`(v10, v11) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.removeEntry:(Ljava/lang/String;)V` @kind direct;
+  #L2b47fc.  call `close`(v6) @signature `Ljava/io/FilterInputStream;.close:()V` @kind virtual;
+  #L2b4802.  @monitorexit v10
+  #L2b4804.  return v1 @kind object;
+  #L2b4806.  call temp:= `a`(v6) @signature `Lcom/android/volley/toolbox/DiskBasedCache$CountingInputStream;.a:()J` @kind virtual;
+  #L2b480c.  v7:= temp @kind wide;
+  #L2b480e.  call temp:= `g`(v6, v7) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.g:(Lcom/android/volley/toolbox/DiskBasedCache$CountingInputStream;J)[B` @kind static;
+  #L2b4814.  v7:= temp @kind object;
+  #L2b4816.  call temp:= `b`(v0, v7) @signature `Lcom/android/volley/toolbox/DiskBasedCache$CacheHeader;.b:([B)Lcom/android/volley/Cache$Entry;` @kind virtual;
+  #L2b481c.  v0:= temp @kind object;
+  #L2b481e.  call `close`(v6) @signature `Ljava/io/FilterInputStream;.close:()V` @kind virtual;
+  #L2b4824.  @monitorexit v10
+  #L2b4826.  return v0 @kind object;
+  #L2b4828.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L2b482a.  call `close`(v6) @signature `Ljava/io/FilterInputStream;.close:()V` @kind virtual;
+  #L2b4830.  throw v0;
+  #L2b4832.  v0:= Exception @type ^`java.io.IOException` @kind object;
+  #L2b4834.  v6:= "%s: %s" @kind object;
+  #L2b4838.  v5:= new `java.lang.Object`[v5];
+  #L2b483c.  call temp:= `getAbsolutePath`(v2) @signature `Ljava/io/File;.getAbsolutePath:()Ljava/lang/String;` @kind virtual;
+  #L2b4842.  v2:= temp @kind object;
+  #L2b4844.  v5[v4]:= v2 @kind object;
+  #L2b4848.  call temp:= `toString`(v0) @signature `Ljava/io/IOException;.toString:()Ljava/lang/String;` @kind virtual;
+  #L2b484e.  v0:= temp @kind object;
+  #L2b4850.  v5[v3]:= v0 @kind object;
+  #L2b4854.  call `d`(v6, v5) @signature `Lcom/android/volley/VolleyLog;.d:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind static;
+  #L2b485a.  call `remove`(v10, v11) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.remove:(Ljava/lang/String;)V` @kind virtual;
+  #L2b4860.  @monitorexit v10
+  #L2b4862.  return v1 @kind object;
+  #L2b4864.  v11:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L2b4866.  @monitorexit v10
+  #L2b4868.  throw v11;
+  catch `java.lang.Throwable` @[L2b476a..L2b477a] goto L2b4864;
+  catch `java.lang.Throwable` @[L2b4784..L2b478c] goto L2b4864;
+  catch `java.io.IOException` @[L2b4792..L2b47b6] goto L2b4832;
+  catch `java.lang.Throwable` @[L2b4792..L2b47b6] goto L2b4864;
+  catch `java.lang.Throwable` @[L2b47b6..L2b47fc] goto L2b4828;
+  catch `java.io.IOException` @[L2b47fc..L2b4802] goto L2b4832;
+  catch `java.lang.Throwable` @[L2b47fc..L2b4802] goto L2b4864;
+  catch `java.lang.Throwable` @[L2b4806..L2b481e] goto L2b4828;
+  catch `java.io.IOException` @[L2b481e..L2b4824] goto L2b4832;
+  catch `java.lang.Throwable` @[L2b481e..L2b4824] goto L2b4864;
+  catch `java.io.IOException` @[L2b482a..L2b4832] goto L2b4832;
+  catch `java.lang.Throwable` @[L2b482a..L2b4832] goto L2b4864;
+  catch `java.lang.Throwable` @[L2b4834..L2b4860] goto L2b4864;
+}
+procedure `java.io.File` `getFileForKey`(`com.android.volley.toolbox.DiskBasedCache` v2 @kind this, `java.lang.String` v3 @kind object) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.getFileForKey:(Ljava/lang/String;)Ljava/io/File;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L2b4948.  v0:= new `java.io.File`;
+  #L2b494c.  v1:= v2.`com.android.volley.toolbox.DiskBasedCache.mRootDirectory` @type ^`java.io.File` @kind object;
+  #L2b4950.  call temp:= `getFilenameForKey`(v2, v3) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.getFilenameForKey:(Ljava/lang/String;)Ljava/lang/String;` @kind direct;
+  #L2b4956.  v3:= temp @kind object;
+  #L2b4958.  call `<init>`(v0, v1, v3) @signature `Ljava/io/File;.<init>:(Ljava/io/File;Ljava/lang/String;)V` @kind direct;
+  #L2b495e.  return v0 @kind object;
+}
+procedure `void` `initialize`(`com.android.volley.toolbox.DiskBasedCache` v9 @kind this) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.initialize:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+
+  #L2b4c44.  @monitorenter v9
+  #L2b4c46.  v0:= v9.`com.android.volley.toolbox.DiskBasedCache.mRootDirectory` @type ^`java.io.File` @kind object;
+  #L2b4c4a.  call temp:= `exists`(v0) @signature `Ljava/io/File;.exists:()Z` @kind virtual;
+  #L2b4c50.  v0:= temp;
+  #L2b4c52.  v1:= 0I;
+  #L2b4c54.  if v0 != 0 then goto L2b4c8c;
+  #L2b4c58.  v0:= v9.`com.android.volley.toolbox.DiskBasedCache.mRootDirectory` @type ^`java.io.File` @kind object;
+  #L2b4c5c.  call temp:= `mkdirs`(v0) @signature `Ljava/io/File;.mkdirs:()Z` @kind virtual;
+  #L2b4c62.  v0:= temp;
+  #L2b4c64.  if v0 != 0 then goto L2b4c88;
+  #L2b4c68.  v0:= "Unable to create cache dir %s" @kind object;
+  #L2b4c6c.  v2:= 1I;
+  #L2b4c6e.  v2:= new `java.lang.Object`[v2];
+  #L2b4c72.  v3:= v9.`com.android.volley.toolbox.DiskBasedCache.mRootDirectory` @type ^`java.io.File` @kind object;
+  #L2b4c76.  call temp:= `getAbsolutePath`(v3) @signature `Ljava/io/File;.getAbsolutePath:()Ljava/lang/String;` @kind virtual;
+  #L2b4c7c.  v3:= temp @kind object;
+  #L2b4c7e.  v2[v1]:= v3 @kind object;
+  #L2b4c82.  call `e`(v0, v2) @signature `Lcom/android/volley/VolleyLog;.e:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind static;
+  #L2b4c88.  @monitorexit v9
+  #L2b4c8a.  return @kind void;
+  #L2b4c8c.  v0:= v9.`com.android.volley.toolbox.DiskBasedCache.mRootDirectory` @type ^`java.io.File` @kind object;
+  #L2b4c90.  call temp:= `listFiles`(v0) @signature `Ljava/io/File;.listFiles:()[Ljava/io/File;` @kind virtual;
+  #L2b4c96.  v0:= temp @kind object;
+  #L2b4c98.  if v0 != 0 then goto L2b4ca0;
+  #L2b4c9c.  @monitorexit v9
+  #L2b4c9e.  return @kind void;
+  #L2b4ca0.  v2:= length @variable v0;
+  #L2b4ca2.  if v1 >= v2 then goto L2b4d02;
+  #L2b4ca6.  v3:= v0[v1] @kind object;
+  #L2b4caa.  call temp:= `length`(v3) @signature `Ljava/io/File;.length:()J` @kind virtual;
+  #L2b4cb0.  v4:= temp @kind wide;
+  #L2b4cb2.  v6:= new `com.android.volley.toolbox.DiskBasedCache$CountingInputStream`;
+  #L2b4cb6.  v7:= new `java.io.BufferedInputStream`;
+  #L2b4cba.  call temp:= `a`(v9, v3) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.a:(Ljava/io/File;)Ljava/io/InputStream;` @kind virtual;
+  #L2b4cc0.  v8:= temp @kind object;
+  #L2b4cc2.  call `<init>`(v7, v8) @signature `Ljava/io/BufferedInputStream;.<init>:(Ljava/io/InputStream;)V` @kind direct;
+  #L2b4cc8.  call `<init>`(v6, v7, v4) @signature `Lcom/android/volley/toolbox/DiskBasedCache$CountingInputStream;.<init>:(Ljava/io/InputStream;J)V` @kind direct;
+  #L2b4cce.  call temp:= `a`(v6) @signature `Lcom/android/volley/toolbox/DiskBasedCache$CacheHeader;.a:(Lcom/android/volley/toolbox/DiskBasedCache$CountingInputStream;)Lcom/android/volley/toolbox/DiskBasedCache$CacheHeader;` @kind static;
+  #L2b4cd4.  v7:= temp @kind object;
+  #L2b4cd6.  v7.`com.android.volley.toolbox.DiskBasedCache$CacheHeader.a` @type ^`long` := v4 @kind wide;
+  #L2b4cda.  v4:= v7.`com.android.volley.toolbox.DiskBasedCache$CacheHeader.b` @type ^`java.lang.String` @kind object;
+  #L2b4cde.  call `putEntry`(v9, v4, v7) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.putEntry:(Ljava/lang/String;Lcom/android/volley/toolbox/DiskBasedCache$CacheHeader;)V` @kind direct;
+  #L2b4ce4.  call `close`(v6) @signature `Ljava/io/FilterInputStream;.close:()V` @kind virtual;
+  #L2b4cea.  goto L2b4cfc;
+  #L2b4cec.  v4:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L2b4cee.  call `close`(v6) @signature `Ljava/io/FilterInputStream;.close:()V` @kind virtual;
+  #L2b4cf4.  throw v4;
+  #L2b4cf6.  call temp:= `delete`(v3) @signature `Ljava/io/File;.delete:()Z` @kind virtual;
+  #L2b4cfc.  v1:= v1 + 1;
+  #L2b4d00.  goto L2b4ca2;
+  #L2b4d02.  @monitorexit v9
+  #L2b4d04.  return @kind void;
+  #L2b4d06.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L2b4d08.  @monitorexit v9
+  #L2b4d0a.  goto L2b4d0e;
+  #L2b4d0c.  throw v0;
+  #L2b4d0e.  goto L2b4d0c;
+  catch `java.lang.Throwable` @[L2b4c46..L2b4c88] goto L2b4d06;
+  catch `java.lang.Throwable` @[L2b4c8c..L2b4c98] goto L2b4d06;
+  catch `java.lang.Throwable` @[L2b4ca0..L2b4caa] goto L2b4d06;
+  catch `java.io.IOException` @[L2b4caa..L2b4cce] goto L2b4cf6;
+  catch `java.lang.Throwable` @[L2b4caa..L2b4cce] goto L2b4d06;
+  catch `java.lang.Throwable` @[L2b4cce..L2b4ce4] goto L2b4cec;
+  catch `java.io.IOException` @[L2b4ce4..L2b4cf6] goto L2b4cf6;
+  catch `java.lang.Throwable` @[L2b4ce4..L2b4cf6] goto L2b4d06;
+  catch `java.lang.Throwable` @[L2b4cf6..L2b4cfc] goto L2b4d06;
+}
+procedure `void` `invalidate`(`com.android.volley.toolbox.DiskBasedCache` v3 @kind this, `java.lang.String` v4 @kind object, `boolean` v5 ) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.invalidate:(Ljava/lang/String;Z)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L2b4d64.  @monitorenter v3
+  #L2b4d66.  call temp:= `get`(v3, v4) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.get:(Ljava/lang/String;)Lcom/android/volley/Cache$Entry;` @kind virtual;
+  #L2b4d6c.  v0:= temp @kind object;
+  #L2b4d6e.  if v0 == 0 then goto L2b4d88;
+  #L2b4d72.  v1:= 0L;
+  #L2b4d76.  v0.`com.android.volley.Cache$Entry.softTtl` @type ^`long` := v1 @kind wide;
+  #L2b4d7a.  if v5 == 0 then goto L2b4d82;
+  #L2b4d7e.  v0.`com.android.volley.Cache$Entry.ttl` @type ^`long` := v1 @kind wide;
+  #L2b4d82.  call `put`(v3, v4, v0) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.put:(Ljava/lang/String;Lcom/android/volley/Cache$Entry;)V` @kind virtual;
+  #L2b4d88.  @monitorexit v3
+  #L2b4d8a.  return @kind void;
+  #L2b4d8c.  v4:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L2b4d8e.  @monitorexit v3
+  #L2b4d90.  throw v4;
+  catch `java.lang.Throwable` @[L2b4d66..L2b4d88] goto L2b4d8c;
+}
+procedure `void` `put`(`com.android.volley.toolbox.DiskBasedCache` v6 @kind this, `java.lang.String` v7 @kind object, `com.android.volley.Cache$Entry` v8 @kind object) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.put:(Ljava/lang/String;Lcom/android/volley/Cache$Entry;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L2b4f14.  @monitorenter v6
+  #L2b4f16.  v0:= v8.`com.android.volley.Cache$Entry.data` @type ^`byte`[] @kind object;
+  #L2b4f1a.  v0:= length @variable v0;
+  #L2b4f1c.  call `pruneIfNeeded`(v6, v0) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.pruneIfNeeded:(I)V` @kind direct;
+  #L2b4f22.  call temp:= `getFileForKey`(v6, v7) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.getFileForKey:(Ljava/lang/String;)Ljava/io/File;` @kind virtual;
+  #L2b4f28.  v0:= temp @kind object;
+  #L2b4f2a.  v1:= 0I;
+  #L2b4f2c.  v2:= 1I;
+  #L2b4f2e.  v3:= new `java.io.BufferedOutputStream`;
+  #L2b4f32.  call temp:= `b`(v6, v0) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.b:(Ljava/io/File;)Ljava/io/OutputStream;` @kind virtual;
+  #L2b4f38.  v4:= temp @kind object;
+  #L2b4f3a.  call `<init>`(v3, v4) @signature `Ljava/io/BufferedOutputStream;.<init>:(Ljava/io/OutputStream;)V` @kind direct;
+  #L2b4f40.  v4:= new `com.android.volley.toolbox.DiskBasedCache$CacheHeader`;
+  #L2b4f44.  call `<init>`(v4, v7, v8) @signature `Lcom/android/volley/toolbox/DiskBasedCache$CacheHeader;.<init>:(Ljava/lang/String;Lcom/android/volley/Cache$Entry;)V` @kind direct;
+  #L2b4f4a.  call temp:= `c`(v4, v3) @signature `Lcom/android/volley/toolbox/DiskBasedCache$CacheHeader;.c:(Ljava/io/OutputStream;)Z` @kind virtual;
+  #L2b4f50.  v5:= temp;
+  #L2b4f52.  if v5 == 0 then goto L2b4f70;
+  #L2b4f56.  v8:= v8.`com.android.volley.Cache$Entry.data` @type ^`byte`[] @kind object;
+  #L2b4f5a.  call `write`(v3, v8) @signature `Ljava/io/BufferedOutputStream;.write:([B)V` @kind virtual;
+  #L2b4f60.  call `close`(v3) @signature `Ljava/io/BufferedOutputStream;.close:()V` @kind virtual;
+  #L2b4f66.  call `putEntry`(v6, v7, v4) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.putEntry:(Ljava/lang/String;Lcom/android/volley/toolbox/DiskBasedCache$CacheHeader;)V` @kind direct;
+  #L2b4f6c.  @monitorexit v6
+  #L2b4f6e.  return @kind void;
+  #L2b4f70.  call `close`(v3) @signature `Ljava/io/BufferedOutputStream;.close:()V` @kind virtual;
+  #L2b4f76.  v7:= "Failed to write header for %s" @kind object;
+  #L2b4f7a.  v8:= new `java.lang.Object`[v2];
+  #L2b4f7e.  call temp:= `getAbsolutePath`(v0) @signature `Ljava/io/File;.getAbsolutePath:()Ljava/lang/String;` @kind virtual;
+  #L2b4f84.  v3:= temp @kind object;
+  #L2b4f86.  v8[v1]:= v3 @kind object;
+  #L2b4f8a.  call `d`(v7, v8) @signature `Lcom/android/volley/VolleyLog;.d:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind static;
+  #L2b4f90.  v7:= new `java.io.IOException`;
+  #L2b4f94.  call `<init>`(v7) @signature `Ljava/io/IOException;.<init>:()V` @kind direct;
+  #L2b4f9a.  throw v7;
+  #L2b4f9c.  call temp:= `delete`(v0) @signature `Ljava/io/File;.delete:()Z` @kind virtual;
+  #L2b4fa2.  v7:= temp;
+  #L2b4fa4.  if v7 != 0 then goto L2b4fc2;
+  #L2b4fa8.  v7:= "Could not clean up file %s" @kind object;
+  #L2b4fac.  v8:= new `java.lang.Object`[v2];
+  #L2b4fb0.  call temp:= `getAbsolutePath`(v0) @signature `Ljava/io/File;.getAbsolutePath:()Ljava/lang/String;` @kind virtual;
+  #L2b4fb6.  v0:= temp @kind object;
+  #L2b4fb8.  v8[v1]:= v0 @kind object;
+  #L2b4fbc.  call `d`(v7, v8) @signature `Lcom/android/volley/VolleyLog;.d:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind static;
+  #L2b4fc2.  @monitorexit v6
+  #L2b4fc4.  return @kind void;
+  #L2b4fc6.  v7:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L2b4fc8.  @monitorexit v6
+  #L2b4fca.  throw v7;
+  catch `java.lang.Throwable` @[L2b4f16..L2b4f2a] goto L2b4fc6;
+  catch `java.io.IOException` @[L2b4f2e..L2b4f6c] goto L2b4f9c;
+  catch `java.lang.Throwable` @[L2b4f2e..L2b4f6c] goto L2b4fc6;
+  catch `java.io.IOException` @[L2b4f70..L2b4f9c] goto L2b4f9c;
+  catch `java.lang.Throwable` @[L2b4f70..L2b4f9c] goto L2b4fc6;
+  catch `java.lang.Throwable` @[L2b4f9c..L2b4fc2] goto L2b4fc6;
+}
+procedure `void` `remove`(`com.android.volley.toolbox.DiskBasedCache` v3 @kind this, `java.lang.String` v4 @kind object) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.remove:(Ljava/lang/String;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L2b5064.  @monitorenter v3
+  #L2b5066.  call temp:= `getFileForKey`(v3, v4) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.getFileForKey:(Ljava/lang/String;)Ljava/io/File;` @kind virtual;
+  #L2b506c.  v0:= temp @kind object;
+  #L2b506e.  call temp:= `delete`(v0) @signature `Ljava/io/File;.delete:()Z` @kind virtual;
+  #L2b5074.  v0:= temp;
+  #L2b5076.  call `removeEntry`(v3, v4) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.removeEntry:(Ljava/lang/String;)V` @kind direct;
+  #L2b507c.  if v0 != 0 then goto L2b50a4;
+  #L2b5080.  v0:= "Could not delete cache entry for key=%s, filename=%s" @kind object;
+  #L2b5084.  v1:= 2I;
+  #L2b5086.  v1:= new `java.lang.Object`[v1];
+  #L2b508a.  v2:= 0I;
+  #L2b508c.  v1[v2]:= v4 @kind object;
+  #L2b5090.  v2:= 1I;
+  #L2b5092.  call temp:= `getFilenameForKey`(v3, v4) @signature `Lcom/android/volley/toolbox/DiskBasedCache;.getFilenameForKey:(Ljava/lang/String;)Ljava/lang/String;` @kind direct;
+  #L2b5098.  v4:= temp @kind object;
+  #L2b509a.  v1[v2]:= v4 @kind object;
+  #L2b509e.  call `d`(v0, v1) @signature `Lcom/android/volley/VolleyLog;.d:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind static;
+  #L2b50a4.  @monitorexit v3
+  #L2b50a6.  return @kind void;
+  #L2b50a8.  v4:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L2b50aa.  @monitorexit v3
+  #L2b50ac.  throw v4;
+  catch `java.lang.Throwable` @[L2b5066..L2b50a4] goto L2b50a8;
+}

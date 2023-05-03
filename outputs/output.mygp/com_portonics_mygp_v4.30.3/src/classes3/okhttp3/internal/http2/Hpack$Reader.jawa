@@ -1,0 +1,512 @@
+record `okhttp3.internal.http2.Hpack$Reader` @kind class @AccessFlag FINAL {
+  `okhttp3.internal.http2.Header`[] `okhttp3.internal.http2.Hpack$Reader.dynamicTable` @AccessFlag ;
+  `int` `okhttp3.internal.http2.Hpack$Reader.dynamicTableByteCount` @AccessFlag ;
+  `int` `okhttp3.internal.http2.Hpack$Reader.headerCount` @AccessFlag ;
+  `java.util.List` `okhttp3.internal.http2.Hpack$Reader.headerList` @AccessFlag PRIVATE_FINAL;
+  `int` `okhttp3.internal.http2.Hpack$Reader.headerTableSizeSetting` @AccessFlag PRIVATE_FINAL;
+  `int` `okhttp3.internal.http2.Hpack$Reader.maxDynamicTableByteCount` @AccessFlag PRIVATE;
+  `int` `okhttp3.internal.http2.Hpack$Reader.nextHeaderIndex` @AccessFlag ;
+  `okio.o` `okhttp3.internal.http2.Hpack$Reader.source` @AccessFlag PRIVATE_FINAL;
+}
+procedure `void` `<init>`(`okhttp3.internal.http2.Hpack$Reader` v1 @kind this, `int` v2 , `int` v3 , `okio.i0` v4 @kind object) @signature `Lokhttp3/internal/http2/Hpack$Reader;.<init>:(IILokio/i0;)V` @AccessFlag CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L30be38.  call `<init>`(v1) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L30be3e.  v0:= new `java.util.ArrayList`;
+  #L30be42.  call `<init>`(v0) @signature `Ljava/util/ArrayList;.<init>:()V` @kind direct;
+  #L30be48.  v1.`okhttp3.internal.http2.Hpack$Reader.headerList` @type ^`java.util.List` := v0 @kind object;
+  #L30be4c.  v0:= 8I;
+  #L30be50.  v0:= new `okhttp3.internal.http2.Header`[v0];
+  #L30be54.  v1.`okhttp3.internal.http2.Hpack$Reader.dynamicTable` @type ^`okhttp3.internal.http2.Header`[] := v0 @kind object;
+  #L30be58.  v0:= length @variable v0;
+  #L30be5a.  v0:= v0 + -1;
+  #L30be5e.  v1.`okhttp3.internal.http2.Hpack$Reader.nextHeaderIndex` @type ^`int` := v0;
+  #L30be62.  v0:= 0I;
+  #L30be64.  v1.`okhttp3.internal.http2.Hpack$Reader.headerCount` @type ^`int` := v0;
+  #L30be68.  v1.`okhttp3.internal.http2.Hpack$Reader.dynamicTableByteCount` @type ^`int` := v0;
+  #L30be6c.  v1.`okhttp3.internal.http2.Hpack$Reader.headerTableSizeSetting` @type ^`int` := v2;
+  #L30be70.  v1.`okhttp3.internal.http2.Hpack$Reader.maxDynamicTableByteCount` @type ^`int` := v3;
+  #L30be74.  call temp:= `d`(v4) @signature `Lokio/v;.d:(Lokio/i0;)Lokio/o;` @kind static;
+  #L30be7a.  v2:= temp @kind object;
+  #L30be7c.  v1.`okhttp3.internal.http2.Hpack$Reader.source` @type ^`okio.o` := v2 @kind object;
+  #L30be80.  return @kind void;
+}
+procedure `void` `<init>`(`okhttp3.internal.http2.Hpack$Reader` v0 @kind this, `int` v1 , `okio.i0` v2 @kind object) @signature `Lokhttp3/internal/http2/Hpack$Reader;.<init>:(ILokio/i0;)V` @AccessFlag CONSTRUCTOR {
+    temp;
+
+  #L30be94.  call `<init>`(v0, v1, v1, v2) @signature `Lokhttp3/internal/http2/Hpack$Reader;.<init>:(IILokio/i0;)V` @kind direct;
+  #L30be9a.  return @kind void;
+}
+procedure `void` `adjustDynamicTableByteCount`(`okhttp3.internal.http2.Hpack$Reader` v2 @kind this) @signature `Lokhttp3/internal/http2/Hpack$Reader;.adjustDynamicTableByteCount:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+
+  #L30beac.  v0:= v2.`okhttp3.internal.http2.Hpack$Reader.maxDynamicTableByteCount` @type ^`int`;
+  #L30beb0.  v1:= v2.`okhttp3.internal.http2.Hpack$Reader.dynamicTableByteCount` @type ^`int`;
+  #L30beb4.  if v0 >= v1 then goto L30becc;
+  #L30beb8.  if v0 != 0 then goto L30bec4;
+  #L30bebc.  call `clearDynamicTable`(v2) @signature `Lokhttp3/internal/http2/Hpack$Reader;.clearDynamicTable:()V` @kind direct;
+  #L30bec2.  goto L30becc;
+  #L30bec4.  v1:= v1 - v0 @kind int;
+  #L30bec6.  call temp:= `evictToRecoverBytes`(v2, v1) @signature `Lokhttp3/internal/http2/Hpack$Reader;.evictToRecoverBytes:(I)I` @kind direct;
+  #L30becc.  return @kind void;
+}
+procedure `void` `clearDynamicTable`(`okhttp3.internal.http2.Hpack$Reader` v2 @kind this) @signature `Lokhttp3/internal/http2/Hpack$Reader;.clearDynamicTable:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+
+  #L30bee0.  v0:= v2.`okhttp3.internal.http2.Hpack$Reader.dynamicTable` @type ^`okhttp3.internal.http2.Header`[] @kind object;
+  #L30bee4.  v1:= 0I;
+  #L30bee6.  call `fill`(v0, v1) @signature `Ljava/util/Arrays;.fill:([Ljava/lang/Object;Ljava/lang/Object;)V` @kind static;
+  #L30beec.  v0:= v2.`okhttp3.internal.http2.Hpack$Reader.dynamicTable` @type ^`okhttp3.internal.http2.Header`[] @kind object;
+  #L30bef0.  v0:= length @variable v0;
+  #L30bef2.  v0:= v0 + -1;
+  #L30bef6.  v2.`okhttp3.internal.http2.Hpack$Reader.nextHeaderIndex` @type ^`int` := v0;
+  #L30befa.  v0:= 0I;
+  #L30befc.  v2.`okhttp3.internal.http2.Hpack$Reader.headerCount` @type ^`int` := v0;
+  #L30bf00.  v2.`okhttp3.internal.http2.Hpack$Reader.dynamicTableByteCount` @type ^`int` := v0;
+  #L30bf04.  return @kind void;
+}
+procedure `int` `dynamicTableIndex`(`okhttp3.internal.http2.Hpack$Reader` v1 @kind this, `int` v2 ) @signature `Lokhttp3/internal/http2/Hpack$Reader;.dynamicTableIndex:(I)I` @AccessFlag PRIVATE {
+    temp;
+    v0;
+
+  #L30bbf0.  v0:= v1.`okhttp3.internal.http2.Hpack$Reader.nextHeaderIndex` @type ^`int`;
+  #L30bbf4.  v0:= v0 + 1;
+  #L30bbf8.  v0:= v0 + v2 @kind int;
+  #L30bbfa.  return v0;
+}
+procedure `int` `evictToRecoverBytes`(`okhttp3.internal.http2.Hpack$Reader` v4 @kind this, `int` v5 ) @signature `Lokhttp3/internal/http2/Hpack$Reader;.evictToRecoverBytes:(I)I` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L30bc0c.  v0:= 0I;
+  #L30bc0e.  if v5 <= 0 then goto L30bc80;
+  #L30bc12.  v1:= v4.`okhttp3.internal.http2.Hpack$Reader.dynamicTable` @type ^`okhttp3.internal.http2.Header`[] @kind object;
+  #L30bc16.  v1:= length @variable v1;
+  #L30bc18.  v1:= v1 + -1;
+  #L30bc1c.  v2:= v4.`okhttp3.internal.http2.Hpack$Reader.nextHeaderIndex` @type ^`int`;
+  #L30bc20.  if v1 < v2 then goto L30bc5e;
+  #L30bc24.  if v5 <= 0 then goto L30bc5e;
+  #L30bc28.  v2:= v4.`okhttp3.internal.http2.Hpack$Reader.dynamicTable` @type ^`okhttp3.internal.http2.Header`[] @kind object;
+  #L30bc2c.  v3:= v2[v1] @kind object;
+  #L30bc30.  v3:= v3.`okhttp3.internal.http2.Header.hpackSize` @type ^`int`;
+  #L30bc34.  v5:= v5 - v3 @kind int;
+  #L30bc36.  v3:= v4.`okhttp3.internal.http2.Hpack$Reader.dynamicTableByteCount` @type ^`int`;
+  #L30bc3a.  v2:= v2[v1] @kind object;
+  #L30bc3e.  v2:= v2.`okhttp3.internal.http2.Header.hpackSize` @type ^`int`;
+  #L30bc42.  v3:= v3 - v2 @kind int;
+  #L30bc44.  v4.`okhttp3.internal.http2.Hpack$Reader.dynamicTableByteCount` @type ^`int` := v3;
+  #L30bc48.  v2:= v4.`okhttp3.internal.http2.Hpack$Reader.headerCount` @type ^`int`;
+  #L30bc4c.  v2:= v2 + -1;
+  #L30bc50.  v4.`okhttp3.internal.http2.Hpack$Reader.headerCount` @type ^`int` := v2;
+  #L30bc54.  v0:= v0 + 1;
+  #L30bc58.  v1:= v1 + -1;
+  #L30bc5c.  goto L30bc1c;
+  #L30bc5e.  v5:= v4.`okhttp3.internal.http2.Hpack$Reader.dynamicTable` @type ^`okhttp3.internal.http2.Header`[] @kind object;
+  #L30bc62.  v1:= v2 + 1;
+  #L30bc66.  v2:= v2 + 1;
+  #L30bc6a.  v2:= v2 + v0 @kind int;
+  #L30bc6c.  v3:= v4.`okhttp3.internal.http2.Hpack$Reader.headerCount` @type ^`int`;
+  #L30bc70.  call `arraycopy`(v5, v1, v5, v2, v3) @signature `Ljava/lang/System;.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V` @kind static;
+  #L30bc76.  v5:= v4.`okhttp3.internal.http2.Hpack$Reader.nextHeaderIndex` @type ^`int`;
+  #L30bc7a.  v5:= v5 + v0 @kind int;
+  #L30bc7c.  v4.`okhttp3.internal.http2.Hpack$Reader.nextHeaderIndex` @type ^`int` := v5;
+  #L30bc80.  return v0;
+}
+procedure `okio.ByteString` `getName`(`okhttp3.internal.http2.Hpack$Reader` v3 @kind this, `int` v4 ) @signature `Lokhttp3/internal/http2/Hpack$Reader;.getName:(I)Lokio/ByteString;` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L30bd3c.  call temp:= `isStaticHeader`(v3, v4) @signature `Lokhttp3/internal/http2/Hpack$Reader;.isStaticHeader:(I)Z` @kind direct;
+  #L30bd42.  v0:= temp;
+  #L30bd44.  if v0 == 0 then goto L30bd56;
+  #L30bd48.  v0:= `@@okhttp3.internal.http2.Hpack.STATIC_HEADER_TABLE` @type ^`okhttp3.internal.http2.Header`[] @kind object;
+  #L30bd4c.  v4:= v0[v4] @kind object;
+  #L30bd50.  v4:= v4.`okhttp3.internal.http2.Header.name` @type ^`okio.ByteString` @kind object;
+  #L30bd54.  return v4 @kind object;
+  #L30bd56.  v0:= `@@okhttp3.internal.http2.Hpack.STATIC_HEADER_TABLE` @type ^`okhttp3.internal.http2.Header`[] @kind object;
+  #L30bd5a.  v0:= length @variable v0;
+  #L30bd5c.  v0:= v4 - v0 @kind int;
+  #L30bd60.  call temp:= `dynamicTableIndex`(v3, v0) @signature `Lokhttp3/internal/http2/Hpack$Reader;.dynamicTableIndex:(I)I` @kind direct;
+  #L30bd66.  v0:= temp;
+  #L30bd68.  if v0 < 0 then goto L30bd80;
+  #L30bd6c.  v1:= v3.`okhttp3.internal.http2.Hpack$Reader.dynamicTable` @type ^`okhttp3.internal.http2.Header`[] @kind object;
+  #L30bd70.  v2:= length @variable v1;
+  #L30bd72.  if v0 >= v2 then goto L30bd80;
+  #L30bd76.  v4:= v1[v0] @kind object;
+  #L30bd7a.  v4:= v4.`okhttp3.internal.http2.Header.name` @type ^`okio.ByteString` @kind object;
+  #L30bd7e.  return v4 @kind object;
+  #L30bd80.  v0:= new `java.io.IOException`;
+  #L30bd84.  v1:= new `java.lang.StringBuilder`;
+  #L30bd88.  call `<init>`(v1) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L30bd8e.  v2:= "Header index too large " @kind object;
+  #L30bd92.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L30bd98.  v4:= v4 + 1;
+  #L30bd9c.  call temp:= `append`(v1, v4) @signature `Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder;` @kind virtual;
+  #L30bda2.  call temp:= `toString`(v1) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L30bda8.  v4:= temp @kind object;
+  #L30bdaa.  call `<init>`(v0, v4) @signature `Ljava/io/IOException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L30bdb0.  throw v0;
+}
+procedure `void` `insertIntoDynamicTable`(`okhttp3.internal.http2.Hpack$Reader` v5 @kind this, `int` v6 , `okhttp3.internal.http2.Header` v7 @kind object) @signature `Lokhttp3/internal/http2/Hpack$Reader;.insertIntoDynamicTable:(ILokhttp3/internal/http2/Header;)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L30bf18.  v0:= v5.`okhttp3.internal.http2.Hpack$Reader.headerList` @type ^`java.util.List` @kind object;
+  #L30bf1c.  call temp:= `add`(v0, v7) @signature `Ljava/util/List;.add:(Ljava/lang/Object;)Z` @kind interface;
+  #L30bf22.  v0:= v7.`okhttp3.internal.http2.Header.hpackSize` @type ^`int`;
+  #L30bf26.  v1:= -1I;
+  #L30bf28.  if v6 == v1 then goto L30bf42;
+  #L30bf2c.  v2:= v5.`okhttp3.internal.http2.Hpack$Reader.dynamicTable` @type ^`okhttp3.internal.http2.Header`[] @kind object;
+  #L30bf30.  call temp:= `dynamicTableIndex`(v5, v6) @signature `Lokhttp3/internal/http2/Hpack$Reader;.dynamicTableIndex:(I)I` @kind direct;
+  #L30bf36.  v3:= temp;
+  #L30bf38.  v2:= v2[v3] @kind object;
+  #L30bf3c.  v2:= v2.`okhttp3.internal.http2.Header.hpackSize` @type ^`int`;
+  #L30bf40.  v0:= v0 - v2 @kind int;
+  #L30bf42.  v2:= v5.`okhttp3.internal.http2.Hpack$Reader.maxDynamicTableByteCount` @type ^`int`;
+  #L30bf46.  if v0 <= v2 then goto L30bf52;
+  #L30bf4a.  call `clearDynamicTable`(v5) @signature `Lokhttp3/internal/http2/Hpack$Reader;.clearDynamicTable:()V` @kind direct;
+  #L30bf50.  return @kind void;
+  #L30bf52.  v3:= v5.`okhttp3.internal.http2.Hpack$Reader.dynamicTableByteCount` @type ^`int`;
+  #L30bf56.  v3:= v3 + v0 @kind int;
+  #L30bf58.  v3:= v3 - v2 @kind int;
+  #L30bf5a.  call temp:= `evictToRecoverBytes`(v5, v3) @signature `Lokhttp3/internal/http2/Hpack$Reader;.evictToRecoverBytes:(I)I` @kind direct;
+  #L30bf60.  v2:= temp;
+  #L30bf62.  if v6 != v1 then goto L30bfc2;
+  #L30bf66.  v6:= v5.`okhttp3.internal.http2.Hpack$Reader.headerCount` @type ^`int`;
+  #L30bf6a.  v6:= v6 + 1;
+  #L30bf6e.  v1:= v5.`okhttp3.internal.http2.Hpack$Reader.dynamicTable` @type ^`okhttp3.internal.http2.Header`[] @kind object;
+  #L30bf72.  v2:= length @variable v1;
+  #L30bf74.  if v6 <= v2 then goto L30bfa0;
+  #L30bf78.  v6:= length @variable v1;
+  #L30bf7a.  v6:= v6 * 2;
+  #L30bf7e.  v6:= new `okhttp3.internal.http2.Header`[v6];
+  #L30bf82.  v2:= 0I;
+  #L30bf84.  v3:= length @variable v1;
+  #L30bf86.  v4:= length @variable v1;
+  #L30bf88.  call `arraycopy`(v1, v2, v6, v3, v4) @signature `Ljava/lang/System;.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V` @kind static;
+  #L30bf8e.  v1:= v5.`okhttp3.internal.http2.Hpack$Reader.dynamicTable` @type ^`okhttp3.internal.http2.Header`[] @kind object;
+  #L30bf92.  v1:= length @variable v1;
+  #L30bf94.  v1:= v1 + -1;
+  #L30bf98.  v5.`okhttp3.internal.http2.Hpack$Reader.nextHeaderIndex` @type ^`int` := v1;
+  #L30bf9c.  v5.`okhttp3.internal.http2.Hpack$Reader.dynamicTable` @type ^`okhttp3.internal.http2.Header`[] := v6 @kind object;
+  #L30bfa0.  v6:= v5.`okhttp3.internal.http2.Hpack$Reader.nextHeaderIndex` @type ^`int`;
+  #L30bfa4.  v1:= v6 + -1;
+  #L30bfa8.  v5.`okhttp3.internal.http2.Hpack$Reader.nextHeaderIndex` @type ^`int` := v1;
+  #L30bfac.  v1:= v5.`okhttp3.internal.http2.Hpack$Reader.dynamicTable` @type ^`okhttp3.internal.http2.Header`[] @kind object;
+  #L30bfb0.  v1[v6]:= v7 @kind object;
+  #L30bfb4.  v6:= v5.`okhttp3.internal.http2.Hpack$Reader.headerCount` @type ^`int`;
+  #L30bfb8.  v6:= v6 + 1;
+  #L30bfbc.  v5.`okhttp3.internal.http2.Hpack$Reader.headerCount` @type ^`int` := v6;
+  #L30bfc0.  goto L30bfd6;
+  #L30bfc2.  call temp:= `dynamicTableIndex`(v5, v6) @signature `Lokhttp3/internal/http2/Hpack$Reader;.dynamicTableIndex:(I)I` @kind direct;
+  #L30bfc8.  v1:= temp;
+  #L30bfca.  v1:= v1 + v2 @kind int;
+  #L30bfcc.  v6:= v6 + v1 @kind int;
+  #L30bfce.  v1:= v5.`okhttp3.internal.http2.Hpack$Reader.dynamicTable` @type ^`okhttp3.internal.http2.Header`[] @kind object;
+  #L30bfd2.  v1[v6]:= v7 @kind object;
+  #L30bfd6.  v6:= v5.`okhttp3.internal.http2.Hpack$Reader.dynamicTableByteCount` @type ^`int`;
+  #L30bfda.  v6:= v6 + v0 @kind int;
+  #L30bfdc.  v5.`okhttp3.internal.http2.Hpack$Reader.dynamicTableByteCount` @type ^`int` := v6;
+  #L30bfe0.  return @kind void;
+}
+procedure `boolean` `isStaticHeader`(`okhttp3.internal.http2.Hpack$Reader` v2 @kind this, `int` v3 ) @signature `Lokhttp3/internal/http2/Hpack$Reader;.isStaticHeader:(I)Z` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+
+  #L30bbc8.  v0:= 1I;
+  #L30bbca.  if v3 < 0 then goto L30bbdc;
+  #L30bbce.  v1:= `@@okhttp3.internal.http2.Hpack.STATIC_HEADER_TABLE` @type ^`okhttp3.internal.http2.Header`[] @kind object;
+  #L30bbd2.  v1:= length @variable v1;
+  #L30bbd4.  v1:= v1 - v0 @kind int;
+  #L30bbd6.  if v3 > v1 then goto L30bbdc;
+  #L30bbda.  goto L30bbde;
+  #L30bbdc.  v0:= 0I;
+  #L30bbde.  return v0;
+}
+procedure `int` `readByte`(`okhttp3.internal.http2.Hpack$Reader` v1 @kind this) @signature `Lokhttp3/internal/http2/Hpack$Reader;.readByte:()I` @AccessFlag PRIVATE {
+    temp;
+    v0;
+
+  #L30bcac.  v0:= v1.`okhttp3.internal.http2.Hpack$Reader.source` @type ^`okio.o` @kind object;
+  #L30bcb0.  call temp:= `readByte`(v0) @signature `Lokio/o;.readByte:()B` @kind interface;
+  #L30bcb6.  v0:= temp;
+  #L30bcb8.  v0:= v0 ^& 255;
+  #L30bcbc.  return v0;
+}
+procedure `void` `readIndexedHeader`(`okhttp3.internal.http2.Hpack$Reader` v3 @kind this, `int` v4 ) @signature `Lokhttp3/internal/http2/Hpack$Reader;.readIndexedHeader:(I)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L30c120.  call temp:= `isStaticHeader`(v3, v4) @signature `Lokhttp3/internal/http2/Hpack$Reader;.isStaticHeader:(I)Z` @kind direct;
+  #L30c126.  v0:= temp;
+  #L30c128.  if v0 == 0 then goto L30c140;
+  #L30c12c.  v0:= `@@okhttp3.internal.http2.Hpack.STATIC_HEADER_TABLE` @type ^`okhttp3.internal.http2.Header`[] @kind object;
+  #L30c130.  v4:= v0[v4] @kind object;
+  #L30c134.  v0:= v3.`okhttp3.internal.http2.Hpack$Reader.headerList` @type ^`java.util.List` @kind object;
+  #L30c138.  call temp:= `add`(v0, v4) @signature `Ljava/util/List;.add:(Ljava/lang/Object;)Z` @kind interface;
+  #L30c13e.  goto L30c16e;
+  #L30c140.  v0:= `@@okhttp3.internal.http2.Hpack.STATIC_HEADER_TABLE` @type ^`okhttp3.internal.http2.Header`[] @kind object;
+  #L30c144.  v0:= length @variable v0;
+  #L30c146.  v0:= v4 - v0 @kind int;
+  #L30c14a.  call temp:= `dynamicTableIndex`(v3, v0) @signature `Lokhttp3/internal/http2/Hpack$Reader;.dynamicTableIndex:(I)I` @kind direct;
+  #L30c150.  v0:= temp;
+  #L30c152.  if v0 < 0 then goto L30c170;
+  #L30c156.  v1:= v3.`okhttp3.internal.http2.Hpack$Reader.dynamicTable` @type ^`okhttp3.internal.http2.Header`[] @kind object;
+  #L30c15a.  v2:= length @variable v1;
+  #L30c15c.  if v0 >= v2 then goto L30c170;
+  #L30c160.  v4:= v3.`okhttp3.internal.http2.Hpack$Reader.headerList` @type ^`java.util.List` @kind object;
+  #L30c164.  v0:= v1[v0] @kind object;
+  #L30c168.  call temp:= `add`(v4, v0) @signature `Ljava/util/List;.add:(Ljava/lang/Object;)Z` @kind interface;
+  #L30c16e.  return @kind void;
+  #L30c170.  v0:= new `java.io.IOException`;
+  #L30c174.  v1:= new `java.lang.StringBuilder`;
+  #L30c178.  call `<init>`(v1) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L30c17e.  v2:= "Header index too large " @kind object;
+  #L30c182.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L30c188.  v4:= v4 + 1;
+  #L30c18c.  call temp:= `append`(v1, v4) @signature `Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder;` @kind virtual;
+  #L30c192.  call temp:= `toString`(v1) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L30c198.  v4:= temp @kind object;
+  #L30c19a.  call `<init>`(v0, v4) @signature `Ljava/io/IOException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L30c1a0.  throw v0;
+}
+procedure `void` `readLiteralHeaderWithIncrementalIndexingIndexedName`(`okhttp3.internal.http2.Hpack$Reader` v2 @kind this, `int` v3 ) @signature `Lokhttp3/internal/http2/Hpack$Reader;.readLiteralHeaderWithIncrementalIndexingIndexedName:(I)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+
+  #L30c1b4.  call temp:= `getName`(v2, v3) @signature `Lokhttp3/internal/http2/Hpack$Reader;.getName:(I)Lokio/ByteString;` @kind direct;
+  #L30c1ba.  v3:= temp @kind object;
+  #L30c1bc.  call temp:= `readByteString`(v2) @signature `Lokhttp3/internal/http2/Hpack$Reader;.readByteString:()Lokio/ByteString;` @kind virtual;
+  #L30c1c2.  v0:= temp @kind object;
+  #L30c1c4.  v1:= new `okhttp3.internal.http2.Header`;
+  #L30c1c8.  call `<init>`(v1, v3, v0) @signature `Lokhttp3/internal/http2/Header;.<init>:(Lokio/ByteString;Lokio/ByteString;)V` @kind direct;
+  #L30c1ce.  v3:= -1I;
+  #L30c1d0.  call `insertIntoDynamicTable`(v2, v3, v1) @signature `Lokhttp3/internal/http2/Hpack$Reader;.insertIntoDynamicTable:(ILokhttp3/internal/http2/Header;)V` @kind direct;
+  #L30c1d6.  return @kind void;
+}
+procedure `void` `readLiteralHeaderWithIncrementalIndexingNewName`(`okhttp3.internal.http2.Hpack$Reader` v3 @kind this) @signature `Lokhttp3/internal/http2/Hpack$Reader;.readLiteralHeaderWithIncrementalIndexingNewName:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L30c1e8.  call temp:= `readByteString`(v3) @signature `Lokhttp3/internal/http2/Hpack$Reader;.readByteString:()Lokio/ByteString;` @kind virtual;
+  #L30c1ee.  v0:= temp @kind object;
+  #L30c1f0.  call temp:= `checkLowercase`(v0) @signature `Lokhttp3/internal/http2/Hpack;.checkLowercase:(Lokio/ByteString;)Lokio/ByteString;` @kind static;
+  #L30c1f6.  v0:= temp @kind object;
+  #L30c1f8.  call temp:= `readByteString`(v3) @signature `Lokhttp3/internal/http2/Hpack$Reader;.readByteString:()Lokio/ByteString;` @kind virtual;
+  #L30c1fe.  v1:= temp @kind object;
+  #L30c200.  v2:= new `okhttp3.internal.http2.Header`;
+  #L30c204.  call `<init>`(v2, v0, v1) @signature `Lokhttp3/internal/http2/Header;.<init>:(Lokio/ByteString;Lokio/ByteString;)V` @kind direct;
+  #L30c20a.  v0:= -1I;
+  #L30c20c.  call `insertIntoDynamicTable`(v3, v0, v2) @signature `Lokhttp3/internal/http2/Hpack$Reader;.insertIntoDynamicTable:(ILokhttp3/internal/http2/Header;)V` @kind direct;
+  #L30c212.  return @kind void;
+}
+procedure `void` `readLiteralHeaderWithoutIndexingIndexedName`(`okhttp3.internal.http2.Hpack$Reader` v3 @kind this, `int` v4 ) @signature `Lokhttp3/internal/http2/Hpack$Reader;.readLiteralHeaderWithoutIndexingIndexedName:(I)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L30c224.  call temp:= `getName`(v3, v4) @signature `Lokhttp3/internal/http2/Hpack$Reader;.getName:(I)Lokio/ByteString;` @kind direct;
+  #L30c22a.  v4:= temp @kind object;
+  #L30c22c.  call temp:= `readByteString`(v3) @signature `Lokhttp3/internal/http2/Hpack$Reader;.readByteString:()Lokio/ByteString;` @kind virtual;
+  #L30c232.  v0:= temp @kind object;
+  #L30c234.  v1:= v3.`okhttp3.internal.http2.Hpack$Reader.headerList` @type ^`java.util.List` @kind object;
+  #L30c238.  v2:= new `okhttp3.internal.http2.Header`;
+  #L30c23c.  call `<init>`(v2, v4, v0) @signature `Lokhttp3/internal/http2/Header;.<init>:(Lokio/ByteString;Lokio/ByteString;)V` @kind direct;
+  #L30c242.  call temp:= `add`(v1, v2) @signature `Ljava/util/List;.add:(Ljava/lang/Object;)Z` @kind interface;
+  #L30c248.  return @kind void;
+}
+procedure `void` `readLiteralHeaderWithoutIndexingNewName`(`okhttp3.internal.http2.Hpack$Reader` v4 @kind this) @signature `Lokhttp3/internal/http2/Hpack$Reader;.readLiteralHeaderWithoutIndexingNewName:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L30c25c.  call temp:= `readByteString`(v4) @signature `Lokhttp3/internal/http2/Hpack$Reader;.readByteString:()Lokio/ByteString;` @kind virtual;
+  #L30c262.  v0:= temp @kind object;
+  #L30c264.  call temp:= `checkLowercase`(v0) @signature `Lokhttp3/internal/http2/Hpack;.checkLowercase:(Lokio/ByteString;)Lokio/ByteString;` @kind static;
+  #L30c26a.  v0:= temp @kind object;
+  #L30c26c.  call temp:= `readByteString`(v4) @signature `Lokhttp3/internal/http2/Hpack$Reader;.readByteString:()Lokio/ByteString;` @kind virtual;
+  #L30c272.  v1:= temp @kind object;
+  #L30c274.  v2:= v4.`okhttp3.internal.http2.Hpack$Reader.headerList` @type ^`java.util.List` @kind object;
+  #L30c278.  v3:= new `okhttp3.internal.http2.Header`;
+  #L30c27c.  call `<init>`(v3, v0, v1) @signature `Lokhttp3/internal/http2/Header;.<init>:(Lokio/ByteString;Lokio/ByteString;)V` @kind direct;
+  #L30c282.  call temp:= `add`(v2, v3) @signature `Ljava/util/List;.add:(Ljava/lang/Object;)Z` @kind interface;
+  #L30c288.  return @kind void;
+}
+procedure `java.util.List` `getAndResetHeaderList`(`okhttp3.internal.http2.Hpack$Reader` v2 @kind this) @signature `Lokhttp3/internal/http2/Hpack$Reader;.getAndResetHeaderList:()Ljava/util/List;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L30bd10.  v0:= new `java.util.ArrayList`;
+  #L30bd14.  v1:= v2.`okhttp3.internal.http2.Hpack$Reader.headerList` @type ^`java.util.List` @kind object;
+  #L30bd18.  call `<init>`(v0, v1) @signature `Ljava/util/ArrayList;.<init>:(Ljava/util/Collection;)V` @kind direct;
+  #L30bd1e.  v1:= v2.`okhttp3.internal.http2.Hpack$Reader.headerList` @type ^`java.util.List` @kind object;
+  #L30bd22.  call `clear`(v1) @signature `Ljava/util/List;.clear:()V` @kind interface;
+  #L30bd28.  return v0 @kind object;
+}
+procedure `int` `maxDynamicTableByteCount`(`okhttp3.internal.http2.Hpack$Reader` v1 @kind this) @signature `Lokhttp3/internal/http2/Hpack$Reader;.maxDynamicTableByteCount:()I` @AccessFlag  {
+    temp;
+    v0;
+
+  #L30bc94.  v0:= v1.`okhttp3.internal.http2.Hpack$Reader.maxDynamicTableByteCount` @type ^`int`;
+  #L30bc98.  return v0;
+}
+procedure `okio.ByteString` `readByteString`(`okhttp3.internal.http2.Hpack$Reader` v5 @kind this) @signature `Lokhttp3/internal/http2/Hpack$Reader;.readByteString:()Lokio/ByteString;` @AccessFlag  {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L30bdc4.  call temp:= `readByte`(v5) @signature `Lokhttp3/internal/http2/Hpack$Reader;.readByte:()I` @kind direct;
+  #L30bdca.  v0:= temp;
+  #L30bdcc.  v1:= v0 ^& 128;
+  #L30bdd0.  v2:= 128I;
+  #L30bdd4.  if v1 != v2 then goto L30bddc;
+  #L30bdd8.  v1:= 1I;
+  #L30bdda.  goto L30bdde;
+  #L30bddc.  v1:= 0I;
+  #L30bdde.  v2:= 127I;
+  #L30bde2.  call temp:= `readInt`(v5, v0, v2) @signature `Lokhttp3/internal/http2/Hpack$Reader;.readInt:(II)I` @kind virtual;
+  #L30bde8.  v0:= temp;
+  #L30bdea.  if v1 == 0 then goto L30be16;
+  #L30bdee.  call temp:= `get`() @signature `Lokhttp3/internal/http2/Huffman;.get:()Lokhttp3/internal/http2/Huffman;` @kind static;
+  #L30bdf4.  v1:= temp @kind object;
+  #L30bdf6.  v2:= v5.`okhttp3.internal.http2.Hpack$Reader.source` @type ^`okio.o` @kind object;
+  #L30bdfa.  v3:= (`long`) v0 @kind i2l;
+  #L30bdfc.  call temp:= `p0`(v2, v3) @signature `Lokio/o;.p0:(J)[B` @kind interface;
+  #L30be02.  v0:= temp @kind object;
+  #L30be04.  call temp:= `decode`(v1, v0) @signature `Lokhttp3/internal/http2/Huffman;.decode:([B)[B` @kind virtual;
+  #L30be0a.  v0:= temp @kind object;
+  #L30be0c.  call temp:= `of`(v0) @signature `Lokio/ByteString;.of:([B)Lokio/ByteString;` @kind static;
+  #L30be12.  v0:= temp @kind object;
+  #L30be14.  return v0 @kind object;
+  #L30be16.  v1:= v5.`okhttp3.internal.http2.Hpack$Reader.source` @type ^`okio.o` @kind object;
+  #L30be1a.  v2:= (`long`) v0 @kind i2l;
+  #L30be1c.  call temp:= `g`(v1, v2) @signature `Lokio/o;.g:(J)Lokio/ByteString;` @kind interface;
+  #L30be22.  v0:= temp @kind object;
+  #L30be24.  return v0 @kind object;
+}
+procedure `void` `readHeaders`(`okhttp3.internal.http2.Hpack$Reader` v3 @kind this) @signature `Lokhttp3/internal/http2/Hpack$Reader;.readHeaders:()V` @AccessFlag  {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L30bff4.  v0:= v3.`okhttp3.internal.http2.Hpack$Reader.source` @type ^`okio.o` @kind object;
+  #L30bff8.  call temp:= `O`(v0) @signature `Lokio/o;.O:()Z` @kind interface;
+  #L30bffe.  v0:= temp;
+  #L30c000.  if v0 != 0 then goto L30c10e;
+  #L30c004.  v0:= v3.`okhttp3.internal.http2.Hpack$Reader.source` @type ^`okio.o` @kind object;
+  #L30c008.  call temp:= `readByte`(v0) @signature `Lokio/o;.readByte:()B` @kind interface;
+  #L30c00e.  v0:= temp;
+  #L30c010.  v0:= v0 ^& 255;
+  #L30c014.  v1:= 128I;
+  #L30c018.  if v0 == v1 then goto L30c0fe;
+  #L30c01c.  v2:= v0 ^& 128;
+  #L30c020.  if v2 != v1 then goto L30c03c;
+  #L30c024.  v1:= 127I;
+  #L30c028.  call temp:= `readInt`(v3, v0, v1) @signature `Lokhttp3/internal/http2/Hpack$Reader;.readInt:(II)I` @kind virtual;
+  #L30c02e.  v0:= temp;
+  #L30c030.  v0:= v0 + -1;
+  #L30c034.  call `readIndexedHeader`(v3, v0) @signature `Lokhttp3/internal/http2/Hpack$Reader;.readIndexedHeader:(I)V` @kind direct;
+  #L30c03a.  goto L30bff4;
+  #L30c03c.  v1:= 64I;
+  #L30c040.  if v0 != v1 then goto L30c04c;
+  #L30c044.  call `readLiteralHeaderWithIncrementalIndexingNewName`(v3) @signature `Lokhttp3/internal/http2/Hpack$Reader;.readLiteralHeaderWithIncrementalIndexingNewName:()V` @kind direct;
+  #L30c04a.  goto L30bff4;
+  #L30c04c.  v2:= v0 ^& 64;
+  #L30c050.  if v2 != v1 then goto L30c06c;
+  #L30c054.  v1:= 63I;
+  #L30c058.  call temp:= `readInt`(v3, v0, v1) @signature `Lokhttp3/internal/http2/Hpack$Reader;.readInt:(II)I` @kind virtual;
+  #L30c05e.  v0:= temp;
+  #L30c060.  v0:= v0 + -1;
+  #L30c064.  call `readLiteralHeaderWithIncrementalIndexingIndexedName`(v3, v0) @signature `Lokhttp3/internal/http2/Hpack$Reader;.readLiteralHeaderWithIncrementalIndexingIndexedName:(I)V` @kind direct;
+  #L30c06a.  goto L30bff4;
+  #L30c06c.  v1:= v0 ^& 32;
+  #L30c070.  v2:= 32I;
+  #L30c074.  if v1 != v2 then goto L30c0ce;
+  #L30c078.  v1:= 31I;
+  #L30c07c.  call temp:= `readInt`(v3, v0, v1) @signature `Lokhttp3/internal/http2/Hpack$Reader;.readInt:(II)I` @kind virtual;
+  #L30c082.  v0:= temp;
+  #L30c084.  v3.`okhttp3.internal.http2.Hpack$Reader.maxDynamicTableByteCount` @type ^`int` := v0;
+  #L30c088.  if v0 < 0 then goto L30c09c;
+  #L30c08c.  v1:= v3.`okhttp3.internal.http2.Hpack$Reader.headerTableSizeSetting` @type ^`int`;
+  #L30c090.  if v0 > v1 then goto L30c09c;
+  #L30c094.  call `adjustDynamicTableByteCount`(v3) @signature `Lokhttp3/internal/http2/Hpack$Reader;.adjustDynamicTableByteCount:()V` @kind direct;
+  #L30c09a.  goto L30bff4;
+  #L30c09c.  v0:= new `java.io.IOException`;
+  #L30c0a0.  v1:= new `java.lang.StringBuilder`;
+  #L30c0a4.  call `<init>`(v1) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L30c0aa.  v2:= "Invalid dynamic table size update " @kind object;
+  #L30c0ae.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L30c0b4.  v2:= v3.`okhttp3.internal.http2.Hpack$Reader.maxDynamicTableByteCount` @type ^`int`;
+  #L30c0b8.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder;` @kind virtual;
+  #L30c0be.  call temp:= `toString`(v1) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L30c0c4.  v1:= temp @kind object;
+  #L30c0c6.  call `<init>`(v0, v1) @signature `Ljava/io/IOException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L30c0cc.  throw v0;
+  #L30c0ce.  v1:= 16I;
+  #L30c0d2.  if v0 == v1 then goto L30c0f4;
+  #L30c0d6.  if v0 != 0 then goto L30c0dc;
+  #L30c0da.  goto L30c0f4;
+  #L30c0dc.  v1:= 15I;
+  #L30c0e0.  call temp:= `readInt`(v3, v0, v1) @signature `Lokhttp3/internal/http2/Hpack$Reader;.readInt:(II)I` @kind virtual;
+  #L30c0e6.  v0:= temp;
+  #L30c0e8.  v0:= v0 + -1;
+  #L30c0ec.  call `readLiteralHeaderWithoutIndexingIndexedName`(v3, v0) @signature `Lokhttp3/internal/http2/Hpack$Reader;.readLiteralHeaderWithoutIndexingIndexedName:(I)V` @kind direct;
+  #L30c0f2.  goto L30bff4;
+  #L30c0f4.  call `readLiteralHeaderWithoutIndexingNewName`(v3) @signature `Lokhttp3/internal/http2/Hpack$Reader;.readLiteralHeaderWithoutIndexingNewName:()V` @kind direct;
+  #L30c0fa.  goto L30bff4;
+  #L30c0fe.  v0:= new `java.io.IOException`;
+  #L30c102.  v1:= "index == 0" @kind object;
+  #L30c106.  call `<init>`(v0, v1) @signature `Ljava/io/IOException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L30c10c.  throw v0;
+  #L30c10e.  return @kind void;
+}
+procedure `int` `readInt`(`okhttp3.internal.http2.Hpack$Reader` v2 @kind this, `int` v3 , `int` v4 ) @signature `Lokhttp3/internal/http2/Hpack$Reader;.readInt:(II)I` @AccessFlag  {
+    temp;
+    v0;
+    v1;
+
+  #L30bcd0.  v3:= v3 ^& v4 @kind int;
+  #L30bcd2.  if v3 >= v4 then goto L30bcd8;
+  #L30bcd6.  return v3;
+  #L30bcd8.  v3:= 0I;
+  #L30bcda.  call temp:= `readByte`(v2) @signature `Lokhttp3/internal/http2/Hpack$Reader;.readByte:()I` @kind direct;
+  #L30bce0.  v0:= temp;
+  #L30bce2.  v1:= v0 ^& 128;
+  #L30bce6.  if v1 == 0 then goto L30bcf8;
+  #L30bcea.  v0:= v0 ^& 127;
+  #L30bcee.  v0:= v0 ^< v3 @kind int;
+  #L30bcf0.  v4:= v4 + v0 @kind int;
+  #L30bcf2.  v3:= v3 + 7;
+  #L30bcf6.  goto L30bcda;
+  #L30bcf8.  v3:= v0 ^< v3 @kind int;
+  #L30bcfc.  v4:= v4 + v3 @kind int;
+  #L30bcfe.  return v4;
+}

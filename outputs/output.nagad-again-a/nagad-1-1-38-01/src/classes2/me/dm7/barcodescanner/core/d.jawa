@@ -1,0 +1,81 @@
+record `me.dm7.barcodescanner.core.d` @kind class @AccessFlag PUBLIC {
+}
+procedure `android.hardware.Camera` `getCameraInstance`(`int` v1 ) @signature `Lme/dm7/barcodescanner/core/d;.getCameraInstance:(I)Landroid/hardware/Camera;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+
+  #L1ef698.  v0:= -1I;
+  #L1ef69a.  if v1 != v0 then goto L1ef6a8;
+  #L1ef69e.  call temp:= `open`() @signature `Landroid/hardware/Camera;.open:()Landroid/hardware/Camera;` @kind static;
+  #L1ef6a4.  v1:= temp @kind object;
+  #L1ef6a6.  goto L1ef6b4;
+  #L1ef6a8.  call temp:= `open`(v1) @signature `Landroid/hardware/Camera;.open:(I)Landroid/hardware/Camera;` @kind static;
+  #L1ef6ae.  v1:= temp @kind object;
+  #L1ef6b0.  goto L1ef6b4;
+  #L1ef6b2.  v1:= 0I;
+  #L1ef6b4.  return v1 @kind object;
+  catch `java.lang.Exception` @[L1ef69e..L1ef6b0] goto L1ef6b2;
+}
+procedure `int` `getDefaultCameraId`() @signature `Lme/dm7/barcodescanner/core/d;.getDefaultCameraId:()I` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L1ef74c.  call temp:= `getNumberOfCameras`() @signature `Landroid/hardware/Camera;.getNumberOfCameras:()I` @kind static;
+  #L1ef752.  v0:= temp;
+  #L1ef754.  v1:= new `android.hardware.Camera$CameraInfo`;
+  #L1ef758.  call `<init>`(v1) @signature `Landroid/hardware/Camera$CameraInfo;.<init>:()V` @kind direct;
+  #L1ef75e.  v2:= -1I;
+  #L1ef760.  v3:= 0I;
+  #L1ef762.  v2:= 0I;
+  #L1ef764.  v3:= -1I;
+  #L1ef766.  if v2 >= v0 then goto L1ef786;
+  #L1ef76a.  call `getCameraInfo`(v2, v1) @signature `Landroid/hardware/Camera;.getCameraInfo:(ILandroid/hardware/Camera$CameraInfo;)V` @kind static;
+  #L1ef770.  v3:= v1.`android.hardware.Camera$CameraInfo.facing` @type ^`int`;
+  #L1ef774.  if v3 != 0 then goto L1ef77a;
+  #L1ef778.  return v2;
+  #L1ef77a.  v3:= v2 + 1;
+  #L1ef77e.  v4:= v3;
+  #L1ef780.  v3:= v2;
+  #L1ef782.  v2:= v4;
+  #L1ef784.  goto L1ef766;
+  #L1ef786.  return v3;
+}
+procedure `boolean` `isFlashSupported`(`android.hardware.Camera` v3 @kind object) @signature `Lme/dm7/barcodescanner/core/d;.isFlashSupported:(Landroid/hardware/Camera;)Z` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L1ef6d8.  v0:= 0I;
+  #L1ef6da.  if v3 == 0 then goto L1ef73a;
+  #L1ef6de.  call temp:= `getParameters`(v3) @signature `Landroid/hardware/Camera;.getParameters:()Landroid/hardware/Camera$Parameters;` @kind virtual;
+  #L1ef6e4.  v3:= temp @kind object;
+  #L1ef6e6.  call temp:= `getFlashMode`(v3) @signature `Landroid/hardware/Camera$Parameters;.getFlashMode:()Ljava/lang/String;` @kind virtual;
+  #L1ef6ec.  v1:= temp @kind object;
+  #L1ef6ee.  if v1 != 0 then goto L1ef6f4;
+  #L1ef6f2.  return v0;
+  #L1ef6f4.  call temp:= `getSupportedFlashModes`(v3) @signature `Landroid/hardware/Camera$Parameters;.getSupportedFlashModes:()Ljava/util/List;` @kind virtual;
+  #L1ef6fa.  v3:= temp @kind object;
+  #L1ef6fc.  if v3 == 0 then goto L1ef73a;
+  #L1ef700.  call temp:= `isEmpty`(v3) @signature `Ljava/util/List;.isEmpty:()Z` @kind interface;
+  #L1ef706.  v1:= temp;
+  #L1ef708.  if v1 != 0 then goto L1ef73a;
+  #L1ef70c.  call temp:= `size`(v3) @signature `Ljava/util/List;.size:()I` @kind interface;
+  #L1ef712.  v1:= temp;
+  #L1ef714.  v2:= 1I;
+  #L1ef716.  if v1 != v2 then goto L1ef738;
+  #L1ef71a.  call temp:= `get`(v3, v0) @signature `Ljava/util/List;.get:(I)Ljava/lang/Object;` @kind interface;
+  #L1ef720.  v3:= temp @kind object;
+  #L1ef722.  v3:= (`java.lang.String`) v3 @kind object;
+  #L1ef726.  v1:= "off" @kind object;
+  #L1ef72a.  call temp:= `equals`(v3, v1) @signature `Ljava/lang/String;.equals:(Ljava/lang/Object;)Z` @kind virtual;
+  #L1ef730.  v3:= temp;
+  #L1ef732.  if v3 == 0 then goto L1ef738;
+  #L1ef736.  goto L1ef73a;
+  #L1ef738.  return v2;
+  #L1ef73a.  return v0;
+}

@@ -1,0 +1,202 @@
+record `kotlinx.coroutines.DispatchedTaskKt` @kind class @AccessFlag PUBLIC_FINAL {
+}
+global `int` `@@kotlinx.coroutines.DispatchedTaskKt.MODE_ATOMIC` @AccessFlag PUBLIC_STATIC_FINAL;
+global `int` `@@kotlinx.coroutines.DispatchedTaskKt.MODE_CANCELLABLE` @AccessFlag PUBLIC_STATIC_FINAL;
+global `int` `@@kotlinx.coroutines.DispatchedTaskKt.MODE_CANCELLABLE_REUSABLE` @AccessFlag PUBLIC_STATIC_FINAL;
+global `int` `@@kotlinx.coroutines.DispatchedTaskKt.MODE_UNDISPATCHED` @AccessFlag PUBLIC_STATIC_FINAL;
+global `int` `@@kotlinx.coroutines.DispatchedTaskKt.MODE_UNINITIALIZED` @AccessFlag PUBLIC_STATIC_FINAL;
+procedure `void` `a`(`kotlinx.coroutines.DispatchedTask` v4 @kind object) @signature `Lkotlinx/coroutines/DispatchedTaskKt;.a:(Lkotlinx/coroutines/DispatchedTask;)V` @AccessFlag PRIVATE_STATIC_FINAL {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L0f1070.  v0:= `@@kotlinx.coroutines.ThreadLocalEventLoop.INSTANCE` @type ^`kotlinx.coroutines.ThreadLocalEventLoop` @kind object;
+  #L0f1074.  call temp:= `getEventLoop$kotlinx_coroutines_core`(v0) @signature `Lkotlinx/coroutines/ThreadLocalEventLoop;.getEventLoop$kotlinx_coroutines_core:()Lkotlinx/coroutines/EventLoop;` @kind virtual;
+  #L0f107a.  v0:= temp @kind object;
+  #L0f107c.  call temp:= `isUnconfinedLoopActive`(v0) @signature `Lkotlinx/coroutines/EventLoop;.isUnconfinedLoopActive:()Z` @kind virtual;
+  #L0f1082.  v1:= temp;
+  #L0f1084.  if v1 == 0 then goto L0f1090;
+  #L0f1088.  call `dispatchUnconfined`(v0, v4) @signature `Lkotlinx/coroutines/EventLoop;.dispatchUnconfined:(Lkotlinx/coroutines/DispatchedTask;)V` @kind virtual;
+  #L0f108e.  goto L0f10c4;
+  #L0f1090.  v1:= 1I;
+  #L0f1092.  call `incrementUseCount`(v0, v1) @signature `Lkotlinx/coroutines/EventLoop;.incrementUseCount:(Z)V` @kind virtual;
+  #L0f1098.  call temp:= `getDelegate$kotlinx_coroutines_core`(v4) @signature `Lkotlinx/coroutines/DispatchedTask;.getDelegate$kotlinx_coroutines_core:()Lkotlin/coroutines/Continuation;` @kind virtual;
+  #L0f109e.  v2:= temp @kind object;
+  #L0f10a0.  call `resume`(v4, v2, v1) @signature `Lkotlinx/coroutines/DispatchedTaskKt;.resume:(Lkotlinx/coroutines/DispatchedTask;Lkotlin/coroutines/Continuation;Z)V` @kind static;
+  #L0f10a6.  call temp:= `processUnconfinedEvent`(v0) @signature `Lkotlinx/coroutines/EventLoop;.processUnconfinedEvent:()Z` @kind virtual;
+  #L0f10ac.  v2:= temp;
+  #L0f10ae.  if v2 != 0 then goto L0f10a6;
+  #L0f10b2.  goto L0f10be;
+  #L0f10b4.  v2:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L0f10b6.  v3:= 0I;
+  #L0f10b8.  call `handleFatalException`(v4, v2, v3) @signature `Lkotlinx/coroutines/DispatchedTask;.handleFatalException:(Ljava/lang/Throwable;Ljava/lang/Throwable;)V` @kind virtual;
+  #L0f10be.  call `decrementUseCount`(v0, v1) @signature `Lkotlinx/coroutines/EventLoop;.decrementUseCount:(Z)V` @kind virtual;
+  #L0f10c4.  return @kind void;
+  #L0f10c6.  v4:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L0f10c8.  call `decrementUseCount`(v0, v1) @signature `Lkotlinx/coroutines/EventLoop;.decrementUseCount:(Z)V` @kind virtual;
+  #L0f10ce.  throw v4;
+  catch `java.lang.Throwable` @[L0f1098..L0f10ae] goto L0f10b4;
+  catch `java.lang.Throwable` @[L0f10b8..L0f10be] goto L0f10c6;
+}
+procedure `void` `dispatch`(`kotlinx.coroutines.DispatchedTask` v3 @kind object, `int` v4 ) @signature `Lkotlinx/coroutines/DispatchedTaskKt;.dispatch:(Lkotlinx/coroutines/DispatchedTask;I)V` @AccessFlag PUBLIC_STATIC_FINAL {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L0f0f0c.  call temp:= `getDelegate$kotlinx_coroutines_core`(v3) @signature `Lkotlinx/coroutines/DispatchedTask;.getDelegate$kotlinx_coroutines_core:()Lkotlin/coroutines/Continuation;` @kind virtual;
+  #L0f0f12.  v0:= temp @kind object;
+  #L0f0f14.  v1:= 4I;
+  #L0f0f16.  if v4 != v1 then goto L0f0f1e;
+  #L0f0f1a.  v1:= 1I;
+  #L0f0f1c.  goto L0f0f20;
+  #L0f0f1e.  v1:= 0I;
+  #L0f0f20.  if v1 != 0 then goto L0f0f72;
+  #L0f0f24.  v2:= instanceof @variable v0 @type ^`kotlinx.coroutines.internal.DispatchedContinuation` @kind boolean;
+  #L0f0f28.  if v2 == 0 then goto L0f0f72;
+  #L0f0f2c.  call temp:= `isCancellableMode`(v4) @signature `Lkotlinx/coroutines/DispatchedTaskKt;.isCancellableMode:(I)Z` @kind static;
+  #L0f0f32.  v4:= temp;
+  #L0f0f34.  v2:= v3.`kotlinx.coroutines.DispatchedTask.resumeMode` @type ^`int`;
+  #L0f0f38.  call temp:= `isCancellableMode`(v2) @signature `Lkotlinx/coroutines/DispatchedTaskKt;.isCancellableMode:(I)Z` @kind static;
+  #L0f0f3e.  v2:= temp;
+  #L0f0f40.  if v4 != v2 then goto L0f0f72;
+  #L0f0f44.  v4:= v0 @kind object;
+  #L0f0f46.  v4:= (`kotlinx.coroutines.internal.DispatchedContinuation`) v4 @kind object;
+  #L0f0f4a.  v4:= v4.`kotlinx.coroutines.internal.DispatchedContinuation.dispatcher` @type ^`kotlinx.coroutines.CoroutineDispatcher` @kind object;
+  #L0f0f4e.  call temp:= `getContext`(v0) @signature `Lkotlin/coroutines/Continuation;.getContext:()Lkotlin/coroutines/CoroutineContext;` @kind interface;
+  #L0f0f54.  v0:= temp @kind object;
+  #L0f0f56.  call temp:= `isDispatchNeeded`(v4, v0) @signature `Lkotlinx/coroutines/CoroutineDispatcher;.isDispatchNeeded:(Lkotlin/coroutines/CoroutineContext;)Z` @kind virtual;
+  #L0f0f5c.  v1:= temp;
+  #L0f0f5e.  if v1 == 0 then goto L0f0f6a;
+  #L0f0f62.  call `dispatch`(v4, v0, v3) @signature `Lkotlinx/coroutines/CoroutineDispatcher;.dispatch:(Lkotlin/coroutines/CoroutineContext;Ljava/lang/Runnable;)V` @kind virtual;
+  #L0f0f68.  goto L0f0f78;
+  #L0f0f6a.  call `a`(v3) @signature `Lkotlinx/coroutines/DispatchedTaskKt;.a:(Lkotlinx/coroutines/DispatchedTask;)V` @kind static;
+  #L0f0f70.  goto L0f0f78;
+  #L0f0f72.  call `resume`(v3, v0, v1) @signature `Lkotlinx/coroutines/DispatchedTaskKt;.resume:(Lkotlinx/coroutines/DispatchedTask;Lkotlin/coroutines/Continuation;Z)V` @kind static;
+  #L0f0f78.  return @kind void;
+}
+procedure `void` `getMODE_CANCELLABLE$annotations`() @signature `Lkotlinx/coroutines/DispatchedTaskKt;.getMODE_CANCELLABLE$annotations:()V` @AccessFlag PUBLIC_STATIC_SYNTHETIC {
+    temp;
+
+  #L0f0f8c.  return @kind void;
+}
+procedure `boolean` `isCancellableMode`(`int` v2 ) @signature `Lkotlinx/coroutines/DispatchedTaskKt;.isCancellableMode:(I)Z` @AccessFlag PUBLIC_STATIC_FINAL {
+    temp;
+    v0;
+    v1;
+
+  #L0f0ec8.  v0:= 1I;
+  #L0f0eca.  if v2 == v0 then goto L0f0ed8;
+  #L0f0ece.  v1:= 2I;
+  #L0f0ed0.  if v2 != v1 then goto L0f0ed6;
+  #L0f0ed4.  goto L0f0ed8;
+  #L0f0ed6.  v0:= 0I;
+  #L0f0ed8.  return v0;
+}
+procedure `boolean` `isReusableMode`(`int` v1 ) @signature `Lkotlinx/coroutines/DispatchedTaskKt;.isReusableMode:(I)Z` @AccessFlag PUBLIC_STATIC_FINAL {
+    temp;
+    v0;
+
+  #L0f0eec.  v0:= 2I;
+  #L0f0eee.  if v1 != v0 then goto L0f0ef6;
+  #L0f0ef2.  v1:= 1I;
+  #L0f0ef4.  goto L0f0ef8;
+  #L0f0ef6.  v1:= 0I;
+  #L0f0ef8.  return v1;
+}
+procedure `void` `resume`(`kotlinx.coroutines.DispatchedTask` v3 @kind object, `kotlin.coroutines.Continuation` v4 @kind object, `boolean` v5 ) @signature `Lkotlinx/coroutines/DispatchedTaskKt;.resume:(Lkotlinx/coroutines/DispatchedTask;Lkotlin/coroutines/Continuation;Z)V` @AccessFlag PUBLIC_STATIC_FINAL {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L0f0fa0.  call temp:= `takeState$kotlinx_coroutines_core`(v3) @signature `Lkotlinx/coroutines/DispatchedTask;.takeState$kotlinx_coroutines_core:()Ljava/lang/Object;` @kind virtual;
+  #L0f0fa6.  v0:= temp @kind object;
+  #L0f0fa8.  call temp:= `getExceptionalResult$kotlinx_coroutines_core`(v3, v0) @signature `Lkotlinx/coroutines/DispatchedTask;.getExceptionalResult$kotlinx_coroutines_core:(Ljava/lang/Object;)Ljava/lang/Throwable;` @kind virtual;
+  #L0f0fae.  v1:= temp @kind object;
+  #L0f0fb0.  if v1 == 0 then goto L0f0fc2;
+  #L0f0fb4.  v3:= `@@kotlin.Result.Companion` @type ^`kotlin.Result$Companion` @kind object;
+  #L0f0fb8.  call temp:= `createFailure`(v1) @signature `Lkotlin/ResultKt;.createFailure:(Ljava/lang/Throwable;)Ljava/lang/Object;` @kind static;
+  #L0f0fbe.  v3:= temp @kind object;
+  #L0f0fc0.  goto L0f0fce;
+  #L0f0fc2.  v1:= `@@kotlin.Result.Companion` @type ^`kotlin.Result$Companion` @kind object;
+  #L0f0fc6.  call temp:= `getSuccessfulResult$kotlinx_coroutines_core`(v3, v0) @signature `Lkotlinx/coroutines/DispatchedTask;.getSuccessfulResult$kotlinx_coroutines_core:(Ljava/lang/Object;)Ljava/lang/Object;` @kind virtual;
+  #L0f0fcc.  v3:= temp @kind object;
+  #L0f0fce.  call temp:= `constructor-impl`(v3) @signature `Lkotlin/Result;.constructor-impl:(Ljava/lang/Object;)Ljava/lang/Object;` @kind static;
+  #L0f0fd4.  v3:= temp @kind object;
+  #L0f0fd6.  if v5 == 0 then goto L0f104a;
+  #L0f0fda.  v4:= (`kotlinx.coroutines.internal.DispatchedContinuation`) v4 @kind object;
+  #L0f0fde.  v5:= v4.`kotlinx.coroutines.internal.DispatchedContinuation.continuation` @type ^`kotlin.coroutines.Continuation` @kind object;
+  #L0f0fe2.  v0:= v4.`kotlinx.coroutines.internal.DispatchedContinuation.countOrElement` @type ^`java.lang.Object` @kind object;
+  #L0f0fe6.  call temp:= `getContext`(v5) @signature `Lkotlin/coroutines/Continuation;.getContext:()Lkotlin/coroutines/CoroutineContext;` @kind interface;
+  #L0f0fec.  v1:= temp @kind object;
+  #L0f0fee.  call temp:= `updateThreadContext`(v1, v0) @signature `Lkotlinx/coroutines/internal/ThreadContextKt;.updateThreadContext:(Lkotlin/coroutines/CoroutineContext;Ljava/lang/Object;)Ljava/lang/Object;` @kind static;
+  #L0f0ff4.  v0:= temp @kind object;
+  #L0f0ff6.  v2:= `@@kotlinx.coroutines.internal.ThreadContextKt.NO_THREAD_ELEMENTS` @type ^`kotlinx.coroutines.internal.Symbol` @kind object;
+  #L0f0ffa.  if v0 == v2 then goto L0f1008;
+  #L0f0ffe.  call temp:= `updateUndispatchedCompletion`(v5, v1, v0) @signature `Lkotlinx/coroutines/CoroutineContextKt;.updateUndispatchedCompletion:(Lkotlin/coroutines/Continuation;Lkotlin/coroutines/CoroutineContext;Ljava/lang/Object;)Lkotlinx/coroutines/UndispatchedCoroutine;` @kind static;
+  #L0f1004.  v5:= temp @kind object;
+  #L0f1006.  goto L0f100a;
+  #L0f1008.  v5:= 0I;
+  #L0f100a.  v4:= v4.`kotlinx.coroutines.internal.DispatchedContinuation.continuation` @type ^`kotlin.coroutines.Continuation` @kind object;
+  #L0f100e.  call `resumeWith`(v4, v3) @signature `Lkotlin/coroutines/Continuation;.resumeWith:(Ljava/lang/Object;)V` @kind interface;
+  #L0f1014.  v3:= `@@kotlin.Unit.INSTANCE` @type ^`kotlin.Unit` @kind object;
+  #L0f1018.  if v5 == 0 then goto L0f1028;
+  #L0f101c.  call temp:= `clearThreadContext`(v5) @signature `Lkotlinx/coroutines/UndispatchedCoroutine;.clearThreadContext:()Z` @kind virtual;
+  #L0f1022.  v3:= temp;
+  #L0f1024.  if v3 == 0 then goto L0f1050;
+  #L0f1028.  call `restoreThreadContext`(v1, v0) @signature `Lkotlinx/coroutines/internal/ThreadContextKt;.restoreThreadContext:(Lkotlin/coroutines/CoroutineContext;Ljava/lang/Object;)V` @kind static;
+  #L0f102e.  goto L0f1050;
+  #L0f1030.  v3:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L0f1032.  if v5 == 0 then goto L0f1042;
+  #L0f1036.  call temp:= `clearThreadContext`(v5) @signature `Lkotlinx/coroutines/UndispatchedCoroutine;.clearThreadContext:()Z` @kind virtual;
+  #L0f103c.  v4:= temp;
+  #L0f103e.  if v4 == 0 then goto L0f1048;
+  #L0f1042.  call `restoreThreadContext`(v1, v0) @signature `Lkotlinx/coroutines/internal/ThreadContextKt;.restoreThreadContext:(Lkotlin/coroutines/CoroutineContext;Ljava/lang/Object;)V` @kind static;
+  #L0f1048.  throw v3;
+  #L0f104a.  call `resumeWith`(v4, v3) @signature `Lkotlin/coroutines/Continuation;.resumeWith:(Ljava/lang/Object;)V` @kind interface;
+  #L0f1050.  return @kind void;
+  catch `java.lang.Throwable` @[L0f100a..L0f1018] goto L0f1030;
+}
+procedure `void` `resumeWithStackTrace`(`kotlin.coroutines.Continuation` v1 @kind object, `java.lang.Throwable` v2 @kind object) @signature `Lkotlinx/coroutines/DispatchedTaskKt;.resumeWithStackTrace:(Lkotlin/coroutines/Continuation;Ljava/lang/Throwable;)V` @AccessFlag PUBLIC_STATIC_FINAL {
+    temp;
+    v0;
+
+  #L0f10f8.  v0:= `@@kotlin.Result.Companion` @type ^`kotlin.Result$Companion` @kind object;
+  #L0f10fc.  call temp:= `createFailure`(v2) @signature `Lkotlin/ResultKt;.createFailure:(Ljava/lang/Throwable;)Ljava/lang/Object;` @kind static;
+  #L0f1102.  v2:= temp @kind object;
+  #L0f1104.  call temp:= `constructor-impl`(v2) @signature `Lkotlin/Result;.constructor-impl:(Ljava/lang/Object;)Ljava/lang/Object;` @kind static;
+  #L0f110a.  v2:= temp @kind object;
+  #L0f110c.  call `resumeWith`(v1, v2) @signature `Lkotlin/coroutines/Continuation;.resumeWith:(Ljava/lang/Object;)V` @kind interface;
+  #L0f1112.  return @kind void;
+}
+procedure `void` `runUnconfinedEventLoop`(`kotlinx.coroutines.DispatchedTask` v2 @kind object, `kotlinx.coroutines.EventLoop` v3 @kind object, `kotlin.jvm.functions.Function0` v4 @kind object) @signature `Lkotlinx/coroutines/DispatchedTaskKt;.runUnconfinedEventLoop:(Lkotlinx/coroutines/DispatchedTask;Lkotlinx/coroutines/EventLoop;Lkotlin/jvm/functions/Function0;)V` @AccessFlag PUBLIC_STATIC_FINAL {
+    temp;
+    v0;
+    v1;
+
+  #L0f1124.  v0:= 1I;
+  #L0f1126.  call `incrementUseCount`(v3, v0) @signature `Lkotlinx/coroutines/EventLoop;.incrementUseCount:(Z)V` @kind virtual;
+  #L0f112c.  call temp:= `invoke`(v4) @signature `Lkotlin/jvm/functions/Function0;.invoke:()Ljava/lang/Object;` @kind interface;
+  #L0f1132.  call temp:= `processUnconfinedEvent`(v3) @signature `Lkotlinx/coroutines/EventLoop;.processUnconfinedEvent:()Z` @kind virtual;
+  #L0f1138.  v4:= temp;
+  #L0f113a.  if v4 != 0 then goto L0f1132;
+  #L0f113e.  call `finallyStart`(v0) @signature `Lkotlin/jvm/internal/InlineMarker;.finallyStart:(I)V` @kind static;
+  #L0f1144.  goto L0f1156;
+  #L0f1146.  v4:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L0f1148.  v1:= 0I;
+  #L0f114a.  call `handleFatalException`(v2, v4, v1) @signature `Lkotlinx/coroutines/DispatchedTask;.handleFatalException:(Ljava/lang/Throwable;Ljava/lang/Throwable;)V` @kind virtual;
+  #L0f1150.  call `finallyStart`(v0) @signature `Lkotlin/jvm/internal/InlineMarker;.finallyStart:(I)V` @kind static;
+  #L0f1156.  call `decrementUseCount`(v3, v0) @signature `Lkotlinx/coroutines/EventLoop;.decrementUseCount:(Z)V` @kind virtual;
+  #L0f115c.  call `finallyEnd`(v0) @signature `Lkotlin/jvm/internal/InlineMarker;.finallyEnd:(I)V` @kind static;
+  #L0f1162.  return @kind void;
+  #L0f1164.  v2:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L0f1166.  call `finallyStart`(v0) @signature `Lkotlin/jvm/internal/InlineMarker;.finallyStart:(I)V` @kind static;
+  #L0f116c.  call `decrementUseCount`(v3, v0) @signature `Lkotlinx/coroutines/EventLoop;.decrementUseCount:(Z)V` @kind virtual;
+  #L0f1172.  call `finallyEnd`(v0) @signature `Lkotlin/jvm/internal/InlineMarker;.finallyEnd:(I)V` @kind static;
+  #L0f1178.  throw v2;
+  catch `java.lang.Throwable` @[L0f112c..L0f113a] goto L0f1146;
+  catch `java.lang.Throwable` @[L0f114a..L0f1150] goto L0f1164;
+}

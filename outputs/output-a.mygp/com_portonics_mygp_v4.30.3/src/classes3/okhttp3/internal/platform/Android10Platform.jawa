@@ -1,0 +1,96 @@
+record `okhttp3.internal.platform.Android10Platform` @kind class @AccessFlag  extends `okhttp3.internal.platform.AndroidPlatform` @kind class {
+}
+procedure `void` `<init>`(`okhttp3.internal.platform.Android10Platform` v7 @kind this, `java.lang.Class` v8 @kind object) @signature `Lokhttp3/internal/platform/Android10Platform;.<init>:(Ljava/lang/Class;)V` @AccessFlag CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+
+  #L312840.  v2:= 0I;
+  #L312842.  v3:= 0I;
+  #L312844.  v4:= 0I;
+  #L312846.  v5:= 0I;
+  #L312848.  v6:= 0I;
+  #L31284a.  v0:= v7 @kind object;
+  #L31284c.  v1:= v8 @kind object;
+  #L31284e.  call `<init>`(v0, v1, v2, v3, v4, v5, v6) @signature `Lokhttp3/internal/platform/AndroidPlatform;.<init>:(Ljava/lang/Class;Ljava/lang/Class;Ljava/lang/reflect/Method;Ljava/lang/reflect/Method;Ljava/lang/reflect/Method;Ljava/lang/reflect/Method;)V` @kind direct;
+  #L312854.  return @kind void;
+}
+procedure `okhttp3.internal.platform.Platform` `buildIfSupported`() @signature `Lokhttp3/internal/platform/Android10Platform;.buildIfSupported:()Lokhttp3/internal/platform/Platform;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L3127e4.  call temp:= `isAndroid`() @signature `Lokhttp3/internal/platform/Platform;.isAndroid:()Z` @kind static;
+  #L3127ea.  v0:= temp;
+  #L3127ec.  v1:= 0I;
+  #L3127ee.  if v0 != 0 then goto L3127f4;
+  #L3127f2.  return v1 @kind object;
+  #L3127f4.  call temp:= `getSdkInt`() @signature `Lokhttp3/internal/platform/AndroidPlatform;.getSdkInt:()I` @kind static;
+  #L3127fa.  v0:= temp;
+  #L3127fc.  v2:= 29I;
+  #L312800.  if v0 < v2 then goto L31281c;
+  #L312804.  v0:= "com.android.org.conscrypt.SSLParametersImpl" @kind object;
+  #L312808.  call temp:= `forName`(v0) @signature `Ljava/lang/Class;.forName:(Ljava/lang/String;)Ljava/lang/Class;` @kind static;
+  #L31280e.  v0:= temp @kind object;
+  #L312810.  v2:= new `okhttp3.internal.platform.Android10Platform`;
+  #L312814.  call `<init>`(v2, v0) @signature `Lokhttp3/internal/platform/Android10Platform;.<init>:(Ljava/lang/Class;)V` @kind direct;
+  #L31281a.  return v2 @kind object;
+  #L31281c.  return v1 @kind object;
+  catch `java.lang.ReflectiveOperationException` @[L3127f4..L31281a] goto L31281c;
+}
+procedure `void` `enableSessionTickets`(`okhttp3.internal.platform.Android10Platform` v1 @kind this, `javax.net.ssl.SSLSocket` v2 @kind object) @signature `Lokhttp3/internal/platform/Android10Platform;.enableSessionTickets:(Ljavax/net/ssl/SSLSocket;)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+
+  #L3128d0.  call temp:= `isSupportedSocket`(v2) @signature `Landroid/net/ssl/SSLSockets;.isSupportedSocket:(Ljavax/net/ssl/SSLSocket;)Z` @kind static;
+  #L3128d6.  v0:= temp;
+  #L3128d8.  if v0 == 0 then goto L3128e4;
+  #L3128dc.  v0:= 1I;
+  #L3128de.  call `setUseSessionTickets`(v2, v0) @signature `Landroid/net/ssl/SSLSockets;.setUseSessionTickets:(Ljavax/net/ssl/SSLSocket;Z)V` @kind static;
+  #L3128e4.  return @kind void;
+}
+procedure `void` `configureTlsExtensions`(`okhttp3.internal.platform.Android10Platform` v1 @kind this, `javax.net.ssl.SSLSocket` v2 @kind object, `java.lang.String` v3 @kind object, `java.util.List` v4 @kind object) @signature `Lokhttp3/internal/platform/Android10Platform;.configureTlsExtensions:(Ljavax/net/ssl/SSLSocket;Ljava/lang/String;Ljava/util/List;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L312868.  call `enableSessionTickets`(v1, v2) @signature `Lokhttp3/internal/platform/Android10Platform;.enableSessionTickets:(Ljavax/net/ssl/SSLSocket;)V` @kind direct;
+  #L31286e.  call temp:= `getSSLParameters`(v2) @signature `Ljavax/net/ssl/SSLSocket;.getSSLParameters:()Ljavax/net/ssl/SSLParameters;` @kind virtual;
+  #L312874.  v3:= temp @kind object;
+  #L312876.  call temp:= `alpnProtocolNames`(v4) @signature `Lokhttp3/internal/platform/Platform;.alpnProtocolNames:(Ljava/util/List;)Ljava/util/List;` @kind static;
+  #L31287c.  v4:= temp @kind object;
+  #L31287e.  v0:= 0I;
+  #L312880.  v0:= new `java.lang.String`[v0];
+  #L312884.  call temp:= `toArray`(v4, v0) @signature `Ljava/util/List;.toArray:([Ljava/lang/Object;)[Ljava/lang/Object;` @kind interface;
+  #L31288a.  v4:= temp @kind object;
+  #L31288c.  v4:= (`java.lang.String`[]) v4 @kind object;
+  #L312890.  call `setApplicationProtocols`(v3, v4) @signature `Ljavax/net/ssl/SSLParameters;.setApplicationProtocols:([Ljava/lang/String;)V` @kind virtual;
+  #L312896.  call `setSSLParameters`(v2, v3) @signature `Ljavax/net/ssl/SSLSocket;.setSSLParameters:(Ljavax/net/ssl/SSLParameters;)V` @kind virtual;
+  #L31289c.  return @kind void;
+  #L31289e.  v2:= Exception @type ^`java.lang.IllegalArgumentException` @kind object;
+  #L3128a0.  v3:= new `java.io.IOException`;
+  #L3128a4.  v4:= "Android internal error" @kind object;
+  #L3128a8.  call `<init>`(v3, v4, v2) @signature `Ljava/io/IOException;.<init>:(Ljava/lang/String;Ljava/lang/Throwable;)V` @kind direct;
+  #L3128ae.  throw v3;
+  catch `java.lang.IllegalArgumentException` @[L312868..L31289c] goto L31289e;
+}
+procedure `java.lang.String` `getSelectedProtocol`(`okhttp3.internal.platform.Android10Platform` v1 @kind this, `javax.net.ssl.SSLSocket` v2 @kind object) @signature `Lokhttp3/internal/platform/Android10Platform;.getSelectedProtocol:(Ljavax/net/ssl/SSLSocket;)Ljava/lang/String;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L3127b4.  call temp:= `getApplicationProtocol`(v2) @signature `Ljavax/net/ssl/SSLSocket;.getApplicationProtocol:()Ljava/lang/String;` @kind virtual;
+  #L3127ba.  v2:= temp @kind object;
+  #L3127bc.  if v2 == 0 then goto L3127d0;
+  #L3127c0.  call temp:= `isEmpty`(v2) @signature `Ljava/lang/String;.isEmpty:()Z` @kind virtual;
+  #L3127c6.  v0:= temp;
+  #L3127c8.  if v0 == 0 then goto L3127ce;
+  #L3127cc.  goto L3127d0;
+  #L3127ce.  return v2 @kind object;
+  #L3127d0.  v2:= 0I;
+  #L3127d2.  return v2 @kind object;
+}

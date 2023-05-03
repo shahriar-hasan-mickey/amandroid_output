@@ -1,0 +1,44 @@
+record `okio.AsyncTimeout$Watchdog` @kind class @AccessFlag FINAL extends `java.lang.Thread` @kind class {
+}
+procedure `void` `<init>`(`okio.AsyncTimeout$Watchdog` v1 @kind this) @signature `Lokio/AsyncTimeout$Watchdog;.<init>:()V` @AccessFlag CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L24b270.  v0:= "Okio Watchdog" @kind object;
+  #L24b274.  call `<init>`(v1, v0) @signature `Ljava/lang/Thread;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L24b27a.  v0:= 1I;
+  #L24b27c.  call `setDaemon`(v1, v0) @signature `Lokio/AsyncTimeout$Watchdog;.setDaemon:(Z)V` @kind virtual;
+  #L24b282.  return @kind void;
+}
+procedure `void` `run`(`okio.AsyncTimeout$Watchdog` v3 @kind this) @signature `Lokio/AsyncTimeout$Watchdog;.run:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L24b294.  v0:= constclass @type ^`okio.AsyncTimeout` @kind object;
+  #L24b298.  @monitorenter v0
+  #L24b29a.  call temp:= `awaitTimeout`() @signature `Lokio/AsyncTimeout;.awaitTimeout:()Lokio/AsyncTimeout;` @kind static;
+  #L24b2a0.  v1:= temp @kind object;
+  #L24b2a2.  if v1 != 0 then goto L24b2aa;
+  #L24b2a6.  @monitorexit v0
+  #L24b2a8.  goto L24b294;
+  #L24b2aa.  v2:= `@@okio.AsyncTimeout.head` @type ^`okio.AsyncTimeout` @kind object;
+  #L24b2ae.  if v1 != v2 then goto L24b2bc;
+  #L24b2b2.  v1:= 0I;
+  #L24b2b4.  `@@okio.AsyncTimeout.head` @type ^`okio.AsyncTimeout` := v1 @kind object;
+  #L24b2b8.  @monitorexit v0
+  #L24b2ba.  return @kind void;
+  #L24b2bc.  @monitorexit v0
+  #L24b2be.  call `timedOut`(v1) @signature `Lokio/AsyncTimeout;.timedOut:()V` @kind virtual;
+  #L24b2c4.  goto L24b294;
+  #L24b2c6.  v1:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L24b2c8.  @monitorexit v0
+  #L24b2ca.  throw v1;
+  #L24b2cc.  return @kind void;
+  catch `java.lang.InterruptedException` @[L24b294..L24b29a] goto L24b294;
+  catch `java.lang.Throwable` @[L24b29a..L24b2be] goto L24b2c6;
+  catch `java.lang.InterruptedException` @[L24b2be..L24b2c4] goto L24b294;
+  catch `java.lang.Throwable` @[L24b2c8..L24b2ca] goto L24b2c6;
+  catch `java.lang.InterruptedException` @[L24b2ca..L24b2cc] goto L24b294;
+}

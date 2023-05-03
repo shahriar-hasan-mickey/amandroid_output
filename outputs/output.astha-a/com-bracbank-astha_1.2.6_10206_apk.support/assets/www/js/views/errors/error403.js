@@ -1,0 +1,1 @@
+define(["jquery","underscore","Backbone","text!views/errors/error403.tpl"],function(e,n,r,i){var t=r.View.extend({events:{"submit #login":"loginverification"},initialize:function(){},render:function(){var r=n.template(i);e("#content").html(r).trigger("create"),e("#spinner").hide()}});return t});

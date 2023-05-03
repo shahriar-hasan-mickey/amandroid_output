@@ -1,0 +1,533 @@
+record `okhttp3.internal.http.StreamAllocation` @kind class @AccessFlag PUBLIC_FINAL {
+  `okhttp3.Address` `okhttp3.internal.http.StreamAllocation.address` @AccessFlag PUBLIC_FINAL;
+  `boolean` `okhttp3.internal.http.StreamAllocation.canceled` @AccessFlag PRIVATE;
+  `okhttp3.internal.io.RealConnection` `okhttp3.internal.http.StreamAllocation.connection` @AccessFlag PRIVATE;
+  `okhttp3.ConnectionPool` `okhttp3.internal.http.StreamAllocation.connectionPool` @AccessFlag PRIVATE_FINAL;
+  `int` `okhttp3.internal.http.StreamAllocation.refusedStreamCount` @AccessFlag PRIVATE;
+  `boolean` `okhttp3.internal.http.StreamAllocation.released` @AccessFlag PRIVATE;
+  `okhttp3.Route` `okhttp3.internal.http.StreamAllocation.route` @AccessFlag PRIVATE;
+  `okhttp3.internal.http.RouteSelector` `okhttp3.internal.http.StreamAllocation.routeSelector` @AccessFlag PRIVATE_FINAL;
+  `okhttp3.internal.http.HttpStream` `okhttp3.internal.http.StreamAllocation.stream` @AccessFlag PRIVATE;
+}
+procedure `void` `<init>`(`okhttp3.internal.http.StreamAllocation` v2 @kind this, `okhttp3.ConnectionPool` v3 @kind object @name `connectionPool`, `okhttp3.Address` v4 @kind object @name `address`) @signature `Lokhttp3/internal/http/StreamAllocation;.<init>:(Lokhttp3/ConnectionPool;Lokhttp3/Address;)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+
+  #L24accc.  call `<init>`(v2) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L24acd2.  v2.`okhttp3.internal.http.StreamAllocation.connectionPool` @type ^`okhttp3.ConnectionPool` := v3 @kind object;
+  #L24acd6.  v2.`okhttp3.internal.http.StreamAllocation.address` @type ^`okhttp3.Address` := v4 @kind object;
+  #L24acda.  v0:= new `okhttp3.internal.http.RouteSelector`;
+  #L24acde.  call temp:= `routeDatabase`(v2) @signature `Lokhttp3/internal/http/StreamAllocation;.routeDatabase:()Lokhttp3/internal/RouteDatabase;` @kind direct;
+  #L24ace4.  v1:= temp @kind object;
+  #L24ace6.  call `<init>`(v0, v4, v1) @signature `Lokhttp3/internal/http/RouteSelector;.<init>:(Lokhttp3/Address;Lokhttp3/internal/RouteDatabase;)V` @kind direct;
+  #L24acec.  v2.`okhttp3.internal.http.StreamAllocation.routeSelector` @type ^`okhttp3.internal.http.RouteSelector` := v0 @kind object;
+  #L24acf0.  return @kind void;
+}
+procedure `void` `deallocate`(`okhttp3.internal.http.StreamAllocation` v6 @kind this, `boolean` v7 @name `noNewStreams`, `boolean` v8 @name `released`, `boolean` v9 @name `streamFinished`) @signature `Lokhttp3/internal/http/StreamAllocation;.deallocate:(ZZZ)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L24ad04.  v0:= 0I;
+  #L24ad06.  v2:= v6.`okhttp3.internal.http.StreamAllocation.connectionPool` @type ^`okhttp3.ConnectionPool` @kind object;
+  #L24ad0a.  @monitorenter v2
+  #L24ad0c.  if v9 == 0 then goto L24ad16;
+  #L24ad10.  v1:= 0I;
+  #L24ad12.  v6.`okhttp3.internal.http.StreamAllocation.stream` @type ^`okhttp3.internal.http.HttpStream` := v1 @kind object;
+  #L24ad16.  if v8 == 0 then goto L24ad20;
+  #L24ad1a.  v1:= 1I;
+  #L24ad1c.  v6.`okhttp3.internal.http.StreamAllocation.released` @type ^`boolean` := v1 @kind boolean;
+  #L24ad20.  v1:= v6.`okhttp3.internal.http.StreamAllocation.connection` @type ^`okhttp3.internal.io.RealConnection` @kind object;
+  #L24ad24.  if v1 == 0 then goto L24ada2;
+  #L24ad28.  if v7 == 0 then goto L24ad36;
+  #L24ad2c.  v1:= v6.`okhttp3.internal.http.StreamAllocation.connection` @type ^`okhttp3.internal.io.RealConnection` @kind object;
+  #L24ad30.  v3:= 1I;
+  #L24ad32.  v1.`okhttp3.internal.io.RealConnection.noNewStreams` @type ^`boolean` := v3 @kind boolean;
+  #L24ad36.  v1:= v6.`okhttp3.internal.http.StreamAllocation.stream` @type ^`okhttp3.internal.http.HttpStream` @kind object;
+  #L24ad3a.  if v1 != 0 then goto L24ada2;
+  #L24ad3e.  v1:= v6.`okhttp3.internal.http.StreamAllocation.released` @type ^`boolean` @kind boolean;
+  #L24ad42.  if v1 != 0 then goto L24ad52;
+  #L24ad46.  v1:= v6.`okhttp3.internal.http.StreamAllocation.connection` @type ^`okhttp3.internal.io.RealConnection` @kind object;
+  #L24ad4a.  v1:= v1.`okhttp3.internal.io.RealConnection.noNewStreams` @type ^`boolean` @kind boolean;
+  #L24ad4e.  if v1 == 0 then goto L24ada2;
+  #L24ad52.  v1:= v6.`okhttp3.internal.http.StreamAllocation.connection` @type ^`okhttp3.internal.io.RealConnection` @kind object;
+  #L24ad56.  call `release`(v6, v1) @signature `Lokhttp3/internal/http/StreamAllocation;.release:(Lokhttp3/internal/io/RealConnection;)V` @kind direct;
+  #L24ad5c.  v1:= v6.`okhttp3.internal.http.StreamAllocation.connection` @type ^`okhttp3.internal.io.RealConnection` @kind object;
+  #L24ad60.  v1:= v1.`okhttp3.internal.io.RealConnection.allocations` @type ^`java.util.List` @kind object;
+  #L24ad64.  call temp:= `isEmpty`(v1) @signature `Ljava/util/List;.isEmpty:()Z` @kind interface;
+  #L24ad6a.  v1:= temp;
+  #L24ad6c.  if v1 == 0 then goto L24ad9c;
+  #L24ad70.  v1:= v6.`okhttp3.internal.http.StreamAllocation.connection` @type ^`okhttp3.internal.io.RealConnection` @kind object;
+  #L24ad74.  call temp:= `nanoTime`() @signature `Ljava/lang/System;.nanoTime:()J` @kind static;
+  #L24ad7a.  v4:= temp @kind wide;
+  #L24ad7c.  v1.`okhttp3.internal.io.RealConnection.idleAtNanos` @type ^`long` := v4 @kind wide;
+  #L24ad80.  v1:= `@@okhttp3.internal.Internal.instance` @type ^`okhttp3.internal.Internal` @kind object;
+  #L24ad84.  v3:= v6.`okhttp3.internal.http.StreamAllocation.connectionPool` @type ^`okhttp3.ConnectionPool` @kind object;
+  #L24ad88.  v4:= v6.`okhttp3.internal.http.StreamAllocation.connection` @type ^`okhttp3.internal.io.RealConnection` @kind object;
+  #L24ad8c.  call temp:= `connectionBecameIdle`(v1, v3, v4) @signature `Lokhttp3/internal/Internal;.connectionBecameIdle:(Lokhttp3/ConnectionPool;Lokhttp3/internal/io/RealConnection;)Z` @kind virtual;
+  #L24ad92.  v1:= temp;
+  #L24ad94.  if v1 == 0 then goto L24ad9c;
+  #L24ad98.  v0:= v6.`okhttp3.internal.http.StreamAllocation.connection` @type ^`okhttp3.internal.io.RealConnection` @kind object;
+  #L24ad9c.  v1:= 0I;
+  #L24ad9e.  v6.`okhttp3.internal.http.StreamAllocation.connection` @type ^`okhttp3.internal.io.RealConnection` := v1 @kind object;
+  #L24ada2.  @monitorexit v2
+  #L24ada4.  if v0 == 0 then goto L24adb6;
+  #L24ada8.  call temp:= `socket`(v0) @signature `Lokhttp3/internal/io/RealConnection;.socket:()Ljava/net/Socket;` @kind virtual;
+  #L24adae.  v1:= temp @kind object;
+  #L24adb0.  call `closeQuietly`(v1) @signature `Lokhttp3/internal/Util;.closeQuietly:(Ljava/net/Socket;)V` @kind static;
+  #L24adb6.  return @kind void;
+  #L24adb8.  v1:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L24adba.  @monitorexit v2
+  #L24adbc.  throw v1;
+  catch `java.lang.Throwable` @[L24ad12..L24ada4] goto L24adb8;
+  catch `java.lang.Throwable` @[L24adba..L24adbc] goto L24adb8;
+}
+procedure `okhttp3.internal.io.RealConnection` `findConnection`(`okhttp3.internal.http.StreamAllocation` v9 @kind this, `int` v10 @name `connectTimeout`, `int` v11 @name `readTimeout`, `int` v12 @name `writeTimeout`, `boolean` v13 @name `connectionRetryEnabled`) @signature `Lokhttp3/internal/http/StreamAllocation;.findConnection:(IIIZ)Lokhttp3/internal/io/RealConnection;` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+
+  #L24ade4.  v2:= v9.`okhttp3.internal.http.StreamAllocation.connectionPool` @type ^`okhttp3.ConnectionPool` @kind object;
+  #L24ade8.  @monitorenter v2
+  #L24adea.  v1:= v9.`okhttp3.internal.http.StreamAllocation.released` @type ^`boolean` @kind boolean;
+  #L24adee.  if v1 == 0 then goto L24ae08;
+  #L24adf2.  v1:= new `java.lang.IllegalStateException`;
+  #L24adf6.  v3:= "released" @kind object;
+  #L24adfa.  call `<init>`(v1, v3) @signature `Ljava/lang/IllegalStateException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L24ae00.  throw v1;
+  #L24ae02.  v1:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L24ae04.  @monitorexit v2
+  #L24ae06.  throw v1;
+  #L24ae08.  v1:= v9.`okhttp3.internal.http.StreamAllocation.stream` @type ^`okhttp3.internal.http.HttpStream` @kind object;
+  #L24ae0c.  if v1 == 0 then goto L24ae20;
+  #L24ae10.  v1:= new `java.lang.IllegalStateException`;
+  #L24ae14.  v3:= "stream != null" @kind object;
+  #L24ae18.  call `<init>`(v1, v3) @signature `Ljava/lang/IllegalStateException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L24ae1e.  throw v1;
+  #L24ae20.  v1:= v9.`okhttp3.internal.http.StreamAllocation.canceled` @type ^`boolean` @kind boolean;
+  #L24ae24.  if v1 == 0 then goto L24ae38;
+  #L24ae28.  v1:= new `java.io.IOException`;
+  #L24ae2c.  v3:= "Canceled" @kind object;
+  #L24ae30.  call `<init>`(v1, v3) @signature `Ljava/io/IOException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L24ae36.  throw v1;
+  #L24ae38.  v6:= v9.`okhttp3.internal.http.StreamAllocation.connection` @type ^`okhttp3.internal.io.RealConnection` @kind object;
+  #L24ae3c.  if v6 == 0 then goto L24ae4c;
+  #L24ae40.  v1:= v6.`okhttp3.internal.io.RealConnection.noNewStreams` @type ^`boolean` @kind boolean;
+  #L24ae44.  if v1 != 0 then goto L24ae4c;
+  #L24ae48.  @monitorexit v2
+  #L24ae4a.  return v6 @kind object;
+  #L24ae4c.  v1:= `@@okhttp3.internal.Internal.instance` @type ^`okhttp3.internal.Internal` @kind object;
+  #L24ae50.  v3:= v9.`okhttp3.internal.http.StreamAllocation.connectionPool` @type ^`okhttp3.ConnectionPool` @kind object;
+  #L24ae54.  v4:= v9.`okhttp3.internal.http.StreamAllocation.address` @type ^`okhttp3.Address` @kind object;
+  #L24ae58.  call temp:= `get`(v1, v3, v4, v9) @signature `Lokhttp3/internal/Internal;.get:(Lokhttp3/ConnectionPool;Lokhttp3/Address;Lokhttp3/internal/http/StreamAllocation;)Lokhttp3/internal/io/RealConnection;` @kind virtual;
+  #L24ae5e.  v7:= temp @kind object;
+  #L24ae60.  if v7 == 0 then goto L24ae6e;
+  #L24ae64.  v9.`okhttp3.internal.http.StreamAllocation.connection` @type ^`okhttp3.internal.io.RealConnection` := v7 @kind object;
+  #L24ae68.  @monitorexit v2
+  #L24ae6a.  v6:= v7 @kind object;
+  #L24ae6c.  goto L24ae4a;
+  #L24ae6e.  v8:= v9.`okhttp3.internal.http.StreamAllocation.route` @type ^`okhttp3.Route` @kind object;
+  #L24ae72.  @monitorexit v2
+  #L24ae74.  if v8 != 0 then goto L24ae96;
+  #L24ae78.  v1:= v9.`okhttp3.internal.http.StreamAllocation.routeSelector` @type ^`okhttp3.internal.http.RouteSelector` @kind object;
+  #L24ae7c.  call temp:= `next`(v1) @signature `Lokhttp3/internal/http/RouteSelector;.next:()Lokhttp3/Route;` @kind virtual;
+  #L24ae82.  v8:= temp @kind object;
+  #L24ae84.  v2:= v9.`okhttp3.internal.http.StreamAllocation.connectionPool` @type ^`okhttp3.ConnectionPool` @kind object;
+  #L24ae88.  @monitorenter v2
+  #L24ae8a.  v9.`okhttp3.internal.http.StreamAllocation.route` @type ^`okhttp3.Route` := v8 @kind object;
+  #L24ae8e.  v1:= 0I;
+  #L24ae90.  v9.`okhttp3.internal.http.StreamAllocation.refusedStreamCount` @type ^`int` := v1;
+  #L24ae94.  @monitorexit v2
+  #L24ae96.  v0:= new `okhttp3.internal.io.RealConnection`;
+  #L24ae9a.  call `<init>`(v0, v8) @signature `Lokhttp3/internal/io/RealConnection;.<init>:(Lokhttp3/Route;)V` @kind direct;
+  #L24aea0.  call `acquire`(v9, v0) @signature `Lokhttp3/internal/http/StreamAllocation;.acquire:(Lokhttp3/internal/io/RealConnection;)V` @kind virtual;
+  #L24aea6.  v2:= v9.`okhttp3.internal.http.StreamAllocation.connectionPool` @type ^`okhttp3.ConnectionPool` @kind object;
+  #L24aeaa.  @monitorenter v2
+  #L24aeac.  v1:= `@@okhttp3.internal.Internal.instance` @type ^`okhttp3.internal.Internal` @kind object;
+  #L24aeb0.  v3:= v9.`okhttp3.internal.http.StreamAllocation.connectionPool` @type ^`okhttp3.ConnectionPool` @kind object;
+  #L24aeb4.  call `put`(v1, v3, v0) @signature `Lokhttp3/internal/Internal;.put:(Lokhttp3/ConnectionPool;Lokhttp3/internal/io/RealConnection;)V` @kind virtual;
+  #L24aeba.  v9.`okhttp3.internal.http.StreamAllocation.connection` @type ^`okhttp3.internal.io.RealConnection` := v0 @kind object;
+  #L24aebe.  v1:= v9.`okhttp3.internal.http.StreamAllocation.canceled` @type ^`boolean` @kind boolean;
+  #L24aec2.  if v1 == 0 then goto L24aee2;
+  #L24aec6.  v1:= new `java.io.IOException`;
+  #L24aeca.  v3:= "Canceled" @kind object;
+  #L24aece.  call `<init>`(v1, v3) @signature `Ljava/io/IOException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L24aed4.  throw v1;
+  #L24aed6.  v1:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L24aed8.  @monitorexit v2
+  #L24aeda.  throw v1;
+  #L24aedc.  v1:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L24aede.  @monitorexit v2
+  #L24aee0.  throw v1;
+  #L24aee2.  @monitorexit v2
+  #L24aee4.  v1:= v9.`okhttp3.internal.http.StreamAllocation.address` @type ^`okhttp3.Address` @kind object;
+  #L24aee8.  call temp:= `connectionSpecs`(v1) @signature `Lokhttp3/Address;.connectionSpecs:()Ljava/util/List;` @kind virtual;
+  #L24aeee.  v4:= temp @kind object;
+  #L24aef0.  v1:= v10;
+  #L24aef2.  v2:= v11;
+  #L24aef4.  v3:= v12;
+  #L24aef6.  v5:= v13;
+  #L24aef8.  call `connect`(v0, v1, v2, v3, v4, v5) @signature `Lokhttp3/internal/io/RealConnection;.connect:(IIILjava/util/List;Z)V` @kind virtual;
+  #L24aefe.  call temp:= `routeDatabase`(v9) @signature `Lokhttp3/internal/http/StreamAllocation;.routeDatabase:()Lokhttp3/internal/RouteDatabase;` @kind direct;
+  #L24af04.  v1:= temp @kind object;
+  #L24af06.  call temp:= `route`(v0) @signature `Lokhttp3/internal/io/RealConnection;.route:()Lokhttp3/Route;` @kind virtual;
+  #L24af0c.  v2:= temp @kind object;
+  #L24af0e.  call `connected`(v1, v2) @signature `Lokhttp3/internal/RouteDatabase;.connected:(Lokhttp3/Route;)V` @kind virtual;
+  #L24af14.  v6:= v0 @kind object;
+  #L24af16.  goto L24ae4a;
+  catch `java.lang.Throwable` @[L24adea..L24ae06] goto L24ae02;
+  catch `java.lang.Throwable` @[L24ae08..L24ae74] goto L24ae02;
+  catch `java.lang.Throwable` @[L24ae8a..L24ae96] goto L24aedc;
+  catch `java.lang.Throwable` @[L24aeac..L24aeda] goto L24aed6;
+  catch `java.lang.Throwable` @[L24aede..L24aee0] goto L24aedc;
+  catch `java.lang.Throwable` @[L24aee2..L24aee4] goto L24aed6;
+}
+procedure `okhttp3.internal.io.RealConnection` `findHealthyConnection`(`okhttp3.internal.http.StreamAllocation` v3 @kind this, `int` v4 @name `connectTimeout`, `int` v5 @name `readTimeout`, `int` v6 @name `writeTimeout`, `boolean` v7 @name `connectionRetryEnabled`, `boolean` v8 @name `doExtensiveHealthChecks`) @signature `Lokhttp3/internal/http/StreamAllocation;.findHealthyConnection:(IIIZZ)Lokhttp3/internal/io/RealConnection;` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L24af60.  call temp:= `findConnection`(v3, v4, v5, v6, v7) @signature `Lokhttp3/internal/http/StreamAllocation;.findConnection:(IIIZ)Lokhttp3/internal/io/RealConnection;` @kind direct;
+  #L24af66.  v0:= temp @kind object;
+  #L24af68.  v2:= v3.`okhttp3.internal.http.StreamAllocation.connectionPool` @type ^`okhttp3.ConnectionPool` @kind object;
+  #L24af6c.  @monitorenter v2
+  #L24af6e.  v1:= v0.`okhttp3.internal.io.RealConnection.successCount` @type ^`int`;
+  #L24af72.  if v1 != 0 then goto L24af7a;
+  #L24af76.  @monitorexit v2
+  #L24af78.  return v0 @kind object;
+  #L24af7a.  @monitorexit v2
+  #L24af7c.  call temp:= `isHealthy`(v0, v8) @signature `Lokhttp3/internal/io/RealConnection;.isHealthy:(Z)Z` @kind virtual;
+  #L24af82.  v1:= temp;
+  #L24af84.  if v1 != 0 then goto L24af78;
+  #L24af88.  call `noNewStreams`(v3) @signature `Lokhttp3/internal/http/StreamAllocation;.noNewStreams:()V` @kind virtual;
+  #L24af8e.  goto L24af60;
+  #L24af90.  v1:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L24af92.  @monitorexit v2
+  #L24af94.  throw v1;
+  catch `java.lang.Throwable` @[L24af6e..L24af7c] goto L24af90;
+  catch `java.lang.Throwable` @[L24af92..L24af94] goto L24af90;
+}
+procedure `void` `release`(`okhttp3.internal.http.StreamAllocation` v4 @kind this, `okhttp3.internal.io.RealConnection` v5 @kind object @name `connection`) @signature `Lokhttp3/internal/http/StreamAllocation;.release:(Lokhttp3/internal/io/RealConnection;)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L24afbc.  v0:= 0I;
+  #L24afbe.  v3:= v5.`okhttp3.internal.io.RealConnection.allocations` @type ^`java.util.List` @kind object;
+  #L24afc2.  call temp:= `size`(v3) @signature `Ljava/util/List;.size:()I` @kind interface;
+  #L24afc8.  v2:= temp;
+  #L24afca.  if v0 >= v2 then goto L24affc;
+  #L24afce.  v3:= v5.`okhttp3.internal.io.RealConnection.allocations` @type ^`java.util.List` @kind object;
+  #L24afd2.  call temp:= `get`(v3, v0) @signature `Ljava/util/List;.get:(I)Ljava/lang/Object;` @kind interface;
+  #L24afd8.  v1:= temp @kind object;
+  #L24afda.  v1:= (`java.lang.ref.Reference`) v1 @kind object;
+  #L24afde.  call temp:= `get`(v1) @signature `Ljava/lang/ref/Reference;.get:()Ljava/lang/Object;` @kind virtual;
+  #L24afe4.  v3:= temp @kind object;
+  #L24afe6.  if v3 != v4 then goto L24aff6;
+  #L24afea.  v3:= v5.`okhttp3.internal.io.RealConnection.allocations` @type ^`java.util.List` @kind object;
+  #L24afee.  call temp:= `remove`(v3, v0) @signature `Ljava/util/List;.remove:(I)Ljava/lang/Object;` @kind interface;
+  #L24aff4.  return @kind void;
+  #L24aff6.  v0:= v0 + 1;
+  #L24affa.  goto L24afca;
+  #L24affc.  v3:= new `java.lang.IllegalStateException`;
+  #L24b000.  call `<init>`(v3) @signature `Ljava/lang/IllegalStateException;.<init>:()V` @kind direct;
+  #L24b006.  throw v3;
+}
+procedure `okhttp3.internal.RouteDatabase` `routeDatabase`(`okhttp3.internal.http.StreamAllocation` v2 @kind this) @signature `Lokhttp3/internal/http/StreamAllocation;.routeDatabase:()Lokhttp3/internal/RouteDatabase;` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+
+  #L24b018.  v0:= `@@okhttp3.internal.Internal.instance` @type ^`okhttp3.internal.Internal` @kind object;
+  #L24b01c.  v1:= v2.`okhttp3.internal.http.StreamAllocation.connectionPool` @type ^`okhttp3.ConnectionPool` @kind object;
+  #L24b020.  call temp:= `routeDatabase`(v0, v1) @signature `Lokhttp3/internal/Internal;.routeDatabase:(Lokhttp3/ConnectionPool;)Lokhttp3/internal/RouteDatabase;` @kind virtual;
+  #L24b026.  v0:= temp @kind object;
+  #L24b028.  return v0 @kind object;
+}
+procedure `void` `acquire`(`okhttp3.internal.http.StreamAllocation` v2 @kind this, `okhttp3.internal.io.RealConnection` v3 @kind object @name `connection`) @signature `Lokhttp3/internal/http/StreamAllocation;.acquire:(Lokhttp3/internal/io/RealConnection;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L24b03c.  v0:= v3.`okhttp3.internal.io.RealConnection.allocations` @type ^`java.util.List` @kind object;
+  #L24b040.  v1:= new `java.lang.ref.WeakReference`;
+  #L24b044.  call `<init>`(v1, v2) @signature `Ljava/lang/ref/WeakReference;.<init>:(Ljava/lang/Object;)V` @kind direct;
+  #L24b04a.  call temp:= `add`(v0, v1) @signature `Ljava/util/List;.add:(Ljava/lang/Object;)Z` @kind interface;
+  #L24b050.  return @kind void;
+}
+procedure `void` `cancel`(`okhttp3.internal.http.StreamAllocation` v4 @kind this) @signature `Lokhttp3/internal/http/StreamAllocation;.cancel:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L24b064.  v3:= v4.`okhttp3.internal.http.StreamAllocation.connectionPool` @type ^`okhttp3.ConnectionPool` @kind object;
+  #L24b068.  @monitorenter v3
+  #L24b06a.  v2:= 1I;
+  #L24b06c.  v4.`okhttp3.internal.http.StreamAllocation.canceled` @type ^`boolean` := v2 @kind boolean;
+  #L24b070.  v1:= v4.`okhttp3.internal.http.StreamAllocation.stream` @type ^`okhttp3.internal.http.HttpStream` @kind object;
+  #L24b074.  v0:= v4.`okhttp3.internal.http.StreamAllocation.connection` @type ^`okhttp3.internal.io.RealConnection` @kind object;
+  #L24b078.  @monitorexit v3
+  #L24b07a.  if v1 == 0 then goto L24b08c;
+  #L24b07e.  call `cancel`(v1) @signature `Lokhttp3/internal/http/HttpStream;.cancel:()V` @kind interface;
+  #L24b084.  return @kind void;
+  #L24b086.  v2:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L24b088.  @monitorexit v3
+  #L24b08a.  throw v2;
+  #L24b08c.  if v0 == 0 then goto L24b084;
+  #L24b090.  call `cancel`(v0) @signature `Lokhttp3/internal/io/RealConnection;.cancel:()V` @kind virtual;
+  #L24b096.  goto L24b084;
+  catch `java.lang.Throwable` @[L24b06c..L24b07a] goto L24b086;
+  catch `java.lang.Throwable` @[L24b088..L24b08a] goto L24b086;
+}
+procedure `okhttp3.internal.io.RealConnection` `connection`(`okhttp3.internal.http.StreamAllocation` v1 @kind this) @signature `Lokhttp3/internal/http/StreamAllocation;.connection:()Lokhttp3/internal/io/RealConnection;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L24b0bc.  @monitorenter v1
+  #L24b0be.  v0:= v1.`okhttp3.internal.http.StreamAllocation.connection` @type ^`okhttp3.internal.io.RealConnection` @kind object;
+  #L24b0c2.  @monitorexit v1
+  #L24b0c4.  return v0 @kind object;
+  #L24b0c6.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L24b0c8.  @monitorexit v1
+  #L24b0ca.  throw v0;
+  catch `java.lang.Throwable` @[L24b0be..L24b0c2] goto L24b0c6;
+}
+procedure `boolean` `hasMoreRoutes`(`okhttp3.internal.http.StreamAllocation` v1 @kind this) @signature `Lokhttp3/internal/http/StreamAllocation;.hasMoreRoutes:()Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L24b0e8.  v0:= v1.`okhttp3.internal.http.StreamAllocation.route` @type ^`okhttp3.Route` @kind object;
+  #L24b0ec.  if v0 != 0 then goto L24b100;
+  #L24b0f0.  v0:= v1.`okhttp3.internal.http.StreamAllocation.routeSelector` @type ^`okhttp3.internal.http.RouteSelector` @kind object;
+  #L24b0f4.  call temp:= `hasNext`(v0) @signature `Lokhttp3/internal/http/RouteSelector;.hasNext:()Z` @kind virtual;
+  #L24b0fa.  v0:= temp;
+  #L24b0fc.  if v0 == 0 then goto L24b104;
+  #L24b100.  v0:= 1I;
+  #L24b102.  return v0;
+  #L24b104.  v0:= 0I;
+  #L24b106.  goto L24b102;
+}
+procedure `okhttp3.internal.http.HttpStream` `newStream`(`okhttp3.internal.http.StreamAllocation` v7 @kind this, `int` v8 @name `connectTimeout`, `int` v9 @name `readTimeout`, `int` v10 @name `writeTimeout`, `boolean` v11 @name `connectionRetryEnabled`, `boolean` v12 @name `doExtensiveHealthChecks`) @signature `Lokhttp3/internal/http/StreamAllocation;.newStream:(IIIZZ)Lokhttp3/internal/http/HttpStream;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+
+  #L24b118.  call temp:= `findHealthyConnection`(v7, v8, v9, v10, v11, v12) @signature `Lokhttp3/internal/http/StreamAllocation;.findHealthyConnection:(IIIZZ)Lokhttp3/internal/io/RealConnection;` @kind direct;
+  #L24b11e.  v1:= temp @kind object;
+  #L24b120.  v3:= v1.`okhttp3.internal.io.RealConnection.framedConnection` @type ^`okhttp3.internal.framed.FramedConnection` @kind object;
+  #L24b124.  if v3 == 0 then goto L24b144;
+  #L24b128.  v2:= new `okhttp3.internal.http.Http2xStream`;
+  #L24b12c.  v3:= v1.`okhttp3.internal.io.RealConnection.framedConnection` @type ^`okhttp3.internal.framed.FramedConnection` @kind object;
+  #L24b130.  call `<init>`(v2, v7, v3) @signature `Lokhttp3/internal/http/Http2xStream;.<init>:(Lokhttp3/internal/http/StreamAllocation;Lokhttp3/internal/framed/FramedConnection;)V` @kind direct;
+  #L24b136.  v4:= v7.`okhttp3.internal.http.StreamAllocation.connectionPool` @type ^`okhttp3.ConnectionPool` @kind object;
+  #L24b13a.  @monitorenter v4
+  #L24b13c.  v7.`okhttp3.internal.http.StreamAllocation.stream` @type ^`okhttp3.internal.http.HttpStream` := v2 @kind object;
+  #L24b140.  @monitorexit v4
+  #L24b142.  return v2 @kind object;
+  #L24b144.  call temp:= `socket`(v1) @signature `Lokhttp3/internal/io/RealConnection;.socket:()Ljava/net/Socket;` @kind virtual;
+  #L24b14a.  v3:= temp @kind object;
+  #L24b14c.  call `setSoTimeout`(v3, v9) @signature `Ljava/net/Socket;.setSoTimeout:(I)V` @kind virtual;
+  #L24b152.  v3:= v1.`okhttp3.internal.io.RealConnection.source` @type ^`okio.BufferedSource` @kind object;
+  #L24b156.  call temp:= `timeout`(v3) @signature `Lokio/BufferedSource;.timeout:()Lokio/Timeout;` @kind interface;
+  #L24b15c.  v3:= temp @kind object;
+  #L24b15e.  v4:= (`long`) v9 @kind i2l;
+  #L24b160.  v6:= `@@java.util.concurrent.TimeUnit.MILLISECONDS` @type ^`java.util.concurrent.TimeUnit` @kind object;
+  #L24b164.  call temp:= `timeout`(v3, v4, v6) @signature `Lokio/Timeout;.timeout:(JLjava/util/concurrent/TimeUnit;)Lokio/Timeout;` @kind virtual;
+  #L24b16a.  v3:= v1.`okhttp3.internal.io.RealConnection.sink` @type ^`okio.BufferedSink` @kind object;
+  #L24b16e.  call temp:= `timeout`(v3) @signature `Lokio/BufferedSink;.timeout:()Lokio/Timeout;` @kind interface;
+  #L24b174.  v3:= temp @kind object;
+  #L24b176.  v4:= (`long`) v10 @kind i2l;
+  #L24b178.  v6:= `@@java.util.concurrent.TimeUnit.MILLISECONDS` @type ^`java.util.concurrent.TimeUnit` @kind object;
+  #L24b17c.  call temp:= `timeout`(v3, v4, v6) @signature `Lokio/Timeout;.timeout:(JLjava/util/concurrent/TimeUnit;)Lokio/Timeout;` @kind virtual;
+  #L24b182.  v2:= new `okhttp3.internal.http.Http1xStream`;
+  #L24b186.  v3:= v1.`okhttp3.internal.io.RealConnection.source` @type ^`okio.BufferedSource` @kind object;
+  #L24b18a.  v4:= v1.`okhttp3.internal.io.RealConnection.sink` @type ^`okio.BufferedSink` @kind object;
+  #L24b18e.  call `<init>`(v2, v7, v3, v4) @signature `Lokhttp3/internal/http/Http1xStream;.<init>:(Lokhttp3/internal/http/StreamAllocation;Lokio/BufferedSource;Lokio/BufferedSink;)V` @kind direct;
+  #L24b194.  goto L24b136;
+  #L24b196.  v3:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L24b198.  @monitorexit v4
+  #L24b19a.  throw v3;
+  #L24b19c.  v0:= Exception @type ^`java.io.IOException` @kind object;
+  #L24b19e.  v3:= new `okhttp3.internal.http.RouteException`;
+  #L24b1a2.  call `<init>`(v3, v0) @signature `Lokhttp3/internal/http/RouteException;.<init>:(Ljava/io/IOException;)V` @kind direct;
+  #L24b1a8.  throw v3;
+  catch `java.io.IOException` @[L24b118..L24b13c] goto L24b19c;
+  catch `java.lang.Throwable` @[L24b13c..L24b142] goto L24b196;
+  catch `java.io.IOException` @[L24b144..L24b194] goto L24b19c;
+  catch `java.lang.Throwable` @[L24b198..L24b19a] goto L24b196;
+  catch `java.io.IOException` @[L24b19a..L24b19c] goto L24b19c;
+}
+procedure `void` `noNewStreams`(`okhttp3.internal.http.StreamAllocation` v2 @kind this) @signature `Lokhttp3/internal/http/StreamAllocation;.noNewStreams:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L24b1ec.  v1:= 0I;
+  #L24b1ee.  v0:= 1I;
+  #L24b1f0.  call `deallocate`(v2, v0, v1, v1) @signature `Lokhttp3/internal/http/StreamAllocation;.deallocate:(ZZZ)V` @kind direct;
+  #L24b1f6.  return @kind void;
+}
+procedure `void` `release`(`okhttp3.internal.http.StreamAllocation` v2 @kind this) @signature `Lokhttp3/internal/http/StreamAllocation;.release:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L24b208.  v1:= 0I;
+  #L24b20a.  v0:= 1I;
+  #L24b20c.  call `deallocate`(v2, v1, v0, v1) @signature `Lokhttp3/internal/http/StreamAllocation;.deallocate:(ZZZ)V` @kind direct;
+  #L24b212.  return @kind void;
+}
+procedure `okhttp3.internal.http.HttpStream` `stream`(`okhttp3.internal.http.StreamAllocation` v2 @kind this) @signature `Lokhttp3/internal/http/StreamAllocation;.stream:()Lokhttp3/internal/http/HttpStream;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L24b224.  v1:= v2.`okhttp3.internal.http.StreamAllocation.connectionPool` @type ^`okhttp3.ConnectionPool` @kind object;
+  #L24b228.  @monitorenter v1
+  #L24b22a.  v0:= v2.`okhttp3.internal.http.StreamAllocation.stream` @type ^`okhttp3.internal.http.HttpStream` @kind object;
+  #L24b22e.  @monitorexit v1
+  #L24b230.  return v0 @kind object;
+  #L24b232.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L24b234.  @monitorexit v1
+  #L24b236.  throw v0;
+  catch `java.lang.Throwable` @[L24b22a..L24b236] goto L24b232;
+}
+procedure `void` `streamFailed`(`okhttp3.internal.http.StreamAllocation` v7 @kind this, `java.io.IOException` v8 @kind object @name `e`) @signature `Lokhttp3/internal/http/StreamAllocation;.streamFailed:(Ljava/io/IOException;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+
+  #L24b254.  v6:= 1I;
+  #L24b256.  v1:= 0I;
+  #L24b258.  v4:= v7.`okhttp3.internal.http.StreamAllocation.connectionPool` @type ^`okhttp3.ConnectionPool` @kind object;
+  #L24b25c.  @monitorenter v4
+  #L24b25e.  v3:= instanceof @variable v8 @type ^`okhttp3.internal.framed.StreamResetException` @kind boolean;
+  #L24b262.  if v3 == 0 then goto L24b2ae;
+  #L24b266.  v0:= v8 @kind object;
+  #L24b268.  v0:= (`okhttp3.internal.framed.StreamResetException`) v0 @kind object;
+  #L24b26c.  v2:= v0 @kind object;
+  #L24b26e.  v3:= v2.`okhttp3.internal.framed.StreamResetException.errorCode` @type ^`okhttp3.internal.framed.ErrorCode` @kind object;
+  #L24b272.  v5:= `@@okhttp3.internal.framed.ErrorCode.REFUSED_STREAM` @type ^`okhttp3.internal.framed.ErrorCode` @kind object;
+  #L24b276.  if v3 != v5 then goto L24b286;
+  #L24b27a.  v3:= v7.`okhttp3.internal.http.StreamAllocation.refusedStreamCount` @type ^`int`;
+  #L24b27e.  v3:= v3 + 1;
+  #L24b282.  v7.`okhttp3.internal.http.StreamAllocation.refusedStreamCount` @type ^`int` := v3;
+  #L24b286.  v3:= v2.`okhttp3.internal.framed.StreamResetException.errorCode` @type ^`okhttp3.internal.framed.ErrorCode` @kind object;
+  #L24b28a.  v5:= `@@okhttp3.internal.framed.ErrorCode.REFUSED_STREAM` @type ^`okhttp3.internal.framed.ErrorCode` @kind object;
+  #L24b28e.  if v3 != v5 then goto L24b29a;
+  #L24b292.  v3:= v7.`okhttp3.internal.http.StreamAllocation.refusedStreamCount` @type ^`int`;
+  #L24b296.  if v3 <= v6 then goto L24b2a2;
+  #L24b29a.  v1:= 1I;
+  #L24b29c.  v3:= 0I;
+  #L24b29e.  v7.`okhttp3.internal.http.StreamAllocation.route` @type ^`okhttp3.Route` := v3 @kind object;
+  #L24b2a2.  @monitorexit v4
+  #L24b2a4.  v3:= 0I;
+  #L24b2a6.  call `deallocate`(v7, v1, v3, v6) @signature `Lokhttp3/internal/http/StreamAllocation;.deallocate:(ZZZ)V` @kind direct;
+  #L24b2ac.  return @kind void;
+  #L24b2ae.  v3:= v7.`okhttp3.internal.http.StreamAllocation.connection` @type ^`okhttp3.internal.io.RealConnection` @kind object;
+  #L24b2b2.  if v3 == 0 then goto L24b2a2;
+  #L24b2b6.  v3:= v7.`okhttp3.internal.http.StreamAllocation.connection` @type ^`okhttp3.internal.io.RealConnection` @kind object;
+  #L24b2ba.  call temp:= `isMultiplexed`(v3) @signature `Lokhttp3/internal/io/RealConnection;.isMultiplexed:()Z` @kind virtual;
+  #L24b2c0.  v3:= temp;
+  #L24b2c2.  if v3 != 0 then goto L24b2a2;
+  #L24b2c6.  v1:= 1I;
+  #L24b2c8.  v3:= v7.`okhttp3.internal.http.StreamAllocation.connection` @type ^`okhttp3.internal.io.RealConnection` @kind object;
+  #L24b2cc.  v3:= v3.`okhttp3.internal.io.RealConnection.successCount` @type ^`int`;
+  #L24b2d0.  if v3 != 0 then goto L24b2a2;
+  #L24b2d4.  v3:= v7.`okhttp3.internal.http.StreamAllocation.route` @type ^`okhttp3.Route` @kind object;
+  #L24b2d8.  if v3 == 0 then goto L24b2ee;
+  #L24b2dc.  if v8 == 0 then goto L24b2ee;
+  #L24b2e0.  v3:= v7.`okhttp3.internal.http.StreamAllocation.routeSelector` @type ^`okhttp3.internal.http.RouteSelector` @kind object;
+  #L24b2e4.  v5:= v7.`okhttp3.internal.http.StreamAllocation.route` @type ^`okhttp3.Route` @kind object;
+  #L24b2e8.  call `connectFailed`(v3, v5, v8) @signature `Lokhttp3/internal/http/RouteSelector;.connectFailed:(Lokhttp3/Route;Ljava/io/IOException;)V` @kind virtual;
+  #L24b2ee.  v3:= 0I;
+  #L24b2f0.  v7.`okhttp3.internal.http.StreamAllocation.route` @type ^`okhttp3.Route` := v3 @kind object;
+  #L24b2f4.  goto L24b2a2;
+  #L24b2f6.  v3:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L24b2f8.  @monitorexit v4
+  #L24b2fa.  throw v3;
+  catch `java.lang.Throwable` @[L24b25e..L24b2a4] goto L24b2f6;
+  catch `java.lang.Throwable` @[L24b2ae..L24b2fa] goto L24b2f6;
+}
+procedure `void` `streamFinished`(`okhttp3.internal.http.StreamAllocation` v4 @kind this, `boolean` v5 @name `noNewStreams`, `okhttp3.internal.http.HttpStream` v6 @kind object @name `stream`) @signature `Lokhttp3/internal/http/StreamAllocation;.streamFinished:(ZLokhttp3/internal/http/HttpStream;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L24b320.  v1:= v4.`okhttp3.internal.http.StreamAllocation.connectionPool` @type ^`okhttp3.ConnectionPool` @kind object;
+  #L24b324.  @monitorenter v1
+  #L24b326.  if v6 == 0 then goto L24b332;
+  #L24b32a.  v0:= v4.`okhttp3.internal.http.StreamAllocation.stream` @type ^`okhttp3.internal.http.HttpStream` @kind object;
+  #L24b32e.  if v6 == v0 then goto L24b382;
+  #L24b332.  v0:= new `java.lang.IllegalStateException`;
+  #L24b336.  v2:= new `java.lang.StringBuilder`;
+  #L24b33a.  call `<init>`(v2) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L24b340.  v3:= "expected " @kind object;
+  #L24b344.  call temp:= `append`(v2, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L24b34a.  v2:= temp @kind object;
+  #L24b34c.  v3:= v4.`okhttp3.internal.http.StreamAllocation.stream` @type ^`okhttp3.internal.http.HttpStream` @kind object;
+  #L24b350.  call temp:= `append`(v2, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L24b356.  v2:= temp @kind object;
+  #L24b358.  v3:= " but was " @kind object;
+  #L24b35c.  call temp:= `append`(v2, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L24b362.  v2:= temp @kind object;
+  #L24b364.  call temp:= `append`(v2, v6) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L24b36a.  v2:= temp @kind object;
+  #L24b36c.  call temp:= `toString`(v2) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L24b372.  v2:= temp @kind object;
+  #L24b374.  call `<init>`(v0, v2) @signature `Ljava/lang/IllegalStateException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L24b37a.  throw v0;
+  #L24b37c.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L24b37e.  @monitorexit v1
+  #L24b380.  throw v0;
+  #L24b382.  if v5 != 0 then goto L24b396;
+  #L24b386.  v0:= v4.`okhttp3.internal.http.StreamAllocation.connection` @type ^`okhttp3.internal.io.RealConnection` @kind object;
+  #L24b38a.  v2:= v0.`okhttp3.internal.io.RealConnection.successCount` @type ^`int`;
+  #L24b38e.  v2:= v2 + 1;
+  #L24b392.  v0.`okhttp3.internal.io.RealConnection.successCount` @type ^`int` := v2;
+  #L24b396.  @monitorexit v1
+  #L24b398.  v0:= 0I;
+  #L24b39a.  v1:= 1I;
+  #L24b39c.  call `deallocate`(v4, v5, v0, v1) @signature `Lokhttp3/internal/http/StreamAllocation;.deallocate:(ZZZ)V` @kind direct;
+  #L24b3a2.  return @kind void;
+  catch `java.lang.Throwable` @[L24b32a..L24b380] goto L24b37c;
+  catch `java.lang.Throwable` @[L24b386..L24b398] goto L24b37c;
+}
+procedure `java.lang.String` `toString`(`okhttp3.internal.http.StreamAllocation` v1 @kind this) @signature `Lokhttp3/internal/http/StreamAllocation;.toString:()Ljava/lang/String;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L24b3c8.  v0:= v1.`okhttp3.internal.http.StreamAllocation.address` @type ^`okhttp3.Address` @kind object;
+  #L24b3cc.  call temp:= `toString`(v0) @signature `Ljava/lang/Object;.toString:()Ljava/lang/String;` @kind virtual;
+  #L24b3d2.  v0:= temp @kind object;
+  #L24b3d4.  return v0 @kind object;
+}

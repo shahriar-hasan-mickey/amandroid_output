@@ -1,0 +1,804 @@
+record `com.bumptech.glide.RequestManager` @kind class @AccessFlag PUBLIC extends `android.content.ComponentCallbacks2` @kind interface, `com.bumptech.glide.manager.LifecycleListener` @kind interface {
+  `com.bumptech.glide.manager.Lifecycle` `com.bumptech.glide.RequestManager.a` @AccessFlag FINAL;
+  `com.bumptech.glide.manager.RequestTracker` `com.bumptech.glide.RequestManager.b` @AccessFlag PRIVATE_FINAL;
+  `com.bumptech.glide.manager.RequestManagerTreeNode` `com.bumptech.glide.RequestManager.c` @AccessFlag PRIVATE_FINAL;
+  `android.content.Context` `com.bumptech.glide.RequestManager.context` @AccessFlag PROTECTED_FINAL;
+  `com.bumptech.glide.manager.TargetTracker` `com.bumptech.glide.RequestManager.d` @AccessFlag PRIVATE_FINAL;
+  `java.lang.Runnable` `com.bumptech.glide.RequestManager.e` @AccessFlag PRIVATE_FINAL;
+  `com.bumptech.glide.manager.ConnectivityMonitor` `com.bumptech.glide.RequestManager.f` @AccessFlag PRIVATE_FINAL;
+  `java.util.concurrent.CopyOnWriteArrayList` `com.bumptech.glide.RequestManager.g` @AccessFlag PRIVATE_FINAL;
+  `com.bumptech.glide.Glide` `com.bumptech.glide.RequestManager.glide` @AccessFlag PROTECTED_FINAL;
+  `com.bumptech.glide.request.RequestOptions` `com.bumptech.glide.RequestManager.h` @AccessFlag PRIVATE;
+  `boolean` `com.bumptech.glide.RequestManager.i` @AccessFlag PRIVATE;
+}
+global `com.bumptech.glide.request.RequestOptions` `@@com.bumptech.glide.RequestManager.j` @AccessFlag PRIVATE_STATIC_FINAL;
+global `com.bumptech.glide.request.RequestOptions` `@@com.bumptech.glide.RequestManager.k` @AccessFlag PRIVATE_STATIC_FINAL;
+global `com.bumptech.glide.request.RequestOptions` `@@com.bumptech.glide.RequestManager.l` @AccessFlag PRIVATE_STATIC_FINAL;
+procedure `void` `<clinit>`() @signature `Lcom/bumptech/glide/RequestManager;.<clinit>:()V` @AccessFlag STATIC_CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+
+  #L3d5df0.  v0:= constclass @type ^`android.graphics.Bitmap` @kind object;
+  #L3d5df4.  call temp:= `decodeTypeOf`(v0) @signature `Lcom/bumptech/glide/request/RequestOptions;.decodeTypeOf:(Ljava/lang/Class;)Lcom/bumptech/glide/request/RequestOptions;` @kind static;
+  #L3d5dfa.  v0:= temp @kind object;
+  #L3d5dfc.  call temp:= `lock`(v0) @signature `Lcom/bumptech/glide/request/BaseRequestOptions;.lock:()Lcom/bumptech/glide/request/BaseRequestOptions;` @kind virtual;
+  #L3d5e02.  v0:= temp @kind object;
+  #L3d5e04.  v0:= (`com.bumptech.glide.request.RequestOptions`) v0 @kind object;
+  #L3d5e08.  `@@com.bumptech.glide.RequestManager.j` @type ^`com.bumptech.glide.request.RequestOptions` := v0 @kind object;
+  #L3d5e0c.  v0:= constclass @type ^`com.bumptech.glide.load.resource.gif.GifDrawable` @kind object;
+  #L3d5e10.  call temp:= `decodeTypeOf`(v0) @signature `Lcom/bumptech/glide/request/RequestOptions;.decodeTypeOf:(Ljava/lang/Class;)Lcom/bumptech/glide/request/RequestOptions;` @kind static;
+  #L3d5e16.  v0:= temp @kind object;
+  #L3d5e18.  call temp:= `lock`(v0) @signature `Lcom/bumptech/glide/request/BaseRequestOptions;.lock:()Lcom/bumptech/glide/request/BaseRequestOptions;` @kind virtual;
+  #L3d5e1e.  v0:= temp @kind object;
+  #L3d5e20.  v0:= (`com.bumptech.glide.request.RequestOptions`) v0 @kind object;
+  #L3d5e24.  `@@com.bumptech.glide.RequestManager.k` @type ^`com.bumptech.glide.request.RequestOptions` := v0 @kind object;
+  #L3d5e28.  v0:= `@@com.bumptech.glide.load.engine.DiskCacheStrategy.DATA` @type ^`com.bumptech.glide.load.engine.DiskCacheStrategy` @kind object;
+  #L3d5e2c.  call temp:= `diskCacheStrategyOf`(v0) @signature `Lcom/bumptech/glide/request/RequestOptions;.diskCacheStrategyOf:(Lcom/bumptech/glide/load/engine/DiskCacheStrategy;)Lcom/bumptech/glide/request/RequestOptions;` @kind static;
+  #L3d5e32.  v0:= temp @kind object;
+  #L3d5e34.  v1:= `@@com.bumptech.glide.Priority.LOW` @type ^`com.bumptech.glide.Priority` @kind object;
+  #L3d5e38.  call temp:= `priority`(v0, v1) @signature `Lcom/bumptech/glide/request/BaseRequestOptions;.priority:(Lcom/bumptech/glide/Priority;)Lcom/bumptech/glide/request/BaseRequestOptions;` @kind virtual;
+  #L3d5e3e.  v0:= temp @kind object;
+  #L3d5e40.  v0:= (`com.bumptech.glide.request.RequestOptions`) v0 @kind object;
+  #L3d5e44.  v1:= 1I;
+  #L3d5e46.  call temp:= `skipMemoryCache`(v0, v1) @signature `Lcom/bumptech/glide/request/BaseRequestOptions;.skipMemoryCache:(Z)Lcom/bumptech/glide/request/BaseRequestOptions;` @kind virtual;
+  #L3d5e4c.  v0:= temp @kind object;
+  #L3d5e4e.  v0:= (`com.bumptech.glide.request.RequestOptions`) v0 @kind object;
+  #L3d5e52.  `@@com.bumptech.glide.RequestManager.l` @type ^`com.bumptech.glide.request.RequestOptions` := v0 @kind object;
+  #L3d5e56.  return @kind void;
+}
+procedure `void` `<init>`(`com.bumptech.glide.RequestManager` v7 @kind this, `com.bumptech.glide.Glide` v8 @kind object, `com.bumptech.glide.manager.Lifecycle` v9 @kind object, `com.bumptech.glide.manager.RequestManagerTreeNode` v10 @kind object, `android.content.Context` v11 @kind object) @signature `Lcom/bumptech/glide/RequestManager;.<init>:(Lcom/bumptech/glide/Glide;Lcom/bumptech/glide/manager/Lifecycle;Lcom/bumptech/glide/manager/RequestManagerTreeNode;Landroid/content/Context;)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+
+  #L3d5e68.  v4:= new `com.bumptech.glide.manager.RequestTracker`;
+  #L3d5e6c.  call `<init>`(v4) @signature `Lcom/bumptech/glide/manager/RequestTracker;.<init>:()V` @kind direct;
+  #L3d5e72.  call temp:= `c`(v8) @signature `Lcom/bumptech/glide/Glide;.c:()Lcom/bumptech/glide/manager/ConnectivityMonitorFactory;` @kind virtual;
+  #L3d5e78.  v5:= temp @kind object;
+  #L3d5e7a.  v0:= v7 @kind object;
+  #L3d5e7c.  v1:= v8 @kind object;
+  #L3d5e7e.  v2:= v9 @kind object;
+  #L3d5e80.  v3:= v10 @kind object;
+  #L3d5e82.  v6:= v11 @kind object;
+  #L3d5e84.  call `<init>`(v0, v1, v2, v3, v4, v5, v6) @signature `Lcom/bumptech/glide/RequestManager;.<init>:(Lcom/bumptech/glide/Glide;Lcom/bumptech/glide/manager/Lifecycle;Lcom/bumptech/glide/manager/RequestManagerTreeNode;Lcom/bumptech/glide/manager/RequestTracker;Lcom/bumptech/glide/manager/ConnectivityMonitorFactory;Landroid/content/Context;)V` @kind direct;
+  #L3d5e8a.  return @kind void;
+}
+procedure `void` `<init>`(`com.bumptech.glide.RequestManager` v1 @kind this, `com.bumptech.glide.Glide` v2 @kind object, `com.bumptech.glide.manager.Lifecycle` v3 @kind object, `com.bumptech.glide.manager.RequestManagerTreeNode` v4 @kind object, `com.bumptech.glide.manager.RequestTracker` v5 @kind object, `com.bumptech.glide.manager.ConnectivityMonitorFactory` v6 @kind object, `android.content.Context` v7 @kind object) @signature `Lcom/bumptech/glide/RequestManager;.<init>:(Lcom/bumptech/glide/Glide;Lcom/bumptech/glide/manager/Lifecycle;Lcom/bumptech/glide/manager/RequestManagerTreeNode;Lcom/bumptech/glide/manager/RequestTracker;Lcom/bumptech/glide/manager/ConnectivityMonitorFactory;Landroid/content/Context;)V` @AccessFlag CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L3d5e9c.  call `<init>`(v1) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L3d5ea2.  v0:= new `com.bumptech.glide.manager.TargetTracker`;
+  #L3d5ea6.  call `<init>`(v0) @signature `Lcom/bumptech/glide/manager/TargetTracker;.<init>:()V` @kind direct;
+  #L3d5eac.  v1.`com.bumptech.glide.RequestManager.d` @type ^`com.bumptech.glide.manager.TargetTracker` := v0 @kind object;
+  #L3d5eb0.  v0:= new `com.bumptech.glide.RequestManager$a`;
+  #L3d5eb4.  call `<init>`(v0, v1) @signature `Lcom/bumptech/glide/RequestManager$a;.<init>:(Lcom/bumptech/glide/RequestManager;)V` @kind direct;
+  #L3d5eba.  v1.`com.bumptech.glide.RequestManager.e` @type ^`java.lang.Runnable` := v0 @kind object;
+  #L3d5ebe.  v1.`com.bumptech.glide.RequestManager.glide` @type ^`com.bumptech.glide.Glide` := v2 @kind object;
+  #L3d5ec2.  v1.`com.bumptech.glide.RequestManager.a` @type ^`com.bumptech.glide.manager.Lifecycle` := v3 @kind object;
+  #L3d5ec6.  v1.`com.bumptech.glide.RequestManager.c` @type ^`com.bumptech.glide.manager.RequestManagerTreeNode` := v4 @kind object;
+  #L3d5eca.  v1.`com.bumptech.glide.RequestManager.b` @type ^`com.bumptech.glide.manager.RequestTracker` := v5 @kind object;
+  #L3d5ece.  v1.`com.bumptech.glide.RequestManager.context` @type ^`android.content.Context` := v7 @kind object;
+  #L3d5ed2.  call temp:= `getApplicationContext`(v7) @signature `Landroid/content/Context;.getApplicationContext:()Landroid/content/Context;` @kind virtual;
+  #L3d5ed8.  v4:= temp @kind object;
+  #L3d5eda.  v7:= new `com.bumptech.glide.RequestManager$c`;
+  #L3d5ede.  call `<init>`(v7, v1, v5) @signature `Lcom/bumptech/glide/RequestManager$c;.<init>:(Lcom/bumptech/glide/RequestManager;Lcom/bumptech/glide/manager/RequestTracker;)V` @kind direct;
+  #L3d5ee4.  call temp:= `build`(v6, v4, v7) @signature `Lcom/bumptech/glide/manager/ConnectivityMonitorFactory;.build:(Landroid/content/Context;Lcom/bumptech/glide/manager/ConnectivityMonitor$ConnectivityListener;)Lcom/bumptech/glide/manager/ConnectivityMonitor;` @kind interface;
+  #L3d5eea.  v4:= temp @kind object;
+  #L3d5eec.  v1.`com.bumptech.glide.RequestManager.f` @type ^`com.bumptech.glide.manager.ConnectivityMonitor` := v4 @kind object;
+  #L3d5ef0.  call temp:= `isOnBackgroundThread`() @signature `Lcom/bumptech/glide/util/Util;.isOnBackgroundThread:()Z` @kind static;
+  #L3d5ef6.  v5:= temp;
+  #L3d5ef8.  if v5 == 0 then goto L3d5f04;
+  #L3d5efc.  call `postOnUiThread`(v0) @signature `Lcom/bumptech/glide/util/Util;.postOnUiThread:(Ljava/lang/Runnable;)V` @kind static;
+  #L3d5f02.  goto L3d5f0a;
+  #L3d5f04.  call `addListener`(v3, v1) @signature `Lcom/bumptech/glide/manager/Lifecycle;.addListener:(Lcom/bumptech/glide/manager/LifecycleListener;)V` @kind interface;
+  #L3d5f0a.  call `addListener`(v3, v4) @signature `Lcom/bumptech/glide/manager/Lifecycle;.addListener:(Lcom/bumptech/glide/manager/LifecycleListener;)V` @kind interface;
+  #L3d5f10.  v3:= new `java.util.concurrent.CopyOnWriteArrayList`;
+  #L3d5f14.  call temp:= `d`(v2) @signature `Lcom/bumptech/glide/Glide;.d:()Lcom/bumptech/glide/GlideContext;` @kind virtual;
+  #L3d5f1a.  v4:= temp @kind object;
+  #L3d5f1c.  call temp:= `getDefaultRequestListeners`(v4) @signature `Lcom/bumptech/glide/GlideContext;.getDefaultRequestListeners:()Ljava/util/List;` @kind virtual;
+  #L3d5f22.  v4:= temp @kind object;
+  #L3d5f24.  call `<init>`(v3, v4) @signature `Ljava/util/concurrent/CopyOnWriteArrayList;.<init>:(Ljava/util/Collection;)V` @kind direct;
+  #L3d5f2a.  v1.`com.bumptech.glide.RequestManager.g` @type ^`java.util.concurrent.CopyOnWriteArrayList` := v3 @kind object;
+  #L3d5f2e.  call temp:= `d`(v2) @signature `Lcom/bumptech/glide/Glide;.d:()Lcom/bumptech/glide/GlideContext;` @kind virtual;
+  #L3d5f34.  v3:= temp @kind object;
+  #L3d5f36.  call temp:= `getDefaultRequestOptions`(v3) @signature `Lcom/bumptech/glide/GlideContext;.getDefaultRequestOptions:()Lcom/bumptech/glide/request/RequestOptions;` @kind virtual;
+  #L3d5f3c.  v3:= temp @kind object;
+  #L3d5f3e.  call `setRequestOptions`(v1, v3) @signature `Lcom/bumptech/glide/RequestManager;.setRequestOptions:(Lcom/bumptech/glide/request/RequestOptions;)V` @kind virtual;
+  #L3d5f44.  call `h`(v2, v1) @signature `Lcom/bumptech/glide/Glide;.h:(Lcom/bumptech/glide/RequestManager;)V` @kind virtual;
+  #L3d5f4a.  return @kind void;
+}
+procedure `void` `f`(`com.bumptech.glide.RequestManager` v2 @kind this, `com.bumptech.glide.request.target.Target` v3 @kind object) @signature `Lcom/bumptech/glide/RequestManager;.f:(Lcom/bumptech/glide/request/target/Target;)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+
+  #L3d636c.  call temp:= `e`(v2, v3) @signature `Lcom/bumptech/glide/RequestManager;.e:(Lcom/bumptech/glide/request/target/Target;)Z` @kind virtual;
+  #L3d6372.  v0:= temp;
+  #L3d6374.  call temp:= `getRequest`(v3) @signature `Lcom/bumptech/glide/request/target/Target;.getRequest:()Lcom/bumptech/glide/request/Request;` @kind interface;
+  #L3d637a.  v1:= temp @kind object;
+  #L3d637c.  if v0 != 0 then goto L3d63a2;
+  #L3d6380.  v0:= v2.`com.bumptech.glide.RequestManager.glide` @type ^`com.bumptech.glide.Glide` @kind object;
+  #L3d6384.  call temp:= `i`(v0, v3) @signature `Lcom/bumptech/glide/Glide;.i:(Lcom/bumptech/glide/request/target/Target;)Z` @kind virtual;
+  #L3d638a.  v0:= temp;
+  #L3d638c.  if v0 != 0 then goto L3d63a2;
+  #L3d6390.  if v1 == 0 then goto L3d63a2;
+  #L3d6394.  v0:= 0I;
+  #L3d6396.  call `setRequest`(v3, v0) @signature `Lcom/bumptech/glide/request/target/Target;.setRequest:(Lcom/bumptech/glide/request/Request;)V` @kind interface;
+  #L3d639c.  call `clear`(v1) @signature `Lcom/bumptech/glide/request/Request;.clear:()V` @kind interface;
+  #L3d63a2.  return @kind void;
+}
+procedure `void` `g`(`com.bumptech.glide.RequestManager` v1 @kind this, `com.bumptech.glide.request.RequestOptions` v2 @kind object) @signature `Lcom/bumptech/glide/RequestManager;.g:(Lcom/bumptech/glide/request/RequestOptions;)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+
+  #L3d63b4.  @monitorenter v1
+  #L3d63b6.  v0:= v1.`com.bumptech.glide.RequestManager.h` @type ^`com.bumptech.glide.request.RequestOptions` @kind object;
+  #L3d63ba.  call temp:= `apply`(v0, v2) @signature `Lcom/bumptech/glide/request/BaseRequestOptions;.apply:(Lcom/bumptech/glide/request/BaseRequestOptions;)Lcom/bumptech/glide/request/BaseRequestOptions;` @kind virtual;
+  #L3d63c0.  v2:= temp @kind object;
+  #L3d63c2.  v2:= (`com.bumptech.glide.request.RequestOptions`) v2 @kind object;
+  #L3d63c6.  v1.`com.bumptech.glide.RequestManager.h` @type ^`com.bumptech.glide.request.RequestOptions` := v2 @kind object;
+  #L3d63ca.  @monitorexit v1
+  #L3d63cc.  return @kind void;
+  #L3d63ce.  v2:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3d63d0.  @monitorexit v1
+  #L3d63d2.  throw v2;
+  catch `java.lang.Throwable` @[L3d63b6..L3d63ca] goto L3d63ce;
+}
+procedure `java.util.List` `a`(`com.bumptech.glide.RequestManager` v1 @kind this) @signature `Lcom/bumptech/glide/RequestManager;.a:()Ljava/util/List;` @AccessFlag  {
+    temp;
+    v0;
+
+  #L3d5dd8.  v0:= v1.`com.bumptech.glide.RequestManager.g` @type ^`java.util.concurrent.CopyOnWriteArrayList` @kind object;
+  #L3d5ddc.  return v0 @kind object;
+}
+procedure `com.bumptech.glide.RequestManager` `addDefaultRequestListener`(`com.bumptech.glide.RequestManager` v1 @kind this, `com.bumptech.glide.request.RequestListener` v2 @kind object) @signature `Lcom/bumptech/glide/RequestManager;.addDefaultRequestListener:(Lcom/bumptech/glide/request/RequestListener;)Lcom/bumptech/glide/RequestManager;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L3d5b90.  v0:= v1.`com.bumptech.glide.RequestManager.g` @type ^`java.util.concurrent.CopyOnWriteArrayList` @kind object;
+  #L3d5b94.  call temp:= `add`(v0, v2) @signature `Ljava/util/concurrent/CopyOnWriteArrayList;.add:(Ljava/lang/Object;)Z` @kind virtual;
+  #L3d5b9a.  return v1 @kind object;
+}
+procedure `com.bumptech.glide.RequestManager` `applyDefaultRequestOptions`(`com.bumptech.glide.RequestManager` v0 @kind this, `com.bumptech.glide.request.RequestOptions` v1 @kind object) @signature `Lcom/bumptech/glide/RequestManager;.applyDefaultRequestOptions:(Lcom/bumptech/glide/request/RequestOptions;)Lcom/bumptech/glide/RequestManager;` @AccessFlag PUBLIC {
+    temp;
+
+  #L3d5bac.  @monitorenter v0
+  #L3d5bae.  call `g`(v0, v1) @signature `Lcom/bumptech/glide/RequestManager;.g:(Lcom/bumptech/glide/request/RequestOptions;)V` @kind direct;
+  #L3d5bb4.  @monitorexit v0
+  #L3d5bb6.  return v0 @kind object;
+  #L3d5bb8.  v1:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3d5bba.  @monitorexit v0
+  #L3d5bbc.  throw v1;
+  catch `java.lang.Throwable` @[L3d5bae..L3d5bb4] goto L3d5bb8;
+}
+procedure `com.bumptech.glide.RequestBuilder` `as`(`com.bumptech.glide.RequestManager` v3 @kind this, `java.lang.Class` v4 @kind object) @signature `Lcom/bumptech/glide/RequestManager;.as:(Ljava/lang/Class;)Lcom/bumptech/glide/RequestBuilder;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L3d5930.  v0:= new `com.bumptech.glide.RequestBuilder`;
+  #L3d5934.  v1:= v3.`com.bumptech.glide.RequestManager.glide` @type ^`com.bumptech.glide.Glide` @kind object;
+  #L3d5938.  v2:= v3.`com.bumptech.glide.RequestManager.context` @type ^`android.content.Context` @kind object;
+  #L3d593c.  call `<init>`(v0, v1, v3, v4, v2) @signature `Lcom/bumptech/glide/RequestBuilder;.<init>:(Lcom/bumptech/glide/Glide;Lcom/bumptech/glide/RequestManager;Ljava/lang/Class;Landroid/content/Context;)V` @kind direct;
+  #L3d5942.  return v0 @kind object;
+}
+procedure `com.bumptech.glide.RequestBuilder` `asBitmap`(`com.bumptech.glide.RequestManager` v2 @kind this) @signature `Lcom/bumptech/glide/RequestManager;.asBitmap:()Lcom/bumptech/glide/RequestBuilder;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L3d5954.  v0:= constclass @type ^`android.graphics.Bitmap` @kind object;
+  #L3d5958.  call temp:= `as`(v2, v0) @signature `Lcom/bumptech/glide/RequestManager;.as:(Ljava/lang/Class;)Lcom/bumptech/glide/RequestBuilder;` @kind virtual;
+  #L3d595e.  v0:= temp @kind object;
+  #L3d5960.  v1:= `@@com.bumptech.glide.RequestManager.j` @type ^`com.bumptech.glide.request.RequestOptions` @kind object;
+  #L3d5964.  call temp:= `apply`(v0, v1) @signature `Lcom/bumptech/glide/RequestBuilder;.apply:(Lcom/bumptech/glide/request/BaseRequestOptions;)Lcom/bumptech/glide/RequestBuilder;` @kind virtual;
+  #L3d596a.  v0:= temp @kind object;
+  #L3d596c.  return v0 @kind object;
+}
+procedure `com.bumptech.glide.RequestBuilder` `asDrawable`(`com.bumptech.glide.RequestManager` v1 @kind this) @signature `Lcom/bumptech/glide/RequestManager;.asDrawable:()Lcom/bumptech/glide/RequestBuilder;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L3d5980.  v0:= constclass @type ^`android.graphics.drawable.Drawable` @kind object;
+  #L3d5984.  call temp:= `as`(v1, v0) @signature `Lcom/bumptech/glide/RequestManager;.as:(Ljava/lang/Class;)Lcom/bumptech/glide/RequestBuilder;` @kind virtual;
+  #L3d598a.  v0:= temp @kind object;
+  #L3d598c.  return v0 @kind object;
+}
+procedure `com.bumptech.glide.RequestBuilder` `asFile`(`com.bumptech.glide.RequestManager` v2 @kind this) @signature `Lcom/bumptech/glide/RequestManager;.asFile:()Lcom/bumptech/glide/RequestBuilder;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L3d59a0.  v0:= constclass @type ^`java.io.File` @kind object;
+  #L3d59a4.  call temp:= `as`(v2, v0) @signature `Lcom/bumptech/glide/RequestManager;.as:(Ljava/lang/Class;)Lcom/bumptech/glide/RequestBuilder;` @kind virtual;
+  #L3d59aa.  v0:= temp @kind object;
+  #L3d59ac.  v1:= 1I;
+  #L3d59ae.  call temp:= `skipMemoryCacheOf`(v1) @signature `Lcom/bumptech/glide/request/RequestOptions;.skipMemoryCacheOf:(Z)Lcom/bumptech/glide/request/RequestOptions;` @kind static;
+  #L3d59b4.  v1:= temp @kind object;
+  #L3d59b6.  call temp:= `apply`(v0, v1) @signature `Lcom/bumptech/glide/RequestBuilder;.apply:(Lcom/bumptech/glide/request/BaseRequestOptions;)Lcom/bumptech/glide/RequestBuilder;` @kind virtual;
+  #L3d59bc.  v0:= temp @kind object;
+  #L3d59be.  return v0 @kind object;
+}
+procedure `com.bumptech.glide.RequestBuilder` `asGif`(`com.bumptech.glide.RequestManager` v2 @kind this) @signature `Lcom/bumptech/glide/RequestManager;.asGif:()Lcom/bumptech/glide/RequestBuilder;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L3d59d0.  v0:= constclass @type ^`com.bumptech.glide.load.resource.gif.GifDrawable` @kind object;
+  #L3d59d4.  call temp:= `as`(v2, v0) @signature `Lcom/bumptech/glide/RequestManager;.as:(Ljava/lang/Class;)Lcom/bumptech/glide/RequestBuilder;` @kind virtual;
+  #L3d59da.  v0:= temp @kind object;
+  #L3d59dc.  v1:= `@@com.bumptech.glide.RequestManager.k` @type ^`com.bumptech.glide.request.RequestOptions` @kind object;
+  #L3d59e0.  call temp:= `apply`(v0, v1) @signature `Lcom/bumptech/glide/RequestBuilder;.apply:(Lcom/bumptech/glide/request/BaseRequestOptions;)Lcom/bumptech/glide/RequestBuilder;` @kind virtual;
+  #L3d59e6.  v0:= temp @kind object;
+  #L3d59e8.  return v0 @kind object;
+}
+procedure `com.bumptech.glide.request.RequestOptions` `b`(`com.bumptech.glide.RequestManager` v1 @kind this) @signature `Lcom/bumptech/glide/RequestManager;.b:()Lcom/bumptech/glide/request/RequestOptions;` @AccessFlag  {
+    temp;
+    v0;
+
+  #L3d5c34.  @monitorenter v1
+  #L3d5c36.  v0:= v1.`com.bumptech.glide.RequestManager.h` @type ^`com.bumptech.glide.request.RequestOptions` @kind object;
+  #L3d5c3a.  @monitorexit v1
+  #L3d5c3c.  return v0 @kind object;
+  #L3d5c3e.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3d5c40.  @monitorexit v1
+  #L3d5c42.  throw v0;
+  catch `java.lang.Throwable` @[L3d5c36..L3d5c3a] goto L3d5c3e;
+}
+procedure `com.bumptech.glide.TransitionOptions` `c`(`com.bumptech.glide.RequestManager` v1 @kind this, `java.lang.Class` v2 @kind object) @signature `Lcom/bumptech/glide/RequestManager;.c:(Ljava/lang/Class;)Lcom/bumptech/glide/TransitionOptions;` @AccessFlag  {
+    temp;
+    v0;
+
+  #L3d5c0c.  v0:= v1.`com.bumptech.glide.RequestManager.glide` @type ^`com.bumptech.glide.Glide` @kind object;
+  #L3d5c10.  call temp:= `d`(v0) @signature `Lcom/bumptech/glide/Glide;.d:()Lcom/bumptech/glide/GlideContext;` @kind virtual;
+  #L3d5c16.  v0:= temp @kind object;
+  #L3d5c18.  call temp:= `getDefaultTransitionOptions`(v0, v2) @signature `Lcom/bumptech/glide/GlideContext;.getDefaultTransitionOptions:(Ljava/lang/Class;)Lcom/bumptech/glide/TransitionOptions;` @kind virtual;
+  #L3d5c1e.  v2:= temp @kind object;
+  #L3d5c20.  return v2 @kind object;
+}
+procedure `void` `clear`(`com.bumptech.glide.RequestManager` v1 @kind this, `android.view.View` v2 @kind object) @signature `Lcom/bumptech/glide/RequestManager;.clear:(Landroid/view/View;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L3d5f5c.  v0:= new `com.bumptech.glide.RequestManager$b`;
+  #L3d5f60.  call `<init>`(v0, v2) @signature `Lcom/bumptech/glide/RequestManager$b;.<init>:(Landroid/view/View;)V` @kind direct;
+  #L3d5f66.  call `clear`(v1, v0) @signature `Lcom/bumptech/glide/RequestManager;.clear:(Lcom/bumptech/glide/request/target/Target;)V` @kind virtual;
+  #L3d5f6c.  return @kind void;
+}
+procedure `void` `clear`(`com.bumptech.glide.RequestManager` v0 @kind this, `com.bumptech.glide.request.target.Target` v1 @kind object) @signature `Lcom/bumptech/glide/RequestManager;.clear:(Lcom/bumptech/glide/request/target/Target;)V` @AccessFlag PUBLIC {
+    temp;
+
+  #L3d5f80.  if v1 != 0 then goto L3d5f86;
+  #L3d5f84.  return @kind void;
+  #L3d5f86.  call `f`(v0, v1) @signature `Lcom/bumptech/glide/RequestManager;.f:(Lcom/bumptech/glide/request/target/Target;)V` @kind direct;
+  #L3d5f8c.  return @kind void;
+}
+procedure `void` `d`(`com.bumptech.glide.RequestManager` v1 @kind this, `com.bumptech.glide.request.target.Target` v2 @kind object, `com.bumptech.glide.request.Request` v3 @kind object) @signature `Lcom/bumptech/glide/RequestManager;.d:(Lcom/bumptech/glide/request/target/Target;Lcom/bumptech/glide/request/Request;)V` @AccessFlag  {
+    temp;
+    v0;
+
+  #L3d6330.  @monitorenter v1
+  #L3d6332.  v0:= v1.`com.bumptech.glide.RequestManager.d` @type ^`com.bumptech.glide.manager.TargetTracker` @kind object;
+  #L3d6336.  call `track`(v0, v2) @signature `Lcom/bumptech/glide/manager/TargetTracker;.track:(Lcom/bumptech/glide/request/target/Target;)V` @kind virtual;
+  #L3d633c.  v2:= v1.`com.bumptech.glide.RequestManager.b` @type ^`com.bumptech.glide.manager.RequestTracker` @kind object;
+  #L3d6340.  call `runRequest`(v2, v3) @signature `Lcom/bumptech/glide/manager/RequestTracker;.runRequest:(Lcom/bumptech/glide/request/Request;)V` @kind virtual;
+  #L3d6346.  @monitorexit v1
+  #L3d6348.  return @kind void;
+  #L3d634a.  v2:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3d634c.  @monitorexit v1
+  #L3d634e.  throw v2;
+  catch `java.lang.Throwable` @[L3d6332..L3d6346] goto L3d634a;
+}
+procedure `com.bumptech.glide.RequestBuilder` `download`(`com.bumptech.glide.RequestManager` v1 @kind this, `java.lang.Object` v2 @kind object) @signature `Lcom/bumptech/glide/RequestManager;.download:(Ljava/lang/Object;)Lcom/bumptech/glide/RequestBuilder;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L3d59fc.  call temp:= `downloadOnly`(v1) @signature `Lcom/bumptech/glide/RequestManager;.downloadOnly:()Lcom/bumptech/glide/RequestBuilder;` @kind virtual;
+  #L3d5a02.  v0:= temp @kind object;
+  #L3d5a04.  call temp:= `load`(v0, v2) @signature `Lcom/bumptech/glide/RequestBuilder;.load:(Ljava/lang/Object;)Lcom/bumptech/glide/RequestBuilder;` @kind virtual;
+  #L3d5a0a.  v2:= temp @kind object;
+  #L3d5a0c.  return v2 @kind object;
+}
+procedure `com.bumptech.glide.RequestBuilder` `downloadOnly`(`com.bumptech.glide.RequestManager` v2 @kind this) @signature `Lcom/bumptech/glide/RequestManager;.downloadOnly:()Lcom/bumptech/glide/RequestBuilder;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L3d5a20.  v0:= constclass @type ^`java.io.File` @kind object;
+  #L3d5a24.  call temp:= `as`(v2, v0) @signature `Lcom/bumptech/glide/RequestManager;.as:(Ljava/lang/Class;)Lcom/bumptech/glide/RequestBuilder;` @kind virtual;
+  #L3d5a2a.  v0:= temp @kind object;
+  #L3d5a2c.  v1:= `@@com.bumptech.glide.RequestManager.l` @type ^`com.bumptech.glide.request.RequestOptions` @kind object;
+  #L3d5a30.  call temp:= `apply`(v0, v1) @signature `Lcom/bumptech/glide/RequestBuilder;.apply:(Lcom/bumptech/glide/request/BaseRequestOptions;)Lcom/bumptech/glide/RequestBuilder;` @kind virtual;
+  #L3d5a36.  v0:= temp @kind object;
+  #L3d5a38.  return v0 @kind object;
+}
+procedure `boolean` `e`(`com.bumptech.glide.RequestManager` v3 @kind this, `com.bumptech.glide.request.target.Target` v4 @kind object) @signature `Lcom/bumptech/glide/RequestManager;.e:(Lcom/bumptech/glide/request/target/Target;)Z` @AccessFlag  {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L3d58c4.  @monitorenter v3
+  #L3d58c6.  call temp:= `getRequest`(v4) @signature `Lcom/bumptech/glide/request/target/Target;.getRequest:()Lcom/bumptech/glide/request/Request;` @kind interface;
+  #L3d58cc.  v0:= temp @kind object;
+  #L3d58ce.  v1:= 1I;
+  #L3d58d0.  if v0 != 0 then goto L3d58d8;
+  #L3d58d4.  @monitorexit v3
+  #L3d58d6.  return v1;
+  #L3d58d8.  v2:= v3.`com.bumptech.glide.RequestManager.b` @type ^`com.bumptech.glide.manager.RequestTracker` @kind object;
+  #L3d58dc.  call temp:= `clearAndRemove`(v2, v0) @signature `Lcom/bumptech/glide/manager/RequestTracker;.clearAndRemove:(Lcom/bumptech/glide/request/Request;)Z` @kind virtual;
+  #L3d58e2.  v0:= temp;
+  #L3d58e4.  if v0 == 0 then goto L3d58fe;
+  #L3d58e8.  v0:= v3.`com.bumptech.glide.RequestManager.d` @type ^`com.bumptech.glide.manager.TargetTracker` @kind object;
+  #L3d58ec.  call `untrack`(v0, v4) @signature `Lcom/bumptech/glide/manager/TargetTracker;.untrack:(Lcom/bumptech/glide/request/target/Target;)V` @kind virtual;
+  #L3d58f2.  v0:= 0I;
+  #L3d58f4.  call `setRequest`(v4, v0) @signature `Lcom/bumptech/glide/request/target/Target;.setRequest:(Lcom/bumptech/glide/request/Request;)V` @kind interface;
+  #L3d58fa.  @monitorexit v3
+  #L3d58fc.  return v1;
+  #L3d58fe.  v4:= 0I;
+  #L3d5900.  @monitorexit v3
+  #L3d5902.  return v4;
+  #L3d5904.  v4:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3d5906.  @monitorexit v3
+  #L3d5908.  throw v4;
+  catch `java.lang.Throwable` @[L3d58c6..L3d58ce] goto L3d5904;
+  catch `java.lang.Throwable` @[L3d58d8..L3d58fa] goto L3d5904;
+}
+procedure `boolean` `isPaused`(`com.bumptech.glide.RequestManager` v1 @kind this) @signature `Lcom/bumptech/glide/RequestManager;.isPaused:()Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L3d5890.  @monitorenter v1
+  #L3d5892.  v0:= v1.`com.bumptech.glide.RequestManager.b` @type ^`com.bumptech.glide.manager.RequestTracker` @kind object;
+  #L3d5896.  call temp:= `isPaused`(v0) @signature `Lcom/bumptech/glide/manager/RequestTracker;.isPaused:()Z` @kind virtual;
+  #L3d589c.  v0:= temp;
+  #L3d589e.  @monitorexit v1
+  #L3d58a0.  return v0;
+  #L3d58a2.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3d58a4.  @monitorexit v1
+  #L3d58a6.  throw v0;
+  catch `java.lang.Throwable` @[L3d5892..L3d589e] goto L3d58a2;
+}
+procedure `com.bumptech.glide.RequestBuilder` `load`(`com.bumptech.glide.RequestManager` v1 @kind this, `android.graphics.Bitmap` v2 @kind object) @signature `Lcom/bumptech/glide/RequestManager;.load:(Landroid/graphics/Bitmap;)Lcom/bumptech/glide/RequestBuilder;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L3d5a4c.  call temp:= `asDrawable`(v1) @signature `Lcom/bumptech/glide/RequestManager;.asDrawable:()Lcom/bumptech/glide/RequestBuilder;` @kind virtual;
+  #L3d5a52.  v0:= temp @kind object;
+  #L3d5a54.  call temp:= `load`(v0, v2) @signature `Lcom/bumptech/glide/RequestBuilder;.load:(Landroid/graphics/Bitmap;)Lcom/bumptech/glide/RequestBuilder;` @kind virtual;
+  #L3d5a5a.  v2:= temp @kind object;
+  #L3d5a5c.  return v2 @kind object;
+}
+procedure `com.bumptech.glide.RequestBuilder` `load`(`com.bumptech.glide.RequestManager` v1 @kind this, `android.graphics.drawable.Drawable` v2 @kind object) @signature `Lcom/bumptech/glide/RequestManager;.load:(Landroid/graphics/drawable/Drawable;)Lcom/bumptech/glide/RequestBuilder;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L3d5a70.  call temp:= `asDrawable`(v1) @signature `Lcom/bumptech/glide/RequestManager;.asDrawable:()Lcom/bumptech/glide/RequestBuilder;` @kind virtual;
+  #L3d5a76.  v0:= temp @kind object;
+  #L3d5a78.  call temp:= `load`(v0, v2) @signature `Lcom/bumptech/glide/RequestBuilder;.load:(Landroid/graphics/drawable/Drawable;)Lcom/bumptech/glide/RequestBuilder;` @kind virtual;
+  #L3d5a7e.  v2:= temp @kind object;
+  #L3d5a80.  return v2 @kind object;
+}
+procedure `com.bumptech.glide.RequestBuilder` `load`(`com.bumptech.glide.RequestManager` v1 @kind this, `android.net.Uri` v2 @kind object) @signature `Lcom/bumptech/glide/RequestManager;.load:(Landroid/net/Uri;)Lcom/bumptech/glide/RequestBuilder;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L3d5a94.  call temp:= `asDrawable`(v1) @signature `Lcom/bumptech/glide/RequestManager;.asDrawable:()Lcom/bumptech/glide/RequestBuilder;` @kind virtual;
+  #L3d5a9a.  v0:= temp @kind object;
+  #L3d5a9c.  call temp:= `load`(v0, v2) @signature `Lcom/bumptech/glide/RequestBuilder;.load:(Landroid/net/Uri;)Lcom/bumptech/glide/RequestBuilder;` @kind virtual;
+  #L3d5aa2.  v2:= temp @kind object;
+  #L3d5aa4.  return v2 @kind object;
+}
+procedure `com.bumptech.glide.RequestBuilder` `load`(`com.bumptech.glide.RequestManager` v1 @kind this, `java.io.File` v2 @kind object) @signature `Lcom/bumptech/glide/RequestManager;.load:(Ljava/io/File;)Lcom/bumptech/glide/RequestBuilder;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L3d5adc.  call temp:= `asDrawable`(v1) @signature `Lcom/bumptech/glide/RequestManager;.asDrawable:()Lcom/bumptech/glide/RequestBuilder;` @kind virtual;
+  #L3d5ae2.  v0:= temp @kind object;
+  #L3d5ae4.  call temp:= `load`(v0, v2) @signature `Lcom/bumptech/glide/RequestBuilder;.load:(Ljava/io/File;)Lcom/bumptech/glide/RequestBuilder;` @kind virtual;
+  #L3d5aea.  v2:= temp @kind object;
+  #L3d5aec.  return v2 @kind object;
+}
+procedure `com.bumptech.glide.RequestBuilder` `load`(`com.bumptech.glide.RequestManager` v1 @kind this, `java.lang.Integer` v2 @kind object) @signature `Lcom/bumptech/glide/RequestManager;.load:(Ljava/lang/Integer;)Lcom/bumptech/glide/RequestBuilder;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L3d5b00.  call temp:= `asDrawable`(v1) @signature `Lcom/bumptech/glide/RequestManager;.asDrawable:()Lcom/bumptech/glide/RequestBuilder;` @kind virtual;
+  #L3d5b06.  v0:= temp @kind object;
+  #L3d5b08.  call temp:= `load`(v0, v2) @signature `Lcom/bumptech/glide/RequestBuilder;.load:(Ljava/lang/Integer;)Lcom/bumptech/glide/RequestBuilder;` @kind virtual;
+  #L3d5b0e.  v2:= temp @kind object;
+  #L3d5b10.  return v2 @kind object;
+}
+procedure `com.bumptech.glide.RequestBuilder` `load`(`com.bumptech.glide.RequestManager` v1 @kind this, `java.lang.Object` v2 @kind object) @signature `Lcom/bumptech/glide/RequestManager;.load:(Ljava/lang/Object;)Lcom/bumptech/glide/RequestBuilder;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L3d5b24.  call temp:= `asDrawable`(v1) @signature `Lcom/bumptech/glide/RequestManager;.asDrawable:()Lcom/bumptech/glide/RequestBuilder;` @kind virtual;
+  #L3d5b2a.  v0:= temp @kind object;
+  #L3d5b2c.  call temp:= `load`(v0, v2) @signature `Lcom/bumptech/glide/RequestBuilder;.load:(Ljava/lang/Object;)Lcom/bumptech/glide/RequestBuilder;` @kind virtual;
+  #L3d5b32.  v2:= temp @kind object;
+  #L3d5b34.  return v2 @kind object;
+}
+procedure `com.bumptech.glide.RequestBuilder` `load`(`com.bumptech.glide.RequestManager` v1 @kind this, `java.lang.String` v2 @kind object) @signature `Lcom/bumptech/glide/RequestManager;.load:(Ljava/lang/String;)Lcom/bumptech/glide/RequestBuilder;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L3d5b48.  call temp:= `asDrawable`(v1) @signature `Lcom/bumptech/glide/RequestManager;.asDrawable:()Lcom/bumptech/glide/RequestBuilder;` @kind virtual;
+  #L3d5b4e.  v0:= temp @kind object;
+  #L3d5b50.  call temp:= `load`(v0, v2) @signature `Lcom/bumptech/glide/RequestBuilder;.load:(Ljava/lang/String;)Lcom/bumptech/glide/RequestBuilder;` @kind virtual;
+  #L3d5b56.  v2:= temp @kind object;
+  #L3d5b58.  return v2 @kind object;
+}
+procedure `com.bumptech.glide.RequestBuilder` `load`(`com.bumptech.glide.RequestManager` v1 @kind this, `java.net.URL` v2 @kind object) @signature `Lcom/bumptech/glide/RequestManager;.load:(Ljava/net/URL;)Lcom/bumptech/glide/RequestBuilder;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L3d5b6c.  call temp:= `asDrawable`(v1) @signature `Lcom/bumptech/glide/RequestManager;.asDrawable:()Lcom/bumptech/glide/RequestBuilder;` @kind virtual;
+  #L3d5b72.  v0:= temp @kind object;
+  #L3d5b74.  call temp:= `load`(v0, v2) @signature `Lcom/bumptech/glide/RequestBuilder;.load:(Ljava/net/URL;)Lcom/bumptech/glide/RequestBuilder;` @kind virtual;
+  #L3d5b7a.  v2:= temp @kind object;
+  #L3d5b7c.  return v2 @kind object;
+}
+procedure `com.bumptech.glide.RequestBuilder` `load`(`com.bumptech.glide.RequestManager` v1 @kind this, `byte`[] v2 @kind object) @signature `Lcom/bumptech/glide/RequestManager;.load:([B)Lcom/bumptech/glide/RequestBuilder;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L3d5ab8.  call temp:= `asDrawable`(v1) @signature `Lcom/bumptech/glide/RequestManager;.asDrawable:()Lcom/bumptech/glide/RequestBuilder;` @kind virtual;
+  #L3d5abe.  v0:= temp @kind object;
+  #L3d5ac0.  call temp:= `load`(v0, v2) @signature `Lcom/bumptech/glide/RequestBuilder;.load:([B)Lcom/bumptech/glide/RequestBuilder;` @kind virtual;
+  #L3d5ac6.  v2:= temp @kind object;
+  #L3d5ac8.  return v2 @kind object;
+}
+procedure `java.lang.Object` `load`(`com.bumptech.glide.RequestManager` v0 @kind this, `android.graphics.Bitmap` v1 @kind object) @signature `Lcom/bumptech/glide/RequestManager;.load:(Landroid/graphics/Bitmap;)Ljava/lang/Object;` @AccessFlag PUBLIC_SYNTHETIC {
+    temp;
+
+  #L3d5c60.  call temp:= `load`(v0, v1) @signature `Lcom/bumptech/glide/RequestManager;.load:(Landroid/graphics/Bitmap;)Lcom/bumptech/glide/RequestBuilder;` @kind virtual;
+  #L3d5c66.  v1:= temp @kind object;
+  #L3d5c68.  return v1 @kind object;
+}
+procedure `java.lang.Object` `load`(`com.bumptech.glide.RequestManager` v0 @kind this, `android.graphics.drawable.Drawable` v1 @kind object) @signature `Lcom/bumptech/glide/RequestManager;.load:(Landroid/graphics/drawable/Drawable;)Ljava/lang/Object;` @AccessFlag PUBLIC_SYNTHETIC {
+    temp;
+
+  #L3d5c7c.  call temp:= `load`(v0, v1) @signature `Lcom/bumptech/glide/RequestManager;.load:(Landroid/graphics/drawable/Drawable;)Lcom/bumptech/glide/RequestBuilder;` @kind virtual;
+  #L3d5c82.  v1:= temp @kind object;
+  #L3d5c84.  return v1 @kind object;
+}
+procedure `java.lang.Object` `load`(`com.bumptech.glide.RequestManager` v0 @kind this, `android.net.Uri` v1 @kind object) @signature `Lcom/bumptech/glide/RequestManager;.load:(Landroid/net/Uri;)Ljava/lang/Object;` @AccessFlag PUBLIC_SYNTHETIC {
+    temp;
+
+  #L3d5c98.  call temp:= `load`(v0, v1) @signature `Lcom/bumptech/glide/RequestManager;.load:(Landroid/net/Uri;)Lcom/bumptech/glide/RequestBuilder;` @kind virtual;
+  #L3d5c9e.  v1:= temp @kind object;
+  #L3d5ca0.  return v1 @kind object;
+}
+procedure `java.lang.Object` `load`(`com.bumptech.glide.RequestManager` v0 @kind this, `java.io.File` v1 @kind object) @signature `Lcom/bumptech/glide/RequestManager;.load:(Ljava/io/File;)Ljava/lang/Object;` @AccessFlag PUBLIC_SYNTHETIC {
+    temp;
+
+  #L3d5cd0.  call temp:= `load`(v0, v1) @signature `Lcom/bumptech/glide/RequestManager;.load:(Ljava/io/File;)Lcom/bumptech/glide/RequestBuilder;` @kind virtual;
+  #L3d5cd6.  v1:= temp @kind object;
+  #L3d5cd8.  return v1 @kind object;
+}
+procedure `java.lang.Object` `load`(`com.bumptech.glide.RequestManager` v0 @kind this, `java.lang.Integer` v1 @kind object) @signature `Lcom/bumptech/glide/RequestManager;.load:(Ljava/lang/Integer;)Ljava/lang/Object;` @AccessFlag PUBLIC_SYNTHETIC {
+    temp;
+
+  #L3d5cec.  call temp:= `load`(v0, v1) @signature `Lcom/bumptech/glide/RequestManager;.load:(Ljava/lang/Integer;)Lcom/bumptech/glide/RequestBuilder;` @kind virtual;
+  #L3d5cf2.  v1:= temp @kind object;
+  #L3d5cf4.  return v1 @kind object;
+}
+procedure `java.lang.Object` `load`(`com.bumptech.glide.RequestManager` v0 @kind this, `java.lang.Object` v1 @kind object) @signature `Lcom/bumptech/glide/RequestManager;.load:(Ljava/lang/Object;)Ljava/lang/Object;` @AccessFlag PUBLIC_SYNTHETIC {
+    temp;
+
+  #L3d5d08.  call temp:= `load`(v0, v1) @signature `Lcom/bumptech/glide/RequestManager;.load:(Ljava/lang/Object;)Lcom/bumptech/glide/RequestBuilder;` @kind virtual;
+  #L3d5d0e.  v1:= temp @kind object;
+  #L3d5d10.  return v1 @kind object;
+}
+procedure `java.lang.Object` `load`(`com.bumptech.glide.RequestManager` v0 @kind this, `java.lang.String` v1 @kind object) @signature `Lcom/bumptech/glide/RequestManager;.load:(Ljava/lang/String;)Ljava/lang/Object;` @AccessFlag PUBLIC_SYNTHETIC {
+    temp;
+
+  #L3d5d24.  call temp:= `load`(v0, v1) @signature `Lcom/bumptech/glide/RequestManager;.load:(Ljava/lang/String;)Lcom/bumptech/glide/RequestBuilder;` @kind virtual;
+  #L3d5d2a.  v1:= temp @kind object;
+  #L3d5d2c.  return v1 @kind object;
+}
+procedure `java.lang.Object` `load`(`com.bumptech.glide.RequestManager` v0 @kind this, `java.net.URL` v1 @kind object) @signature `Lcom/bumptech/glide/RequestManager;.load:(Ljava/net/URL;)Ljava/lang/Object;` @AccessFlag PUBLIC_SYNTHETIC {
+    temp;
+
+  #L3d5d40.  call temp:= `load`(v0, v1) @signature `Lcom/bumptech/glide/RequestManager;.load:(Ljava/net/URL;)Lcom/bumptech/glide/RequestBuilder;` @kind virtual;
+  #L3d5d46.  v1:= temp @kind object;
+  #L3d5d48.  return v1 @kind object;
+}
+procedure `java.lang.Object` `load`(`com.bumptech.glide.RequestManager` v0 @kind this, `byte`[] v1 @kind object) @signature `Lcom/bumptech/glide/RequestManager;.load:([B)Ljava/lang/Object;` @AccessFlag PUBLIC_SYNTHETIC {
+    temp;
+
+  #L3d5cb4.  call temp:= `load`(v0, v1) @signature `Lcom/bumptech/glide/RequestManager;.load:([B)Lcom/bumptech/glide/RequestBuilder;` @kind virtual;
+  #L3d5cba.  v1:= temp @kind object;
+  #L3d5cbc.  return v1 @kind object;
+}
+procedure `void` `onConfigurationChanged`(`com.bumptech.glide.RequestManager` v0 @kind this, `android.content.res.Configuration` v1 @kind object) @signature `Lcom/bumptech/glide/RequestManager;.onConfigurationChanged:(Landroid/content/res/Configuration;)V` @AccessFlag PUBLIC {
+    temp;
+
+  #L3d5fa0.  return @kind void;
+}
+procedure `void` `onDestroy`(`com.bumptech.glide.RequestManager` v2 @kind this) @signature `Lcom/bumptech/glide/RequestManager;.onDestroy:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L3d5fb4.  @monitorenter v2
+  #L3d5fb6.  v0:= v2.`com.bumptech.glide.RequestManager.d` @type ^`com.bumptech.glide.manager.TargetTracker` @kind object;
+  #L3d5fba.  call `onDestroy`(v0) @signature `Lcom/bumptech/glide/manager/TargetTracker;.onDestroy:()V` @kind virtual;
+  #L3d5fc0.  v0:= v2.`com.bumptech.glide.RequestManager.d` @type ^`com.bumptech.glide.manager.TargetTracker` @kind object;
+  #L3d5fc4.  call temp:= `getAll`(v0) @signature `Lcom/bumptech/glide/manager/TargetTracker;.getAll:()Ljava/util/List;` @kind virtual;
+  #L3d5fca.  v0:= temp @kind object;
+  #L3d5fcc.  call temp:= `iterator`(v0) @signature `Ljava/util/List;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L3d5fd2.  v0:= temp @kind object;
+  #L3d5fd4.  call temp:= `hasNext`(v0) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L3d5fda.  v1:= temp;
+  #L3d5fdc.  if v1 == 0 then goto L3d5ff4;
+  #L3d5fe0.  call temp:= `next`(v0) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L3d5fe6.  v1:= temp @kind object;
+  #L3d5fe8.  v1:= (`com.bumptech.glide.request.target.Target`) v1 @kind object;
+  #L3d5fec.  call `clear`(v2, v1) @signature `Lcom/bumptech/glide/RequestManager;.clear:(Lcom/bumptech/glide/request/target/Target;)V` @kind virtual;
+  #L3d5ff2.  goto L3d5fd4;
+  #L3d5ff4.  v0:= v2.`com.bumptech.glide.RequestManager.d` @type ^`com.bumptech.glide.manager.TargetTracker` @kind object;
+  #L3d5ff8.  call `clear`(v0) @signature `Lcom/bumptech/glide/manager/TargetTracker;.clear:()V` @kind virtual;
+  #L3d5ffe.  v0:= v2.`com.bumptech.glide.RequestManager.b` @type ^`com.bumptech.glide.manager.RequestTracker` @kind object;
+  #L3d6002.  call `clearRequests`(v0) @signature `Lcom/bumptech/glide/manager/RequestTracker;.clearRequests:()V` @kind virtual;
+  #L3d6008.  v0:= v2.`com.bumptech.glide.RequestManager.a` @type ^`com.bumptech.glide.manager.Lifecycle` @kind object;
+  #L3d600c.  call `removeListener`(v0, v2) @signature `Lcom/bumptech/glide/manager/Lifecycle;.removeListener:(Lcom/bumptech/glide/manager/LifecycleListener;)V` @kind interface;
+  #L3d6012.  v0:= v2.`com.bumptech.glide.RequestManager.a` @type ^`com.bumptech.glide.manager.Lifecycle` @kind object;
+  #L3d6016.  v1:= v2.`com.bumptech.glide.RequestManager.f` @type ^`com.bumptech.glide.manager.ConnectivityMonitor` @kind object;
+  #L3d601a.  call `removeListener`(v0, v1) @signature `Lcom/bumptech/glide/manager/Lifecycle;.removeListener:(Lcom/bumptech/glide/manager/LifecycleListener;)V` @kind interface;
+  #L3d6020.  v0:= v2.`com.bumptech.glide.RequestManager.e` @type ^`java.lang.Runnable` @kind object;
+  #L3d6024.  call `removeCallbacksOnUiThread`(v0) @signature `Lcom/bumptech/glide/util/Util;.removeCallbacksOnUiThread:(Ljava/lang/Runnable;)V` @kind static;
+  #L3d602a.  v0:= v2.`com.bumptech.glide.RequestManager.glide` @type ^`com.bumptech.glide.Glide` @kind object;
+  #L3d602e.  call `k`(v0, v2) @signature `Lcom/bumptech/glide/Glide;.k:(Lcom/bumptech/glide/RequestManager;)V` @kind virtual;
+  #L3d6034.  @monitorexit v2
+  #L3d6036.  return @kind void;
+  #L3d6038.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3d603a.  @monitorexit v2
+  #L3d603c.  throw v0;
+  catch `java.lang.Throwable` @[L3d5fb6..L3d6034] goto L3d6038;
+}
+procedure `void` `onLowMemory`(`com.bumptech.glide.RequestManager` v0 @kind this) @signature `Lcom/bumptech/glide/RequestManager;.onLowMemory:()V` @AccessFlag PUBLIC {
+    temp;
+
+  #L3d605c.  return @kind void;
+}
+procedure `void` `onStart`(`com.bumptech.glide.RequestManager` v1 @kind this) @signature `Lcom/bumptech/glide/RequestManager;.onStart:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L3d6070.  @monitorenter v1
+  #L3d6072.  call `resumeRequests`(v1) @signature `Lcom/bumptech/glide/RequestManager;.resumeRequests:()V` @kind virtual;
+  #L3d6078.  v0:= v1.`com.bumptech.glide.RequestManager.d` @type ^`com.bumptech.glide.manager.TargetTracker` @kind object;
+  #L3d607c.  call `onStart`(v0) @signature `Lcom/bumptech/glide/manager/TargetTracker;.onStart:()V` @kind virtual;
+  #L3d6082.  @monitorexit v1
+  #L3d6084.  return @kind void;
+  #L3d6086.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3d6088.  @monitorexit v1
+  #L3d608a.  throw v0;
+  catch `java.lang.Throwable` @[L3d6072..L3d6082] goto L3d6086;
+}
+procedure `void` `onStop`(`com.bumptech.glide.RequestManager` v1 @kind this) @signature `Lcom/bumptech/glide/RequestManager;.onStop:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L3d60a8.  @monitorenter v1
+  #L3d60aa.  call `pauseRequests`(v1) @signature `Lcom/bumptech/glide/RequestManager;.pauseRequests:()V` @kind virtual;
+  #L3d60b0.  v0:= v1.`com.bumptech.glide.RequestManager.d` @type ^`com.bumptech.glide.manager.TargetTracker` @kind object;
+  #L3d60b4.  call `onStop`(v0) @signature `Lcom/bumptech/glide/manager/TargetTracker;.onStop:()V` @kind virtual;
+  #L3d60ba.  @monitorexit v1
+  #L3d60bc.  return @kind void;
+  #L3d60be.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3d60c0.  @monitorexit v1
+  #L3d60c2.  throw v0;
+  catch `java.lang.Throwable` @[L3d60aa..L3d60ba] goto L3d60be;
+}
+procedure `void` `onTrimMemory`(`com.bumptech.glide.RequestManager` v1 @kind this, `int` v2 ) @signature `Lcom/bumptech/glide/RequestManager;.onTrimMemory:(I)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L3d60e0.  v0:= 60I;
+  #L3d60e4.  if v2 != v0 then goto L3d60f6;
+  #L3d60e8.  v2:= v1.`com.bumptech.glide.RequestManager.i` @type ^`boolean` @kind boolean;
+  #L3d60ec.  if v2 == 0 then goto L3d60f6;
+  #L3d60f0.  call `pauseAllRequestsRecursive`(v1) @signature `Lcom/bumptech/glide/RequestManager;.pauseAllRequestsRecursive:()V` @kind virtual;
+  #L3d60f6.  return @kind void;
+}
+procedure `void` `pauseAllRequests`(`com.bumptech.glide.RequestManager` v1 @kind this) @signature `Lcom/bumptech/glide/RequestManager;.pauseAllRequests:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L3d6108.  @monitorenter v1
+  #L3d610a.  v0:= v1.`com.bumptech.glide.RequestManager.b` @type ^`com.bumptech.glide.manager.RequestTracker` @kind object;
+  #L3d610e.  call `pauseAllRequests`(v0) @signature `Lcom/bumptech/glide/manager/RequestTracker;.pauseAllRequests:()V` @kind virtual;
+  #L3d6114.  @monitorexit v1
+  #L3d6116.  return @kind void;
+  #L3d6118.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3d611a.  @monitorexit v1
+  #L3d611c.  throw v0;
+  catch `java.lang.Throwable` @[L3d610a..L3d6114] goto L3d6118;
+}
+procedure `void` `pauseAllRequestsRecursive`(`com.bumptech.glide.RequestManager` v2 @kind this) @signature `Lcom/bumptech/glide/RequestManager;.pauseAllRequestsRecursive:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L3d613c.  @monitorenter v2
+  #L3d613e.  call `pauseAllRequests`(v2) @signature `Lcom/bumptech/glide/RequestManager;.pauseAllRequests:()V` @kind virtual;
+  #L3d6144.  v0:= v2.`com.bumptech.glide.RequestManager.c` @type ^`com.bumptech.glide.manager.RequestManagerTreeNode` @kind object;
+  #L3d6148.  call temp:= `getDescendants`(v0) @signature `Lcom/bumptech/glide/manager/RequestManagerTreeNode;.getDescendants:()Ljava/util/Set;` @kind interface;
+  #L3d614e.  v0:= temp @kind object;
+  #L3d6150.  call temp:= `iterator`(v0) @signature `Ljava/util/Set;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L3d6156.  v0:= temp @kind object;
+  #L3d6158.  call temp:= `hasNext`(v0) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L3d615e.  v1:= temp;
+  #L3d6160.  if v1 == 0 then goto L3d6178;
+  #L3d6164.  call temp:= `next`(v0) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L3d616a.  v1:= temp @kind object;
+  #L3d616c.  v1:= (`com.bumptech.glide.RequestManager`) v1 @kind object;
+  #L3d6170.  call `pauseAllRequests`(v1) @signature `Lcom/bumptech/glide/RequestManager;.pauseAllRequests:()V` @kind virtual;
+  #L3d6176.  goto L3d6158;
+  #L3d6178.  @monitorexit v2
+  #L3d617a.  return @kind void;
+  #L3d617c.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3d617e.  @monitorexit v2
+  #L3d6180.  throw v0;
+  catch `java.lang.Throwable` @[L3d613e..L3d6176] goto L3d617c;
+}
+procedure `void` `pauseRequests`(`com.bumptech.glide.RequestManager` v1 @kind this) @signature `Lcom/bumptech/glide/RequestManager;.pauseRequests:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L3d61a0.  @monitorenter v1
+  #L3d61a2.  v0:= v1.`com.bumptech.glide.RequestManager.b` @type ^`com.bumptech.glide.manager.RequestTracker` @kind object;
+  #L3d61a6.  call `pauseRequests`(v0) @signature `Lcom/bumptech/glide/manager/RequestTracker;.pauseRequests:()V` @kind virtual;
+  #L3d61ac.  @monitorexit v1
+  #L3d61ae.  return @kind void;
+  #L3d61b0.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3d61b2.  @monitorexit v1
+  #L3d61b4.  throw v0;
+  catch `java.lang.Throwable` @[L3d61a2..L3d61ac] goto L3d61b0;
+}
+procedure `void` `pauseRequestsRecursive`(`com.bumptech.glide.RequestManager` v2 @kind this) @signature `Lcom/bumptech/glide/RequestManager;.pauseRequestsRecursive:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L3d61d4.  @monitorenter v2
+  #L3d61d6.  call `pauseRequests`(v2) @signature `Lcom/bumptech/glide/RequestManager;.pauseRequests:()V` @kind virtual;
+  #L3d61dc.  v0:= v2.`com.bumptech.glide.RequestManager.c` @type ^`com.bumptech.glide.manager.RequestManagerTreeNode` @kind object;
+  #L3d61e0.  call temp:= `getDescendants`(v0) @signature `Lcom/bumptech/glide/manager/RequestManagerTreeNode;.getDescendants:()Ljava/util/Set;` @kind interface;
+  #L3d61e6.  v0:= temp @kind object;
+  #L3d61e8.  call temp:= `iterator`(v0) @signature `Ljava/util/Set;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L3d61ee.  v0:= temp @kind object;
+  #L3d61f0.  call temp:= `hasNext`(v0) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L3d61f6.  v1:= temp;
+  #L3d61f8.  if v1 == 0 then goto L3d6210;
+  #L3d61fc.  call temp:= `next`(v0) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L3d6202.  v1:= temp @kind object;
+  #L3d6204.  v1:= (`com.bumptech.glide.RequestManager`) v1 @kind object;
+  #L3d6208.  call `pauseRequests`(v1) @signature `Lcom/bumptech/glide/RequestManager;.pauseRequests:()V` @kind virtual;
+  #L3d620e.  goto L3d61f0;
+  #L3d6210.  @monitorexit v2
+  #L3d6212.  return @kind void;
+  #L3d6214.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3d6216.  @monitorexit v2
+  #L3d6218.  throw v0;
+  catch `java.lang.Throwable` @[L3d61d6..L3d620e] goto L3d6214;
+}
+procedure `void` `resumeRequests`(`com.bumptech.glide.RequestManager` v1 @kind this) @signature `Lcom/bumptech/glide/RequestManager;.resumeRequests:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L3d6238.  @monitorenter v1
+  #L3d623a.  v0:= v1.`com.bumptech.glide.RequestManager.b` @type ^`com.bumptech.glide.manager.RequestTracker` @kind object;
+  #L3d623e.  call `resumeRequests`(v0) @signature `Lcom/bumptech/glide/manager/RequestTracker;.resumeRequests:()V` @kind virtual;
+  #L3d6244.  @monitorexit v1
+  #L3d6246.  return @kind void;
+  #L3d6248.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3d624a.  @monitorexit v1
+  #L3d624c.  throw v0;
+  catch `java.lang.Throwable` @[L3d623a..L3d6244] goto L3d6248;
+}
+procedure `void` `resumeRequestsRecursive`(`com.bumptech.glide.RequestManager` v2 @kind this) @signature `Lcom/bumptech/glide/RequestManager;.resumeRequestsRecursive:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L3d626c.  @monitorenter v2
+  #L3d626e.  call `assertMainThread`() @signature `Lcom/bumptech/glide/util/Util;.assertMainThread:()V` @kind static;
+  #L3d6274.  call `resumeRequests`(v2) @signature `Lcom/bumptech/glide/RequestManager;.resumeRequests:()V` @kind virtual;
+  #L3d627a.  v0:= v2.`com.bumptech.glide.RequestManager.c` @type ^`com.bumptech.glide.manager.RequestManagerTreeNode` @kind object;
+  #L3d627e.  call temp:= `getDescendants`(v0) @signature `Lcom/bumptech/glide/manager/RequestManagerTreeNode;.getDescendants:()Ljava/util/Set;` @kind interface;
+  #L3d6284.  v0:= temp @kind object;
+  #L3d6286.  call temp:= `iterator`(v0) @signature `Ljava/util/Set;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L3d628c.  v0:= temp @kind object;
+  #L3d628e.  call temp:= `hasNext`(v0) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L3d6294.  v1:= temp;
+  #L3d6296.  if v1 == 0 then goto L3d62ae;
+  #L3d629a.  call temp:= `next`(v0) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L3d62a0.  v1:= temp @kind object;
+  #L3d62a2.  v1:= (`com.bumptech.glide.RequestManager`) v1 @kind object;
+  #L3d62a6.  call `resumeRequests`(v1) @signature `Lcom/bumptech/glide/RequestManager;.resumeRequests:()V` @kind virtual;
+  #L3d62ac.  goto L3d628e;
+  #L3d62ae.  @monitorexit v2
+  #L3d62b0.  return @kind void;
+  #L3d62b2.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3d62b4.  @monitorexit v2
+  #L3d62b6.  throw v0;
+  catch `java.lang.Throwable` @[L3d626e..L3d62ac] goto L3d62b2;
+}
+procedure `com.bumptech.glide.RequestManager` `setDefaultRequestOptions`(`com.bumptech.glide.RequestManager` v0 @kind this, `com.bumptech.glide.request.RequestOptions` v1 @kind object) @signature `Lcom/bumptech/glide/RequestManager;.setDefaultRequestOptions:(Lcom/bumptech/glide/request/RequestOptions;)Lcom/bumptech/glide/RequestManager;` @AccessFlag PUBLIC {
+    temp;
+
+  #L3d5bdc.  @monitorenter v0
+  #L3d5bde.  call `setRequestOptions`(v0, v1) @signature `Lcom/bumptech/glide/RequestManager;.setRequestOptions:(Lcom/bumptech/glide/request/RequestOptions;)V` @kind virtual;
+  #L3d5be4.  @monitorexit v0
+  #L3d5be6.  return v0 @kind object;
+  #L3d5be8.  v1:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3d5bea.  @monitorexit v0
+  #L3d5bec.  throw v1;
+  catch `java.lang.Throwable` @[L3d5bde..L3d5be4] goto L3d5be8;
+}
+procedure `void` `setPauseAllRequestsOnTrimMemoryModerate`(`com.bumptech.glide.RequestManager` v0 @kind this, `boolean` v1 ) @signature `Lcom/bumptech/glide/RequestManager;.setPauseAllRequestsOnTrimMemoryModerate:(Z)V` @AccessFlag PUBLIC {
+    temp;
+
+  #L3d62d4.  v0.`com.bumptech.glide.RequestManager.i` @type ^`boolean` := v1 @kind boolean;
+  #L3d62d8.  return @kind void;
+}
+procedure `void` `setRequestOptions`(`com.bumptech.glide.RequestManager` v0 @kind this, `com.bumptech.glide.request.RequestOptions` v1 @kind object) @signature `Lcom/bumptech/glide/RequestManager;.setRequestOptions:(Lcom/bumptech/glide/request/RequestOptions;)V` @AccessFlag PROTECTED {
+    temp;
+
+  #L3d62ec.  @monitorenter v0
+  #L3d62ee.  call temp:= `clone`(v1) @signature `Lcom/bumptech/glide/request/BaseRequestOptions;.clone:()Lcom/bumptech/glide/request/BaseRequestOptions;` @kind virtual;
+  #L3d62f4.  v1:= temp @kind object;
+  #L3d62f6.  v1:= (`com.bumptech.glide.request.RequestOptions`) v1 @kind object;
+  #L3d62fa.  call temp:= `autoClone`(v1) @signature `Lcom/bumptech/glide/request/BaseRequestOptions;.autoClone:()Lcom/bumptech/glide/request/BaseRequestOptions;` @kind virtual;
+  #L3d6300.  v1:= temp @kind object;
+  #L3d6302.  v1:= (`com.bumptech.glide.request.RequestOptions`) v1 @kind object;
+  #L3d6306.  v0.`com.bumptech.glide.RequestManager.h` @type ^`com.bumptech.glide.request.RequestOptions` := v1 @kind object;
+  #L3d630a.  @monitorexit v0
+  #L3d630c.  return @kind void;
+  #L3d630e.  v1:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3d6310.  @monitorexit v0
+  #L3d6312.  throw v1;
+  catch `java.lang.Throwable` @[L3d62ee..L3d630a] goto L3d630e;
+}
+procedure `java.lang.String` `toString`(`com.bumptech.glide.RequestManager` v2 @kind this) @signature `Lcom/bumptech/glide/RequestManager;.toString:()Ljava/lang/String;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L3d5d5c.  @monitorenter v2
+  #L3d5d5e.  v0:= new `java.lang.StringBuilder`;
+  #L3d5d62.  call `<init>`(v0) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L3d5d68.  call temp:= `toString`(v2) @signature `Ljava/lang/Object;.toString:()Ljava/lang/String;` @kind super;
+  #L3d5d6e.  v1:= temp @kind object;
+  #L3d5d70.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3d5d76.  v1:= "{tracker=" @kind object;
+  #L3d5d7a.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3d5d80.  v1:= v2.`com.bumptech.glide.RequestManager.b` @type ^`com.bumptech.glide.manager.RequestTracker` @kind object;
+  #L3d5d84.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3d5d8a.  v1:= ", treeNode=" @kind object;
+  #L3d5d8e.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3d5d94.  v1:= v2.`com.bumptech.glide.RequestManager.c` @type ^`com.bumptech.glide.manager.RequestManagerTreeNode` @kind object;
+  #L3d5d98.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3d5d9e.  v1:= "}" @kind object;
+  #L3d5da2.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3d5da8.  call temp:= `toString`(v0) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L3d5dae.  v0:= temp @kind object;
+  #L3d5db0.  @monitorexit v2
+  #L3d5db2.  return v0 @kind object;
+  #L3d5db4.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3d5db6.  @monitorexit v2
+  #L3d5db8.  throw v0;
+  catch `java.lang.Throwable` @[L3d5d5e..L3d5db0] goto L3d5db4;
+}

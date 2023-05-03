@@ -1,0 +1,387 @@
+record `io.objectbox.Transaction` @kind class @AccessFlag PUBLIC extends `java.io.Closeable` @kind interface {
+  `long` `io.objectbox.Transaction.a` @AccessFlag PRIVATE_FINAL;
+  `io.objectbox.BoxStore` `io.objectbox.Transaction.b` @AccessFlag PRIVATE_FINAL;
+  `boolean` `io.objectbox.Transaction.c` @AccessFlag PRIVATE_FINAL;
+  `java.lang.Throwable` `io.objectbox.Transaction.d` @AccessFlag PRIVATE_FINAL;
+  `int` `io.objectbox.Transaction.e` @AccessFlag PRIVATE;
+  `boolean` `io.objectbox.Transaction.f` @AccessFlag PRIVATE_VOLATILE;
+}
+global `boolean` `@@io.objectbox.Transaction.g` @AccessFlag STATIC;
+procedure `void` `<init>`(`io.objectbox.Transaction` v0 @kind this, `io.objectbox.BoxStore` v1 @kind object, `long` v2 , `int` v4 ) @signature `Lio/objectbox/Transaction;.<init>:(Lio/objectbox/BoxStore;JI)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+
+  #L3e2210.  call `<init>`(v0) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L3e2216.  v0.`io.objectbox.Transaction.b` @type ^`io.objectbox.BoxStore` := v1 @kind object;
+  #L3e221a.  v0.`io.objectbox.Transaction.a` @type ^`long` := v2 @kind wide;
+  #L3e221e.  v0.`io.objectbox.Transaction.e` @type ^`int` := v4;
+  #L3e2222.  call temp:= `nativeIsReadOnly`(v0, v2) @signature `Lio/objectbox/Transaction;.nativeIsReadOnly:(J)Z` @kind virtual;
+  #L3e2228.  v1:= temp;
+  #L3e222a.  v0.`io.objectbox.Transaction.c` @type ^`boolean` := v1 @kind boolean;
+  #L3e222e.  v1:= `@@io.objectbox.Transaction.g` @type ^`boolean` @kind boolean;
+  #L3e2232.  if v1 == 0 then goto L3e2242;
+  #L3e2236.  v1:= new `java.lang.Throwable`;
+  #L3e223a.  call `<init>`(v1) @signature `Ljava/lang/Throwable;.<init>:()V` @kind direct;
+  #L3e2240.  goto L3e2244;
+  #L3e2242.  v1:= 0I;
+  #L3e2244.  v0.`io.objectbox.Transaction.d` @type ^`java.lang.Throwable` := v1 @kind object;
+  #L3e2248.  return @kind void;
+}
+procedure `void` `a`(`io.objectbox.Transaction` v2 @kind this) @signature `Lio/objectbox/Transaction;.a:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+
+  #L3e2280.  v0:= v2.`io.objectbox.Transaction.f` @type ^`boolean` @kind boolean;
+  #L3e2284.  if v0 != 0 then goto L3e228a;
+  #L3e2288.  return @kind void;
+  #L3e228a.  v0:= new `java.lang.IllegalStateException`;
+  #L3e228e.  v1:= "Transaction is closed" @kind object;
+  #L3e2292.  call `<init>`(v0, v1) @signature `Ljava/lang/IllegalStateException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L3e2298.  throw v0;
+}
+procedure `void` `abort`(`io.objectbox.Transaction` v2 @kind this) @signature `Lio/objectbox/Transaction;.abort:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L3e225c.  call `a`(v2) @signature `Lio/objectbox/Transaction;.a:()V` @kind direct;
+  #L3e2262.  v0:= v2.`io.objectbox.Transaction.a` @type ^`long` @kind wide;
+  #L3e2266.  call `nativeAbort`(v2, v0) @signature `Lio/objectbox/Transaction;.nativeAbort:(J)V` @kind virtual;
+  #L3e226c.  return @kind void;
+}
+procedure `long` `b`(`io.objectbox.Transaction` v2 @kind this) @signature `Lio/objectbox/Transaction;.b:()J` @AccessFlag  {
+    temp;
+    v0;
+    v1;
+
+  #L3e21f8.  v0:= v2.`io.objectbox.Transaction.a` @type ^`long` @kind wide;
+  #L3e21fc.  return v0 @kind wide;
+}
+procedure `void` `close`(`io.objectbox.Transaction` v4 @kind this) @signature `Lio/objectbox/Transaction;.close:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L3e22ac.  @monitorenter v4
+  #L3e22ae.  v0:= v4.`io.objectbox.Transaction.f` @type ^`boolean` @kind boolean;
+  #L3e22b2.  if v0 != 0 then goto L3e23d2;
+  #L3e22b6.  v0:= 1I;
+  #L3e22b8.  v4.`io.objectbox.Transaction.f` @type ^`boolean` := v0 @kind boolean;
+  #L3e22bc.  v0:= v4.`io.objectbox.Transaction.b` @type ^`io.objectbox.BoxStore` @kind object;
+  #L3e22c0.  call `unregisterTransaction`(v0, v4) @signature `Lio/objectbox/BoxStore;.unregisterTransaction:(Lio/objectbox/Transaction;)V` @kind virtual;
+  #L3e22c6.  v0:= v4.`io.objectbox.Transaction.a` @type ^`long` @kind wide;
+  #L3e22ca.  call temp:= `nativeIsOwnerThread`(v4, v0) @signature `Lio/objectbox/Transaction;.nativeIsOwnerThread:(J)Z` @kind virtual;
+  #L3e22d0.  v0:= temp;
+  #L3e22d2.  if v0 != 0 then goto L3e23b8;
+  #L3e22d6.  v0:= v4.`io.objectbox.Transaction.a` @type ^`long` @kind wide;
+  #L3e22da.  call temp:= `nativeIsActive`(v4, v0) @signature `Lio/objectbox/Transaction;.nativeIsActive:(J)Z` @kind virtual;
+  #L3e22e0.  v0:= temp;
+  #L3e22e2.  v1:= v4.`io.objectbox.Transaction.a` @type ^`long` @kind wide;
+  #L3e22e6.  call temp:= `nativeIsRecycled`(v4, v1) @signature `Lio/objectbox/Transaction;.nativeIsRecycled:(J)Z` @kind virtual;
+  #L3e22ec.  v1:= temp;
+  #L3e22ee.  if v0 != 0 then goto L3e22f6;
+  #L3e22f2.  if v1 == 0 then goto L3e23b8;
+  #L3e22f6.  v1:= new `java.lang.StringBuilder`;
+  #L3e22fa.  call `<init>`(v1) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L3e2300.  v2:= " (initial commit count: " @kind object;
+  #L3e2304.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3e230a.  v2:= v4.`io.objectbox.Transaction.e` @type ^`int`;
+  #L3e230e.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3e2314.  v2:= ")." @kind object;
+  #L3e2318.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3e231e.  call temp:= `toString`(v1) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L3e2324.  v1:= temp @kind object;
+  #L3e2326.  if v0 == 0 then goto L3e2358;
+  #L3e232a.  v0:= `@@java.lang.System.err` @type ^`java.io.PrintStream` @kind object;
+  #L3e232e.  v2:= new `java.lang.StringBuilder`;
+  #L3e2332.  call `<init>`(v2) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L3e2338.  v3:= "Transaction is still active" @kind object;
+  #L3e233c.  call temp:= `append`(v2, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3e2342.  call temp:= `append`(v2, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3e2348.  call temp:= `toString`(v2) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L3e234e.  v1:= temp @kind object;
+  #L3e2350.  call `println`(v0, v1) @signature `Ljava/io/PrintStream;.println:(Ljava/lang/String;)V` @kind virtual;
+  #L3e2356.  goto L3e238e;
+  #L3e2358.  v0:= `@@java.lang.System.out` @type ^`java.io.PrintStream` @kind object;
+  #L3e235c.  v2:= new `java.lang.StringBuilder`;
+  #L3e2360.  call `<init>`(v2) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L3e2366.  v3:= "Hint: use closeThreadResources() to avoid finalizing recycled transactions" @kind object;
+  #L3e236a.  call temp:= `append`(v2, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3e2370.  call temp:= `append`(v2, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3e2376.  call temp:= `toString`(v2) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L3e237c.  v1:= temp @kind object;
+  #L3e237e.  call `println`(v0, v1) @signature `Ljava/io/PrintStream;.println:(Ljava/lang/String;)V` @kind virtual;
+  #L3e2384.  v0:= `@@java.lang.System.out` @type ^`java.io.PrintStream` @kind object;
+  #L3e2388.  call `flush`(v0) @signature `Ljava/io/PrintStream;.flush:()V` @kind virtual;
+  #L3e238e.  v0:= v4.`io.objectbox.Transaction.d` @type ^`java.lang.Throwable` @kind object;
+  #L3e2392.  if v0 == 0 then goto L3e23ae;
+  #L3e2396.  v0:= `@@java.lang.System.err` @type ^`java.io.PrintStream` @kind object;
+  #L3e239a.  v1:= "Transaction was initially created here:" @kind object;
+  #L3e239e.  call `println`(v0, v1) @signature `Ljava/io/PrintStream;.println:(Ljava/lang/String;)V` @kind virtual;
+  #L3e23a4.  v0:= v4.`io.objectbox.Transaction.d` @type ^`java.lang.Throwable` @kind object;
+  #L3e23a8.  call `printStackTrace`(v0) @signature `Ljava/lang/Throwable;.printStackTrace:()V` @kind virtual;
+  #L3e23ae.  v0:= `@@java.lang.System.err` @type ^`java.io.PrintStream` @kind object;
+  #L3e23b2.  call `flush`(v0) @signature `Ljava/io/PrintStream;.flush:()V` @kind virtual;
+  #L3e23b8.  v0:= v4.`io.objectbox.Transaction.b` @type ^`io.objectbox.BoxStore` @kind object;
+  #L3e23bc.  call temp:= `isClosed`(v0) @signature `Lio/objectbox/BoxStore;.isClosed:()Z` @kind virtual;
+  #L3e23c2.  v0:= temp;
+  #L3e23c4.  if v0 != 0 then goto L3e23d2;
+  #L3e23c8.  v0:= v4.`io.objectbox.Transaction.a` @type ^`long` @kind wide;
+  #L3e23cc.  call `nativeDestroy`(v4, v0) @signature `Lio/objectbox/Transaction;.nativeDestroy:(J)V` @kind virtual;
+  #L3e23d2.  @monitorexit v4
+  #L3e23d4.  return @kind void;
+  #L3e23d6.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3e23d8.  @monitorexit v4
+  #L3e23da.  throw v0;
+  catch `java.lang.Throwable` @[L3e22ae..L3e23d2] goto L3e23d6;
+}
+procedure `void` `commit`(`io.objectbox.Transaction` v2 @kind this) @signature `Lio/objectbox/Transaction;.commit:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L3e23f8.  call `a`(v2) @signature `Lio/objectbox/Transaction;.a:()V` @kind direct;
+  #L3e23fe.  v0:= v2.`io.objectbox.Transaction.a` @type ^`long` @kind wide;
+  #L3e2402.  call temp:= `nativeCommit`(v2, v0) @signature `Lio/objectbox/Transaction;.nativeCommit:(J)[I` @kind virtual;
+  #L3e2408.  v0:= temp @kind object;
+  #L3e240a.  v1:= v2.`io.objectbox.Transaction.b` @type ^`io.objectbox.BoxStore` @kind object;
+  #L3e240e.  call `u`(v1, v2, v0) @signature `Lio/objectbox/BoxStore;.u:(Lio/objectbox/Transaction;[I)V` @kind virtual;
+  #L3e2414.  return @kind void;
+}
+procedure `void` `commitAndClose`(`io.objectbox.Transaction` v0 @kind this) @signature `Lio/objectbox/Transaction;.commitAndClose:()V` @AccessFlag PUBLIC {
+    temp;
+
+  #L3e2428.  call `commit`(v0) @signature `Lio/objectbox/Transaction;.commit:()V` @kind virtual;
+  #L3e242e.  call `close`(v0) @signature `Lio/objectbox/Transaction;.close:()V` @kind virtual;
+  #L3e2434.  return @kind void;
+}
+procedure `io.objectbox.Cursor` `createCursor`(`io.objectbox.Transaction` v6 @kind this, `java.lang.Class` v7 @kind object) @signature `Lio/objectbox/Transaction;.createCursor:(Ljava/lang/Class;)Lio/objectbox/Cursor;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L3e20dc.  call `a`(v6) @signature `Lio/objectbox/Transaction;.a:()V` @kind direct;
+  #L3e20e2.  v0:= v6.`io.objectbox.Transaction.b` @type ^`io.objectbox.BoxStore` @kind object;
+  #L3e20e6.  call temp:= `j`(v0, v7) @signature `Lio/objectbox/BoxStore;.j:(Ljava/lang/Class;)Lio/objectbox/EntityInfo;` @kind virtual;
+  #L3e20ec.  v0:= temp @kind object;
+  #L3e20ee.  call temp:= `getCursorFactory`(v0) @signature `Lio/objectbox/EntityInfo;.getCursorFactory:()Lio/objectbox/internal/CursorFactory;` @kind interface;
+  #L3e20f4.  v1:= temp @kind object;
+  #L3e20f6.  v2:= v6.`io.objectbox.Transaction.a` @type ^`long` @kind wide;
+  #L3e20fa.  call temp:= `getDbName`(v0) @signature `Lio/objectbox/EntityInfo;.getDbName:()Ljava/lang/String;` @kind interface;
+  #L3e2100.  v0:= temp @kind object;
+  #L3e2102.  call temp:= `nativeCreateCursor`(v6, v2, v0, v7) @signature `Lio/objectbox/Transaction;.nativeCreateCursor:(JLjava/lang/String;Ljava/lang/Class;)J` @kind virtual;
+  #L3e2108.  v2:= temp @kind wide;
+  #L3e210a.  v4:= 0L;
+  #L3e210e.  v7:= lcmp(v2, v4);
+  #L3e2112.  if v7 == 0 then goto L3e2124;
+  #L3e2116.  v7:= v6.`io.objectbox.Transaction.b` @type ^`io.objectbox.BoxStore` @kind object;
+  #L3e211a.  call temp:= `createCursor`(v1, v6, v2, v7) @signature `Lio/objectbox/internal/CursorFactory;.createCursor:(Lio/objectbox/Transaction;JLio/objectbox/BoxStore;)Lio/objectbox/Cursor;` @kind interface;
+  #L3e2120.  v7:= temp @kind object;
+  #L3e2122.  return v7 @kind object;
+  #L3e2124.  v7:= new `io.objectbox.exception.DbException`;
+  #L3e2128.  v0:= "Could not create native cursor" @kind object;
+  #L3e212c.  call `<init>`(v7, v0) @signature `Lio/objectbox/exception/DbException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L3e2132.  throw v7;
+}
+procedure `io.objectbox.KeyValueCursor` `createKeyValueCursor`(`io.objectbox.Transaction` v3 @kind this) @signature `Lio/objectbox/Transaction;.createKeyValueCursor:()Lio/objectbox/KeyValueCursor;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L3e2144.  call `a`(v3) @signature `Lio/objectbox/Transaction;.a:()V` @kind direct;
+  #L3e214a.  v0:= v3.`io.objectbox.Transaction.a` @type ^`long` @kind wide;
+  #L3e214e.  call temp:= `nativeCreateKeyValueCursor`(v3, v0) @signature `Lio/objectbox/Transaction;.nativeCreateKeyValueCursor:(J)J` @kind virtual;
+  #L3e2154.  v0:= temp @kind wide;
+  #L3e2156.  v2:= new `io.objectbox.KeyValueCursor`;
+  #L3e215a.  call `<init>`(v2, v0) @signature `Lio/objectbox/KeyValueCursor;.<init>:(J)V` @kind direct;
+  #L3e2160.  return v2 @kind object;
+}
+procedure `void` `finalize`(`io.objectbox.Transaction` v0 @kind this) @signature `Lio/objectbox/Transaction;.finalize:()V` @AccessFlag PROTECTED {
+    temp;
+
+  #L3e2448.  call `close`(v0) @signature `Lio/objectbox/Transaction;.close:()V` @kind virtual;
+  #L3e244e.  call `finalize`(v0) @signature `Ljava/lang/Object;.finalize:()V` @kind super;
+  #L3e2454.  return @kind void;
+}
+procedure `io.objectbox.BoxStore` `getStore`(`io.objectbox.Transaction` v1 @kind this) @signature `Lio/objectbox/Transaction;.getStore:()Lio/objectbox/BoxStore;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L3e20c4.  v0:= v1.`io.objectbox.Transaction.b` @type ^`io.objectbox.BoxStore` @kind object;
+  #L3e20c8.  return v0 @kind object;
+}
+procedure `boolean` `isActive`(`io.objectbox.Transaction` v2 @kind this) @signature `Lio/objectbox/Transaction;.isActive:()Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L3e2024.  call `a`(v2) @signature `Lio/objectbox/Transaction;.a:()V` @kind direct;
+  #L3e202a.  v0:= v2.`io.objectbox.Transaction.a` @type ^`long` @kind wide;
+  #L3e202e.  call temp:= `nativeIsActive`(v2, v0) @signature `Lio/objectbox/Transaction;.nativeIsActive:(J)Z` @kind virtual;
+  #L3e2034.  v0:= temp;
+  #L3e2036.  return v0;
+}
+procedure `boolean` `isClosed`(`io.objectbox.Transaction` v1 @kind this) @signature `Lio/objectbox/Transaction;.isClosed:()Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L3e2048.  v0:= v1.`io.objectbox.Transaction.f` @type ^`boolean` @kind boolean;
+  #L3e204c.  return v0;
+}
+procedure `boolean` `isObsolete`(`io.objectbox.Transaction` v2 @kind this) @signature `Lio/objectbox/Transaction;.isObsolete:()Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L3e2060.  v0:= v2.`io.objectbox.Transaction.e` @type ^`int`;
+  #L3e2064.  v1:= v2.`io.objectbox.Transaction.b` @type ^`io.objectbox.BoxStore` @kind object;
+  #L3e2068.  v1:= v1.`io.objectbox.BoxStore.s` @type ^`int`;
+  #L3e206c.  if v0 == v1 then goto L3e2074;
+  #L3e2070.  v0:= 1I;
+  #L3e2072.  goto L3e2076;
+  #L3e2074.  v0:= 0I;
+  #L3e2076.  return v0;
+}
+procedure `boolean` `isReadOnly`(`io.objectbox.Transaction` v1 @kind this) @signature `Lio/objectbox/Transaction;.isReadOnly:()Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L3e2088.  v0:= v1.`io.objectbox.Transaction.c` @type ^`boolean` @kind boolean;
+  #L3e208c.  return v0;
+}
+procedure `boolean` `isRecycled`(`io.objectbox.Transaction` v2 @kind this) @signature `Lio/objectbox/Transaction;.isRecycled:()Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L3e20a0.  call `a`(v2) @signature `Lio/objectbox/Transaction;.a:()V` @kind direct;
+  #L3e20a6.  v0:= v2.`io.objectbox.Transaction.a` @type ^`long` @kind wide;
+  #L3e20aa.  call temp:= `nativeIsRecycled`(v2, v0) @signature `Lio/objectbox/Transaction;.nativeIsRecycled:(J)Z` @kind virtual;
+  #L3e20b0.  v0:= temp;
+  #L3e20b2.  return v0;
+}
+procedure `void` `nativeAbort`(`long` v0 ) @signature `Lio/objectbox/Transaction;.nativeAbort:(J)V` @AccessFlag NATIVE {
+
+  # return;
+}
+procedure `int`[] `nativeCommit`(`long` v0 ) @signature `Lio/objectbox/Transaction;.nativeCommit:(J)[I` @AccessFlag NATIVE {
+
+  # return;
+}
+procedure `long` `nativeCreateCursor`(`long` v0 , `java.lang.String` v2 @kind object, `java.lang.Class` v3 @kind object) @signature `Lio/objectbox/Transaction;.nativeCreateCursor:(JLjava/lang/String;Ljava/lang/Class;)J` @AccessFlag NATIVE {
+
+  # return;
+}
+procedure `long` `nativeCreateKeyValueCursor`(`long` v0 ) @signature `Lio/objectbox/Transaction;.nativeCreateKeyValueCursor:(J)J` @AccessFlag NATIVE {
+
+  # return;
+}
+procedure `void` `nativeDestroy`(`long` v0 ) @signature `Lio/objectbox/Transaction;.nativeDestroy:(J)V` @AccessFlag NATIVE {
+
+  # return;
+}
+procedure `boolean` `nativeIsActive`(`long` v0 ) @signature `Lio/objectbox/Transaction;.nativeIsActive:(J)Z` @AccessFlag NATIVE {
+
+  # return;
+}
+procedure `boolean` `nativeIsOwnerThread`(`long` v0 ) @signature `Lio/objectbox/Transaction;.nativeIsOwnerThread:(J)Z` @AccessFlag NATIVE {
+
+  # return;
+}
+procedure `boolean` `nativeIsReadOnly`(`long` v0 ) @signature `Lio/objectbox/Transaction;.nativeIsReadOnly:(J)Z` @AccessFlag NATIVE {
+
+  # return;
+}
+procedure `boolean` `nativeIsRecycled`(`long` v0 ) @signature `Lio/objectbox/Transaction;.nativeIsRecycled:(J)Z` @AccessFlag NATIVE {
+
+  # return;
+}
+procedure `void` `nativeRecycle`(`long` v0 ) @signature `Lio/objectbox/Transaction;.nativeRecycle:(J)V` @AccessFlag NATIVE {
+
+  # return;
+}
+procedure `void` `nativeRenew`(`long` v0 ) @signature `Lio/objectbox/Transaction;.nativeRenew:(J)V` @AccessFlag NATIVE {
+
+  # return;
+}
+procedure `void` `nativeReset`(`long` v0 ) @signature `Lio/objectbox/Transaction;.nativeReset:(J)V` @AccessFlag NATIVE {
+
+  # return;
+}
+procedure `void` `recycle`(`io.objectbox.Transaction` v2 @kind this) @signature `Lio/objectbox/Transaction;.recycle:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L3e2468.  call `a`(v2) @signature `Lio/objectbox/Transaction;.a:()V` @kind direct;
+  #L3e246e.  v0:= v2.`io.objectbox.Transaction.a` @type ^`long` @kind wide;
+  #L3e2472.  call `nativeRecycle`(v2, v0) @signature `Lio/objectbox/Transaction;.nativeRecycle:(J)V` @kind virtual;
+  #L3e2478.  return @kind void;
+}
+procedure `void` `renew`(`io.objectbox.Transaction` v2 @kind this) @signature `Lio/objectbox/Transaction;.renew:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L3e248c.  call `a`(v2) @signature `Lio/objectbox/Transaction;.a:()V` @kind direct;
+  #L3e2492.  v0:= v2.`io.objectbox.Transaction.b` @type ^`io.objectbox.BoxStore` @kind object;
+  #L3e2496.  v0:= v0.`io.objectbox.BoxStore.s` @type ^`int`;
+  #L3e249a.  v2.`io.objectbox.Transaction.e` @type ^`int` := v0;
+  #L3e249e.  v0:= v2.`io.objectbox.Transaction.a` @type ^`long` @kind wide;
+  #L3e24a2.  call `nativeRenew`(v2, v0) @signature `Lio/objectbox/Transaction;.nativeRenew:(J)V` @kind virtual;
+  #L3e24a8.  return @kind void;
+}
+procedure `void` `reset`(`io.objectbox.Transaction` v2 @kind this) @signature `Lio/objectbox/Transaction;.reset:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L3e24bc.  call `a`(v2) @signature `Lio/objectbox/Transaction;.a:()V` @kind direct;
+  #L3e24c2.  v0:= v2.`io.objectbox.Transaction.b` @type ^`io.objectbox.BoxStore` @kind object;
+  #L3e24c6.  v0:= v0.`io.objectbox.BoxStore.s` @type ^`int`;
+  #L3e24ca.  v2.`io.objectbox.Transaction.e` @type ^`int` := v0;
+  #L3e24ce.  v0:= v2.`io.objectbox.Transaction.a` @type ^`long` @kind wide;
+  #L3e24d2.  call `nativeReset`(v2, v0) @signature `Lio/objectbox/Transaction;.nativeReset:(J)V` @kind virtual;
+  #L3e24d8.  return @kind void;
+}
+procedure `java.lang.String` `toString`(`io.objectbox.Transaction` v4 @kind this) @signature `Lio/objectbox/Transaction;.toString:()Ljava/lang/String;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L3e2174.  v0:= new `java.lang.StringBuilder`;
+  #L3e2178.  call `<init>`(v0) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L3e217e.  v1:= "TX " @kind object;
+  #L3e2182.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3e2188.  v1:= v4.`io.objectbox.Transaction.a` @type ^`long` @kind wide;
+  #L3e218c.  v3:= 16I;
+  #L3e2190.  call temp:= `toString`(v1, v3) @signature `Ljava/lang/Long;.toString:(JI)Ljava/lang/String;` @kind static;
+  #L3e2196.  v1:= temp @kind object;
+  #L3e2198.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3e219e.  v1:= " (" @kind object;
+  #L3e21a2.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3e21a8.  v1:= v4.`io.objectbox.Transaction.c` @type ^`boolean` @kind boolean;
+  #L3e21ac.  if v1 == 0 then goto L3e21b6;
+  #L3e21b0.  v1:= "read-only" @kind object;
+  #L3e21b4.  goto L3e21ba;
+  #L3e21b6.  v1:= "write" @kind object;
+  #L3e21ba.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3e21c0.  v1:= ", initialCommitCount=" @kind object;
+  #L3e21c4.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3e21ca.  v1:= v4.`io.objectbox.Transaction.e` @type ^`int`;
+  #L3e21ce.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3e21d4.  v1:= ")" @kind object;
+  #L3e21d8.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3e21de.  call temp:= `toString`(v0) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L3e21e4.  v0:= temp @kind object;
+  #L3e21e6.  return v0 @kind object;
+}

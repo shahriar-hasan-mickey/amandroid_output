@@ -1,0 +1,118 @@
+record `okio.HashingSource` @kind class @AccessFlag PUBLIC_FINAL extends `okio.ForwardingSource` @kind class {
+  `java.security.MessageDigest` `okio.HashingSource.messageDigest` @AccessFlag PRIVATE_FINAL;
+}
+procedure `void` `<init>`(`okio.HashingSource` v2 @kind this, `okio.Source` v3 @kind object @name `source`, `java.lang.String` v4 @kind object @name `algorithm`) @signature `Lokio/HashingSource;.<init>:(Lokio/Source;Ljava/lang/String;)V` @AccessFlag PRIVATE_CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+
+  #L35498c.  call `<init>`(v2, v3) @signature `Lokio/ForwardingSource;.<init>:(Lokio/Source;)V` @kind direct;
+  #L354992.  call temp:= `getInstance`(v4) @signature `Ljava/security/MessageDigest;.getInstance:(Ljava/lang/String;)Ljava/security/MessageDigest;` @kind static;
+  #L354998.  v1:= temp @kind object;
+  #L35499a.  v2.`okio.HashingSource.messageDigest` @type ^`java.security.MessageDigest` := v1 @kind object;
+  #L35499e.  return @kind void;
+  #L3549a0.  v0:= Exception @type ^`java.security.NoSuchAlgorithmException` @kind object;
+  #L3549a2.  v1:= new `java.lang.AssertionError`;
+  #L3549a6.  call `<init>`(v1) @signature `Ljava/lang/AssertionError;.<init>:()V` @kind direct;
+  #L3549ac.  throw v1;
+  catch `java.security.NoSuchAlgorithmException` @[L354992..L35499e] goto L3549a0;
+}
+procedure `okio.HashingSource` `md5`(`okio.Source` v2 @kind object @name `source`) @signature `Lokio/HashingSource;.md5:(Lokio/Source;)Lokio/HashingSource;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+
+  #L3549d0.  v0:= new `okio.HashingSource`;
+  #L3549d4.  v1:= "MD5" @kind object;
+  #L3549d8.  call `<init>`(v0, v2, v1) @signature `Lokio/HashingSource;.<init>:(Lokio/Source;Ljava/lang/String;)V` @kind direct;
+  #L3549de.  return v0 @kind object;
+}
+procedure `okio.HashingSource` `sha1`(`okio.Source` v2 @kind object @name `source`) @signature `Lokio/HashingSource;.sha1:(Lokio/Source;)Lokio/HashingSource;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+
+  #L3549f0.  v0:= new `okio.HashingSource`;
+  #L3549f4.  v1:= "SHA-1" @kind object;
+  #L3549f8.  call `<init>`(v0, v2, v1) @signature `Lokio/HashingSource;.<init>:(Lokio/Source;Ljava/lang/String;)V` @kind direct;
+  #L3549fe.  return v0 @kind object;
+}
+procedure `okio.HashingSource` `sha256`(`okio.Source` v2 @kind object @name `source`) @signature `Lokio/HashingSource;.sha256:(Lokio/Source;)Lokio/HashingSource;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+
+  #L354a10.  v0:= new `okio.HashingSource`;
+  #L354a14.  v1:= "SHA-256" @kind object;
+  #L354a18.  call `<init>`(v0, v2, v1) @signature `Lokio/HashingSource;.<init>:(Lokio/Source;Ljava/lang/String;)V` @kind direct;
+  #L354a1e.  return v0 @kind object;
+}
+procedure `okio.ByteString` `hash`(`okio.HashingSource` v2 @kind this) @signature `Lokio/HashingSource;.hash:()Lokio/ByteString;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L354a30.  v1:= v2.`okio.HashingSource.messageDigest` @type ^`java.security.MessageDigest` @kind object;
+  #L354a34.  call temp:= `digest`(v1) @signature `Ljava/security/MessageDigest;.digest:()[B` @kind virtual;
+  #L354a3a.  v0:= temp @kind object;
+  #L354a3c.  call temp:= `of`(v0) @signature `Lokio/ByteString;.of:([B)Lokio/ByteString;` @kind static;
+  #L354a42.  v1:= temp @kind object;
+  #L354a44.  return v1 @kind object;
+}
+procedure `long` `read`(`okio.HashingSource` v12 @kind this, `okio.Buffer` v13 @kind object @name `sink`, `long` v14 @name `byteCount`) @signature `Lokio/HashingSource;.read:(Lokio/Buffer;J)J` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+    v9;
+    v10;
+    v11;
+
+  #L354a58.  call temp:= `read`(v12, v13, v14) @signature `Lokio/ForwardingSource;.read:(Lokio/Buffer;J)J` @kind super;
+  #L354a5e.  v4:= temp @kind wide;
+  #L354a60.  v8:= -1L;
+  #L354a64.  v8:= lcmp(v4, v8);
+  #L354a68.  if v8 == 0 then goto L354adc;
+  #L354a6c.  v8:= v13.`okio.Buffer.size` @type ^`long` @kind wide;
+  #L354a70.  v6:= v8 - v4 @kind long;
+  #L354a74.  v0:= v13.`okio.Buffer.size` @type ^`long` @kind wide;
+  #L354a78.  v3:= v13.`okio.Buffer.head` @type ^`okio.Segment` @kind object;
+  #L354a7c.  v8:= v13.`okio.Buffer.size` @type ^`long` @kind wide;
+  #L354a80.  v8:= v8 - v4 @kind long;
+  #L354a82.  v8:= lcmp(v0, v8);
+  #L354a86.  if v8 <= 0 then goto L354a9e;
+  #L354a8a.  v3:= v3.`okio.Segment.prev` @type ^`okio.Segment` @kind object;
+  #L354a8e.  v8:= v3.`okio.Segment.limit` @type ^`int`;
+  #L354a92.  v9:= v3.`okio.Segment.pos` @type ^`int`;
+  #L354a96.  v8:= v8 - v9 @kind int;
+  #L354a98.  v8:= (`long`) v8 @kind i2l;
+  #L354a9a.  v0:= v0 - v8 @kind long;
+  #L354a9c.  goto L354a7c;
+  #L354a9e.  v8:= v13.`okio.Buffer.size` @type ^`long` @kind wide;
+  #L354aa2.  v8:= lcmp(v0, v8);
+  #L354aa6.  if v8 >= 0 then goto L354adc;
+  #L354aaa.  v8:= v3.`okio.Segment.pos` @type ^`int`;
+  #L354aae.  v8:= (`long`) v8 @kind i2l;
+  #L354ab0.  v8:= v8 + v6 @kind long;
+  #L354ab2.  v8:= v8 - v0 @kind long;
+  #L354ab4.  v2:= (`int`) v8 @kind l2i;
+  #L354ab6.  v8:= v12.`okio.HashingSource.messageDigest` @type ^`java.security.MessageDigest` @kind object;
+  #L354aba.  v9:= v3.`okio.Segment.data` @type ^`byte`[] @kind object;
+  #L354abe.  v10:= v3.`okio.Segment.limit` @type ^`int`;
+  #L354ac2.  v10:= v10 - v2 @kind int;
+  #L354ac4.  call `update`(v8, v9, v2, v10) @signature `Ljava/security/MessageDigest;.update:([BII)V` @kind virtual;
+  #L354aca.  v8:= v3.`okio.Segment.limit` @type ^`int`;
+  #L354ace.  v9:= v3.`okio.Segment.pos` @type ^`int`;
+  #L354ad2.  v8:= v8 - v9 @kind int;
+  #L354ad4.  v8:= (`long`) v8 @kind i2l;
+  #L354ad6.  v0:= v0 + v8 @kind long;
+  #L354ad8.  v6:= v0 @kind wide;
+  #L354ada.  goto L354a9e;
+  #L354adc.  return v4 @kind wide;
+}

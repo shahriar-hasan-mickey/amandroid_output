@@ -1,0 +1,364 @@
+record `co.infinum.goldfinger.GoldfingerImpl` @kind class @AccessFlag  extends `co.infinum.goldfinger.Goldfinger` @kind interface {
+  `co.infinum.goldfinger.AsyncCryptoObjectFactory` `co.infinum.goldfinger.GoldfingerImpl.asyncCryptoFactory` @AccessFlag PRIVATE_FINAL;
+  `co.infinum.goldfinger.AsyncCryptoObjectFactory$Callback` `co.infinum.goldfinger.GoldfingerImpl.asyncCryptoFactoryCallback` @AccessFlag PRIVATE;
+  `co.infinum.goldfinger.BiometricCallback` `co.infinum.goldfinger.GoldfingerImpl.biometricCallback` @AccessFlag PRIVATE;
+  `androidx.biometric.BiometricManager` `co.infinum.goldfinger.GoldfingerImpl.biometricManager` @AccessFlag PRIVATE_FINAL;
+  `androidx.biometric.BiometricPrompt` `co.infinum.goldfinger.GoldfingerImpl.biometricPrompt` @AccessFlag PRIVATE;
+  `boolean` `co.infinum.goldfinger.GoldfingerImpl.creatingCryptoObject` @AccessFlag PRIVATE;
+  `co.infinum.goldfinger.CrypterProxy` `co.infinum.goldfinger.GoldfingerImpl.cryptoProxy` @AccessFlag PRIVATE_FINAL;
+  `java.util.concurrent.Executor` `co.infinum.goldfinger.GoldfingerImpl.executor` @AccessFlag PRIVATE_FINAL;
+}
+global `android.os.Handler` `@@co.infinum.goldfinger.GoldfingerImpl.MAIN_HANDLER` @AccessFlag PRIVATE_STATIC_FINAL;
+procedure `void` `<clinit>`() @signature `Lco/infinum/goldfinger/GoldfingerImpl;.<clinit>:()V` @AccessFlag STATIC_CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+
+  #L2af958.  v0:= new `android.os.Handler`;
+  #L2af95c.  call temp:= `getMainLooper`() @signature `Landroid/os/Looper;.getMainLooper:()Landroid/os/Looper;` @kind static;
+  #L2af962.  v1:= temp @kind object;
+  #L2af964.  call `<init>`(v0, v1) @signature `Landroid/os/Handler;.<init>:(Landroid/os/Looper;)V` @kind direct;
+  #L2af96a.  `@@co.infinum.goldfinger.GoldfingerImpl.MAIN_HANDLER` @type ^`android.os.Handler` := v0 @kind object;
+  #L2af96e.  return @kind void;
+}
+procedure `void` `<init>`(`co.infinum.goldfinger.GoldfingerImpl` v1 @kind this, `android.content.Context` v2 @kind object, `co.infinum.goldfinger.AsyncCryptoObjectFactory` v3 @kind object, `co.infinum.goldfinger.CrypterProxy` v4 @kind object) @signature `Lco/infinum/goldfinger/GoldfingerImpl;.<init>:(Landroid/content/Context;Lco/infinum/goldfinger/AsyncCryptoObjectFactory;Lco/infinum/goldfinger/CrypterProxy;)V` @AccessFlag CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L2af980.  call `<init>`(v1) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L2af986.  call temp:= `newSingleThreadExecutor`() @signature `Ljava/util/concurrent/Executors;.newSingleThreadExecutor:()Ljava/util/concurrent/ExecutorService;` @kind static;
+  #L2af98c.  v0:= temp @kind object;
+  #L2af98e.  v1.`co.infinum.goldfinger.GoldfingerImpl.executor` @type ^`java.util.concurrent.Executor` := v0 @kind object;
+  #L2af992.  v0:= 0I;
+  #L2af994.  v1.`co.infinum.goldfinger.GoldfingerImpl.creatingCryptoObject` @type ^`boolean` := v0 @kind boolean;
+  #L2af998.  call temp:= `from`(v2) @signature `Landroidx/biometric/BiometricManager;.from:(Landroid/content/Context;)Landroidx/biometric/BiometricManager;` @kind static;
+  #L2af99e.  v2:= temp @kind object;
+  #L2af9a0.  v1.`co.infinum.goldfinger.GoldfingerImpl.biometricManager` @type ^`androidx.biometric.BiometricManager` := v2 @kind object;
+  #L2af9a4.  v1.`co.infinum.goldfinger.GoldfingerImpl.asyncCryptoFactory` @type ^`co.infinum.goldfinger.AsyncCryptoObjectFactory` := v3 @kind object;
+  #L2af9a8.  v1.`co.infinum.goldfinger.GoldfingerImpl.cryptoProxy` @type ^`co.infinum.goldfinger.CrypterProxy` := v4 @kind object;
+  #L2af9ac.  return @kind void;
+}
+procedure `boolean` `a`(`co.infinum.goldfinger.GoldfingerImpl` v0 @kind object, `boolean` v1 ) @signature `Lco/infinum/goldfinger/GoldfingerImpl;.a:(Lco/infinum/goldfinger/GoldfingerImpl;Z)Z` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L2af7f8.  v0.`co.infinum.goldfinger.GoldfingerImpl.creatingCryptoObject` @type ^`boolean` := v1 @kind boolean;
+  #L2af7fc.  return v1;
+}
+procedure `void` `b`(`co.infinum.goldfinger.GoldfingerImpl` v0 @kind object, `co.infinum.goldfinger.Goldfinger$PromptParams` v1 @kind object, `co.infinum.goldfinger.Mode` v2 @kind object, `java.lang.String` v3 @kind object, `java.lang.String` v4 @kind object, `co.infinum.goldfinger.Goldfinger$Callback` v5 @kind object, `androidx.biometric.BiometricPrompt$CryptoObject` v6 @kind object) @signature `Lco/infinum/goldfinger/GoldfingerImpl;.b:(Lco/infinum/goldfinger/GoldfingerImpl;Lco/infinum/goldfinger/Goldfinger$PromptParams;Lco/infinum/goldfinger/Mode;Ljava/lang/String;Ljava/lang/String;Lco/infinum/goldfinger/Goldfinger$Callback;Landroidx/biometric/BiometricPrompt$CryptoObject;)V` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L2af9c0.  call `startNativeFingerprintAuthentication`(v0, v1, v2, v3, v4, v5, v6) @signature `Lco/infinum/goldfinger/GoldfingerImpl;.startNativeFingerprintAuthentication:(Lco/infinum/goldfinger/Goldfinger$PromptParams;Lco/infinum/goldfinger/Mode;Ljava/lang/String;Ljava/lang/String;Lco/infinum/goldfinger/Goldfinger$Callback;Landroidx/biometric/BiometricPrompt$CryptoObject;)V` @kind direct;
+  #L2af9c6.  return @kind void;
+}
+procedure `androidx.biometric.BiometricPrompt` `c`(`co.infinum.goldfinger.GoldfingerImpl` v0 @kind object) @signature `Lco/infinum/goldfinger/GoldfingerImpl;.c:(Lco/infinum/goldfinger/GoldfingerImpl;)Landroidx/biometric/BiometricPrompt;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L2af7e0.  v0:= v0.`co.infinum.goldfinger.GoldfingerImpl.biometricPrompt` @type ^`androidx.biometric.BiometricPrompt` @kind object;
+  #L2af7e4.  return v0 @kind object;
+}
+procedure `void` `initializeCryptoObject`(`co.infinum.goldfinger.GoldfingerImpl` v9 @kind this, `co.infinum.goldfinger.Goldfinger$PromptParams` v10 @kind object, `co.infinum.goldfinger.Mode` v11 @kind object, `java.lang.String` v12 @kind object, `java.lang.String` v13 @kind object, `co.infinum.goldfinger.Goldfinger$Callback` v14 @kind object) @signature `Lco/infinum/goldfinger/GoldfingerImpl;.initializeCryptoObject:(Lco/infinum/goldfinger/Goldfinger$PromptParams;Lco/infinum/goldfinger/Mode;Ljava/lang/String;Ljava/lang/String;Lco/infinum/goldfinger/Goldfinger$Callback;)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+
+  #L2afb04.  v0:= 0I;
+  #L2afb06.  v0:= new `java.lang.Object`[v0];
+  #L2afb0a.  v1:= "Creating CryptoObject" @kind object;
+  #L2afb0e.  call `a`(v1, v0) @signature `Lco/infinum/goldfinger/LogUtils;.a:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind static;
+  #L2afb14.  v0:= new `co.infinum.goldfinger.GoldfingerImpl$1`;
+  #L2afb18.  v2:= v0 @kind object;
+  #L2afb1a.  v3:= v9 @kind object;
+  #L2afb1c.  v4:= v10 @kind object;
+  #L2afb1e.  v5:= v11 @kind object;
+  #L2afb20.  v6:= v12 @kind object;
+  #L2afb22.  v7:= v13 @kind object;
+  #L2afb24.  v8:= v14 @kind object;
+  #L2afb26.  call `<init>`(v2, v3, v4, v5, v6, v7, v8) @signature `Lco/infinum/goldfinger/GoldfingerImpl$1;.<init>:(Lco/infinum/goldfinger/GoldfingerImpl;Lco/infinum/goldfinger/Goldfinger$PromptParams;Lco/infinum/goldfinger/Mode;Ljava/lang/String;Ljava/lang/String;Lco/infinum/goldfinger/Goldfinger$Callback;)V` @kind direct;
+  #L2afb2c.  v9.`co.infinum.goldfinger.GoldfingerImpl.asyncCryptoFactoryCallback` @type ^`co.infinum.goldfinger.AsyncCryptoObjectFactory$Callback` := v0 @kind object;
+  #L2afb30.  v10:= 1I;
+  #L2afb32.  v9.`co.infinum.goldfinger.GoldfingerImpl.creatingCryptoObject` @type ^`boolean` := v10 @kind boolean;
+  #L2afb36.  v10:= v9.`co.infinum.goldfinger.GoldfingerImpl.asyncCryptoFactory` @type ^`co.infinum.goldfinger.AsyncCryptoObjectFactory` @kind object;
+  #L2afb3a.  call `a`(v10, v11, v12, v0) @signature `Lco/infinum/goldfinger/AsyncCryptoObjectFactory;.a:(Lco/infinum/goldfinger/Mode;Ljava/lang/String;Lco/infinum/goldfinger/AsyncCryptoObjectFactory$Callback;)V` @kind virtual;
+  #L2afb40.  return @kind void;
+}
+procedure `boolean` `preconditionsInvalid`(`co.infinum.goldfinger.GoldfingerImpl` v3 @kind this, `co.infinum.goldfinger.Goldfinger$PromptParams` v4 @kind object, `co.infinum.goldfinger.Mode` v5 @kind object, `java.lang.String` v6 @kind object, `java.lang.String` v7 @kind object, `co.infinum.goldfinger.Goldfinger$Callback` v8 @kind object) @signature `Lco/infinum/goldfinger/GoldfingerImpl;.preconditionsInvalid:(Lco/infinum/goldfinger/Goldfinger$PromptParams;Lco/infinum/goldfinger/Mode;Ljava/lang/String;Ljava/lang/String;Lco/infinum/goldfinger/Goldfinger$Callback;)Z` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L2af890.  v0:= v3.`co.infinum.goldfinger.GoldfingerImpl.biometricCallback` @type ^`co.infinum.goldfinger.BiometricCallback` @kind object;
+  #L2af894.  v1:= 0I;
+  #L2af896.  v2:= 1I;
+  #L2af898.  if v0 == 0 then goto L2af8a4;
+  #L2af89c.  v0:= v0.`co.infinum.goldfinger.BiometricCallback.a` @type ^`boolean` @kind boolean;
+  #L2af8a0.  if v0 != 0 then goto L2af8ac;
+  #L2af8a4.  v0:= v3.`co.infinum.goldfinger.GoldfingerImpl.creatingCryptoObject` @type ^`boolean` @kind boolean;
+  #L2af8a8.  if v0 == 0 then goto L2af8bc;
+  #L2af8ac.  v4:= new `java.lang.Object`[v1];
+  #L2af8b0.  v5:= "Authentication is already active. Ignoring authenticate call." @kind object;
+  #L2af8b4.  call `a`(v5, v4) @signature `Lco/infinum/goldfinger/LogUtils;.a:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind static;
+  #L2af8ba.  return v2;
+  #L2af8bc.  call temp:= `hasFingerprintHardware`(v3) @signature `Lco/infinum/goldfinger/GoldfingerImpl;.hasFingerprintHardware:()Z` @kind virtual;
+  #L2af8c2.  v0:= temp;
+  #L2af8c4.  if v0 != 0 then goto L2af8da;
+  #L2af8c8.  v4:= new `co.infinum.goldfinger.MissingHardwareException`;
+  #L2af8cc.  call `<init>`(v4) @signature `Lco/infinum/goldfinger/MissingHardwareException;.<init>:()V` @kind direct;
+  #L2af8d2.  call `onError`(v8, v4) @signature `Lco/infinum/goldfinger/Goldfinger$Callback;.onError:(Ljava/lang/Exception;)V` @kind interface;
+  #L2af8d8.  return v2;
+  #L2af8da.  call temp:= `hasEnrolledFingerprint`(v3) @signature `Lco/infinum/goldfinger/GoldfingerImpl;.hasEnrolledFingerprint:()Z` @kind virtual;
+  #L2af8e0.  v0:= temp;
+  #L2af8e2.  if v0 != 0 then goto L2af8f8;
+  #L2af8e6.  v4:= new `co.infinum.goldfinger.NoEnrolledFingerprintException`;
+  #L2af8ea.  call `<init>`(v4) @signature `Lco/infinum/goldfinger/NoEnrolledFingerprintException;.<init>:()V` @kind direct;
+  #L2af8f0.  call `onError`(v8, v4) @signature `Lco/infinum/goldfinger/Goldfinger$Callback;.onError:(Ljava/lang/Exception;)V` @kind interface;
+  #L2af8f6.  return v2;
+  #L2af8f8.  call temp:= `b`(v5, v4) @signature `Lco/infinum/goldfinger/ValidateUtils;.b:(Lco/infinum/goldfinger/Mode;Lco/infinum/goldfinger/Goldfinger$PromptParams;)Ljava/util/List;` @kind static;
+  #L2af8fe.  v4:= temp @kind object;
+  #L2af900.  call temp:= `isEmpty`(v4) @signature `Ljava/util/List;.isEmpty:()Z` @kind interface;
+  #L2af906.  v0:= temp;
+  #L2af908.  if v0 != 0 then goto L2af91e;
+  #L2af90c.  v5:= new `co.infinum.goldfinger.InvalidParametersException`;
+  #L2af910.  call `<init>`(v5, v4) @signature `Lco/infinum/goldfinger/InvalidParametersException;.<init>:(Ljava/util/List;)V` @kind direct;
+  #L2af916.  call `onError`(v8, v5) @signature `Lco/infinum/goldfinger/Goldfinger$Callback;.onError:(Ljava/lang/Exception;)V` @kind interface;
+  #L2af91c.  return v2;
+  #L2af91e.  call temp:= `a`(v5, v6, v7) @signature `Lco/infinum/goldfinger/ValidateUtils;.a:(Lco/infinum/goldfinger/Mode;Ljava/lang/String;Ljava/lang/String;)Ljava/util/List;` @kind static;
+  #L2af924.  v4:= temp @kind object;
+  #L2af926.  call temp:= `isEmpty`(v4) @signature `Ljava/util/List;.isEmpty:()Z` @kind interface;
+  #L2af92c.  v5:= temp;
+  #L2af92e.  if v5 != 0 then goto L2af944;
+  #L2af932.  v5:= new `co.infinum.goldfinger.InvalidParametersException`;
+  #L2af936.  call `<init>`(v5, v4) @signature `Lco/infinum/goldfinger/InvalidParametersException;.<init>:(Ljava/util/List;)V` @kind direct;
+  #L2af93c.  call `onError`(v8, v5) @signature `Lco/infinum/goldfinger/Goldfinger$Callback;.onError:(Ljava/lang/Exception;)V` @kind interface;
+  #L2af942.  return v2;
+  #L2af944.  return v1;
+}
+procedure `void` `startNativeFingerprintAuthentication`(`co.infinum.goldfinger.GoldfingerImpl` v11 @kind this, `co.infinum.goldfinger.Goldfinger$PromptParams` v12 @kind object, `co.infinum.goldfinger.Mode` v13 @kind object, `java.lang.String` v14 @kind object, `java.lang.String` v15 @kind object, `co.infinum.goldfinger.Goldfinger$Callback` v16 @kind object, `androidx.biometric.BiometricPrompt$CryptoObject` v17 @kind object) @signature `Lco/infinum/goldfinger/GoldfingerImpl;.startNativeFingerprintAuthentication:(Lco/infinum/goldfinger/Goldfinger$PromptParams;Lco/infinum/goldfinger/Mode;Ljava/lang/String;Ljava/lang/String;Lco/infinum/goldfinger/Goldfinger$Callback;Landroidx/biometric/BiometricPrompt$CryptoObject;)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+    v9;
+    v10;
+
+  #L2afb54.  v8:= v11 @kind object;
+  #L2afb56.  v0:= new `co.infinum.goldfinger.BiometricCallback`;
+  #L2afb5a.  v1:= v8.`co.infinum.goldfinger.GoldfingerImpl.cryptoProxy` @type ^`co.infinum.goldfinger.CrypterProxy` @kind object;
+  #L2afb5e.  v2:= new `co.infinum.goldfinger.GoldfingerImpl$2`;
+  #L2afb62.  v3:= v16 @kind object;
+  #L2afb66.  call `<init>`(v2, v11, v3) @signature `Lco/infinum/goldfinger/GoldfingerImpl$2;.<init>:(Lco/infinum/goldfinger/GoldfingerImpl;Lco/infinum/goldfinger/Goldfinger$Callback;)V` @kind direct;
+  #L2afb6c.  v4:= v13 @kind object;
+  #L2afb6e.  v6:= v15 @kind object;
+  #L2afb70.  call `<init>`(v0, v1, v13, v15, v2) @signature `Lco/infinum/goldfinger/BiometricCallback;.<init>:(Lco/infinum/goldfinger/CrypterProxy;Lco/infinum/goldfinger/Mode;Ljava/lang/String;Lco/infinum/goldfinger/Goldfinger$Callback;)V` @kind direct;
+  #L2afb76.  v8.`co.infinum.goldfinger.GoldfingerImpl.biometricCallback` @type ^`co.infinum.goldfinger.BiometricCallback` := v0 @kind object;
+  #L2afb7a.  call temp:= `dialogOwner`(v12) @signature `Lco/infinum/goldfinger/Goldfinger$PromptParams;.dialogOwner:()Ljava/lang/Object;` @kind virtual;
+  #L2afb80.  v0:= temp @kind object;
+  #L2afb82.  v0:= instanceof @variable v0 @type ^`androidx.fragment.app.FragmentActivity` @kind boolean;
+  #L2afb86.  if v0 == 0 then goto L2afbac;
+  #L2afb8a.  v0:= new `androidx.biometric.BiometricPrompt`;
+  #L2afb8e.  call temp:= `dialogOwner`(v12) @signature `Lco/infinum/goldfinger/Goldfinger$PromptParams;.dialogOwner:()Ljava/lang/Object;` @kind virtual;
+  #L2afb94.  v1:= temp @kind object;
+  #L2afb96.  v1:= (`androidx.fragment.app.FragmentActivity`) v1 @kind object;
+  #L2afb9a.  v2:= v8.`co.infinum.goldfinger.GoldfingerImpl.executor` @type ^`java.util.concurrent.Executor` @kind object;
+  #L2afb9e.  v5:= v8.`co.infinum.goldfinger.GoldfingerImpl.biometricCallback` @type ^`co.infinum.goldfinger.BiometricCallback` @kind object;
+  #L2afba2.  call `<init>`(v0, v1, v2, v5) @signature `Landroidx/biometric/BiometricPrompt;.<init>:(Landroidx/fragment/app/FragmentActivity;Ljava/util/concurrent/Executor;Landroidx/biometric/BiometricPrompt$AuthenticationCallback;)V` @kind direct;
+  #L2afba8.  v8.`co.infinum.goldfinger.GoldfingerImpl.biometricPrompt` @type ^`androidx.biometric.BiometricPrompt` := v0 @kind object;
+  #L2afbac.  call temp:= `dialogOwner`(v12) @signature `Lco/infinum/goldfinger/Goldfinger$PromptParams;.dialogOwner:()Ljava/lang/Object;` @kind virtual;
+  #L2afbb2.  v0:= temp @kind object;
+  #L2afbb4.  v0:= instanceof @variable v0 @type ^`androidx.fragment.app.Fragment` @kind boolean;
+  #L2afbb8.  if v0 == 0 then goto L2afbde;
+  #L2afbbc.  v0:= new `androidx.biometric.BiometricPrompt`;
+  #L2afbc0.  call temp:= `dialogOwner`(v12) @signature `Lco/infinum/goldfinger/Goldfinger$PromptParams;.dialogOwner:()Ljava/lang/Object;` @kind virtual;
+  #L2afbc6.  v1:= temp @kind object;
+  #L2afbc8.  v1:= (`androidx.fragment.app.Fragment`) v1 @kind object;
+  #L2afbcc.  v2:= v8.`co.infinum.goldfinger.GoldfingerImpl.executor` @type ^`java.util.concurrent.Executor` @kind object;
+  #L2afbd0.  v5:= v8.`co.infinum.goldfinger.GoldfingerImpl.biometricCallback` @type ^`co.infinum.goldfinger.BiometricCallback` @kind object;
+  #L2afbd4.  call `<init>`(v0, v1, v2, v5) @signature `Landroidx/biometric/BiometricPrompt;.<init>:(Landroidx/fragment/app/Fragment;Ljava/util/concurrent/Executor;Landroidx/biometric/BiometricPrompt$AuthenticationCallback;)V` @kind direct;
+  #L2afbda.  v8.`co.infinum.goldfinger.GoldfingerImpl.biometricPrompt` @type ^`androidx.biometric.BiometricPrompt` := v0 @kind object;
+  #L2afbde.  v9:= `@@co.infinum.goldfinger.GoldfingerImpl.MAIN_HANDLER` @type ^`android.os.Handler` @kind object;
+  #L2afbe2.  v10:= new `co.infinum.goldfinger.GoldfingerImpl$3`;
+  #L2afbe6.  v0:= v10 @kind object;
+  #L2afbe8.  v1:= v11 @kind object;
+  #L2afbea.  v2:= v13 @kind object;
+  #L2afbec.  v3:= v16 @kind object;
+  #L2afbf0.  v4:= v12 @kind object;
+  #L2afbf2.  v5:= v14 @kind object;
+  #L2afbf4.  v6:= v15 @kind object;
+  #L2afbf6.  v7:= v17 @kind object;
+  #L2afbfa.  call `<init>`(v0, v1, v2, v3, v4, v5, v6, v7) @signature `Lco/infinum/goldfinger/GoldfingerImpl$3;.<init>:(Lco/infinum/goldfinger/GoldfingerImpl;Lco/infinum/goldfinger/Mode;Lco/infinum/goldfinger/Goldfinger$Callback;Lco/infinum/goldfinger/Goldfinger$PromptParams;Ljava/lang/String;Ljava/lang/String;Landroidx/biometric/BiometricPrompt$CryptoObject;)V` @kind direct;
+  #L2afc00.  call temp:= `post`(v9, v10) @signature `Landroid/os/Handler;.post:(Ljava/lang/Runnable;)Z` @kind virtual;
+  #L2afc06.  return @kind void;
+}
+procedure `void` `authenticate`(`co.infinum.goldfinger.GoldfingerImpl` v8 @kind this, `co.infinum.goldfinger.Goldfinger$PromptParams` v9 @kind object, `co.infinum.goldfinger.Goldfinger$Callback` v10 @kind object) @signature `Lco/infinum/goldfinger/GoldfingerImpl;.authenticate:(Lco/infinum/goldfinger/Goldfinger$PromptParams;Lco/infinum/goldfinger/Goldfinger$Callback;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+
+  #L2af9d8.  v6:= `@@co.infinum.goldfinger.Mode.AUTHENTICATION` @type ^`co.infinum.goldfinger.Mode` @kind object;
+  #L2af9dc.  v3:= 0I;
+  #L2af9de.  v4:= 0I;
+  #L2af9e0.  v0:= v8 @kind object;
+  #L2af9e2.  v1:= v9 @kind object;
+  #L2af9e4.  v2:= v6 @kind object;
+  #L2af9e6.  v5:= v10 @kind object;
+  #L2af9e8.  call temp:= `preconditionsInvalid`(v0, v1, v2, v3, v4, v5) @signature `Lco/infinum/goldfinger/GoldfingerImpl;.preconditionsInvalid:(Lco/infinum/goldfinger/Goldfinger$PromptParams;Lco/infinum/goldfinger/Mode;Ljava/lang/String;Ljava/lang/String;Lco/infinum/goldfinger/Goldfinger$Callback;)Z` @kind direct;
+  #L2af9ee.  v0:= temp;
+  #L2af9f0.  if v0 == 0 then goto L2af9f6;
+  #L2af9f4.  return @kind void;
+  #L2af9f6.  v0:= 0I;
+  #L2af9f8.  v0:= new `java.lang.Object`[v0];
+  #L2af9fc.  v1:= "Starting authentication" @kind object;
+  #L2afa00.  call `a`(v1, v0) @signature `Lco/infinum/goldfinger/LogUtils;.a:(Ljava/lang/String;[Ljava/lang/Object;)V` @kind static;
+  #L2afa06.  v3:= 0I;
+  #L2afa08.  v4:= 0I;
+  #L2afa0a.  v7:= 0I;
+  #L2afa0c.  v0:= v8 @kind object;
+  #L2afa0e.  v1:= v9 @kind object;
+  #L2afa10.  v2:= v6 @kind object;
+  #L2afa12.  v5:= v10 @kind object;
+  #L2afa14.  v6:= v7 @kind object;
+  #L2afa16.  call `startNativeFingerprintAuthentication`(v0, v1, v2, v3, v4, v5, v6) @signature `Lco/infinum/goldfinger/GoldfingerImpl;.startNativeFingerprintAuthentication:(Lco/infinum/goldfinger/Goldfinger$PromptParams;Lco/infinum/goldfinger/Mode;Ljava/lang/String;Ljava/lang/String;Lco/infinum/goldfinger/Goldfinger$Callback;Landroidx/biometric/BiometricPrompt$CryptoObject;)V` @kind direct;
+  #L2afa1c.  return @kind void;
+}
+procedure `boolean` `canAuthenticate`(`co.infinum.goldfinger.GoldfingerImpl` v1 @kind this) @signature `Lco/infinum/goldfinger/GoldfingerImpl;.canAuthenticate:()Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L2af810.  v0:= v1.`co.infinum.goldfinger.GoldfingerImpl.biometricManager` @type ^`androidx.biometric.BiometricManager` @kind object;
+  #L2af814.  call temp:= `canAuthenticate`(v0) @signature `Landroidx/biometric/BiometricManager;.canAuthenticate:()I` @kind virtual;
+  #L2af81a.  v0:= temp;
+  #L2af81c.  if v0 != 0 then goto L2af824;
+  #L2af820.  v0:= 1I;
+  #L2af822.  goto L2af826;
+  #L2af824.  v0:= 0I;
+  #L2af826.  return v0;
+}
+procedure `void` `cancel`(`co.infinum.goldfinger.GoldfingerImpl` v2 @kind this) @signature `Lco/infinum/goldfinger/GoldfingerImpl;.cancel:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L2afa30.  v0:= v2.`co.infinum.goldfinger.GoldfingerImpl.biometricPrompt` @type ^`androidx.biometric.BiometricPrompt` @kind object;
+  #L2afa34.  v1:= 0I;
+  #L2afa36.  if v0 == 0 then goto L2afa44;
+  #L2afa3a.  call `cancelAuthentication`(v0) @signature `Landroidx/biometric/BiometricPrompt;.cancelAuthentication:()V` @kind virtual;
+  #L2afa40.  v2.`co.infinum.goldfinger.GoldfingerImpl.biometricPrompt` @type ^`androidx.biometric.BiometricPrompt` := v1 @kind object;
+  #L2afa44.  v0:= v2.`co.infinum.goldfinger.GoldfingerImpl.biometricCallback` @type ^`co.infinum.goldfinger.BiometricCallback` @kind object;
+  #L2afa48.  if v0 == 0 then goto L2afa56;
+  #L2afa4c.  call `d`(v0) @signature `Lco/infinum/goldfinger/BiometricCallback;.d:()V` @kind virtual;
+  #L2afa52.  v2.`co.infinum.goldfinger.GoldfingerImpl.biometricCallback` @type ^`co.infinum.goldfinger.BiometricCallback` := v1 @kind object;
+  #L2afa56.  v0:= v2.`co.infinum.goldfinger.GoldfingerImpl.asyncCryptoFactoryCallback` @type ^`co.infinum.goldfinger.AsyncCryptoObjectFactory$Callback` @kind object;
+  #L2afa5a.  if v0 == 0 then goto L2afa68;
+  #L2afa5e.  call `a`(v0) @signature `Lco/infinum/goldfinger/AsyncCryptoObjectFactory$Callback;.a:()V` @kind virtual;
+  #L2afa64.  v2.`co.infinum.goldfinger.GoldfingerImpl.asyncCryptoFactoryCallback` @type ^`co.infinum.goldfinger.AsyncCryptoObjectFactory$Callback` := v1 @kind object;
+  #L2afa68.  return @kind void;
+}
+procedure `void` `decrypt`(`co.infinum.goldfinger.GoldfingerImpl` v7 @kind this, `co.infinum.goldfinger.Goldfinger$PromptParams` v8 @kind object, `java.lang.String` v9 @kind object, `java.lang.String` v10 @kind object, `co.infinum.goldfinger.Goldfinger$Callback` v11 @kind object) @signature `Lco/infinum/goldfinger/GoldfingerImpl;.decrypt:(Lco/infinum/goldfinger/Goldfinger$PromptParams;Ljava/lang/String;Ljava/lang/String;Lco/infinum/goldfinger/Goldfinger$Callback;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+
+  #L2afa7c.  v6:= `@@co.infinum.goldfinger.Mode.DECRYPTION` @type ^`co.infinum.goldfinger.Mode` @kind object;
+  #L2afa80.  v0:= v7 @kind object;
+  #L2afa82.  v1:= v8 @kind object;
+  #L2afa84.  v2:= v6 @kind object;
+  #L2afa86.  v3:= v9 @kind object;
+  #L2afa88.  v4:= v10 @kind object;
+  #L2afa8a.  v5:= v11 @kind object;
+  #L2afa8c.  call temp:= `preconditionsInvalid`(v0, v1, v2, v3, v4, v5) @signature `Lco/infinum/goldfinger/GoldfingerImpl;.preconditionsInvalid:(Lco/infinum/goldfinger/Goldfinger$PromptParams;Lco/infinum/goldfinger/Mode;Ljava/lang/String;Ljava/lang/String;Lco/infinum/goldfinger/Goldfinger$Callback;)Z` @kind direct;
+  #L2afa92.  v0:= temp;
+  #L2afa94.  if v0 == 0 then goto L2afa9a;
+  #L2afa98.  return @kind void;
+  #L2afa9a.  v0:= v7 @kind object;
+  #L2afa9c.  v1:= v8 @kind object;
+  #L2afa9e.  v2:= v6 @kind object;
+  #L2afaa0.  v3:= v9 @kind object;
+  #L2afaa2.  v4:= v10 @kind object;
+  #L2afaa4.  v5:= v11 @kind object;
+  #L2afaa6.  call `initializeCryptoObject`(v0, v1, v2, v3, v4, v5) @signature `Lco/infinum/goldfinger/GoldfingerImpl;.initializeCryptoObject:(Lco/infinum/goldfinger/Goldfinger$PromptParams;Lco/infinum/goldfinger/Mode;Ljava/lang/String;Ljava/lang/String;Lco/infinum/goldfinger/Goldfinger$Callback;)V` @kind direct;
+  #L2afaac.  return @kind void;
+}
+procedure `void` `encrypt`(`co.infinum.goldfinger.GoldfingerImpl` v7 @kind this, `co.infinum.goldfinger.Goldfinger$PromptParams` v8 @kind object, `java.lang.String` v9 @kind object, `java.lang.String` v10 @kind object, `co.infinum.goldfinger.Goldfinger$Callback` v11 @kind object) @signature `Lco/infinum/goldfinger/GoldfingerImpl;.encrypt:(Lco/infinum/goldfinger/Goldfinger$PromptParams;Ljava/lang/String;Ljava/lang/String;Lco/infinum/goldfinger/Goldfinger$Callback;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+
+  #L2afac0.  v6:= `@@co.infinum.goldfinger.Mode.ENCRYPTION` @type ^`co.infinum.goldfinger.Mode` @kind object;
+  #L2afac4.  v0:= v7 @kind object;
+  #L2afac6.  v1:= v8 @kind object;
+  #L2afac8.  v2:= v6 @kind object;
+  #L2afaca.  v3:= v9 @kind object;
+  #L2afacc.  v4:= v10 @kind object;
+  #L2aface.  v5:= v11 @kind object;
+  #L2afad0.  call temp:= `preconditionsInvalid`(v0, v1, v2, v3, v4, v5) @signature `Lco/infinum/goldfinger/GoldfingerImpl;.preconditionsInvalid:(Lco/infinum/goldfinger/Goldfinger$PromptParams;Lco/infinum/goldfinger/Mode;Ljava/lang/String;Ljava/lang/String;Lco/infinum/goldfinger/Goldfinger$Callback;)Z` @kind direct;
+  #L2afad6.  v0:= temp;
+  #L2afad8.  if v0 == 0 then goto L2afade;
+  #L2afadc.  return @kind void;
+  #L2afade.  v0:= v7 @kind object;
+  #L2afae0.  v1:= v8 @kind object;
+  #L2afae2.  v2:= v6 @kind object;
+  #L2afae4.  v3:= v9 @kind object;
+  #L2afae6.  v4:= v10 @kind object;
+  #L2afae8.  v5:= v11 @kind object;
+  #L2afaea.  call `initializeCryptoObject`(v0, v1, v2, v3, v4, v5) @signature `Lco/infinum/goldfinger/GoldfingerImpl;.initializeCryptoObject:(Lco/infinum/goldfinger/Goldfinger$PromptParams;Lco/infinum/goldfinger/Mode;Ljava/lang/String;Ljava/lang/String;Lco/infinum/goldfinger/Goldfinger$Callback;)V` @kind direct;
+  #L2afaf0.  return @kind void;
+}
+procedure `boolean` `hasEnrolledFingerprint`(`co.infinum.goldfinger.GoldfingerImpl` v2 @kind this) @signature `Lco/infinum/goldfinger/GoldfingerImpl;.hasEnrolledFingerprint:()Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L2af838.  v0:= v2.`co.infinum.goldfinger.GoldfingerImpl.biometricManager` @type ^`androidx.biometric.BiometricManager` @kind object;
+  #L2af83c.  call temp:= `canAuthenticate`(v0) @signature `Landroidx/biometric/BiometricManager;.canAuthenticate:()I` @kind virtual;
+  #L2af842.  v0:= temp;
+  #L2af844.  v1:= 11I;
+  #L2af848.  if v0 == v1 then goto L2af850;
+  #L2af84c.  v0:= 1I;
+  #L2af84e.  goto L2af852;
+  #L2af850.  v0:= 0I;
+  #L2af852.  return v0;
+}
+procedure `boolean` `hasFingerprintHardware`(`co.infinum.goldfinger.GoldfingerImpl` v2 @kind this) @signature `Lco/infinum/goldfinger/GoldfingerImpl;.hasFingerprintHardware:()Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L2af864.  v0:= v2.`co.infinum.goldfinger.GoldfingerImpl.biometricManager` @type ^`androidx.biometric.BiometricManager` @kind object;
+  #L2af868.  call temp:= `canAuthenticate`(v0) @signature `Landroidx/biometric/BiometricManager;.canAuthenticate:()I` @kind virtual;
+  #L2af86e.  v0:= temp;
+  #L2af870.  v1:= 12I;
+  #L2af874.  if v0 == v1 then goto L2af87c;
+  #L2af878.  v0:= 1I;
+  #L2af87a.  goto L2af87e;
+  #L2af87c.  v0:= 0I;
+  #L2af87e.  return v0;
+}

@@ -1,0 +1,191 @@
+record `okio.GzipSink` @kind class @AccessFlag PUBLIC_FINAL extends `okio.Sink` @kind interface {
+  `boolean` `okio.GzipSink.closed` @AccessFlag PRIVATE;
+  `java.util.zip.CRC32` `okio.GzipSink.crc` @AccessFlag PRIVATE_FINAL;
+  `java.util.zip.Deflater` `okio.GzipSink.deflater` @AccessFlag PRIVATE_FINAL;
+  `okio.DeflaterSink` `okio.GzipSink.deflaterSink` @AccessFlag PRIVATE_FINAL;
+  `okio.BufferedSink` `okio.GzipSink.sink` @AccessFlag PRIVATE_FINAL;
+}
+procedure `void` `<init>`(`okio.GzipSink` v3 @kind this, `okio.Sink` v4 @kind object) @signature `Lokio/GzipSink;.<init>:(Lokio/Sink;)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L250b70.  call `<init>`(v3) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L250b76.  v0:= new `java.util.zip.CRC32`;
+  #L250b7a.  call `<init>`(v0) @signature `Ljava/util/zip/CRC32;.<init>:()V` @kind direct;
+  #L250b80.  v3.`okio.GzipSink.crc` @type ^`java.util.zip.CRC32` := v0 @kind object;
+  #L250b84.  if v4 == 0 then goto L250bc4;
+  #L250b88.  v0:= new `java.util.zip.Deflater`;
+  #L250b8c.  v1:= -1I;
+  #L250b8e.  v2:= 1I;
+  #L250b90.  call `<init>`(v0, v1, v2) @signature `Ljava/util/zip/Deflater;.<init>:(IZ)V` @kind direct;
+  #L250b96.  v3.`okio.GzipSink.deflater` @type ^`java.util.zip.Deflater` := v0 @kind object;
+  #L250b9a.  call temp:= `buffer`(v4) @signature `Lokio/Okio;.buffer:(Lokio/Sink;)Lokio/BufferedSink;` @kind static;
+  #L250ba0.  v4:= temp @kind object;
+  #L250ba2.  v3.`okio.GzipSink.sink` @type ^`okio.BufferedSink` := v4 @kind object;
+  #L250ba6.  v4:= new `okio.DeflaterSink`;
+  #L250baa.  v0:= v3.`okio.GzipSink.sink` @type ^`okio.BufferedSink` @kind object;
+  #L250bae.  v1:= v3.`okio.GzipSink.deflater` @type ^`java.util.zip.Deflater` @kind object;
+  #L250bb2.  call `<init>`(v4, v0, v1) @signature `Lokio/DeflaterSink;.<init>:(Lokio/BufferedSink;Ljava/util/zip/Deflater;)V` @kind direct;
+  #L250bb8.  v3.`okio.GzipSink.deflaterSink` @type ^`okio.DeflaterSink` := v4 @kind object;
+  #L250bbc.  call `writeHeader`(v3) @signature `Lokio/GzipSink;.writeHeader:()V` @kind direct;
+  #L250bc2.  return @kind void;
+  #L250bc4.  v4:= new `java.lang.IllegalArgumentException`;
+  #L250bc8.  v0:= "sink == null" @kind object;
+  #L250bcc.  call `<init>`(v4, v0) @signature `Ljava/lang/IllegalArgumentException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L250bd2.  throw v4;
+}
+procedure `void` `updateCrc`(`okio.GzipSink` v4 @kind this, `okio.Buffer` v5 @kind object, `long` v6 ) @signature `Lokio/GzipSink;.updateCrc:(Lokio/Buffer;J)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L250c94.  v5:= v5.`okio.Buffer.head` @type ^`okio.Segment` @kind object;
+  #L250c98.  v0:= 0L;
+  #L250c9c.  v2:= lcmp(v6, v0);
+  #L250ca0.  if v2 <= 0 then goto L250cd6;
+  #L250ca4.  v0:= v5.`okio.Segment.limit` @type ^`int`;
+  #L250ca8.  v1:= v5.`okio.Segment.pos` @type ^`int`;
+  #L250cac.  v0:= v0 - v1 @kind int;
+  #L250cae.  v0:= (`long`) v0 @kind i2l;
+  #L250cb0.  call temp:= `min`(v6, v0) @signature `Ljava/lang/Math;.min:(JJ)J` @kind static;
+  #L250cb6.  v0:= temp @kind wide;
+  #L250cb8.  v0:= (`int`) v0 @kind l2i;
+  #L250cba.  v1:= v4.`okio.GzipSink.crc` @type ^`java.util.zip.CRC32` @kind object;
+  #L250cbe.  v2:= v5.`okio.Segment.data` @type ^`byte`[] @kind object;
+  #L250cc2.  v3:= v5.`okio.Segment.pos` @type ^`int`;
+  #L250cc6.  call `update`(v1, v2, v3, v0) @signature `Ljava/util/zip/CRC32;.update:([BII)V` @kind virtual;
+  #L250ccc.  v0:= (`long`) v0 @kind i2l;
+  #L250cce.  v6:= v6 - v0 @kind long;
+  #L250cd0.  v5:= v5.`okio.Segment.next` @type ^`okio.Segment` @kind object;
+  #L250cd4.  goto L250c98;
+  #L250cd6.  return @kind void;
+}
+procedure `void` `writeFooter`(`okio.GzipSink` v3 @kind this) @signature `Lokio/GzipSink;.writeFooter:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L250d50.  v0:= v3.`okio.GzipSink.sink` @type ^`okio.BufferedSink` @kind object;
+  #L250d54.  v1:= v3.`okio.GzipSink.crc` @type ^`java.util.zip.CRC32` @kind object;
+  #L250d58.  call temp:= `getValue`(v1) @signature `Ljava/util/zip/CRC32;.getValue:()J` @kind virtual;
+  #L250d5e.  v1:= temp @kind wide;
+  #L250d60.  v1:= (`int`) v1 @kind l2i;
+  #L250d62.  call temp:= `writeIntLe`(v0, v1) @signature `Lokio/BufferedSink;.writeIntLe:(I)Lokio/BufferedSink;` @kind interface;
+  #L250d68.  v0:= v3.`okio.GzipSink.sink` @type ^`okio.BufferedSink` @kind object;
+  #L250d6c.  v1:= v3.`okio.GzipSink.deflater` @type ^`java.util.zip.Deflater` @kind object;
+  #L250d70.  call temp:= `getBytesRead`(v1) @signature `Ljava/util/zip/Deflater;.getBytesRead:()J` @kind virtual;
+  #L250d76.  v1:= temp @kind wide;
+  #L250d78.  v1:= (`int`) v1 @kind l2i;
+  #L250d7a.  call temp:= `writeIntLe`(v0, v1) @signature `Lokio/BufferedSink;.writeIntLe:(I)Lokio/BufferedSink;` @kind interface;
+  #L250d80.  return @kind void;
+}
+procedure `void` `writeHeader`(`okio.GzipSink` v2 @kind this) @signature `Lokio/GzipSink;.writeHeader:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+
+  #L250d94.  v0:= v2.`okio.GzipSink.sink` @type ^`okio.BufferedSink` @kind object;
+  #L250d98.  call temp:= `buffer`(v0) @signature `Lokio/BufferedSink;.buffer:()Lokio/Buffer;` @kind interface;
+  #L250d9e.  v0:= temp @kind object;
+  #L250da0.  v1:= 8075I;
+  #L250da4.  call temp:= `writeShort`(v0, v1) @signature `Lokio/Buffer;.writeShort:(I)Lokio/Buffer;` @kind virtual;
+  #L250daa.  v1:= 8I;
+  #L250dae.  call temp:= `writeByte`(v0, v1) @signature `Lokio/Buffer;.writeByte:(I)Lokio/Buffer;` @kind virtual;
+  #L250db4.  v1:= 0I;
+  #L250db6.  call temp:= `writeByte`(v0, v1) @signature `Lokio/Buffer;.writeByte:(I)Lokio/Buffer;` @kind virtual;
+  #L250dbc.  call temp:= `writeInt`(v0, v1) @signature `Lokio/Buffer;.writeInt:(I)Lokio/Buffer;` @kind virtual;
+  #L250dc2.  call temp:= `writeByte`(v0, v1) @signature `Lokio/Buffer;.writeByte:(I)Lokio/Buffer;` @kind virtual;
+  #L250dc8.  call temp:= `writeByte`(v0, v1) @signature `Lokio/Buffer;.writeByte:(I)Lokio/Buffer;` @kind virtual;
+  #L250dce.  return @kind void;
+}
+procedure `void` `close`(`okio.GzipSink` v2 @kind this) @signature `Lokio/GzipSink;.close:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L250be4.  v0:= v2.`okio.GzipSink.closed` @type ^`boolean` @kind boolean;
+  #L250be8.  if v0 == 0 then goto L250bee;
+  #L250bec.  return @kind void;
+  #L250bee.  v0:= 0I;
+  #L250bf0.  v1:= v2.`okio.GzipSink.deflaterSink` @type ^`okio.DeflaterSink` @kind object;
+  #L250bf4.  call `finishDeflate`(v1) @signature `Lokio/DeflaterSink;.finishDeflate:()V` @kind virtual;
+  #L250bfa.  call `writeFooter`(v2) @signature `Lokio/GzipSink;.writeFooter:()V` @kind direct;
+  #L250c00.  goto L250c04;
+  #L250c02.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L250c04.  v1:= v2.`okio.GzipSink.deflater` @type ^`java.util.zip.Deflater` @kind object;
+  #L250c08.  call `end`(v1) @signature `Ljava/util/zip/Deflater;.end:()V` @kind virtual;
+  #L250c0e.  goto L250c18;
+  #L250c10.  v1:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L250c12.  if v0 != 0 then goto L250c18;
+  #L250c16.  v0:= v1 @kind object;
+  #L250c18.  v1:= v2.`okio.GzipSink.sink` @type ^`okio.BufferedSink` @kind object;
+  #L250c1c.  call `close`(v1) @signature `Lokio/BufferedSink;.close:()V` @kind interface;
+  #L250c22.  goto L250c2c;
+  #L250c24.  v1:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L250c26.  if v0 != 0 then goto L250c2c;
+  #L250c2a.  v0:= v1 @kind object;
+  #L250c2c.  v1:= 1I;
+  #L250c2e.  v2.`okio.GzipSink.closed` @type ^`boolean` := v1 @kind boolean;
+  #L250c32.  if v0 == 0 then goto L250c3c;
+  #L250c36.  call `sneakyRethrow`(v0) @signature `Lokio/Util;.sneakyRethrow:(Ljava/lang/Throwable;)V` @kind static;
+  #L250c3c.  return @kind void;
+  catch `java.lang.Throwable` @[L250bf0..L250c00] goto L250c02;
+  catch `java.lang.Throwable` @[L250c04..L250c0e] goto L250c10;
+  catch `java.lang.Throwable` @[L250c18..L250c22] goto L250c24;
+}
+procedure `java.util.zip.Deflater` `deflater`(`okio.GzipSink` v1 @kind this) @signature `Lokio/GzipSink;.deflater:()Ljava/util/zip/Deflater;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L250b38.  v0:= v1.`okio.GzipSink.deflater` @type ^`java.util.zip.Deflater` @kind object;
+  #L250b3c.  return v0 @kind object;
+}
+procedure `void` `flush`(`okio.GzipSink` v1 @kind this) @signature `Lokio/GzipSink;.flush:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L250c78.  v0:= v1.`okio.GzipSink.deflaterSink` @type ^`okio.DeflaterSink` @kind object;
+  #L250c7c.  call `flush`(v0) @signature `Lokio/DeflaterSink;.flush:()V` @kind virtual;
+  #L250c82.  return @kind void;
+}
+procedure `okio.Timeout` `timeout`(`okio.GzipSink` v1 @kind this) @signature `Lokio/GzipSink;.timeout:()Lokio/Timeout;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L250b50.  v0:= v1.`okio.GzipSink.sink` @type ^`okio.BufferedSink` @kind object;
+  #L250b54.  call temp:= `timeout`(v0) @signature `Lokio/BufferedSink;.timeout:()Lokio/Timeout;` @kind interface;
+  #L250b5a.  v0:= temp @kind object;
+  #L250b5c.  return v0 @kind object;
+}
+procedure `void` `write`(`okio.GzipSink` v3 @kind this, `okio.Buffer` v4 @kind object, `long` v5 ) @signature `Lokio/GzipSink;.write:(Lokio/Buffer;J)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L250ce8.  v0:= 0L;
+  #L250cec.  v2:= lcmp(v5, v0);
+  #L250cf0.  if v2 < 0 then goto L250d10;
+  #L250cf4.  v2:= lcmp(v5, v0);
+  #L250cf8.  if v2 != 0 then goto L250cfe;
+  #L250cfc.  return @kind void;
+  #L250cfe.  call `updateCrc`(v3, v4, v5) @signature `Lokio/GzipSink;.updateCrc:(Lokio/Buffer;J)V` @kind direct;
+  #L250d04.  v0:= v3.`okio.GzipSink.deflaterSink` @type ^`okio.DeflaterSink` @kind object;
+  #L250d08.  call `write`(v0, v4, v5) @signature `Lokio/DeflaterSink;.write:(Lokio/Buffer;J)V` @kind virtual;
+  #L250d0e.  return @kind void;
+  #L250d10.  v4:= new `java.lang.IllegalArgumentException`;
+  #L250d14.  v0:= new `java.lang.StringBuilder`;
+  #L250d18.  call `<init>`(v0) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L250d1e.  v1:= "byteCount < 0: " @kind object;
+  #L250d22.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L250d28.  call temp:= `append`(v0, v5) @signature `Ljava/lang/StringBuilder;.append:(J)Ljava/lang/StringBuilder;` @kind virtual;
+  #L250d2e.  call temp:= `toString`(v0) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L250d34.  v5:= temp @kind object;
+  #L250d36.  call `<init>`(v4, v5) @signature `Ljava/lang/IllegalArgumentException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L250d3c.  throw v4;
+}

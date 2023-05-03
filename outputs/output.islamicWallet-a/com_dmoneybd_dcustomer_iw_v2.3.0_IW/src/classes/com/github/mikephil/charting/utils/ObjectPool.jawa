@@ -1,0 +1,308 @@
+record `com.github.mikephil.charting.utils.ObjectPool` @kind class @AccessFlag PUBLIC {
+  `int` `com.github.mikephil.charting.utils.ObjectPool.desiredCapacity` @AccessFlag PRIVATE;
+  `com.github.mikephil.charting.utils.ObjectPool$Poolable` `com.github.mikephil.charting.utils.ObjectPool.modelObject` @AccessFlag PRIVATE;
+  `java.lang.Object`[] `com.github.mikephil.charting.utils.ObjectPool.objects` @AccessFlag PRIVATE;
+  `int` `com.github.mikephil.charting.utils.ObjectPool.objectsPointer` @AccessFlag PRIVATE;
+  `int` `com.github.mikephil.charting.utils.ObjectPool.poolId` @AccessFlag PRIVATE;
+  `float` `com.github.mikephil.charting.utils.ObjectPool.replenishPercentage` @AccessFlag PRIVATE;
+}
+global `int` `@@com.github.mikephil.charting.utils.ObjectPool.ids` @AccessFlag PRIVATE_STATIC;
+procedure `void` `<clinit>`() @signature `Lcom/github/mikephil/charting/utils/ObjectPool;.<clinit>:()V` @AccessFlag STATIC_CONSTRUCTOR {
+    temp;
+
+  #L3a508c.  return @kind void;
+}
+procedure `void` `<init>`(`com.github.mikephil.charting.utils.ObjectPool` v0 @kind this, `int` v1 , `com.github.mikephil.charting.utils.ObjectPool$Poolable` v2 @kind object) @signature `Lcom/github/mikephil/charting/utils/ObjectPool;.<init>:(ILcom/github/mikephil/charting/utils/ObjectPool$Poolable;)V` @AccessFlag PRIVATE_CONSTRUCTOR {
+    temp;
+
+  #L3a50a0.  call `<init>`(v0) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L3a50a6.  if v1 <= 0 then goto L3a50d0;
+  #L3a50aa.  v0.`com.github.mikephil.charting.utils.ObjectPool.desiredCapacity` @type ^`int` := v1;
+  #L3a50ae.  v1:= new `java.lang.Object`[v1];
+  #L3a50b2.  v0.`com.github.mikephil.charting.utils.ObjectPool.objects` @type ^`java.lang.Object`[] := v1 @kind object;
+  #L3a50b6.  v1:= 0I;
+  #L3a50b8.  v0.`com.github.mikephil.charting.utils.ObjectPool.objectsPointer` @type ^`int` := v1;
+  #L3a50bc.  v0.`com.github.mikephil.charting.utils.ObjectPool.modelObject` @type ^`com.github.mikephil.charting.utils.ObjectPool$Poolable` := v2 @kind object;
+  #L3a50c0.  v1:= 1.0F;
+  #L3a50c4.  v0.`com.github.mikephil.charting.utils.ObjectPool.replenishPercentage` @type ^`float` := v1;
+  #L3a50c8.  call `refillPool`(v0) @signature `Lcom/github/mikephil/charting/utils/ObjectPool;.refillPool:()V` @kind direct;
+  #L3a50ce.  return @kind void;
+  #L3a50d0.  v1:= new `java.lang.IllegalArgumentException`;
+  #L3a50d4.  v2:= "Object Pool must be instantiated with a capacity greater than 0!" @kind object;
+  #L3a50d8.  call `<init>`(v1, v2) @signature `Ljava/lang/IllegalArgumentException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L3a50de.  throw v1;
+}
+procedure `com.github.mikephil.charting.utils.ObjectPool` `create`(`int` v2 , `com.github.mikephil.charting.utils.ObjectPool$Poolable` v3 @kind object) @signature `Lcom/github/mikephil/charting/utils/ObjectPool;.create:(ILcom/github/mikephil/charting/utils/ObjectPool$Poolable;)Lcom/github/mikephil/charting/utils/ObjectPool;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+
+  #L3a4f78.  v0:= constclass @type ^`com.github.mikephil.charting.utils.ObjectPool` @kind object;
+  #L3a4f7c.  @monitorenter v0
+  #L3a4f7e.  v1:= new `com.github.mikephil.charting.utils.ObjectPool`;
+  #L3a4f82.  call `<init>`(v1, v2, v3) @signature `Lcom/github/mikephil/charting/utils/ObjectPool;.<init>:(ILcom/github/mikephil/charting/utils/ObjectPool$Poolable;)V` @kind direct;
+  #L3a4f88.  v2:= `@@com.github.mikephil.charting.utils.ObjectPool.ids` @type ^`int`;
+  #L3a4f8c.  v1.`com.github.mikephil.charting.utils.ObjectPool.poolId` @type ^`int` := v2;
+  #L3a4f90.  v2:= v2 + 1;
+  #L3a4f94.  `@@com.github.mikephil.charting.utils.ObjectPool.ids` @type ^`int` := v2;
+  #L3a4f98.  @monitorexit v0
+  #L3a4f9a.  return v1 @kind object;
+  #L3a4f9c.  v2:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3a4f9e.  @monitorexit v0
+  #L3a4fa0.  throw v2;
+  catch `java.lang.Throwable` @[L3a4f7e..L3a4f98] goto L3a4f9c;
+}
+procedure `void` `refillPool`(`com.github.mikephil.charting.utils.ObjectPool` v1 @kind this) @signature `Lcom/github/mikephil/charting/utils/ObjectPool;.refillPool:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+
+  #L3a529c.  v0:= v1.`com.github.mikephil.charting.utils.ObjectPool.replenishPercentage` @type ^`float`;
+  #L3a52a0.  call `refillPool`(v1, v0) @signature `Lcom/github/mikephil/charting/utils/ObjectPool;.refillPool:(F)V` @kind direct;
+  #L3a52a6.  return @kind void;
+}
+procedure `void` `refillPool`(`com.github.mikephil.charting.utils.ObjectPool` v4 @kind this, `float` v5 ) @signature `Lcom/github/mikephil/charting/utils/ObjectPool;.refillPool:(F)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L3a52b8.  v0:= v4.`com.github.mikephil.charting.utils.ObjectPool.desiredCapacity` @type ^`int`;
+  #L3a52bc.  v1:= (`float`) v0 @kind i2f;
+  #L3a52be.  v1:= v1 * v5 @kind float;
+  #L3a52c2.  v5:= (`int`) v1 @kind f2i;
+  #L3a52c4.  v1:= 1I;
+  #L3a52c6.  if v5 >= v1 then goto L3a52ce;
+  #L3a52ca.  v0:= 1I;
+  #L3a52cc.  goto L3a52d6;
+  #L3a52ce.  if v5 <= v0 then goto L3a52d4;
+  #L3a52d2.  goto L3a52d6;
+  #L3a52d4.  v0:= v5;
+  #L3a52d6.  v5:= 0I;
+  #L3a52d8.  if v5 >= v0 then goto L3a52f6;
+  #L3a52dc.  v2:= v4.`com.github.mikephil.charting.utils.ObjectPool.objects` @type ^`java.lang.Object`[] @kind object;
+  #L3a52e0.  v3:= v4.`com.github.mikephil.charting.utils.ObjectPool.modelObject` @type ^`com.github.mikephil.charting.utils.ObjectPool$Poolable` @kind object;
+  #L3a52e4.  call temp:= `instantiate`(v3) @signature `Lcom/github/mikephil/charting/utils/ObjectPool$Poolable;.instantiate:()Lcom/github/mikephil/charting/utils/ObjectPool$Poolable;` @kind virtual;
+  #L3a52ea.  v3:= temp @kind object;
+  #L3a52ec.  v2[v5]:= v3 @kind object;
+  #L3a52f0.  v5:= v5 + 1;
+  #L3a52f4.  goto L3a52d8;
+  #L3a52f6.  v0:= v0 - v1 @kind int;
+  #L3a52f8.  v4.`com.github.mikephil.charting.utils.ObjectPool.objectsPointer` @type ^`int` := v0;
+  #L3a52fc.  return @kind void;
+}
+procedure `void` `resizePool`(`com.github.mikephil.charting.utils.ObjectPool` v4 @kind this) @signature `Lcom/github/mikephil/charting/utils/ObjectPool;.resizePool:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L3a5310.  v0:= v4.`com.github.mikephil.charting.utils.ObjectPool.desiredCapacity` @type ^`int`;
+  #L3a5314.  v1:= v0 * 2;
+  #L3a5318.  v4.`com.github.mikephil.charting.utils.ObjectPool.desiredCapacity` @type ^`int` := v1;
+  #L3a531c.  v1:= new `java.lang.Object`[v1];
+  #L3a5320.  v2:= 0I;
+  #L3a5322.  if v2 >= v0 then goto L3a5338;
+  #L3a5326.  v3:= v4.`com.github.mikephil.charting.utils.ObjectPool.objects` @type ^`java.lang.Object`[] @kind object;
+  #L3a532a.  v3:= v3[v2] @kind object;
+  #L3a532e.  v1[v2]:= v3 @kind object;
+  #L3a5332.  v2:= v2 + 1;
+  #L3a5336.  goto L3a5322;
+  #L3a5338.  v4.`com.github.mikephil.charting.utils.ObjectPool.objects` @type ^`java.lang.Object`[] := v1 @kind object;
+  #L3a533c.  return @kind void;
+}
+procedure `com.github.mikephil.charting.utils.ObjectPool$Poolable` `get`(`com.github.mikephil.charting.utils.ObjectPool` v3 @kind this) @signature `Lcom/github/mikephil/charting/utils/ObjectPool;.get:()Lcom/github/mikephil/charting/utils/ObjectPool$Poolable;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L3a4fc0.  @monitorenter v3
+  #L3a4fc2.  v0:= v3.`com.github.mikephil.charting.utils.ObjectPool.objectsPointer` @type ^`int`;
+  #L3a4fc6.  v1:= -1I;
+  #L3a4fc8.  if v0 != v1 then goto L3a4fe0;
+  #L3a4fcc.  v0:= v3.`com.github.mikephil.charting.utils.ObjectPool.replenishPercentage` @type ^`float`;
+  #L3a4fd0.  v1:= 0I;
+  #L3a4fd2.  v0:= fcmpl(v0, v1);
+  #L3a4fd6.  if v0 <= 0 then goto L3a4fe0;
+  #L3a4fda.  call `refillPool`(v3) @signature `Lcom/github/mikephil/charting/utils/ObjectPool;.refillPool:()V` @kind direct;
+  #L3a4fe0.  v0:= v3.`com.github.mikephil.charting.utils.ObjectPool.objects` @type ^`java.lang.Object`[] @kind object;
+  #L3a4fe4.  v1:= v3.`com.github.mikephil.charting.utils.ObjectPool.objectsPointer` @type ^`int`;
+  #L3a4fe8.  v0:= v0[v1] @kind object;
+  #L3a4fec.  v0:= (`com.github.mikephil.charting.utils.ObjectPool$Poolable`) v0 @kind object;
+  #L3a4ff0.  v2:= `@@com.github.mikephil.charting.utils.ObjectPool$Poolable.NO_OWNER` @type ^`int`;
+  #L3a4ff4.  v0.`com.github.mikephil.charting.utils.ObjectPool$Poolable.a` @type ^`int` := v2;
+  #L3a4ff8.  v1:= v1 + -1;
+  #L3a4ffc.  v3.`com.github.mikephil.charting.utils.ObjectPool.objectsPointer` @type ^`int` := v1;
+  #L3a5000.  @monitorexit v3
+  #L3a5002.  return v0 @kind object;
+  #L3a5004.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3a5006.  @monitorexit v3
+  #L3a5008.  throw v0;
+  catch `java.lang.Throwable` @[L3a4fc2..L3a5000] goto L3a5004;
+}
+procedure `int` `getPoolCapacity`(`com.github.mikephil.charting.utils.ObjectPool` v1 @kind this) @signature `Lcom/github/mikephil/charting/utils/ObjectPool;.getPoolCapacity:()I` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L3a5040.  v0:= v1.`com.github.mikephil.charting.utils.ObjectPool.objects` @type ^`java.lang.Object`[] @kind object;
+  #L3a5044.  v0:= length @variable v0;
+  #L3a5046.  return v0;
+}
+procedure `int` `getPoolCount`(`com.github.mikephil.charting.utils.ObjectPool` v1 @kind this) @signature `Lcom/github/mikephil/charting/utils/ObjectPool;.getPoolCount:()I` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L3a5058.  v0:= v1.`com.github.mikephil.charting.utils.ObjectPool.objectsPointer` @type ^`int`;
+  #L3a505c.  v0:= v0 + 1;
+  #L3a5060.  return v0;
+}
+procedure `int` `getPoolId`(`com.github.mikephil.charting.utils.ObjectPool` v1 @kind this) @signature `Lcom/github/mikephil/charting/utils/ObjectPool;.getPoolId:()I` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L3a5074.  v0:= v1.`com.github.mikephil.charting.utils.ObjectPool.poolId` @type ^`int`;
+  #L3a5078.  return v0;
+}
+procedure `float` `getReplenishPercentage`(`com.github.mikephil.charting.utils.ObjectPool` v1 @kind this) @signature `Lcom/github/mikephil/charting/utils/ObjectPool;.getReplenishPercentage:()F` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L3a5028.  v0:= v1.`com.github.mikephil.charting.utils.ObjectPool.replenishPercentage` @type ^`float`;
+  #L3a502c.  return v0;
+}
+procedure `void` `recycle`(`com.github.mikephil.charting.utils.ObjectPool` v3 @kind this, `com.github.mikephil.charting.utils.ObjectPool$Poolable` v4 @kind object) @signature `Lcom/github/mikephil/charting/utils/ObjectPool;.recycle:(Lcom/github/mikephil/charting/utils/ObjectPool$Poolable;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L3a50f0.  @monitorenter v3
+  #L3a50f2.  v0:= v4.`com.github.mikephil.charting.utils.ObjectPool$Poolable.a` @type ^`int`;
+  #L3a50f6.  v1:= `@@com.github.mikephil.charting.utils.ObjectPool$Poolable.NO_OWNER` @type ^`int`;
+  #L3a50fa.  if v0 == v1 then goto L3a5152;
+  #L3a50fe.  v1:= v3.`com.github.mikephil.charting.utils.ObjectPool.poolId` @type ^`int`;
+  #L3a5102.  if v0 != v1 then goto L3a5116;
+  #L3a5106.  v4:= new `java.lang.IllegalArgumentException`;
+  #L3a510a.  v0:= "The object passed is already stored in this pool!" @kind object;
+  #L3a510e.  call `<init>`(v4, v0) @signature `Ljava/lang/IllegalArgumentException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L3a5114.  throw v4;
+  #L3a5116.  v0:= new `java.lang.IllegalArgumentException`;
+  #L3a511a.  v1:= new `java.lang.StringBuilder`;
+  #L3a511e.  call `<init>`(v1) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L3a5124.  v2:= "The object to recycle already belongs to poolId " @kind object;
+  #L3a5128.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3a512e.  v4:= v4.`com.github.mikephil.charting.utils.ObjectPool$Poolable.a` @type ^`int`;
+  #L3a5132.  call temp:= `append`(v1, v4) @signature `Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3a5138.  v4:= ".  Object cannot belong to two different pool instances simultaneously!" @kind object;
+  #L3a513c.  call temp:= `append`(v1, v4) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3a5142.  call temp:= `toString`(v1) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L3a5148.  v4:= temp @kind object;
+  #L3a514a.  call `<init>`(v0, v4) @signature `Ljava/lang/IllegalArgumentException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L3a5150.  throw v0;
+  #L3a5152.  v0:= v3.`com.github.mikephil.charting.utils.ObjectPool.objectsPointer` @type ^`int`;
+  #L3a5156.  v0:= v0 + 1;
+  #L3a515a.  v3.`com.github.mikephil.charting.utils.ObjectPool.objectsPointer` @type ^`int` := v0;
+  #L3a515e.  v1:= v3.`com.github.mikephil.charting.utils.ObjectPool.objects` @type ^`java.lang.Object`[] @kind object;
+  #L3a5162.  v1:= length @variable v1;
+  #L3a5164.  if v0 < v1 then goto L3a516e;
+  #L3a5168.  call `resizePool`(v3) @signature `Lcom/github/mikephil/charting/utils/ObjectPool;.resizePool:()V` @kind direct;
+  #L3a516e.  v0:= v3.`com.github.mikephil.charting.utils.ObjectPool.poolId` @type ^`int`;
+  #L3a5172.  v4.`com.github.mikephil.charting.utils.ObjectPool$Poolable.a` @type ^`int` := v0;
+  #L3a5176.  v0:= v3.`com.github.mikephil.charting.utils.ObjectPool.objects` @type ^`java.lang.Object`[] @kind object;
+  #L3a517a.  v1:= v3.`com.github.mikephil.charting.utils.ObjectPool.objectsPointer` @type ^`int`;
+  #L3a517e.  v0[v1]:= v4 @kind object;
+  #L3a5182.  @monitorexit v3
+  #L3a5184.  return @kind void;
+  #L3a5186.  v4:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3a5188.  @monitorexit v3
+  #L3a518a.  throw v4;
+  catch `java.lang.Throwable` @[L3a50f2..L3a5182] goto L3a5186;
+}
+procedure `void` `recycle`(`com.github.mikephil.charting.utils.ObjectPool` v5 @kind this, `java.util.List` v6 @kind object) @signature `Lcom/github/mikephil/charting/utils/ObjectPool;.recycle:(Ljava/util/List;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L3a51a8.  @monitorenter v5
+  #L3a51aa.  call temp:= `size`(v6) @signature `Ljava/util/List;.size:()I` @kind interface;
+  #L3a51b0.  v0:= temp;
+  #L3a51b2.  v1:= v5.`com.github.mikephil.charting.utils.ObjectPool.objectsPointer` @type ^`int`;
+  #L3a51b6.  v0:= v0 + v1 @kind int;
+  #L3a51b8.  v0:= v0 + 1;
+  #L3a51bc.  v1:= v5.`com.github.mikephil.charting.utils.ObjectPool.desiredCapacity` @type ^`int`;
+  #L3a51c0.  if v0 <= v1 then goto L3a51cc;
+  #L3a51c4.  call `resizePool`(v5) @signature `Lcom/github/mikephil/charting/utils/ObjectPool;.resizePool:()V` @kind direct;
+  #L3a51ca.  goto L3a51aa;
+  #L3a51cc.  call temp:= `size`(v6) @signature `Ljava/util/List;.size:()I` @kind interface;
+  #L3a51d2.  v0:= temp;
+  #L3a51d4.  v1:= 0I;
+  #L3a51d6.  if v1 >= v0 then goto L3a5266;
+  #L3a51da.  call temp:= `get`(v6, v1) @signature `Ljava/util/List;.get:(I)Ljava/lang/Object;` @kind interface;
+  #L3a51e0.  v2:= temp @kind object;
+  #L3a51e2.  v2:= (`com.github.mikephil.charting.utils.ObjectPool$Poolable`) v2 @kind object;
+  #L3a51e6.  v3:= v2.`com.github.mikephil.charting.utils.ObjectPool$Poolable.a` @type ^`int`;
+  #L3a51ea.  v4:= `@@com.github.mikephil.charting.utils.ObjectPool$Poolable.NO_OWNER` @type ^`int`;
+  #L3a51ee.  if v3 == v4 then goto L3a5246;
+  #L3a51f2.  v6:= v5.`com.github.mikephil.charting.utils.ObjectPool.poolId` @type ^`int`;
+  #L3a51f6.  if v3 != v6 then goto L3a520a;
+  #L3a51fa.  v6:= new `java.lang.IllegalArgumentException`;
+  #L3a51fe.  v0:= "The object passed is already stored in this pool!" @kind object;
+  #L3a5202.  call `<init>`(v6, v0) @signature `Ljava/lang/IllegalArgumentException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L3a5208.  throw v6;
+  #L3a520a.  v6:= new `java.lang.IllegalArgumentException`;
+  #L3a520e.  v0:= new `java.lang.StringBuilder`;
+  #L3a5212.  call `<init>`(v0) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L3a5218.  v1:= "The object to recycle already belongs to poolId " @kind object;
+  #L3a521c.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3a5222.  v1:= v2.`com.github.mikephil.charting.utils.ObjectPool$Poolable.a` @type ^`int`;
+  #L3a5226.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3a522c.  v1:= ".  Object cannot belong to two different pool instances simultaneously!" @kind object;
+  #L3a5230.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3a5236.  call temp:= `toString`(v0) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L3a523c.  v0:= temp @kind object;
+  #L3a523e.  call `<init>`(v6, v0) @signature `Ljava/lang/IllegalArgumentException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L3a5244.  throw v6;
+  #L3a5246.  v3:= v5.`com.github.mikephil.charting.utils.ObjectPool.poolId` @type ^`int`;
+  #L3a524a.  v2.`com.github.mikephil.charting.utils.ObjectPool$Poolable.a` @type ^`int` := v3;
+  #L3a524e.  v3:= v5.`com.github.mikephil.charting.utils.ObjectPool.objects` @type ^`java.lang.Object`[] @kind object;
+  #L3a5252.  v4:= v5.`com.github.mikephil.charting.utils.ObjectPool.objectsPointer` @type ^`int`;
+  #L3a5256.  v4:= v4 + 1;
+  #L3a525a.  v4:= v4 + v1 @kind int;
+  #L3a525c.  v3[v4]:= v2 @kind object;
+  #L3a5260.  v1:= v1 + 1;
+  #L3a5264.  goto L3a51d6;
+  #L3a5266.  v6:= v5.`com.github.mikephil.charting.utils.ObjectPool.objectsPointer` @type ^`int`;
+  #L3a526a.  v6:= v6 + v0 @kind int;
+  #L3a526c.  v5.`com.github.mikephil.charting.utils.ObjectPool.objectsPointer` @type ^`int` := v6;
+  #L3a5270.  @monitorexit v5
+  #L3a5272.  return @kind void;
+  #L3a5274.  v6:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L3a5276.  @monitorexit v5
+  #L3a5278.  goto L3a527c;
+  #L3a527a.  throw v6;
+  #L3a527c.  goto L3a527a;
+  catch `java.lang.Throwable` @[L3a51aa..L3a5270] goto L3a5274;
+}
+procedure `void` `setReplenishPercentage`(`com.github.mikephil.charting.utils.ObjectPool` v3 @kind this, `float` v4 ) @signature `Lcom/github/mikephil/charting/utils/ObjectPool;.setReplenishPercentage:(F)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L3a5350.  v0:= 0I;
+  #L3a5352.  v1:= 1.0F;
+  #L3a5356.  v2:= fcmpl(v4, v1);
+  #L3a535a.  if v2 <= 0 then goto L3a5364;
+  #L3a535e.  v4:= 1.0F;
+  #L3a5362.  goto L3a536e;
+  #L3a5364.  v1:= fcmpg(v4, v0);
+  #L3a5368.  if v1 >= 0 then goto L3a536e;
+  #L3a536c.  v4:= 0I;
+  #L3a536e.  v3.`com.github.mikephil.charting.utils.ObjectPool.replenishPercentage` @type ^`float` := v4;
+  #L3a5372.  return @kind void;
+}

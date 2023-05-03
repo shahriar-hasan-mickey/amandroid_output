@@ -1,0 +1,1 @@
+define(["underscore","Backbone"],function(n,e){var i=e.Model.extend({url:function(){return this.instanceUrl},validation:{username:{required:!0,msg:"validation.newregistration.usernamenotnull"},password:{required:!0,msg:"validation.newregistration.pwdnotnull"}},initialize:function(n){this.url=n.url}});return i});

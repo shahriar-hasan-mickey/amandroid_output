@@ -1,0 +1,45 @@
+record `okio.AsyncTimeout$Watchdog` @kind class @AccessFlag FINAL extends `java.lang.Thread` @kind class {
+}
+procedure `void` `<init>`(`okio.AsyncTimeout$Watchdog` v1 @kind this) @signature `Lokio/AsyncTimeout$Watchdog;.<init>:()V` @AccessFlag CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L2e1580.  v0:= "Okio Watchdog" @kind object;
+  #L2e1584.  call `<init>`(v1, v0) @signature `Ljava/lang/Thread;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L2e158a.  v0:= 1I;
+  #L2e158c.  call `setDaemon`(v1, v0) @signature `Ljava/lang/Thread;.setDaemon:(Z)V` @kind virtual;
+  #L2e1592.  return @kind void;
+}
+procedure `void` `run`(`okio.AsyncTimeout$Watchdog` v3 @kind this) @signature `Lokio/AsyncTimeout$Watchdog;.run:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L2e15a4.  v0:= constclass @type ^`okio.AsyncTimeout` @kind object;
+  #L2e15a8.  @monitorenter v0
+  #L2e15aa.  call temp:= `a`() @signature `Lokio/AsyncTimeout;.a:()Lokio/AsyncTimeout;` @kind static;
+  #L2e15b0.  v1:= temp @kind object;
+  #L2e15b2.  if v1 != 0 then goto L2e15ba;
+  #L2e15b6.  @monitorexit v0
+  #L2e15b8.  goto L2e15a4;
+  #L2e15ba.  v2:= `@@okio.AsyncTimeout.a` @type ^`okio.AsyncTimeout` @kind object;
+  #L2e15be.  if v1 != v2 then goto L2e15cc;
+  #L2e15c2.  v1:= 0I;
+  #L2e15c4.  `@@okio.AsyncTimeout.a` @type ^`okio.AsyncTimeout` := v1 @kind object;
+  #L2e15c8.  @monitorexit v0
+  #L2e15ca.  return @kind void;
+  #L2e15cc.  @monitorexit v0
+  #L2e15ce.  call `timedOut`(v1) @signature `Lokio/AsyncTimeout;.timedOut:()V` @kind virtual;
+  #L2e15d4.  goto L2e15a4;
+  #L2e15d6.  v1:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L2e15d8.  @monitorexit v0
+  #L2e15da.  goto L2e15de;
+  #L2e15dc.  throw v1;
+  #L2e15de.  goto L2e15dc;
+  catch `java.lang.InterruptedException` @[L2e15a4..L2e15aa] goto L2e15a4;
+  catch `java.lang.Throwable` @[L2e15aa..L2e15ce] goto L2e15d6;
+  catch `java.lang.InterruptedException` @[L2e15ce..L2e15d4] goto L2e15a4;
+  catch `java.lang.Throwable` @[L2e15d8..L2e15da] goto L2e15d6;
+  catch `java.lang.InterruptedException` @[L2e15da..L2e15dc] goto L2e15a4;
+}

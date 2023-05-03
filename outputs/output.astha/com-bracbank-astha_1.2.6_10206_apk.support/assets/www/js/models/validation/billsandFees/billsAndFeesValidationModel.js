@@ -1,0 +1,1 @@
+define(["underscore","Backbone"],function(n,e){var r=e.Model.extend({url:function(){return this.instanceUrl},validation:{fromaccnum:{required:!0,msg:"Please select an account number"}},initialize:function(n){this.url=n.url}});return r});

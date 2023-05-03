@@ -1,0 +1,1655 @@
+record `org.eclipse.paho.client.mqttv3.MqttAsyncClient` @kind class @AccessFlag PUBLIC extends `org.eclipse.paho.client.mqttv3.IMqttAsyncClient` @kind interface {
+  `java.lang.String` `org.eclipse.paho.client.mqttv3.MqttAsyncClient.clientId` @AccessFlag PRIVATE;
+  `org.eclipse.paho.client.mqttv3.internal.ClientComms` `org.eclipse.paho.client.mqttv3.MqttAsyncClient.comms` @AccessFlag PROTECTED;
+  `org.eclipse.paho.client.mqttv3.MqttConnectOptions` `org.eclipse.paho.client.mqttv3.MqttAsyncClient.connOpts` @AccessFlag PRIVATE;
+  `java.util.concurrent.ScheduledExecutorService` `org.eclipse.paho.client.mqttv3.MqttAsyncClient.executorService` @AccessFlag PRIVATE;
+  `org.eclipse.paho.client.mqttv3.MqttCallback` `org.eclipse.paho.client.mqttv3.MqttAsyncClient.mqttCallback` @AccessFlag PRIVATE;
+  `org.eclipse.paho.client.mqttv3.MqttClientPersistence` `org.eclipse.paho.client.mqttv3.MqttAsyncClient.persistence` @AccessFlag PRIVATE;
+  `java.util.Timer` `org.eclipse.paho.client.mqttv3.MqttAsyncClient.reconnectTimer` @AccessFlag PRIVATE;
+  `boolean` `org.eclipse.paho.client.mqttv3.MqttAsyncClient.reconnecting` @AccessFlag PRIVATE;
+  `java.lang.String` `org.eclipse.paho.client.mqttv3.MqttAsyncClient.serverURI` @AccessFlag PRIVATE;
+  `java.util.Hashtable` `org.eclipse.paho.client.mqttv3.MqttAsyncClient.topics` @AccessFlag PRIVATE;
+  `java.lang.Object` `org.eclipse.paho.client.mqttv3.MqttAsyncClient.userContext` @AccessFlag PRIVATE;
+}
+global `java.lang.String` `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.CLASS_NAME` @AccessFlag PRIVATE_STATIC_FINAL;
+global `java.lang.String` `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.CLIENT_ID_PREFIX` @AccessFlag PRIVATE_STATIC_FINAL;
+global `long` `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.DISCONNECT_TIMEOUT` @AccessFlag PRIVATE_STATIC_FINAL;
+global `char` `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.MAX_HIGH_SURROGATE` @AccessFlag PRIVATE_STATIC_FINAL;
+global `char` `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.MIN_HIGH_SURROGATE` @AccessFlag PRIVATE_STATIC_FINAL;
+global `long` `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.QUIESCE_TIMEOUT` @AccessFlag PRIVATE_STATIC_FINAL;
+global `java.lang.Object` `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.clientLock` @AccessFlag PRIVATE_STATIC;
+global `org.eclipse.paho.client.mqttv3.logging.Logger` `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.log` @AccessFlag PRIVATE_STATIC_FINAL;
+global `int` `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.reconnectDelay` @AccessFlag PRIVATE_STATIC;
+procedure `void` `<clinit>`() @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.<clinit>:()V` @AccessFlag STATIC_CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+
+  #L229150.  v0:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.CLASS_NAME` @type ^`java.lang.String` @kind object;
+  #L229154.  v1:= "org.eclipse.paho.client.mqttv3.internal.nls.logcat" @kind object;
+  #L229158.  call temp:= `getLogger`(v1, v0) @signature `Lorg/eclipse/paho/client/mqttv3/logging/LoggerFactory;.getLogger:(Ljava/lang/String;Ljava/lang/String;)Lorg/eclipse/paho/client/mqttv3/logging/Logger;` @kind static;
+  #L22915e.  v0:= temp @kind object;
+  #L229160.  `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.log` @type ^`org.eclipse.paho.client.mqttv3.logging.Logger` := v0 @kind object;
+  #L229164.  v0:= 1000I;
+  #L229168.  `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.reconnectDelay` @type ^`int` := v0;
+  #L22916c.  v0:= new `java.lang.Object`;
+  #L229170.  call `<init>`(v0) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L229176.  `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.clientLock` @type ^`java.lang.Object` := v0 @kind object;
+  #L22917a.  return @kind void;
+}
+procedure `void` `<init>`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v1 @kind this, `java.lang.String` v2 @kind object, `java.lang.String` v3 @kind object) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.<init>:(Ljava/lang/String;Ljava/lang/String;)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L22918c.  v0:= new `org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence`;
+  #L229190.  call `<init>`(v0) @signature `Lorg/eclipse/paho/client/mqttv3/persist/MqttDefaultFilePersistence;.<init>:()V` @kind direct;
+  #L229196.  call `<init>`(v1, v2, v3, v0) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.<init>:(Ljava/lang/String;Ljava/lang/String;Lorg/eclipse/paho/client/mqttv3/MqttClientPersistence;)V` @kind direct;
+  #L22919c.  return @kind void;
+}
+procedure `void` `<init>`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v1 @kind this, `java.lang.String` v2 @kind object, `java.lang.String` v3 @kind object, `org.eclipse.paho.client.mqttv3.MqttClientPersistence` v4 @kind object) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.<init>:(Ljava/lang/String;Ljava/lang/String;Lorg/eclipse/paho/client/mqttv3/MqttClientPersistence;)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L2291b0.  v0:= new `org.eclipse.paho.client.mqttv3.TimerPingSender`;
+  #L2291b4.  call `<init>`(v0) @signature `Lorg/eclipse/paho/client/mqttv3/TimerPingSender;.<init>:()V` @kind direct;
+  #L2291ba.  call `<init>`(v1, v2, v3, v4, v0) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.<init>:(Ljava/lang/String;Ljava/lang/String;Lorg/eclipse/paho/client/mqttv3/MqttClientPersistence;Lorg/eclipse/paho/client/mqttv3/MqttPingSender;)V` @kind direct;
+  #L2291c0.  return @kind void;
+}
+procedure `void` `<init>`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v6 @kind this, `java.lang.String` v7 @kind object, `java.lang.String` v8 @kind object, `org.eclipse.paho.client.mqttv3.MqttClientPersistence` v9 @kind object, `org.eclipse.paho.client.mqttv3.MqttPingSender` v10 @kind object) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.<init>:(Ljava/lang/String;Ljava/lang/String;Lorg/eclipse/paho/client/mqttv3/MqttClientPersistence;Lorg/eclipse/paho/client/mqttv3/MqttPingSender;)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L2291d4.  v5:= 0I;
+  #L2291d6.  v0:= v6 @kind object;
+  #L2291d8.  v1:= v7 @kind object;
+  #L2291da.  v2:= v8 @kind object;
+  #L2291dc.  v3:= v9 @kind object;
+  #L2291de.  v4:= v10 @kind object;
+  #L2291e0.  call `<init>`(v0, v1, v2, v3, v4, v5) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.<init>:(Ljava/lang/String;Ljava/lang/String;Lorg/eclipse/paho/client/mqttv3/MqttClientPersistence;Lorg/eclipse/paho/client/mqttv3/MqttPingSender;Ljava/util/concurrent/ScheduledExecutorService;)V` @kind direct;
+  #L2291e6.  return @kind void;
+}
+procedure `void` `<init>`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v5 @kind this, `java.lang.String` v6 @kind object, `java.lang.String` v7 @kind object, `org.eclipse.paho.client.mqttv3.MqttClientPersistence` v8 @kind object, `org.eclipse.paho.client.mqttv3.MqttPingSender` v9 @kind object, `java.util.concurrent.ScheduledExecutorService` v10 @kind object) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.<init>:(Ljava/lang/String;Ljava/lang/String;Lorg/eclipse/paho/client/mqttv3/MqttClientPersistence;Lorg/eclipse/paho/client/mqttv3/MqttPingSender;Ljava/util/concurrent/ScheduledExecutorService;)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L2291f8.  call `<init>`(v5) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L2291fe.  v0:= 0I;
+  #L229200.  v5.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.reconnecting` @type ^`boolean` := v0 @kind boolean;
+  #L229204.  v1:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.log` @type ^`org.eclipse.paho.client.mqttv3.logging.Logger` @kind object;
+  #L229208.  call `setResourceName`(v1, v7) @signature `Lorg/eclipse/paho/client/mqttv3/logging/Logger;.setResourceName:(Ljava/lang/String;)V` @kind interface;
+  #L22920e.  if v7 == 0 then goto L229308;
+  #L229212.  v1:= 0I;
+  #L229214.  v2:= 0I;
+  #L229216.  call temp:= `length`(v7) @signature `Ljava/lang/String;.length:()I` @kind virtual;
+  #L22921c.  v3:= temp;
+  #L22921e.  v4:= 1I;
+  #L229220.  v3:= v3 - v4 @kind int;
+  #L229222.  if v1 < v3 then goto L2292e8;
+  #L229226.  v1:= 65535I;
+  #L22922c.  if v2 > v1 then goto L2292d8;
+  #L229230.  call temp:= `validateURI`(v6) @signature `Lorg/eclipse/paho/client/mqttv3/MqttConnectOptions;.validateURI:(Ljava/lang/String;)I` @kind static;
+  #L229236.  v5.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.serverURI` @type ^`java.lang.String` := v6 @kind object;
+  #L22923a.  v5.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.clientId` @type ^`java.lang.String` := v7 @kind object;
+  #L22923e.  v5.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.persistence` @type ^`org.eclipse.paho.client.mqttv3.MqttClientPersistence` := v8 @kind object;
+  #L229242.  v1:= v5.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.persistence` @type ^`org.eclipse.paho.client.mqttv3.MqttClientPersistence` @kind object;
+  #L229246.  if v1 != 0 then goto L229258;
+  #L22924a.  v1:= new `org.eclipse.paho.client.mqttv3.persist.MemoryPersistence`;
+  #L22924e.  call `<init>`(v1) @signature `Lorg/eclipse/paho/client/mqttv3/persist/MemoryPersistence;.<init>:()V` @kind direct;
+  #L229254.  v5.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.persistence` @type ^`org.eclipse.paho.client.mqttv3.MqttClientPersistence` := v1 @kind object;
+  #L229258.  v5.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.executorService` @type ^`java.util.concurrent.ScheduledExecutorService` := v10 @kind object;
+  #L22925c.  v10:= v5.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.executorService` @type ^`java.util.concurrent.ScheduledExecutorService` @kind object;
+  #L229260.  if v10 != 0 then goto L229274;
+  #L229264.  v10:= 10I;
+  #L229268.  call temp:= `newScheduledThreadPool`(v10) @signature `Ljava/util/concurrent/Executors;.newScheduledThreadPool:(I)Ljava/util/concurrent/ScheduledExecutorService;` @kind static;
+  #L22926e.  v10:= temp @kind object;
+  #L229270.  v5.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.executorService` @type ^`java.util.concurrent.ScheduledExecutorService` := v10 @kind object;
+  #L229274.  v10:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.log` @type ^`org.eclipse.paho.client.mqttv3.logging.Logger` @kind object;
+  #L229278.  v1:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.CLASS_NAME` @type ^`java.lang.String` @kind object;
+  #L22927c.  v2:= 3I;
+  #L22927e.  v2:= new `java.lang.Object`[v2];
+  #L229282.  v2[v0]:= v7 @kind object;
+  #L229286.  v2[v4]:= v6 @kind object;
+  #L22928a.  v0:= 2I;
+  #L22928c.  v2[v0]:= v8 @kind object;
+  #L229290.  v8:= "MqttAsyncClient" @kind object;
+  #L229294.  v0:= "101" @kind object;
+  #L229298.  call `fine`(v10, v1, v8, v0, v2) @signature `Lorg/eclipse/paho/client/mqttv3/logging/Logger;.fine:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L22929e.  v8:= v5.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.persistence` @type ^`org.eclipse.paho.client.mqttv3.MqttClientPersistence` @kind object;
+  #L2292a2.  call `open`(v8, v7, v6) @signature `Lorg/eclipse/paho/client/mqttv3/MqttClientPersistence;.open:(Ljava/lang/String;Ljava/lang/String;)V` @kind interface;
+  #L2292a8.  v6:= new `org.eclipse.paho.client.mqttv3.internal.ClientComms`;
+  #L2292ac.  v7:= v5.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.persistence` @type ^`org.eclipse.paho.client.mqttv3.MqttClientPersistence` @kind object;
+  #L2292b0.  v8:= v5.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.executorService` @type ^`java.util.concurrent.ScheduledExecutorService` @kind object;
+  #L2292b4.  call `<init>`(v6, v5, v7, v9, v8) @signature `Lorg/eclipse/paho/client/mqttv3/internal/ClientComms;.<init>:(Lorg/eclipse/paho/client/mqttv3/IMqttAsyncClient;Lorg/eclipse/paho/client/mqttv3/MqttClientPersistence;Lorg/eclipse/paho/client/mqttv3/MqttPingSender;Ljava/util/concurrent/ExecutorService;)V` @kind direct;
+  #L2292ba.  v5.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.comms` @type ^`org.eclipse.paho.client.mqttv3.internal.ClientComms` := v6 @kind object;
+  #L2292be.  v6:= v5.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.persistence` @type ^`org.eclipse.paho.client.mqttv3.MqttClientPersistence` @kind object;
+  #L2292c2.  call `close`(v6) @signature `Lorg/eclipse/paho/client/mqttv3/MqttClientPersistence;.close:()V` @kind interface;
+  #L2292c8.  v6:= new `java.util.Hashtable`;
+  #L2292cc.  call `<init>`(v6) @signature `Ljava/util/Hashtable;.<init>:()V` @kind direct;
+  #L2292d2.  v5.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.topics` @type ^`java.util.Hashtable` := v6 @kind object;
+  #L2292d6.  return @kind void;
+  #L2292d8.  v6:= new `java.lang.IllegalArgumentException`;
+  #L2292dc.  v7:= "ClientId longer than 65535 characters" @kind object;
+  #L2292e0.  call `<init>`(v6, v7) @signature `Ljava/lang/IllegalArgumentException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L2292e6.  throw v6;
+  #L2292e8.  call temp:= `charAt`(v7, v1) @signature `Ljava/lang/String;.charAt:(I)C` @kind virtual;
+  #L2292ee.  v3:= temp;
+  #L2292f0.  call temp:= `Character_isHighSurrogate`(v3) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.Character_isHighSurrogate:(C)Z` @kind static;
+  #L2292f6.  v3:= temp;
+  #L2292f8.  if v3 == 0 then goto L229300;
+  #L2292fc.  v1:= v1 + 1;
+  #L229300.  v2:= v2 + 1;
+  #L229304.  v1:= v1 + v4 @kind int;
+  #L229306.  goto L229216;
+  #L229308.  v6:= new `java.lang.IllegalArgumentException`;
+  #L22930c.  v7:= "Null clientId" @kind object;
+  #L229310.  call `<init>`(v6, v7) @signature `Ljava/lang/IllegalArgumentException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L229316.  throw v6;
+}
+procedure `boolean` `Character_isHighSurrogate`(`char` v1 ) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.Character_isHighSurrogate:(C)Z` @AccessFlag PROTECTED_STATIC {
+    temp;
+    v0;
+
+  #L2281a8.  v0:= 55296I;
+  #L2281ae.  if v1 < v0 then goto L2281c0;
+  #L2281b2.  v0:= 56319I;
+  #L2281b8.  if v1 > v0 then goto L2281c0;
+  #L2281bc.  v1:= 1I;
+  #L2281be.  return v1;
+  #L2281c0.  v1:= 0I;
+  #L2281c2.  return v1;
+}
+procedure `org.eclipse.paho.client.mqttv3.logging.Logger` `access$0`() @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.access$0:()Lorg/eclipse/paho/client/mqttv3/logging/Logger;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+    v0;
+
+  #L229114.  v0:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.log` @type ^`org.eclipse.paho.client.mqttv3.logging.Logger` @kind object;
+  #L229118.  return v0 @kind object;
+}
+procedure `java.lang.String` `access$1`() @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.access$1:()Ljava/lang/String;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+    v0;
+
+  #L228264.  v0:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.CLASS_NAME` @type ^`java.lang.String` @kind object;
+  #L228268.  return v0 @kind object;
+}
+procedure `org.eclipse.paho.client.mqttv3.MqttConnectOptions` `access$10`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v0 @kind object) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.access$10:(Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;)Lorg/eclipse/paho/client/mqttv3/MqttConnectOptions;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L228cc0.  v0:= v0.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.connOpts` @type ^`org.eclipse.paho.client.mqttv3.MqttConnectOptions` @kind object;
+  #L228cc4.  return v0 @kind object;
+}
+procedure `java.util.Timer` `access$11`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v0 @kind object) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.access$11:(Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;)Ljava/util/Timer;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L22837c.  v0:= v0.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.reconnectTimer` @type ^`java.util.Timer` @kind object;
+  #L228380.  return v0 @kind object;
+}
+procedure `void` `access$2`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v0 @kind object) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.access$2:(Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;)V` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L229328.  call `attemptReconnect`(v0) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.attemptReconnect:()V` @kind direct;
+  #L22932e.  return @kind void;
+}
+procedure `void` `access$3`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v0 @kind object, `boolean` v1 ) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.access$3:(Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;Z)V` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L229340.  v0.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.reconnecting` @type ^`boolean` := v1 @kind boolean;
+  #L229344.  return @kind void;
+}
+procedure `void` `access$4`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v0 @kind object) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.access$4:(Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;)V` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L229358.  call `startReconnectCycle`(v0) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.startReconnectCycle:()V` @kind direct;
+  #L22935e.  return @kind void;
+}
+procedure `void` `access$5`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v0 @kind object) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.access$5:(Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;)V` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L229370.  call `stopReconnectCycle`(v0) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.stopReconnectCycle:()V` @kind direct;
+  #L229376.  return @kind void;
+}
+procedure `int` `access$6`() @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.access$6:()I` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+    v0;
+
+  #L2281f4.  v0:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.reconnectDelay` @type ^`int`;
+  #L2281f8.  return v0;
+}
+procedure `void` `access$7`(`int` v0 ) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.access$7:(I)V` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L229388.  `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.reconnectDelay` @type ^`int` := v0;
+  #L22938c.  return @kind void;
+}
+procedure `java.lang.String` `access$8`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v0 @kind object) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.access$8:(Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;)Ljava/lang/String;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L22827c.  v0:= v0.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.clientId` @type ^`java.lang.String` @kind object;
+  #L228280.  return v0 @kind object;
+}
+procedure `java.lang.Object` `access$9`() @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.access$9:()Ljava/lang/Object;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+    v0;
+
+  #L22824c.  v0:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.clientLock` @type ^`java.lang.Object` @kind object;
+  #L228250.  return v0 @kind object;
+}
+procedure `void` `attemptReconnect`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v7 @kind this) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.attemptReconnect:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+
+  #L2293a0.  v0:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.log` @type ^`org.eclipse.paho.client.mqttv3.logging.Logger` @kind object;
+  #L2293a4.  v1:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.CLASS_NAME` @type ^`java.lang.String` @kind object;
+  #L2293a8.  v2:= 1I;
+  #L2293aa.  v2:= new `java.lang.Object`[v2];
+  #L2293ae.  v3:= v7.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.clientId` @type ^`java.lang.String` @kind object;
+  #L2293b2.  v4:= 0I;
+  #L2293b4.  v2[v4]:= v3 @kind object;
+  #L2293b8.  v3:= "attemptReconnect" @kind object;
+  #L2293bc.  v4:= "500" @kind object;
+  #L2293c0.  call `fine`(v0, v1, v3, v4, v2) @signature `Lorg/eclipse/paho/client/mqttv3/logging/Logger;.fine:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L2293c6.  v0:= v7.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.connOpts` @type ^`org.eclipse.paho.client.mqttv3.MqttConnectOptions` @kind object;
+  #L2293ca.  v1:= v7.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.userContext` @type ^`java.lang.Object` @kind object;
+  #L2293ce.  v2:= new `org.eclipse.paho.client.mqttv3.MqttAsyncClient$MqttReconnectActionListener`;
+  #L2293d2.  call `<init>`(v2, v7, v3) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient$MqttReconnectActionListener;.<init>:(Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;Ljava/lang/String;)V` @kind direct;
+  #L2293d8.  call temp:= `connect`(v7, v0, v1, v2) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.connect:(Lorg/eclipse/paho/client/mqttv3/MqttConnectOptions;Ljava/lang/Object;Lorg/eclipse/paho/client/mqttv3/IMqttActionListener;)Lorg/eclipse/paho/client/mqttv3/IMqttToken;` @kind virtual;
+  #L2293de.  goto L22941a;
+  #L2293e0.  v0:= Exception @type ^`org.eclipse.paho.client.mqttv3.MqttException` @kind object;
+  #L2293e2.  v6:= v0 @kind object;
+  #L2293e4.  v1:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.log` @type ^`org.eclipse.paho.client.mqttv3.logging.Logger` @kind object;
+  #L2293e8.  v2:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.CLASS_NAME` @type ^`java.lang.String` @kind object;
+  #L2293ec.  v5:= 0I;
+  #L2293ee.  v3:= "attemptReconnect" @kind object;
+  #L2293f2.  v4:= "804" @kind object;
+  #L2293f6.  call `fine`(v1, v2, v3, v4, v5, v6) @signature `Lorg/eclipse/paho/client/mqttv3/logging/Logger;.fine:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;Ljava/lang/Throwable;)V` @kind interface;
+  #L2293fc.  goto L22941a;
+  #L2293fe.  v0:= Exception @type ^`org.eclipse.paho.client.mqttv3.MqttSecurityException` @kind object;
+  #L229400.  v6:= v0 @kind object;
+  #L229402.  v1:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.log` @type ^`org.eclipse.paho.client.mqttv3.logging.Logger` @kind object;
+  #L229406.  v2:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.CLASS_NAME` @type ^`java.lang.String` @kind object;
+  #L22940a.  v5:= 0I;
+  #L22940c.  v3:= "attemptReconnect" @kind object;
+  #L229410.  v4:= "804" @kind object;
+  #L229414.  call `fine`(v1, v2, v3, v4, v5, v6) @signature `Lorg/eclipse/paho/client/mqttv3/logging/Logger;.fine:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;Ljava/lang/Throwable;)V` @kind interface;
+  #L22941a.  return @kind void;
+  catch `org.eclipse.paho.client.mqttv3.MqttSecurityException` @[L2293c6..L2293de] goto L2293fe;
+  catch `org.eclipse.paho.client.mqttv3.MqttException` @[L2293c6..L2293de] goto L2293e0;
+}
+procedure `org.eclipse.paho.client.mqttv3.internal.NetworkModule` `createNetworkModule`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v11 @kind this, `java.lang.String` v12 @kind object, `org.eclipse.paho.client.mqttv3.MqttConnectOptions` v13 @kind object) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.createNetworkModule:(Ljava/lang/String;Lorg/eclipse/paho/client/mqttv3/MqttConnectOptions;)Lorg/eclipse/paho/client/mqttv3/internal/NetworkModule;` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+    v9;
+    v10;
+
+  #L228d40.  v0:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.log` @type ^`org.eclipse.paho.client.mqttv3.logging.Logger` @kind object;
+  #L228d44.  v1:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.CLASS_NAME` @type ^`java.lang.String` @kind object;
+  #L228d48.  v2:= 1I;
+  #L228d4a.  v3:= new `java.lang.Object`[v2];
+  #L228d4e.  v4:= 0I;
+  #L228d50.  v3[v4]:= v12 @kind object;
+  #L228d54.  v5:= "createNetworkModule" @kind object;
+  #L228d58.  v6:= "115" @kind object;
+  #L228d5c.  call `fine`(v0, v1, v5, v6, v3) @signature `Lorg/eclipse/paho/client/mqttv3/logging/Logger;.fine:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L228d62.  call temp:= `getSocketFactory`(v13) @signature `Lorg/eclipse/paho/client/mqttv3/MqttConnectOptions;.getSocketFactory:()Ljavax/net/SocketFactory;` @kind virtual;
+  #L228d68.  v0:= temp @kind object;
+  #L228d6a.  call temp:= `validateURI`(v12) @signature `Lorg/eclipse/paho/client/mqttv3/MqttConnectOptions;.validateURI:(Ljava/lang/String;)I` @kind static;
+  #L228d70.  v1:= temp;
+  #L228d72.  v3:= new `java.net.URI`;
+  #L228d76.  call `<init>`(v3, v12) @signature `Ljava/net/URI;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L228d7c.  call temp:= `getHost`(v3) @signature `Ljava/net/URI;.getHost:()Ljava/lang/String;` @kind virtual;
+  #L228d82.  v6:= temp @kind object;
+  #L228d84.  v7:= 3I;
+  #L228d86.  if v6 != 0 then goto L228dfa;
+  #L228d8a.  v6:= "_" @kind object;
+  #L228d8e.  call temp:= `contains`(v12, v6) @signature `Ljava/lang/String;.contains:(Ljava/lang/CharSequence;)Z` @kind virtual;
+  #L228d94.  v6:= temp;
+  #L228d96.  if v6 == 0 then goto L228dfa;
+  #L228d9a.  v6:= constclass @type ^`java.net.URI` @kind object;
+  #L228d9e.  v8:= "host" @kind object;
+  #L228da2.  call temp:= `getDeclaredField`(v6, v8) @signature `Ljava/lang/Class;.getDeclaredField:(Ljava/lang/String;)Ljava/lang/reflect/Field;` @kind virtual;
+  #L228da8.  v6:= temp @kind object;
+  #L228daa.  call `setAccessible`(v6, v2) @signature `Ljava/lang/reflect/Field;.setAccessible:(Z)V` @kind virtual;
+  #L228db0.  call temp:= `getScheme`(v3) @signature `Ljava/net/URI;.getScheme:()Ljava/lang/String;` @kind virtual;
+  #L228db6.  v8:= temp @kind object;
+  #L228db8.  call temp:= `length`(v8) @signature `Ljava/lang/String;.length:()I` @kind virtual;
+  #L228dbe.  v8:= temp;
+  #L228dc0.  v8:= v8 + v7 @kind int;
+  #L228dc2.  call temp:= `substring`(v12, v8) @signature `Ljava/lang/String;.substring:(I)Ljava/lang/String;` @kind virtual;
+  #L228dc8.  v8:= temp @kind object;
+  #L228dca.  call temp:= `getHostName`(v11, v8) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.getHostName:(Ljava/lang/String;)Ljava/lang/String;` @kind direct;
+  #L228dd0.  v8:= temp @kind object;
+  #L228dd2.  call `set`(v6, v3, v8) @signature `Ljava/lang/reflect/Field;.set:(Ljava/lang/Object;Ljava/lang/Object;)V` @kind virtual;
+  #L228dd8.  goto L228dfa;
+  #L228dda.  v13:= Exception @type ^`java.lang.IllegalAccessException` @kind object;
+  #L228ddc.  goto L228de8;
+  #L228dde.  v13:= Exception @type ^`java.lang.IllegalArgumentException` @kind object;
+  #L228de0.  goto L228de8;
+  #L228de2.  v13:= Exception @type ^`java.lang.SecurityException` @kind object;
+  #L228de4.  goto L228de8;
+  #L228de6.  v13:= Exception @type ^`java.lang.NoSuchFieldException` @kind object;
+  #L228de8.  call temp:= `getCause`(v13) @signature `Ljava/lang/Exception;.getCause:()Ljava/lang/Throwable;` @kind virtual;
+  #L228dee.  v13:= temp @kind object;
+  #L228df0.  call temp:= `createMqttException`(v13) @signature `Lorg/eclipse/paho/client/mqttv3/internal/ExceptionHelper;.createMqttException:(Ljava/lang/Throwable;)Lorg/eclipse/paho/client/mqttv3/MqttException;` @kind static;
+  #L228df6.  v13:= temp @kind object;
+  #L228df8.  throw v13;
+  #L228dfa.  call temp:= `getHost`(v3) @signature `Ljava/net/URI;.getHost:()Ljava/lang/String;` @kind virtual;
+  #L228e00.  v6:= temp @kind object;
+  #L228e02.  call temp:= `getPort`(v3) @signature `Ljava/net/URI;.getPort:()I` @kind virtual;
+  #L228e08.  v3:= temp;
+  #L228e0a.  v8:= 32105I;
+  #L228e0e.  v9:= -1I;
+  #L228e10.  v10:= 0I;
+  #L228e12.  if v1 == 0 then goto L228fbe;
+  #L228e16.  if v1 == v2 then goto L228f30;
+  #L228e1a.  if v1 == v7 then goto L228ed8;
+  #L228e1e.  v7:= 4I;
+  #L228e20.  if v1 == v7 then goto L228e42;
+  #L228e24.  v13:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.log` @type ^`org.eclipse.paho.client.mqttv3.logging.Logger` @kind object;
+  #L228e28.  v0:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.CLASS_NAME` @type ^`java.lang.String` @kind object;
+  #L228e2c.  v1:= new `java.lang.Object`[v2];
+  #L228e30.  v1[v4]:= v12 @kind object;
+  #L228e34.  v12:= "119" @kind object;
+  #L228e38.  call `fine`(v13, v0, v5, v12, v1) @signature `Lorg/eclipse/paho/client/mqttv3/logging/Logger;.fine:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L228e3e.  goto L228ff8;
+  #L228e42.  if v3 != v9 then goto L228e50;
+  #L228e46.  v1:= 443I;
+  #L228e4a.  v4:= 443I;
+  #L228e4e.  goto L228e52;
+  #L228e50.  v4:= v3;
+  #L228e52.  if v0 != 0 then goto L228e80;
+  #L228e56.  v0:= new `org.eclipse.paho.client.mqttv3.internal.security.SSLSocketFactoryFactory`;
+  #L228e5a.  call `<init>`(v0) @signature `Lorg/eclipse/paho/client/mqttv3/internal/security/SSLSocketFactoryFactory;.<init>:()V` @kind direct;
+  #L228e60.  call temp:= `getSSLProperties`(v13) @signature `Lorg/eclipse/paho/client/mqttv3/MqttConnectOptions;.getSSLProperties:()Ljava/util/Properties;` @kind virtual;
+  #L228e66.  v1:= temp @kind object;
+  #L228e68.  if v1 == 0 then goto L228e72;
+  #L228e6c.  call `initialize`(v0, v1, v10) @signature `Lorg/eclipse/paho/client/mqttv3/internal/security/SSLSocketFactoryFactory;.initialize:(Ljava/util/Properties;Ljava/lang/String;)V` @kind virtual;
+  #L228e72.  call temp:= `createSocketFactory`(v0, v10) @signature `Lorg/eclipse/paho/client/mqttv3/internal/security/SSLSocketFactoryFactory;.createSocketFactory:(Ljava/lang/String;)Ljavax/net/ssl/SSLSocketFactory;` @kind virtual;
+  #L228e78.  v1:= temp @kind object;
+  #L228e7a.  v7:= v0 @kind object;
+  #L228e7c.  v0:= v1 @kind object;
+  #L228e7e.  goto L228e8a;
+  #L228e80.  v1:= instanceof @variable v0 @type ^`javax.net.ssl.SSLSocketFactory` @kind boolean;
+  #L228e84.  if v1 == 0 then goto L228ece;
+  #L228e88.  v7:= v10 @kind object;
+  #L228e8a.  v8:= new `org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketSecureNetworkModule`;
+  #L228e8e.  v1:= v0 @kind object;
+  #L228e90.  v1:= (`javax.net.ssl.SSLSocketFactory`) v1 @kind object;
+  #L228e94.  v5:= v11.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.clientId` @type ^`java.lang.String` @kind object;
+  #L228e98.  v0:= v8 @kind object;
+  #L228e9a.  v2:= v12 @kind object;
+  #L228e9c.  v3:= v6 @kind object;
+  #L228e9e.  call `<init>`(v0, v1, v2, v3, v4, v5) @signature `Lorg/eclipse/paho/client/mqttv3/internal/websocket/WebSocketSecureNetworkModule;.<init>:(Ljavax/net/ssl/SSLSocketFactory;Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;)V` @kind direct;
+  #L228ea4.  call temp:= `getConnectionTimeout`(v13) @signature `Lorg/eclipse/paho/client/mqttv3/MqttConnectOptions;.getConnectionTimeout:()I` @kind virtual;
+  #L228eaa.  v12:= temp;
+  #L228eac.  call `setSSLhandshakeTimeout`(v8, v12) @signature `Lorg/eclipse/paho/client/mqttv3/internal/SSLNetworkModule;.setSSLhandshakeTimeout:(I)V` @kind virtual;
+  #L228eb2.  if v7 == 0 then goto L228ec8;
+  #L228eb6.  call temp:= `getEnabledCipherSuites`(v7, v10) @signature `Lorg/eclipse/paho/client/mqttv3/internal/security/SSLSocketFactoryFactory;.getEnabledCipherSuites:(Ljava/lang/String;)[Ljava/lang/String;` @kind virtual;
+  #L228ebc.  v12:= temp @kind object;
+  #L228ebe.  if v12 == 0 then goto L228ec8;
+  #L228ec2.  call `setEnabledCiphers`(v8, v12) @signature `Lorg/eclipse/paho/client/mqttv3/internal/SSLNetworkModule;.setEnabledCiphers:([Ljava/lang/String;)V` @kind virtual;
+  #L228ec8.  v10:= v8 @kind object;
+  #L228eca.  goto L228ff8;
+  #L228ece.  call temp:= `createMqttException`(v8) @signature `Lorg/eclipse/paho/client/mqttv3/internal/ExceptionHelper;.createMqttException:(I)Lorg/eclipse/paho/client/mqttv3/MqttException;` @kind static;
+  #L228ed4.  v12:= temp @kind object;
+  #L228ed6.  throw v12;
+  #L228ed8.  if v3 != v9 then goto L228ee6;
+  #L228edc.  v1:= 80I;
+  #L228ee0.  v4:= 80I;
+  #L228ee4.  goto L228ee8;
+  #L228ee6.  v4:= v3;
+  #L228ee8.  if v0 != 0 then goto L228ef6;
+  #L228eec.  call temp:= `getDefault`() @signature `Ljavax/net/SocketFactory;.getDefault:()Ljavax/net/SocketFactory;` @kind static;
+  #L228ef2.  v0:= temp @kind object;
+  #L228ef4.  goto L228efe;
+  #L228ef6.  v1:= instanceof @variable v0 @type ^`javax.net.ssl.SSLSocketFactory` @kind boolean;
+  #L228efa.  if v1 != 0 then goto L228f26;
+  #L228efe.  v1:= v0 @kind object;
+  #L228f00.  v7:= new `org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketNetworkModule`;
+  #L228f04.  v5:= v11.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.clientId` @type ^`java.lang.String` @kind object;
+  #L228f08.  v0:= v7 @kind object;
+  #L228f0a.  v2:= v12 @kind object;
+  #L228f0c.  v3:= v6 @kind object;
+  #L228f0e.  call `<init>`(v0, v1, v2, v3, v4, v5) @signature `Lorg/eclipse/paho/client/mqttv3/internal/websocket/WebSocketNetworkModule;.<init>:(Ljavax/net/SocketFactory;Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;)V` @kind direct;
+  #L228f14.  call temp:= `getConnectionTimeout`(v13) @signature `Lorg/eclipse/paho/client/mqttv3/MqttConnectOptions;.getConnectionTimeout:()I` @kind virtual;
+  #L228f1a.  v12:= temp;
+  #L228f1c.  call `setConnectTimeout`(v7, v12) @signature `Lorg/eclipse/paho/client/mqttv3/internal/TCPNetworkModule;.setConnectTimeout:(I)V` @kind virtual;
+  #L228f22.  v10:= v7 @kind object;
+  #L228f24.  goto L228ff8;
+  #L228f26.  call temp:= `createMqttException`(v8) @signature `Lorg/eclipse/paho/client/mqttv3/internal/ExceptionHelper;.createMqttException:(I)Lorg/eclipse/paho/client/mqttv3/MqttException;` @kind static;
+  #L228f2c.  v12:= temp @kind object;
+  #L228f2e.  throw v12;
+  #L228f30.  if v3 != v9 then goto L228f38;
+  #L228f34.  v3:= 8883I;
+  #L228f38.  if v0 != 0 then goto L228f62;
+  #L228f3c.  v12:= new `org.eclipse.paho.client.mqttv3.internal.security.SSLSocketFactoryFactory`;
+  #L228f40.  call `<init>`(v12) @signature `Lorg/eclipse/paho/client/mqttv3/internal/security/SSLSocketFactoryFactory;.<init>:()V` @kind direct;
+  #L228f46.  call temp:= `getSSLProperties`(v13) @signature `Lorg/eclipse/paho/client/mqttv3/MqttConnectOptions;.getSSLProperties:()Ljava/util/Properties;` @kind virtual;
+  #L228f4c.  v0:= temp @kind object;
+  #L228f4e.  if v0 == 0 then goto L228f58;
+  #L228f52.  call `initialize`(v12, v0, v10) @signature `Lorg/eclipse/paho/client/mqttv3/internal/security/SSLSocketFactoryFactory;.initialize:(Ljava/util/Properties;Ljava/lang/String;)V` @kind virtual;
+  #L228f58.  call temp:= `createSocketFactory`(v12, v10) @signature `Lorg/eclipse/paho/client/mqttv3/internal/security/SSLSocketFactoryFactory;.createSocketFactory:(Ljava/lang/String;)Ljavax/net/ssl/SSLSocketFactory;` @kind virtual;
+  #L228f5e.  v0:= temp @kind object;
+  #L228f60.  goto L228f6c;
+  #L228f62.  v12:= instanceof @variable v0 @type ^`javax.net.ssl.SSLSocketFactory` @kind boolean;
+  #L228f66.  if v12 == 0 then goto L228fb4;
+  #L228f6a.  v12:= v10 @kind object;
+  #L228f6c.  v1:= new `org.eclipse.paho.client.mqttv3.internal.SSLNetworkModule`;
+  #L228f70.  v0:= (`javax.net.ssl.SSLSocketFactory`) v0 @kind object;
+  #L228f74.  v2:= v11.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.clientId` @type ^`java.lang.String` @kind object;
+  #L228f78.  call `<init>`(v1, v0, v6, v3, v2) @signature `Lorg/eclipse/paho/client/mqttv3/internal/SSLNetworkModule;.<init>:(Ljavax/net/ssl/SSLSocketFactory;Ljava/lang/String;ILjava/lang/String;)V` @kind direct;
+  #L228f7e.  call temp:= `getConnectionTimeout`(v13) @signature `Lorg/eclipse/paho/client/mqttv3/MqttConnectOptions;.getConnectionTimeout:()I` @kind virtual;
+  #L228f84.  v0:= temp;
+  #L228f86.  call `setSSLhandshakeTimeout`(v1, v0) @signature `Lorg/eclipse/paho/client/mqttv3/internal/SSLNetworkModule;.setSSLhandshakeTimeout:(I)V` @kind virtual;
+  #L228f8c.  call temp:= `getSSLHostnameVerifier`(v13) @signature `Lorg/eclipse/paho/client/mqttv3/MqttConnectOptions;.getSSLHostnameVerifier:()Ljavax/net/ssl/HostnameVerifier;` @kind virtual;
+  #L228f92.  v13:= temp @kind object;
+  #L228f94.  call `setSSLHostnameVerifier`(v1, v13) @signature `Lorg/eclipse/paho/client/mqttv3/internal/SSLNetworkModule;.setSSLHostnameVerifier:(Ljavax/net/ssl/HostnameVerifier;)V` @kind virtual;
+  #L228f9a.  if v12 == 0 then goto L228fb0;
+  #L228f9e.  call temp:= `getEnabledCipherSuites`(v12, v10) @signature `Lorg/eclipse/paho/client/mqttv3/internal/security/SSLSocketFactoryFactory;.getEnabledCipherSuites:(Ljava/lang/String;)[Ljava/lang/String;` @kind virtual;
+  #L228fa4.  v12:= temp @kind object;
+  #L228fa6.  if v12 == 0 then goto L228fb0;
+  #L228faa.  call `setEnabledCiphers`(v1, v12) @signature `Lorg/eclipse/paho/client/mqttv3/internal/SSLNetworkModule;.setEnabledCiphers:([Ljava/lang/String;)V` @kind virtual;
+  #L228fb0.  v10:= v1 @kind object;
+  #L228fb2.  goto L228ff8;
+  #L228fb4.  call temp:= `createMqttException`(v8) @signature `Lorg/eclipse/paho/client/mqttv3/internal/ExceptionHelper;.createMqttException:(I)Lorg/eclipse/paho/client/mqttv3/MqttException;` @kind static;
+  #L228fba.  v12:= temp @kind object;
+  #L228fbc.  throw v12;
+  #L228fbe.  if v3 != v9 then goto L228fc6;
+  #L228fc2.  v3:= 1883I;
+  #L228fc6.  if v0 != 0 then goto L228fd4;
+  #L228fca.  call temp:= `getDefault`() @signature `Ljavax/net/SocketFactory;.getDefault:()Ljavax/net/SocketFactory;` @kind static;
+  #L228fd0.  v0:= temp @kind object;
+  #L228fd2.  goto L228fdc;
+  #L228fd4.  v12:= instanceof @variable v0 @type ^`javax.net.ssl.SSLSocketFactory` @kind boolean;
+  #L228fd8.  if v12 != 0 then goto L228ffa;
+  #L228fdc.  v10:= new `org.eclipse.paho.client.mqttv3.internal.TCPNetworkModule`;
+  #L228fe0.  v12:= v11.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.clientId` @type ^`java.lang.String` @kind object;
+  #L228fe4.  call `<init>`(v10, v0, v6, v3, v12) @signature `Lorg/eclipse/paho/client/mqttv3/internal/TCPNetworkModule;.<init>:(Ljavax/net/SocketFactory;Ljava/lang/String;ILjava/lang/String;)V` @kind direct;
+  #L228fea.  call temp:= `getConnectionTimeout`(v13) @signature `Lorg/eclipse/paho/client/mqttv3/MqttConnectOptions;.getConnectionTimeout:()I` @kind virtual;
+  #L228ff0.  v12:= temp;
+  #L228ff2.  call `setConnectTimeout`(v10, v12) @signature `Lorg/eclipse/paho/client/mqttv3/internal/TCPNetworkModule;.setConnectTimeout:(I)V` @kind virtual;
+  #L228ff8.  return v10 @kind object;
+  #L228ffa.  call temp:= `createMqttException`(v8) @signature `Lorg/eclipse/paho/client/mqttv3/internal/ExceptionHelper;.createMqttException:(I)Lorg/eclipse/paho/client/mqttv3/MqttException;` @kind static;
+  #L229000.  v12:= temp @kind object;
+  #L229002.  throw v12;
+  #L229004.  v13:= Exception @type ^`java.net.URISyntaxException` @kind object;
+  #L229006.  v0:= new `java.lang.IllegalArgumentException`;
+  #L22900a.  v1:= new `java.lang.StringBuilder`;
+  #L22900e.  v2:= "Malformed URI: " @kind object;
+  #L229012.  call `<init>`(v1, v2) @signature `Ljava/lang/StringBuilder;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L229018.  call temp:= `append`(v1, v12) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L22901e.  v12:= ", " @kind object;
+  #L229022.  call temp:= `append`(v1, v12) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L229028.  call temp:= `getMessage`(v13) @signature `Ljava/net/URISyntaxException;.getMessage:()Ljava/lang/String;` @kind virtual;
+  #L22902e.  v12:= temp @kind object;
+  #L229030.  call temp:= `append`(v1, v12) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L229036.  call temp:= `toString`(v1) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L22903c.  v12:= temp @kind object;
+  #L22903e.  call `<init>`(v0, v12) @signature `Ljava/lang/IllegalArgumentException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L229044.  throw v0;
+  catch `java.net.URISyntaxException` @[L228d72..L228d96] goto L229004;
+  catch `java.lang.NoSuchFieldException` @[L228d9a..L228dd8] goto L228de6;
+  catch `java.lang.SecurityException` @[L228d9a..L228dd8] goto L228de2;
+  catch `java.lang.IllegalArgumentException` @[L228d9a..L228dd8] goto L228dde;
+  catch `java.lang.IllegalAccessException` @[L228d9a..L228dd8] goto L228dda;
+  catch `java.net.URISyntaxException` @[L228d9a..L228dd8] goto L229004;
+  catch `java.net.URISyntaxException` @[L228de8..L228dfa] goto L229004;
+}
+procedure `java.lang.String` `generateClientId`() @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.generateClientId:()Ljava/lang/String;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L228294.  v0:= new `java.lang.StringBuilder`;
+  #L228298.  v1:= "paho" @kind object;
+  #L22829c.  call `<init>`(v0, v1) @signature `Ljava/lang/StringBuilder;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L2282a2.  call temp:= `nanoTime`() @signature `Ljava/lang/System;.nanoTime:()J` @kind static;
+  #L2282a8.  v1:= temp @kind wide;
+  #L2282aa.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(J)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2282b0.  call temp:= `toString`(v0) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L2282b6.  v0:= temp @kind object;
+  #L2282b8.  return v0 @kind object;
+}
+procedure `java.lang.String` `getHostName`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v2 @kind this, `java.lang.String` v3 @kind object) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.getHostName:(Ljava/lang/String;)Ljava/lang/String;` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+
+  #L22831c.  v0:= 58I;
+  #L228320.  call temp:= `indexOf`(v3, v0) @signature `Ljava/lang/String;.indexOf:(I)I` @kind virtual;
+  #L228326.  v0:= temp;
+  #L228328.  v1:= -1I;
+  #L22832a.  if v0 != v1 then goto L22833a;
+  #L22832e.  v0:= 47I;
+  #L228332.  call temp:= `indexOf`(v3, v0) @signature `Ljava/lang/String;.indexOf:(I)I` @kind virtual;
+  #L228338.  v0:= temp;
+  #L22833a.  if v0 != v1 then goto L228346;
+  #L22833e.  call temp:= `length`(v3) @signature `Ljava/lang/String;.length:()I` @kind virtual;
+  #L228344.  v0:= temp;
+  #L228346.  v1:= 0I;
+  #L228348.  call temp:= `substring`(v3, v1, v0) @signature `Ljava/lang/String;.substring:(II)Ljava/lang/String;` @kind virtual;
+  #L22834e.  v3:= temp @kind object;
+  #L228350.  return v3 @kind object;
+}
+procedure `void` `startReconnectCycle`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v6 @kind this) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.startReconnectCycle:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L229678.  v0:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.log` @type ^`org.eclipse.paho.client.mqttv3.logging.Logger` @kind object;
+  #L22967c.  v1:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.CLASS_NAME` @type ^`java.lang.String` @kind object;
+  #L229680.  v2:= 2I;
+  #L229682.  v2:= new `java.lang.Object`[v2];
+  #L229686.  v3:= v6.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.clientId` @type ^`java.lang.String` @kind object;
+  #L22968a.  v4:= 0I;
+  #L22968c.  v2[v4]:= v3 @kind object;
+  #L229690.  v3:= new `java.lang.Long`;
+  #L229694.  v4:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.reconnectDelay` @type ^`int`;
+  #L229698.  v4:= (`long`) v4 @kind i2l;
+  #L22969a.  call `<init>`(v3, v4) @signature `Ljava/lang/Long;.<init>:(J)V` @kind direct;
+  #L2296a0.  v4:= 1I;
+  #L2296a2.  v2[v4]:= v3 @kind object;
+  #L2296a6.  v3:= "startReconnectCycle" @kind object;
+  #L2296aa.  v4:= "503" @kind object;
+  #L2296ae.  call `fine`(v0, v1, v3, v4, v2) @signature `Lorg/eclipse/paho/client/mqttv3/logging/Logger;.fine:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L2296b4.  v0:= new `java.util.Timer`;
+  #L2296b8.  v1:= new `java.lang.StringBuilder`;
+  #L2296bc.  v2:= "MQTT Reconnect: " @kind object;
+  #L2296c0.  call `<init>`(v1, v2) @signature `Ljava/lang/StringBuilder;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L2296c6.  v2:= v6.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.clientId` @type ^`java.lang.String` @kind object;
+  #L2296ca.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2296d0.  call temp:= `toString`(v1) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L2296d6.  v1:= temp @kind object;
+  #L2296d8.  call `<init>`(v0, v1) @signature `Ljava/util/Timer;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L2296de.  v6.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.reconnectTimer` @type ^`java.util.Timer` := v0 @kind object;
+  #L2296e2.  v0:= v6.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.reconnectTimer` @type ^`java.util.Timer` @kind object;
+  #L2296e6.  v1:= new `org.eclipse.paho.client.mqttv3.MqttAsyncClient$ReconnectTask`;
+  #L2296ea.  v2:= 0I;
+  #L2296ec.  call `<init>`(v1, v6, v2) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient$ReconnectTask;.<init>:(Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient$ReconnectTask;)V` @kind direct;
+  #L2296f2.  v2:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.reconnectDelay` @type ^`int`;
+  #L2296f6.  v2:= (`long`) v2 @kind i2l;
+  #L2296f8.  call `schedule`(v0, v1, v2) @signature `Ljava/util/Timer;.schedule:(Ljava/util/TimerTask;J)V` @kind virtual;
+  #L2296fe.  return @kind void;
+}
+procedure `void` `stopReconnectCycle`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v5 @kind this) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.stopReconnectCycle:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L229710.  v0:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.log` @type ^`org.eclipse.paho.client.mqttv3.logging.Logger` @kind object;
+  #L229714.  v1:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.CLASS_NAME` @type ^`java.lang.String` @kind object;
+  #L229718.  v2:= 1I;
+  #L22971a.  v2:= new `java.lang.Object`[v2];
+  #L22971e.  v3:= v5.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.clientId` @type ^`java.lang.String` @kind object;
+  #L229722.  v4:= 0I;
+  #L229724.  v2[v4]:= v3 @kind object;
+  #L229728.  v3:= "stopReconnectCycle" @kind object;
+  #L22972c.  v4:= "504" @kind object;
+  #L229730.  call `fine`(v0, v1, v3, v4, v2) @signature `Lorg/eclipse/paho/client/mqttv3/logging/Logger;.fine:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L229736.  v0:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.clientLock` @type ^`java.lang.Object` @kind object;
+  #L22973a.  @monitorenter v0
+  #L22973c.  v1:= v5.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.connOpts` @type ^`org.eclipse.paho.client.mqttv3.MqttConnectOptions` @kind object;
+  #L229740.  call temp:= `isAutomaticReconnect`(v1) @signature `Lorg/eclipse/paho/client/mqttv3/MqttConnectOptions;.isAutomaticReconnect:()Z` @kind virtual;
+  #L229746.  v1:= temp;
+  #L229748.  if v1 == 0 then goto L22976c;
+  #L22974c.  v1:= v5.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.reconnectTimer` @type ^`java.util.Timer` @kind object;
+  #L229750.  if v1 == 0 then goto L229764;
+  #L229754.  v1:= v5.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.reconnectTimer` @type ^`java.util.Timer` @kind object;
+  #L229758.  call `cancel`(v1) @signature `Ljava/util/Timer;.cancel:()V` @kind virtual;
+  #L22975e.  v1:= 0I;
+  #L229760.  v5.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.reconnectTimer` @type ^`java.util.Timer` := v1 @kind object;
+  #L229764.  v1:= 1000I;
+  #L229768.  `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.reconnectDelay` @type ^`int` := v1;
+  #L22976c.  @monitorexit v0
+  #L22976e.  return @kind void;
+  #L229770.  v1:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L229772.  @monitorexit v0
+  #L229774.  throw v1;
+  catch `java.lang.Throwable` @[L22973c..L229774] goto L229770;
+}
+procedure `org.eclipse.paho.client.mqttv3.IMqttToken` `checkPing`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v3 @kind this, `java.lang.Object` v4 @kind object, `org.eclipse.paho.client.mqttv3.IMqttActionListener` v5 @kind object) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.checkPing:(Ljava/lang/Object;Lorg/eclipse/paho/client/mqttv3/IMqttActionListener;)Lorg/eclipse/paho/client/mqttv3/IMqttToken;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L2284cc.  v4:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.log` @type ^`org.eclipse.paho.client.mqttv3.logging.Logger` @kind object;
+  #L2284d0.  v5:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.CLASS_NAME` @type ^`java.lang.String` @kind object;
+  #L2284d4.  v0:= "ping" @kind object;
+  #L2284d8.  v1:= "117" @kind object;
+  #L2284dc.  call `fine`(v4, v5, v0, v1) @signature `Lorg/eclipse/paho/client/mqttv3/logging/Logger;.fine:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V` @kind interface;
+  #L2284e2.  v4:= v3.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.comms` @type ^`org.eclipse.paho.client.mqttv3.internal.ClientComms` @kind object;
+  #L2284e6.  call temp:= `checkForActivity`(v4) @signature `Lorg/eclipse/paho/client/mqttv3/internal/ClientComms;.checkForActivity:()Lorg/eclipse/paho/client/mqttv3/MqttToken;` @kind virtual;
+  #L2284ec.  v4:= temp @kind object;
+  #L2284ee.  v5:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.log` @type ^`org.eclipse.paho.client.mqttv3.logging.Logger` @kind object;
+  #L2284f2.  v1:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.CLASS_NAME` @type ^`java.lang.String` @kind object;
+  #L2284f6.  v2:= "118" @kind object;
+  #L2284fa.  call `fine`(v5, v1, v0, v2) @signature `Lorg/eclipse/paho/client/mqttv3/logging/Logger;.fine:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V` @kind interface;
+  #L228500.  return v4 @kind object;
+}
+procedure `void` `close`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v1 @kind this) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.close:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L22943c.  v0:= 0I;
+  #L22943e.  call `close`(v1, v0) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.close:(Z)V` @kind virtual;
+  #L229444.  return @kind void;
+}
+procedure `void` `close`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v4 @kind this, `boolean` v5 ) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.close:(Z)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L229458.  v0:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.log` @type ^`org.eclipse.paho.client.mqttv3.logging.Logger` @kind object;
+  #L22945c.  v1:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.CLASS_NAME` @type ^`java.lang.String` @kind object;
+  #L229460.  v2:= "close" @kind object;
+  #L229464.  v3:= "113" @kind object;
+  #L229468.  call `fine`(v0, v1, v2, v3) @signature `Lorg/eclipse/paho/client/mqttv3/logging/Logger;.fine:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V` @kind interface;
+  #L22946e.  v0:= v4.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.comms` @type ^`org.eclipse.paho.client.mqttv3.internal.ClientComms` @kind object;
+  #L229472.  call `close`(v0, v5) @signature `Lorg/eclipse/paho/client/mqttv3/internal/ClientComms;.close:(Z)V` @kind virtual;
+  #L229478.  v5:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.log` @type ^`org.eclipse.paho.client.mqttv3.logging.Logger` @kind object;
+  #L22947c.  v0:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.CLASS_NAME` @type ^`java.lang.String` @kind object;
+  #L229480.  v1:= "114" @kind object;
+  #L229484.  call `fine`(v5, v0, v2, v1) @signature `Lorg/eclipse/paho/client/mqttv3/logging/Logger;.fine:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V` @kind interface;
+  #L22948a.  return @kind void;
+}
+procedure `org.eclipse.paho.client.mqttv3.IMqttToken` `connect`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v1 @kind this) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.connect:()Lorg/eclipse/paho/client/mqttv3/IMqttToken;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L228514.  v0:= 0I;
+  #L228516.  call temp:= `connect`(v1, v0, v0) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.connect:(Ljava/lang/Object;Lorg/eclipse/paho/client/mqttv3/IMqttActionListener;)Lorg/eclipse/paho/client/mqttv3/IMqttToken;` @kind virtual;
+  #L22851c.  v0:= temp @kind object;
+  #L22851e.  return v0 @kind object;
+}
+procedure `org.eclipse.paho.client.mqttv3.IMqttToken` `connect`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v1 @kind this, `java.lang.Object` v2 @kind object, `org.eclipse.paho.client.mqttv3.IMqttActionListener` v3 @kind object) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.connect:(Ljava/lang/Object;Lorg/eclipse/paho/client/mqttv3/IMqttActionListener;)Lorg/eclipse/paho/client/mqttv3/IMqttToken;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L228530.  v0:= new `org.eclipse.paho.client.mqttv3.MqttConnectOptions`;
+  #L228534.  call `<init>`(v0) @signature `Lorg/eclipse/paho/client/mqttv3/MqttConnectOptions;.<init>:()V` @kind direct;
+  #L22853a.  call temp:= `connect`(v1, v0, v2, v3) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.connect:(Lorg/eclipse/paho/client/mqttv3/MqttConnectOptions;Ljava/lang/Object;Lorg/eclipse/paho/client/mqttv3/IMqttActionListener;)Lorg/eclipse/paho/client/mqttv3/IMqttToken;` @kind virtual;
+  #L228540.  v2:= temp @kind object;
+  #L228542.  return v2 @kind object;
+}
+procedure `org.eclipse.paho.client.mqttv3.IMqttToken` `connect`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v1 @kind this, `org.eclipse.paho.client.mqttv3.MqttConnectOptions` v2 @kind object) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.connect:(Lorg/eclipse/paho/client/mqttv3/MqttConnectOptions;)Lorg/eclipse/paho/client/mqttv3/IMqttToken;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L228554.  v0:= 0I;
+  #L228556.  call temp:= `connect`(v1, v2, v0, v0) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.connect:(Lorg/eclipse/paho/client/mqttv3/MqttConnectOptions;Ljava/lang/Object;Lorg/eclipse/paho/client/mqttv3/IMqttActionListener;)Lorg/eclipse/paho/client/mqttv3/IMqttToken;` @kind virtual;
+  #L22855c.  v2:= temp @kind object;
+  #L22855e.  return v2 @kind object;
+}
+procedure `org.eclipse.paho.client.mqttv3.IMqttToken` `connect`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v11 @kind this, `org.eclipse.paho.client.mqttv3.MqttConnectOptions` v12 @kind object, `java.lang.Object` v13 @kind object, `org.eclipse.paho.client.mqttv3.IMqttActionListener` v14 @kind object) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.connect:(Lorg/eclipse/paho/client/mqttv3/MqttConnectOptions;Ljava/lang/Object;Lorg/eclipse/paho/client/mqttv3/IMqttActionListener;)Lorg/eclipse/paho/client/mqttv3/IMqttToken;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+    v9;
+    v10;
+
+  #L228570.  v0:= v11.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.comms` @type ^`org.eclipse.paho.client.mqttv3.internal.ClientComms` @kind object;
+  #L228574.  call temp:= `isConnected`(v0) @signature `Lorg/eclipse/paho/client/mqttv3/internal/ClientComms;.isConnected:()Z` @kind virtual;
+  #L22857a.  v0:= temp;
+  #L22857c.  if v0 != 0 then goto L228744;
+  #L228580.  v0:= v11.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.comms` @type ^`org.eclipse.paho.client.mqttv3.internal.ClientComms` @kind object;
+  #L228584.  call temp:= `isConnecting`(v0) @signature `Lorg/eclipse/paho/client/mqttv3/internal/ClientComms;.isConnecting:()Z` @kind virtual;
+  #L22858a.  v0:= temp;
+  #L22858c.  if v0 != 0 then goto L228734;
+  #L228590.  v0:= v11.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.comms` @type ^`org.eclipse.paho.client.mqttv3.internal.ClientComms` @kind object;
+  #L228594.  call temp:= `isDisconnecting`(v0) @signature `Lorg/eclipse/paho/client/mqttv3/internal/ClientComms;.isDisconnecting:()Z` @kind virtual;
+  #L22859a.  v0:= temp;
+  #L22859c.  if v0 != 0 then goto L228724;
+  #L2285a0.  v0:= v11.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.comms` @type ^`org.eclipse.paho.client.mqttv3.internal.ClientComms` @kind object;
+  #L2285a4.  call temp:= `isClosed`(v0) @signature `Lorg/eclipse/paho/client/mqttv3/internal/ClientComms;.isClosed:()Z` @kind virtual;
+  #L2285aa.  v0:= temp;
+  #L2285ac.  if v0 != 0 then goto L228714;
+  #L2285b0.  if v12 != 0 then goto L2285be;
+  #L2285b4.  v12:= new `org.eclipse.paho.client.mqttv3.MqttConnectOptions`;
+  #L2285b8.  call `<init>`(v12) @signature `Lorg/eclipse/paho/client/mqttv3/MqttConnectOptions;.<init>:()V` @kind direct;
+  #L2285be.  v4:= v12 @kind object;
+  #L2285c0.  v11.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.connOpts` @type ^`org.eclipse.paho.client.mqttv3.MqttConnectOptions` := v4 @kind object;
+  #L2285c4.  v11.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.userContext` @type ^`java.lang.Object` := v13 @kind object;
+  #L2285c8.  call temp:= `isAutomaticReconnect`(v4) @signature `Lorg/eclipse/paho/client/mqttv3/MqttConnectOptions;.isAutomaticReconnect:()Z` @kind virtual;
+  #L2285ce.  v12:= temp;
+  #L2285d0.  v0:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.log` @type ^`org.eclipse.paho.client.mqttv3.logging.Logger` @kind object;
+  #L2285d4.  v1:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.CLASS_NAME` @type ^`java.lang.String` @kind object;
+  #L2285d8.  v2:= 8I;
+  #L2285dc.  v2:= new `java.lang.Object`[v2];
+  #L2285e0.  call temp:= `isCleanSession`(v4) @signature `Lorg/eclipse/paho/client/mqttv3/MqttConnectOptions;.isCleanSession:()Z` @kind virtual;
+  #L2285e6.  v3:= temp;
+  #L2285e8.  call temp:= `valueOf`(v3) @signature `Ljava/lang/Boolean;.valueOf:(Z)Ljava/lang/Boolean;` @kind static;
+  #L2285ee.  v3:= temp @kind object;
+  #L2285f0.  v9:= 0I;
+  #L2285f2.  v2[v9]:= v3 @kind object;
+  #L2285f6.  v3:= 1I;
+  #L2285f8.  v5:= new `java.lang.Integer`;
+  #L2285fc.  call temp:= `getConnectionTimeout`(v4) @signature `Lorg/eclipse/paho/client/mqttv3/MqttConnectOptions;.getConnectionTimeout:()I` @kind virtual;
+  #L228602.  v6:= temp;
+  #L228604.  call `<init>`(v5, v6) @signature `Ljava/lang/Integer;.<init>:(I)V` @kind direct;
+  #L22860a.  v2[v3]:= v5 @kind object;
+  #L22860e.  v3:= 2I;
+  #L228610.  v5:= new `java.lang.Integer`;
+  #L228614.  call temp:= `getKeepAliveInterval`(v4) @signature `Lorg/eclipse/paho/client/mqttv3/MqttConnectOptions;.getKeepAliveInterval:()I` @kind virtual;
+  #L22861a.  v6:= temp;
+  #L22861c.  call `<init>`(v5, v6) @signature `Ljava/lang/Integer;.<init>:(I)V` @kind direct;
+  #L228622.  v2[v3]:= v5 @kind object;
+  #L228626.  v3:= 3I;
+  #L228628.  call temp:= `getUserName`(v4) @signature `Lorg/eclipse/paho/client/mqttv3/MqttConnectOptions;.getUserName:()Ljava/lang/String;` @kind virtual;
+  #L22862e.  v5:= temp @kind object;
+  #L228630.  v2[v3]:= v5 @kind object;
+  #L228634.  v3:= 4I;
+  #L228636.  call temp:= `getPassword`(v4) @signature `Lorg/eclipse/paho/client/mqttv3/MqttConnectOptions;.getPassword:()[C` @kind virtual;
+  #L22863c.  v5:= temp @kind object;
+  #L22863e.  v6:= "[null]" @kind object;
+  #L228642.  v7:= "[notnull]" @kind object;
+  #L228646.  if v5 != 0 then goto L22864e;
+  #L22864a.  v5:= v6 @kind object;
+  #L22864c.  goto L228650;
+  #L22864e.  v5:= v7 @kind object;
+  #L228650.  v2[v3]:= v5 @kind object;
+  #L228654.  v3:= 5I;
+  #L228656.  call temp:= `getWillMessage`(v4) @signature `Lorg/eclipse/paho/client/mqttv3/MqttConnectOptions;.getWillMessage:()Lorg/eclipse/paho/client/mqttv3/MqttMessage;` @kind virtual;
+  #L22865c.  v5:= temp @kind object;
+  #L22865e.  if v5 != 0 then goto L228664;
+  #L228662.  goto L228666;
+  #L228664.  v6:= v7 @kind object;
+  #L228666.  v2[v3]:= v6 @kind object;
+  #L22866a.  v3:= 6I;
+  #L22866c.  v2[v3]:= v13 @kind object;
+  #L228670.  v3:= 7I;
+  #L228672.  v2[v3]:= v14 @kind object;
+  #L228676.  v3:= "connect" @kind object;
+  #L22867a.  v5:= "103" @kind object;
+  #L22867e.  call `fine`(v0, v1, v3, v5, v2) @signature `Lorg/eclipse/paho/client/mqttv3/logging/Logger;.fine:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L228684.  v0:= v11.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.comms` @type ^`org.eclipse.paho.client.mqttv3.internal.ClientComms` @kind object;
+  #L228688.  v1:= v11.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.serverURI` @type ^`java.lang.String` @kind object;
+  #L22868c.  call temp:= `createNetworkModules`(v11, v1, v4) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.createNetworkModules:(Ljava/lang/String;Lorg/eclipse/paho/client/mqttv3/MqttConnectOptions;)[Lorg/eclipse/paho/client/mqttv3/internal/NetworkModule;` @kind virtual;
+  #L228692.  v1:= temp @kind object;
+  #L228694.  call `setNetworkModules`(v0, v1) @signature `Lorg/eclipse/paho/client/mqttv3/internal/ClientComms;.setNetworkModules:([Lorg/eclipse/paho/client/mqttv3/internal/NetworkModule;)V` @kind virtual;
+  #L22869a.  v0:= v11.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.comms` @type ^`org.eclipse.paho.client.mqttv3.internal.ClientComms` @kind object;
+  #L22869e.  v1:= new `org.eclipse.paho.client.mqttv3.MqttAsyncClient$MqttReconnectCallback`;
+  #L2286a2.  call `<init>`(v1, v11, v12) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient$MqttReconnectCallback;.<init>:(Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;Z)V` @kind direct;
+  #L2286a8.  call `setReconnectCallback`(v0, v1) @signature `Lorg/eclipse/paho/client/mqttv3/internal/ClientComms;.setReconnectCallback:(Lorg/eclipse/paho/client/mqttv3/MqttCallbackExtended;)V` @kind virtual;
+  #L2286ae.  v12:= new `org.eclipse.paho.client.mqttv3.MqttToken`;
+  #L2286b2.  call temp:= `getClientId`(v11) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.getClientId:()Ljava/lang/String;` @kind virtual;
+  #L2286b8.  v0:= temp @kind object;
+  #L2286ba.  call `<init>`(v12, v0) @signature `Lorg/eclipse/paho/client/mqttv3/MqttToken;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L2286c0.  v10:= new `org.eclipse.paho.client.mqttv3.internal.ConnectActionListener`;
+  #L2286c4.  v2:= v11.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.persistence` @type ^`org.eclipse.paho.client.mqttv3.MqttClientPersistence` @kind object;
+  #L2286c8.  v3:= v11.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.comms` @type ^`org.eclipse.paho.client.mqttv3.internal.ClientComms` @kind object;
+  #L2286cc.  v8:= v11.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.reconnecting` @type ^`boolean` @kind boolean;
+  #L2286d0.  v0:= v10 @kind object;
+  #L2286d2.  v1:= v11 @kind object;
+  #L2286d4.  v5:= v12 @kind object;
+  #L2286d6.  v6:= v13 @kind object;
+  #L2286d8.  v7:= v14 @kind object;
+  #L2286da.  call `<init>`(v0, v1, v2, v3, v4, v5, v6, v7, v8) @signature `Lorg/eclipse/paho/client/mqttv3/internal/ConnectActionListener;.<init>:(Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;Lorg/eclipse/paho/client/mqttv3/MqttClientPersistence;Lorg/eclipse/paho/client/mqttv3/internal/ClientComms;Lorg/eclipse/paho/client/mqttv3/MqttConnectOptions;Lorg/eclipse/paho/client/mqttv3/MqttToken;Ljava/lang/Object;Lorg/eclipse/paho/client/mqttv3/IMqttActionListener;Z)V` @kind direct;
+  #L2286e0.  call `setActionCallback`(v12, v10) @signature `Lorg/eclipse/paho/client/mqttv3/MqttToken;.setActionCallback:(Lorg/eclipse/paho/client/mqttv3/IMqttActionListener;)V` @kind virtual;
+  #L2286e6.  call `setUserContext`(v12, v11) @signature `Lorg/eclipse/paho/client/mqttv3/MqttToken;.setUserContext:(Ljava/lang/Object;)V` @kind virtual;
+  #L2286ec.  v13:= v11.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.mqttCallback` @type ^`org.eclipse.paho.client.mqttv3.MqttCallback` @kind object;
+  #L2286f0.  v14:= instanceof @variable v13 @type ^`org.eclipse.paho.client.mqttv3.MqttCallbackExtended` @kind boolean;
+  #L2286f4.  if v14 == 0 then goto L228702;
+  #L2286f8.  v13:= (`org.eclipse.paho.client.mqttv3.MqttCallbackExtended`) v13 @kind object;
+  #L2286fc.  call `setMqttCallbackExtended`(v10, v13) @signature `Lorg/eclipse/paho/client/mqttv3/internal/ConnectActionListener;.setMqttCallbackExtended:(Lorg/eclipse/paho/client/mqttv3/MqttCallbackExtended;)V` @kind virtual;
+  #L228702.  v13:= v11.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.comms` @type ^`org.eclipse.paho.client.mqttv3.internal.ClientComms` @kind object;
+  #L228706.  call `setNetworkModuleIndex`(v13, v9) @signature `Lorg/eclipse/paho/client/mqttv3/internal/ClientComms;.setNetworkModuleIndex:(I)V` @kind virtual;
+  #L22870c.  call `connect`(v10) @signature `Lorg/eclipse/paho/client/mqttv3/internal/ConnectActionListener;.connect:()V` @kind virtual;
+  #L228712.  return v12 @kind object;
+  #L228714.  v12:= new `org.eclipse.paho.client.mqttv3.MqttException`;
+  #L228718.  v13:= 32111I;
+  #L22871c.  call `<init>`(v12, v13) @signature `Lorg/eclipse/paho/client/mqttv3/MqttException;.<init>:(I)V` @kind direct;
+  #L228722.  throw v12;
+  #L228724.  v12:= new `org.eclipse.paho.client.mqttv3.MqttException`;
+  #L228728.  v13:= 32102I;
+  #L22872c.  call `<init>`(v12, v13) @signature `Lorg/eclipse/paho/client/mqttv3/MqttException;.<init>:(I)V` @kind direct;
+  #L228732.  throw v12;
+  #L228734.  v12:= new `org.eclipse.paho.client.mqttv3.MqttException`;
+  #L228738.  v13:= 32110I;
+  #L22873c.  call `<init>`(v12, v13) @signature `Lorg/eclipse/paho/client/mqttv3/MqttException;.<init>:(I)V` @kind direct;
+  #L228742.  throw v12;
+  #L228744.  v12:= 32100I;
+  #L228748.  call temp:= `createMqttException`(v12) @signature `Lorg/eclipse/paho/client/mqttv3/internal/ExceptionHelper;.createMqttException:(I)Lorg/eclipse/paho/client/mqttv3/MqttException;` @kind static;
+  #L22874e.  v12:= temp @kind object;
+  #L228750.  throw v12;
+}
+procedure `org.eclipse.paho.client.mqttv3.internal.NetworkModule`[] `createNetworkModules`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v7 @kind this, `java.lang.String` v8 @kind object, `org.eclipse.paho.client.mqttv3.MqttConnectOptions` v9 @kind object) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.createNetworkModules:(Ljava/lang/String;Lorg/eclipse/paho/client/mqttv3/MqttConnectOptions;)[Lorg/eclipse/paho/client/mqttv3/internal/NetworkModule;` @AccessFlag PROTECTED {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+
+  #L229088.  v0:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.log` @type ^`org.eclipse.paho.client.mqttv3.logging.Logger` @kind object;
+  #L22908c.  v1:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.CLASS_NAME` @type ^`java.lang.String` @kind object;
+  #L229090.  v2:= 1I;
+  #L229092.  v3:= new `java.lang.Object`[v2];
+  #L229096.  v4:= 0I;
+  #L229098.  v3[v4]:= v8 @kind object;
+  #L22909c.  v5:= "createNetworkModules" @kind object;
+  #L2290a0.  v6:= "116" @kind object;
+  #L2290a4.  call `fine`(v0, v1, v5, v6, v3) @signature `Lorg/eclipse/paho/client/mqttv3/logging/Logger;.fine:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L2290aa.  call temp:= `getServerURIs`(v9) @signature `Lorg/eclipse/paho/client/mqttv3/MqttConnectOptions;.getServerURIs:()[Ljava/lang/String;` @kind virtual;
+  #L2290b0.  v0:= temp @kind object;
+  #L2290b2.  if v0 != 0 then goto L2290c0;
+  #L2290b6.  v0:= new `java.lang.String`[v2];
+  #L2290ba.  v0[v4]:= v8 @kind object;
+  #L2290be.  goto L2290ce;
+  #L2290c0.  v1:= length @variable v0;
+  #L2290c2.  if v1 != 0 then goto L2290ce;
+  #L2290c6.  v0:= new `java.lang.String`[v2];
+  #L2290ca.  v0[v4]:= v8 @kind object;
+  #L2290ce.  v8:= length @variable v0;
+  #L2290d0.  v8:= new `org.eclipse.paho.client.mqttv3.internal.NetworkModule`[v8];
+  #L2290d4.  v1:= length @variable v0;
+  #L2290d6.  if v4 < v1 then goto L2290ee;
+  #L2290da.  v9:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.log` @type ^`org.eclipse.paho.client.mqttv3.logging.Logger` @kind object;
+  #L2290de.  v0:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.CLASS_NAME` @type ^`java.lang.String` @kind object;
+  #L2290e2.  v1:= "108" @kind object;
+  #L2290e6.  call `fine`(v9, v0, v5, v1) @signature `Lorg/eclipse/paho/client/mqttv3/logging/Logger;.fine:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V` @kind interface;
+  #L2290ec.  return v8 @kind object;
+  #L2290ee.  v1:= v0[v4] @kind object;
+  #L2290f2.  call temp:= `createNetworkModule`(v7, v1, v9) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.createNetworkModule:(Ljava/lang/String;Lorg/eclipse/paho/client/mqttv3/MqttConnectOptions;)Lorg/eclipse/paho/client/mqttv3/internal/NetworkModule;` @kind direct;
+  #L2290f8.  v1:= temp @kind object;
+  #L2290fa.  v8[v4]:= v1 @kind object;
+  #L2290fe.  v4:= v4 + 1;
+  #L229102.  goto L2290d4;
+}
+procedure `void` `deleteBufferedMessage`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v1 @kind this, `int` v2 ) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.deleteBufferedMessage:(I)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L22949c.  v0:= v1.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.comms` @type ^`org.eclipse.paho.client.mqttv3.internal.ClientComms` @kind object;
+  #L2294a0.  call `deleteBufferedMessage`(v0, v2) @signature `Lorg/eclipse/paho/client/mqttv3/internal/ClientComms;.deleteBufferedMessage:(I)V` @kind virtual;
+  #L2294a6.  return @kind void;
+}
+procedure `org.eclipse.paho.client.mqttv3.IMqttToken` `disconnect`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v1 @kind this) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.disconnect:()Lorg/eclipse/paho/client/mqttv3/IMqttToken;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L228764.  v0:= 0I;
+  #L228766.  call temp:= `disconnect`(v1, v0, v0) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.disconnect:(Ljava/lang/Object;Lorg/eclipse/paho/client/mqttv3/IMqttActionListener;)Lorg/eclipse/paho/client/mqttv3/IMqttToken;` @kind virtual;
+  #L22876c.  v0:= temp @kind object;
+  #L22876e.  return v0 @kind object;
+}
+procedure `org.eclipse.paho.client.mqttv3.IMqttToken` `disconnect`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v1 @kind this, `long` v2 ) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.disconnect:(J)Lorg/eclipse/paho/client/mqttv3/IMqttToken;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L2287a0.  v0:= 0I;
+  #L2287a2.  call temp:= `disconnect`(v1, v2, v0, v0) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.disconnect:(JLjava/lang/Object;Lorg/eclipse/paho/client/mqttv3/IMqttActionListener;)Lorg/eclipse/paho/client/mqttv3/IMqttToken;` @kind virtual;
+  #L2287a8.  v2:= temp @kind object;
+  #L2287aa.  return v2 @kind object;
+}
+procedure `org.eclipse.paho.client.mqttv3.IMqttToken` `disconnect`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v6 @kind this, `long` v7 , `java.lang.Object` v9 @kind object, `org.eclipse.paho.client.mqttv3.IMqttActionListener` v10 @kind object) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.disconnect:(JLjava/lang/Object;Lorg/eclipse/paho/client/mqttv3/IMqttActionListener;)Lorg/eclipse/paho/client/mqttv3/IMqttToken;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L2287bc.  v0:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.log` @type ^`org.eclipse.paho.client.mqttv3.logging.Logger` @kind object;
+  #L2287c0.  v1:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.CLASS_NAME` @type ^`java.lang.String` @kind object;
+  #L2287c4.  v2:= 3I;
+  #L2287c6.  v2:= new `java.lang.Object`[v2];
+  #L2287ca.  v3:= new `java.lang.Long`;
+  #L2287ce.  call `<init>`(v3, v7) @signature `Ljava/lang/Long;.<init>:(J)V` @kind direct;
+  #L2287d4.  v4:= 0I;
+  #L2287d6.  v2[v4]:= v3 @kind object;
+  #L2287da.  v3:= 1I;
+  #L2287dc.  v2[v3]:= v9 @kind object;
+  #L2287e0.  v3:= 2I;
+  #L2287e2.  v2[v3]:= v10 @kind object;
+  #L2287e6.  v3:= "disconnect" @kind object;
+  #L2287ea.  v4:= "104" @kind object;
+  #L2287ee.  call `fine`(v0, v1, v3, v4, v2) @signature `Lorg/eclipse/paho/client/mqttv3/logging/Logger;.fine:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L2287f4.  v0:= new `org.eclipse.paho.client.mqttv3.MqttToken`;
+  #L2287f8.  call temp:= `getClientId`(v6) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.getClientId:()Ljava/lang/String;` @kind virtual;
+  #L2287fe.  v1:= temp @kind object;
+  #L228800.  call `<init>`(v0, v1) @signature `Lorg/eclipse/paho/client/mqttv3/MqttToken;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L228806.  call `setActionCallback`(v0, v10) @signature `Lorg/eclipse/paho/client/mqttv3/MqttToken;.setActionCallback:(Lorg/eclipse/paho/client/mqttv3/IMqttActionListener;)V` @kind virtual;
+  #L22880c.  call `setUserContext`(v0, v9) @signature `Lorg/eclipse/paho/client/mqttv3/MqttToken;.setUserContext:(Ljava/lang/Object;)V` @kind virtual;
+  #L228812.  v9:= new `org.eclipse.paho.client.mqttv3.internal.wire.MqttDisconnect`;
+  #L228816.  call `<init>`(v9) @signature `Lorg/eclipse/paho/client/mqttv3/internal/wire/MqttDisconnect;.<init>:()V` @kind direct;
+  #L22881c.  v10:= v6.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.comms` @type ^`org.eclipse.paho.client.mqttv3.internal.ClientComms` @kind object;
+  #L228820.  call `disconnect`(v10, v9, v7, v0) @signature `Lorg/eclipse/paho/client/mqttv3/internal/ClientComms;.disconnect:(Lorg/eclipse/paho/client/mqttv3/internal/wire/MqttDisconnect;JLorg/eclipse/paho/client/mqttv3/MqttToken;)V` @kind virtual;
+  #L228826.  v7:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.log` @type ^`org.eclipse.paho.client.mqttv3.logging.Logger` @kind object;
+  #L22882a.  v8:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.CLASS_NAME` @type ^`java.lang.String` @kind object;
+  #L22882e.  v9:= "108" @kind object;
+  #L228832.  call `fine`(v7, v8, v3, v9) @signature `Lorg/eclipse/paho/client/mqttv3/logging/Logger;.fine:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V` @kind interface;
+  #L228838.  return v0 @kind object;
+  #L22883a.  v7:= Exception @type ^`org.eclipse.paho.client.mqttv3.MqttException` @kind object;
+  #L22883c.  v0:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.log` @type ^`org.eclipse.paho.client.mqttv3.logging.Logger` @kind object;
+  #L228840.  v1:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.CLASS_NAME` @type ^`java.lang.String` @kind object;
+  #L228844.  v4:= 0I;
+  #L228846.  v2:= "disconnect" @kind object;
+  #L22884a.  v3:= "105" @kind object;
+  #L22884e.  v5:= v7 @kind object;
+  #L228850.  call `fine`(v0, v1, v2, v3, v4, v5) @signature `Lorg/eclipse/paho/client/mqttv3/logging/Logger;.fine:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;Ljava/lang/Throwable;)V` @kind interface;
+  #L228856.  throw v7;
+  catch `org.eclipse.paho.client.mqttv3.MqttException` @[L22881c..L228826] goto L22883a;
+}
+procedure `org.eclipse.paho.client.mqttv3.IMqttToken` `disconnect`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v2 @kind this, `java.lang.Object` v3 @kind object, `org.eclipse.paho.client.mqttv3.IMqttActionListener` v4 @kind object) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.disconnect:(Ljava/lang/Object;Lorg/eclipse/paho/client/mqttv3/IMqttActionListener;)Lorg/eclipse/paho/client/mqttv3/IMqttToken;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L228780.  v0:= 30000L;
+  #L228784.  call temp:= `disconnect`(v2, v0, v3, v4) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.disconnect:(JLjava/lang/Object;Lorg/eclipse/paho/client/mqttv3/IMqttActionListener;)Lorg/eclipse/paho/client/mqttv3/IMqttToken;` @kind virtual;
+  #L22878a.  v3:= temp @kind object;
+  #L22878c.  return v3 @kind object;
+}
+procedure `void` `disconnectForcibly`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v4 @kind this) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.disconnectForcibly:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L2294b8.  v0:= 30000L;
+  #L2294bc.  v2:= 10000L;
+  #L2294c0.  call `disconnectForcibly`(v4, v0, v2) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.disconnectForcibly:(JJ)V` @kind virtual;
+  #L2294c6.  return @kind void;
+}
+procedure `void` `disconnectForcibly`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v2 @kind this, `long` v3 ) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.disconnectForcibly:(J)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L2294d8.  v0:= 30000L;
+  #L2294dc.  call `disconnectForcibly`(v2, v0, v3) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.disconnectForcibly:(JJ)V` @kind virtual;
+  #L2294e2.  return @kind void;
+}
+procedure `void` `disconnectForcibly`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v1 @kind this, `long` v2 , `long` v4 ) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.disconnectForcibly:(JJ)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L2294f4.  v0:= v1.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.comms` @type ^`org.eclipse.paho.client.mqttv3.internal.ClientComms` @kind object;
+  #L2294f8.  call `disconnectForcibly`(v0, v2, v4) @signature `Lorg/eclipse/paho/client/mqttv3/internal/ClientComms;.disconnectForcibly:(JJ)V` @kind virtual;
+  #L2294fe.  return @kind void;
+}
+procedure `void` `disconnectForcibly`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v6 @kind this, `long` v7 , `long` v9 , `boolean` v11 ) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.disconnectForcibly:(JJZ)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L229510.  v0:= v6.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.comms` @type ^`org.eclipse.paho.client.mqttv3.internal.ClientComms` @kind object;
+  #L229514.  v1:= v7 @kind wide;
+  #L229516.  v3:= v9 @kind wide;
+  #L229518.  v5:= v11;
+  #L22951a.  call `disconnectForcibly`(v0, v1, v3, v5) @signature `Lorg/eclipse/paho/client/mqttv3/internal/ClientComms;.disconnectForcibly:(JJZ)V` @kind virtual;
+  #L229520.  return @kind void;
+}
+procedure `org.eclipse.paho.client.mqttv3.MqttMessage` `getBufferedMessage`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v1 @kind this, `int` v2 ) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.getBufferedMessage:(I)Lorg/eclipse/paho/client/mqttv3/MqttMessage;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L228cd8.  v0:= v1.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.comms` @type ^`org.eclipse.paho.client.mqttv3.internal.ClientComms` @kind object;
+  #L228cdc.  call temp:= `getBufferedMessage`(v0, v2) @signature `Lorg/eclipse/paho/client/mqttv3/internal/ClientComms;.getBufferedMessage:(I)Lorg/eclipse/paho/client/mqttv3/MqttMessage;` @kind virtual;
+  #L228ce2.  v2:= temp @kind object;
+  #L228ce4.  return v2 @kind object;
+}
+procedure `int` `getBufferedMessageCount`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v1 @kind this) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.getBufferedMessageCount:()I` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L22820c.  v0:= v1.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.comms` @type ^`org.eclipse.paho.client.mqttv3.internal.ClientComms` @kind object;
+  #L228210.  call temp:= `getBufferedMessageCount`(v0) @signature `Lorg/eclipse/paho/client/mqttv3/internal/ClientComms;.getBufferedMessageCount:()I` @kind virtual;
+  #L228216.  v0:= temp;
+  #L228218.  return v0;
+}
+procedure `java.lang.String` `getClientId`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v1 @kind this) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.getClientId:()Ljava/lang/String;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L2282cc.  v0:= v1.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.clientId` @type ^`java.lang.String` @kind object;
+  #L2282d0.  return v0 @kind object;
+}
+procedure `java.lang.String` `getCurrentServerURI`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v2 @kind this) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.getCurrentServerURI:()Ljava/lang/String;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L2282e4.  v0:= v2.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.comms` @type ^`org.eclipse.paho.client.mqttv3.internal.ClientComms` @kind object;
+  #L2282e8.  call temp:= `getNetworkModules`(v0) @signature `Lorg/eclipse/paho/client/mqttv3/internal/ClientComms;.getNetworkModules:()[Lorg/eclipse/paho/client/mqttv3/internal/NetworkModule;` @kind virtual;
+  #L2282ee.  v0:= temp @kind object;
+  #L2282f0.  v1:= v2.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.comms` @type ^`org.eclipse.paho.client.mqttv3.internal.ClientComms` @kind object;
+  #L2282f4.  call temp:= `getNetworkModuleIndex`(v1) @signature `Lorg/eclipse/paho/client/mqttv3/internal/ClientComms;.getNetworkModuleIndex:()I` @kind virtual;
+  #L2282fa.  v1:= temp;
+  #L2282fc.  v0:= v0[v1] @kind object;
+  #L228300.  call temp:= `getServerURI`(v0) @signature `Lorg/eclipse/paho/client/mqttv3/internal/NetworkModule;.getServerURI:()Ljava/lang/String;` @kind interface;
+  #L228306.  v0:= temp @kind object;
+  #L228308.  return v0 @kind object;
+}
+procedure `org.eclipse.paho.client.mqttv3.util.Debug` `getDebug`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v3 @kind this) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.getDebug:()Lorg/eclipse/paho/client/mqttv3/util/Debug;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L22912c.  v0:= new `org.eclipse.paho.client.mqttv3.util.Debug`;
+  #L229130.  v1:= v3.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.clientId` @type ^`java.lang.String` @kind object;
+  #L229134.  v2:= v3.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.comms` @type ^`org.eclipse.paho.client.mqttv3.internal.ClientComms` @kind object;
+  #L229138.  call `<init>`(v0, v1, v2) @signature `Lorg/eclipse/paho/client/mqttv3/util/Debug;.<init>:(Ljava/lang/String;Lorg/eclipse/paho/client/mqttv3/internal/ClientComms;)V` @kind direct;
+  #L22913e.  return v0 @kind object;
+}
+procedure `int` `getInFlightMessageCount`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v1 @kind this) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.getInFlightMessageCount:()I` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L22822c.  v0:= v1.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.comms` @type ^`org.eclipse.paho.client.mqttv3.internal.ClientComms` @kind object;
+  #L228230.  call temp:= `getActualInFlight`(v0) @signature `Lorg/eclipse/paho/client/mqttv3/internal/ClientComms;.getActualInFlight:()I` @kind virtual;
+  #L228236.  v0:= temp;
+  #L228238.  return v0;
+}
+procedure `org.eclipse.paho.client.mqttv3.IMqttDeliveryToken`[] `getPendingDeliveryTokens`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v1 @kind this) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.getPendingDeliveryTokens:()[Lorg/eclipse/paho/client/mqttv3/IMqttDeliveryToken;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L2284ac.  v0:= v1.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.comms` @type ^`org.eclipse.paho.client.mqttv3.internal.ClientComms` @kind object;
+  #L2284b0.  call temp:= `getPendingDeliveryTokens`(v0) @signature `Lorg/eclipse/paho/client/mqttv3/internal/ClientComms;.getPendingDeliveryTokens:()[Lorg/eclipse/paho/client/mqttv3/MqttDeliveryToken;` @kind virtual;
+  #L2284b6.  v0:= temp @kind object;
+  #L2284b8.  return v0 @kind object;
+}
+procedure `java.lang.String` `getServerURI`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v1 @kind this) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.getServerURI:()Ljava/lang/String;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L228364.  v0:= v1.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.serverURI` @type ^`java.lang.String` @kind object;
+  #L228368.  return v0 @kind object;
+}
+procedure `org.eclipse.paho.client.mqttv3.MqttTopic` `getTopic`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v2 @kind this, `java.lang.String` v3 @kind object) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.getTopic:(Ljava/lang/String;)Lorg/eclipse/paho/client/mqttv3/MqttTopic;` @AccessFlag PROTECTED {
+    temp;
+    v0;
+    v1;
+
+  #L228cf8.  v0:= 0I;
+  #L228cfa.  call `validate`(v3, v0) @signature `Lorg/eclipse/paho/client/mqttv3/MqttTopic;.validate:(Ljava/lang/String;Z)V` @kind static;
+  #L228d00.  v0:= v2.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.topics` @type ^`java.util.Hashtable` @kind object;
+  #L228d04.  call temp:= `get`(v0, v3) @signature `Ljava/util/Hashtable;.get:(Ljava/lang/Object;)Ljava/lang/Object;` @kind virtual;
+  #L228d0a.  v0:= temp @kind object;
+  #L228d0c.  v0:= (`org.eclipse.paho.client.mqttv3.MqttTopic`) v0 @kind object;
+  #L228d10.  if v0 != 0 then goto L228d2c;
+  #L228d14.  v0:= new `org.eclipse.paho.client.mqttv3.MqttTopic`;
+  #L228d18.  v1:= v2.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.comms` @type ^`org.eclipse.paho.client.mqttv3.internal.ClientComms` @kind object;
+  #L228d1c.  call `<init>`(v0, v3, v1) @signature `Lorg/eclipse/paho/client/mqttv3/MqttTopic;.<init>:(Ljava/lang/String;Lorg/eclipse/paho/client/mqttv3/internal/ClientComms;)V` @kind direct;
+  #L228d22.  v1:= v2.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.topics` @type ^`java.util.Hashtable` @kind object;
+  #L228d26.  call temp:= `put`(v1, v3, v0) @signature `Ljava/util/Hashtable;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;` @kind virtual;
+  #L228d2c.  return v0 @kind object;
+}
+procedure `boolean` `isConnected`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v1 @kind this) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.isConnected:()Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L2281d4.  v0:= v1.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.comms` @type ^`org.eclipse.paho.client.mqttv3.internal.ClientComms` @kind object;
+  #L2281d8.  call temp:= `isConnected`(v0) @signature `Lorg/eclipse/paho/client/mqttv3/internal/ClientComms;.isConnected:()Z` @kind virtual;
+  #L2281de.  v0:= temp;
+  #L2281e0.  return v0;
+}
+procedure `void` `messageArrivedComplete`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v1 @kind this, `int` v2 , `int` v3 ) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.messageArrivedComplete:(II)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L229534.  v0:= v1.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.comms` @type ^`org.eclipse.paho.client.mqttv3.internal.ClientComms` @kind object;
+  #L229538.  call `messageArrivedComplete`(v0, v2, v3) @signature `Lorg/eclipse/paho/client/mqttv3/internal/ClientComms;.messageArrivedComplete:(II)V` @kind virtual;
+  #L22953e.  return @kind void;
+}
+procedure `org.eclipse.paho.client.mqttv3.IMqttDeliveryToken` `publish`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v1 @kind this, `java.lang.String` v2 @kind object, `org.eclipse.paho.client.mqttv3.MqttMessage` v3 @kind object) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.publish:(Ljava/lang/String;Lorg/eclipse/paho/client/mqttv3/MqttMessage;)Lorg/eclipse/paho/client/mqttv3/IMqttDeliveryToken;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L2283ec.  v0:= 0I;
+  #L2283ee.  call temp:= `publish`(v1, v2, v3, v0, v0) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.publish:(Ljava/lang/String;Lorg/eclipse/paho/client/mqttv3/MqttMessage;Ljava/lang/Object;Lorg/eclipse/paho/client/mqttv3/IMqttActionListener;)Lorg/eclipse/paho/client/mqttv3/IMqttDeliveryToken;` @kind virtual;
+  #L2283f4.  v2:= temp @kind object;
+  #L2283f6.  return v2 @kind object;
+}
+procedure `org.eclipse.paho.client.mqttv3.IMqttDeliveryToken` `publish`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v7 @kind this, `java.lang.String` v8 @kind object, `org.eclipse.paho.client.mqttv3.MqttMessage` v9 @kind object, `java.lang.Object` v10 @kind object, `org.eclipse.paho.client.mqttv3.IMqttActionListener` v11 @kind object) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.publish:(Ljava/lang/String;Lorg/eclipse/paho/client/mqttv3/MqttMessage;Ljava/lang/Object;Lorg/eclipse/paho/client/mqttv3/IMqttActionListener;)Lorg/eclipse/paho/client/mqttv3/IMqttDeliveryToken;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+
+  #L228408.  v0:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.log` @type ^`org.eclipse.paho.client.mqttv3.logging.Logger` @kind object;
+  #L22840c.  v1:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.CLASS_NAME` @type ^`java.lang.String` @kind object;
+  #L228410.  v2:= 3I;
+  #L228412.  v2:= new `java.lang.Object`[v2];
+  #L228416.  v3:= 0I;
+  #L228418.  v2[v3]:= v8 @kind object;
+  #L22841c.  v4:= 1I;
+  #L22841e.  v2[v4]:= v10 @kind object;
+  #L228422.  v5:= 2I;
+  #L228424.  v2[v5]:= v11 @kind object;
+  #L228428.  v5:= "publish" @kind object;
+  #L22842c.  v6:= "111" @kind object;
+  #L228430.  call `fine`(v0, v1, v5, v6, v2) @signature `Lorg/eclipse/paho/client/mqttv3/logging/Logger;.fine:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L228436.  call `validate`(v8, v3) @signature `Lorg/eclipse/paho/client/mqttv3/MqttTopic;.validate:(Ljava/lang/String;Z)V` @kind static;
+  #L22843c.  v0:= new `org.eclipse.paho.client.mqttv3.MqttDeliveryToken`;
+  #L228440.  call temp:= `getClientId`(v7) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.getClientId:()Ljava/lang/String;` @kind virtual;
+  #L228446.  v1:= temp @kind object;
+  #L228448.  call `<init>`(v0, v1) @signature `Lorg/eclipse/paho/client/mqttv3/MqttDeliveryToken;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L22844e.  call `setActionCallback`(v0, v11) @signature `Lorg/eclipse/paho/client/mqttv3/MqttToken;.setActionCallback:(Lorg/eclipse/paho/client/mqttv3/IMqttActionListener;)V` @kind virtual;
+  #L228454.  call `setUserContext`(v0, v10) @signature `Lorg/eclipse/paho/client/mqttv3/MqttToken;.setUserContext:(Ljava/lang/Object;)V` @kind virtual;
+  #L22845a.  call `setMessage`(v0, v9) @signature `Lorg/eclipse/paho/client/mqttv3/MqttDeliveryToken;.setMessage:(Lorg/eclipse/paho/client/mqttv3/MqttMessage;)V` @kind virtual;
+  #L228460.  v10:= v0.`org.eclipse.paho.client.mqttv3.MqttToken.internalTok` @type ^`org.eclipse.paho.client.mqttv3.internal.Token` @kind object;
+  #L228464.  v11:= new `java.lang.String`[v4];
+  #L228468.  v11[v3]:= v8 @kind object;
+  #L22846c.  call `setTopics`(v10, v11) @signature `Lorg/eclipse/paho/client/mqttv3/internal/Token;.setTopics:([Ljava/lang/String;)V` @kind virtual;
+  #L228472.  v10:= new `org.eclipse.paho.client.mqttv3.internal.wire.MqttPublish`;
+  #L228476.  call `<init>`(v10, v8, v9) @signature `Lorg/eclipse/paho/client/mqttv3/internal/wire/MqttPublish;.<init>:(Ljava/lang/String;Lorg/eclipse/paho/client/mqttv3/MqttMessage;)V` @kind direct;
+  #L22847c.  v8:= v7.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.comms` @type ^`org.eclipse.paho.client.mqttv3.internal.ClientComms` @kind object;
+  #L228480.  call `sendNoWait`(v8, v10, v0) @signature `Lorg/eclipse/paho/client/mqttv3/internal/ClientComms;.sendNoWait:(Lorg/eclipse/paho/client/mqttv3/internal/wire/MqttWireMessage;Lorg/eclipse/paho/client/mqttv3/MqttToken;)V` @kind virtual;
+  #L228486.  v8:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.log` @type ^`org.eclipse.paho.client.mqttv3.logging.Logger` @kind object;
+  #L22848a.  v9:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.CLASS_NAME` @type ^`java.lang.String` @kind object;
+  #L22848e.  v10:= "112" @kind object;
+  #L228492.  call `fine`(v8, v9, v5, v10) @signature `Lorg/eclipse/paho/client/mqttv3/logging/Logger;.fine:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V` @kind interface;
+  #L228498.  return v0 @kind object;
+}
+procedure `org.eclipse.paho.client.mqttv3.IMqttDeliveryToken` `publish`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v7 @kind this, `java.lang.String` v8 @kind object, `byte`[] v9 @kind object, `int` v10 , `boolean` v11 ) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.publish:(Ljava/lang/String;[BIZ)Lorg/eclipse/paho/client/mqttv3/IMqttDeliveryToken;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+
+  #L228394.  v5:= 0I;
+  #L228396.  v6:= 0I;
+  #L228398.  v0:= v7 @kind object;
+  #L22839a.  v1:= v8 @kind object;
+  #L22839c.  v2:= v9 @kind object;
+  #L22839e.  v3:= v10;
+  #L2283a0.  v4:= v11;
+  #L2283a2.  call temp:= `publish`(v0, v1, v2, v3, v4, v5, v6) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.publish:(Ljava/lang/String;[BIZLjava/lang/Object;Lorg/eclipse/paho/client/mqttv3/IMqttActionListener;)Lorg/eclipse/paho/client/mqttv3/IMqttDeliveryToken;` @kind virtual;
+  #L2283a8.  v8:= temp @kind object;
+  #L2283aa.  return v8 @kind object;
+}
+procedure `org.eclipse.paho.client.mqttv3.IMqttDeliveryToken` `publish`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v1 @kind this, `java.lang.String` v2 @kind object, `byte`[] v3 @kind object, `int` v4 , `boolean` v5 , `java.lang.Object` v6 @kind object, `org.eclipse.paho.client.mqttv3.IMqttActionListener` v7 @kind object) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.publish:(Ljava/lang/String;[BIZLjava/lang/Object;Lorg/eclipse/paho/client/mqttv3/IMqttActionListener;)Lorg/eclipse/paho/client/mqttv3/IMqttDeliveryToken;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L2283bc.  v0:= new `org.eclipse.paho.client.mqttv3.MqttMessage`;
+  #L2283c0.  call `<init>`(v0, v3) @signature `Lorg/eclipse/paho/client/mqttv3/MqttMessage;.<init>:([B)V` @kind direct;
+  #L2283c6.  call `setQos`(v0, v4) @signature `Lorg/eclipse/paho/client/mqttv3/MqttMessage;.setQos:(I)V` @kind virtual;
+  #L2283cc.  call `setRetained`(v0, v5) @signature `Lorg/eclipse/paho/client/mqttv3/MqttMessage;.setRetained:(Z)V` @kind virtual;
+  #L2283d2.  call temp:= `publish`(v1, v2, v0, v6, v7) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.publish:(Ljava/lang/String;Lorg/eclipse/paho/client/mqttv3/MqttMessage;Ljava/lang/Object;Lorg/eclipse/paho/client/mqttv3/IMqttActionListener;)Lorg/eclipse/paho/client/mqttv3/IMqttDeliveryToken;` @kind virtual;
+  #L2283d8.  v2:= temp @kind object;
+  #L2283da.  return v2 @kind object;
+}
+procedure `void` `reconnect`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v5 @kind this) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.reconnect:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L229550.  v0:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.log` @type ^`org.eclipse.paho.client.mqttv3.logging.Logger` @kind object;
+  #L229554.  v1:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.CLASS_NAME` @type ^`java.lang.String` @kind object;
+  #L229558.  v2:= 1I;
+  #L22955a.  v2:= new `java.lang.Object`[v2];
+  #L22955e.  v3:= v5.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.clientId` @type ^`java.lang.String` @kind object;
+  #L229562.  v4:= 0I;
+  #L229564.  v2[v4]:= v3 @kind object;
+  #L229568.  v3:= "reconnect" @kind object;
+  #L22956c.  v4:= "500" @kind object;
+  #L229570.  call `fine`(v0, v1, v3, v4, v2) @signature `Lorg/eclipse/paho/client/mqttv3/logging/Logger;.fine:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L229576.  v0:= v5.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.comms` @type ^`org.eclipse.paho.client.mqttv3.internal.ClientComms` @kind object;
+  #L22957a.  call temp:= `isConnected`(v0) @signature `Lorg/eclipse/paho/client/mqttv3/internal/ClientComms;.isConnected:()Z` @kind virtual;
+  #L229580.  v0:= temp;
+  #L229582.  if v0 != 0 then goto L2295f4;
+  #L229586.  v0:= v5.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.comms` @type ^`org.eclipse.paho.client.mqttv3.internal.ClientComms` @kind object;
+  #L22958a.  call temp:= `isConnecting`(v0) @signature `Lorg/eclipse/paho/client/mqttv3/internal/ClientComms;.isConnecting:()Z` @kind virtual;
+  #L229590.  v0:= temp;
+  #L229592.  if v0 != 0 then goto L2295e4;
+  #L229596.  v0:= v5.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.comms` @type ^`org.eclipse.paho.client.mqttv3.internal.ClientComms` @kind object;
+  #L22959a.  call temp:= `isDisconnecting`(v0) @signature `Lorg/eclipse/paho/client/mqttv3/internal/ClientComms;.isDisconnecting:()Z` @kind virtual;
+  #L2295a0.  v0:= temp;
+  #L2295a2.  if v0 != 0 then goto L2295d4;
+  #L2295a6.  v0:= v5.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.comms` @type ^`org.eclipse.paho.client.mqttv3.internal.ClientComms` @kind object;
+  #L2295aa.  call temp:= `isClosed`(v0) @signature `Lorg/eclipse/paho/client/mqttv3/internal/ClientComms;.isClosed:()Z` @kind virtual;
+  #L2295b0.  v0:= temp;
+  #L2295b2.  if v0 != 0 then goto L2295c4;
+  #L2295b6.  call `stopReconnectCycle`(v5) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.stopReconnectCycle:()V` @kind direct;
+  #L2295bc.  call `attemptReconnect`(v5) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.attemptReconnect:()V` @kind direct;
+  #L2295c2.  return @kind void;
+  #L2295c4.  v0:= new `org.eclipse.paho.client.mqttv3.MqttException`;
+  #L2295c8.  v1:= 32111I;
+  #L2295cc.  call `<init>`(v0, v1) @signature `Lorg/eclipse/paho/client/mqttv3/MqttException;.<init>:(I)V` @kind direct;
+  #L2295d2.  throw v0;
+  #L2295d4.  v0:= new `org.eclipse.paho.client.mqttv3.MqttException`;
+  #L2295d8.  v1:= 32102I;
+  #L2295dc.  call `<init>`(v0, v1) @signature `Lorg/eclipse/paho/client/mqttv3/MqttException;.<init>:(I)V` @kind direct;
+  #L2295e2.  throw v0;
+  #L2295e4.  v0:= new `org.eclipse.paho.client.mqttv3.MqttException`;
+  #L2295e8.  v1:= 32110I;
+  #L2295ec.  call `<init>`(v0, v1) @signature `Lorg/eclipse/paho/client/mqttv3/MqttException;.<init>:(I)V` @kind direct;
+  #L2295f2.  throw v0;
+  #L2295f4.  v0:= 32100I;
+  #L2295f8.  call temp:= `createMqttException`(v0) @signature `Lorg/eclipse/paho/client/mqttv3/internal/ExceptionHelper;.createMqttException:(I)Lorg/eclipse/paho/client/mqttv3/MqttException;` @kind static;
+  #L2295fe.  v0:= temp @kind object;
+  #L229600.  throw v0;
+}
+procedure `void` `setBufferOpts`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v2 @kind this, `org.eclipse.paho.client.mqttv3.DisconnectedBufferOptions` v3 @kind object) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.setBufferOpts:(Lorg/eclipse/paho/client/mqttv3/DisconnectedBufferOptions;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L229614.  v0:= v2.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.comms` @type ^`org.eclipse.paho.client.mqttv3.internal.ClientComms` @kind object;
+  #L229618.  v1:= new `org.eclipse.paho.client.mqttv3.internal.DisconnectedMessageBuffer`;
+  #L22961c.  call `<init>`(v1, v3) @signature `Lorg/eclipse/paho/client/mqttv3/internal/DisconnectedMessageBuffer;.<init>:(Lorg/eclipse/paho/client/mqttv3/DisconnectedBufferOptions;)V` @kind direct;
+  #L229622.  call `setDisconnectedMessageBuffer`(v0, v1) @signature `Lorg/eclipse/paho/client/mqttv3/internal/ClientComms;.setDisconnectedMessageBuffer:(Lorg/eclipse/paho/client/mqttv3/internal/DisconnectedMessageBuffer;)V` @kind virtual;
+  #L229628.  return @kind void;
+}
+procedure `void` `setCallback`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v1 @kind this, `org.eclipse.paho.client.mqttv3.MqttCallback` v2 @kind object) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.setCallback:(Lorg/eclipse/paho/client/mqttv3/MqttCallback;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L22963c.  v1.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.mqttCallback` @type ^`org.eclipse.paho.client.mqttv3.MqttCallback` := v2 @kind object;
+  #L229640.  v0:= v1.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.comms` @type ^`org.eclipse.paho.client.mqttv3.internal.ClientComms` @kind object;
+  #L229644.  call `setCallback`(v0, v2) @signature `Lorg/eclipse/paho/client/mqttv3/internal/ClientComms;.setCallback:(Lorg/eclipse/paho/client/mqttv3/MqttCallback;)V` @kind virtual;
+  #L22964a.  return @kind void;
+}
+procedure `void` `setManualAcks`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v1 @kind this, `boolean` v2 ) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.setManualAcks:(Z)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L22965c.  v0:= v1.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.comms` @type ^`org.eclipse.paho.client.mqttv3.internal.ClientComms` @kind object;
+  #L229660.  call `setManualAcks`(v0, v2) @signature `Lorg/eclipse/paho/client/mqttv3/internal/ClientComms;.setManualAcks:(Z)V` @kind virtual;
+  #L229666.  return @kind void;
+}
+procedure `org.eclipse.paho.client.mqttv3.IMqttToken` `subscribe`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v3 @kind this, `java.lang.String` v4 @kind object, `int` v5 ) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.subscribe:(Ljava/lang/String;I)Lorg/eclipse/paho/client/mqttv3/IMqttToken;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L228878.  v0:= 1I;
+  #L22887a.  v1:= new `java.lang.String`[v0];
+  #L22887e.  v2:= 0I;
+  #L228880.  v1[v2]:= v4 @kind object;
+  #L228884.  v4:= new `int`[v0];
+  #L228888.  v4[v2]:= v5;
+  #L22888c.  v5:= 0I;
+  #L22888e.  call temp:= `subscribe`(v3, v1, v4, v5, v5) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.subscribe:([Ljava/lang/String;[ILjava/lang/Object;Lorg/eclipse/paho/client/mqttv3/IMqttActionListener;)Lorg/eclipse/paho/client/mqttv3/IMqttToken;` @kind virtual;
+  #L228894.  v4:= temp @kind object;
+  #L228896.  return v4 @kind object;
+}
+procedure `org.eclipse.paho.client.mqttv3.IMqttToken` `subscribe`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v3 @kind this, `java.lang.String` v4 @kind object, `int` v5 , `java.lang.Object` v6 @kind object, `org.eclipse.paho.client.mqttv3.IMqttActionListener` v7 @kind object) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.subscribe:(Ljava/lang/String;ILjava/lang/Object;Lorg/eclipse/paho/client/mqttv3/IMqttActionListener;)Lorg/eclipse/paho/client/mqttv3/IMqttToken;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L2288a8.  v0:= 1I;
+  #L2288aa.  v1:= new `java.lang.String`[v0];
+  #L2288ae.  v2:= 0I;
+  #L2288b0.  v1[v2]:= v4 @kind object;
+  #L2288b4.  v4:= new `int`[v0];
+  #L2288b8.  v4[v2]:= v5;
+  #L2288bc.  call temp:= `subscribe`(v3, v1, v4, v6, v7) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.subscribe:([Ljava/lang/String;[ILjava/lang/Object;Lorg/eclipse/paho/client/mqttv3/IMqttActionListener;)Lorg/eclipse/paho/client/mqttv3/IMqttToken;` @kind virtual;
+  #L2288c2.  v4:= temp @kind object;
+  #L2288c4.  return v4 @kind object;
+}
+procedure `org.eclipse.paho.client.mqttv3.IMqttToken` `subscribe`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v7 @kind this, `java.lang.String` v8 @kind object, `int` v9 , `java.lang.Object` v10 @kind object, `org.eclipse.paho.client.mqttv3.IMqttActionListener` v11 @kind object, `org.eclipse.paho.client.mqttv3.IMqttMessageListener` v12 @kind object) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.subscribe:(Ljava/lang/String;ILjava/lang/Object;Lorg/eclipse/paho/client/mqttv3/IMqttActionListener;Lorg/eclipse/paho/client/mqttv3/IMqttMessageListener;)Lorg/eclipse/paho/client/mqttv3/IMqttToken;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+
+  #L2288d8.  v0:= 1I;
+  #L2288da.  v2:= new `java.lang.String`[v0];
+  #L2288de.  v1:= 0I;
+  #L2288e0.  v2[v1]:= v8 @kind object;
+  #L2288e4.  v3:= new `int`[v0];
+  #L2288e8.  v3[v1]:= v9;
+  #L2288ec.  v6:= new `org.eclipse.paho.client.mqttv3.IMqttMessageListener`[v0];
+  #L2288f0.  v6[v1]:= v12 @kind object;
+  #L2288f4.  v1:= v7 @kind object;
+  #L2288f6.  v4:= v10 @kind object;
+  #L2288f8.  v5:= v11 @kind object;
+  #L2288fa.  call temp:= `subscribe`(v1, v2, v3, v4, v5, v6) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.subscribe:([Ljava/lang/String;[ILjava/lang/Object;Lorg/eclipse/paho/client/mqttv3/IMqttActionListener;[Lorg/eclipse/paho/client/mqttv3/IMqttMessageListener;)Lorg/eclipse/paho/client/mqttv3/IMqttToken;` @kind virtual;
+  #L228900.  v8:= temp @kind object;
+  #L228902.  return v8 @kind object;
+}
+procedure `org.eclipse.paho.client.mqttv3.IMqttToken` `subscribe`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v7 @kind this, `java.lang.String` v8 @kind object, `int` v9 , `org.eclipse.paho.client.mqttv3.IMqttMessageListener` v10 @kind object) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.subscribe:(Ljava/lang/String;ILorg/eclipse/paho/client/mqttv3/IMqttMessageListener;)Lorg/eclipse/paho/client/mqttv3/IMqttToken;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+
+  #L228914.  v0:= 1I;
+  #L228916.  v2:= new `java.lang.String`[v0];
+  #L22891a.  v1:= 0I;
+  #L22891c.  v2[v1]:= v8 @kind object;
+  #L228920.  v3:= new `int`[v0];
+  #L228924.  v3[v1]:= v9;
+  #L228928.  v6:= new `org.eclipse.paho.client.mqttv3.IMqttMessageListener`[v0];
+  #L22892c.  v6[v1]:= v10 @kind object;
+  #L228930.  v4:= 0I;
+  #L228932.  v5:= 0I;
+  #L228934.  v1:= v7 @kind object;
+  #L228936.  call temp:= `subscribe`(v1, v2, v3, v4, v5, v6) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.subscribe:([Ljava/lang/String;[ILjava/lang/Object;Lorg/eclipse/paho/client/mqttv3/IMqttActionListener;[Lorg/eclipse/paho/client/mqttv3/IMqttMessageListener;)Lorg/eclipse/paho/client/mqttv3/IMqttToken;` @kind virtual;
+  #L22893c.  v8:= temp @kind object;
+  #L22893e.  return v8 @kind object;
+}
+procedure `org.eclipse.paho.client.mqttv3.IMqttToken` `subscribe`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v1 @kind this, `java.lang.String`[] v2 @kind object, `int`[] v3 @kind object) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.subscribe:([Ljava/lang/String;[I)Lorg/eclipse/paho/client/mqttv3/IMqttToken;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L228950.  v0:= 0I;
+  #L228952.  call temp:= `subscribe`(v1, v2, v3, v0, v0) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.subscribe:([Ljava/lang/String;[ILjava/lang/Object;Lorg/eclipse/paho/client/mqttv3/IMqttActionListener;)Lorg/eclipse/paho/client/mqttv3/IMqttToken;` @kind virtual;
+  #L228958.  v2:= temp @kind object;
+  #L22895a.  return v2 @kind object;
+}
+procedure `org.eclipse.paho.client.mqttv3.IMqttToken` `subscribe`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v7 @kind this, `java.lang.String`[] v8 @kind object, `int`[] v9 @kind object, `java.lang.Object` v10 @kind object, `org.eclipse.paho.client.mqttv3.IMqttActionListener` v11 @kind object) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.subscribe:([Ljava/lang/String;[ILjava/lang/Object;Lorg/eclipse/paho/client/mqttv3/IMqttActionListener;)Lorg/eclipse/paho/client/mqttv3/IMqttToken;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+
+  #L22896c.  v0:= length @variable v8;
+  #L22896e.  v1:= length @variable v9;
+  #L228970.  if v0 != v1 then goto L228a84;
+  #L228974.  v0:= 0I;
+  #L228976.  v1:= 0I;
+  #L228978.  v2:= length @variable v8;
+  #L22897a.  if v1 < v2 then goto L228a6e;
+  #L22897e.  v1:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.log` @type ^`org.eclipse.paho.client.mqttv3.logging.Logger` @kind object;
+  #L228982.  v2:= 5I;
+  #L228984.  call temp:= `isLoggable`(v1, v2) @signature `Lorg/eclipse/paho/client/mqttv3/logging/Logger;.isLoggable:(I)Z` @kind interface;
+  #L22898a.  v1:= temp;
+  #L22898c.  v2:= "subscribe" @kind object;
+  #L228990.  if v1 == 0 then goto L228a1e;
+  #L228994.  v1:= new `java.lang.StringBuffer`;
+  #L228998.  call `<init>`(v1) @signature `Ljava/lang/StringBuffer;.<init>:()V` @kind direct;
+  #L22899e.  v3:= 0I;
+  #L2289a0.  v4:= length @variable v8;
+  #L2289a2.  v5:= 1I;
+  #L2289a4.  if v3 < v4 then goto L2289d8;
+  #L2289a8.  v3:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.log` @type ^`org.eclipse.paho.client.mqttv3.logging.Logger` @kind object;
+  #L2289ac.  v4:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.CLASS_NAME` @type ^`java.lang.String` @kind object;
+  #L2289b0.  v6:= 3I;
+  #L2289b2.  v6:= new `java.lang.Object`[v6];
+  #L2289b6.  call temp:= `toString`(v1) @signature `Ljava/lang/StringBuffer;.toString:()Ljava/lang/String;` @kind virtual;
+  #L2289bc.  v1:= temp @kind object;
+  #L2289be.  v6[v0]:= v1 @kind object;
+  #L2289c2.  v6[v5]:= v10 @kind object;
+  #L2289c6.  v0:= 2I;
+  #L2289c8.  v6[v0]:= v11 @kind object;
+  #L2289cc.  v0:= "106" @kind object;
+  #L2289d0.  call `fine`(v3, v4, v2, v0, v6) @signature `Lorg/eclipse/paho/client/mqttv3/logging/Logger;.fine:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L2289d6.  goto L228a1e;
+  #L2289d8.  if v3 <= 0 then goto L2289e6;
+  #L2289dc.  v4:= ", " @kind object;
+  #L2289e0.  call temp:= `append`(v1, v4) @signature `Ljava/lang/StringBuffer;.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;` @kind virtual;
+  #L2289e6.  v4:= "topic=" @kind object;
+  #L2289ea.  call temp:= `append`(v1, v4) @signature `Ljava/lang/StringBuffer;.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;` @kind virtual;
+  #L2289f0.  v4:= v8[v3] @kind object;
+  #L2289f4.  call temp:= `append`(v1, v4) @signature `Ljava/lang/StringBuffer;.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;` @kind virtual;
+  #L2289fa.  v4:= " qos=" @kind object;
+  #L2289fe.  call temp:= `append`(v1, v4) @signature `Ljava/lang/StringBuffer;.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;` @kind virtual;
+  #L228a04.  v4:= v9[v3];
+  #L228a08.  call temp:= `append`(v1, v4) @signature `Ljava/lang/StringBuffer;.append:(I)Ljava/lang/StringBuffer;` @kind virtual;
+  #L228a0e.  v4:= v8[v3] @kind object;
+  #L228a12.  call `validate`(v4, v5) @signature `Lorg/eclipse/paho/client/mqttv3/MqttTopic;.validate:(Ljava/lang/String;Z)V` @kind static;
+  #L228a18.  v3:= v3 + 1;
+  #L228a1c.  goto L2289a0;
+  #L228a1e.  v0:= new `org.eclipse.paho.client.mqttv3.MqttToken`;
+  #L228a22.  call temp:= `getClientId`(v7) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.getClientId:()Ljava/lang/String;` @kind virtual;
+  #L228a28.  v1:= temp @kind object;
+  #L228a2a.  call `<init>`(v0, v1) @signature `Lorg/eclipse/paho/client/mqttv3/MqttToken;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L228a30.  call `setActionCallback`(v0, v11) @signature `Lorg/eclipse/paho/client/mqttv3/MqttToken;.setActionCallback:(Lorg/eclipse/paho/client/mqttv3/IMqttActionListener;)V` @kind virtual;
+  #L228a36.  call `setUserContext`(v0, v10) @signature `Lorg/eclipse/paho/client/mqttv3/MqttToken;.setUserContext:(Ljava/lang/Object;)V` @kind virtual;
+  #L228a3c.  v10:= v0.`org.eclipse.paho.client.mqttv3.MqttToken.internalTok` @type ^`org.eclipse.paho.client.mqttv3.internal.Token` @kind object;
+  #L228a40.  call `setTopics`(v10, v8) @signature `Lorg/eclipse/paho/client/mqttv3/internal/Token;.setTopics:([Ljava/lang/String;)V` @kind virtual;
+  #L228a46.  v10:= new `org.eclipse.paho.client.mqttv3.internal.wire.MqttSubscribe`;
+  #L228a4a.  call `<init>`(v10, v8, v9) @signature `Lorg/eclipse/paho/client/mqttv3/internal/wire/MqttSubscribe;.<init>:([Ljava/lang/String;[I)V` @kind direct;
+  #L228a50.  v8:= v7.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.comms` @type ^`org.eclipse.paho.client.mqttv3.internal.ClientComms` @kind object;
+  #L228a54.  call `sendNoWait`(v8, v10, v0) @signature `Lorg/eclipse/paho/client/mqttv3/internal/ClientComms;.sendNoWait:(Lorg/eclipse/paho/client/mqttv3/internal/wire/MqttWireMessage;Lorg/eclipse/paho/client/mqttv3/MqttToken;)V` @kind virtual;
+  #L228a5a.  v8:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.log` @type ^`org.eclipse.paho.client.mqttv3.logging.Logger` @kind object;
+  #L228a5e.  v9:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.CLASS_NAME` @type ^`java.lang.String` @kind object;
+  #L228a62.  v10:= "109" @kind object;
+  #L228a66.  call `fine`(v8, v9, v2, v10) @signature `Lorg/eclipse/paho/client/mqttv3/logging/Logger;.fine:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V` @kind interface;
+  #L228a6c.  return v0 @kind object;
+  #L228a6e.  v2:= v7.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.comms` @type ^`org.eclipse.paho.client.mqttv3.internal.ClientComms` @kind object;
+  #L228a72.  v3:= v8[v1] @kind object;
+  #L228a76.  call `removeMessageListener`(v2, v3) @signature `Lorg/eclipse/paho/client/mqttv3/internal/ClientComms;.removeMessageListener:(Ljava/lang/String;)V` @kind virtual;
+  #L228a7c.  v1:= v1 + 1;
+  #L228a80.  goto L228978;
+  #L228a84.  v8:= new `java.lang.IllegalArgumentException`;
+  #L228a88.  call `<init>`(v8) @signature `Ljava/lang/IllegalArgumentException;.<init>:()V` @kind direct;
+  #L228a8e.  throw v8;
+}
+procedure `org.eclipse.paho.client.mqttv3.IMqttToken` `subscribe`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v2 @kind this, `java.lang.String`[] v3 @kind object, `int`[] v4 @kind object, `java.lang.Object` v5 @kind object, `org.eclipse.paho.client.mqttv3.IMqttActionListener` v6 @kind object, `org.eclipse.paho.client.mqttv3.IMqttMessageListener`[] v7 @kind object) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.subscribe:([Ljava/lang/String;[ILjava/lang/Object;Lorg/eclipse/paho/client/mqttv3/IMqttActionListener;[Lorg/eclipse/paho/client/mqttv3/IMqttMessageListener;)Lorg/eclipse/paho/client/mqttv3/IMqttToken;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L228aa0.  v0:= length @variable v7;
+  #L228aa2.  v1:= length @variable v4;
+  #L228aa4.  if v0 != v1 then goto L228ada;
+  #L228aa8.  v0:= length @variable v4;
+  #L228aaa.  v1:= length @variable v3;
+  #L228aac.  if v0 != v1 then goto L228ada;
+  #L228ab0.  call temp:= `subscribe`(v2, v3, v4, v5, v6) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.subscribe:([Ljava/lang/String;[ILjava/lang/Object;Lorg/eclipse/paho/client/mqttv3/IMqttActionListener;)Lorg/eclipse/paho/client/mqttv3/IMqttToken;` @kind virtual;
+  #L228ab6.  v4:= temp @kind object;
+  #L228ab8.  v5:= 0I;
+  #L228aba.  v6:= length @variable v3;
+  #L228abc.  if v5 < v6 then goto L228ac2;
+  #L228ac0.  return v4 @kind object;
+  #L228ac2.  v6:= v2.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.comms` @type ^`org.eclipse.paho.client.mqttv3.internal.ClientComms` @kind object;
+  #L228ac6.  v0:= v3[v5] @kind object;
+  #L228aca.  v1:= v7[v5] @kind object;
+  #L228ace.  call `setMessageListener`(v6, v0, v1) @signature `Lorg/eclipse/paho/client/mqttv3/internal/ClientComms;.setMessageListener:(Ljava/lang/String;Lorg/eclipse/paho/client/mqttv3/IMqttMessageListener;)V` @kind virtual;
+  #L228ad4.  v5:= v5 + 1;
+  #L228ad8.  goto L228aba;
+  #L228ada.  v3:= new `java.lang.IllegalArgumentException`;
+  #L228ade.  call `<init>`(v3) @signature `Ljava/lang/IllegalArgumentException;.<init>:()V` @kind direct;
+  #L228ae4.  throw v3;
+}
+procedure `org.eclipse.paho.client.mqttv3.IMqttToken` `subscribe`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v6 @kind this, `java.lang.String`[] v7 @kind object, `int`[] v8 @kind object, `org.eclipse.paho.client.mqttv3.IMqttMessageListener`[] v9 @kind object) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.subscribe:([Ljava/lang/String;[I[Lorg/eclipse/paho/client/mqttv3/IMqttMessageListener;)Lorg/eclipse/paho/client/mqttv3/IMqttToken;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L228af8.  v3:= 0I;
+  #L228afa.  v4:= 0I;
+  #L228afc.  v0:= v6 @kind object;
+  #L228afe.  v1:= v7 @kind object;
+  #L228b00.  v2:= v8 @kind object;
+  #L228b02.  v5:= v9 @kind object;
+  #L228b04.  call temp:= `subscribe`(v0, v1, v2, v3, v4, v5) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.subscribe:([Ljava/lang/String;[ILjava/lang/Object;Lorg/eclipse/paho/client/mqttv3/IMqttActionListener;[Lorg/eclipse/paho/client/mqttv3/IMqttMessageListener;)Lorg/eclipse/paho/client/mqttv3/IMqttToken;` @kind virtual;
+  #L228b0a.  v7:= temp @kind object;
+  #L228b0c.  return v7 @kind object;
+}
+procedure `org.eclipse.paho.client.mqttv3.IMqttToken` `unsubscribe`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v2 @kind this, `java.lang.String` v3 @kind object) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.unsubscribe:(Ljava/lang/String;)Lorg/eclipse/paho/client/mqttv3/IMqttToken;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L228b20.  v0:= 1I;
+  #L228b22.  v0:= new `java.lang.String`[v0];
+  #L228b26.  v1:= 0I;
+  #L228b28.  v0[v1]:= v3 @kind object;
+  #L228b2c.  v3:= 0I;
+  #L228b2e.  call temp:= `unsubscribe`(v2, v0, v3, v3) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.unsubscribe:([Ljava/lang/String;Ljava/lang/Object;Lorg/eclipse/paho/client/mqttv3/IMqttActionListener;)Lorg/eclipse/paho/client/mqttv3/IMqttToken;` @kind virtual;
+  #L228b34.  v3:= temp @kind object;
+  #L228b36.  return v3 @kind object;
+}
+procedure `org.eclipse.paho.client.mqttv3.IMqttToken` `unsubscribe`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v2 @kind this, `java.lang.String` v3 @kind object, `java.lang.Object` v4 @kind object, `org.eclipse.paho.client.mqttv3.IMqttActionListener` v5 @kind object) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.unsubscribe:(Ljava/lang/String;Ljava/lang/Object;Lorg/eclipse/paho/client/mqttv3/IMqttActionListener;)Lorg/eclipse/paho/client/mqttv3/IMqttToken;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L228b48.  v0:= 1I;
+  #L228b4a.  v0:= new `java.lang.String`[v0];
+  #L228b4e.  v1:= 0I;
+  #L228b50.  v0[v1]:= v3 @kind object;
+  #L228b54.  call temp:= `unsubscribe`(v2, v0, v4, v5) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.unsubscribe:([Ljava/lang/String;Ljava/lang/Object;Lorg/eclipse/paho/client/mqttv3/IMqttActionListener;)Lorg/eclipse/paho/client/mqttv3/IMqttToken;` @kind virtual;
+  #L228b5a.  v3:= temp @kind object;
+  #L228b5c.  return v3 @kind object;
+}
+procedure `org.eclipse.paho.client.mqttv3.IMqttToken` `unsubscribe`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v1 @kind this, `java.lang.String`[] v2 @kind object) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.unsubscribe:([Ljava/lang/String;)Lorg/eclipse/paho/client/mqttv3/IMqttToken;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L228b70.  v0:= 0I;
+  #L228b72.  call temp:= `unsubscribe`(v1, v2, v0, v0) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.unsubscribe:([Ljava/lang/String;Ljava/lang/Object;Lorg/eclipse/paho/client/mqttv3/IMqttActionListener;)Lorg/eclipse/paho/client/mqttv3/IMqttToken;` @kind virtual;
+  #L228b78.  v2:= temp @kind object;
+  #L228b7a.  return v2 @kind object;
+}
+procedure `org.eclipse.paho.client.mqttv3.IMqttToken` `unsubscribe`(`org.eclipse.paho.client.mqttv3.MqttAsyncClient` v7 @kind this, `java.lang.String`[] v8 @kind object, `java.lang.Object` v9 @kind object, `org.eclipse.paho.client.mqttv3.IMqttActionListener` v10 @kind object) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.unsubscribe:([Ljava/lang/String;Ljava/lang/Object;Lorg/eclipse/paho/client/mqttv3/IMqttActionListener;)Lorg/eclipse/paho/client/mqttv3/IMqttToken;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+
+  #L228b8c.  v0:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.log` @type ^`org.eclipse.paho.client.mqttv3.logging.Logger` @kind object;
+  #L228b90.  v1:= 5I;
+  #L228b92.  call temp:= `isLoggable`(v0, v1) @signature `Lorg/eclipse/paho/client/mqttv3/logging/Logger;.isLoggable:(I)Z` @kind interface;
+  #L228b98.  v0:= temp;
+  #L228b9a.  v1:= "unsubscribe" @kind object;
+  #L228b9e.  v2:= 0I;
+  #L228ba0.  v3:= 1I;
+  #L228ba2.  if v0 == 0 then goto L228c2e;
+  #L228ba6.  v0:= "" @kind object;
+  #L228baa.  v4:= v0 @kind object;
+  #L228bac.  v0:= 0I;
+  #L228bae.  v5:= length @variable v8;
+  #L228bb0.  if v0 < v5 then goto L228bdc;
+  #L228bb4.  v0:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.log` @type ^`org.eclipse.paho.client.mqttv3.logging.Logger` @kind object;
+  #L228bb8.  v5:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.CLASS_NAME` @type ^`java.lang.String` @kind object;
+  #L228bbc.  v6:= 3I;
+  #L228bbe.  v6:= new `java.lang.Object`[v6];
+  #L228bc2.  v6[v2]:= v4 @kind object;
+  #L228bc6.  v6[v3]:= v9 @kind object;
+  #L228bca.  v4:= 2I;
+  #L228bcc.  v6[v4]:= v10 @kind object;
+  #L228bd0.  v4:= "107" @kind object;
+  #L228bd4.  call `fine`(v0, v5, v1, v4, v6) @signature `Lorg/eclipse/paho/client/mqttv3/logging/Logger;.fine:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V` @kind interface;
+  #L228bda.  goto L228c2e;
+  #L228bdc.  if v0 <= 0 then goto L228c04;
+  #L228be0.  v5:= new `java.lang.StringBuilder`;
+  #L228be4.  call temp:= `valueOf`(v4) @signature `Ljava/lang/String;.valueOf:(Ljava/lang/Object;)Ljava/lang/String;` @kind static;
+  #L228bea.  v4:= temp @kind object;
+  #L228bec.  call `<init>`(v5, v4) @signature `Ljava/lang/StringBuilder;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L228bf2.  v4:= ", " @kind object;
+  #L228bf6.  call temp:= `append`(v5, v4) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L228bfc.  call temp:= `toString`(v5) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L228c02.  v4:= temp @kind object;
+  #L228c04.  v5:= new `java.lang.StringBuilder`;
+  #L228c08.  call temp:= `valueOf`(v4) @signature `Ljava/lang/String;.valueOf:(Ljava/lang/Object;)Ljava/lang/String;` @kind static;
+  #L228c0e.  v4:= temp @kind object;
+  #L228c10.  call `<init>`(v5, v4) @signature `Ljava/lang/StringBuilder;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L228c16.  v4:= v8[v0] @kind object;
+  #L228c1a.  call temp:= `append`(v5, v4) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L228c20.  call temp:= `toString`(v5) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L228c26.  v4:= temp @kind object;
+  #L228c28.  v0:= v0 + 1;
+  #L228c2c.  goto L228bae;
+  #L228c2e.  v0:= 0I;
+  #L228c30.  v4:= length @variable v8;
+  #L228c32.  if v0 < v4 then goto L228ca0;
+  #L228c36.  v0:= length @variable v8;
+  #L228c38.  if v2 < v0 then goto L228c8c;
+  #L228c3c.  v0:= new `org.eclipse.paho.client.mqttv3.MqttToken`;
+  #L228c40.  call temp:= `getClientId`(v7) @signature `Lorg/eclipse/paho/client/mqttv3/MqttAsyncClient;.getClientId:()Ljava/lang/String;` @kind virtual;
+  #L228c46.  v2:= temp @kind object;
+  #L228c48.  call `<init>`(v0, v2) @signature `Lorg/eclipse/paho/client/mqttv3/MqttToken;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L228c4e.  call `setActionCallback`(v0, v10) @signature `Lorg/eclipse/paho/client/mqttv3/MqttToken;.setActionCallback:(Lorg/eclipse/paho/client/mqttv3/IMqttActionListener;)V` @kind virtual;
+  #L228c54.  call `setUserContext`(v0, v9) @signature `Lorg/eclipse/paho/client/mqttv3/MqttToken;.setUserContext:(Ljava/lang/Object;)V` @kind virtual;
+  #L228c5a.  v9:= v0.`org.eclipse.paho.client.mqttv3.MqttToken.internalTok` @type ^`org.eclipse.paho.client.mqttv3.internal.Token` @kind object;
+  #L228c5e.  call `setTopics`(v9, v8) @signature `Lorg/eclipse/paho/client/mqttv3/internal/Token;.setTopics:([Ljava/lang/String;)V` @kind virtual;
+  #L228c64.  v9:= new `org.eclipse.paho.client.mqttv3.internal.wire.MqttUnsubscribe`;
+  #L228c68.  call `<init>`(v9, v8) @signature `Lorg/eclipse/paho/client/mqttv3/internal/wire/MqttUnsubscribe;.<init>:([Ljava/lang/String;)V` @kind direct;
+  #L228c6e.  v8:= v7.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.comms` @type ^`org.eclipse.paho.client.mqttv3.internal.ClientComms` @kind object;
+  #L228c72.  call `sendNoWait`(v8, v9, v0) @signature `Lorg/eclipse/paho/client/mqttv3/internal/ClientComms;.sendNoWait:(Lorg/eclipse/paho/client/mqttv3/internal/wire/MqttWireMessage;Lorg/eclipse/paho/client/mqttv3/MqttToken;)V` @kind virtual;
+  #L228c78.  v8:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.log` @type ^`org.eclipse.paho.client.mqttv3.logging.Logger` @kind object;
+  #L228c7c.  v9:= `@@org.eclipse.paho.client.mqttv3.MqttAsyncClient.CLASS_NAME` @type ^`java.lang.String` @kind object;
+  #L228c80.  v10:= "110" @kind object;
+  #L228c84.  call `fine`(v8, v9, v1, v10) @signature `Lorg/eclipse/paho/client/mqttv3/logging/Logger;.fine:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V` @kind interface;
+  #L228c8a.  return v0 @kind object;
+  #L228c8c.  v0:= v7.`org.eclipse.paho.client.mqttv3.MqttAsyncClient.comms` @type ^`org.eclipse.paho.client.mqttv3.internal.ClientComms` @kind object;
+  #L228c90.  v3:= v8[v2] @kind object;
+  #L228c94.  call `removeMessageListener`(v0, v3) @signature `Lorg/eclipse/paho/client/mqttv3/internal/ClientComms;.removeMessageListener:(Ljava/lang/String;)V` @kind virtual;
+  #L228c9a.  v2:= v2 + 1;
+  #L228c9e.  goto L228c36;
+  #L228ca0.  v4:= v8[v0] @kind object;
+  #L228ca4.  call `validate`(v4, v3) @signature `Lorg/eclipse/paho/client/mqttv3/MqttTopic;.validate:(Ljava/lang/String;Z)V` @kind static;
+  #L228caa.  v0:= v0 + 1;
+  #L228cae.  goto L228c30;
+}

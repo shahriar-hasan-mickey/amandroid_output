@@ -1,0 +1,1 @@
+define(["underscore","Backbone"],function(e,n){var r=(new EncryptedLocalStorage("secret"),n.Model.extend({url:function(){return this.instanceUrl},initialize:function(e){this.url=e.url}}));return r});

@@ -1,0 +1,202 @@
+record `com.journeyapps.barcodescanner.camera.AutoFocusManager` @kind class @AccessFlag PUBLIC_FINAL {
+  `int` `com.journeyapps.barcodescanner.camera.AutoFocusManager.MESSAGE_FOCUS` @AccessFlag PRIVATE;
+  `android.hardware.Camera$AutoFocusCallback` `com.journeyapps.barcodescanner.camera.AutoFocusManager.autoFocusCallback` @AccessFlag PRIVATE_FINAL;
+  `android.hardware.Camera` `com.journeyapps.barcodescanner.camera.AutoFocusManager.camera` @AccessFlag PRIVATE_FINAL;
+  `android.os.Handler$Callback` `com.journeyapps.barcodescanner.camera.AutoFocusManager.focusHandlerCallback` @AccessFlag PRIVATE_FINAL;
+  `boolean` `com.journeyapps.barcodescanner.camera.AutoFocusManager.focusing` @AccessFlag PRIVATE;
+  `android.os.Handler` `com.journeyapps.barcodescanner.camera.AutoFocusManager.handler` @AccessFlag PRIVATE;
+  `boolean` `com.journeyapps.barcodescanner.camera.AutoFocusManager.stopped` @AccessFlag PRIVATE;
+  `boolean` `com.journeyapps.barcodescanner.camera.AutoFocusManager.useAutoFocus` @AccessFlag PRIVATE_FINAL;
+}
+global `long` `@@com.journeyapps.barcodescanner.camera.AutoFocusManager.AUTO_FOCUS_INTERVAL_MS` @AccessFlag PRIVATE_STATIC_FINAL;
+global `java.util.Collection` `@@com.journeyapps.barcodescanner.camera.AutoFocusManager.FOCUS_MODES_CALLING_AF` @AccessFlag PRIVATE_STATIC_FINAL;
+global `java.lang.String` `@@com.journeyapps.barcodescanner.camera.AutoFocusManager.TAG` @AccessFlag PRIVATE_STATIC_FINAL;
+procedure `void` `<clinit>`() @signature `Lcom/journeyapps/barcodescanner/camera/AutoFocusManager;.<clinit>:()V` @AccessFlag STATIC_CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+
+  #L29f318.  v0:= new `java.util.ArrayList`;
+  #L29f31c.  v1:= 2I;
+  #L29f31e.  call `<init>`(v0, v1) @signature `Ljava/util/ArrayList;.<init>:(I)V` @kind direct;
+  #L29f324.  `@@com.journeyapps.barcodescanner.camera.AutoFocusManager.FOCUS_MODES_CALLING_AF` @type ^`java.util.Collection` := v0 @kind object;
+  #L29f328.  v1:= "auto" @kind object;
+  #L29f32c.  call temp:= `add`(v0, v1) @signature `Ljava/util/Collection;.add:(Ljava/lang/Object;)Z` @kind interface;
+  #L29f332.  v1:= "macro" @kind object;
+  #L29f336.  call temp:= `add`(v0, v1) @signature `Ljava/util/Collection;.add:(Ljava/lang/Object;)Z` @kind interface;
+  #L29f33c.  return @kind void;
+}
+procedure `void` `<init>`(`com.journeyapps.barcodescanner.camera.AutoFocusManager` v3 @kind this, `android.hardware.Camera` v4 @kind object, `com.journeyapps.barcodescanner.camera.CameraSettings` v5 @kind object) @signature `Lcom/journeyapps/barcodescanner/camera/AutoFocusManager;.<init>:(Landroid/hardware/Camera;Lcom/journeyapps/barcodescanner/camera/CameraSettings;)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L29f350.  call `<init>`(v3) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L29f356.  v0:= 1I;
+  #L29f358.  v3.`com.journeyapps.barcodescanner.camera.AutoFocusManager.MESSAGE_FOCUS` @type ^`int` := v0;
+  #L29f35c.  v1:= new `com.journeyapps.barcodescanner.camera.AutoFocusManager$1`;
+  #L29f360.  call `<init>`(v1, v3) @signature `Lcom/journeyapps/barcodescanner/camera/AutoFocusManager$1;.<init>:(Lcom/journeyapps/barcodescanner/camera/AutoFocusManager;)V` @kind direct;
+  #L29f366.  v3.`com.journeyapps.barcodescanner.camera.AutoFocusManager.focusHandlerCallback` @type ^`android.os.Handler$Callback` := v1 @kind object;
+  #L29f36a.  v2:= new `com.journeyapps.barcodescanner.camera.AutoFocusManager$2`;
+  #L29f36e.  call `<init>`(v2, v3) @signature `Lcom/journeyapps/barcodescanner/camera/AutoFocusManager$2;.<init>:(Lcom/journeyapps/barcodescanner/camera/AutoFocusManager;)V` @kind direct;
+  #L29f374.  v3.`com.journeyapps.barcodescanner.camera.AutoFocusManager.autoFocusCallback` @type ^`android.hardware.Camera$AutoFocusCallback` := v2 @kind object;
+  #L29f378.  v2:= new `android.os.Handler`;
+  #L29f37c.  call `<init>`(v2, v1) @signature `Landroid/os/Handler;.<init>:(Landroid/os/Handler$Callback;)V` @kind direct;
+  #L29f382.  v3.`com.journeyapps.barcodescanner.camera.AutoFocusManager.handler` @type ^`android.os.Handler` := v2 @kind object;
+  #L29f386.  v3.`com.journeyapps.barcodescanner.camera.AutoFocusManager.camera` @type ^`android.hardware.Camera` := v4 @kind object;
+  #L29f38a.  call temp:= `getParameters`(v4) @signature `Landroid/hardware/Camera;.getParameters:()Landroid/hardware/Camera$Parameters;` @kind virtual;
+  #L29f390.  v4:= temp @kind object;
+  #L29f392.  call temp:= `getFocusMode`(v4) @signature `Landroid/hardware/Camera$Parameters;.getFocusMode:()Ljava/lang/String;` @kind virtual;
+  #L29f398.  v4:= temp @kind object;
+  #L29f39a.  call temp:= `isAutoFocusEnabled`(v5) @signature `Lcom/journeyapps/barcodescanner/camera/CameraSettings;.isAutoFocusEnabled:()Z` @kind virtual;
+  #L29f3a0.  v5:= temp;
+  #L29f3a2.  if v5 == 0 then goto L29f3b8;
+  #L29f3a6.  v5:= `@@com.journeyapps.barcodescanner.camera.AutoFocusManager.FOCUS_MODES_CALLING_AF` @type ^`java.util.Collection` @kind object;
+  #L29f3aa.  call temp:= `contains`(v5, v4) @signature `Ljava/util/Collection;.contains:(Ljava/lang/Object;)Z` @kind interface;
+  #L29f3b0.  v5:= temp;
+  #L29f3b2.  if v5 == 0 then goto L29f3b8;
+  #L29f3b6.  goto L29f3ba;
+  #L29f3b8.  v0:= 0I;
+  #L29f3ba.  v3.`com.journeyapps.barcodescanner.camera.AutoFocusManager.useAutoFocus` @type ^`boolean` := v0 @kind boolean;
+  #L29f3be.  v5:= `@@com.journeyapps.barcodescanner.camera.AutoFocusManager.TAG` @type ^`java.lang.String` @kind object;
+  #L29f3c2.  v1:= new `java.lang.StringBuilder`;
+  #L29f3c6.  call `<init>`(v1) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L29f3cc.  v2:= "Current focus mode '" @kind object;
+  #L29f3d0.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L29f3d6.  call temp:= `append`(v1, v4) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L29f3dc.  v4:= "'; use auto focus? " @kind object;
+  #L29f3e0.  call temp:= `append`(v1, v4) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L29f3e6.  call temp:= `append`(v1, v0) @signature `Ljava/lang/StringBuilder;.append:(Z)Ljava/lang/StringBuilder;` @kind virtual;
+  #L29f3ec.  call temp:= `toString`(v1) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L29f3f2.  v4:= temp @kind object;
+  #L29f3f4.  call temp:= `i`(v5, v4) @signature `Landroid/util/Log;.i:(Ljava/lang/String;Ljava/lang/String;)I` @kind static;
+  #L29f3fa.  call `start`(v3) @signature `Lcom/journeyapps/barcodescanner/camera/AutoFocusManager;.start:()V` @kind virtual;
+  #L29f400.  return @kind void;
+}
+procedure `int` `a`(`com.journeyapps.barcodescanner.camera.AutoFocusManager` v0 @kind object) @signature `Lcom/journeyapps/barcodescanner/camera/AutoFocusManager;.a:(Lcom/journeyapps/barcodescanner/camera/AutoFocusManager;)I` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L29f300.  v0:= v0.`com.journeyapps.barcodescanner.camera.AutoFocusManager.MESSAGE_FOCUS` @type ^`int`;
+  #L29f304.  return v0;
+}
+procedure `void` `autoFocusAgainLater`(`com.journeyapps.barcodescanner.camera.AutoFocusManager` v4 @kind this) @signature `Lcom/journeyapps/barcodescanner/camera/AutoFocusManager;.autoFocusAgainLater:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L29f444.  @monitorenter v4
+  #L29f446.  v0:= v4.`com.journeyapps.barcodescanner.camera.AutoFocusManager.stopped` @type ^`boolean` @kind boolean;
+  #L29f44a.  if v0 != 0 then goto L29f47c;
+  #L29f44e.  v0:= v4.`com.journeyapps.barcodescanner.camera.AutoFocusManager.handler` @type ^`android.os.Handler` @kind object;
+  #L29f452.  v1:= v4.`com.journeyapps.barcodescanner.camera.AutoFocusManager.MESSAGE_FOCUS` @type ^`int`;
+  #L29f456.  call temp:= `hasMessages`(v0, v1) @signature `Landroid/os/Handler;.hasMessages:(I)Z` @kind virtual;
+  #L29f45c.  v0:= temp;
+  #L29f45e.  if v0 != 0 then goto L29f47c;
+  #L29f462.  v0:= v4.`com.journeyapps.barcodescanner.camera.AutoFocusManager.handler` @type ^`android.os.Handler` @kind object;
+  #L29f466.  v1:= v4.`com.journeyapps.barcodescanner.camera.AutoFocusManager.MESSAGE_FOCUS` @type ^`int`;
+  #L29f46a.  call temp:= `obtainMessage`(v0, v1) @signature `Landroid/os/Handler;.obtainMessage:(I)Landroid/os/Message;` @kind virtual;
+  #L29f470.  v1:= temp @kind object;
+  #L29f472.  v2:= 2000L;
+  #L29f476.  call temp:= `sendMessageDelayed`(v0, v1, v2) @signature `Landroid/os/Handler;.sendMessageDelayed:(Landroid/os/Message;J)Z` @kind virtual;
+  #L29f47c.  @monitorexit v4
+  #L29f47e.  return @kind void;
+  #L29f480.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L29f482.  @monitorexit v4
+  #L29f484.  throw v0;
+  catch `java.lang.Throwable` @[L29f446..L29f47c] goto L29f480;
+}
+procedure `void` `b`(`com.journeyapps.barcodescanner.camera.AutoFocusManager` v0 @kind object) @signature `Lcom/journeyapps/barcodescanner/camera/AutoFocusManager;.b:(Lcom/journeyapps/barcodescanner/camera/AutoFocusManager;)V` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L29f414.  call `focus`(v0) @signature `Lcom/journeyapps/barcodescanner/camera/AutoFocusManager;.focus:()V` @kind direct;
+  #L29f41a.  return @kind void;
+}
+procedure `boolean` `c`(`com.journeyapps.barcodescanner.camera.AutoFocusManager` v0 @kind object, `boolean` v1 ) @signature `Lcom/journeyapps/barcodescanner/camera/AutoFocusManager;.c:(Lcom/journeyapps/barcodescanner/camera/AutoFocusManager;Z)Z` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L29f2e8.  v0.`com.journeyapps.barcodescanner.camera.AutoFocusManager.focusing` @type ^`boolean` := v1 @kind boolean;
+  #L29f2ec.  return v1;
+}
+procedure `void` `cancelOutstandingTask`(`com.journeyapps.barcodescanner.camera.AutoFocusManager` v2 @kind this) @signature `Lcom/journeyapps/barcodescanner/camera/AutoFocusManager;.cancelOutstandingTask:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+
+  #L29f4a4.  v0:= v2.`com.journeyapps.barcodescanner.camera.AutoFocusManager.handler` @type ^`android.os.Handler` @kind object;
+  #L29f4a8.  v1:= v2.`com.journeyapps.barcodescanner.camera.AutoFocusManager.MESSAGE_FOCUS` @type ^`int`;
+  #L29f4ac.  call `removeMessages`(v0, v1) @signature `Landroid/os/Handler;.removeMessages:(I)V` @kind virtual;
+  #L29f4b2.  return @kind void;
+}
+procedure `void` `d`(`com.journeyapps.barcodescanner.camera.AutoFocusManager` v0 @kind object) @signature `Lcom/journeyapps/barcodescanner/camera/AutoFocusManager;.d:(Lcom/journeyapps/barcodescanner/camera/AutoFocusManager;)V` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L29f42c.  call `autoFocusAgainLater`(v0) @signature `Lcom/journeyapps/barcodescanner/camera/AutoFocusManager;.autoFocusAgainLater:()V` @kind direct;
+  #L29f432.  return @kind void;
+}
+procedure `android.os.Handler` `e`(`com.journeyapps.barcodescanner.camera.AutoFocusManager` v0 @kind object) @signature `Lcom/journeyapps/barcodescanner/camera/AutoFocusManager;.e:(Lcom/journeyapps/barcodescanner/camera/AutoFocusManager;)Landroid/os/Handler;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L29f2d0.  v0:= v0.`com.journeyapps.barcodescanner.camera.AutoFocusManager.handler` @type ^`android.os.Handler` @kind object;
+  #L29f2d4.  return v0 @kind object;
+}
+procedure `void` `focus`(`com.journeyapps.barcodescanner.camera.AutoFocusManager` v3 @kind this) @signature `Lcom/journeyapps/barcodescanner/camera/AutoFocusManager;.focus:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L29f4c4.  v0:= v3.`com.journeyapps.barcodescanner.camera.AutoFocusManager.useAutoFocus` @type ^`boolean` @kind boolean;
+  #L29f4c8.  if v0 == 0 then goto L29f508;
+  #L29f4cc.  v0:= v3.`com.journeyapps.barcodescanner.camera.AutoFocusManager.stopped` @type ^`boolean` @kind boolean;
+  #L29f4d0.  if v0 != 0 then goto L29f508;
+  #L29f4d4.  v0:= v3.`com.journeyapps.barcodescanner.camera.AutoFocusManager.focusing` @type ^`boolean` @kind boolean;
+  #L29f4d8.  if v0 != 0 then goto L29f508;
+  #L29f4dc.  v0:= v3.`com.journeyapps.barcodescanner.camera.AutoFocusManager.camera` @type ^`android.hardware.Camera` @kind object;
+  #L29f4e0.  v1:= v3.`com.journeyapps.barcodescanner.camera.AutoFocusManager.autoFocusCallback` @type ^`android.hardware.Camera$AutoFocusCallback` @kind object;
+  #L29f4e4.  call `autoFocus`(v0, v1) @signature `Landroid/hardware/Camera;.autoFocus:(Landroid/hardware/Camera$AutoFocusCallback;)V` @kind virtual;
+  #L29f4ea.  v0:= 1I;
+  #L29f4ec.  v3.`com.journeyapps.barcodescanner.camera.AutoFocusManager.focusing` @type ^`boolean` := v0 @kind boolean;
+  #L29f4f0.  goto L29f508;
+  #L29f4f2.  v0:= Exception @type ^`java.lang.RuntimeException` @kind object;
+  #L29f4f4.  v1:= `@@com.journeyapps.barcodescanner.camera.AutoFocusManager.TAG` @type ^`java.lang.String` @kind object;
+  #L29f4f8.  v2:= "Unexpected exception while focusing" @kind object;
+  #L29f4fc.  call temp:= `w`(v1, v2, v0) @signature `Landroid/util/Log;.w:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)I` @kind static;
+  #L29f502.  call `autoFocusAgainLater`(v3) @signature `Lcom/journeyapps/barcodescanner/camera/AutoFocusManager;.autoFocusAgainLater:()V` @kind direct;
+  #L29f508.  return @kind void;
+  catch `java.lang.RuntimeException` @[L29f4dc..L29f4f0] goto L29f4f2;
+}
+procedure `void` `start`(`com.journeyapps.barcodescanner.camera.AutoFocusManager` v1 @kind this) @signature `Lcom/journeyapps/barcodescanner/camera/AutoFocusManager;.start:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L29f52c.  v0:= 0I;
+  #L29f52e.  v1.`com.journeyapps.barcodescanner.camera.AutoFocusManager.stopped` @type ^`boolean` := v0 @kind boolean;
+  #L29f532.  call `focus`(v1) @signature `Lcom/journeyapps/barcodescanner/camera/AutoFocusManager;.focus:()V` @kind direct;
+  #L29f538.  return @kind void;
+}
+procedure `void` `stop`(`com.journeyapps.barcodescanner.camera.AutoFocusManager` v3 @kind this) @signature `Lcom/journeyapps/barcodescanner/camera/AutoFocusManager;.stop:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L29f54c.  v0:= 1I;
+  #L29f54e.  v3.`com.journeyapps.barcodescanner.camera.AutoFocusManager.stopped` @type ^`boolean` := v0 @kind boolean;
+  #L29f552.  v0:= 0I;
+  #L29f554.  v3.`com.journeyapps.barcodescanner.camera.AutoFocusManager.focusing` @type ^`boolean` := v0 @kind boolean;
+  #L29f558.  call `cancelOutstandingTask`(v3) @signature `Lcom/journeyapps/barcodescanner/camera/AutoFocusManager;.cancelOutstandingTask:()V` @kind direct;
+  #L29f55e.  v0:= v3.`com.journeyapps.barcodescanner.camera.AutoFocusManager.useAutoFocus` @type ^`boolean` @kind boolean;
+  #L29f562.  if v0 == 0 then goto L29f582;
+  #L29f566.  v0:= v3.`com.journeyapps.barcodescanner.camera.AutoFocusManager.camera` @type ^`android.hardware.Camera` @kind object;
+  #L29f56a.  call `cancelAutoFocus`(v0) @signature `Landroid/hardware/Camera;.cancelAutoFocus:()V` @kind virtual;
+  #L29f570.  goto L29f582;
+  #L29f572.  v0:= Exception @type ^`java.lang.RuntimeException` @kind object;
+  #L29f574.  v1:= `@@com.journeyapps.barcodescanner.camera.AutoFocusManager.TAG` @type ^`java.lang.String` @kind object;
+  #L29f578.  v2:= "Unexpected exception while cancelling focusing" @kind object;
+  #L29f57c.  call temp:= `w`(v1, v2, v0) @signature `Landroid/util/Log;.w:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)I` @kind static;
+  #L29f582.  return @kind void;
+  catch `java.lang.RuntimeException` @[L29f566..L29f570] goto L29f572;
+}

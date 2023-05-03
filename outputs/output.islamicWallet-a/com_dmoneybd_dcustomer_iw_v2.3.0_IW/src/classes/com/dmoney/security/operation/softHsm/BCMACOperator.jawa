@@ -1,0 +1,53 @@
+record `com.dmoney.security.operation.softHsm.BCMACOperator` @kind class @AccessFlag PUBLIC extends `com.dmoney.security.operation.interfaces.IHMACOperation` @kind interface {
+}
+procedure `void` `<init>`(`com.dmoney.security.operation.softHsm.BCMACOperator` v0 @kind this) @signature `Lcom/dmoney/security/operation/softHsm/BCMACOperator;.<init>:()V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+
+  #L2c9540.  call `<init>`(v0) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L2c9546.  return @kind void;
+}
+procedure `byte`[] `GenerateMac`(`com.dmoney.security.operation.softHsm.BCMACOperator` v5 @kind this, `byte`[] v6 @kind object, `byte`[] v7 @kind object) @signature `Lcom/dmoney/security/operation/softHsm/BCMACOperator;.GenerateMac:([B[B)[B` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L2c94c4.  call temp:= `getInstance`() @signature `Lcom/dmoney/security/config/Configuration;.getInstance:()Lcom/dmoney/security/config/Configuration;` @kind static;
+  #L2c94ca.  v0:= temp @kind object;
+  #L2c94cc.  call temp:= `getHMACKeyAlgo`(v0) @signature `Lcom/dmoney/security/config/Configuration;.getHMACKeyAlgo:()Ljava/lang/String;` @kind virtual;
+  #L2c94d2.  v0:= temp @kind object;
+  #L2c94d4.  v1:= `@@com.dmoney.security.config.Configuration.PROVIDER` @type ^`java.lang.String` @kind object;
+  #L2c94d8.  call temp:= `getInstance`(v0, v1) @signature `Ljavax/crypto/Mac;.getInstance:(Ljava/lang/String;Ljava/lang/String;)Ljavax/crypto/Mac;` @kind static;
+  #L2c94de.  v0:= temp @kind object;
+  #L2c94e0.  v1:= new `javax.crypto.spec.SecretKeySpec`;
+  #L2c94e4.  v2:= length @variable v7;
+  #L2c94e6.  call temp:= `getInstance`() @signature `Lcom/dmoney/security/config/Configuration;.getInstance:()Lcom/dmoney/security/config/Configuration;` @kind static;
+  #L2c94ec.  v3:= temp @kind object;
+  #L2c94ee.  call temp:= `getHMACKeyAlgo`(v3) @signature `Lcom/dmoney/security/config/Configuration;.getHMACKeyAlgo:()Ljava/lang/String;` @kind virtual;
+  #L2c94f4.  v3:= temp @kind object;
+  #L2c94f6.  v4:= 0I;
+  #L2c94f8.  call `<init>`(v1, v7, v4, v2, v3) @signature `Ljavax/crypto/spec/SecretKeySpec;.<init>:([BIILjava/lang/String;)V` @kind direct;
+  #L2c94fe.  call `init`(v0, v1) @signature `Ljavax/crypto/Mac;.init:(Ljava/security/Key;)V` @kind virtual;
+  #L2c9504.  call `update`(v0, v6) @signature `Ljavax/crypto/Mac;.update:([B)V` @kind virtual;
+  #L2c950a.  call temp:= `doFinal`(v0) @signature `Ljavax/crypto/Mac;.doFinal:()[B` @kind virtual;
+  #L2c9510.  v6:= temp @kind object;
+  #L2c9512.  return v6 @kind object;
+}
+procedure `byte`[] `Sign`(`com.dmoney.security.operation.softHsm.BCMACOperator` v0 @kind this, `byte`[] v1 @kind object, `byte`[] v2 @kind object) @signature `Lcom/dmoney/security/operation/softHsm/BCMACOperator;.Sign:([B[B)[B` @AccessFlag PUBLIC {
+    temp;
+
+  #L2c9524.  call temp:= `GenerateMac`(v0, v1, v2) @signature `Lcom/dmoney/security/operation/softHsm/BCMACOperator;.GenerateMac:([B[B)[B` @kind direct;
+  #L2c952a.  v1:= temp @kind object;
+  #L2c952c.  return v1 @kind object;
+}
+procedure `boolean` `Verify`(`com.dmoney.security.operation.softHsm.BCMACOperator` v0 @kind this, `byte`[] v1 @kind object, `byte`[] v2 @kind object, `byte`[] v3 @kind object) @signature `Lcom/dmoney/security/operation/softHsm/BCMACOperator;.Verify:([B[B[B)Z` @AccessFlag PUBLIC {
+    temp;
+
+  #L2c94a0.  call temp:= `GenerateMac`(v0, v1, v3) @signature `Lcom/dmoney/security/operation/softHsm/BCMACOperator;.GenerateMac:([B[B)[B` @kind direct;
+  #L2c94a6.  v1:= temp @kind object;
+  #L2c94a8.  call temp:= `isEqual`(v2, v1) @signature `Ljava/security/MessageDigest;.isEqual:([B[B)Z` @kind static;
+  #L2c94ae.  v1:= temp;
+  #L2c94b0.  return v1;
+}

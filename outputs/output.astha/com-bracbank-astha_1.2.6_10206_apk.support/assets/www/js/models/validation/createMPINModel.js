@@ -1,0 +1,1 @@
+define(["underscore","Backbone"],function(n,i){var e=Backbone.Model.extend({url:function(){return this.instanceUrl},validation:{newmpin:{required:!0,msg:"validation.creatempin.newpin"},confirmmpin:{required:!0,msg:"validation.creatempin.confirmpin"}},initialize:function(n){this.url=n.url}});return e});

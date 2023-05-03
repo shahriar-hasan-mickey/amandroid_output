@@ -1,0 +1,154 @@
+record `com.activeandroid.util.SqlParser` @kind class @AccessFlag PUBLIC {
+}
+global `int` `@@com.activeandroid.util.SqlParser.STATE_COMMENT` @AccessFlag PUBLIC_STATIC_FINAL;
+global `int` `@@com.activeandroid.util.SqlParser.STATE_COMMENT_BLOCK` @AccessFlag PUBLIC_STATIC_FINAL;
+global `int` `@@com.activeandroid.util.SqlParser.STATE_NONE` @AccessFlag PUBLIC_STATIC_FINAL;
+global `int` `@@com.activeandroid.util.SqlParser.STATE_STRING` @AccessFlag PUBLIC_STATIC_FINAL;
+procedure `void` `<init>`(`com.activeandroid.util.SqlParser` v0 @kind this) @signature `Lcom/activeandroid/util/SqlParser;.<init>:()V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+
+  #L263904.  call `<init>`(v0) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L26390a.  return @kind void;
+}
+procedure `boolean` `isNewLine`(`char` v1 ) @signature `Lcom/activeandroid/util/SqlParser;.isNewLine:(C)Z` @AccessFlag PRIVATE_STATIC {
+    temp;
+    v0;
+
+  #L263718.  v0:= 13I;
+  #L26371c.  if v1 == v0 then goto L26372e;
+  #L263720.  v0:= 10I;
+  #L263724.  if v1 != v0 then goto L26372a;
+  #L263728.  goto L26372e;
+  #L26372a.  v1:= 0I;
+  #L26372c.  goto L263730;
+  #L26372e.  v1:= 1I;
+  #L263730.  return v1;
+}
+procedure `boolean` `isWhitespace`(`char` v1 ) @signature `Lcom/activeandroid/util/SqlParser;.isWhitespace:(C)Z` @AccessFlag PRIVATE_STATIC {
+    temp;
+    v0;
+
+  #L263744.  v0:= 13I;
+  #L263748.  if v1 == v0 then goto L26376a;
+  #L26374c.  v0:= 10I;
+  #L263750.  if v1 == v0 then goto L26376a;
+  #L263754.  v0:= 9I;
+  #L263758.  if v1 == v0 then goto L26376a;
+  #L26375c.  v0:= 32I;
+  #L263760.  if v1 != v0 then goto L263766;
+  #L263764.  goto L26376a;
+  #L263766.  v1:= 0I;
+  #L263768.  goto L26376c;
+  #L26376a.  v1:= 1I;
+  #L26376c.  return v1;
+}
+procedure `java.util.List` `parse`(`java.io.InputStream` v10 @kind object) @signature `Lcom/activeandroid/util/SqlParser;.parse:(Ljava/io/InputStream;)Ljava/util/List;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+    v9;
+
+  #L263780.  v0:= new `java.io.BufferedInputStream`;
+  #L263784.  call `<init>`(v0, v10) @signature `Ljava/io/BufferedInputStream;.<init>:(Ljava/io/InputStream;)V` @kind direct;
+  #L26378a.  v10:= new `java.util.ArrayList`;
+  #L26378e.  call `<init>`(v10) @signature `Ljava/util/ArrayList;.<init>:()V` @kind direct;
+  #L263794.  v1:= new `java.lang.StringBuffer`;
+  #L263798.  call `<init>`(v1) @signature `Ljava/lang/StringBuffer;.<init>:()V` @kind direct;
+  #L26379e.  v2:= new `com.activeandroid.util.Tokenizer`;
+  #L2637a2.  call `<init>`(v2, v0) @signature `Lcom/activeandroid/util/Tokenizer;.<init>:(Ljava/io/InputStream;)V` @kind direct;
+  #L2637a8.  v3:= 2I;
+  #L2637aa.  v4:= 3I;
+  #L2637ac.  v5:= 0I;
+  #L2637ae.  v6:= 0I;
+  #L2637b0.  call temp:= `hasNext`(v2) @signature `Lcom/activeandroid/util/Tokenizer;.hasNext:()Z` @kind virtual;
+  #L2637b6.  v7:= temp;
+  #L2637b8.  if v7 == 0 then goto L2638b4;
+  #L2637bc.  call temp:= `next`(v2) @signature `Lcom/activeandroid/util/Tokenizer;.next:()I` @kind virtual;
+  #L2637c2.  v7:= temp;
+  #L2637c4.  v7:= (`char`) v7 @kind i2c;
+  #L2637c6.  if v6 != v4 then goto L2637dc;
+  #L2637ca.  v7:= "*/" @kind object;
+  #L2637ce.  call temp:= `skip`(v2, v7) @signature `Lcom/activeandroid/util/Tokenizer;.skip:(Ljava/lang/String;)Z` @kind virtual;
+  #L2637d4.  v7:= temp;
+  #L2637d6.  if v7 == 0 then goto L2637b0;
+  #L2637da.  goto L2637ec;
+  #L2637dc.  if v6 != v3 then goto L2637ee;
+  #L2637e0.  call temp:= `isNewLine`(v7) @signature `Lcom/activeandroid/util/SqlParser;.isNewLine:(C)Z` @kind static;
+  #L2637e6.  v7:= temp;
+  #L2637e8.  if v7 == 0 then goto L2637b0;
+  #L2637ec.  goto L2637ae;
+  #L2637ee.  if v6 != 0 then goto L263806;
+  #L2637f2.  v8:= "/*" @kind object;
+  #L2637f6.  call temp:= `skip`(v2, v8) @signature `Lcom/activeandroid/util/Tokenizer;.skip:(Ljava/lang/String;)Z` @kind virtual;
+  #L2637fc.  v8:= temp;
+  #L2637fe.  if v8 == 0 then goto L263806;
+  #L263802.  v6:= 3I;
+  #L263804.  goto L2637b0;
+  #L263806.  if v6 != 0 then goto L26381e;
+  #L26380a.  v8:= "--" @kind object;
+  #L26380e.  call temp:= `skip`(v2, v8) @signature `Lcom/activeandroid/util/Tokenizer;.skip:(Ljava/lang/String;)Z` @kind virtual;
+  #L263814.  v8:= temp;
+  #L263816.  if v8 == 0 then goto L26381e;
+  #L26381a.  v6:= 2I;
+  #L26381c.  goto L2637b0;
+  #L26381e.  if v6 != 0 then goto L263848;
+  #L263822.  v8:= 59I;
+  #L263826.  if v7 != v8 then goto L263848;
+  #L26382a.  call temp:= `toString`(v1) @signature `Ljava/lang/StringBuffer;.toString:()Ljava/lang/String;` @kind virtual;
+  #L263830.  v7:= temp @kind object;
+  #L263832.  call temp:= `trim`(v7) @signature `Ljava/lang/String;.trim:()Ljava/lang/String;` @kind virtual;
+  #L263838.  v7:= temp @kind object;
+  #L26383a.  call temp:= `add`(v10, v7) @signature `Ljava/util/List;.add:(Ljava/lang/Object;)Z` @kind interface;
+  #L263840.  call `setLength`(v1, v5) @signature `Ljava/lang/StringBuffer;.setLength:(I)V` @kind virtual;
+  #L263846.  goto L2637b0;
+  #L263848.  v8:= 39I;
+  #L26384c.  v9:= 1I;
+  #L26384e.  if v6 != 0 then goto L26385a;
+  #L263852.  if v7 != v8 then goto L26385a;
+  #L263856.  v6:= 1I;
+  #L263858.  goto L263864;
+  #L26385a.  if v6 != v9 then goto L263864;
+  #L26385e.  if v7 != v8 then goto L263864;
+  #L263862.  v6:= 0I;
+  #L263864.  if v6 == 0 then goto L26386c;
+  #L263868.  if v6 != v9 then goto L2637b0;
+  #L26386c.  if v6 != 0 then goto L2638aa;
+  #L263870.  call temp:= `isWhitespace`(v7) @signature `Lcom/activeandroid/util/SqlParser;.isWhitespace:(C)Z` @kind static;
+  #L263876.  v8:= temp;
+  #L263878.  if v8 == 0 then goto L2638aa;
+  #L26387c.  call temp:= `length`(v1) @signature `Ljava/lang/StringBuffer;.length:()I` @kind virtual;
+  #L263882.  v7:= temp;
+  #L263884.  if v7 <= 0 then goto L2637b0;
+  #L263888.  call temp:= `length`(v1) @signature `Ljava/lang/StringBuffer;.length:()I` @kind virtual;
+  #L26388e.  v7:= temp;
+  #L263890.  v7:= v7 - v9 @kind int;
+  #L263892.  call temp:= `charAt`(v1, v7) @signature `Ljava/lang/StringBuffer;.charAt:(I)C` @kind virtual;
+  #L263898.  v7:= temp;
+  #L26389a.  v8:= 32I;
+  #L26389e.  if v7 == v8 then goto L2637b0;
+  #L2638a2.  call temp:= `append`(v1, v8) @signature `Ljava/lang/StringBuffer;.append:(C)Ljava/lang/StringBuffer;` @kind virtual;
+  #L2638a8.  goto L2637b0;
+  #L2638aa.  call temp:= `append`(v1, v7) @signature `Ljava/lang/StringBuffer;.append:(C)Ljava/lang/StringBuffer;` @kind virtual;
+  #L2638b0.  goto L2637b0;
+  #L2638b4.  call `closeQuietly`(v0) @signature `Lcom/activeandroid/util/IOUtils;.closeQuietly:(Ljava/io/Closeable;)V` @kind static;
+  #L2638ba.  call temp:= `length`(v1) @signature `Ljava/lang/StringBuffer;.length:()I` @kind virtual;
+  #L2638c0.  v0:= temp;
+  #L2638c2.  if v0 <= 0 then goto L2638dc;
+  #L2638c6.  call temp:= `toString`(v1) @signature `Ljava/lang/StringBuffer;.toString:()Ljava/lang/String;` @kind virtual;
+  #L2638cc.  v0:= temp @kind object;
+  #L2638ce.  call temp:= `trim`(v0) @signature `Ljava/lang/String;.trim:()Ljava/lang/String;` @kind virtual;
+  #L2638d4.  v0:= temp @kind object;
+  #L2638d6.  call temp:= `add`(v10, v0) @signature `Ljava/util/List;.add:(Ljava/lang/Object;)Z` @kind interface;
+  #L2638dc.  return v10 @kind object;
+  #L2638de.  v10:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L2638e0.  call `closeQuietly`(v0) @signature `Lcom/activeandroid/util/IOUtils;.closeQuietly:(Ljava/io/Closeable;)V` @kind static;
+  #L2638e6.  throw v10;
+  catch `java.lang.Throwable` @[L26379e..L2638b0] goto L2638de;
+}

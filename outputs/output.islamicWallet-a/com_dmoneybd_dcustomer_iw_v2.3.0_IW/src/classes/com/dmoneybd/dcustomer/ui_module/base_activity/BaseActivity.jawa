@@ -1,0 +1,417 @@
+record `com.dmoneybd.dcustomer.ui_module.base_activity.BaseActivity` @kind class @AccessFlag PUBLIC extends `androidx.appcompat.app.AppCompatActivity` @kind class, `com.dmoneybd.dcustomer.ui_module.base_activity.view.IBaseView` @kind interface {
+  `int` `com.dmoneybd.dcustomer.ui_module.base_activity.BaseActivity.SESSION_OUT_TIME_IN_SECOND` @AccessFlag PRIVATE;
+  `com.google.android.gms.location.FusedLocationProviderClient` `com.dmoneybd.dcustomer.ui_module.base_activity.BaseActivity.fusedLocationProviderClient` @AccessFlag PROTECTED;
+  `com.dmoneybd.dcustomer.ui_module.base_activity.presenter.IBasePresenter` `com.dmoneybd.dcustomer.ui_module.base_activity.BaseActivity.k` @AccessFlag ;
+  `dmax.dialog.SpotsDialog` `com.dmoneybd.dcustomer.ui_module.base_activity.BaseActivity.progressDialog` @AccessFlag PROTECTED;
+}
+global `int` `@@com.dmoneybd.dcustomer.ui_module.base_activity.BaseActivity.LOCATION_PERMISSION_REQUEST` @AccessFlag PRIVATE_STATIC_FINAL;
+procedure `void` `<init>`(`com.dmoneybd.dcustomer.ui_module.base_activity.BaseActivity` v1 @kind this) @signature `Lcom/dmoneybd/dcustomer/ui_module/base_activity/BaseActivity;.<init>:()V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L31807c.  call `<init>`(v1) @signature `Landroidx/appcompat/app/AppCompatActivity;.<init>:()V` @kind direct;
+  #L318082.  v0:= 300I;
+  #L318086.  v1.`com.dmoneybd.dcustomer.ui_module.base_activity.BaseActivity.SESSION_OUT_TIME_IN_SECOND` @type ^`int` := v0;
+  #L31808a.  return @kind void;
+}
+procedure `void` `getLocation`(`com.dmoneybd.dcustomer.ui_module.base_activity.BaseActivity` v4 @kind this) @signature `Lcom/dmoneybd/dcustomer/ui_module/base_activity/BaseActivity;.getLocation:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L318130.  call temp:= `shouldGetLocation`(v4) @signature `Lcom/dmoneybd/dcustomer/ui_module/base_activity/BaseActivity;.shouldGetLocation:()Z` @kind virtual;
+  #L318136.  v0:= temp;
+  #L318138.  if v0 == 0 then goto L3181b2;
+  #L31813c.  v0:= v4.`com.dmoneybd.dcustomer.ui_module.base_activity.BaseActivity.fusedLocationProviderClient` @type ^`com.google.android.gms.location.FusedLocationProviderClient` @kind object;
+  #L318140.  if v0 != 0 then goto L318158;
+  #L318144.  call temp:= `getApplicationContext`(v4) @signature `Landroid/app/Activity;.getApplicationContext:()Landroid/content/Context;` @kind virtual;
+  #L31814a.  v0:= temp @kind object;
+  #L31814c.  call temp:= `getFusedLocationProviderClient`(v0) @signature `Lcom/google/android/gms/location/LocationServices;.getFusedLocationProviderClient:(Landroid/content/Context;)Lcom/google/android/gms/location/FusedLocationProviderClient;` @kind static;
+  #L318152.  v0:= temp @kind object;
+  #L318154.  v4.`com.dmoneybd.dcustomer.ui_module.base_activity.BaseActivity.fusedLocationProviderClient` @type ^`com.google.android.gms.location.FusedLocationProviderClient` := v0 @kind object;
+  #L318158.  v0:= "android.permission.ACCESS_FINE_LOCATION" @kind object;
+  #L31815c.  call temp:= `checkSelfPermission`(v4, v0) @signature `Landroidx/core/content/ContextCompat;.checkSelfPermission:(Landroid/content/Context;Ljava/lang/String;)I` @kind static;
+  #L318162.  v1:= temp;
+  #L318164.  if v1 == 0 then goto L318196;
+  #L318168.  v1:= "android.permission.ACCESS_COARSE_LOCATION" @kind object;
+  #L31816c.  call temp:= `checkSelfPermission`(v4, v1) @signature `Landroidx/core/content/ContextCompat;.checkSelfPermission:(Landroid/content/Context;Ljava/lang/String;)I` @kind static;
+  #L318172.  v2:= temp;
+  #L318174.  if v2 == 0 then goto L318196;
+  #L318178.  v2:= 2I;
+  #L31817a.  v2:= new `java.lang.String`[v2];
+  #L31817e.  v3:= 0I;
+  #L318180.  v2[v3]:= v1 @kind object;
+  #L318184.  v1:= 1I;
+  #L318186.  v2[v1]:= v0 @kind object;
+  #L31818a.  v0:= 1001I;
+  #L31818e.  call `requestPermissions`(v4, v2, v0) @signature `Landroidx/core/app/ActivityCompat;.requestPermissions:(Landroid/app/Activity;[Ljava/lang/String;I)V` @kind static;
+  #L318194.  return @kind void;
+  #L318196.  v0:= v4.`com.dmoneybd.dcustomer.ui_module.base_activity.BaseActivity.fusedLocationProviderClient` @type ^`com.google.android.gms.location.FusedLocationProviderClient` @kind object;
+  #L31819a.  call temp:= `getLastLocation`(v0) @signature `Lcom/google/android/gms/location/FusedLocationProviderClient;.getLastLocation:()Lcom/google/android/gms/tasks/Task;` @kind virtual;
+  #L3181a0.  v0:= temp @kind object;
+  #L3181a2.  v1:= new `com.dmoneybd.dcustomer.ui_module.base_activity.a`;
+  #L3181a6.  call `<init>`(v1, v4) @signature `Lcom/dmoneybd/dcustomer/ui_module/base_activity/a;.<init>:(Lcom/dmoneybd/dcustomer/ui_module/base_activity/BaseActivity;)V` @kind direct;
+  #L3181ac.  call temp:= `addOnSuccessListener`(v0, v4, v1) @signature `Lcom/google/android/gms/tasks/Task;.addOnSuccessListener:(Landroid/app/Activity;Lcom/google/android/gms/tasks/OnSuccessListener;)Lcom/google/android/gms/tasks/Task;` @kind virtual;
+  #L3181b2.  return @kind void;
+}
+procedure `void` `init`(`com.dmoneybd.dcustomer.ui_module.base_activity.BaseActivity` v1 @kind this) @signature `Lcom/dmoneybd/dcustomer/ui_module/base_activity/BaseActivity;.init:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+
+  #L3181c4.  v0:= v1.`com.dmoneybd.dcustomer.ui_module.base_activity.BaseActivity.k` @type ^`com.dmoneybd.dcustomer.ui_module.base_activity.presenter.IBasePresenter` @kind object;
+  #L3181c8.  if v0 == 0 then goto L3181e2;
+  #L3181cc.  v0:= "Presenter is not null" @kind object;
+  #L3181d0.  call `showLog`(v0) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.showLog:(Ljava/lang/String;)V` @kind static;
+  #L3181d6.  v0:= v1.`com.dmoneybd.dcustomer.ui_module.base_activity.BaseActivity.k` @type ^`com.dmoneybd.dcustomer.ui_module.base_activity.presenter.IBasePresenter` @kind object;
+  #L3181da.  call `setView`(v0, v1, v1) @signature `Lcom/dmoneybd/dcustomer/ui_module/base_activity/presenter/IBasePresenter;.setView:(Lcom/dmoneybd/dcustomer/ui_module/base_activity/view/IBaseView;Landroid/content/Context;)V` @kind interface;
+  #L3181e0.  goto L3181ec;
+  #L3181e2.  v0:= "Presenter is NULL" @kind object;
+  #L3181e6.  call `showLog`(v0) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.showLog:(Ljava/lang/String;)V` @kind static;
+  #L3181ec.  return @kind void;
+}
+procedure `void` `lambda$getLocation$0`(`com.dmoneybd.dcustomer.ui_module.base_activity.BaseActivity` v3 @kind this, `android.location.Location` v4 @kind object) @signature `Lcom/dmoneybd/dcustomer/ui_module/base_activity/BaseActivity;.lambda$getLocation$0:(Landroid/location/Location;)V` @AccessFlag PRIVATE_SYNTHETIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L318218.  if v4 == 0 then goto L318260;
+  #L31821c.  call temp:= `getApplicationContext`(v3) @signature `Landroid/app/Activity;.getApplicationContext:()Landroid/content/Context;` @kind virtual;
+  #L318222.  v0:= temp @kind object;
+  #L318224.  call temp:= `getLatitude`(v4) @signature `Landroid/location/Location;.getLatitude:()D` @kind virtual;
+  #L31822a.  v1:= temp @kind wide;
+  #L31822c.  call temp:= `valueOf`(v1) @signature `Ljava/lang/String;.valueOf:(D)Ljava/lang/String;` @kind static;
+  #L318232.  v1:= temp @kind object;
+  #L318234.  v2:= "CURRENT_LATITUDE" @kind object;
+  #L318238.  call `savePreferences`(v0, v2, v1) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.savePreferences:(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)V` @kind static;
+  #L31823e.  call temp:= `getApplicationContext`(v3) @signature `Landroid/app/Activity;.getApplicationContext:()Landroid/content/Context;` @kind virtual;
+  #L318244.  v0:= temp @kind object;
+  #L318246.  call temp:= `getLongitude`(v4) @signature `Landroid/location/Location;.getLongitude:()D` @kind virtual;
+  #L31824c.  v1:= temp @kind wide;
+  #L31824e.  call temp:= `valueOf`(v1) @signature `Ljava/lang/String;.valueOf:(D)Ljava/lang/String;` @kind static;
+  #L318254.  v4:= temp @kind object;
+  #L318256.  v1:= "CURRENT_LONGITUDE" @kind object;
+  #L31825a.  call `savePreferences`(v0, v1, v4) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.savePreferences:(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)V` @kind static;
+  #L318260.  return @kind void;
+}
+procedure `void` `controlProgressBar`(`com.dmoneybd.dcustomer.ui_module.base_activity.BaseActivity` v1 @kind this, `boolean` v2 ) @signature `Lcom/dmoneybd/dcustomer/ui_module/base_activity/BaseActivity;.controlProgressBar:(Z)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L31809c.  if v2 == 0 then goto L3180f0;
+  #L3180a0.  v2:= v1.`com.dmoneybd.dcustomer.ui_module.base_activity.BaseActivity.progressDialog` @type ^`dmax.dialog.SpotsDialog` @kind object;
+  #L3180a4.  if v2 == 0 then goto L3180be;
+  #L3180a8.  call temp:= `isShowing`(v2) @signature `Landroid/app/AlertDialog;.isShowing:()Z` @kind virtual;
+  #L3180ae.  v2:= temp;
+  #L3180b0.  if v2 == 0 then goto L3180be;
+  #L3180b4.  v2:= v1.`com.dmoneybd.dcustomer.ui_module.base_activity.BaseActivity.progressDialog` @type ^`dmax.dialog.SpotsDialog` @kind object;
+  #L3180b8.  call `dismiss`(v2) @signature `Landroid/app/AlertDialog;.dismiss:()V` @kind virtual;
+  #L3180be.  v2:= new `dmax.dialog.SpotsDialog`;
+  #L3180c2.  v0:= 2131952334I;
+  #L3180c8.  call `<init>`(v2, v1, v0) @signature `Ldmax/dialog/SpotsDialog;.<init>:(Landroid/content/Context;I)V` @kind direct;
+  #L3180ce.  v1.`com.dmoneybd.dcustomer.ui_module.base_activity.BaseActivity.progressDialog` @type ^`dmax.dialog.SpotsDialog` := v2 @kind object;
+  #L3180d2.  v0:= 0I;
+  #L3180d4.  call `setCancelable`(v2, v0) @signature `Landroid/app/AlertDialog;.setCancelable:(Z)V` @kind virtual;
+  #L3180da.  v2:= v1.`com.dmoneybd.dcustomer.ui_module.base_activity.BaseActivity.progressDialog` @type ^`dmax.dialog.SpotsDialog` @kind object;
+  #L3180de.  call `setCanceledOnTouchOutside`(v2, v0) @signature `Landroid/app/AlertDialog;.setCanceledOnTouchOutside:(Z)V` @kind virtual;
+  #L3180e4.  v2:= v1.`com.dmoneybd.dcustomer.ui_module.base_activity.BaseActivity.progressDialog` @type ^`dmax.dialog.SpotsDialog` @kind object;
+  #L3180e8.  call `show`(v2) @signature `Landroid/app/AlertDialog;.show:()V` @kind virtual;
+  #L3180ee.  goto L31810e;
+  #L3180f0.  v2:= v1.`com.dmoneybd.dcustomer.ui_module.base_activity.BaseActivity.progressDialog` @type ^`dmax.dialog.SpotsDialog` @kind object;
+  #L3180f4.  if v2 == 0 then goto L31810e;
+  #L3180f8.  call temp:= `isShowing`(v2) @signature `Landroid/app/AlertDialog;.isShowing:()Z` @kind virtual;
+  #L3180fe.  v2:= temp;
+  #L318100.  if v2 == 0 then goto L31810e;
+  #L318104.  v2:= v1.`com.dmoneybd.dcustomer.ui_module.base_activity.BaseActivity.progressDialog` @type ^`dmax.dialog.SpotsDialog` @kind object;
+  #L318108.  call `dismiss`(v2) @signature `Landroid/app/AlertDialog;.dismiss:()V` @kind virtual;
+  #L31810e.  return @kind void;
+  catch `java.lang.Exception` @[L3180a0..L31810e] goto L31810e;
+}
+procedure `void` `e`(`com.dmoneybd.dcustomer.ui_module.base_activity.BaseActivity` v0 @kind this, `android.location.Location` v1 @kind object) @signature `Lcom/dmoneybd/dcustomer/ui_module/base_activity/BaseActivity;.e:(Landroid/location/Location;)V` @AccessFlag PUBLIC_SYNTHETIC {
+    temp;
+
+  #L318200.  call `lambda$getLocation$0`(v0, v1) @signature `Lcom/dmoneybd/dcustomer/ui_module/base_activity/BaseActivity;.lambda$getLocation$0:(Landroid/location/Location;)V` @kind direct;
+  #L318206.  return @kind void;
+}
+procedure `void` `onCreate`(`com.dmoneybd.dcustomer.ui_module.base_activity.BaseActivity` v0 @kind this, `android.os.Bundle` v1 @kind object) @signature `Lcom/dmoneybd/dcustomer/ui_module/base_activity/BaseActivity;.onCreate:(Landroid/os/Bundle;)V` @AccessFlag PROTECTED {
+    temp;
+
+  #L318274.  call `onCreate`(v0, v1) @signature `Landroidx/appcompat/app/AppCompatActivity;.onCreate:(Landroid/os/Bundle;)V` @kind super;
+  #L31827a.  call `setLanguage`(v0) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.setLanguage:(Landroid/app/Activity;)V` @kind static;
+  #L318280.  v1:= 2131362607I;
+  #L318286.  call temp:= `findViewById`(v0, v1) @signature `Landroidx/appcompat/app/AppCompatActivity;.findViewById:(I)Landroid/view/View;` @kind virtual;
+  #L31828c.  v1:= temp @kind object;
+  #L31828e.  v1:= (`androidx.appcompat.widget.Toolbar`) v1 @kind object;
+  #L318292.  call `setSupportActionBar`(v0, v1) @signature `Landroidx/appcompat/app/AppCompatActivity;.setSupportActionBar:(Landroidx/appcompat/widget/Toolbar;)V` @kind virtual;
+  #L318298.  goto L3182a2;
+  #L31829a.  v1:= Exception @type ^`java.lang.Exception` @kind object;
+  #L31829c.  call `printStackTrace`(v1) @signature `Ljava/lang/Exception;.printStackTrace:()V` @kind virtual;
+  #L3182a2.  call `init`(v0) @signature `Lcom/dmoneybd/dcustomer/ui_module/base_activity/BaseActivity;.init:()V` @kind direct;
+  #L3182a8.  call `getLocation`(v0) @signature `Lcom/dmoneybd/dcustomer/ui_module/base_activity/BaseActivity;.getLocation:()V` @kind direct;
+  #L3182ae.  return @kind void;
+  catch `java.lang.Exception` @[L31827a..L318298] goto L31829a;
+}
+procedure `void` `onDestroy`(`com.dmoneybd.dcustomer.ui_module.base_activity.BaseActivity` v1 @kind this) @signature `Lcom/dmoneybd/dcustomer/ui_module/base_activity/BaseActivity;.onDestroy:()V` @AccessFlag PROTECTED {
+    temp;
+    v0;
+
+  #L3182d0.  call `onDestroy`(v1) @signature `Landroidx/appcompat/app/AppCompatActivity;.onDestroy:()V` @kind super;
+  #L3182d6.  call `hideSoftKeyboard`(v1) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.hideSoftKeyboard:(Landroid/app/Activity;)V` @kind static;
+  #L3182dc.  v0:= 0I;
+  #L3182de.  call `controlProgressBar`(v1, v0) @signature `Lcom/dmoneybd/dcustomer/ui_module/base_activity/BaseActivity;.controlProgressBar:(Z)V` @kind virtual;
+  #L3182e4.  return @kind void;
+}
+procedure `void` `onPause`(`com.dmoneybd.dcustomer.ui_module.base_activity.BaseActivity` v0 @kind this) @signature `Lcom/dmoneybd/dcustomer/ui_module/base_activity/BaseActivity;.onPause:()V` @AccessFlag PROTECTED {
+    temp;
+
+  #L3182f8.  call `onPause`(v0) @signature `Landroidx/fragment/app/FragmentActivity;.onPause:()V` @kind super;
+  #L3182fe.  call `hideSoftKeyboard`(v0) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.hideSoftKeyboard:(Landroid/app/Activity;)V` @kind static;
+  #L318304.  return @kind void;
+}
+procedure `void` `onRequestPermissionsResult`(`com.dmoneybd.dcustomer.ui_module.base_activity.BaseActivity` v5 @kind this, `int` v6 , `java.lang.String`[] v7 @kind object, `int`[] v8 @kind object) @signature `Lcom/dmoneybd/dcustomer/ui_module/base_activity/BaseActivity;.onRequestPermissionsResult:(I[Ljava/lang/String;[I)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L318318.  v0:= 1001I;
+  #L31831c.  if v6 != v0 then goto L31837e;
+  #L318320.  v6:= 0I;
+  #L318322.  v0:= 0I;
+  #L318324.  v1:= 0I;
+  #L318326.  v2:= length @variable v7;
+  #L318328.  if v6 >= v2 then goto L318370;
+  #L31832c.  v2:= v7[v6] @kind object;
+  #L318330.  v3:= "android.permission.ACCESS_COARSE_LOCATION" @kind object;
+  #L318334.  call temp:= `equals`(v2, v3) @signature `Ljava/lang/String;.equals:(Ljava/lang/Object;)Z` @kind virtual;
+  #L31833a.  v2:= temp;
+  #L31833c.  v3:= 1I;
+  #L31833e.  if v2 == 0 then goto L31834c;
+  #L318342.  v2:= v8[v6];
+  #L318346.  if v2 != 0 then goto L31834c;
+  #L31834a.  v1:= 1I;
+  #L31834c.  v2:= v7[v6] @kind object;
+  #L318350.  v4:= "android.permission.ACCESS_FINE_LOCATION" @kind object;
+  #L318354.  call temp:= `equals`(v2, v4) @signature `Ljava/lang/String;.equals:(Ljava/lang/Object;)Z` @kind virtual;
+  #L31835a.  v2:= temp;
+  #L31835c.  if v2 == 0 then goto L31836a;
+  #L318360.  v2:= v8[v6];
+  #L318364.  if v2 != 0 then goto L31836a;
+  #L318368.  v0:= 1I;
+  #L31836a.  v6:= v6 + 1;
+  #L31836e.  goto L318326;
+  #L318370.  if v0 == 0 then goto L31837e;
+  #L318374.  if v1 == 0 then goto L31837e;
+  #L318378.  call `getLocation`(v5) @signature `Lcom/dmoneybd/dcustomer/ui_module/base_activity/BaseActivity;.getLocation:()V` @kind direct;
+  #L31837e.  return @kind void;
+}
+procedure `void` `onResume`(`com.dmoneybd.dcustomer.ui_module.base_activity.BaseActivity` v6 @kind this) @signature `Lcom/dmoneybd/dcustomer/ui_module/base_activity/BaseActivity;.onResume:()V` @AccessFlag PROTECTED {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L318390.  call `onResume`(v6) @signature `Landroidx/fragment/app/FragmentActivity;.onResume:()V` @kind super;
+  #L318396.  v0:= "last_interaction" @kind object;
+  #L31839a.  call temp:= `getPreferences`(v6, v0) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.getPreferences:(Landroid/content/Context;Ljava/lang/String;)Ljava/lang/String;` @kind static;
+  #L3183a0.  v1:= temp @kind object;
+  #L3183a2.  call temp:= `isEmpty`(v1) @signature `Ljava/lang/String;.isEmpty:()Z` @kind virtual;
+  #L3183a8.  v1:= temp;
+  #L3183aa.  if v1 != 0 then goto L31844e;
+  #L3183ae.  v1:= `@@java.util.concurrent.TimeUnit.MILLISECONDS` @type ^`java.util.concurrent.TimeUnit` @kind object;
+  #L3183b2.  call temp:= `currentTimeMillis`() @signature `Ljava/lang/System;.currentTimeMillis:()J` @kind static;
+  #L3183b8.  v2:= temp @kind wide;
+  #L3183ba.  call temp:= `getPreferences`(v6, v0) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.getPreferences:(Landroid/content/Context;Ljava/lang/String;)Ljava/lang/String;` @kind static;
+  #L3183c0.  v4:= temp @kind object;
+  #L3183c2.  call temp:= `decode`(v4) @signature `Ljava/lang/Long;.decode:(Ljava/lang/String;)Ljava/lang/Long;` @kind static;
+  #L3183c8.  v4:= temp @kind object;
+  #L3183ca.  call temp:= `longValue`(v4) @signature `Ljava/lang/Long;.longValue:()J` @kind virtual;
+  #L3183d0.  v4:= temp @kind wide;
+  #L3183d2.  v2:= v2 - v4 @kind long;
+  #L3183d4.  call temp:= `toSeconds`(v1, v2) @signature `Ljava/util/concurrent/TimeUnit;.toSeconds:(J)J` @kind virtual;
+  #L3183da.  v1:= temp @kind wide;
+  #L3183dc.  v3:= v6.`com.dmoneybd.dcustomer.ui_module.base_activity.BaseActivity.SESSION_OUT_TIME_IN_SECOND` @type ^`int`;
+  #L3183e0.  v3:= (`long`) v3 @kind i2l;
+  #L3183e2.  v5:= lcmp(v1, v3);
+  #L3183e6.  if v5 <= 0 then goto L31844e;
+  #L3183ea.  call temp:= `getApplicationContext`(v6) @signature `Landroid/app/Activity;.getApplicationContext:()Landroid/content/Context;` @kind virtual;
+  #L3183f0.  v1:= temp @kind object;
+  #L3183f2.  v2:= "user full name" @kind object;
+  #L3183f6.  v3:= "" @kind object;
+  #L3183fa.  call `savePreferences`(v1, v2, v3) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.savePreferences:(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)V` @kind static;
+  #L318400.  call temp:= `getApplicationContext`(v6) @signature `Landroid/app/Activity;.getApplicationContext:()Landroid/content/Context;` @kind virtual;
+  #L318406.  v1:= temp @kind object;
+  #L318408.  v2:= "is logged in" @kind object;
+  #L31840c.  call `savePreferences`(v1, v2, v3) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.savePreferences:(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)V` @kind static;
+  #L318412.  call temp:= `getApplicationContext`(v6) @signature `Landroid/app/Activity;.getApplicationContext:()Landroid/content/Context;` @kind virtual;
+  #L318418.  v1:= temp @kind object;
+  #L31841a.  call `savePreferences`(v1, v0, v3) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.savePreferences:(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)V` @kind static;
+  #L318420.  v0:= new `android.content.Intent`;
+  #L318424.  v1:= constclass @type ^`com.dmoneybd.dcustomer.ui_module.user.LoginActivity` @kind object;
+  #L318428.  call `<init>`(v0, v6, v1) @signature `Landroid/content/Intent;.<init>:(Landroid/content/Context;Ljava/lang/Class;)V` @kind direct;
+  #L31842e.  v1:= 268468224I;
+  #L318434.  call temp:= `setFlags`(v0, v1) @signature `Landroid/content/Intent;.setFlags:(I)Landroid/content/Intent;` @kind virtual;
+  #L31843a.  call `startActivity`(v6, v0) @signature `Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V` @kind virtual;
+  #L318440.  v0:= 0I;
+  #L318442.  call `overridePendingTransition`(v6, v0, v0) @signature `Landroid/app/Activity;.overridePendingTransition:(II)V` @kind virtual;
+  #L318448.  call `finish`(v6) @signature `Landroid/app/Activity;.finish:()V` @kind virtual;
+  #L31844e.  return @kind void;
+}
+procedure `void` `onStop`(`com.dmoneybd.dcustomer.ui_module.base_activity.BaseActivity` v0 @kind this) @signature `Lcom/dmoneybd/dcustomer/ui_module/base_activity/BaseActivity;.onStop:()V` @AccessFlag PROTECTED {
+    temp;
+
+  #L318460.  call `onStop`(v0) @signature `Landroidx/appcompat/app/AppCompatActivity;.onStop:()V` @kind super;
+  #L318466.  call `hideSoftKeyboard`(v0) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.hideSoftKeyboard:(Landroid/app/Activity;)V` @kind static;
+  #L31846c.  return @kind void;
+}
+procedure `void` `onUserInteraction`(`com.dmoneybd.dcustomer.ui_module.base_activity.BaseActivity` v7 @kind this) @signature `Lcom/dmoneybd/dcustomer/ui_module/base_activity/BaseActivity;.onUserInteraction:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+
+  #L318480.  call `onUserInteraction`(v7) @signature `Landroid/app/Activity;.onUserInteraction:()V` @kind super;
+  #L318486.  v0:= new `java.lang.StringBuilder`;
+  #L31848a.  call `<init>`(v0) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L318490.  v1:= "Last interacted: " @kind object;
+  #L318494.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L31849a.  v1:= "last_interaction" @kind object;
+  #L31849e.  call temp:= `getPreferences`(v7, v1) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.getPreferences:(Landroid/content/Context;Ljava/lang/String;)Ljava/lang/String;` @kind static;
+  #L3184a4.  v2:= temp @kind object;
+  #L3184a6.  call temp:= `append`(v0, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3184ac.  call temp:= `toString`(v0) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L3184b2.  v0:= temp @kind object;
+  #L3184b4.  call `showLog`(v0) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.showLog:(Ljava/lang/String;)V` @kind static;
+  #L3184ba.  v0:= new `java.lang.StringBuilder`;
+  #L3184be.  call `<init>`(v0) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L3184c4.  v2:= "Current Time: " @kind object;
+  #L3184c8.  call temp:= `append`(v0, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3184ce.  call temp:= `currentTimeMillis`() @signature `Ljava/lang/System;.currentTimeMillis:()J` @kind static;
+  #L3184d4.  v2:= temp @kind wide;
+  #L3184d6.  call temp:= `append`(v0, v2) @signature `Ljava/lang/StringBuilder;.append:(J)Ljava/lang/StringBuilder;` @kind virtual;
+  #L3184dc.  call temp:= `toString`(v0) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L3184e2.  v0:= temp @kind object;
+  #L3184e4.  call `showLog`(v0) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.showLog:(Ljava/lang/String;)V` @kind static;
+  #L3184ea.  call temp:= `getPreferences`(v7, v1) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.getPreferences:(Landroid/content/Context;Ljava/lang/String;)Ljava/lang/String;` @kind static;
+  #L3184f0.  v0:= temp @kind object;
+  #L3184f2.  call temp:= `isEmpty`(v0) @signature `Ljava/lang/String;.isEmpty:()Z` @kind virtual;
+  #L3184f8.  v0:= temp;
+  #L3184fa.  if v0 != 0 then goto L318554;
+  #L3184fe.  v0:= new `java.lang.StringBuilder`;
+  #L318502.  call `<init>`(v0) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L318508.  v2:= "Difference: " @kind object;
+  #L31850c.  call temp:= `append`(v0, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L318512.  v2:= `@@java.util.concurrent.TimeUnit.MILLISECONDS` @type ^`java.util.concurrent.TimeUnit` @kind object;
+  #L318516.  call temp:= `currentTimeMillis`() @signature `Ljava/lang/System;.currentTimeMillis:()J` @kind static;
+  #L31851c.  v3:= temp @kind wide;
+  #L31851e.  call temp:= `getPreferences`(v7, v1) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.getPreferences:(Landroid/content/Context;Ljava/lang/String;)Ljava/lang/String;` @kind static;
+  #L318524.  v5:= temp @kind object;
+  #L318526.  call temp:= `decode`(v5) @signature `Ljava/lang/Long;.decode:(Ljava/lang/String;)Ljava/lang/Long;` @kind static;
+  #L31852c.  v5:= temp @kind object;
+  #L31852e.  call temp:= `longValue`(v5) @signature `Ljava/lang/Long;.longValue:()J` @kind virtual;
+  #L318534.  v5:= temp @kind wide;
+  #L318536.  v3:= v3 - v5 @kind long;
+  #L318538.  call temp:= `toSeconds`(v2, v3) @signature `Ljava/util/concurrent/TimeUnit;.toSeconds:(J)J` @kind virtual;
+  #L31853e.  v2:= temp @kind wide;
+  #L318540.  call temp:= `append`(v0, v2) @signature `Ljava/lang/StringBuilder;.append:(J)Ljava/lang/StringBuilder;` @kind virtual;
+  #L318546.  call temp:= `toString`(v0) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L31854c.  v0:= temp @kind object;
+  #L31854e.  call `showLog`(v0) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.showLog:(Ljava/lang/String;)V` @kind static;
+  #L318554.  call temp:= `getPreferences`(v7, v1) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.getPreferences:(Landroid/content/Context;Ljava/lang/String;)Ljava/lang/String;` @kind static;
+  #L31855a.  v0:= temp @kind object;
+  #L31855c.  call temp:= `isEmpty`(v0) @signature `Ljava/lang/String;.isEmpty:()Z` @kind virtual;
+  #L318562.  v0:= temp;
+  #L318564.  if v0 != 0 then goto L318616;
+  #L318568.  v0:= `@@java.util.concurrent.TimeUnit.MILLISECONDS` @type ^`java.util.concurrent.TimeUnit` @kind object;
+  #L31856c.  call temp:= `currentTimeMillis`() @signature `Ljava/lang/System;.currentTimeMillis:()J` @kind static;
+  #L318572.  v2:= temp @kind wide;
+  #L318574.  call temp:= `getPreferences`(v7, v1) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.getPreferences:(Landroid/content/Context;Ljava/lang/String;)Ljava/lang/String;` @kind static;
+  #L31857a.  v4:= temp @kind object;
+  #L31857c.  call temp:= `decode`(v4) @signature `Ljava/lang/Long;.decode:(Ljava/lang/String;)Ljava/lang/Long;` @kind static;
+  #L318582.  v4:= temp @kind object;
+  #L318584.  call temp:= `longValue`(v4) @signature `Ljava/lang/Long;.longValue:()J` @kind virtual;
+  #L31858a.  v4:= temp @kind wide;
+  #L31858c.  v2:= v2 - v4 @kind long;
+  #L31858e.  call temp:= `toSeconds`(v0, v2) @signature `Ljava/util/concurrent/TimeUnit;.toSeconds:(J)J` @kind virtual;
+  #L318594.  v2:= temp @kind wide;
+  #L318596.  v0:= v7.`com.dmoneybd.dcustomer.ui_module.base_activity.BaseActivity.SESSION_OUT_TIME_IN_SECOND` @type ^`int`;
+  #L31859a.  v4:= (`long`) v0 @kind i2l;
+  #L31859c.  v0:= lcmp(v2, v4);
+  #L3185a0.  if v0 <= 0 then goto L318616;
+  #L3185a4.  call temp:= `isLoginActivityVisible`() @signature `Lcom/dmoneybd/dcustomer/base/DCustomerApplication;.isLoginActivityVisible:()Z` @kind static;
+  #L3185aa.  v0:= temp;
+  #L3185ac.  if v0 != 0 then goto L31862c;
+  #L3185b0.  call temp:= `getApplicationContext`(v7) @signature `Landroid/app/Activity;.getApplicationContext:()Landroid/content/Context;` @kind virtual;
+  #L3185b6.  v0:= temp @kind object;
+  #L3185b8.  v2:= "user full name" @kind object;
+  #L3185bc.  v3:= "" @kind object;
+  #L3185c0.  call `savePreferences`(v0, v2, v3) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.savePreferences:(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)V` @kind static;
+  #L3185c6.  call temp:= `getApplicationContext`(v7) @signature `Landroid/app/Activity;.getApplicationContext:()Landroid/content/Context;` @kind virtual;
+  #L3185cc.  v0:= temp @kind object;
+  #L3185ce.  v2:= "is logged in" @kind object;
+  #L3185d2.  call `savePreferences`(v0, v2, v3) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.savePreferences:(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)V` @kind static;
+  #L3185d8.  call temp:= `getApplicationContext`(v7) @signature `Landroid/app/Activity;.getApplicationContext:()Landroid/content/Context;` @kind virtual;
+  #L3185de.  v0:= temp @kind object;
+  #L3185e0.  call `savePreferences`(v0, v1, v3) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.savePreferences:(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)V` @kind static;
+  #L3185e6.  v0:= new `android.content.Intent`;
+  #L3185ea.  v1:= constclass @type ^`com.dmoneybd.dcustomer.ui_module.user.LoginActivity` @kind object;
+  #L3185ee.  call `<init>`(v0, v7, v1) @signature `Landroid/content/Intent;.<init>:(Landroid/content/Context;Ljava/lang/Class;)V` @kind direct;
+  #L3185f4.  v1:= 268468224I;
+  #L3185fa.  call temp:= `setFlags`(v0, v1) @signature `Landroid/content/Intent;.setFlags:(I)Landroid/content/Intent;` @kind virtual;
+  #L318600.  call `startActivity`(v7, v0) @signature `Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V` @kind virtual;
+  #L318606.  v0:= 0I;
+  #L318608.  call `overridePendingTransition`(v7, v0, v0) @signature `Landroid/app/Activity;.overridePendingTransition:(II)V` @kind virtual;
+  #L31860e.  call `finish`(v7) @signature `Landroid/app/Activity;.finish:()V` @kind virtual;
+  #L318614.  goto L31862c;
+  #L318616.  call temp:= `currentTimeMillis`() @signature `Ljava/lang/System;.currentTimeMillis:()J` @kind static;
+  #L31861c.  v2:= temp @kind wide;
+  #L31861e.  call temp:= `valueOf`(v2) @signature `Ljava/lang/String;.valueOf:(J)Ljava/lang/String;` @kind static;
+  #L318624.  v0:= temp @kind object;
+  #L318626.  call `savePreferences`(v7, v1, v0) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.savePreferences:(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)V` @kind static;
+  #L31862c.  return @kind void;
+}
+procedure `boolean` `shouldCallService`(`com.dmoneybd.dcustomer.ui_module.base_activity.BaseActivity` v2 @kind this) @signature `Lcom/dmoneybd/dcustomer/ui_module/base_activity/BaseActivity;.shouldCallService:()Z` @AccessFlag PROTECTED {
+    temp;
+    v0;
+    v1;
+
+  #L318030.  call temp:= `getApplicationContext`(v2) @signature `Landroid/app/Activity;.getApplicationContext:()Landroid/content/Context;` @kind virtual;
+  #L318036.  v0:= temp @kind object;
+  #L318038.  v1:= "is logged in" @kind object;
+  #L31803c.  call temp:= `getPreferences`(v0, v1) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.getPreferences:(Landroid/content/Context;Ljava/lang/String;)Ljava/lang/String;` @kind static;
+  #L318042.  v0:= temp @kind object;
+  #L318044.  v1:= "" @kind object;
+  #L318048.  call temp:= `equals`(v0, v1) @signature `Ljava/lang/String;.equals:(Ljava/lang/Object;)Z` @kind virtual;
+  #L31804e.  v0:= temp;
+  #L318050.  v0:= v0 ^~ 1;
+  #L318054.  return v0;
+}
+procedure `boolean` `shouldGetLocation`(`com.dmoneybd.dcustomer.ui_module.base_activity.BaseActivity` v1 @kind this) @signature `Lcom/dmoneybd/dcustomer/ui_module/base_activity/BaseActivity;.shouldGetLocation:()Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L318068.  v0:= 0I;
+  #L31806a.  return v0;
+}
+procedure `void` `showErrorMessage`(`com.dmoneybd.dcustomer.ui_module.base_activity.BaseActivity` v1 @kind this, `java.lang.String` v2 @kind object) @signature `Lcom/dmoneybd/dcustomer/ui_module/base_activity/BaseActivity;.showErrorMessage:(Ljava/lang/String;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L318640.  call temp:= `getApplicationContext`(v1) @signature `Landroid/app/Activity;.getApplicationContext:()Landroid/content/Context;` @kind virtual;
+  #L318646.  v0:= temp @kind object;
+  #L318648.  call `showToastMessage`(v0, v2) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.showToastMessage:(Landroid/content/Context;Ljava/lang/String;)V` @kind static;
+  #L31864e.  v2:= 0I;
+  #L318650.  call `controlProgressBar`(v1, v2) @signature `Lcom/dmoneybd/dcustomer/ui_module/base_activity/BaseActivity;.controlProgressBar:(Z)V` @kind virtual;
+  #L318656.  return @kind void;
+}

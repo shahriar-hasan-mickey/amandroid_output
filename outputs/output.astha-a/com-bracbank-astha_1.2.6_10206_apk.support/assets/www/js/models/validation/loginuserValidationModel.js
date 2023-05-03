@@ -1,0 +1,1 @@
+define(["underscore","Backbone"],function(n,i){var e=Backbone.Model.extend({url:function(){return this.instanceUrl},validation:{userid:[{required:!0,msg:"validation.login.useridnotnull"},{minLength:3,msg:"app.login.errmin"},{maxLength:30,msg:"app.login.useridnotnull"}]},initialize:function(n){this.url=n.url}});return e});

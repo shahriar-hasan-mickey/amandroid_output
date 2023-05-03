@@ -1,0 +1,131 @@
+record `io.reactivex.internal.schedulers.SchedulerPoolFactory` @kind class @AccessFlag PUBLIC_FINAL {
+}
+global `boolean` `@@io.reactivex.internal.schedulers.SchedulerPoolFactory.PURGE_ENABLED` @AccessFlag PUBLIC_STATIC_FINAL;
+global `int` `@@io.reactivex.internal.schedulers.SchedulerPoolFactory.PURGE_PERIOD_SECONDS` @AccessFlag PUBLIC_STATIC_FINAL;
+global `java.util.concurrent.atomic.AtomicReference` `@@io.reactivex.internal.schedulers.SchedulerPoolFactory.a` @AccessFlag STATIC_FINAL;
+global `java.util.Map` `@@io.reactivex.internal.schedulers.SchedulerPoolFactory.b` @AccessFlag STATIC_FINAL;
+procedure `void` `<clinit>`() @signature `Lio/reactivex/internal/schedulers/SchedulerPoolFactory;.<clinit>:()V` @AccessFlag STATIC_CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L4553bc.  v0:= new `java.util.concurrent.atomic.AtomicReference`;
+  #L4553c0.  call `<init>`(v0) @signature `Ljava/util/concurrent/atomic/AtomicReference;.<init>:()V` @kind direct;
+  #L4553c6.  `@@io.reactivex.internal.schedulers.SchedulerPoolFactory.a` @type ^`java.util.concurrent.atomic.AtomicReference` := v0 @kind object;
+  #L4553ca.  v0:= new `java.util.concurrent.ConcurrentHashMap`;
+  #L4553ce.  call `<init>`(v0) @signature `Ljava/util/concurrent/ConcurrentHashMap;.<init>:()V` @kind direct;
+  #L4553d4.  `@@io.reactivex.internal.schedulers.SchedulerPoolFactory.b` @type ^`java.util.Map` := v0 @kind object;
+  #L4553d8.  call temp:= `getProperties`() @signature `Ljava/lang/System;.getProperties:()Ljava/util/Properties;` @kind static;
+  #L4553de.  v0:= temp @kind object;
+  #L4553e0.  v1:= "rx2.purge-enabled" @kind object;
+  #L4553e4.  call temp:= `containsKey`(v0, v1) @signature `Ljava/util/Properties;.containsKey:(Ljava/lang/Object;)Z` @kind virtual;
+  #L4553ea.  v2:= temp;
+  #L4553ec.  v3:= 1I;
+  #L4553ee.  if v2 == 0 then goto L455426;
+  #L4553f2.  call temp:= `getBoolean`(v1) @signature `Ljava/lang/Boolean;.getBoolean:(Ljava/lang/String;)Z` @kind static;
+  #L4553f8.  v1:= temp;
+  #L4553fa.  if v1 == 0 then goto L455424;
+  #L4553fe.  v2:= "rx2.purge-period-seconds" @kind object;
+  #L455402.  call temp:= `containsKey`(v0, v2) @signature `Ljava/util/Properties;.containsKey:(Ljava/lang/Object;)Z` @kind virtual;
+  #L455408.  v0:= temp;
+  #L45540a.  if v0 == 0 then goto L455424;
+  #L45540e.  call temp:= `getInteger`(v2, v3) @signature `Ljava/lang/Integer;.getInteger:(Ljava/lang/String;I)Ljava/lang/Integer;` @kind static;
+  #L455414.  v0:= temp @kind object;
+  #L455416.  call temp:= `intValue`(v0) @signature `Ljava/lang/Integer;.intValue:()I` @kind virtual;
+  #L45541c.  v3:= temp;
+  #L45541e.  v0:= v3;
+  #L455420.  v3:= v1;
+  #L455422.  goto L455428;
+  #L455424.  v3:= v1;
+  #L455426.  v0:= 1I;
+  #L455428.  `@@io.reactivex.internal.schedulers.SchedulerPoolFactory.PURGE_ENABLED` @type ^`boolean` := v3 @kind boolean;
+  #L45542c.  `@@io.reactivex.internal.schedulers.SchedulerPoolFactory.PURGE_PERIOD_SECONDS` @type ^`int` := v0;
+  #L455430.  call `start`() @signature `Lio/reactivex/internal/schedulers/SchedulerPoolFactory;.start:()V` @kind static;
+  #L455436.  return @kind void;
+}
+procedure `void` `<init>`(`io.reactivex.internal.schedulers.SchedulerPoolFactory` v2 @kind this) @signature `Lio/reactivex/internal/schedulers/SchedulerPoolFactory;.<init>:()V` @AccessFlag PRIVATE_CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+
+  #L455448.  call `<init>`(v2) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L45544e.  v0:= new `java.lang.IllegalStateException`;
+  #L455452.  v1:= "No instances!" @kind object;
+  #L455456.  call `<init>`(v0, v1) @signature `Ljava/lang/IllegalStateException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L45545c.  throw v0;
+}
+procedure `java.util.concurrent.ScheduledExecutorService` `create`(`java.util.concurrent.ThreadFactory` v2 @kind object) @signature `Lio/reactivex/internal/schedulers/SchedulerPoolFactory;.create:(Ljava/util/concurrent/ThreadFactory;)Ljava/util/concurrent/ScheduledExecutorService;` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+
+  #L455388.  v0:= 1I;
+  #L45538a.  call temp:= `newScheduledThreadPool`(v0, v2) @signature `Ljava/util/concurrent/Executors;.newScheduledThreadPool:(ILjava/util/concurrent/ThreadFactory;)Ljava/util/concurrent/ScheduledExecutorService;` @kind static;
+  #L455390.  v2:= temp @kind object;
+  #L455392.  v0:= instanceof @variable v2 @type ^`java.util.concurrent.ScheduledThreadPoolExecutor` @kind boolean;
+  #L455396.  if v0 == 0 then goto L4553aa;
+  #L45539a.  v0:= v2 @kind object;
+  #L45539c.  v0:= (`java.util.concurrent.ScheduledThreadPoolExecutor`) v0 @kind object;
+  #L4553a0.  v1:= `@@io.reactivex.internal.schedulers.SchedulerPoolFactory.b` @type ^`java.util.Map` @kind object;
+  #L4553a4.  call temp:= `put`(v1, v0, v2) @signature `Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L4553aa.  return v2 @kind object;
+}
+procedure `void` `shutdown`() @signature `Lio/reactivex/internal/schedulers/SchedulerPoolFactory;.shutdown:()V` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+
+  #L455470.  v0:= `@@io.reactivex.internal.schedulers.SchedulerPoolFactory.a` @type ^`java.util.concurrent.atomic.AtomicReference` @kind object;
+  #L455474.  call temp:= `get`(v0) @signature `Ljava/util/concurrent/atomic/AtomicReference;.get:()Ljava/lang/Object;` @kind virtual;
+  #L45547a.  v0:= temp @kind object;
+  #L45547c.  v0:= (`java.util.concurrent.ScheduledExecutorService`) v0 @kind object;
+  #L455480.  call temp:= `shutdownNow`(v0) @signature `Ljava/util/concurrent/ScheduledExecutorService;.shutdownNow:()Ljava/util/List;` @kind interface;
+  #L455486.  v0:= `@@io.reactivex.internal.schedulers.SchedulerPoolFactory.b` @type ^`java.util.Map` @kind object;
+  #L45548a.  call `clear`(v0) @signature `Ljava/util/Map;.clear:()V` @kind interface;
+  #L455490.  return @kind void;
+}
+procedure `void` `start`() @signature `Lio/reactivex/internal/schedulers/SchedulerPoolFactory;.start:()V` @AccessFlag PUBLIC_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+    v9;
+    v10;
+    v11;
+
+  #L4554a4.  v0:= `@@io.reactivex.internal.schedulers.SchedulerPoolFactory.a` @type ^`java.util.concurrent.atomic.AtomicReference` @kind object;
+  #L4554a8.  call temp:= `get`(v0) @signature `Ljava/util/concurrent/atomic/AtomicReference;.get:()Ljava/lang/Object;` @kind virtual;
+  #L4554ae.  v1:= temp @kind object;
+  #L4554b0.  v1:= (`java.util.concurrent.ScheduledExecutorService`) v1 @kind object;
+  #L4554b4.  if v1 == 0 then goto L4554c6;
+  #L4554b8.  call temp:= `isShutdown`(v1) @signature `Ljava/util/concurrent/ScheduledExecutorService;.isShutdown:()Z` @kind interface;
+  #L4554be.  v2:= temp;
+  #L4554c0.  if v2 != 0 then goto L4554c6;
+  #L4554c4.  return @kind void;
+  #L4554c6.  v2:= 1I;
+  #L4554c8.  v3:= new `io.reactivex.internal.schedulers.RxThreadFactory`;
+  #L4554cc.  v4:= "RxSchedulerPurge" @kind object;
+  #L4554d0.  call `<init>`(v3, v4) @signature `Lio/reactivex/internal/schedulers/RxThreadFactory;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L4554d6.  call temp:= `newScheduledThreadPool`(v2, v3) @signature `Ljava/util/concurrent/Executors;.newScheduledThreadPool:(ILjava/util/concurrent/ThreadFactory;)Ljava/util/concurrent/ScheduledExecutorService;` @kind static;
+  #L4554dc.  v5:= temp @kind object;
+  #L4554de.  call temp:= `compareAndSet`(v0, v1, v5) @signature `Ljava/util/concurrent/atomic/AtomicReference;.compareAndSet:(Ljava/lang/Object;Ljava/lang/Object;)Z` @kind virtual;
+  #L4554e4.  v0:= temp;
+  #L4554e6.  if v0 == 0 then goto L455508;
+  #L4554ea.  v6:= new `io.reactivex.internal.schedulers.SchedulerPoolFactory$a`;
+  #L4554ee.  call `<init>`(v6) @signature `Lio/reactivex/internal/schedulers/SchedulerPoolFactory$a;.<init>:()V` @kind direct;
+  #L4554f4.  v0:= `@@io.reactivex.internal.schedulers.SchedulerPoolFactory.PURGE_PERIOD_SECONDS` @type ^`int`;
+  #L4554f8.  v7:= (`long`) v0 @kind i2l;
+  #L4554fa.  v9:= (`long`) v0 @kind i2l;
+  #L4554fc.  v11:= `@@java.util.concurrent.TimeUnit.SECONDS` @type ^`java.util.concurrent.TimeUnit` @kind object;
+  #L455500.  call temp:= `scheduleAtFixedRate`(v5, v6, v7, v9, v11) @signature `Ljava/util/concurrent/ScheduledExecutorService;.scheduleAtFixedRate:(Ljava/lang/Runnable;JJLjava/util/concurrent/TimeUnit;)Ljava/util/concurrent/ScheduledFuture;` @kind interface;
+  #L455506.  return @kind void;
+  #L455508.  call temp:= `shutdownNow`(v5) @signature `Ljava/util/concurrent/ScheduledExecutorService;.shutdownNow:()Ljava/util/List;` @kind interface;
+  #L45550e.  goto L4554a4;
+}

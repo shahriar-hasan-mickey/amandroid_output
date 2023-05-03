@@ -1,0 +1,321 @@
+record `okhttp3.internal.connection.Exchange` @kind class @AccessFlag PUBLIC_FINAL {
+  `okhttp3.Call` `okhttp3.internal.connection.Exchange.call` @AccessFlag FINAL;
+  `okhttp3.internal.http.ExchangeCodec` `okhttp3.internal.connection.Exchange.codec` @AccessFlag FINAL;
+  `boolean` `okhttp3.internal.connection.Exchange.duplex` @AccessFlag PRIVATE;
+  `okhttp3.EventListener` `okhttp3.internal.connection.Exchange.eventListener` @AccessFlag FINAL;
+  `okhttp3.internal.connection.ExchangeFinder` `okhttp3.internal.connection.Exchange.finder` @AccessFlag FINAL;
+  `okhttp3.internal.connection.Transmitter` `okhttp3.internal.connection.Exchange.transmitter` @AccessFlag FINAL;
+}
+procedure `void` `<init>`(`okhttp3.internal.connection.Exchange` v0 @kind this, `okhttp3.internal.connection.Transmitter` v1 @kind object, `okhttp3.Call` v2 @kind object, `okhttp3.EventListener` v3 @kind object, `okhttp3.internal.connection.ExchangeFinder` v4 @kind object, `okhttp3.internal.http.ExchangeCodec` v5 @kind object) @signature `Lokhttp3/internal/connection/Exchange;.<init>:(Lokhttp3/internal/connection/Transmitter;Lokhttp3/Call;Lokhttp3/EventListener;Lokhttp3/internal/connection/ExchangeFinder;Lokhttp3/internal/http/ExchangeCodec;)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+
+  #L305c18.  call `<init>`(v0) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L305c1e.  v0.`okhttp3.internal.connection.Exchange.transmitter` @type ^`okhttp3.internal.connection.Transmitter` := v1 @kind object;
+  #L305c22.  v0.`okhttp3.internal.connection.Exchange.call` @type ^`okhttp3.Call` := v2 @kind object;
+  #L305c26.  v0.`okhttp3.internal.connection.Exchange.eventListener` @type ^`okhttp3.EventListener` := v3 @kind object;
+  #L305c2a.  v0.`okhttp3.internal.connection.Exchange.finder` @type ^`okhttp3.internal.connection.ExchangeFinder` := v4 @kind object;
+  #L305c2e.  v0.`okhttp3.internal.connection.Exchange.codec` @type ^`okhttp3.internal.http.ExchangeCodec` := v5 @kind object;
+  #L305c32.  return @kind void;
+}
+procedure `java.io.IOException` `bodyComplete`(`okhttp3.internal.connection.Exchange` v2 @kind this, `long` v3 , `boolean` v5 , `boolean` v6 , `java.io.IOException` v7 @kind object) @signature `Lokhttp3/internal/connection/Exchange;.bodyComplete:(JZZLjava/io/IOException;)Ljava/io/IOException;` @AccessFlag  {
+    temp;
+    v0;
+    v1;
+
+  #L305a0c.  if v7 == 0 then goto L305a16;
+  #L305a10.  call `trackFailure`(v2, v7) @signature `Lokhttp3/internal/connection/Exchange;.trackFailure:(Ljava/io/IOException;)V` @kind virtual;
+  #L305a16.  if v6 == 0 then goto L305a3c;
+  #L305a1a.  if v7 == 0 then goto L305a2e;
+  #L305a1e.  v0:= v2.`okhttp3.internal.connection.Exchange.eventListener` @type ^`okhttp3.EventListener` @kind object;
+  #L305a22.  v1:= v2.`okhttp3.internal.connection.Exchange.call` @type ^`okhttp3.Call` @kind object;
+  #L305a26.  call `requestFailed`(v0, v1, v7) @signature `Lokhttp3/EventListener;.requestFailed:(Lokhttp3/Call;Ljava/io/IOException;)V` @kind virtual;
+  #L305a2c.  goto L305a3c;
+  #L305a2e.  v0:= v2.`okhttp3.internal.connection.Exchange.eventListener` @type ^`okhttp3.EventListener` @kind object;
+  #L305a32.  v1:= v2.`okhttp3.internal.connection.Exchange.call` @type ^`okhttp3.Call` @kind object;
+  #L305a36.  call `requestBodyEnd`(v0, v1, v3) @signature `Lokhttp3/EventListener;.requestBodyEnd:(Lokhttp3/Call;J)V` @kind virtual;
+  #L305a3c.  if v5 == 0 then goto L305a62;
+  #L305a40.  if v7 == 0 then goto L305a54;
+  #L305a44.  v3:= v2.`okhttp3.internal.connection.Exchange.eventListener` @type ^`okhttp3.EventListener` @kind object;
+  #L305a48.  v4:= v2.`okhttp3.internal.connection.Exchange.call` @type ^`okhttp3.Call` @kind object;
+  #L305a4c.  call `responseFailed`(v3, v4, v7) @signature `Lokhttp3/EventListener;.responseFailed:(Lokhttp3/Call;Ljava/io/IOException;)V` @kind virtual;
+  #L305a52.  goto L305a62;
+  #L305a54.  v0:= v2.`okhttp3.internal.connection.Exchange.eventListener` @type ^`okhttp3.EventListener` @kind object;
+  #L305a58.  v1:= v2.`okhttp3.internal.connection.Exchange.call` @type ^`okhttp3.Call` @kind object;
+  #L305a5c.  call `responseBodyEnd`(v0, v1, v3) @signature `Lokhttp3/EventListener;.responseBodyEnd:(Lokhttp3/Call;J)V` @kind virtual;
+  #L305a62.  v3:= v2.`okhttp3.internal.connection.Exchange.transmitter` @type ^`okhttp3.internal.connection.Transmitter` @kind object;
+  #L305a66.  call temp:= `exchangeMessageDone`(v3, v2, v6, v5, v7) @signature `Lokhttp3/internal/connection/Transmitter;.exchangeMessageDone:(Lokhttp3/internal/connection/Exchange;ZZLjava/io/IOException;)Ljava/io/IOException;` @kind virtual;
+  #L305a6c.  v3:= temp @kind object;
+  #L305a6e.  return v3 @kind object;
+}
+procedure `void` `cancel`(`okhttp3.internal.connection.Exchange` v1 @kind this) @signature `Lokhttp3/internal/connection/Exchange;.cancel:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L305c44.  v0:= v1.`okhttp3.internal.connection.Exchange.codec` @type ^`okhttp3.internal.http.ExchangeCodec` @kind object;
+  #L305c48.  call `cancel`(v0) @signature `Lokhttp3/internal/http/ExchangeCodec;.cancel:()V` @kind interface;
+  #L305c4e.  return @kind void;
+}
+procedure `okhttp3.internal.connection.RealConnection` `connection`(`okhttp3.internal.connection.Exchange` v1 @kind this) @signature `Lokhttp3/internal/connection/Exchange;.connection:()Lokhttp3/internal/connection/RealConnection;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L305b7c.  v0:= v1.`okhttp3.internal.connection.Exchange.codec` @type ^`okhttp3.internal.http.ExchangeCodec` @kind object;
+  #L305b80.  call temp:= `connection`(v0) @signature `Lokhttp3/internal/http/ExchangeCodec;.connection:()Lokhttp3/internal/connection/RealConnection;` @kind interface;
+  #L305b86.  v0:= temp @kind object;
+  #L305b88.  return v0 @kind object;
+}
+procedure `okio.g0` `createRequestBody`(`okhttp3.internal.connection.Exchange` v3 @kind this, `okhttp3.Request` v4 @kind object, `boolean` v5 ) @signature `Lokhttp3/internal/connection/Exchange;.createRequestBody:(Lokhttp3/Request;Z)Lokio/g0;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L305bcc.  v3.`okhttp3.internal.connection.Exchange.duplex` @type ^`boolean` := v5 @kind boolean;
+  #L305bd0.  call temp:= `body`(v4) @signature `Lokhttp3/Request;.body:()Lokhttp3/RequestBody;` @kind virtual;
+  #L305bd6.  v5:= temp @kind object;
+  #L305bd8.  call temp:= `contentLength`(v5) @signature `Lokhttp3/RequestBody;.contentLength:()J` @kind virtual;
+  #L305bde.  v0:= temp @kind wide;
+  #L305be0.  v5:= v3.`okhttp3.internal.connection.Exchange.eventListener` @type ^`okhttp3.EventListener` @kind object;
+  #L305be4.  v2:= v3.`okhttp3.internal.connection.Exchange.call` @type ^`okhttp3.Call` @kind object;
+  #L305be8.  call `requestBodyStart`(v5, v2) @signature `Lokhttp3/EventListener;.requestBodyStart:(Lokhttp3/Call;)V` @kind virtual;
+  #L305bee.  v5:= v3.`okhttp3.internal.connection.Exchange.codec` @type ^`okhttp3.internal.http.ExchangeCodec` @kind object;
+  #L305bf2.  call temp:= `createRequestBody`(v5, v4, v0) @signature `Lokhttp3/internal/http/ExchangeCodec;.createRequestBody:(Lokhttp3/Request;J)Lokio/g0;` @kind interface;
+  #L305bf8.  v4:= temp @kind object;
+  #L305bfa.  v5:= new `okhttp3.internal.connection.Exchange$RequestBodySink`;
+  #L305bfe.  call `<init>`(v5, v3, v4, v0) @signature `Lokhttp3/internal/connection/Exchange$RequestBodySink;.<init>:(Lokhttp3/internal/connection/Exchange;Lokio/g0;J)V` @kind direct;
+  #L305c04.  return v5 @kind object;
+}
+procedure `void` `detachWithViolence`(`okhttp3.internal.connection.Exchange` v3 @kind this) @signature `Lokhttp3/internal/connection/Exchange;.detachWithViolence:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L305c60.  v0:= v3.`okhttp3.internal.connection.Exchange.codec` @type ^`okhttp3.internal.http.ExchangeCodec` @kind object;
+  #L305c64.  call `cancel`(v0) @signature `Lokhttp3/internal/http/ExchangeCodec;.cancel:()V` @kind interface;
+  #L305c6a.  v0:= v3.`okhttp3.internal.connection.Exchange.transmitter` @type ^`okhttp3.internal.connection.Transmitter` @kind object;
+  #L305c6e.  v1:= 1I;
+  #L305c70.  v2:= 0I;
+  #L305c72.  call temp:= `exchangeMessageDone`(v0, v3, v1, v1, v2) @signature `Lokhttp3/internal/connection/Transmitter;.exchangeMessageDone:(Lokhttp3/internal/connection/Exchange;ZZLjava/io/IOException;)Ljava/io/IOException;` @kind virtual;
+  #L305c78.  return @kind void;
+}
+procedure `void` `finishRequest`(`okhttp3.internal.connection.Exchange` v3 @kind this) @signature `Lokhttp3/internal/connection/Exchange;.finishRequest:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L305c8c.  v0:= v3.`okhttp3.internal.connection.Exchange.codec` @type ^`okhttp3.internal.http.ExchangeCodec` @kind object;
+  #L305c90.  call `finishRequest`(v0) @signature `Lokhttp3/internal/http/ExchangeCodec;.finishRequest:()V` @kind interface;
+  #L305c96.  return @kind void;
+  #L305c98.  v0:= Exception @type ^`java.io.IOException` @kind object;
+  #L305c9a.  v1:= v3.`okhttp3.internal.connection.Exchange.eventListener` @type ^`okhttp3.EventListener` @kind object;
+  #L305c9e.  v2:= v3.`okhttp3.internal.connection.Exchange.call` @type ^`okhttp3.Call` @kind object;
+  #L305ca2.  call `requestFailed`(v1, v2, v0) @signature `Lokhttp3/EventListener;.requestFailed:(Lokhttp3/Call;Ljava/io/IOException;)V` @kind virtual;
+  #L305ca8.  call `trackFailure`(v3, v0) @signature `Lokhttp3/internal/connection/Exchange;.trackFailure:(Ljava/io/IOException;)V` @kind virtual;
+  #L305cae.  throw v0;
+  catch `java.io.IOException` @[L305c8c..L305c96] goto L305c98;
+}
+procedure `void` `flushRequest`(`okhttp3.internal.connection.Exchange` v3 @kind this) @signature `Lokhttp3/internal/connection/Exchange;.flushRequest:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L305cd0.  v0:= v3.`okhttp3.internal.connection.Exchange.codec` @type ^`okhttp3.internal.http.ExchangeCodec` @kind object;
+  #L305cd4.  call `flushRequest`(v0) @signature `Lokhttp3/internal/http/ExchangeCodec;.flushRequest:()V` @kind interface;
+  #L305cda.  return @kind void;
+  #L305cdc.  v0:= Exception @type ^`java.io.IOException` @kind object;
+  #L305cde.  v1:= v3.`okhttp3.internal.connection.Exchange.eventListener` @type ^`okhttp3.EventListener` @kind object;
+  #L305ce2.  v2:= v3.`okhttp3.internal.connection.Exchange.call` @type ^`okhttp3.Call` @kind object;
+  #L305ce6.  call `requestFailed`(v1, v2, v0) @signature `Lokhttp3/EventListener;.requestFailed:(Lokhttp3/Call;Ljava/io/IOException;)V` @kind virtual;
+  #L305cec.  call `trackFailure`(v3, v0) @signature `Lokhttp3/internal/connection/Exchange;.trackFailure:(Ljava/io/IOException;)V` @kind virtual;
+  #L305cf2.  throw v0;
+  catch `java.io.IOException` @[L305cd0..L305cda] goto L305cdc;
+}
+procedure `boolean` `isDuplex`(`okhttp3.internal.connection.Exchange` v1 @kind this) @signature `Lokhttp3/internal/connection/Exchange;.isDuplex:()Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L3059f4.  v0:= v1.`okhttp3.internal.connection.Exchange.duplex` @type ^`boolean` @kind boolean;
+  #L3059f8.  return v0;
+}
+procedure `okhttp3.internal.ws.RealWebSocket$Streams` `newWebSocketStreams`(`okhttp3.internal.connection.Exchange` v1 @kind this) @signature `Lokhttp3/internal/connection/Exchange;.newWebSocketStreams:()Lokhttp3/internal/ws/RealWebSocket$Streams;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L305b9c.  v0:= v1.`okhttp3.internal.connection.Exchange.transmitter` @type ^`okhttp3.internal.connection.Transmitter` @kind object;
+  #L305ba0.  call `timeoutEarlyExit`(v0) @signature `Lokhttp3/internal/connection/Transmitter;.timeoutEarlyExit:()V` @kind virtual;
+  #L305ba6.  v0:= v1.`okhttp3.internal.connection.Exchange.codec` @type ^`okhttp3.internal.http.ExchangeCodec` @kind object;
+  #L305baa.  call temp:= `connection`(v0) @signature `Lokhttp3/internal/http/ExchangeCodec;.connection:()Lokhttp3/internal/connection/RealConnection;` @kind interface;
+  #L305bb0.  v0:= temp @kind object;
+  #L305bb2.  call temp:= `newWebSocketStreams`(v0, v1) @signature `Lokhttp3/internal/connection/RealConnection;.newWebSocketStreams:(Lokhttp3/internal/connection/Exchange;)Lokhttp3/internal/ws/RealWebSocket$Streams;` @kind virtual;
+  #L305bb8.  v0:= temp @kind object;
+  #L305bba.  return v0 @kind object;
+}
+procedure `void` `noNewExchangesOnConnection`(`okhttp3.internal.connection.Exchange` v1 @kind this) @signature `Lokhttp3/internal/connection/Exchange;.noNewExchangesOnConnection:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L305d14.  v0:= v1.`okhttp3.internal.connection.Exchange.codec` @type ^`okhttp3.internal.http.ExchangeCodec` @kind object;
+  #L305d18.  call temp:= `connection`(v0) @signature `Lokhttp3/internal/http/ExchangeCodec;.connection:()Lokhttp3/internal/connection/RealConnection;` @kind interface;
+  #L305d1e.  v0:= temp @kind object;
+  #L305d20.  call `noNewExchanges`(v0) @signature `Lokhttp3/internal/connection/RealConnection;.noNewExchanges:()V` @kind virtual;
+  #L305d26.  return @kind void;
+}
+procedure `void` `noRequestBody`(`okhttp3.internal.connection.Exchange` v4 @kind this) @signature `Lokhttp3/internal/connection/Exchange;.noRequestBody:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L305d38.  v0:= v4.`okhttp3.internal.connection.Exchange.transmitter` @type ^`okhttp3.internal.connection.Transmitter` @kind object;
+  #L305d3c.  v1:= 1I;
+  #L305d3e.  v2:= 0I;
+  #L305d40.  v3:= 0I;
+  #L305d42.  call temp:= `exchangeMessageDone`(v0, v4, v1, v2, v3) @signature `Lokhttp3/internal/connection/Transmitter;.exchangeMessageDone:(Lokhttp3/internal/connection/Exchange;ZZLjava/io/IOException;)Ljava/io/IOException;` @kind virtual;
+  #L305d48.  return @kind void;
+}
+procedure `okhttp3.ResponseBody` `openResponseBody`(`okhttp3.internal.connection.Exchange` v4 @kind this, `okhttp3.Response` v5 @kind object) @signature `Lokhttp3/internal/connection/Exchange;.openResponseBody:(Lokhttp3/Response;)Lokhttp3/ResponseBody;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L305af4.  v0:= v4.`okhttp3.internal.connection.Exchange.eventListener` @type ^`okhttp3.EventListener` @kind object;
+  #L305af8.  v1:= v4.`okhttp3.internal.connection.Exchange.call` @type ^`okhttp3.Call` @kind object;
+  #L305afc.  call `responseBodyStart`(v0, v1) @signature `Lokhttp3/EventListener;.responseBodyStart:(Lokhttp3/Call;)V` @kind virtual;
+  #L305b02.  v0:= "Content-Type" @kind object;
+  #L305b06.  call temp:= `header`(v5, v0) @signature `Lokhttp3/Response;.header:(Ljava/lang/String;)Ljava/lang/String;` @kind virtual;
+  #L305b0c.  v0:= temp @kind object;
+  #L305b0e.  v1:= v4.`okhttp3.internal.connection.Exchange.codec` @type ^`okhttp3.internal.http.ExchangeCodec` @kind object;
+  #L305b12.  call temp:= `reportedContentLength`(v1, v5) @signature `Lokhttp3/internal/http/ExchangeCodec;.reportedContentLength:(Lokhttp3/Response;)J` @kind interface;
+  #L305b18.  v1:= temp @kind wide;
+  #L305b1a.  v3:= v4.`okhttp3.internal.connection.Exchange.codec` @type ^`okhttp3.internal.http.ExchangeCodec` @kind object;
+  #L305b1e.  call temp:= `openResponseBodySource`(v3, v5) @signature `Lokhttp3/internal/http/ExchangeCodec;.openResponseBodySource:(Lokhttp3/Response;)Lokio/i0;` @kind interface;
+  #L305b24.  v5:= temp @kind object;
+  #L305b26.  v3:= new `okhttp3.internal.connection.Exchange$ResponseBodySource`;
+  #L305b2a.  call `<init>`(v3, v4, v5, v1) @signature `Lokhttp3/internal/connection/Exchange$ResponseBodySource;.<init>:(Lokhttp3/internal/connection/Exchange;Lokio/i0;J)V` @kind direct;
+  #L305b30.  v5:= new `okhttp3.internal.http.RealResponseBody`;
+  #L305b34.  call temp:= `d`(v3) @signature `Lokio/v;.d:(Lokio/i0;)Lokio/o;` @kind static;
+  #L305b3a.  v3:= temp @kind object;
+  #L305b3c.  call `<init>`(v5, v0, v1, v3) @signature `Lokhttp3/internal/http/RealResponseBody;.<init>:(Ljava/lang/String;JLokio/o;)V` @kind direct;
+  #L305b42.  return v5 @kind object;
+  #L305b44.  v5:= Exception @type ^`java.io.IOException` @kind object;
+  #L305b46.  v0:= v4.`okhttp3.internal.connection.Exchange.eventListener` @type ^`okhttp3.EventListener` @kind object;
+  #L305b4a.  v1:= v4.`okhttp3.internal.connection.Exchange.call` @type ^`okhttp3.Call` @kind object;
+  #L305b4e.  call `responseFailed`(v0, v1, v5) @signature `Lokhttp3/EventListener;.responseFailed:(Lokhttp3/Call;Ljava/io/IOException;)V` @kind virtual;
+  #L305b54.  call `trackFailure`(v4, v5) @signature `Lokhttp3/internal/connection/Exchange;.trackFailure:(Ljava/io/IOException;)V` @kind virtual;
+  #L305b5a.  throw v5;
+  catch `java.io.IOException` @[L305af4..L305b42] goto L305b44;
+}
+procedure `okhttp3.Response$Builder` `readResponseHeaders`(`okhttp3.internal.connection.Exchange` v2 @kind this, `boolean` v3 ) @signature `Lokhttp3/internal/connection/Exchange;.readResponseHeaders:(Z)Lokhttp3/Response$Builder;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L305aa0.  v0:= v2.`okhttp3.internal.connection.Exchange.codec` @type ^`okhttp3.internal.http.ExchangeCodec` @kind object;
+  #L305aa4.  call temp:= `readResponseHeaders`(v0, v3) @signature `Lokhttp3/internal/http/ExchangeCodec;.readResponseHeaders:(Z)Lokhttp3/Response$Builder;` @kind interface;
+  #L305aaa.  v3:= temp @kind object;
+  #L305aac.  if v3 == 0 then goto L305aba;
+  #L305ab0.  v0:= `@@okhttp3.internal.Internal.instance` @type ^`okhttp3.internal.Internal` @kind object;
+  #L305ab4.  call `initExchange`(v0, v3, v2) @signature `Lokhttp3/internal/Internal;.initExchange:(Lokhttp3/Response$Builder;Lokhttp3/internal/connection/Exchange;)V` @kind virtual;
+  #L305aba.  return v3 @kind object;
+  #L305abc.  v3:= Exception @type ^`java.io.IOException` @kind object;
+  #L305abe.  v0:= v2.`okhttp3.internal.connection.Exchange.eventListener` @type ^`okhttp3.EventListener` @kind object;
+  #L305ac2.  v1:= v2.`okhttp3.internal.connection.Exchange.call` @type ^`okhttp3.Call` @kind object;
+  #L305ac6.  call `responseFailed`(v0, v1, v3) @signature `Lokhttp3/EventListener;.responseFailed:(Lokhttp3/Call;Ljava/io/IOException;)V` @kind virtual;
+  #L305acc.  call `trackFailure`(v2, v3) @signature `Lokhttp3/internal/connection/Exchange;.trackFailure:(Ljava/io/IOException;)V` @kind virtual;
+  #L305ad2.  throw v3;
+  catch `java.io.IOException` @[L305aa0..L305aba] goto L305abc;
+}
+procedure `void` `responseHeadersEnd`(`okhttp3.internal.connection.Exchange` v2 @kind this, `okhttp3.Response` v3 @kind object) @signature `Lokhttp3/internal/connection/Exchange;.responseHeadersEnd:(Lokhttp3/Response;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L305d5c.  v0:= v2.`okhttp3.internal.connection.Exchange.eventListener` @type ^`okhttp3.EventListener` @kind object;
+  #L305d60.  v1:= v2.`okhttp3.internal.connection.Exchange.call` @type ^`okhttp3.Call` @kind object;
+  #L305d64.  call `responseHeadersEnd`(v0, v1, v3) @signature `Lokhttp3/EventListener;.responseHeadersEnd:(Lokhttp3/Call;Lokhttp3/Response;)V` @kind virtual;
+  #L305d6a.  return @kind void;
+}
+procedure `void` `responseHeadersStart`(`okhttp3.internal.connection.Exchange` v2 @kind this) @signature `Lokhttp3/internal/connection/Exchange;.responseHeadersStart:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L305d7c.  v0:= v2.`okhttp3.internal.connection.Exchange.eventListener` @type ^`okhttp3.EventListener` @kind object;
+  #L305d80.  v1:= v2.`okhttp3.internal.connection.Exchange.call` @type ^`okhttp3.Call` @kind object;
+  #L305d84.  call `responseHeadersStart`(v0, v1) @signature `Lokhttp3/EventListener;.responseHeadersStart:(Lokhttp3/Call;)V` @kind virtual;
+  #L305d8a.  return @kind void;
+}
+procedure `void` `timeoutEarlyExit`(`okhttp3.internal.connection.Exchange` v1 @kind this) @signature `Lokhttp3/internal/connection/Exchange;.timeoutEarlyExit:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L305d9c.  v0:= v1.`okhttp3.internal.connection.Exchange.transmitter` @type ^`okhttp3.internal.connection.Transmitter` @kind object;
+  #L305da0.  call `timeoutEarlyExit`(v0) @signature `Lokhttp3/internal/connection/Transmitter;.timeoutEarlyExit:()V` @kind virtual;
+  #L305da6.  return @kind void;
+}
+procedure `void` `trackFailure`(`okhttp3.internal.connection.Exchange` v1 @kind this, `java.io.IOException` v2 @kind object) @signature `Lokhttp3/internal/connection/Exchange;.trackFailure:(Ljava/io/IOException;)V` @AccessFlag  {
+    temp;
+    v0;
+
+  #L305db8.  v0:= v1.`okhttp3.internal.connection.Exchange.finder` @type ^`okhttp3.internal.connection.ExchangeFinder` @kind object;
+  #L305dbc.  call `trackFailure`(v0) @signature `Lokhttp3/internal/connection/ExchangeFinder;.trackFailure:()V` @kind virtual;
+  #L305dc2.  v0:= v1.`okhttp3.internal.connection.Exchange.codec` @type ^`okhttp3.internal.http.ExchangeCodec` @kind object;
+  #L305dc6.  call temp:= `connection`(v0) @signature `Lokhttp3/internal/http/ExchangeCodec;.connection:()Lokhttp3/internal/connection/RealConnection;` @kind interface;
+  #L305dcc.  v0:= temp @kind object;
+  #L305dce.  call `trackFailure`(v0, v2) @signature `Lokhttp3/internal/connection/RealConnection;.trackFailure:(Ljava/io/IOException;)V` @kind virtual;
+  #L305dd4.  return @kind void;
+}
+procedure `okhttp3.Headers` `trailers`(`okhttp3.internal.connection.Exchange` v1 @kind this) @signature `Lokhttp3/internal/connection/Exchange;.trailers:()Lokhttp3/Headers;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L305a80.  v0:= v1.`okhttp3.internal.connection.Exchange.codec` @type ^`okhttp3.internal.http.ExchangeCodec` @kind object;
+  #L305a84.  call temp:= `trailers`(v0) @signature `Lokhttp3/internal/http/ExchangeCodec;.trailers:()Lokhttp3/Headers;` @kind interface;
+  #L305a8a.  v0:= temp @kind object;
+  #L305a8c.  return v0 @kind object;
+}
+procedure `void` `webSocketUpgradeFailed`(`okhttp3.internal.connection.Exchange` v6 @kind this) @signature `Lokhttp3/internal/connection/Exchange;.webSocketUpgradeFailed:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L305de8.  v1:= -1L;
+  #L305dec.  v3:= 1I;
+  #L305dee.  v4:= 1I;
+  #L305df0.  v5:= 0I;
+  #L305df2.  v0:= v6 @kind object;
+  #L305df4.  call temp:= `bodyComplete`(v0, v1, v3, v4, v5) @signature `Lokhttp3/internal/connection/Exchange;.bodyComplete:(JZZLjava/io/IOException;)Ljava/io/IOException;` @kind virtual;
+  #L305dfa.  return @kind void;
+}
+procedure `void` `writeRequestHeaders`(`okhttp3.internal.connection.Exchange` v2 @kind this, `okhttp3.Request` v3 @kind object) @signature `Lokhttp3/internal/connection/Exchange;.writeRequestHeaders:(Lokhttp3/Request;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L305e0c.  v0:= v2.`okhttp3.internal.connection.Exchange.eventListener` @type ^`okhttp3.EventListener` @kind object;
+  #L305e10.  v1:= v2.`okhttp3.internal.connection.Exchange.call` @type ^`okhttp3.Call` @kind object;
+  #L305e14.  call `requestHeadersStart`(v0, v1) @signature `Lokhttp3/EventListener;.requestHeadersStart:(Lokhttp3/Call;)V` @kind virtual;
+  #L305e1a.  v0:= v2.`okhttp3.internal.connection.Exchange.codec` @type ^`okhttp3.internal.http.ExchangeCodec` @kind object;
+  #L305e1e.  call `writeRequestHeaders`(v0, v3) @signature `Lokhttp3/internal/http/ExchangeCodec;.writeRequestHeaders:(Lokhttp3/Request;)V` @kind interface;
+  #L305e24.  v0:= v2.`okhttp3.internal.connection.Exchange.eventListener` @type ^`okhttp3.EventListener` @kind object;
+  #L305e28.  v1:= v2.`okhttp3.internal.connection.Exchange.call` @type ^`okhttp3.Call` @kind object;
+  #L305e2c.  call `requestHeadersEnd`(v0, v1, v3) @signature `Lokhttp3/EventListener;.requestHeadersEnd:(Lokhttp3/Call;Lokhttp3/Request;)V` @kind virtual;
+  #L305e32.  return @kind void;
+  #L305e34.  v3:= Exception @type ^`java.io.IOException` @kind object;
+  #L305e36.  v0:= v2.`okhttp3.internal.connection.Exchange.eventListener` @type ^`okhttp3.EventListener` @kind object;
+  #L305e3a.  v1:= v2.`okhttp3.internal.connection.Exchange.call` @type ^`okhttp3.Call` @kind object;
+  #L305e3e.  call `requestFailed`(v0, v1, v3) @signature `Lokhttp3/EventListener;.requestFailed:(Lokhttp3/Call;Ljava/io/IOException;)V` @kind virtual;
+  #L305e44.  call `trackFailure`(v2, v3) @signature `Lokhttp3/internal/connection/Exchange;.trackFailure:(Ljava/io/IOException;)V` @kind virtual;
+  #L305e4a.  throw v3;
+  catch `java.io.IOException` @[L305e0c..L305e32] goto L305e34;
+}

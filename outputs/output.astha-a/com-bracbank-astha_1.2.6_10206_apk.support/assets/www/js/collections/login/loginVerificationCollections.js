@@ -1,0 +1,1 @@
+define(["underscore","Backbone","models/login/loginVerificationModel"],function(n,e,i){var o=e.Collection.extend({model:i,initialize:function(n,e){},url:function(){}});return o});

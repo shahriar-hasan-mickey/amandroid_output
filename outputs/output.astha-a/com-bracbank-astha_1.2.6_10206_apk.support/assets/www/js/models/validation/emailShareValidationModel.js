@@ -1,0 +1,1 @@
+define(["underscore","Backbone"],function(i,n){var e=n.Model.extend({url:function(){return alert("inside  model"),this.instanceUrl},validation:{emailId:[{required:!0,msg:"validation.login.emailnullerror"},{pattern:"email",msg:"validation.login.validemailerror"}],passwd:[{required:!0,msg:"validation.login.passwordisnotnull"}]},initialize:function(i){this.url=i.url}});return e});

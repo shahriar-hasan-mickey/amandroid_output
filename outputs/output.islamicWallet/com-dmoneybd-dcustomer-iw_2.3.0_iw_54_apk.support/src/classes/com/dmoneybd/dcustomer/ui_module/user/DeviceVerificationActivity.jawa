@@ -1,0 +1,578 @@
+record `com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity` @kind class @AccessFlag PUBLIC extends `androidx.appcompat.app.AppCompatActivity` @kind class, `com.dmoneybd.dcustomer.ui_module.user.view.IDeviceVerificationView` @kind interface, `com.dmoneybd.dcustomer.ui_module.common.view.IResendOtpView` @kind interface, `android.view.View$OnClickListener` @kind interface {
+  `android.widget.Button` `com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity.buttonResendOtp` @AccessFlag PRIVATE;
+  `com.dmoneybd.dcustomer.data.DeviceVerificationData` `com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity.k` @AccessFlag ;
+  `com.dmoneybd.dcustomer.ui_module.user.presenter.IDeviceVerificationPresenter` `com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity.l` @AccessFlag ;
+  `com.dmoneybd.dcustomer.network_module.responses.LoginResponse` `com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity.loginResponse` @AccessFlag PRIVATE;
+  `com.dmoneybd.dcustomer.ui_module.common.presenter.IResendOtpPresenter` `com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity.m` @AccessFlag ;
+  `long` `com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity.mLastClickTime` @AccessFlag PRIVATE;
+  `com.chaos.view.PinView` `com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity.pinViewVerificationCode` @AccessFlag PRIVATE;
+  `dmax.dialog.SpotsDialog` `com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity.progressDialog` @AccessFlag PROTECTED;
+  `android.widget.TextView` `com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity.textTimer` @AccessFlag PRIVATE;
+}
+procedure `void` `<init>`(`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity` v2 @kind this) @signature `Lcom/dmoneybd/dcustomer/ui_module/user/DeviceVerificationActivity;.<init>:()V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+
+  #L36a810.  call `<init>`(v2) @signature `Landroidx/appcompat/app/AppCompatActivity;.<init>:()V` @kind direct;
+  #L36a816.  v0:= new `com.dmoneybd.dcustomer.data.DeviceVerificationData`;
+  #L36a81a.  call `<init>`(v0) @signature `Lcom/dmoneybd/dcustomer/data/DeviceVerificationData;.<init>:()V` @kind direct;
+  #L36a820.  v2.`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity.k` @type ^`com.dmoneybd.dcustomer.data.DeviceVerificationData` := v0 @kind object;
+  #L36a824.  v0:= 0L;
+  #L36a828.  v2.`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity.mLastClickTime` @type ^`long` := v0 @kind wide;
+  #L36a82c.  return @kind void;
+}
+procedure `void` `changeStatusBarColor`(`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity` v2 @kind this) @signature `Lcom/dmoneybd/dcustomer/ui_module/user/DeviceVerificationActivity;.changeStatusBarColor:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+
+  #L36a8a0.  v0:= `@@android.os.Build$VERSION.SDK_INT` @type ^`int`;
+  #L36a8a4.  v1:= 21I;
+  #L36a8a8.  if v0 < v1 then goto L36a8da;
+  #L36a8ac.  call temp:= `getWindow`(v2) @signature `Landroid/app/Activity;.getWindow:()Landroid/view/Window;` @kind virtual;
+  #L36a8b2.  v0:= temp @kind object;
+  #L36a8b4.  v1:= 67108864I;
+  #L36a8b8.  call `clearFlags`(v0, v1) @signature `Landroid/view/Window;.clearFlags:(I)V` @kind virtual;
+  #L36a8be.  v1:= -2147483648I;
+  #L36a8c2.  call `addFlags`(v0, v1) @signature `Landroid/view/Window;.addFlags:(I)V` @kind virtual;
+  #L36a8c8.  v1:= "#00000000" @kind object;
+  #L36a8cc.  call temp:= `parseColor`(v1) @signature `Landroid/graphics/Color;.parseColor:(Ljava/lang/String;)I` @kind static;
+  #L36a8d2.  v1:= temp;
+  #L36a8d4.  call `setStatusBarColor`(v0, v1) @signature `Landroid/view/Window;.setStatusBarColor:(I)V` @kind virtual;
+  #L36a8da.  return @kind void;
+}
+procedure `com.chaos.view.PinView` `e`(`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity` v0 @kind object) @signature `Lcom/dmoneybd/dcustomer/ui_module/user/DeviceVerificationActivity;.e:(Lcom/dmoneybd/dcustomer/ui_module/user/DeviceVerificationActivity;)Lcom/chaos/view/PinView;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L36a7f8.  v0:= v0.`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity.pinViewVerificationCode` @type ^`com.chaos.view.PinView` @kind object;
+  #L36a7fc.  return v0 @kind object;
+}
+procedure `android.widget.TextView` `f`(`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity` v0 @kind object) @signature `Lcom/dmoneybd/dcustomer/ui_module/user/DeviceVerificationActivity;.f:(Lcom/dmoneybd/dcustomer/ui_module/user/DeviceVerificationActivity;)Landroid/widget/TextView;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L36a7e0.  v0:= v0.`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity.textTimer` @type ^`android.widget.TextView` @kind object;
+  #L36a7e4.  return v0 @kind object;
+}
+procedure `android.widget.Button` `g`(`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity` v0 @kind object) @signature `Lcom/dmoneybd/dcustomer/ui_module/user/DeviceVerificationActivity;.g:(Lcom/dmoneybd/dcustomer/ui_module/user/DeviceVerificationActivity;)Landroid/widget/Button;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L36a7c8.  v0:= v0.`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity.buttonResendOtp` @type ^`android.widget.Button` @kind object;
+  #L36a7cc.  return v0 @kind object;
+}
+procedure `void` `goToLoginPage`(`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity` v3 @kind this) @signature `Lcom/dmoneybd/dcustomer/ui_module/user/DeviceVerificationActivity;.goToLoginPage:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L36acdc.  v0:= new `android.content.Intent`;
+  #L36ace0.  call temp:= `getApplicationContext`(v3) @signature `Landroid/app/Activity;.getApplicationContext:()Landroid/content/Context;` @kind virtual;
+  #L36ace6.  v1:= temp @kind object;
+  #L36ace8.  v2:= constclass @type ^`com.dmoneybd.dcustomer.ui_module.user.LoginActivity` @kind object;
+  #L36acec.  call `<init>`(v0, v1, v2) @signature `Landroid/content/Intent;.<init>:(Landroid/content/Context;Ljava/lang/Class;)V` @kind direct;
+  #L36acf2.  v1:= 268468224I;
+  #L36acf8.  call temp:= `setFlags`(v0, v1) @signature `Landroid/content/Intent;.setFlags:(I)Landroid/content/Intent;` @kind virtual;
+  #L36acfe.  call `startActivity`(v3, v0) @signature `Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V` @kind virtual;
+  #L36ad04.  return @kind void;
+}
+procedure `void` `hideKeyboard`(`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity` v3 @kind this) @signature `Lcom/dmoneybd/dcustomer/ui_module/user/DeviceVerificationActivity;.hideKeyboard:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L36ad18.  call temp:= `getCurrentFocus`(v3) @signature `Landroid/app/Activity;.getCurrentFocus:()Landroid/view/View;` @kind virtual;
+  #L36ad1e.  v0:= temp @kind object;
+  #L36ad20.  if v0 == 0 then goto L36ad4e;
+  #L36ad24.  v1:= "input_method" @kind object;
+  #L36ad28.  call temp:= `getSystemService`(v3, v1) @signature `Landroid/app/Activity;.getSystemService:(Ljava/lang/String;)Ljava/lang/Object;` @kind virtual;
+  #L36ad2e.  v1:= temp @kind object;
+  #L36ad30.  v1:= (`android.view.inputmethod.InputMethodManager`) v1 @kind object;
+  #L36ad34.  call temp:= `getClass`(v1) @signature `Ljava/lang/Object;.getClass:()Ljava/lang/Class;` @kind virtual;
+  #L36ad3a.  v1:= (`android.view.inputmethod.InputMethodManager`) v1 @kind object;
+  #L36ad3e.  call temp:= `getWindowToken`(v0) @signature `Landroid/view/View;.getWindowToken:()Landroid/os/IBinder;` @kind virtual;
+  #L36ad44.  v0:= temp @kind object;
+  #L36ad46.  v2:= 0I;
+  #L36ad48.  call temp:= `hideSoftInputFromWindow`(v1, v0, v2) @signature `Landroid/view/inputmethod/InputMethodManager;.hideSoftInputFromWindow:(Landroid/os/IBinder;I)Z` @kind virtual;
+  #L36ad4e.  return @kind void;
+}
+procedure `void` `init`(`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity` v2 @kind this) @signature `Lcom/dmoneybd/dcustomer/ui_module/user/DeviceVerificationActivity;.init:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+
+  #L36ad60.  v0:= v2.`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity.l` @type ^`com.dmoneybd.dcustomer.ui_module.user.presenter.IDeviceVerificationPresenter` @kind object;
+  #L36ad64.  call `setView`(v0, v2, v2) @signature `Lcom/dmoneybd/dcustomer/ui_module/user/presenter/IDeviceVerificationPresenter;.setView:(Lcom/dmoneybd/dcustomer/ui_module/user/view/IDeviceVerificationView;Landroid/content/Context;)V` @kind interface;
+  #L36ad6a.  v0:= v2.`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity.m` @type ^`com.dmoneybd.dcustomer.ui_module.common.presenter.IResendOtpPresenter` @kind object;
+  #L36ad6e.  call `setView`(v0, v2, v2) @signature `Lcom/dmoneybd/dcustomer/ui_module/common/presenter/IResendOtpPresenter;.setView:(Lcom/dmoneybd/dcustomer/ui_module/common/view/IResendOtpView;Landroid/content/Context;)V` @kind interface;
+  #L36ad74.  call temp:= `getIntent`(v2) @signature `Landroid/app/Activity;.getIntent:()Landroid/content/Intent;` @kind virtual;
+  #L36ad7a.  v0:= temp @kind object;
+  #L36ad7c.  v1:= "LOGIN_RESPONSE" @kind object;
+  #L36ad80.  call temp:= `hasExtra`(v0, v1) @signature `Landroid/content/Intent;.hasExtra:(Ljava/lang/String;)Z` @kind virtual;
+  #L36ad86.  v0:= temp;
+  #L36ad88.  if v0 == 0 then goto L36ada6;
+  #L36ad8c.  call temp:= `getIntent`(v2) @signature `Landroid/app/Activity;.getIntent:()Landroid/content/Intent;` @kind virtual;
+  #L36ad92.  v0:= temp @kind object;
+  #L36ad94.  call temp:= `getSerializableExtra`(v0, v1) @signature `Landroid/content/Intent;.getSerializableExtra:(Ljava/lang/String;)Ljava/io/Serializable;` @kind virtual;
+  #L36ad9a.  v0:= temp @kind object;
+  #L36ad9c.  v0:= (`com.dmoneybd.dcustomer.network_module.responses.LoginResponse`) v0 @kind object;
+  #L36ada0.  v2.`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity.loginResponse` @type ^`com.dmoneybd.dcustomer.network_module.responses.LoginResponse` := v0 @kind object;
+  #L36ada4.  goto L36adac;
+  #L36ada6.  call `finish`(v2) @signature `Landroid/app/Activity;.finish:()V` @kind virtual;
+  #L36adac.  v0:= 2131361961I;
+  #L36adb2.  call temp:= `findViewById`(v2, v0) @signature `Landroidx/appcompat/app/AppCompatActivity;.findViewById:(I)Landroid/view/View;` @kind virtual;
+  #L36adb8.  v0:= temp @kind object;
+  #L36adba.  v0:= (`android.widget.Button`) v0 @kind object;
+  #L36adbe.  v2.`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity.buttonResendOtp` @type ^`android.widget.Button` := v0 @kind object;
+  #L36adc2.  v0:= v2.`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity.k` @type ^`com.dmoneybd.dcustomer.data.DeviceVerificationData` @kind object;
+  #L36adc6.  v1:= v2.`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity.loginResponse` @type ^`com.dmoneybd.dcustomer.network_module.responses.LoginResponse` @kind object;
+  #L36adca.  call temp:= `getMobileNo`(v1) @signature `Lcom/dmoneybd/dcustomer/network_module/responses/LoginResponse;.getMobileNo:()Ljava/lang/String;` @kind virtual;
+  #L36add0.  v1:= temp @kind object;
+  #L36add2.  call `setMobileNumber`(v0, v1) @signature `Lcom/dmoneybd/dcustomer/data/DeviceVerificationData;.setMobileNumber:(Ljava/lang/String;)V` @kind virtual;
+  #L36add8.  v0:= v2.`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity.k` @type ^`com.dmoneybd.dcustomer.data.DeviceVerificationData` @kind object;
+  #L36addc.  v1:= v2.`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity.loginResponse` @type ^`com.dmoneybd.dcustomer.network_module.responses.LoginResponse` @kind object;
+  #L36ade0.  call temp:= `getReferenceId`(v1) @signature `Lcom/dmoneybd/dcustomer/network_module/responses/LoginResponse;.getReferenceId:()Ljava/lang/String;` @kind virtual;
+  #L36ade6.  v1:= temp @kind object;
+  #L36ade8.  call `setReferenceId`(v0, v1) @signature `Lcom/dmoneybd/dcustomer/data/DeviceVerificationData;.setReferenceId:(Ljava/lang/String;)V` @kind virtual;
+  #L36adee.  v0:= v2.`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity.k` @type ^`com.dmoneybd.dcustomer.data.DeviceVerificationData` @kind object;
+  #L36adf2.  v1:= new `com.dmoneybd.dcustomer.device_module.DeviceInfo`;
+  #L36adf6.  call `<init>`(v1, v2) @signature `Lcom/dmoneybd/dcustomer/device_module/DeviceInfo;.<init>:(Landroid/content/Context;)V` @kind direct;
+  #L36adfc.  call temp:= `getDeviceName`(v1) @signature `Lcom/dmoneybd/dcustomer/device_module/DeviceInfo;.getDeviceName:()Ljava/lang/String;` @kind virtual;
+  #L36ae02.  v1:= temp @kind object;
+  #L36ae04.  call `setDeviceName`(v0, v1) @signature `Lcom/dmoneybd/dcustomer/network_module/requests/BaseRequest;.setDeviceName:(Ljava/lang/String;)V` @kind virtual;
+  #L36ae0a.  v0:= v2.`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity.k` @type ^`com.dmoneybd.dcustomer.data.DeviceVerificationData` @kind object;
+  #L36ae0e.  v1:= new `com.dmoneybd.dcustomer.device_module.DeviceInfo`;
+  #L36ae12.  call `<init>`(v1, v2) @signature `Lcom/dmoneybd/dcustomer/device_module/DeviceInfo;.<init>:(Landroid/content/Context;)V` @kind direct;
+  #L36ae18.  call temp:= `getDeviceSecureAndroidId`(v1) @signature `Lcom/dmoneybd/dcustomer/device_module/DeviceInfo;.getDeviceSecureAndroidId:()Ljava/lang/String;` @kind virtual;
+  #L36ae1e.  v1:= temp @kind object;
+  #L36ae20.  call `setDeviceNumber`(v0, v1) @signature `Lcom/dmoneybd/dcustomer/network_module/requests/BaseRequest;.setDeviceNumber:(Ljava/lang/String;)V` @kind virtual;
+  #L36ae26.  v0:= v2.`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity.buttonResendOtp` @type ^`android.widget.Button` @kind object;
+  #L36ae2a.  call `setOnClickListener`(v0, v2) @signature `Landroid/widget/Button;.setOnClickListener:(Landroid/view/View$OnClickListener;)V` @kind virtual;
+  #L36ae30.  v0:= 2131362371I;
+  #L36ae36.  call temp:= `findViewById`(v2, v0) @signature `Landroidx/appcompat/app/AppCompatActivity;.findViewById:(I)Landroid/view/View;` @kind virtual;
+  #L36ae3c.  v0:= temp @kind object;
+  #L36ae3e.  v0:= (`com.chaos.view.PinView`) v0 @kind object;
+  #L36ae42.  v2.`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity.pinViewVerificationCode` @type ^`com.chaos.view.PinView` := v0 @kind object;
+  #L36ae46.  v1:= 1I;
+  #L36ae48.  call `setAnimationEnable`(v0, v1) @signature `Lcom/chaos/view/PinView;.setAnimationEnable:(Z)V` @kind virtual;
+  #L36ae4e.  v0:= v2.`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity.pinViewVerificationCode` @type ^`com.chaos.view.PinView` @kind object;
+  #L36ae52.  v1:= new `com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity$1`;
+  #L36ae56.  call `<init>`(v1, v2) @signature `Lcom/dmoneybd/dcustomer/ui_module/user/DeviceVerificationActivity$1;.<init>:(Lcom/dmoneybd/dcustomer/ui_module/user/DeviceVerificationActivity;)V` @kind direct;
+  #L36ae5c.  call `addTextChangedListener`(v0, v1) @signature `Landroid/widget/EditText;.addTextChangedListener:(Landroid/text/TextWatcher;)V` @kind virtual;
+  #L36ae62.  v0:= 2131362752I;
+  #L36ae68.  call temp:= `findViewById`(v2, v0) @signature `Landroidx/appcompat/app/AppCompatActivity;.findViewById:(I)Landroid/view/View;` @kind virtual;
+  #L36ae6e.  v0:= temp @kind object;
+  #L36ae70.  v0:= (`android.widget.TextView`) v0 @kind object;
+  #L36ae74.  v2.`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity.textTimer` @type ^`android.widget.TextView` := v0 @kind object;
+  #L36ae78.  call `setTimer`(v2) @signature `Lcom/dmoneybd/dcustomer/ui_module/user/DeviceVerificationActivity;.setTimer:()V` @kind direct;
+  #L36ae7e.  v0:= new `com.dmoneybd.dcustomer.ui_module.user.q`;
+  #L36ae82.  call `<init>`(v0, v2) @signature `Lcom/dmoneybd/dcustomer/ui_module/user/q;.<init>:(Lcom/dmoneybd/dcustomer/ui_module/user/DeviceVerificationActivity;)V` @kind direct;
+  #L36ae88.  call `bindListener`(v2, v0) @signature `Lcom/dmoneybd/dcustomer/base/SmsReceiver;.bindListener:(Landroid/app/Activity;Lcom/dmoneybd/dcustomer/base/SmsReceiver$SmsListener;)V` @kind static;
+  #L36ae8e.  return @kind void;
+}
+procedure `void` `lambda$init$0`(`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity` v1 @kind this, `java.lang.String` v2 @kind object) @signature `Lcom/dmoneybd/dcustomer/ui_module/user/DeviceVerificationActivity;.lambda$init$0:(Ljava/lang/String;)V` @AccessFlag PRIVATE_SYNTHETIC {
+    temp;
+    v0;
+
+  #L36aeb8.  v0:= v1.`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity.pinViewVerificationCode` @type ^`com.chaos.view.PinView` @kind object;
+  #L36aebc.  call `setText`(v0, v2) @signature `Landroid/widget/EditText;.setText:(Ljava/lang/CharSequence;)V` @kind virtual;
+  #L36aec2.  return @kind void;
+}
+procedure `void` `resendOtp`(`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity` v2 @kind this) @signature `Lcom/dmoneybd/dcustomer/ui_module/user/DeviceVerificationActivity;.resendOtp:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+
+  #L36b024.  v0:= new `com.dmoneybd.dcustomer.data.ResendOtpData`;
+  #L36b028.  v1:= 10I;
+  #L36b02c.  call `<init>`(v0, v1) @signature `Lcom/dmoneybd/dcustomer/data/ResendOtpData;.<init>:(I)V` @kind direct;
+  #L36b032.  v1:= v2.`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity.loginResponse` @type ^`com.dmoneybd.dcustomer.network_module.responses.LoginResponse` @kind object;
+  #L36b036.  call temp:= `getReferenceId`(v1) @signature `Lcom/dmoneybd/dcustomer/network_module/responses/LoginResponse;.getReferenceId:()Ljava/lang/String;` @kind virtual;
+  #L36b03c.  v1:= temp @kind object;
+  #L36b03e.  call `setReferenceId`(v0, v1) @signature `Lcom/dmoneybd/dcustomer/data/ResendOtpData;.setReferenceId:(Ljava/lang/String;)V` @kind virtual;
+  #L36b044.  v1:= 1I;
+  #L36b046.  call `controlProgressBar`(v2, v1) @signature `Lcom/dmoneybd/dcustomer/ui_module/user/DeviceVerificationActivity;.controlProgressBar:(Z)V` @kind virtual;
+  #L36b04c.  v1:= v2.`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity.m` @type ^`com.dmoneybd.dcustomer.ui_module.common.presenter.IResendOtpPresenter` @kind object;
+  #L36b050.  call `resendOtp`(v1, v0) @signature `Lcom/dmoneybd/dcustomer/ui_module/common/presenter/IResendOtpPresenter;.resendOtp:(Lcom/dmoneybd/dcustomer/data/ResendOtpData;)V` @kind interface;
+  #L36b056.  return @kind void;
+}
+procedure `void` `setTimer`(`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity` v7 @kind this) @signature `Lcom/dmoneybd/dcustomer/ui_module/user/DeviceVerificationActivity;.setTimer:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+
+  #L36b068.  call `startSmsRetriever`(v7) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.startSmsRetriever:(Landroid/content/Context;)V` @kind static;
+  #L36b06e.  v6:= new `com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity$2`;
+  #L36b072.  v2:= 30000L;
+  #L36b076.  v4:= 1000L;
+  #L36b07a.  v0:= v6 @kind object;
+  #L36b07c.  v1:= v7 @kind object;
+  #L36b07e.  call `<init>`(v0, v1, v2, v4) @signature `Lcom/dmoneybd/dcustomer/ui_module/user/DeviceVerificationActivity$2;.<init>:(Lcom/dmoneybd/dcustomer/ui_module/user/DeviceVerificationActivity;JJ)V` @kind direct;
+  #L36b084.  call temp:= `start`(v6) @signature `Landroid/os/CountDownTimer;.start:()Landroid/os/CountDownTimer;` @kind virtual;
+  #L36b08a.  return @kind void;
+}
+procedure `void` `actionDoVerifyCode`(`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity` v2 @kind this, `java.lang.String` v3 @kind object) @signature `Lcom/dmoneybd/dcustomer/ui_module/user/DeviceVerificationActivity;.actionDoVerifyCode:(Ljava/lang/String;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L36a840.  call `hideKeyboard`(v2) @signature `Lcom/dmoneybd/dcustomer/ui_module/user/DeviceVerificationActivity;.hideKeyboard:()V` @kind direct;
+  #L36a846.  v0:= new `java.lang.StringBuilder`;
+  #L36a84a.  call `<init>`(v0) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L36a850.  v1:= "Entered code:" @kind object;
+  #L36a854.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L36a85a.  call temp:= `append`(v0, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L36a860.  call temp:= `toString`(v0) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L36a866.  v0:= temp @kind object;
+  #L36a868.  call `showLog`(v0) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.showLog:(Ljava/lang/String;)V` @kind static;
+  #L36a86e.  v0:= v2.`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity.k` @type ^`com.dmoneybd.dcustomer.data.DeviceVerificationData` @kind object;
+  #L36a872.  call `setVerificationCode`(v0, v3) @signature `Lcom/dmoneybd/dcustomer/data/DeviceVerificationData;.setVerificationCode:(Ljava/lang/String;)V` @kind virtual;
+  #L36a878.  v3:= 1I;
+  #L36a87a.  call `controlProgressBar`(v2, v3) @signature `Lcom/dmoneybd/dcustomer/ui_module/user/DeviceVerificationActivity;.controlProgressBar:(Z)V` @kind virtual;
+  #L36a880.  v3:= v2.`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity.l` @type ^`com.dmoneybd.dcustomer.ui_module.user.presenter.IDeviceVerificationPresenter` @kind object;
+  #L36a884.  v0:= v2.`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity.k` @type ^`com.dmoneybd.dcustomer.data.DeviceVerificationData` @kind object;
+  #L36a888.  call `doVerify`(v3, v0) @signature `Lcom/dmoneybd/dcustomer/ui_module/user/presenter/IDeviceVerificationPresenter;.doVerify:(Lcom/dmoneybd/dcustomer/data/DeviceVerificationData;)V` @kind interface;
+  #L36a88e.  return @kind void;
+}
+procedure `void` `controlProgressBar`(`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity` v1 @kind this, `boolean` v2 ) @signature `Lcom/dmoneybd/dcustomer/ui_module/user/DeviceVerificationActivity;.controlProgressBar:(Z)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L36a8ec.  if v2 == 0 then goto L36a936;
+  #L36a8f0.  v2:= v1.`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity.progressDialog` @type ^`dmax.dialog.SpotsDialog` @kind object;
+  #L36a8f4.  if v2 == 0 then goto L36a90e;
+  #L36a8f8.  call temp:= `isShowing`(v2) @signature `Landroid/app/AlertDialog;.isShowing:()Z` @kind virtual;
+  #L36a8fe.  v2:= temp;
+  #L36a900.  if v2 == 0 then goto L36a90e;
+  #L36a904.  v2:= v1.`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity.progressDialog` @type ^`dmax.dialog.SpotsDialog` @kind object;
+  #L36a908.  call `dismiss`(v2) @signature `Landroid/app/AlertDialog;.dismiss:()V` @kind virtual;
+  #L36a90e.  v2:= new `dmax.dialog.SpotsDialog`;
+  #L36a912.  v0:= 2131952334I;
+  #L36a918.  call `<init>`(v2, v1, v0) @signature `Ldmax/dialog/SpotsDialog;.<init>:(Landroid/content/Context;I)V` @kind direct;
+  #L36a91e.  v1.`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity.progressDialog` @type ^`dmax.dialog.SpotsDialog` := v2 @kind object;
+  #L36a922.  v0:= 0I;
+  #L36a924.  call `setCancelable`(v2, v0) @signature `Landroid/app/AlertDialog;.setCancelable:(Z)V` @kind virtual;
+  #L36a92a.  v2:= v1.`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity.progressDialog` @type ^`dmax.dialog.SpotsDialog` @kind object;
+  #L36a92e.  call `show`(v2) @signature `Landroid/app/AlertDialog;.show:()V` @kind virtual;
+  #L36a934.  goto L36a954;
+  #L36a936.  v2:= v1.`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity.progressDialog` @type ^`dmax.dialog.SpotsDialog` @kind object;
+  #L36a93a.  if v2 == 0 then goto L36a954;
+  #L36a93e.  call temp:= `isShowing`(v2) @signature `Landroid/app/AlertDialog;.isShowing:()Z` @kind virtual;
+  #L36a944.  v2:= temp;
+  #L36a946.  if v2 == 0 then goto L36a954;
+  #L36a94a.  v2:= v1.`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity.progressDialog` @type ^`dmax.dialog.SpotsDialog` @kind object;
+  #L36a94e.  call `dismiss`(v2) @signature `Landroid/app/AlertDialog;.dismiss:()V` @kind virtual;
+  #L36a954.  return @kind void;
+  catch `java.lang.Exception` @[L36a8f0..L36a954] goto L36a954;
+}
+procedure `void` `deviceVerificationFail`(`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity` v1 @kind this, `java.lang.String` v2 @kind object) @signature `Lcom/dmoneybd/dcustomer/ui_module/user/DeviceVerificationActivity;.deviceVerificationFail:(Ljava/lang/String;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L36a978.  v0:= 0I;
+  #L36a97a.  call `controlProgressBar`(v1, v0) @signature `Lcom/dmoneybd/dcustomer/ui_module/user/DeviceVerificationActivity;.controlProgressBar:(Z)V` @kind virtual;
+  #L36a980.  call temp:= `getApplicationContext`(v1) @signature `Landroid/app/Activity;.getApplicationContext:()Landroid/content/Context;` @kind virtual;
+  #L36a986.  v0:= temp @kind object;
+  #L36a988.  call `showToastMessage`(v0, v2) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.showToastMessage:(Landroid/content/Context;Ljava/lang/String;)V` @kind static;
+  #L36a98e.  return @kind void;
+}
+procedure `void` `deviceVerificationSuccess`(`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity` v5 @kind this) @signature `Lcom/dmoneybd/dcustomer/ui_module/user/DeviceVerificationActivity;.deviceVerificationSuccess:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L36a9a0.  v0:= 0I;
+  #L36a9a2.  call `controlProgressBar`(v5, v0) @signature `Lcom/dmoneybd/dcustomer/ui_module/user/DeviceVerificationActivity;.controlProgressBar:(Z)V` @kind virtual;
+  #L36a9a8.  v0:= v5.`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity.pinViewVerificationCode` @type ^`com.chaos.view.PinView` @kind object;
+  #L36a9ac.  v1:= 0I;
+  #L36a9ae.  call `addTextChangedListener`(v0, v1) @signature `Landroid/widget/EditText;.addTextChangedListener:(Landroid/text/TextWatcher;)V` @kind virtual;
+  #L36a9b4.  v0:= 2131886168I;
+  #L36a9ba.  call temp:= `getString`(v5, v0) @signature `Landroid/app/Activity;.getString:(I)Ljava/lang/String;` @kind virtual;
+  #L36a9c0.  v0:= temp @kind object;
+  #L36a9c2.  call `showToastMessage`(v5, v0) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.showToastMessage:(Landroid/content/Context;Ljava/lang/String;)V` @kind static;
+  #L36a9c8.  v0:= "dm_successful_login" @kind object;
+  #L36a9cc.  call `saveFireBasePostLoginEvent`(v5, v0) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.saveFireBasePostLoginEvent:(Landroid/content/Context;Ljava/lang/String;)V` @kind static;
+  #L36a9d2.  call temp:= `getApplicationContext`(v5) @signature `Landroid/app/Activity;.getApplicationContext:()Landroid/content/Context;` @kind virtual;
+  #L36a9d8.  v0:= temp @kind object;
+  #L36a9da.  v1:= "is logged in" @kind object;
+  #L36a9de.  v2:= "1" @kind object;
+  #L36a9e2.  call `savePreferences`(v0, v1, v2) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.savePreferences:(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)V` @kind static;
+  #L36a9e8.  call temp:= `getApplicationContext`(v5) @signature `Landroid/app/Activity;.getApplicationContext:()Landroid/content/Context;` @kind virtual;
+  #L36a9ee.  v0:= temp @kind object;
+  #L36a9f0.  v1:= v5.`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity.loginResponse` @type ^`com.dmoneybd.dcustomer.network_module.responses.LoginResponse` @kind object;
+  #L36a9f4.  call temp:= `getEmail`(v1) @signature `Lcom/dmoneybd/dcustomer/network_module/responses/LoginResponse;.getEmail:()Ljava/lang/String;` @kind virtual;
+  #L36a9fa.  v1:= temp @kind object;
+  #L36a9fc.  v2:= "EMAIL_ADDRESS" @kind object;
+  #L36aa00.  call `savePreferences`(v0, v2, v1) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.savePreferences:(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)V` @kind static;
+  #L36aa06.  call temp:= `getApplicationContext`(v5) @signature `Landroid/app/Activity;.getApplicationContext:()Landroid/content/Context;` @kind virtual;
+  #L36aa0c.  v0:= temp @kind object;
+  #L36aa0e.  v1:= v5.`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity.loginResponse` @type ^`com.dmoneybd.dcustomer.network_module.responses.LoginResponse` @kind object;
+  #L36aa12.  call temp:= `getSessionId`(v1) @signature `Lcom/dmoneybd/dcustomer/network_module/responses/LoginResponse;.getSessionId:()Ljava/lang/String;` @kind virtual;
+  #L36aa18.  v1:= temp @kind object;
+  #L36aa1a.  v2:= "session_id" @kind object;
+  #L36aa1e.  call `savePreferences`(v0, v2, v1) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.savePreferences:(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)V` @kind static;
+  #L36aa24.  call temp:= `getApplicationContext`(v5) @signature `Landroid/app/Activity;.getApplicationContext:()Landroid/content/Context;` @kind virtual;
+  #L36aa2a.  v0:= temp @kind object;
+  #L36aa2c.  v1:= v5.`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity.loginResponse` @type ^`com.dmoneybd.dcustomer.network_module.responses.LoginResponse` @kind object;
+  #L36aa30.  call temp:= `getClientId`(v1) @signature `Lcom/dmoneybd/dcustomer/network_module/responses/LoginResponse;.getClientId:()Ljava/lang/String;` @kind virtual;
+  #L36aa36.  v1:= temp @kind object;
+  #L36aa38.  v2:= "client_id" @kind object;
+  #L36aa3c.  call `savePreferences`(v0, v2, v1) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.savePreferences:(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)V` @kind static;
+  #L36aa42.  call temp:= `getApplicationContext`(v5) @signature `Landroid/app/Activity;.getApplicationContext:()Landroid/content/Context;` @kind virtual;
+  #L36aa48.  v0:= temp @kind object;
+  #L36aa4a.  v1:= v5.`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity.loginResponse` @type ^`com.dmoneybd.dcustomer.network_module.responses.LoginResponse` @kind object;
+  #L36aa4e.  call temp:= `getSavingsId`(v1) @signature `Lcom/dmoneybd/dcustomer/network_module/responses/LoginResponse;.getSavingsId:()Ljava/lang/String;` @kind virtual;
+  #L36aa54.  v1:= temp @kind object;
+  #L36aa56.  v2:= "savings_id" @kind object;
+  #L36aa5a.  call `savePreferences`(v0, v2, v1) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.savePreferences:(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)V` @kind static;
+  #L36aa60.  call temp:= `getApplicationContext`(v5) @signature `Landroid/app/Activity;.getApplicationContext:()Landroid/content/Context;` @kind virtual;
+  #L36aa66.  v0:= temp @kind object;
+  #L36aa68.  v1:= v5.`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity.loginResponse` @type ^`com.dmoneybd.dcustomer.network_module.responses.LoginResponse` @kind object;
+  #L36aa6c.  call temp:= `getSessionToken`(v1) @signature `Lcom/dmoneybd/dcustomer/network_module/responses/LoginResponse;.getSessionToken:()Ljava/lang/String;` @kind virtual;
+  #L36aa72.  v1:= temp @kind object;
+  #L36aa74.  v2:= "app_access_token" @kind object;
+  #L36aa78.  call `savePreferences`(v0, v2, v1) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.savePreferences:(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)V` @kind static;
+  #L36aa7e.  call temp:= `getApplicationContext`(v5) @signature `Landroid/app/Activity;.getApplicationContext:()Landroid/content/Context;` @kind virtual;
+  #L36aa84.  v0:= temp @kind object;
+  #L36aa86.  v1:= v5.`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity.loginResponse` @type ^`com.dmoneybd.dcustomer.network_module.responses.LoginResponse` @kind object;
+  #L36aa8a.  call temp:= `getMobileNo`(v1) @signature `Lcom/dmoneybd/dcustomer/network_module/responses/LoginResponse;.getMobileNo:()Ljava/lang/String;` @kind virtual;
+  #L36aa90.  v1:= temp @kind object;
+  #L36aa92.  v2:= "mobile_no" @kind object;
+  #L36aa96.  call `savePreferences`(v0, v2, v1) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.savePreferences:(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)V` @kind static;
+  #L36aa9c.  call temp:= `getApplicationContext`(v5) @signature `Landroid/app/Activity;.getApplicationContext:()Landroid/content/Context;` @kind virtual;
+  #L36aaa2.  v0:= temp @kind object;
+  #L36aaa4.  v1:= v5.`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity.loginResponse` @type ^`com.dmoneybd.dcustomer.network_module.responses.LoginResponse` @kind object;
+  #L36aaa8.  call temp:= `getCustomerType`(v1) @signature `Lcom/dmoneybd/dcustomer/network_module/responses/LoginResponse;.getCustomerType:()Ljava/lang/String;` @kind virtual;
+  #L36aaae.  v1:= temp @kind object;
+  #L36aab0.  v2:= "CUSTOMER_TYPE" @kind object;
+  #L36aab4.  call `savePreferences`(v0, v2, v1) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.savePreferences:(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)V` @kind static;
+  #L36aaba.  call temp:= `getApplicationContext`(v5) @signature `Landroid/app/Activity;.getApplicationContext:()Landroid/content/Context;` @kind virtual;
+  #L36aac0.  v0:= temp @kind object;
+  #L36aac2.  v1:= v5.`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity.loginResponse` @type ^`com.dmoneybd.dcustomer.network_module.responses.LoginResponse` @kind object;
+  #L36aac6.  call temp:= `getUserName`(v1) @signature `Lcom/dmoneybd/dcustomer/network_module/responses/LoginResponse;.getUserName:()Ljava/lang/String;` @kind virtual;
+  #L36aacc.  v1:= temp @kind object;
+  #L36aace.  v2:= "user full name" @kind object;
+  #L36aad2.  call `savePreferences`(v0, v2, v1) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.savePreferences:(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)V` @kind static;
+  #L36aad8.  call temp:= `getApplicationContext`(v5) @signature `Landroid/app/Activity;.getApplicationContext:()Landroid/content/Context;` @kind virtual;
+  #L36aade.  v0:= temp @kind object;
+  #L36aae0.  v1:= v5.`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity.loginResponse` @type ^`com.dmoneybd.dcustomer.network_module.responses.LoginResponse` @kind object;
+  #L36aae4.  call temp:= `getDocumentName`(v1) @signature `Lcom/dmoneybd/dcustomer/network_module/responses/LoginResponse;.getDocumentName:()Ljava/lang/String;` @kind virtual;
+  #L36aaea.  v1:= temp @kind object;
+  #L36aaec.  v2:= "PROFILE_PIC_URL" @kind object;
+  #L36aaf0.  call `savePreferences`(v0, v2, v1) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.savePreferences:(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)V` @kind static;
+  #L36aaf6.  call temp:= `getApplicationContext`(v5) @signature `Landroid/app/Activity;.getApplicationContext:()Landroid/content/Context;` @kind virtual;
+  #L36aafc.  v0:= temp @kind object;
+  #L36aafe.  v1:= v5.`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity.loginResponse` @type ^`com.dmoneybd.dcustomer.network_module.responses.LoginResponse` @kind object;
+  #L36ab02.  call temp:= `getUserFunctions`(v1) @signature `Lcom/dmoneybd/dcustomer/network_module/responses/LoginResponse;.getUserFunctions:()Ljava/util/ArrayList;` @kind virtual;
+  #L36ab08.  v1:= temp @kind object;
+  #L36ab0a.  v2:= "user_roles" @kind object;
+  #L36ab0e.  call `saveArrayListPreferences`(v0, v2, v1) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.saveArrayListPreferences:(Landroid/content/Context;Ljava/lang/String;Ljava/util/ArrayList;)V` @kind static;
+  #L36ab14.  call temp:= `getApplicationContext`(v5) @signature `Landroid/app/Activity;.getApplicationContext:()Landroid/content/Context;` @kind virtual;
+  #L36ab1a.  v0:= temp @kind object;
+  #L36ab1c.  call temp:= `currentTimeMillis`() @signature `Ljava/lang/System;.currentTimeMillis:()J` @kind static;
+  #L36ab22.  v1:= temp @kind wide;
+  #L36ab24.  call temp:= `valueOf`(v1) @signature `Ljava/lang/String;.valueOf:(J)Ljava/lang/String;` @kind static;
+  #L36ab2a.  v1:= temp @kind object;
+  #L36ab2c.  v2:= "last_interaction" @kind object;
+  #L36ab30.  call `savePreferences`(v0, v2, v1) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.savePreferences:(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)V` @kind static;
+  #L36ab36.  v0:= v5.`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity.loginResponse` @type ^`com.dmoneybd.dcustomer.network_module.responses.LoginResponse` @kind object;
+  #L36ab3a.  call temp:= `getSettings`(v0) @signature `Lcom/dmoneybd/dcustomer/network_module/responses/LoginResponse;.getSettings:()Lcom/dmoneybd/dcustomer/network_module/responses/UserSettings;` @kind virtual;
+  #L36ab40.  v0:= temp @kind object;
+  #L36ab42.  v1:= "SHOULD_CHANGE_PASSWORD_OR_PIN" @kind object;
+  #L36ab46.  if v0 == 0 then goto L36ac62;
+  #L36ab4a.  v0:= v5.`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity.loginResponse` @type ^`com.dmoneybd.dcustomer.network_module.responses.LoginResponse` @kind object;
+  #L36ab4e.  call temp:= `getSettings`(v0) @signature `Lcom/dmoneybd/dcustomer/network_module/responses/LoginResponse;.getSettings:()Lcom/dmoneybd/dcustomer/network_module/responses/UserSettings;` @kind virtual;
+  #L36ab54.  v0:= temp @kind object;
+  #L36ab56.  call temp:= `getApplicationContext`(v5) @signature `Landroid/app/Activity;.getApplicationContext:()Landroid/content/Context;` @kind virtual;
+  #L36ab5c.  v2:= temp @kind object;
+  #L36ab5e.  call temp:= `getSmsStatus`(v0) @signature `Lcom/dmoneybd/dcustomer/network_module/responses/UserSettings;.getSmsStatus:()Ljava/lang/String;` @kind virtual;
+  #L36ab64.  v3:= temp @kind object;
+  #L36ab66.  call temp:= `getEmptyStringWhenNull`(v3) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.getEmptyStringWhenNull:(Ljava/lang/String;)Ljava/lang/String;` @kind static;
+  #L36ab6c.  v3:= temp @kind object;
+  #L36ab6e.  v4:= "sms_status" @kind object;
+  #L36ab72.  call `savePreferences`(v2, v4, v3) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.savePreferences:(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)V` @kind static;
+  #L36ab78.  call temp:= `getApplicationContext`(v5) @signature `Landroid/app/Activity;.getApplicationContext:()Landroid/content/Context;` @kind virtual;
+  #L36ab7e.  v2:= temp @kind object;
+  #L36ab80.  call temp:= `getMaskOn`(v0) @signature `Lcom/dmoneybd/dcustomer/network_module/responses/UserSettings;.getMaskOn:()Ljava/lang/String;` @kind virtual;
+  #L36ab86.  v3:= temp @kind object;
+  #L36ab88.  call temp:= `getEmptyStringWhenNull`(v3) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.getEmptyStringWhenNull:(Ljava/lang/String;)Ljava/lang/String;` @kind static;
+  #L36ab8e.  v3:= temp @kind object;
+  #L36ab90.  v4:= "mask_status" @kind object;
+  #L36ab94.  call `savePreferences`(v2, v4, v3) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.savePreferences:(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)V` @kind static;
+  #L36ab9a.  call temp:= `getApplicationContext`(v5) @signature `Landroid/app/Activity;.getApplicationContext:()Landroid/content/Context;` @kind virtual;
+  #L36aba0.  v2:= temp @kind object;
+  #L36aba2.  call temp:= `getIsEmailVerified`(v0) @signature `Lcom/dmoneybd/dcustomer/network_module/responses/UserSettings;.getIsEmailVerified:()Ljava/lang/String;` @kind virtual;
+  #L36aba8.  v3:= temp @kind object;
+  #L36abaa.  call temp:= `getEmptyStringWhenNull`(v3) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.getEmptyStringWhenNull:(Ljava/lang/String;)Ljava/lang/String;` @kind static;
+  #L36abb0.  v3:= temp @kind object;
+  #L36abb2.  v4:= "email_verified" @kind object;
+  #L36abb6.  call `savePreferences`(v2, v4, v3) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.savePreferences:(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)V` @kind static;
+  #L36abbc.  call temp:= `getApplicationContext`(v5) @signature `Landroid/app/Activity;.getApplicationContext:()Landroid/content/Context;` @kind virtual;
+  #L36abc2.  v2:= temp @kind object;
+  #L36abc4.  call temp:= `getShouldChangePassPin`(v0) @signature `Lcom/dmoneybd/dcustomer/network_module/responses/UserSettings;.getShouldChangePassPin:()Ljava/lang/String;` @kind virtual;
+  #L36abca.  v3:= temp @kind object;
+  #L36abcc.  call temp:= `getEmptyStringWhenNull`(v3) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.getEmptyStringWhenNull:(Ljava/lang/String;)Ljava/lang/String;` @kind static;
+  #L36abd2.  v3:= temp @kind object;
+  #L36abd4.  call `savePreferences`(v2, v1, v3) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.savePreferences:(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)V` @kind static;
+  #L36abda.  call temp:= `getApplicationContext`(v5) @signature `Landroid/app/Activity;.getApplicationContext:()Landroid/content/Context;` @kind virtual;
+  #L36abe0.  v2:= temp @kind object;
+  #L36abe2.  call temp:= `getIsNidVerified`(v0) @signature `Lcom/dmoneybd/dcustomer/network_module/responses/UserSettings;.getIsNidVerified:()Ljava/lang/String;` @kind virtual;
+  #L36abe8.  v3:= temp @kind object;
+  #L36abea.  call temp:= `getEmptyStringWhenNull`(v3) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.getEmptyStringWhenNull:(Ljava/lang/String;)Ljava/lang/String;` @kind static;
+  #L36abf0.  v3:= temp @kind object;
+  #L36abf2.  v4:= "NID_STATUS" @kind object;
+  #L36abf6.  call `savePreferences`(v2, v4, v3) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.savePreferences:(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)V` @kind static;
+  #L36abfc.  call temp:= `getApplicationContext`(v5) @signature `Landroid/app/Activity;.getApplicationContext:()Landroid/content/Context;` @kind virtual;
+  #L36ac02.  v2:= temp @kind object;
+  #L36ac04.  call temp:= `getIsMobileVerified`(v0) @signature `Lcom/dmoneybd/dcustomer/network_module/responses/UserSettings;.getIsMobileVerified:()Ljava/lang/String;` @kind virtual;
+  #L36ac0a.  v3:= temp @kind object;
+  #L36ac0c.  call temp:= `getEmptyStringWhenNull`(v3) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.getEmptyStringWhenNull:(Ljava/lang/String;)Ljava/lang/String;` @kind static;
+  #L36ac12.  v3:= temp @kind object;
+  #L36ac14.  v4:= "MOBILE_NUMBER_VERIFICATION_STATUS" @kind object;
+  #L36ac18.  call `savePreferences`(v2, v4, v3) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.savePreferences:(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)V` @kind static;
+  #L36ac1e.  call temp:= `getApplicationContext`(v5) @signature `Landroid/app/Activity;.getApplicationContext:()Landroid/content/Context;` @kind virtual;
+  #L36ac24.  v2:= temp @kind object;
+  #L36ac26.  call temp:= `getIsProfilePicVerified`(v0) @signature `Lcom/dmoneybd/dcustomer/network_module/responses/UserSettings;.getIsProfilePicVerified:()Ljava/lang/String;` @kind virtual;
+  #L36ac2c.  v3:= temp @kind object;
+  #L36ac2e.  call temp:= `getEmptyStringWhenNull`(v3) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.getEmptyStringWhenNull:(Ljava/lang/String;)Ljava/lang/String;` @kind static;
+  #L36ac34.  v3:= temp @kind object;
+  #L36ac36.  v4:= "PROFILE_PICTURE_VERIFICATION_STATUS" @kind object;
+  #L36ac3a.  call `savePreferences`(v2, v4, v3) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.savePreferences:(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)V` @kind static;
+  #L36ac40.  call temp:= `getApplicationContext`(v5) @signature `Landroid/app/Activity;.getApplicationContext:()Landroid/content/Context;` @kind virtual;
+  #L36ac46.  v2:= temp @kind object;
+  #L36ac48.  call temp:= `getIsBankInfoVerified`(v0) @signature `Lcom/dmoneybd/dcustomer/network_module/responses/UserSettings;.getIsBankInfoVerified:()Ljava/lang/String;` @kind virtual;
+  #L36ac4e.  v0:= temp @kind object;
+  #L36ac50.  call temp:= `getEmptyStringWhenNull`(v0) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.getEmptyStringWhenNull:(Ljava/lang/String;)Ljava/lang/String;` @kind static;
+  #L36ac56.  v0:= temp @kind object;
+  #L36ac58.  v3:= "BANK_STATUS" @kind object;
+  #L36ac5c.  call `savePreferences`(v2, v3, v0) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.savePreferences:(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)V` @kind static;
+  #L36ac62.  call temp:= `getApplicationContext`(v5) @signature `Landroid/app/Activity;.getApplicationContext:()Landroid/content/Context;` @kind virtual;
+  #L36ac68.  v0:= temp @kind object;
+  #L36ac6a.  call temp:= `getPreferences`(v0, v1) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.getPreferences:(Landroid/content/Context;Ljava/lang/String;)Ljava/lang/String;` @kind static;
+  #L36ac70.  v0:= temp @kind object;
+  #L36ac72.  v1:= "Y" @kind object;
+  #L36ac76.  call temp:= `equals`(v0, v1) @signature `Ljava/lang/String;.equals:(Ljava/lang/Object;)Z` @kind virtual;
+  #L36ac7c.  v0:= temp;
+  #L36ac7e.  if v0 == 0 then goto L36acae;
+  #L36ac82.  v0:= new `android.content.Intent`;
+  #L36ac86.  v2:= constclass @type ^`com.dmoneybd.dcustomer.ui_module.user.ChangePinActivity` @kind object;
+  #L36ac8a.  call `<init>`(v0, v5, v2) @signature `Landroid/content/Intent;.<init>:(Landroid/content/Context;Ljava/lang/Class;)V` @kind direct;
+  #L36ac90.  v2:= "DEFAULT_PIN_CHANGE" @kind object;
+  #L36ac94.  call temp:= `putExtra`(v0, v2, v1) @signature `Landroid/content/Intent;.putExtra:(Ljava/lang/String;Ljava/lang/String;)Landroid/content/Intent;` @kind virtual;
+  #L36ac9a.  v1:= 268468224I;
+  #L36aca0.  call temp:= `setFlags`(v0, v1) @signature `Landroid/content/Intent;.setFlags:(I)Landroid/content/Intent;` @kind virtual;
+  #L36aca6.  call `startActivity`(v5, v0) @signature `Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V` @kind virtual;
+  #L36acac.  goto L36acc8;
+  #L36acae.  v0:= new `android.content.Intent`;
+  #L36acb2.  v1:= constclass @type ^`com.dmoneybd.dcustomer.ui_module.home.MainActivityNew` @kind object;
+  #L36acb6.  call `<init>`(v0, v5, v1) @signature `Landroid/content/Intent;.<init>:(Landroid/content/Context;Ljava/lang/Class;)V` @kind direct;
+  #L36acbc.  call `startActivity`(v5, v0) @signature `Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V` @kind virtual;
+  #L36acc2.  call `finish`(v5) @signature `Landroid/app/Activity;.finish:()V` @kind virtual;
+  #L36acc8.  return @kind void;
+}
+procedure `void` `h`(`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity` v0 @kind this, `java.lang.String` v1 @kind object) @signature `Lcom/dmoneybd/dcustomer/ui_module/user/DeviceVerificationActivity;.h:(Ljava/lang/String;)V` @AccessFlag PUBLIC_SYNTHETIC {
+    temp;
+
+  #L36aea0.  call `lambda$init$0`(v0, v1) @signature `Lcom/dmoneybd/dcustomer/ui_module/user/DeviceVerificationActivity;.lambda$init$0:(Ljava/lang/String;)V` @kind direct;
+  #L36aea6.  return @kind void;
+}
+procedure `void` `onBackPressed`(`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity` v0 @kind this) @signature `Lcom/dmoneybd/dcustomer/ui_module/user/DeviceVerificationActivity;.onBackPressed:()V` @AccessFlag PUBLIC {
+    temp;
+
+  #L36aed4.  call `goToLoginPage`(v0) @signature `Lcom/dmoneybd/dcustomer/ui_module/user/DeviceVerificationActivity;.goToLoginPage:()V` @kind direct;
+  #L36aeda.  call `finish`(v0) @signature `Landroid/app/Activity;.finish:()V` @kind virtual;
+  #L36aee0.  return @kind void;
+}
+procedure `void` `onClick`(`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity` v5 @kind this, `android.view.View` v6 @kind object) @signature `Lcom/dmoneybd/dcustomer/ui_module/user/DeviceVerificationActivity;.onClick:(Landroid/view/View;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L36aef4.  call temp:= `elapsedRealtime`() @signature `Landroid/os/SystemClock;.elapsedRealtime:()J` @kind static;
+  #L36aefa.  v0:= temp @kind wide;
+  #L36aefc.  v2:= v5.`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity.mLastClickTime` @type ^`long` @kind wide;
+  #L36af00.  v0:= v0 - v2 @kind long;
+  #L36af02.  v2:= 1000L;
+  #L36af06.  v4:= lcmp(v0, v2);
+  #L36af0a.  if v4 >= 0 then goto L36af10;
+  #L36af0e.  return @kind void;
+  #L36af10.  call temp:= `elapsedRealtime`() @signature `Landroid/os/SystemClock;.elapsedRealtime:()J` @kind static;
+  #L36af16.  v0:= temp @kind wide;
+  #L36af18.  v5.`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity.mLastClickTime` @type ^`long` := v0 @kind wide;
+  #L36af1c.  call temp:= `getId`(v6) @signature `Landroid/view/View;.getId:()I` @kind virtual;
+  #L36af22.  v6:= temp;
+  #L36af24.  v0:= 2131361961I;
+  #L36af2a.  if v6 != v0 then goto L36af3a;
+  #L36af2e.  call `hideKeyboard`(v5) @signature `Lcom/dmoneybd/dcustomer/ui_module/user/DeviceVerificationActivity;.hideKeyboard:()V` @kind direct;
+  #L36af34.  call `resendOtp`(v5) @signature `Lcom/dmoneybd/dcustomer/ui_module/user/DeviceVerificationActivity;.resendOtp:()V` @kind direct;
+  #L36af3a.  return @kind void;
+}
+procedure `void` `onCreate`(`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity` v1 @kind this, `android.os.Bundle` v2 @kind object) @signature `Lcom/dmoneybd/dcustomer/ui_module/user/DeviceVerificationActivity;.onCreate:(Landroid/os/Bundle;)V` @AccessFlag PROTECTED {
+    temp;
+    v0;
+
+  #L36af4c.  call `onCreate`(v1, v2) @signature `Landroidx/appcompat/app/AppCompatActivity;.onCreate:(Landroid/os/Bundle;)V` @kind super;
+  #L36af52.  call `setLanguage`(v1) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.setLanguage:(Landroid/app/Activity;)V` @kind static;
+  #L36af58.  call `changeStatusBarColor`(v1) @signature `Lcom/dmoneybd/dcustomer/ui_module/user/DeviceVerificationActivity;.changeStatusBarColor:()V` @kind direct;
+  #L36af5e.  v2:= "dm_device_verification" @kind object;
+  #L36af62.  call `saveFireBasePreLoginEvent`(v1, v2) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.saveFireBasePreLoginEvent:(Landroid/content/Context;Ljava/lang/String;)V` @kind static;
+  #L36af68.  v2:= 2131558464I;
+  #L36af6e.  call `setContentView`(v1, v2) @signature `Landroidx/appcompat/app/AppCompatActivity;.setContentView:(I)V` @kind virtual;
+  #L36af74.  call temp:= `getInstance`() @signature `Lcom/dmoneybd/dcustomer/base/DCustomerApplication;.getInstance:()Lcom/dmoneybd/dcustomer/base/DCustomerApplication;` @kind static;
+  #L36af7a.  v2:= temp @kind object;
+  #L36af7c.  call temp:= `getNetComponent`(v2) @signature `Lcom/dmoneybd/dcustomer/base/DCustomerApplication;.getNetComponent:()Lcom/dmoneybd/dcustomer/dagger_module/component/NetComponent;` @kind virtual;
+  #L36af82.  v2:= temp @kind object;
+  #L36af84.  call `inject`(v2, v1) @signature `Lcom/dmoneybd/dcustomer/dagger_module/component/NetComponent;.inject:(Lcom/dmoneybd/dcustomer/ui_module/user/DeviceVerificationActivity;)V` @kind interface;
+  #L36af8a.  v2:= 2131362607I;
+  #L36af90.  call temp:= `findViewById`(v1, v2) @signature `Landroidx/appcompat/app/AppCompatActivity;.findViewById:(I)Landroid/view/View;` @kind virtual;
+  #L36af96.  v2:= temp @kind object;
+  #L36af98.  v2:= (`androidx.appcompat.widget.Toolbar`) v2 @kind object;
+  #L36af9c.  call `setSupportActionBar`(v1, v2) @signature `Landroidx/appcompat/app/AppCompatActivity;.setSupportActionBar:(Landroidx/appcompat/widget/Toolbar;)V` @kind virtual;
+  #L36afa2.  v0:= 2131886385I;
+  #L36afa8.  call `setTitle`(v2, v0) @signature `Landroidx/appcompat/widget/Toolbar;.setTitle:(I)V` @kind virtual;
+  #L36afae.  call `init`(v1) @signature `Lcom/dmoneybd/dcustomer/ui_module/user/DeviceVerificationActivity;.init:()V` @kind direct;
+  #L36afb4.  return @kind void;
+}
+procedure `void` `onOtpResendFailure`(`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity` v0 @kind this, `com.dmoneybd.dcustomer.network_module.requests.ErrorObject` v1 @kind object) @signature `Lcom/dmoneybd/dcustomer/ui_module/user/DeviceVerificationActivity;.onOtpResendFailure:(Lcom/dmoneybd/dcustomer/network_module/requests/ErrorObject;)V` @AccessFlag PUBLIC {
+    temp;
+
+  #L36afc8.  call temp:= `getErrorMessage`(v1) @signature `Lcom/dmoneybd/dcustomer/network_module/requests/ErrorObject;.getErrorMessage:()Ljava/lang/String;` @kind virtual;
+  #L36afce.  v1:= temp @kind object;
+  #L36afd0.  call `showToastMessage`(v0, v1) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.showToastMessage:(Landroid/content/Context;Ljava/lang/String;)V` @kind static;
+  #L36afd6.  return @kind void;
+}
+procedure `void` `onOtpResendSuccess`(`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity` v1 @kind this, `com.dmoneybd.dcustomer.network_module.responses.ResendOtpResponse` v2 @kind object) @signature `Lcom/dmoneybd/dcustomer/ui_module/user/DeviceVerificationActivity;.onOtpResendSuccess:(Lcom/dmoneybd/dcustomer/network_module/responses/ResendOtpResponse;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L36afe8.  call `setTimer`(v1) @signature `Lcom/dmoneybd/dcustomer/ui_module/user/DeviceVerificationActivity;.setTimer:()V` @kind direct;
+  #L36afee.  v2:= v1.`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity.buttonResendOtp` @type ^`android.widget.Button` @kind object;
+  #L36aff2.  v0:= 8I;
+  #L36aff6.  call `setVisibility`(v2, v0) @signature `Landroid/widget/Button;.setVisibility:(I)V` @kind virtual;
+  #L36affc.  v2:= 2131886086I;
+  #L36b002.  call temp:= `getString`(v1, v2) @signature `Landroid/app/Activity;.getString:(I)Ljava/lang/String;` @kind virtual;
+  #L36b008.  v2:= temp @kind object;
+  #L36b00a.  call `showToastMessage`(v1, v2) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.showToastMessage:(Landroid/content/Context;Ljava/lang/String;)V` @kind static;
+  #L36b010.  return @kind void;
+}
+procedure `void` `showErrorMessage`(`com.dmoneybd.dcustomer.ui_module.user.DeviceVerificationActivity` v1 @kind this, `java.lang.String` v2 @kind object) @signature `Lcom/dmoneybd/dcustomer/ui_module/user/DeviceVerificationActivity;.showErrorMessage:(Ljava/lang/String;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L36b09c.  call temp:= `getApplicationContext`(v1) @signature `Landroid/app/Activity;.getApplicationContext:()Landroid/content/Context;` @kind virtual;
+  #L36b0a2.  v0:= temp @kind object;
+  #L36b0a4.  call `showToastMessage`(v0, v2) @signature `Lcom/dmoneybd/dcustomer/utilities/CommonTasks;.showToastMessage:(Landroid/content/Context;Ljava/lang/String;)V` @kind static;
+  #L36b0aa.  return @kind void;
+}

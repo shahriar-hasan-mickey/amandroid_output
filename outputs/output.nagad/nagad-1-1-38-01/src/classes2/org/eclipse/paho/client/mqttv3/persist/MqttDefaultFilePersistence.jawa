@@ -1,0 +1,506 @@
+record `org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence` @kind class @AccessFlag PUBLIC extends `org.eclipse.paho.client.mqttv3.MqttClientPersistence` @kind interface {
+  `java.io.File` `org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence.clientDir` @AccessFlag PRIVATE;
+  `java.io.File` `org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence.dataDir` @AccessFlag PRIVATE;
+  `org.eclipse.paho.client.mqttv3.internal.FileLock` `org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence.fileLock` @AccessFlag PRIVATE;
+}
+global `java.io.FilenameFilter` `@@org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence.FILENAME_FILTER` @AccessFlag PRIVATE_STATIC;
+global `java.lang.String` `@@org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence.LOCK_FILENAME` @AccessFlag PRIVATE_STATIC_FINAL;
+global `java.lang.String` `@@org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence.MESSAGE_BACKUP_FILE_EXTENSION` @AccessFlag PRIVATE_STATIC_FINAL;
+global `java.lang.String` `@@org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence.MESSAGE_FILE_EXTENSION` @AccessFlag PRIVATE_STATIC_FINAL;
+procedure `void` `<init>`(`org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence` v1 @kind this) @signature `Lorg/eclipse/paho/client/mqttv3/persist/MqttDefaultFilePersistence;.<init>:()V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L237c0c.  v0:= "user.dir" @kind object;
+  #L237c10.  call temp:= `getProperty`(v0) @signature `Ljava/lang/System;.getProperty:(Ljava/lang/String;)Ljava/lang/String;` @kind static;
+  #L237c16.  v0:= temp @kind object;
+  #L237c18.  call `<init>`(v1, v0) @signature `Lorg/eclipse/paho/client/mqttv3/persist/MqttDefaultFilePersistence;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L237c1e.  return @kind void;
+}
+procedure `void` `<init>`(`org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence` v1 @kind this, `java.lang.String` v2 @kind object) @signature `Lorg/eclipse/paho/client/mqttv3/persist/MqttDefaultFilePersistence;.<init>:(Ljava/lang/String;)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L237c30.  call `<init>`(v1) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L237c36.  v0:= 0I;
+  #L237c38.  v1.`org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence.clientDir` @type ^`java.io.File` := v0 @kind object;
+  #L237c3c.  v1.`org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence.fileLock` @type ^`org.eclipse.paho.client.mqttv3.internal.FileLock` := v0 @kind object;
+  #L237c40.  v0:= new `java.io.File`;
+  #L237c44.  call `<init>`(v0, v2) @signature `Ljava/io/File;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L237c4a.  v1.`org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence.dataDir` @type ^`java.io.File` := v0 @kind object;
+  #L237c4e.  return @kind void;
+}
+procedure `void` `checkIsOpen`(`org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence` v1 @kind this) @signature `Lorg/eclipse/paho/client/mqttv3/persist/MqttDefaultFilePersistence;.checkIsOpen:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+
+  #L237c60.  v0:= v1.`org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence.clientDir` @type ^`java.io.File` @kind object;
+  #L237c64.  if v0 == 0 then goto L237c6a;
+  #L237c68.  return @kind void;
+  #L237c6a.  v0:= new `org.eclipse.paho.client.mqttv3.MqttPersistenceException`;
+  #L237c6e.  call `<init>`(v0) @signature `Lorg/eclipse/paho/client/mqttv3/MqttPersistenceException;.<init>:()V` @kind direct;
+  #L237c74.  throw v0;
+}
+procedure `java.io.FilenameFilter` `getFilenameFilter`() @signature `Lorg/eclipse/paho/client/mqttv3/persist/MqttDefaultFilePersistence;.getFilenameFilter:()Ljava/io/FilenameFilter;` @AccessFlag PRIVATE_STATIC {
+    temp;
+    v0;
+    v1;
+
+  #L237abc.  v0:= `@@org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence.FILENAME_FILTER` @type ^`java.io.FilenameFilter` @kind object;
+  #L237ac0.  if v0 != 0 then goto L237ad6;
+  #L237ac4.  v0:= new `org.eclipse.paho.client.mqttv3.persist.PersistanceFileNameFilter`;
+  #L237ac8.  v1:= ".msg" @kind object;
+  #L237acc.  call `<init>`(v0, v1) @signature `Lorg/eclipse/paho/client/mqttv3/persist/PersistanceFileNameFilter;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L237ad2.  `@@org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence.FILENAME_FILTER` @type ^`java.io.FilenameFilter` := v0 @kind object;
+  #L237ad6.  v0:= `@@org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence.FILENAME_FILTER` @type ^`java.io.FilenameFilter` @kind object;
+  #L237ada.  return v0 @kind object;
+}
+procedure `java.io.File`[] `getFiles`(`org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence` v2 @kind this) @signature `Lorg/eclipse/paho/client/mqttv3/persist/MqttDefaultFilePersistence;.getFiles:()[Ljava/io/File;` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+
+  #L237a80.  call `checkIsOpen`(v2) @signature `Lorg/eclipse/paho/client/mqttv3/persist/MqttDefaultFilePersistence;.checkIsOpen:()V` @kind direct;
+  #L237a86.  v0:= v2.`org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence.clientDir` @type ^`java.io.File` @kind object;
+  #L237a8a.  call temp:= `getFilenameFilter`() @signature `Lorg/eclipse/paho/client/mqttv3/persist/MqttDefaultFilePersistence;.getFilenameFilter:()Ljava/io/FilenameFilter;` @kind static;
+  #L237a90.  v1:= temp @kind object;
+  #L237a92.  call temp:= `listFiles`(v0, v1) @signature `Ljava/io/File;.listFiles:(Ljava/io/FilenameFilter;)[Ljava/io/File;` @kind virtual;
+  #L237a98.  v0:= temp @kind object;
+  #L237a9a.  if v0 == 0 then goto L237aa0;
+  #L237a9e.  return v0 @kind object;
+  #L237aa0.  v0:= new `org.eclipse.paho.client.mqttv3.MqttPersistenceException`;
+  #L237aa4.  call `<init>`(v0) @signature `Lorg/eclipse/paho/client/mqttv3/MqttPersistenceException;.<init>:()V` @kind direct;
+  #L237aaa.  throw v0;
+}
+procedure `boolean` `isSafeChar`(`org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence` v1 @kind this, `char` v2 ) @signature `Lorg/eclipse/paho/client/mqttv3/persist/MqttDefaultFilePersistence;.isSafeChar:(C)Z` @AccessFlag PRIVATE {
+    temp;
+    v0;
+
+  #L237a54.  call temp:= `isJavaIdentifierPart`(v2) @signature `Ljava/lang/Character;.isJavaIdentifierPart:(C)Z` @kind static;
+  #L237a5a.  v0:= temp;
+  #L237a5c.  if v0 != 0 then goto L237a6c;
+  #L237a60.  v0:= 45I;
+  #L237a64.  if v2 == v0 then goto L237a6c;
+  #L237a68.  v2:= 0I;
+  #L237a6a.  return v2;
+  #L237a6c.  v2:= 1I;
+  #L237a6e.  return v2;
+}
+procedure `void` `restoreBackups`(`org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence` v6 @kind this, `java.io.File` v7 @kind object) @signature `Lorg/eclipse/paho/client/mqttv3/persist/MqttDefaultFilePersistence;.restoreBackups:(Ljava/io/File;)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L238098.  v0:= new `org.eclipse.paho.client.mqttv3.persist.PersistanceFileFilter`;
+  #L23809c.  v1:= ".bup" @kind object;
+  #L2380a0.  call `<init>`(v0, v1) @signature `Lorg/eclipse/paho/client/mqttv3/persist/PersistanceFileFilter;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L2380a6.  call temp:= `listFiles`(v7, v0) @signature `Ljava/io/File;.listFiles:(Ljava/io/FileFilter;)[Ljava/io/File;` @kind virtual;
+  #L2380ac.  v0:= temp @kind object;
+  #L2380ae.  if v0 == 0 then goto L23811a;
+  #L2380b2.  v1:= 0I;
+  #L2380b4.  v2:= 0I;
+  #L2380b6.  v3:= length @variable v0;
+  #L2380b8.  if v2 < v3 then goto L2380be;
+  #L2380bc.  return @kind void;
+  #L2380be.  v3:= new `java.io.File`;
+  #L2380c2.  v4:= v0[v2] @kind object;
+  #L2380c6.  call temp:= `getName`(v4) @signature `Ljava/io/File;.getName:()Ljava/lang/String;` @kind virtual;
+  #L2380cc.  v4:= temp @kind object;
+  #L2380ce.  v5:= v0[v2] @kind object;
+  #L2380d2.  call temp:= `getName`(v5) @signature `Ljava/io/File;.getName:()Ljava/lang/String;` @kind virtual;
+  #L2380d8.  v5:= temp @kind object;
+  #L2380da.  call temp:= `length`(v5) @signature `Ljava/lang/String;.length:()I` @kind virtual;
+  #L2380e0.  v5:= temp;
+  #L2380e2.  v5:= v5 + -4;
+  #L2380e6.  call temp:= `substring`(v4, v1, v5) @signature `Ljava/lang/String;.substring:(II)Ljava/lang/String;` @kind virtual;
+  #L2380ec.  v4:= temp @kind object;
+  #L2380ee.  call `<init>`(v3, v7, v4) @signature `Ljava/io/File;.<init>:(Ljava/io/File;Ljava/lang/String;)V` @kind direct;
+  #L2380f4.  v4:= v0[v2] @kind object;
+  #L2380f8.  call temp:= `renameTo`(v4, v3) @signature `Ljava/io/File;.renameTo:(Ljava/io/File;)Z` @kind virtual;
+  #L2380fe.  v4:= temp;
+  #L238100.  if v4 != 0 then goto L238114;
+  #L238104.  call temp:= `delete`(v3) @signature `Ljava/io/File;.delete:()Z` @kind virtual;
+  #L23810a.  v4:= v0[v2] @kind object;
+  #L23810e.  call temp:= `renameTo`(v4, v3) @signature `Ljava/io/File;.renameTo:(Ljava/io/File;)Z` @kind virtual;
+  #L238114.  v2:= v2 + 1;
+  #L238118.  goto L2380b6;
+  #L23811a.  v7:= new `org.eclipse.paho.client.mqttv3.MqttPersistenceException`;
+  #L23811e.  call `<init>`(v7) @signature `Lorg/eclipse/paho/client/mqttv3/MqttPersistenceException;.<init>:()V` @kind direct;
+  #L238124.  throw v7;
+}
+procedure `void` `clear`(`org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence` v3 @kind this) @signature `Lorg/eclipse/paho/client/mqttv3/persist/MqttDefaultFilePersistence;.clear:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L237c88.  call `checkIsOpen`(v3) @signature `Lorg/eclipse/paho/client/mqttv3/persist/MqttDefaultFilePersistence;.checkIsOpen:()V` @kind direct;
+  #L237c8e.  call temp:= `getFiles`(v3) @signature `Lorg/eclipse/paho/client/mqttv3/persist/MqttDefaultFilePersistence;.getFiles:()[Ljava/io/File;` @kind direct;
+  #L237c94.  v0:= temp @kind object;
+  #L237c96.  v1:= 0I;
+  #L237c98.  v2:= length @variable v0;
+  #L237c9a.  if v1 < v2 then goto L237caa;
+  #L237c9e.  v0:= v3.`org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence.clientDir` @type ^`java.io.File` @kind object;
+  #L237ca2.  call temp:= `delete`(v0) @signature `Ljava/io/File;.delete:()Z` @kind virtual;
+  #L237ca8.  return @kind void;
+  #L237caa.  v2:= v0[v1] @kind object;
+  #L237cae.  call temp:= `delete`(v2) @signature `Ljava/io/File;.delete:()Z` @kind virtual;
+  #L237cb4.  v1:= v1 + 1;
+  #L237cb8.  goto L237c98;
+}
+procedure `void` `close`(`org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence` v1 @kind this) @signature `Lorg/eclipse/paho/client/mqttv3/persist/MqttDefaultFilePersistence;.close:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L237ccc.  @monitorenter v1
+  #L237cce.  v0:= v1.`org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence.fileLock` @type ^`org.eclipse.paho.client.mqttv3.internal.FileLock` @kind object;
+  #L237cd2.  if v0 == 0 then goto L237ce0;
+  #L237cd6.  v0:= v1.`org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence.fileLock` @type ^`org.eclipse.paho.client.mqttv3.internal.FileLock` @kind object;
+  #L237cda.  call `release`(v0) @signature `Lorg/eclipse/paho/client/mqttv3/internal/FileLock;.release:()V` @kind virtual;
+  #L237ce0.  call temp:= `getFiles`(v1) @signature `Lorg/eclipse/paho/client/mqttv3/persist/MqttDefaultFilePersistence;.getFiles:()[Ljava/io/File;` @kind direct;
+  #L237ce6.  v0:= temp @kind object;
+  #L237ce8.  v0:= length @variable v0;
+  #L237cea.  if v0 != 0 then goto L237cf8;
+  #L237cee.  v0:= v1.`org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence.clientDir` @type ^`java.io.File` @kind object;
+  #L237cf2.  call temp:= `delete`(v0) @signature `Ljava/io/File;.delete:()Z` @kind virtual;
+  #L237cf8.  v0:= 0I;
+  #L237cfa.  v1.`org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence.clientDir` @type ^`java.io.File` := v0 @kind object;
+  #L237cfe.  @monitorexit v1
+  #L237d00.  return @kind void;
+  #L237d02.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L237d04.  @monitorexit v1
+  #L237d06.  throw v0;
+  catch `java.lang.Throwable` @[L237cce..L237d06] goto L237d02;
+}
+procedure `boolean` `containsKey`(`org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence` v3 @kind this, `java.lang.String` v4 @kind object) @signature `Lorg/eclipse/paho/client/mqttv3/persist/MqttDefaultFilePersistence;.containsKey:(Ljava/lang/String;)Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L237a00.  call `checkIsOpen`(v3) @signature `Lorg/eclipse/paho/client/mqttv3/persist/MqttDefaultFilePersistence;.checkIsOpen:()V` @kind direct;
+  #L237a06.  v0:= new `java.io.File`;
+  #L237a0a.  v1:= v3.`org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence.clientDir` @type ^`java.io.File` @kind object;
+  #L237a0e.  v2:= new `java.lang.StringBuilder`;
+  #L237a12.  call temp:= `valueOf`(v4) @signature `Ljava/lang/String;.valueOf:(Ljava/lang/Object;)Ljava/lang/String;` @kind static;
+  #L237a18.  v4:= temp @kind object;
+  #L237a1a.  call `<init>`(v2, v4) @signature `Ljava/lang/StringBuilder;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L237a20.  v4:= ".msg" @kind object;
+  #L237a24.  call temp:= `append`(v2, v4) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L237a2a.  call temp:= `toString`(v2) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L237a30.  v4:= temp @kind object;
+  #L237a32.  call `<init>`(v0, v1, v4) @signature `Ljava/io/File;.<init>:(Ljava/io/File;Ljava/lang/String;)V` @kind direct;
+  #L237a38.  call temp:= `exists`(v0) @signature `Ljava/io/File;.exists:()Z` @kind virtual;
+  #L237a3e.  v4:= temp;
+  #L237a40.  return v4;
+}
+procedure `org.eclipse.paho.client.mqttv3.MqttPersistable` `get`(`org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence` v10 @kind this, `java.lang.String` v11 @kind object) @signature `Lorg/eclipse/paho/client/mqttv3/persist/MqttDefaultFilePersistence;.get:(Ljava/lang/String;)Lorg/eclipse/paho/client/mqttv3/MqttPersistable;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+    v9;
+
+  #L237b58.  call `checkIsOpen`(v10) @signature `Lorg/eclipse/paho/client/mqttv3/persist/MqttDefaultFilePersistence;.checkIsOpen:()V` @kind direct;
+  #L237b5e.  v0:= new `java.io.File`;
+  #L237b62.  v1:= v10.`org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence.clientDir` @type ^`java.io.File` @kind object;
+  #L237b66.  v2:= new `java.lang.StringBuilder`;
+  #L237b6a.  call temp:= `valueOf`(v11) @signature `Ljava/lang/String;.valueOf:(Ljava/lang/Object;)Ljava/lang/String;` @kind static;
+  #L237b70.  v3:= temp @kind object;
+  #L237b72.  call `<init>`(v2, v3) @signature `Ljava/lang/StringBuilder;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L237b78.  v3:= ".msg" @kind object;
+  #L237b7c.  call temp:= `append`(v2, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L237b82.  call temp:= `toString`(v2) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L237b88.  v2:= temp @kind object;
+  #L237b8a.  call `<init>`(v0, v1, v2) @signature `Ljava/io/File;.<init>:(Ljava/io/File;Ljava/lang/String;)V` @kind direct;
+  #L237b90.  v1:= new `java.io.FileInputStream`;
+  #L237b94.  call `<init>`(v1, v0) @signature `Ljava/io/FileInputStream;.<init>:(Ljava/io/File;)V` @kind direct;
+  #L237b9a.  call temp:= `available`(v1) @signature `Ljava/io/FileInputStream;.available:()I` @kind virtual;
+  #L237ba0.  v0:= temp;
+  #L237ba2.  v4:= new `byte`[v0];
+  #L237ba6.  v2:= 0I;
+  #L237ba8.  if v2 < v0 then goto L237bcc;
+  #L237bac.  call `close`(v1) @signature `Ljava/io/FileInputStream;.close:()V` @kind virtual;
+  #L237bb2.  v0:= new `org.eclipse.paho.client.mqttv3.internal.MqttPersistentData`;
+  #L237bb6.  v5:= 0I;
+  #L237bb8.  v6:= length @variable v4;
+  #L237bba.  v7:= 0I;
+  #L237bbc.  v8:= 0I;
+  #L237bbe.  v9:= 0I;
+  #L237bc0.  v2:= v0 @kind object;
+  #L237bc2.  v3:= v11 @kind object;
+  #L237bc4.  call `<init>`(v2, v3, v4, v5, v6, v7, v8, v9) @signature `Lorg/eclipse/paho/client/mqttv3/internal/MqttPersistentData;.<init>:(Ljava/lang/String;[BII[BII)V` @kind direct;
+  #L237bca.  return v0 @kind object;
+  #L237bcc.  v3:= v0 - v2 @kind int;
+  #L237bd0.  call temp:= `read`(v1, v4, v2, v3) @signature `Ljava/io/FileInputStream;.read:([BII)I` @kind virtual;
+  #L237bd6.  v3:= temp;
+  #L237bd8.  v2:= v2 + v3 @kind int;
+  #L237bda.  goto L237ba8;
+  #L237bdc.  v11:= Exception @type ^`java.io.IOException` @kind object;
+  #L237bde.  v0:= new `org.eclipse.paho.client.mqttv3.MqttPersistenceException`;
+  #L237be2.  call `<init>`(v0, v11) @signature `Lorg/eclipse/paho/client/mqttv3/MqttPersistenceException;.<init>:(Ljava/lang/Throwable;)V` @kind direct;
+  #L237be8.  throw v0;
+  catch `java.io.IOException` @[L237b5e..L237bd8] goto L237bdc;
+}
+procedure `java.util.Enumeration` `keys`(`org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence` v6 @kind this) @signature `Lorg/eclipse/paho/client/mqttv3/persist/MqttDefaultFilePersistence;.keys:()Ljava/util/Enumeration;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L237aec.  call `checkIsOpen`(v6) @signature `Lorg/eclipse/paho/client/mqttv3/persist/MqttDefaultFilePersistence;.checkIsOpen:()V` @kind direct;
+  #L237af2.  call temp:= `getFiles`(v6) @signature `Lorg/eclipse/paho/client/mqttv3/persist/MqttDefaultFilePersistence;.getFiles:()[Ljava/io/File;` @kind direct;
+  #L237af8.  v0:= temp @kind object;
+  #L237afa.  v1:= new `java.util.Vector`;
+  #L237afe.  v2:= length @variable v0;
+  #L237b00.  call `<init>`(v1, v2) @signature `Ljava/util/Vector;.<init>:(I)V` @kind direct;
+  #L237b06.  v2:= 0I;
+  #L237b08.  v3:= 0I;
+  #L237b0a.  v4:= length @variable v0;
+  #L237b0c.  if v3 < v4 then goto L237b1a;
+  #L237b10.  call temp:= `elements`(v1) @signature `Ljava/util/Vector;.elements:()Ljava/util/Enumeration;` @kind virtual;
+  #L237b16.  v0:= temp @kind object;
+  #L237b18.  return v0 @kind object;
+  #L237b1a.  v4:= v0[v3] @kind object;
+  #L237b1e.  call temp:= `getName`(v4) @signature `Ljava/io/File;.getName:()Ljava/lang/String;` @kind virtual;
+  #L237b24.  v4:= temp @kind object;
+  #L237b26.  call temp:= `length`(v4) @signature `Ljava/lang/String;.length:()I` @kind virtual;
+  #L237b2c.  v5:= temp;
+  #L237b2e.  v5:= v5 + -4;
+  #L237b32.  call temp:= `substring`(v4, v2, v5) @signature `Ljava/lang/String;.substring:(II)Ljava/lang/String;` @kind virtual;
+  #L237b38.  v4:= temp @kind object;
+  #L237b3a.  call `addElement`(v1, v4) @signature `Ljava/util/Vector;.addElement:(Ljava/lang/Object;)V` @kind virtual;
+  #L237b40.  v3:= v3 + 1;
+  #L237b44.  goto L237b0a;
+}
+procedure `void` `open`(`org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence` v5 @kind this, `java.lang.String` v6 @kind object, `java.lang.String` v7 @kind object) @signature `Lorg/eclipse/paho/client/mqttv3/persist/MqttDefaultFilePersistence;.open:(Ljava/lang/String;Ljava/lang/String;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L237d24.  v0:= v5.`org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence.dataDir` @type ^`java.io.File` @kind object;
+  #L237d28.  call temp:= `exists`(v0) @signature `Ljava/io/File;.exists:()Z` @kind virtual;
+  #L237d2e.  v0:= temp;
+  #L237d30.  if v0 == 0 then goto L237d52;
+  #L237d34.  v0:= v5.`org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence.dataDir` @type ^`java.io.File` @kind object;
+  #L237d38.  call temp:= `isDirectory`(v0) @signature `Ljava/io/File;.isDirectory:()Z` @kind virtual;
+  #L237d3e.  v0:= temp;
+  #L237d40.  if v0 == 0 then goto L237d46;
+  #L237d44.  goto L237d52;
+  #L237d46.  v6:= new `org.eclipse.paho.client.mqttv3.MqttPersistenceException`;
+  #L237d4a.  call `<init>`(v6) @signature `Lorg/eclipse/paho/client/mqttv3/MqttPersistenceException;.<init>:()V` @kind direct;
+  #L237d50.  throw v6;
+  #L237d52.  v0:= v5.`org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence.dataDir` @type ^`java.io.File` @kind object;
+  #L237d56.  call temp:= `exists`(v0) @signature `Ljava/io/File;.exists:()Z` @kind virtual;
+  #L237d5c.  v0:= temp;
+  #L237d5e.  if v0 != 0 then goto L237d80;
+  #L237d62.  v0:= v5.`org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence.dataDir` @type ^`java.io.File` @kind object;
+  #L237d66.  call temp:= `mkdirs`(v0) @signature `Ljava/io/File;.mkdirs:()Z` @kind virtual;
+  #L237d6c.  v0:= temp;
+  #L237d6e.  if v0 == 0 then goto L237d74;
+  #L237d72.  goto L237d80;
+  #L237d74.  v6:= new `org.eclipse.paho.client.mqttv3.MqttPersistenceException`;
+  #L237d78.  call `<init>`(v6) @signature `Lorg/eclipse/paho/client/mqttv3/MqttPersistenceException;.<init>:()V` @kind direct;
+  #L237d7e.  throw v6;
+  #L237d80.  v0:= v5.`org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence.dataDir` @type ^`java.io.File` @kind object;
+  #L237d84.  call temp:= `canWrite`(v0) @signature `Ljava/io/File;.canWrite:()Z` @kind virtual;
+  #L237d8a.  v0:= temp;
+  #L237d8c.  if v0 == 0 then goto L237e68;
+  #L237d90.  v0:= new `java.lang.StringBuffer`;
+  #L237d94.  call `<init>`(v0) @signature `Ljava/lang/StringBuffer;.<init>:()V` @kind direct;
+  #L237d9a.  v1:= 0I;
+  #L237d9c.  v2:= 0I;
+  #L237d9e.  call temp:= `length`(v6) @signature `Ljava/lang/String;.length:()I` @kind virtual;
+  #L237da4.  v3:= temp;
+  #L237da6.  if v2 < v3 then goto L237e48;
+  #L237daa.  v6:= "-" @kind object;
+  #L237dae.  call temp:= `append`(v0, v6) @signature `Ljava/lang/StringBuffer;.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;` @kind virtual;
+  #L237db4.  call temp:= `length`(v7) @signature `Ljava/lang/String;.length:()I` @kind virtual;
+  #L237dba.  v6:= temp;
+  #L237dbc.  if v1 < v6 then goto L237e28;
+  #L237dc0.  @monitorenter v5
+  #L237dc2.  v6:= v5.`org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence.clientDir` @type ^`java.io.File` @kind object;
+  #L237dc6.  if v6 != 0 then goto L237dfe;
+  #L237dca.  call temp:= `toString`(v0) @signature `Ljava/lang/StringBuffer;.toString:()Ljava/lang/String;` @kind virtual;
+  #L237dd0.  v6:= temp @kind object;
+  #L237dd2.  v7:= new `java.io.File`;
+  #L237dd6.  v0:= v5.`org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence.dataDir` @type ^`java.io.File` @kind object;
+  #L237dda.  call `<init>`(v7, v0, v6) @signature `Ljava/io/File;.<init>:(Ljava/io/File;Ljava/lang/String;)V` @kind direct;
+  #L237de0.  v5.`org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence.clientDir` @type ^`java.io.File` := v7 @kind object;
+  #L237de4.  v6:= v5.`org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence.clientDir` @type ^`java.io.File` @kind object;
+  #L237de8.  call temp:= `exists`(v6) @signature `Ljava/io/File;.exists:()Z` @kind virtual;
+  #L237dee.  v6:= temp;
+  #L237df0.  if v6 != 0 then goto L237dfe;
+  #L237df4.  v6:= v5.`org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence.clientDir` @type ^`java.io.File` @kind object;
+  #L237df8.  call temp:= `mkdir`(v6) @signature `Ljava/io/File;.mkdir:()Z` @kind virtual;
+  #L237dfe.  v6:= new `org.eclipse.paho.client.mqttv3.internal.FileLock`;
+  #L237e02.  v7:= v5.`org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence.clientDir` @type ^`java.io.File` @kind object;
+  #L237e06.  v0:= ".lck" @kind object;
+  #L237e0a.  call `<init>`(v6, v7, v0) @signature `Lorg/eclipse/paho/client/mqttv3/internal/FileLock;.<init>:(Ljava/io/File;Ljava/lang/String;)V` @kind direct;
+  #L237e10.  v5.`org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence.fileLock` @type ^`org.eclipse.paho.client.mqttv3.internal.FileLock` := v6 @kind object;
+  #L237e14.  v6:= v5.`org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence.clientDir` @type ^`java.io.File` @kind object;
+  #L237e18.  call `restoreBackups`(v5, v6) @signature `Lorg/eclipse/paho/client/mqttv3/persist/MqttDefaultFilePersistence;.restoreBackups:(Ljava/io/File;)V` @kind direct;
+  #L237e1e.  @monitorexit v5
+  #L237e20.  return @kind void;
+  #L237e22.  v6:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L237e24.  @monitorexit v5
+  #L237e26.  throw v6;
+  #L237e28.  call temp:= `charAt`(v7, v1) @signature `Ljava/lang/String;.charAt:(I)C` @kind virtual;
+  #L237e2e.  v6:= temp;
+  #L237e30.  call temp:= `isSafeChar`(v5, v6) @signature `Lorg/eclipse/paho/client/mqttv3/persist/MqttDefaultFilePersistence;.isSafeChar:(C)Z` @kind direct;
+  #L237e36.  v2:= temp;
+  #L237e38.  if v2 == 0 then goto L237e42;
+  #L237e3c.  call temp:= `append`(v0, v6) @signature `Ljava/lang/StringBuffer;.append:(C)Ljava/lang/StringBuffer;` @kind virtual;
+  #L237e42.  v1:= v1 + 1;
+  #L237e46.  goto L237db4;
+  #L237e48.  call temp:= `charAt`(v6, v2) @signature `Ljava/lang/String;.charAt:(I)C` @kind virtual;
+  #L237e4e.  v3:= temp;
+  #L237e50.  call temp:= `isSafeChar`(v5, v3) @signature `Lorg/eclipse/paho/client/mqttv3/persist/MqttDefaultFilePersistence;.isSafeChar:(C)Z` @kind direct;
+  #L237e56.  v4:= temp;
+  #L237e58.  if v4 == 0 then goto L237e62;
+  #L237e5c.  call temp:= `append`(v0, v3) @signature `Ljava/lang/StringBuffer;.append:(C)Ljava/lang/StringBuffer;` @kind virtual;
+  #L237e62.  v2:= v2 + 1;
+  #L237e66.  goto L237d9e;
+  #L237e68.  v6:= new `org.eclipse.paho.client.mqttv3.MqttPersistenceException`;
+  #L237e6c.  call `<init>`(v6) @signature `Lorg/eclipse/paho/client/mqttv3/MqttPersistenceException;.<init>:()V` @kind direct;
+  #L237e72.  throw v6;
+  catch `java.lang.Throwable` @[L237dc2..L237dfe] goto L237e22;
+  catch `java.lang.Exception` @[L237dfe..L237e14] goto L237e14;
+  catch `java.lang.Throwable` @[L237dfe..L237e14] goto L237e22;
+  catch `java.lang.Throwable` @[L237e14..L237e26] goto L237e22;
+}
+procedure `void` `put`(`org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence` v5 @kind this, `java.lang.String` v6 @kind object, `org.eclipse.paho.client.mqttv3.MqttPersistable` v7 @kind object) @signature `Lorg/eclipse/paho/client/mqttv3/persist/MqttDefaultFilePersistence;.put:(Ljava/lang/String;Lorg/eclipse/paho/client/mqttv3/MqttPersistable;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L237ea4.  call `checkIsOpen`(v5) @signature `Lorg/eclipse/paho/client/mqttv3/persist/MqttDefaultFilePersistence;.checkIsOpen:()V` @kind direct;
+  #L237eaa.  v0:= new `java.io.File`;
+  #L237eae.  v1:= v5.`org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence.clientDir` @type ^`java.io.File` @kind object;
+  #L237eb2.  v2:= new `java.lang.StringBuilder`;
+  #L237eb6.  call temp:= `valueOf`(v6) @signature `Ljava/lang/String;.valueOf:(Ljava/lang/Object;)Ljava/lang/String;` @kind static;
+  #L237ebc.  v3:= temp @kind object;
+  #L237ebe.  call `<init>`(v2, v3) @signature `Ljava/lang/StringBuilder;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L237ec4.  v3:= ".msg" @kind object;
+  #L237ec8.  call temp:= `append`(v2, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L237ece.  call temp:= `toString`(v2) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L237ed4.  v2:= temp @kind object;
+  #L237ed6.  call `<init>`(v0, v1, v2) @signature `Ljava/io/File;.<init>:(Ljava/io/File;Ljava/lang/String;)V` @kind direct;
+  #L237edc.  v1:= new `java.io.File`;
+  #L237ee0.  v2:= v5.`org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence.clientDir` @type ^`java.io.File` @kind object;
+  #L237ee4.  v4:= new `java.lang.StringBuilder`;
+  #L237ee8.  call temp:= `valueOf`(v6) @signature `Ljava/lang/String;.valueOf:(Ljava/lang/Object;)Ljava/lang/String;` @kind static;
+  #L237eee.  v6:= temp @kind object;
+  #L237ef0.  call `<init>`(v4, v6) @signature `Ljava/lang/StringBuilder;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L237ef6.  call temp:= `append`(v4, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L237efc.  v6:= ".bup" @kind object;
+  #L237f00.  call temp:= `append`(v4, v6) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L237f06.  call temp:= `toString`(v4) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L237f0c.  v6:= temp @kind object;
+  #L237f0e.  call `<init>`(v1, v2, v6) @signature `Ljava/io/File;.<init>:(Ljava/io/File;Ljava/lang/String;)V` @kind direct;
+  #L237f14.  call temp:= `exists`(v0) @signature `Ljava/io/File;.exists:()Z` @kind virtual;
+  #L237f1a.  v6:= temp;
+  #L237f1c.  if v6 == 0 then goto L237f38;
+  #L237f20.  call temp:= `renameTo`(v0, v1) @signature `Ljava/io/File;.renameTo:(Ljava/io/File;)Z` @kind virtual;
+  #L237f26.  v6:= temp;
+  #L237f28.  if v6 != 0 then goto L237f38;
+  #L237f2c.  call temp:= `delete`(v1) @signature `Ljava/io/File;.delete:()Z` @kind virtual;
+  #L237f32.  call temp:= `renameTo`(v0, v1) @signature `Ljava/io/File;.renameTo:(Ljava/io/File;)Z` @kind virtual;
+  #L237f38.  v6:= new `java.io.FileOutputStream`;
+  #L237f3c.  call `<init>`(v6, v0) @signature `Ljava/io/FileOutputStream;.<init>:(Ljava/io/File;)V` @kind direct;
+  #L237f42.  call temp:= `getHeaderBytes`(v7) @signature `Lorg/eclipse/paho/client/mqttv3/MqttPersistable;.getHeaderBytes:()[B` @kind interface;
+  #L237f48.  v2:= temp @kind object;
+  #L237f4a.  call temp:= `getHeaderOffset`(v7) @signature `Lorg/eclipse/paho/client/mqttv3/MqttPersistable;.getHeaderOffset:()I` @kind interface;
+  #L237f50.  v3:= temp;
+  #L237f52.  call temp:= `getHeaderLength`(v7) @signature `Lorg/eclipse/paho/client/mqttv3/MqttPersistable;.getHeaderLength:()I` @kind interface;
+  #L237f58.  v4:= temp;
+  #L237f5a.  call `write`(v6, v2, v3, v4) @signature `Ljava/io/FileOutputStream;.write:([BII)V` @kind virtual;
+  #L237f60.  call temp:= `getPayloadBytes`(v7) @signature `Lorg/eclipse/paho/client/mqttv3/MqttPersistable;.getPayloadBytes:()[B` @kind interface;
+  #L237f66.  v2:= temp @kind object;
+  #L237f68.  if v2 == 0 then goto L237f8a;
+  #L237f6c.  call temp:= `getPayloadBytes`(v7) @signature `Lorg/eclipse/paho/client/mqttv3/MqttPersistable;.getPayloadBytes:()[B` @kind interface;
+  #L237f72.  v2:= temp @kind object;
+  #L237f74.  call temp:= `getPayloadOffset`(v7) @signature `Lorg/eclipse/paho/client/mqttv3/MqttPersistable;.getPayloadOffset:()I` @kind interface;
+  #L237f7a.  v3:= temp;
+  #L237f7c.  call temp:= `getPayloadLength`(v7) @signature `Lorg/eclipse/paho/client/mqttv3/MqttPersistable;.getPayloadLength:()I` @kind interface;
+  #L237f82.  v7:= temp;
+  #L237f84.  call `write`(v6, v2, v3, v7) @signature `Ljava/io/FileOutputStream;.write:([BII)V` @kind virtual;
+  #L237f8a.  call temp:= `getFD`(v6) @signature `Ljava/io/FileOutputStream;.getFD:()Ljava/io/FileDescriptor;` @kind virtual;
+  #L237f90.  v7:= temp @kind object;
+  #L237f92.  call `sync`(v7) @signature `Ljava/io/FileDescriptor;.sync:()V` @kind virtual;
+  #L237f98.  call `close`(v6) @signature `Ljava/io/FileOutputStream;.close:()V` @kind virtual;
+  #L237f9e.  call temp:= `exists`(v1) @signature `Ljava/io/File;.exists:()Z` @kind virtual;
+  #L237fa4.  v6:= temp;
+  #L237fa6.  if v6 == 0 then goto L237fb0;
+  #L237faa.  call temp:= `delete`(v1) @signature `Ljava/io/File;.delete:()Z` @kind virtual;
+  #L237fb0.  call temp:= `exists`(v1) @signature `Ljava/io/File;.exists:()Z` @kind virtual;
+  #L237fb6.  v6:= temp;
+  #L237fb8.  if v6 == 0 then goto L237fd4;
+  #L237fbc.  call temp:= `renameTo`(v1, v0) @signature `Ljava/io/File;.renameTo:(Ljava/io/File;)Z` @kind virtual;
+  #L237fc2.  v6:= temp;
+  #L237fc4.  if v6 != 0 then goto L237fd4;
+  #L237fc8.  call temp:= `delete`(v0) @signature `Ljava/io/File;.delete:()Z` @kind virtual;
+  #L237fce.  call temp:= `renameTo`(v1, v0) @signature `Ljava/io/File;.renameTo:(Ljava/io/File;)Z` @kind virtual;
+  #L237fd4.  return @kind void;
+  #L237fd6.  v6:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L237fd8.  goto L237fe8;
+  #L237fda.  v6:= Exception @type ^`java.io.IOException` @kind object;
+  #L237fdc.  v7:= new `org.eclipse.paho.client.mqttv3.MqttPersistenceException`;
+  #L237fe0.  call `<init>`(v7, v6) @signature `Lorg/eclipse/paho/client/mqttv3/MqttPersistenceException;.<init>:(Ljava/lang/Throwable;)V` @kind direct;
+  #L237fe6.  throw v7;
+  #L237fe8.  call temp:= `exists`(v1) @signature `Ljava/io/File;.exists:()Z` @kind virtual;
+  #L237fee.  v7:= temp;
+  #L237ff0.  if v7 == 0 then goto L23800c;
+  #L237ff4.  call temp:= `renameTo`(v1, v0) @signature `Ljava/io/File;.renameTo:(Ljava/io/File;)Z` @kind virtual;
+  #L237ffa.  v7:= temp;
+  #L237ffc.  if v7 != 0 then goto L23800c;
+  #L238000.  call temp:= `delete`(v0) @signature `Ljava/io/File;.delete:()Z` @kind virtual;
+  #L238006.  call temp:= `renameTo`(v1, v0) @signature `Ljava/io/File;.renameTo:(Ljava/io/File;)Z` @kind virtual;
+  #L23800c.  throw v6;
+  catch `java.io.IOException` @[L237f38..L237fb0] goto L237fda;
+  catch `java.lang.Throwable` @[L237f38..L237fb0] goto L237fd6;
+  catch `java.lang.Throwable` @[L237fdc..L237fe8] goto L237fd6;
+}
+procedure `void` `remove`(`org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence` v3 @kind this, `java.lang.String` v4 @kind object) @signature `Lorg/eclipse/paho/client/mqttv3/persist/MqttDefaultFilePersistence;.remove:(Ljava/lang/String;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L23803c.  call `checkIsOpen`(v3) @signature `Lorg/eclipse/paho/client/mqttv3/persist/MqttDefaultFilePersistence;.checkIsOpen:()V` @kind direct;
+  #L238042.  v0:= new `java.io.File`;
+  #L238046.  v1:= v3.`org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence.clientDir` @type ^`java.io.File` @kind object;
+  #L23804a.  v2:= new `java.lang.StringBuilder`;
+  #L23804e.  call temp:= `valueOf`(v4) @signature `Ljava/lang/String;.valueOf:(Ljava/lang/Object;)Ljava/lang/String;` @kind static;
+  #L238054.  v4:= temp @kind object;
+  #L238056.  call `<init>`(v2, v4) @signature `Ljava/lang/StringBuilder;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L23805c.  v4:= ".msg" @kind object;
+  #L238060.  call temp:= `append`(v2, v4) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L238066.  call temp:= `toString`(v2) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L23806c.  v4:= temp @kind object;
+  #L23806e.  call `<init>`(v0, v1, v4) @signature `Ljava/io/File;.<init>:(Ljava/io/File;Ljava/lang/String;)V` @kind direct;
+  #L238074.  call temp:= `exists`(v0) @signature `Ljava/io/File;.exists:()Z` @kind virtual;
+  #L23807a.  v4:= temp;
+  #L23807c.  if v4 == 0 then goto L238086;
+  #L238080.  call temp:= `delete`(v0) @signature `Ljava/io/File;.delete:()Z` @kind virtual;
+  #L238086.  return @kind void;
+}

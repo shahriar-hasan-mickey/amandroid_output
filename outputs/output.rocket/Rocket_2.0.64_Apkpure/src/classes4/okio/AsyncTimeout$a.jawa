@@ -1,0 +1,44 @@
+record `okio.AsyncTimeout$a` @kind class @AccessFlag FINAL extends `java.lang.Thread` @kind class {
+}
+procedure `void` `<init>`(`okio.AsyncTimeout$a` v1 @kind this) @signature `Lokio/AsyncTimeout$a;.<init>:()V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L15fec0.  v0:= "Okio Watchdog" @kind object;
+  #L15fec4.  call `<init>`(v1, v0) @signature `Ljava/lang/Thread;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L15feca.  v0:= 1I;
+  #L15fecc.  call `setDaemon`(v1, v0) @signature `Ljava/lang/Thread;.setDaemon:(Z)V` @kind virtual;
+  #L15fed2.  return @kind void;
+}
+procedure `void` `run`(`okio.AsyncTimeout$a` v3 @kind this) @signature `Lokio/AsyncTimeout$a;.run:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L15fee4.  v0:= constclass @type ^`okio.AsyncTimeout` @kind object;
+  #L15fee8.  @monitorenter v0
+  #L15feea.  v1:= `@@okio.AsyncTimeout.Companion` @type ^`okio.AsyncTimeout$Companion` @kind object;
+  #L15feee.  call temp:= `awaitTimeout$okio`(v1) @signature `Lokio/AsyncTimeout$Companion;.awaitTimeout$okio:()Lokio/AsyncTimeout;` @kind virtual;
+  #L15fef4.  v1:= temp @kind object;
+  #L15fef6.  call temp:= `access$getHead$cp`() @signature `Lokio/AsyncTimeout;.access$getHead$cp:()Lokio/AsyncTimeout;` @kind static;
+  #L15fefc.  v2:= temp @kind object;
+  #L15fefe.  if v1 != v2 then goto L15ff0e;
+  #L15ff02.  v1:= 0I;
+  #L15ff04.  call `access$setHead$cp`(v1) @signature `Lokio/AsyncTimeout;.access$setHead$cp:(Lokio/AsyncTimeout;)V` @kind static;
+  #L15ff0a.  @monitorexit v0
+  #L15ff0c.  return @kind void;
+  #L15ff0e.  v2:= `@@kotlin.Unit.INSTANCE` @type ^`kotlin.Unit` @kind object;
+  #L15ff12.  @monitorexit v0
+  #L15ff14.  if v1 == 0 then goto L15fee4;
+  #L15ff18.  call `timedOut`(v1) @signature `Lokio/AsyncTimeout;.timedOut:()V` @kind virtual;
+  #L15ff1e.  goto L15fee4;
+  #L15ff20.  v1:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L15ff22.  @monitorexit v0
+  #L15ff24.  throw v1;
+  catch `java.lang.InterruptedException` @[L15fee4..L15feea] goto L15fee4;
+  catch `java.lang.Throwable` @[L15feea..L15ff0a] goto L15ff20;
+  catch `java.lang.InterruptedException` @[L15ff0a..L15ff0c] goto L15fee4;
+  catch `java.lang.Throwable` @[L15ff0e..L15ff12] goto L15ff20;
+  catch `java.lang.InterruptedException` @[L15ff12..L15ff26] goto L15fee4;
+}

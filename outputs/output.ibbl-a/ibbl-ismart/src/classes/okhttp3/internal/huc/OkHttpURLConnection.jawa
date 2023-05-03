@@ -1,0 +1,1205 @@
+record `okhttp3.internal.huc.OkHttpURLConnection` @kind class @AccessFlag PUBLIC_FINAL extends `java.net.HttpURLConnection` @kind class, `okhttp3.Callback` @kind interface {
+  `okhttp3.Call` `okhttp3.internal.huc.OkHttpURLConnection.call` @AccessFlag ;
+  `java.lang.Throwable` `okhttp3.internal.huc.OkHttpURLConnection.callFailure` @AccessFlag PRIVATE;
+  `okhttp3.OkHttpClient` `okhttp3.internal.huc.OkHttpURLConnection.client` @AccessFlag ;
+  `boolean` `okhttp3.internal.huc.OkHttpURLConnection.connectPending` @AccessFlag ;
+  `boolean` `okhttp3.internal.huc.OkHttpURLConnection.executed` @AccessFlag PRIVATE;
+  `long` `okhttp3.internal.huc.OkHttpURLConnection.fixedContentLength` @AccessFlag PRIVATE;
+  `okhttp3.Handshake` `okhttp3.internal.huc.OkHttpURLConnection.handshake` @AccessFlag ;
+  `java.lang.Object` `okhttp3.internal.huc.OkHttpURLConnection.lock` @AccessFlag PRIVATE_FINAL;
+  `okhttp3.internal.huc.OkHttpURLConnection$NetworkInterceptor` `okhttp3.internal.huc.OkHttpURLConnection.networkInterceptor` @AccessFlag PRIVATE_FINAL;
+  `okhttp3.Response` `okhttp3.internal.huc.OkHttpURLConnection.networkResponse` @AccessFlag ;
+  `java.net.Proxy` `okhttp3.internal.huc.OkHttpURLConnection.proxy` @AccessFlag ;
+  `okhttp3.Headers$Builder` `okhttp3.internal.huc.OkHttpURLConnection.requestHeaders` @AccessFlag PRIVATE;
+  `okhttp3.Response` `okhttp3.internal.huc.OkHttpURLConnection.response` @AccessFlag PRIVATE;
+  `okhttp3.Headers` `okhttp3.internal.huc.OkHttpURLConnection.responseHeaders` @AccessFlag PRIVATE;
+  `okhttp3.internal.URLFilter` `okhttp3.internal.huc.OkHttpURLConnection.urlFilter` @AccessFlag ;
+}
+global `java.util.Set` `@@okhttp3.internal.huc.OkHttpURLConnection.METHODS` @AccessFlag PRIVATE_STATIC_FINAL;
+global `java.lang.String` `@@okhttp3.internal.huc.OkHttpURLConnection.RESPONSE_SOURCE` @AccessFlag PUBLIC_STATIC_FINAL;
+global `java.lang.String` `@@okhttp3.internal.huc.OkHttpURLConnection.SELECTED_PROTOCOL` @AccessFlag PUBLIC_STATIC_FINAL;
+procedure `void` `<clinit>`() @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.<clinit>:()V` @AccessFlag STATIC_CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+
+  #L244e68.  v0:= new `java.lang.StringBuilder`;
+  #L244e6c.  call `<init>`(v0) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L244e72.  call temp:= `get`() @signature `Lokhttp3/internal/platform/Platform;.get:()Lokhttp3/internal/platform/Platform;` @kind static;
+  #L244e78.  v1:= temp @kind object;
+  #L244e7a.  call temp:= `getPrefix`(v1) @signature `Lokhttp3/internal/platform/Platform;.getPrefix:()Ljava/lang/String;` @kind virtual;
+  #L244e80.  v1:= temp @kind object;
+  #L244e82.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L244e88.  v1:= "-Selected-Protocol" @kind object;
+  #L244e8c.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L244e92.  call temp:= `toString`(v0) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L244e98.  v0:= temp @kind object;
+  #L244e9a.  `@@okhttp3.internal.huc.OkHttpURLConnection.SELECTED_PROTOCOL` @type ^`java.lang.String` := v0 @kind object;
+  #L244e9e.  v0:= new `java.lang.StringBuilder`;
+  #L244ea2.  call `<init>`(v0) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L244ea8.  call temp:= `get`() @signature `Lokhttp3/internal/platform/Platform;.get:()Lokhttp3/internal/platform/Platform;` @kind static;
+  #L244eae.  v1:= temp @kind object;
+  #L244eb0.  call temp:= `getPrefix`(v1) @signature `Lokhttp3/internal/platform/Platform;.getPrefix:()Ljava/lang/String;` @kind virtual;
+  #L244eb6.  v1:= temp @kind object;
+  #L244eb8.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L244ebe.  v1:= "-Response-Source" @kind object;
+  #L244ec2.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L244ec8.  call temp:= `toString`(v0) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L244ece.  v0:= temp @kind object;
+  #L244ed0.  `@@okhttp3.internal.huc.OkHttpURLConnection.RESPONSE_SOURCE` @type ^`java.lang.String` := v0 @kind object;
+  #L244ed4.  v0:= new `java.util.LinkedHashSet`;
+  #L244ed8.  v1:= "OPTIONS" @kind object;
+  #L244edc.  v2:= "GET" @kind object;
+  #L244ee0.  v3:= "HEAD" @kind object;
+  #L244ee4.  v4:= "POST" @kind object;
+  #L244ee8.  v5:= "PUT" @kind object;
+  #L244eec.  v6:= "DELETE" @kind object;
+  #L244ef0.  v7:= "TRACE" @kind object;
+  #L244ef4.  v8:= "PATCH" @kind object;
+  #L244ef8.  temp:= new `java.lang.String`[v1, v2, v3, v4, v5, v6, v7, v8];
+  #L244efe.  v1:= temp @kind object;
+  #L244f00.  call temp:= `asList`(v1) @signature `Ljava/util/Arrays;.asList:([Ljava/lang/Object;)Ljava/util/List;` @kind static;
+  #L244f06.  v1:= temp @kind object;
+  #L244f08.  call `<init>`(v0, v1) @signature `Ljava/util/LinkedHashSet;.<init>:(Ljava/util/Collection;)V` @kind direct;
+  #L244f0e.  `@@okhttp3.internal.huc.OkHttpURLConnection.METHODS` @type ^`java.util.Set` := v0 @kind object;
+  #L244f12.  return @kind void;
+}
+procedure `void` `<init>`(`okhttp3.internal.huc.OkHttpURLConnection` v2 @kind this, `java.net.URL` v3 @kind object, `okhttp3.OkHttpClient` v4 @kind object) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.<init>:(Ljava/net/URL;Lokhttp3/OkHttpClient;)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+
+  #L244f24.  call `<init>`(v2, v3) @signature `Ljava/net/HttpURLConnection;.<init>:(Ljava/net/URL;)V` @kind direct;
+  #L244f2a.  v3:= new `okhttp3.internal.huc.OkHttpURLConnection$NetworkInterceptor`;
+  #L244f2e.  call `<init>`(v3, v2) @signature `Lokhttp3/internal/huc/OkHttpURLConnection$NetworkInterceptor;.<init>:(Lokhttp3/internal/huc/OkHttpURLConnection;)V` @kind direct;
+  #L244f34.  v2.`okhttp3.internal.huc.OkHttpURLConnection.networkInterceptor` @type ^`okhttp3.internal.huc.OkHttpURLConnection$NetworkInterceptor` := v3 @kind object;
+  #L244f38.  v3:= new `okhttp3.Headers$Builder`;
+  #L244f3c.  call `<init>`(v3) @signature `Lokhttp3/Headers$Builder;.<init>:()V` @kind direct;
+  #L244f42.  v2.`okhttp3.internal.huc.OkHttpURLConnection.requestHeaders` @type ^`okhttp3.Headers$Builder` := v3 @kind object;
+  #L244f46.  v0:= -1L;
+  #L244f4a.  v2.`okhttp3.internal.huc.OkHttpURLConnection.fixedContentLength` @type ^`long` := v0 @kind wide;
+  #L244f4e.  v3:= new `java.lang.Object`;
+  #L244f52.  call `<init>`(v3) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L244f58.  v2.`okhttp3.internal.huc.OkHttpURLConnection.lock` @type ^`java.lang.Object` := v3 @kind object;
+  #L244f5c.  v3:= 1I;
+  #L244f5e.  v2.`okhttp3.internal.huc.OkHttpURLConnection.connectPending` @type ^`boolean` := v3 @kind boolean;
+  #L244f62.  v2.`okhttp3.internal.huc.OkHttpURLConnection.client` @type ^`okhttp3.OkHttpClient` := v4 @kind object;
+  #L244f66.  return @kind void;
+}
+procedure `void` `<init>`(`okhttp3.internal.huc.OkHttpURLConnection` v0 @kind this, `java.net.URL` v1 @kind object, `okhttp3.OkHttpClient` v2 @kind object, `okhttp3.internal.URLFilter` v3 @kind object) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.<init>:(Ljava/net/URL;Lokhttp3/OkHttpClient;Lokhttp3/internal/URLFilter;)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+
+  #L244f78.  call `<init>`(v0, v1, v2) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.<init>:(Ljava/net/URL;Lokhttp3/OkHttpClient;)V` @kind direct;
+  #L244f7e.  v0.`okhttp3.internal.huc.OkHttpURLConnection.urlFilter` @type ^`okhttp3.internal.URLFilter` := v3 @kind object;
+  #L244f82.  return @kind void;
+}
+procedure `java.lang.Object` `access$000`(`okhttp3.internal.huc.OkHttpURLConnection` v0 @kind object) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.access$000:(Lokhttp3/internal/huc/OkHttpURLConnection;)Ljava/lang/Object;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L2445a8.  v0:= v0.`okhttp3.internal.huc.OkHttpURLConnection.lock` @type ^`java.lang.Object` @kind object;
+  #L2445ac.  return v0 @kind object;
+}
+procedure `java.net.URL` `access$102`(`okhttp3.internal.huc.OkHttpURLConnection` v0 @kind object, `java.net.URL` v1 @kind object) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.access$102:(Lokhttp3/internal/huc/OkHttpURLConnection;Ljava/net/URL;)Ljava/net/URL;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L244890.  v0.`okhttp3.internal.huc.OkHttpURLConnection.url` @type ^`java.net.URL` := v1 @kind object;
+  #L244894.  return v1 @kind object;
+}
+procedure `okhttp3.Call` `buildCall`(`okhttp3.internal.huc.OkHttpURLConnection` v8 @kind this) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.buildCall:()Lokhttp3/Call;` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+
+  #L2449f4.  v0:= v8.`okhttp3.internal.huc.OkHttpURLConnection.call` @type ^`okhttp3.Call` @kind object;
+  #L2449f8.  if v0 == 0 then goto L2449fe;
+  #L2449fc.  return v0 @kind object;
+  #L2449fe.  v0:= 1I;
+  #L244a00.  v8.`okhttp3.internal.huc.OkHttpURLConnection.connected` @type ^`boolean` := v0 @kind boolean;
+  #L244a04.  v1:= v8.`okhttp3.internal.huc.OkHttpURLConnection.doOutput` @type ^`boolean` @kind boolean;
+  #L244a08.  if v1 == 0 then goto L244a6e;
+  #L244a0c.  v1:= v8.`okhttp3.internal.huc.OkHttpURLConnection.method` @type ^`java.lang.String` @kind object;
+  #L244a10.  v2:= "GET" @kind object;
+  #L244a14.  call temp:= `equals`(v1, v2) @signature `Ljava/lang/String;.equals:(Ljava/lang/Object;)Z` @kind virtual;
+  #L244a1a.  v1:= temp;
+  #L244a1c.  if v1 == 0 then goto L244a2a;
+  #L244a20.  v1:= "POST" @kind object;
+  #L244a24.  v8.`okhttp3.internal.huc.OkHttpURLConnection.method` @type ^`java.lang.String` := v1 @kind object;
+  #L244a28.  goto L244a6e;
+  #L244a2a.  v1:= v8.`okhttp3.internal.huc.OkHttpURLConnection.method` @type ^`java.lang.String` @kind object;
+  #L244a2e.  call temp:= `permitsRequestBody`(v1) @signature `Lokhttp3/internal/http/HttpMethod;.permitsRequestBody:(Ljava/lang/String;)Z` @kind static;
+  #L244a34.  v1:= temp;
+  #L244a36.  if v1 == 0 then goto L244a3c;
+  #L244a3a.  goto L244a6e;
+  #L244a3c.  v0:= new `java.net.ProtocolException`;
+  #L244a40.  v1:= new `java.lang.StringBuilder`;
+  #L244a44.  call `<init>`(v1) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L244a4a.  v2:= v8.`okhttp3.internal.huc.OkHttpURLConnection.method` @type ^`java.lang.String` @kind object;
+  #L244a4e.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L244a54.  v2:= " does not support writing" @kind object;
+  #L244a58.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L244a5e.  call temp:= `toString`(v1) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L244a64.  v1:= temp @kind object;
+  #L244a66.  call `<init>`(v0, v1) @signature `Ljava/net/ProtocolException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L244a6c.  throw v0;
+  #L244a6e.  v1:= v8.`okhttp3.internal.huc.OkHttpURLConnection.requestHeaders` @type ^`okhttp3.Headers$Builder` @kind object;
+  #L244a72.  v2:= "User-Agent" @kind object;
+  #L244a76.  call temp:= `get`(v1, v2) @signature `Lokhttp3/Headers$Builder;.get:(Ljava/lang/String;)Ljava/lang/String;` @kind virtual;
+  #L244a7c.  v1:= temp @kind object;
+  #L244a7e.  if v1 != 0 then goto L244a98;
+  #L244a82.  v1:= v8.`okhttp3.internal.huc.OkHttpURLConnection.requestHeaders` @type ^`okhttp3.Headers$Builder` @kind object;
+  #L244a86.  v2:= "User-Agent" @kind object;
+  #L244a8a.  call temp:= `defaultUserAgent`(v8) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.defaultUserAgent:()Ljava/lang/String;` @kind direct;
+  #L244a90.  v3:= temp @kind object;
+  #L244a92.  call temp:= `add`(v1, v2, v3) @signature `Lokhttp3/Headers$Builder;.add:(Ljava/lang/String;Ljava/lang/String;)Lokhttp3/Headers$Builder;` @kind virtual;
+  #L244a98.  v1:= v8.`okhttp3.internal.huc.OkHttpURLConnection.method` @type ^`java.lang.String` @kind object;
+  #L244a9c.  call temp:= `permitsRequestBody`(v1) @signature `Lokhttp3/internal/http/HttpMethod;.permitsRequestBody:(Ljava/lang/String;)Z` @kind static;
+  #L244aa2.  v1:= temp;
+  #L244aa4.  v2:= 0I;
+  #L244aa6.  if v1 == 0 then goto L244b54;
+  #L244aaa.  v1:= v8.`okhttp3.internal.huc.OkHttpURLConnection.requestHeaders` @type ^`okhttp3.Headers$Builder` @kind object;
+  #L244aae.  v3:= "Content-Type" @kind object;
+  #L244ab2.  call temp:= `get`(v1, v3) @signature `Lokhttp3/Headers$Builder;.get:(Ljava/lang/String;)Ljava/lang/String;` @kind virtual;
+  #L244ab8.  v1:= temp @kind object;
+  #L244aba.  if v1 != 0 then goto L244ad0;
+  #L244abe.  v1:= "application/x-www-form-urlencoded" @kind object;
+  #L244ac2.  v3:= v8.`okhttp3.internal.huc.OkHttpURLConnection.requestHeaders` @type ^`okhttp3.Headers$Builder` @kind object;
+  #L244ac6.  v4:= "Content-Type" @kind object;
+  #L244aca.  call temp:= `add`(v3, v4, v1) @signature `Lokhttp3/Headers$Builder;.add:(Ljava/lang/String;Ljava/lang/String;)Lokhttp3/Headers$Builder;` @kind virtual;
+  #L244ad0.  v3:= v8.`okhttp3.internal.huc.OkHttpURLConnection.fixedContentLength` @type ^`long` @kind wide;
+  #L244ad4.  v5:= -1L;
+  #L244ad8.  v1:= lcmp(v3, v5);
+  #L244adc.  if v1 != 0 then goto L244aec;
+  #L244ae0.  v1:= v8.`okhttp3.internal.huc.OkHttpURLConnection.chunkLength` @type ^`int`;
+  #L244ae4.  if v1 <= 0 then goto L244aea;
+  #L244ae8.  goto L244aec;
+  #L244aea.  v0:= 0I;
+  #L244aec.  v1:= v8.`okhttp3.internal.huc.OkHttpURLConnection.requestHeaders` @type ^`okhttp3.Headers$Builder` @kind object;
+  #L244af0.  v3:= "Content-Length" @kind object;
+  #L244af4.  call temp:= `get`(v1, v3) @signature `Lokhttp3/Headers$Builder;.get:(Ljava/lang/String;)Ljava/lang/String;` @kind virtual;
+  #L244afa.  v1:= temp @kind object;
+  #L244afc.  v3:= v8.`okhttp3.internal.huc.OkHttpURLConnection.fixedContentLength` @type ^`long` @kind wide;
+  #L244b00.  v7:= lcmp(v3, v5);
+  #L244b04.  if v7 == 0 then goto L244b0c;
+  #L244b08.  v5:= v3 @kind wide;
+  #L244b0a.  goto L244b18;
+  #L244b0c.  if v1 == 0 then goto L244b18;
+  #L244b10.  call temp:= `parseLong`(v1) @signature `Ljava/lang/Long;.parseLong:(Ljava/lang/String;)J` @kind static;
+  #L244b16.  v5:= temp @kind wide;
+  #L244b18.  if v0 == 0 then goto L244b28;
+  #L244b1c.  v0:= new `okhttp3.internal.huc.StreamedRequestBody`;
+  #L244b20.  call `<init>`(v0, v5) @signature `Lokhttp3/internal/huc/StreamedRequestBody;.<init>:(J)V` @kind direct;
+  #L244b26.  goto L244b32;
+  #L244b28.  v0:= new `okhttp3.internal.huc.BufferedRequestBody`;
+  #L244b2c.  call `<init>`(v0, v5) @signature `Lokhttp3/internal/huc/BufferedRequestBody;.<init>:(J)V` @kind direct;
+  #L244b32.  call temp:= `timeout`(v0) @signature `Lokhttp3/internal/huc/OutputStreamRequestBody;.timeout:()Lokio/Timeout;` @kind virtual;
+  #L244b38.  v1:= temp @kind object;
+  #L244b3a.  v3:= v8.`okhttp3.internal.huc.OkHttpURLConnection.client` @type ^`okhttp3.OkHttpClient` @kind object;
+  #L244b3e.  call temp:= `writeTimeoutMillis`(v3) @signature `Lokhttp3/OkHttpClient;.writeTimeoutMillis:()I` @kind virtual;
+  #L244b44.  v3:= temp;
+  #L244b46.  v3:= (`long`) v3 @kind i2l;
+  #L244b48.  v5:= `@@java.util.concurrent.TimeUnit.MILLISECONDS` @type ^`java.util.concurrent.TimeUnit` @kind object;
+  #L244b4c.  call temp:= `timeout`(v1, v3, v5) @signature `Lokio/Timeout;.timeout:(JLjava/util/concurrent/TimeUnit;)Lokio/Timeout;` @kind virtual;
+  #L244b52.  goto L244b56;
+  #L244b54.  v0:= v2 @kind object;
+  #L244b56.  v1:= new `okhttp3.Request$Builder`;
+  #L244b5a.  call `<init>`(v1) @signature `Lokhttp3/Request$Builder;.<init>:()V` @kind direct;
+  #L244b60.  v3:= `@@okhttp3.internal.Internal.instance` @type ^`okhttp3.internal.Internal` @kind object;
+  #L244b64.  call temp:= `getURL`(v8) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.getURL:()Ljava/net/URL;` @kind virtual;
+  #L244b6a.  v4:= temp @kind object;
+  #L244b6c.  call temp:= `toString`(v4) @signature `Ljava/net/URL;.toString:()Ljava/lang/String;` @kind virtual;
+  #L244b72.  v4:= temp @kind object;
+  #L244b74.  call temp:= `getHttpUrlChecked`(v3, v4) @signature `Lokhttp3/internal/Internal;.getHttpUrlChecked:(Ljava/lang/String;)Lokhttp3/HttpUrl;` @kind virtual;
+  #L244b7a.  v3:= temp @kind object;
+  #L244b7c.  call temp:= `url`(v1, v3) @signature `Lokhttp3/Request$Builder;.url:(Lokhttp3/HttpUrl;)Lokhttp3/Request$Builder;` @kind virtual;
+  #L244b82.  v1:= temp @kind object;
+  #L244b84.  v3:= v8.`okhttp3.internal.huc.OkHttpURLConnection.requestHeaders` @type ^`okhttp3.Headers$Builder` @kind object;
+  #L244b88.  call temp:= `build`(v3) @signature `Lokhttp3/Headers$Builder;.build:()Lokhttp3/Headers;` @kind virtual;
+  #L244b8e.  v3:= temp @kind object;
+  #L244b90.  call temp:= `headers`(v1, v3) @signature `Lokhttp3/Request$Builder;.headers:(Lokhttp3/Headers;)Lokhttp3/Request$Builder;` @kind virtual;
+  #L244b96.  v1:= temp @kind object;
+  #L244b98.  v3:= v8.`okhttp3.internal.huc.OkHttpURLConnection.method` @type ^`java.lang.String` @kind object;
+  #L244b9c.  call temp:= `method`(v1, v3, v0) @signature `Lokhttp3/Request$Builder;.method:(Ljava/lang/String;Lokhttp3/RequestBody;)Lokhttp3/Request$Builder;` @kind virtual;
+  #L244ba2.  v0:= temp @kind object;
+  #L244ba4.  call temp:= `build`(v0) @signature `Lokhttp3/Request$Builder;.build:()Lokhttp3/Request;` @kind virtual;
+  #L244baa.  v0:= temp @kind object;
+  #L244bac.  v1:= v8.`okhttp3.internal.huc.OkHttpURLConnection.urlFilter` @type ^`okhttp3.internal.URLFilter` @kind object;
+  #L244bb0.  if v1 == 0 then goto L244bca;
+  #L244bb4.  call temp:= `url`(v0) @signature `Lokhttp3/Request;.url:()Lokhttp3/HttpUrl;` @kind virtual;
+  #L244bba.  v3:= temp @kind object;
+  #L244bbc.  call temp:= `url`(v3) @signature `Lokhttp3/HttpUrl;.url:()Ljava/net/URL;` @kind virtual;
+  #L244bc2.  v3:= temp @kind object;
+  #L244bc4.  call `checkURLPermitted`(v1, v3) @signature `Lokhttp3/internal/URLFilter;.checkURLPermitted:(Ljava/net/URL;)V` @kind interface;
+  #L244bca.  v1:= v8.`okhttp3.internal.huc.OkHttpURLConnection.client` @type ^`okhttp3.OkHttpClient` @kind object;
+  #L244bce.  call temp:= `newBuilder`(v1) @signature `Lokhttp3/OkHttpClient;.newBuilder:()Lokhttp3/OkHttpClient$Builder;` @kind virtual;
+  #L244bd4.  v1:= temp @kind object;
+  #L244bd6.  call temp:= `interceptors`(v1) @signature `Lokhttp3/OkHttpClient$Builder;.interceptors:()Ljava/util/List;` @kind virtual;
+  #L244bdc.  v3:= temp @kind object;
+  #L244bde.  call `clear`(v3) @signature `Ljava/util/List;.clear:()V` @kind interface;
+  #L244be4.  call temp:= `interceptors`(v1) @signature `Lokhttp3/OkHttpClient$Builder;.interceptors:()Ljava/util/List;` @kind virtual;
+  #L244bea.  v3:= temp @kind object;
+  #L244bec.  v4:= `@@okhttp3.internal.huc.OkHttpURLConnection$UnexpectedException.INTERCEPTOR` @type ^`okhttp3.Interceptor` @kind object;
+  #L244bf0.  call temp:= `add`(v3, v4) @signature `Ljava/util/List;.add:(Ljava/lang/Object;)Z` @kind interface;
+  #L244bf6.  call temp:= `networkInterceptors`(v1) @signature `Lokhttp3/OkHttpClient$Builder;.networkInterceptors:()Ljava/util/List;` @kind virtual;
+  #L244bfc.  v3:= temp @kind object;
+  #L244bfe.  call `clear`(v3) @signature `Ljava/util/List;.clear:()V` @kind interface;
+  #L244c04.  call temp:= `networkInterceptors`(v1) @signature `Lokhttp3/OkHttpClient$Builder;.networkInterceptors:()Ljava/util/List;` @kind virtual;
+  #L244c0a.  v3:= temp @kind object;
+  #L244c0c.  v4:= v8.`okhttp3.internal.huc.OkHttpURLConnection.networkInterceptor` @type ^`okhttp3.internal.huc.OkHttpURLConnection$NetworkInterceptor` @kind object;
+  #L244c10.  call temp:= `add`(v3, v4) @signature `Ljava/util/List;.add:(Ljava/lang/Object;)Z` @kind interface;
+  #L244c16.  v3:= new `okhttp3.Dispatcher`;
+  #L244c1a.  v4:= v8.`okhttp3.internal.huc.OkHttpURLConnection.client` @type ^`okhttp3.OkHttpClient` @kind object;
+  #L244c1e.  call temp:= `dispatcher`(v4) @signature `Lokhttp3/OkHttpClient;.dispatcher:()Lokhttp3/Dispatcher;` @kind virtual;
+  #L244c24.  v4:= temp @kind object;
+  #L244c26.  call temp:= `executorService`(v4) @signature `Lokhttp3/Dispatcher;.executorService:()Ljava/util/concurrent/ExecutorService;` @kind virtual;
+  #L244c2c.  v4:= temp @kind object;
+  #L244c2e.  call `<init>`(v3, v4) @signature `Lokhttp3/Dispatcher;.<init>:(Ljava/util/concurrent/ExecutorService;)V` @kind direct;
+  #L244c34.  call temp:= `dispatcher`(v1, v3) @signature `Lokhttp3/OkHttpClient$Builder;.dispatcher:(Lokhttp3/Dispatcher;)Lokhttp3/OkHttpClient$Builder;` @kind virtual;
+  #L244c3a.  call temp:= `getUseCaches`(v8) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.getUseCaches:()Z` @kind virtual;
+  #L244c40.  v3:= temp;
+  #L244c42.  if v3 != 0 then goto L244c4c;
+  #L244c46.  call temp:= `cache`(v1, v2) @signature `Lokhttp3/OkHttpClient$Builder;.cache:(Lokhttp3/Cache;)Lokhttp3/OkHttpClient$Builder;` @kind virtual;
+  #L244c4c.  call temp:= `build`(v1) @signature `Lokhttp3/OkHttpClient$Builder;.build:()Lokhttp3/OkHttpClient;` @kind virtual;
+  #L244c52.  v1:= temp @kind object;
+  #L244c54.  call temp:= `newCall`(v1, v0) @signature `Lokhttp3/OkHttpClient;.newCall:(Lokhttp3/Request;)Lokhttp3/Call;` @kind virtual;
+  #L244c5a.  v0:= temp @kind object;
+  #L244c5c.  v8.`okhttp3.internal.huc.OkHttpURLConnection.call` @type ^`okhttp3.Call` := v0 @kind object;
+  #L244c60.  return v0 @kind object;
+}
+procedure `java.lang.String` `defaultUserAgent`(`okhttp3.internal.huc.OkHttpURLConnection` v1 @kind this) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.defaultUserAgent:()Ljava/lang/String;` @AccessFlag PRIVATE {
+    temp;
+    v0;
+
+  #L2445c0.  v0:= "http.agent" @kind object;
+  #L2445c4.  call temp:= `getProperty`(v0) @signature `Ljava/lang/System;.getProperty:(Ljava/lang/String;)Ljava/lang/String;` @kind static;
+  #L2445ca.  v0:= temp @kind object;
+  #L2445cc.  if v0 == 0 then goto L2445da;
+  #L2445d0.  call temp:= `toHumanReadableAscii`(v0) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.toHumanReadableAscii:(Ljava/lang/String;)Ljava/lang/String;` @kind static;
+  #L2445d6.  v0:= temp @kind object;
+  #L2445d8.  goto L2445e2;
+  #L2445da.  call temp:= `userAgent`() @signature `Lokhttp3/internal/Version;.userAgent:()Ljava/lang/String;` @kind static;
+  #L2445e0.  v0:= temp @kind object;
+  #L2445e2.  return v0 @kind object;
+}
+procedure `okhttp3.Headers` `getHeaders`(`okhttp3.internal.huc.OkHttpURLConnection` v4 @kind this) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.getHeaders:()Lokhttp3/Headers;` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L244c74.  v0:= v4.`okhttp3.internal.huc.OkHttpURLConnection.responseHeaders` @type ^`okhttp3.Headers` @kind object;
+  #L244c78.  if v0 != 0 then goto L244cd2;
+  #L244c7c.  v0:= 1I;
+  #L244c7e.  call temp:= `getResponse`(v4, v0) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.getResponse:(Z)Lokhttp3/Response;` @kind direct;
+  #L244c84.  v0:= temp @kind object;
+  #L244c86.  call temp:= `headers`(v0) @signature `Lokhttp3/Response;.headers:()Lokhttp3/Headers;` @kind virtual;
+  #L244c8c.  v1:= temp @kind object;
+  #L244c8e.  call temp:= `newBuilder`(v1) @signature `Lokhttp3/Headers;.newBuilder:()Lokhttp3/Headers$Builder;` @kind virtual;
+  #L244c94.  v1:= temp @kind object;
+  #L244c96.  v2:= `@@okhttp3.internal.huc.OkHttpURLConnection.SELECTED_PROTOCOL` @type ^`java.lang.String` @kind object;
+  #L244c9a.  call temp:= `protocol`(v0) @signature `Lokhttp3/Response;.protocol:()Lokhttp3/Protocol;` @kind virtual;
+  #L244ca0.  v3:= temp @kind object;
+  #L244ca2.  call temp:= `toString`(v3) @signature `Lokhttp3/Protocol;.toString:()Ljava/lang/String;` @kind virtual;
+  #L244ca8.  v3:= temp @kind object;
+  #L244caa.  call temp:= `add`(v1, v2, v3) @signature `Lokhttp3/Headers$Builder;.add:(Ljava/lang/String;Ljava/lang/String;)Lokhttp3/Headers$Builder;` @kind virtual;
+  #L244cb0.  v1:= temp @kind object;
+  #L244cb2.  v2:= `@@okhttp3.internal.huc.OkHttpURLConnection.RESPONSE_SOURCE` @type ^`java.lang.String` @kind object;
+  #L244cb6.  call temp:= `responseSourceHeader`(v0) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.responseSourceHeader:(Lokhttp3/Response;)Ljava/lang/String;` @kind static;
+  #L244cbc.  v0:= temp @kind object;
+  #L244cbe.  call temp:= `add`(v1, v2, v0) @signature `Lokhttp3/Headers$Builder;.add:(Ljava/lang/String;Ljava/lang/String;)Lokhttp3/Headers$Builder;` @kind virtual;
+  #L244cc4.  v0:= temp @kind object;
+  #L244cc6.  call temp:= `build`(v0) @signature `Lokhttp3/Headers$Builder;.build:()Lokhttp3/Headers;` @kind virtual;
+  #L244ccc.  v0:= temp @kind object;
+  #L244cce.  v4.`okhttp3.internal.huc.OkHttpURLConnection.responseHeaders` @type ^`okhttp3.Headers` := v0 @kind object;
+  #L244cd2.  v0:= v4.`okhttp3.internal.huc.OkHttpURLConnection.responseHeaders` @type ^`okhttp3.Headers` @kind object;
+  #L244cd6.  return v0 @kind object;
+}
+procedure `okhttp3.Response` `getResponse`(`okhttp3.internal.huc.OkHttpURLConnection` v2 @kind this, `boolean` v3 ) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.getResponse:(Z)Lokhttp3/Response;` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+
+  #L244ce8.  v0:= v2.`okhttp3.internal.huc.OkHttpURLConnection.lock` @type ^`java.lang.Object` @kind object;
+  #L244cec.  @monitorenter v0
+  #L244cee.  v1:= v2.`okhttp3.internal.huc.OkHttpURLConnection.response` @type ^`okhttp3.Response` @kind object;
+  #L244cf2.  if v1 == 0 then goto L244cfe;
+  #L244cf6.  v3:= v2.`okhttp3.internal.huc.OkHttpURLConnection.response` @type ^`okhttp3.Response` @kind object;
+  #L244cfa.  @monitorexit v0
+  #L244cfc.  return v3 @kind object;
+  #L244cfe.  v1:= v2.`okhttp3.internal.huc.OkHttpURLConnection.callFailure` @type ^`java.lang.Throwable` @kind object;
+  #L244d02.  if v1 == 0 then goto L244d28;
+  #L244d06.  if v3 == 0 then goto L244d1a;
+  #L244d0a.  v3:= v2.`okhttp3.internal.huc.OkHttpURLConnection.networkResponse` @type ^`okhttp3.Response` @kind object;
+  #L244d0e.  if v3 == 0 then goto L244d1a;
+  #L244d12.  v3:= v2.`okhttp3.internal.huc.OkHttpURLConnection.networkResponse` @type ^`okhttp3.Response` @kind object;
+  #L244d16.  @monitorexit v0
+  #L244d18.  return v3 @kind object;
+  #L244d1a.  v3:= v2.`okhttp3.internal.huc.OkHttpURLConnection.callFailure` @type ^`java.lang.Throwable` @kind object;
+  #L244d1e.  call temp:= `propagate`(v3) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.propagate:(Ljava/lang/Throwable;)Ljava/io/IOException;` @kind static;
+  #L244d24.  v3:= temp @kind object;
+  #L244d26.  throw v3;
+  #L244d28.  @monitorexit v0
+  #L244d2a.  call temp:= `buildCall`(v2) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.buildCall:()Lokhttp3/Call;` @kind direct;
+  #L244d30.  v3:= temp @kind object;
+  #L244d32.  v0:= v2.`okhttp3.internal.huc.OkHttpURLConnection.networkInterceptor` @type ^`okhttp3.internal.huc.OkHttpURLConnection$NetworkInterceptor` @kind object;
+  #L244d36.  call `proceed`(v0) @signature `Lokhttp3/internal/huc/OkHttpURLConnection$NetworkInterceptor;.proceed:()V` @kind virtual;
+  #L244d3c.  call temp:= `request`(v3) @signature `Lokhttp3/Call;.request:()Lokhttp3/Request;` @kind interface;
+  #L244d42.  v0:= temp @kind object;
+  #L244d44.  call temp:= `body`(v0) @signature `Lokhttp3/Request;.body:()Lokhttp3/RequestBody;` @kind virtual;
+  #L244d4a.  v0:= temp @kind object;
+  #L244d4c.  v0:= (`okhttp3.internal.huc.OutputStreamRequestBody`) v0 @kind object;
+  #L244d50.  if v0 == 0 then goto L244d62;
+  #L244d54.  call temp:= `outputStream`(v0) @signature `Lokhttp3/internal/huc/OutputStreamRequestBody;.outputStream:()Ljava/io/OutputStream;` @kind virtual;
+  #L244d5a.  v0:= temp @kind object;
+  #L244d5c.  call `close`(v0) @signature `Ljava/io/OutputStream;.close:()V` @kind virtual;
+  #L244d62.  v0:= v2.`okhttp3.internal.huc.OkHttpURLConnection.executed` @type ^`boolean` @kind boolean;
+  #L244d66.  if v0 == 0 then goto L244da4;
+  #L244d6a.  v0:= v2.`okhttp3.internal.huc.OkHttpURLConnection.lock` @type ^`java.lang.Object` @kind object;
+  #L244d6e.  @monitorenter v0
+  #L244d70.  v3:= v2.`okhttp3.internal.huc.OkHttpURLConnection.response` @type ^`okhttp3.Response` @kind object;
+  #L244d74.  if v3 != 0 then goto L244d8c;
+  #L244d78.  v3:= v2.`okhttp3.internal.huc.OkHttpURLConnection.callFailure` @type ^`java.lang.Throwable` @kind object;
+  #L244d7c.  if v3 != 0 then goto L244d8c;
+  #L244d80.  v3:= v2.`okhttp3.internal.huc.OkHttpURLConnection.lock` @type ^`java.lang.Object` @kind object;
+  #L244d84.  call `wait`(v3) @signature `Ljava/lang/Object;.wait:()V` @kind virtual;
+  #L244d8a.  goto L244d70;
+  #L244d8c.  @monitorexit v0
+  #L244d8e.  goto L244dc2;
+  #L244d90.  v3:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L244d92.  goto L244da0;
+  #L244d94.  v3:= new `java.io.InterruptedIOException`;
+  #L244d98.  call `<init>`(v3) @signature `Ljava/io/InterruptedIOException;.<init>:()V` @kind direct;
+  #L244d9e.  throw v3;
+  #L244da0.  @monitorexit v0
+  #L244da2.  throw v3;
+  #L244da4.  v0:= 1I;
+  #L244da6.  v2.`okhttp3.internal.huc.OkHttpURLConnection.executed` @type ^`boolean` := v0 @kind boolean;
+  #L244daa.  call temp:= `execute`(v3) @signature `Lokhttp3/Call;.execute:()Lokhttp3/Response;` @kind interface;
+  #L244db0.  v0:= temp @kind object;
+  #L244db2.  call `onResponse`(v2, v3, v0) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.onResponse:(Lokhttp3/Call;Lokhttp3/Response;)V` @kind virtual;
+  #L244db8.  goto L244dc2;
+  #L244dba.  v0:= Exception @type ^`java.io.IOException` @kind object;
+  #L244dbc.  call `onFailure`(v2, v3, v0) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.onFailure:(Lokhttp3/Call;Ljava/io/IOException;)V` @kind virtual;
+  #L244dc2.  v3:= v2.`okhttp3.internal.huc.OkHttpURLConnection.lock` @type ^`java.lang.Object` @kind object;
+  #L244dc6.  @monitorenter v3
+  #L244dc8.  v0:= v2.`okhttp3.internal.huc.OkHttpURLConnection.callFailure` @type ^`java.lang.Throwable` @kind object;
+  #L244dcc.  if v0 != 0 then goto L244dee;
+  #L244dd0.  v0:= v2.`okhttp3.internal.huc.OkHttpURLConnection.response` @type ^`okhttp3.Response` @kind object;
+  #L244dd4.  if v0 == 0 then goto L244de0;
+  #L244dd8.  v0:= v2.`okhttp3.internal.huc.OkHttpURLConnection.response` @type ^`okhttp3.Response` @kind object;
+  #L244ddc.  @monitorexit v3
+  #L244dde.  return v0 @kind object;
+  #L244de0.  @monitorexit v3
+  #L244de2.  v3:= new `java.lang.AssertionError`;
+  #L244de6.  call `<init>`(v3) @signature `Ljava/lang/AssertionError;.<init>:()V` @kind direct;
+  #L244dec.  throw v3;
+  #L244dee.  v0:= v2.`okhttp3.internal.huc.OkHttpURLConnection.callFailure` @type ^`java.lang.Throwable` @kind object;
+  #L244df2.  call temp:= `propagate`(v0) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.propagate:(Ljava/lang/Throwable;)Ljava/io/IOException;` @kind static;
+  #L244df8.  v0:= temp @kind object;
+  #L244dfa.  throw v0;
+  #L244dfc.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L244dfe.  @monitorexit v3
+  #L244e00.  throw v0;
+  #L244e02.  v3:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L244e04.  @monitorexit v0
+  #L244e06.  throw v3;
+  #L244e08.  return @kind void;
+  catch `java.lang.Throwable` @[L244cee..L244d2a] goto L244e02;
+  catch `java.lang.InterruptedException` @[L244d70..L244d8a] goto L244d94;
+  catch `java.lang.Throwable` @[L244d70..L244d8a] goto L244d90;
+  catch `java.lang.Throwable` @[L244d8c..L244da2] goto L244d90;
+  catch `java.io.IOException` @[L244daa..L244db8] goto L244dba;
+  catch `java.lang.Throwable` @[L244dc8..L244de2] goto L244dfc;
+  catch `java.lang.Throwable` @[L244dee..L244e00] goto L244dfc;
+  catch `java.lang.Throwable` @[L244e04..L244e06] goto L244e02;
+}
+procedure `java.io.IOException` `propagate`(`java.lang.Throwable` v1 @kind object) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.propagate:(Ljava/lang/Throwable;)Ljava/io/IOException;` @AccessFlag PRIVATE_STATIC {
+    temp;
+    v0;
+
+  #L2443f4.  v0:= instanceof @variable v1 @type ^`java.io.IOException` @kind boolean;
+  #L2443f8.  if v0 != 0 then goto L244424;
+  #L2443fc.  v0:= instanceof @variable v1 @type ^`java.lang.Error` @kind boolean;
+  #L244400.  if v0 != 0 then goto L24441e;
+  #L244404.  v0:= instanceof @variable v1 @type ^`java.lang.RuntimeException` @kind boolean;
+  #L244408.  if v0 == 0 then goto L244412;
+  #L24440c.  v1:= (`java.lang.RuntimeException`) v1 @kind object;
+  #L244410.  throw v1;
+  #L244412.  v1:= new `java.lang.AssertionError`;
+  #L244416.  call `<init>`(v1) @signature `Ljava/lang/AssertionError;.<init>:()V` @kind direct;
+  #L24441c.  throw v1;
+  #L24441e.  v1:= (`java.lang.Error`) v1 @kind object;
+  #L244422.  throw v1;
+  #L244424.  v1:= (`java.io.IOException`) v1 @kind object;
+  #L244428.  throw v1;
+}
+procedure `java.lang.String` `responseSourceHeader`(`okhttp3.Response` v2 @kind object) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.responseSourceHeader:(Lokhttp3/Response;)Ljava/lang/String;` @AccessFlag PRIVATE_STATIC {
+    temp;
+    v0;
+    v1;
+
+  #L244730.  call temp:= `networkResponse`(v2) @signature `Lokhttp3/Response;.networkResponse:()Lokhttp3/Response;` @kind virtual;
+  #L244736.  v0:= temp @kind object;
+  #L244738.  if v0 != 0 then goto L24477a;
+  #L24473c.  call temp:= `cacheResponse`(v2) @signature `Lokhttp3/Response;.cacheResponse:()Lokhttp3/Response;` @kind virtual;
+  #L244742.  v0:= temp @kind object;
+  #L244744.  if v0 != 0 then goto L24474e;
+  #L244748.  v2:= "NONE" @kind object;
+  #L24474c.  return v2 @kind object;
+  #L24474e.  v0:= new `java.lang.StringBuilder`;
+  #L244752.  call `<init>`(v0) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L244758.  v1:= "CACHE " @kind object;
+  #L24475c.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L244762.  call temp:= `code`(v2) @signature `Lokhttp3/Response;.code:()I` @kind virtual;
+  #L244768.  v2:= temp;
+  #L24476a.  call temp:= `append`(v0, v2) @signature `Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder;` @kind virtual;
+  #L244770.  call temp:= `toString`(v0) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L244776.  v2:= temp @kind object;
+  #L244778.  return v2 @kind object;
+  #L24477a.  call temp:= `cacheResponse`(v2) @signature `Lokhttp3/Response;.cacheResponse:()Lokhttp3/Response;` @kind virtual;
+  #L244780.  v0:= temp @kind object;
+  #L244782.  if v0 != 0 then goto L2447b2;
+  #L244786.  v0:= new `java.lang.StringBuilder`;
+  #L24478a.  call `<init>`(v0) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L244790.  v1:= "NETWORK " @kind object;
+  #L244794.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L24479a.  call temp:= `code`(v2) @signature `Lokhttp3/Response;.code:()I` @kind virtual;
+  #L2447a0.  v2:= temp;
+  #L2447a2.  call temp:= `append`(v0, v2) @signature `Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2447a8.  call temp:= `toString`(v0) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L2447ae.  v2:= temp @kind object;
+  #L2447b0.  return v2 @kind object;
+  #L2447b2.  v0:= new `java.lang.StringBuilder`;
+  #L2447b6.  call `<init>`(v0) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L2447bc.  v1:= "CONDITIONAL_CACHE " @kind object;
+  #L2447c0.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2447c6.  call temp:= `networkResponse`(v2) @signature `Lokhttp3/Response;.networkResponse:()Lokhttp3/Response;` @kind virtual;
+  #L2447cc.  v2:= temp @kind object;
+  #L2447ce.  call temp:= `code`(v2) @signature `Lokhttp3/Response;.code:()I` @kind virtual;
+  #L2447d4.  v2:= temp;
+  #L2447d6.  call temp:= `append`(v0, v2) @signature `Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2447dc.  call temp:= `toString`(v0) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L2447e2.  v2:= temp @kind object;
+  #L2447e4.  return v2 @kind object;
+}
+procedure `java.lang.String` `toHumanReadableAscii`(`java.lang.String` v8 @kind object) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.toHumanReadableAscii:(Ljava/lang/String;)Ljava/lang/String;` @AccessFlag PRIVATE_STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+
+  #L2447f8.  call temp:= `length`(v8) @signature `Ljava/lang/String;.length:()I` @kind virtual;
+  #L2447fe.  v0:= temp;
+  #L244800.  v1:= 0I;
+  #L244802.  v2:= 0I;
+  #L244804.  if v2 >= v0 then goto L24487e;
+  #L244808.  call temp:= `codePointAt`(v8, v2) @signature `Ljava/lang/String;.codePointAt:(I)I` @kind virtual;
+  #L24480e.  v3:= temp;
+  #L244810.  v4:= 127I;
+  #L244814.  v5:= 31I;
+  #L244818.  if v3 <= v5 then goto L24482c;
+  #L24481c.  if v3 >= v4 then goto L24482c;
+  #L244820.  call temp:= `charCount`(v3) @signature `Ljava/lang/Character;.charCount:(I)I` @kind static;
+  #L244826.  v3:= temp;
+  #L244828.  v2:= v2 + v3 @kind int;
+  #L24482a.  goto L244804;
+  #L24482c.  v6:= new `okio.Buffer`;
+  #L244830.  call `<init>`(v6) @signature `Lokio/Buffer;.<init>:()V` @kind direct;
+  #L244836.  call temp:= `writeUtf8`(v6, v8, v1, v2) @signature `Lokio/Buffer;.writeUtf8:(Ljava/lang/String;II)Lokio/Buffer;` @kind virtual;
+  #L24483c.  v1:= 63I;
+  #L244840.  call temp:= `writeUtf8CodePoint`(v6, v1) @signature `Lokio/Buffer;.writeUtf8CodePoint:(I)Lokio/Buffer;` @kind virtual;
+  #L244846.  call temp:= `charCount`(v3) @signature `Ljava/lang/Character;.charCount:(I)I` @kind static;
+  #L24484c.  v3:= temp;
+  #L24484e.  v2:= v2 + v3 @kind int;
+  #L244850.  if v2 >= v0 then goto L244874;
+  #L244854.  call temp:= `codePointAt`(v8, v2) @signature `Ljava/lang/String;.codePointAt:(I)I` @kind virtual;
+  #L24485a.  v3:= temp;
+  #L24485c.  if v3 <= v5 then goto L244868;
+  #L244860.  if v3 >= v4 then goto L244868;
+  #L244864.  v7:= v3;
+  #L244866.  goto L24486c;
+  #L244868.  v7:= 63I;
+  #L24486c.  call temp:= `writeUtf8CodePoint`(v6, v7) @signature `Lokio/Buffer;.writeUtf8CodePoint:(I)Lokio/Buffer;` @kind virtual;
+  #L244872.  goto L244846;
+  #L244874.  call temp:= `readUtf8`(v6) @signature `Lokio/Buffer;.readUtf8:()Ljava/lang/String;` @kind virtual;
+  #L24487a.  v8:= temp @kind object;
+  #L24487c.  return v8 @kind object;
+  #L24487e.  return v8 @kind object;
+}
+procedure `void` `addRequestProperty`(`okhttp3.internal.huc.OkHttpURLConnection` v3 @kind this, `java.lang.String` v4 @kind object, `java.lang.String` v5 @kind object) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.addRequestProperty:(Ljava/lang/String;Ljava/lang/String;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L244f94.  v0:= v3.`okhttp3.internal.huc.OkHttpURLConnection.connected` @type ^`boolean` @kind boolean;
+  #L244f98.  if v0 != 0 then goto L245000;
+  #L244f9c.  if v4 == 0 then goto L244ff0;
+  #L244fa0.  if v5 != 0 then goto L244fe4;
+  #L244fa4.  call temp:= `get`() @signature `Lokhttp3/internal/platform/Platform;.get:()Lokhttp3/internal/platform/Platform;` @kind static;
+  #L244faa.  v5:= temp @kind object;
+  #L244fac.  v0:= 5I;
+  #L244fae.  v1:= new `java.lang.StringBuilder`;
+  #L244fb2.  call `<init>`(v1) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L244fb8.  v2:= "Ignoring header " @kind object;
+  #L244fbc.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L244fc2.  call temp:= `append`(v1, v4) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L244fc8.  v4:= " because its value was null." @kind object;
+  #L244fcc.  call temp:= `append`(v1, v4) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L244fd2.  call temp:= `toString`(v1) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L244fd8.  v4:= temp @kind object;
+  #L244fda.  v1:= 0I;
+  #L244fdc.  call `log`(v5, v0, v4, v1) @signature `Lokhttp3/internal/platform/Platform;.log:(ILjava/lang/String;Ljava/lang/Throwable;)V` @kind virtual;
+  #L244fe2.  return @kind void;
+  #L244fe4.  v0:= v3.`okhttp3.internal.huc.OkHttpURLConnection.requestHeaders` @type ^`okhttp3.Headers$Builder` @kind object;
+  #L244fe8.  call temp:= `add`(v0, v4, v5) @signature `Lokhttp3/Headers$Builder;.add:(Ljava/lang/String;Ljava/lang/String;)Lokhttp3/Headers$Builder;` @kind virtual;
+  #L244fee.  return @kind void;
+  #L244ff0.  v4:= new `java.lang.NullPointerException`;
+  #L244ff4.  v5:= "field == null" @kind object;
+  #L244ff8.  call `<init>`(v4, v5) @signature `Ljava/lang/NullPointerException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L244ffe.  throw v4;
+  #L245000.  v4:= new `java.lang.IllegalStateException`;
+  #L245004.  v5:= "Cannot add request property after connection is made" @kind object;
+  #L245008.  call `<init>`(v4, v5) @signature `Ljava/lang/IllegalStateException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L24500e.  throw v4;
+}
+procedure `void` `connect`(`okhttp3.internal.huc.OkHttpURLConnection` v2 @kind this) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.connect:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L245020.  v0:= v2.`okhttp3.internal.huc.OkHttpURLConnection.executed` @type ^`boolean` @kind boolean;
+  #L245024.  if v0 == 0 then goto L24502a;
+  #L245028.  return @kind void;
+  #L24502a.  call temp:= `buildCall`(v2) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.buildCall:()Lokhttp3/Call;` @kind direct;
+  #L245030.  v0:= temp @kind object;
+  #L245032.  v1:= 1I;
+  #L245034.  v2.`okhttp3.internal.huc.OkHttpURLConnection.executed` @type ^`boolean` := v1 @kind boolean;
+  #L245038.  call `enqueue`(v0, v2) @signature `Lokhttp3/Call;.enqueue:(Lokhttp3/Callback;)V` @kind interface;
+  #L24503e.  v0:= v2.`okhttp3.internal.huc.OkHttpURLConnection.lock` @type ^`java.lang.Object` @kind object;
+  #L245042.  @monitorenter v0
+  #L245044.  v1:= v2.`okhttp3.internal.huc.OkHttpURLConnection.connectPending` @type ^`boolean` @kind boolean;
+  #L245048.  if v1 == 0 then goto L245068;
+  #L24504c.  v1:= v2.`okhttp3.internal.huc.OkHttpURLConnection.response` @type ^`okhttp3.Response` @kind object;
+  #L245050.  if v1 != 0 then goto L245068;
+  #L245054.  v1:= v2.`okhttp3.internal.huc.OkHttpURLConnection.callFailure` @type ^`java.lang.Throwable` @kind object;
+  #L245058.  if v1 != 0 then goto L245068;
+  #L24505c.  v1:= v2.`okhttp3.internal.huc.OkHttpURLConnection.lock` @type ^`java.lang.Object` @kind object;
+  #L245060.  call `wait`(v1) @signature `Ljava/lang/Object;.wait:()V` @kind virtual;
+  #L245066.  goto L245044;
+  #L245068.  v1:= v2.`okhttp3.internal.huc.OkHttpURLConnection.callFailure` @type ^`java.lang.Throwable` @kind object;
+  #L24506c.  if v1 != 0 then goto L245074;
+  #L245070.  @monitorexit v0
+  #L245072.  return @kind void;
+  #L245074.  v1:= v2.`okhttp3.internal.huc.OkHttpURLConnection.callFailure` @type ^`java.lang.Throwable` @kind object;
+  #L245078.  call temp:= `propagate`(v1) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.propagate:(Ljava/lang/Throwable;)Ljava/io/IOException;` @kind static;
+  #L24507e.  v1:= temp @kind object;
+  #L245080.  throw v1;
+  #L245082.  v1:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L245084.  goto L245092;
+  #L245086.  v1:= new `java.io.InterruptedIOException`;
+  #L24508a.  call `<init>`(v1) @signature `Ljava/io/InterruptedIOException;.<init>:()V` @kind direct;
+  #L245090.  throw v1;
+  #L245092.  @monitorexit v0
+  #L245094.  throw v1;
+  #L245096.  return @kind void;
+  catch `java.lang.InterruptedException` @[L245044..L24506c] goto L245086;
+  catch `java.lang.Throwable` @[L245044..L24506c] goto L245082;
+  catch `java.lang.Throwable` @[L245070..L245072] goto L245082;
+  catch `java.lang.InterruptedException` @[L245074..L245082] goto L245086;
+  catch `java.lang.Throwable` @[L245074..L245082] goto L245082;
+  catch `java.lang.Throwable` @[L245086..L245094] goto L245082;
+}
+procedure `void` `disconnect`(`okhttp3.internal.huc.OkHttpURLConnection` v1 @kind this) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.disconnect:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L2450d0.  v0:= v1.`okhttp3.internal.huc.OkHttpURLConnection.call` @type ^`okhttp3.Call` @kind object;
+  #L2450d4.  if v0 != 0 then goto L2450da;
+  #L2450d8.  return @kind void;
+  #L2450da.  v0:= v1.`okhttp3.internal.huc.OkHttpURLConnection.networkInterceptor` @type ^`okhttp3.internal.huc.OkHttpURLConnection$NetworkInterceptor` @kind object;
+  #L2450de.  call `proceed`(v0) @signature `Lokhttp3/internal/huc/OkHttpURLConnection$NetworkInterceptor;.proceed:()V` @kind virtual;
+  #L2450e4.  v0:= v1.`okhttp3.internal.huc.OkHttpURLConnection.call` @type ^`okhttp3.Call` @kind object;
+  #L2450e8.  call `cancel`(v0) @signature `Lokhttp3/Call;.cancel:()V` @kind interface;
+  #L2450ee.  return @kind void;
+}
+procedure `int` `getConnectTimeout`(`okhttp3.internal.huc.OkHttpURLConnection` v1 @kind this) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.getConnectTimeout:()I` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L244390.  v0:= v1.`okhttp3.internal.huc.OkHttpURLConnection.client` @type ^`okhttp3.OkHttpClient` @kind object;
+  #L244394.  call temp:= `connectTimeoutMillis`(v0) @signature `Lokhttp3/OkHttpClient;.connectTimeoutMillis:()I` @kind virtual;
+  #L24439a.  v0:= temp;
+  #L24439c.  return v0;
+}
+procedure `java.io.InputStream` `getErrorStream`(`okhttp3.internal.huc.OkHttpURLConnection` v4 @kind this) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.getErrorStream:()Ljava/io/InputStream;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L24443c.  v0:= 1I;
+  #L24443e.  v1:= 0I;
+  #L244440.  call temp:= `getResponse`(v4, v0) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.getResponse:(Z)Lokhttp3/Response;` @kind direct;
+  #L244446.  v0:= temp @kind object;
+  #L244448.  call temp:= `hasBody`(v0) @signature `Lokhttp3/internal/http/HttpHeaders;.hasBody:(Lokhttp3/Response;)Z` @kind static;
+  #L24444e.  v2:= temp;
+  #L244450.  if v2 == 0 then goto L244476;
+  #L244454.  call temp:= `code`(v0) @signature `Lokhttp3/Response;.code:()I` @kind virtual;
+  #L24445a.  v2:= temp;
+  #L24445c.  v3:= 400I;
+  #L244460.  if v2 < v3 then goto L244476;
+  #L244464.  call temp:= `body`(v0) @signature `Lokhttp3/Response;.body:()Lokhttp3/ResponseBody;` @kind virtual;
+  #L24446a.  v0:= temp @kind object;
+  #L24446c.  call temp:= `byteStream`(v0) @signature `Lokhttp3/ResponseBody;.byteStream:()Ljava/io/InputStream;` @kind virtual;
+  #L244472.  v0:= temp @kind object;
+  #L244474.  return v0 @kind object;
+  #L244476.  return v1 @kind object;
+  #L244478.  return v1 @kind object;
+  catch `java.io.IOException` @[L244440..L244474] goto L244478;
+}
+procedure `java.lang.String` `getHeaderField`(`okhttp3.internal.huc.OkHttpURLConnection` v3 @kind this, `int` v4 ) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.getHeaderField:(I)Ljava/lang/String;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L2445f4.  v0:= 0I;
+  #L2445f6.  call temp:= `getHeaders`(v3) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.getHeaders:()Lokhttp3/Headers;` @kind direct;
+  #L2445fc.  v1:= temp @kind object;
+  #L2445fe.  if v4 < 0 then goto L24461a;
+  #L244602.  call temp:= `size`(v1) @signature `Lokhttp3/Headers;.size:()I` @kind virtual;
+  #L244608.  v2:= temp;
+  #L24460a.  if v4 < v2 then goto L244610;
+  #L24460e.  goto L24461a;
+  #L244610.  call temp:= `value`(v1, v4) @signature `Lokhttp3/Headers;.value:(I)Ljava/lang/String;` @kind virtual;
+  #L244616.  v4:= temp @kind object;
+  #L244618.  return v4 @kind object;
+  #L24461a.  return v0 @kind object;
+  #L24461c.  return v0 @kind object;
+  catch `java.io.IOException` @[L2445f6..L244618] goto L24461c;
+}
+procedure `java.lang.String` `getHeaderField`(`okhttp3.internal.huc.OkHttpURLConnection` v1 @kind this, `java.lang.String` v2 @kind object) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.getHeaderField:(Ljava/lang/String;)Ljava/lang/String;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L244640.  if v2 != 0 then goto L244660;
+  #L244644.  v2:= 1I;
+  #L244646.  call temp:= `getResponse`(v1, v2) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.getResponse:(Z)Lokhttp3/Response;` @kind direct;
+  #L24464c.  v2:= temp @kind object;
+  #L24464e.  call temp:= `get`(v2) @signature `Lokhttp3/internal/http/StatusLine;.get:(Lokhttp3/Response;)Lokhttp3/internal/http/StatusLine;` @kind static;
+  #L244654.  v2:= temp @kind object;
+  #L244656.  call temp:= `toString`(v2) @signature `Lokhttp3/internal/http/StatusLine;.toString:()Ljava/lang/String;` @kind virtual;
+  #L24465c.  v2:= temp @kind object;
+  #L24465e.  goto L244670;
+  #L244660.  call temp:= `getHeaders`(v1) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.getHeaders:()Lokhttp3/Headers;` @kind direct;
+  #L244666.  v0:= temp @kind object;
+  #L244668.  call temp:= `get`(v0, v2) @signature `Lokhttp3/Headers;.get:(Ljava/lang/String;)Ljava/lang/String;` @kind virtual;
+  #L24466e.  v2:= temp @kind object;
+  #L244670.  return v2 @kind object;
+  #L244672.  v2:= 0I;
+  #L244674.  return v2 @kind object;
+  catch `java.io.IOException` @[L244646..L244670] goto L244672;
+}
+procedure `java.lang.String` `getHeaderFieldKey`(`okhttp3.internal.huc.OkHttpURLConnection` v3 @kind this, `int` v4 ) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.getHeaderFieldKey:(I)Ljava/lang/String;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L244698.  v0:= 0I;
+  #L24469a.  call temp:= `getHeaders`(v3) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.getHeaders:()Lokhttp3/Headers;` @kind direct;
+  #L2446a0.  v1:= temp @kind object;
+  #L2446a2.  if v4 < 0 then goto L2446be;
+  #L2446a6.  call temp:= `size`(v1) @signature `Lokhttp3/Headers;.size:()I` @kind virtual;
+  #L2446ac.  v2:= temp;
+  #L2446ae.  if v4 < v2 then goto L2446b4;
+  #L2446b2.  goto L2446be;
+  #L2446b4.  call temp:= `name`(v1, v4) @signature `Lokhttp3/Headers;.name:(I)Ljava/lang/String;` @kind virtual;
+  #L2446ba.  v4:= temp @kind object;
+  #L2446bc.  return v4 @kind object;
+  #L2446be.  return v0 @kind object;
+  #L2446c0.  return v0 @kind object;
+  catch `java.io.IOException` @[L24469a..L2446bc] goto L2446c0;
+}
+procedure `java.util.Map` `getHeaderFields`(`okhttp3.internal.huc.OkHttpURLConnection` v2 @kind this) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.getHeaderFields:()Ljava/util/Map;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L24495c.  call temp:= `getHeaders`(v2) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.getHeaders:()Lokhttp3/Headers;` @kind direct;
+  #L244962.  v0:= temp @kind object;
+  #L244964.  v1:= 1I;
+  #L244966.  call temp:= `getResponse`(v2, v1) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.getResponse:(Z)Lokhttp3/Response;` @kind direct;
+  #L24496c.  v1:= temp @kind object;
+  #L24496e.  call temp:= `get`(v1) @signature `Lokhttp3/internal/http/StatusLine;.get:(Lokhttp3/Response;)Lokhttp3/internal/http/StatusLine;` @kind static;
+  #L244974.  v1:= temp @kind object;
+  #L244976.  call temp:= `toString`(v1) @signature `Lokhttp3/internal/http/StatusLine;.toString:()Ljava/lang/String;` @kind virtual;
+  #L24497c.  v1:= temp @kind object;
+  #L24497e.  call temp:= `toMultimap`(v0, v1) @signature `Lokhttp3/internal/JavaNetHeaders;.toMultimap:(Lokhttp3/Headers;Ljava/lang/String;)Ljava/util/Map;` @kind static;
+  #L244984.  v0:= temp @kind object;
+  #L244986.  return v0 @kind object;
+  #L244988.  call temp:= `emptyMap`() @signature `Ljava/util/Collections;.emptyMap:()Ljava/util/Map;` @kind static;
+  #L24498e.  v0:= temp @kind object;
+  #L244990.  return v0 @kind object;
+  catch `java.io.IOException` @[L24495c..L244986] goto L244988;
+}
+procedure `java.io.InputStream` `getInputStream`(`okhttp3.internal.huc.OkHttpURLConnection` v3 @kind this) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.getInputStream:()Ljava/io/InputStream;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L24449c.  v0:= v3.`okhttp3.internal.huc.OkHttpURLConnection.doInput` @type ^`boolean` @kind boolean;
+  #L2444a0.  if v0 == 0 then goto L2444e8;
+  #L2444a4.  v0:= 0I;
+  #L2444a6.  call temp:= `getResponse`(v3, v0) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.getResponse:(Z)Lokhttp3/Response;` @kind direct;
+  #L2444ac.  v0:= temp @kind object;
+  #L2444ae.  call temp:= `code`(v0) @signature `Lokhttp3/Response;.code:()I` @kind virtual;
+  #L2444b4.  v1:= temp;
+  #L2444b6.  v2:= 400I;
+  #L2444ba.  if v1 >= v2 then goto L2444d0;
+  #L2444be.  call temp:= `body`(v0) @signature `Lokhttp3/Response;.body:()Lokhttp3/ResponseBody;` @kind virtual;
+  #L2444c4.  v0:= temp @kind object;
+  #L2444c6.  call temp:= `byteStream`(v0) @signature `Lokhttp3/ResponseBody;.byteStream:()Ljava/io/InputStream;` @kind virtual;
+  #L2444cc.  v0:= temp @kind object;
+  #L2444ce.  return v0 @kind object;
+  #L2444d0.  v0:= new `java.io.FileNotFoundException`;
+  #L2444d4.  v1:= v3.`okhttp3.internal.huc.OkHttpURLConnection.url` @type ^`java.net.URL` @kind object;
+  #L2444d8.  call temp:= `toString`(v1) @signature `Ljava/net/URL;.toString:()Ljava/lang/String;` @kind virtual;
+  #L2444de.  v1:= temp @kind object;
+  #L2444e0.  call `<init>`(v0, v1) @signature `Ljava/io/FileNotFoundException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L2444e6.  throw v0;
+  #L2444e8.  v0:= new `java.net.ProtocolException`;
+  #L2444ec.  v1:= "This protocol does not support input" @kind object;
+  #L2444f0.  call `<init>`(v0, v1) @signature `Ljava/net/ProtocolException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L2444f6.  throw v0;
+}
+procedure `boolean` `getInstanceFollowRedirects`(`okhttp3.internal.huc.OkHttpURLConnection` v1 @kind this) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.getInstanceFollowRedirects:()Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L24432c.  v0:= v1.`okhttp3.internal.huc.OkHttpURLConnection.client` @type ^`okhttp3.OkHttpClient` @kind object;
+  #L244330.  call temp:= `followRedirects`(v0) @signature `Lokhttp3/OkHttpClient;.followRedirects:()Z` @kind virtual;
+  #L244336.  v0:= temp;
+  #L244338.  return v0;
+}
+procedure `java.io.OutputStream` `getOutputStream`(`okhttp3.internal.huc.OkHttpURLConnection` v3 @kind this) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.getOutputStream:()Ljava/io/OutputStream;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L244508.  call temp:= `buildCall`(v3) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.buildCall:()Lokhttp3/Call;` @kind direct;
+  #L24450e.  v0:= temp @kind object;
+  #L244510.  call temp:= `request`(v0) @signature `Lokhttp3/Call;.request:()Lokhttp3/Request;` @kind interface;
+  #L244516.  v0:= temp @kind object;
+  #L244518.  call temp:= `body`(v0) @signature `Lokhttp3/Request;.body:()Lokhttp3/RequestBody;` @kind virtual;
+  #L24451e.  v0:= temp @kind object;
+  #L244520.  v0:= (`okhttp3.internal.huc.OutputStreamRequestBody`) v0 @kind object;
+  #L244524.  if v0 == 0 then goto L244566;
+  #L244528.  v1:= instanceof @variable v0 @type ^`okhttp3.internal.huc.StreamedRequestBody` @kind boolean;
+  #L24452c.  if v1 == 0 then goto L244540;
+  #L244530.  call `connect`(v3) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.connect:()V` @kind virtual;
+  #L244536.  v1:= v3.`okhttp3.internal.huc.OkHttpURLConnection.networkInterceptor` @type ^`okhttp3.internal.huc.OkHttpURLConnection$NetworkInterceptor` @kind object;
+  #L24453a.  call `proceed`(v1) @signature `Lokhttp3/internal/huc/OkHttpURLConnection$NetworkInterceptor;.proceed:()V` @kind virtual;
+  #L244540.  call temp:= `isClosed`(v0) @signature `Lokhttp3/internal/huc/OutputStreamRequestBody;.isClosed:()Z` @kind virtual;
+  #L244546.  v1:= temp;
+  #L244548.  if v1 != 0 then goto L244556;
+  #L24454c.  call temp:= `outputStream`(v0) @signature `Lokhttp3/internal/huc/OutputStreamRequestBody;.outputStream:()Ljava/io/OutputStream;` @kind virtual;
+  #L244552.  v0:= temp @kind object;
+  #L244554.  return v0 @kind object;
+  #L244556.  v0:= new `java.net.ProtocolException`;
+  #L24455a.  v1:= "cannot write request body after response has been read" @kind object;
+  #L24455e.  call `<init>`(v0, v1) @signature `Ljava/net/ProtocolException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L244564.  throw v0;
+  #L244566.  v0:= new `java.net.ProtocolException`;
+  #L24456a.  v1:= new `java.lang.StringBuilder`;
+  #L24456e.  call `<init>`(v1) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L244574.  v2:= "method does not support a request body: " @kind object;
+  #L244578.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L24457e.  v2:= v3.`okhttp3.internal.huc.OkHttpURLConnection.method` @type ^`java.lang.String` @kind object;
+  #L244582.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L244588.  call temp:= `toString`(v1) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L24458e.  v1:= temp @kind object;
+  #L244590.  call `<init>`(v0, v1) @signature `Ljava/net/ProtocolException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L244596.  throw v0;
+}
+procedure `java.security.Permission` `getPermission`(`okhttp3.internal.huc.OkHttpURLConnection` v4 @kind this) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.getPermission:()Ljava/security/Permission;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L2448a8.  call temp:= `getURL`(v4) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.getURL:()Ljava/net/URL;` @kind virtual;
+  #L2448ae.  v0:= temp @kind object;
+  #L2448b0.  call temp:= `getHost`(v0) @signature `Ljava/net/URL;.getHost:()Ljava/lang/String;` @kind virtual;
+  #L2448b6.  v1:= temp @kind object;
+  #L2448b8.  call temp:= `getPort`(v0) @signature `Ljava/net/URL;.getPort:()I` @kind virtual;
+  #L2448be.  v2:= temp;
+  #L2448c0.  v3:= -1I;
+  #L2448c2.  if v2 == v3 then goto L2448d0;
+  #L2448c6.  call temp:= `getPort`(v0) @signature `Ljava/net/URL;.getPort:()I` @kind virtual;
+  #L2448cc.  v0:= temp;
+  #L2448ce.  goto L2448e0;
+  #L2448d0.  call temp:= `getProtocol`(v0) @signature `Ljava/net/URL;.getProtocol:()Ljava/lang/String;` @kind virtual;
+  #L2448d6.  v0:= temp @kind object;
+  #L2448d8.  call temp:= `defaultPort`(v0) @signature `Lokhttp3/HttpUrl;.defaultPort:(Ljava/lang/String;)I` @kind static;
+  #L2448de.  v0:= temp;
+  #L2448e0.  call temp:= `usingProxy`(v4) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.usingProxy:()Z` @kind virtual;
+  #L2448e6.  v2:= temp;
+  #L2448e8.  if v2 == 0 then goto L244914;
+  #L2448ec.  v0:= v4.`okhttp3.internal.huc.OkHttpURLConnection.client` @type ^`okhttp3.OkHttpClient` @kind object;
+  #L2448f0.  call temp:= `proxy`(v0) @signature `Lokhttp3/OkHttpClient;.proxy:()Ljava/net/Proxy;` @kind virtual;
+  #L2448f6.  v0:= temp @kind object;
+  #L2448f8.  call temp:= `address`(v0) @signature `Ljava/net/Proxy;.address:()Ljava/net/SocketAddress;` @kind virtual;
+  #L2448fe.  v0:= temp @kind object;
+  #L244900.  v0:= (`java.net.InetSocketAddress`) v0 @kind object;
+  #L244904.  call temp:= `getHostName`(v0) @signature `Ljava/net/InetSocketAddress;.getHostName:()Ljava/lang/String;` @kind virtual;
+  #L24490a.  v1:= temp @kind object;
+  #L24490c.  call temp:= `getPort`(v0) @signature `Ljava/net/InetSocketAddress;.getPort:()I` @kind virtual;
+  #L244912.  v0:= temp;
+  #L244914.  v2:= new `java.net.SocketPermission`;
+  #L244918.  v3:= new `java.lang.StringBuilder`;
+  #L24491c.  call `<init>`(v3) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L244922.  call temp:= `append`(v3, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L244928.  v1:= ":" @kind object;
+  #L24492c.  call temp:= `append`(v3, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L244932.  call temp:= `append`(v3, v0) @signature `Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder;` @kind virtual;
+  #L244938.  call temp:= `toString`(v3) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L24493e.  v0:= temp @kind object;
+  #L244940.  v1:= "connect, resolve" @kind object;
+  #L244944.  call `<init>`(v2, v0, v1) @signature `Ljava/net/SocketPermission;.<init>:(Ljava/lang/String;Ljava/lang/String;)V` @kind direct;
+  #L24494a.  return v2 @kind object;
+}
+procedure `int` `getReadTimeout`(`okhttp3.internal.huc.OkHttpURLConnection` v1 @kind this) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.getReadTimeout:()I` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L2443b0.  v0:= v1.`okhttp3.internal.huc.OkHttpURLConnection.client` @type ^`okhttp3.OkHttpClient` @kind object;
+  #L2443b4.  call temp:= `readTimeoutMillis`(v0) @signature `Lokhttp3/OkHttpClient;.readTimeoutMillis:()I` @kind virtual;
+  #L2443ba.  v0:= temp;
+  #L2443bc.  return v0;
+}
+procedure `java.util.Map` `getRequestProperties`(`okhttp3.internal.huc.OkHttpURLConnection` v2 @kind this) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.getRequestProperties:()Ljava/util/Map;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L2449b4.  v0:= v2.`okhttp3.internal.huc.OkHttpURLConnection.connected` @type ^`boolean` @kind boolean;
+  #L2449b8.  if v0 != 0 then goto L2449d4;
+  #L2449bc.  v0:= v2.`okhttp3.internal.huc.OkHttpURLConnection.requestHeaders` @type ^`okhttp3.Headers$Builder` @kind object;
+  #L2449c0.  call temp:= `build`(v0) @signature `Lokhttp3/Headers$Builder;.build:()Lokhttp3/Headers;` @kind virtual;
+  #L2449c6.  v0:= temp @kind object;
+  #L2449c8.  v1:= 0I;
+  #L2449ca.  call temp:= `toMultimap`(v0, v1) @signature `Lokhttp3/internal/JavaNetHeaders;.toMultimap:(Lokhttp3/Headers;Ljava/lang/String;)Ljava/util/Map;` @kind static;
+  #L2449d0.  v0:= temp @kind object;
+  #L2449d2.  return v0 @kind object;
+  #L2449d4.  v0:= new `java.lang.IllegalStateException`;
+  #L2449d8.  v1:= "Cannot access request header fields after connection is set" @kind object;
+  #L2449dc.  call `<init>`(v0, v1) @signature `Ljava/lang/IllegalStateException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L2449e2.  throw v0;
+}
+procedure `java.lang.String` `getRequestProperty`(`okhttp3.internal.huc.OkHttpURLConnection` v1 @kind this, `java.lang.String` v2 @kind object) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.getRequestProperty:(Ljava/lang/String;)Ljava/lang/String;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L2446e4.  if v2 != 0 then goto L2446ec;
+  #L2446e8.  v2:= 0I;
+  #L2446ea.  return v2 @kind object;
+  #L2446ec.  v0:= v1.`okhttp3.internal.huc.OkHttpURLConnection.requestHeaders` @type ^`okhttp3.Headers$Builder` @kind object;
+  #L2446f0.  call temp:= `get`(v0, v2) @signature `Lokhttp3/Headers$Builder;.get:(Ljava/lang/String;)Ljava/lang/String;` @kind virtual;
+  #L2446f6.  v2:= temp @kind object;
+  #L2446f8.  return v2 @kind object;
+}
+procedure `int` `getResponseCode`(`okhttp3.internal.huc.OkHttpURLConnection` v1 @kind this) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.getResponseCode:()I` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L2443d0.  v0:= 1I;
+  #L2443d2.  call temp:= `getResponse`(v1, v0) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.getResponse:(Z)Lokhttp3/Response;` @kind direct;
+  #L2443d8.  v0:= temp @kind object;
+  #L2443da.  call temp:= `code`(v0) @signature `Lokhttp3/Response;.code:()I` @kind virtual;
+  #L2443e0.  v0:= temp;
+  #L2443e2.  return v0;
+}
+procedure `java.lang.String` `getResponseMessage`(`okhttp3.internal.huc.OkHttpURLConnection` v1 @kind this) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.getResponseMessage:()Ljava/lang/String;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L24470c.  v0:= 1I;
+  #L24470e.  call temp:= `getResponse`(v1, v0) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.getResponse:(Z)Lokhttp3/Response;` @kind direct;
+  #L244714.  v0:= temp @kind object;
+  #L244716.  call temp:= `message`(v0) @signature `Lokhttp3/Response;.message:()Ljava/lang/String;` @kind virtual;
+  #L24471c.  v0:= temp @kind object;
+  #L24471e.  return v0 @kind object;
+}
+procedure `void` `onFailure`(`okhttp3.internal.huc.OkHttpURLConnection` v1 @kind this, `okhttp3.Call` v2 @kind object, `java.io.IOException` v3 @kind object) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.onFailure:(Lokhttp3/Call;Ljava/io/IOException;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L245100.  v2:= v1.`okhttp3.internal.huc.OkHttpURLConnection.lock` @type ^`java.lang.Object` @kind object;
+  #L245104.  @monitorenter v2
+  #L245106.  v0:= instanceof @variable v3 @type ^`okhttp3.internal.huc.OkHttpURLConnection$UnexpectedException` @kind boolean;
+  #L24510a.  if v0 == 0 then goto L245116;
+  #L24510e.  call temp:= `getCause`(v3) @signature `Ljava/io/IOException;.getCause:()Ljava/lang/Throwable;` @kind virtual;
+  #L245114.  v3:= temp @kind object;
+  #L245116.  v1.`okhttp3.internal.huc.OkHttpURLConnection.callFailure` @type ^`java.lang.Throwable` := v3 @kind object;
+  #L24511a.  v3:= v1.`okhttp3.internal.huc.OkHttpURLConnection.lock` @type ^`java.lang.Object` @kind object;
+  #L24511e.  call `notifyAll`(v3) @signature `Ljava/lang/Object;.notifyAll:()V` @kind virtual;
+  #L245124.  @monitorexit v2
+  #L245126.  return @kind void;
+  #L245128.  v3:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L24512a.  @monitorexit v2
+  #L24512c.  throw v3;
+  catch `java.lang.Throwable` @[L245106..L24512c] goto L245128;
+}
+procedure `void` `onResponse`(`okhttp3.internal.huc.OkHttpURLConnection` v1 @kind this, `okhttp3.Call` v2 @kind object, `okhttp3.Response` v3 @kind object) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.onResponse:(Lokhttp3/Call;Lokhttp3/Response;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L24514c.  v2:= v1.`okhttp3.internal.huc.OkHttpURLConnection.lock` @type ^`java.lang.Object` @kind object;
+  #L245150.  @monitorenter v2
+  #L245152.  v1.`okhttp3.internal.huc.OkHttpURLConnection.response` @type ^`okhttp3.Response` := v3 @kind object;
+  #L245156.  call temp:= `handshake`(v3) @signature `Lokhttp3/Response;.handshake:()Lokhttp3/Handshake;` @kind virtual;
+  #L24515c.  v0:= temp @kind object;
+  #L24515e.  v1.`okhttp3.internal.huc.OkHttpURLConnection.handshake` @type ^`okhttp3.Handshake` := v0 @kind object;
+  #L245162.  call temp:= `request`(v3) @signature `Lokhttp3/Response;.request:()Lokhttp3/Request;` @kind virtual;
+  #L245168.  v3:= temp @kind object;
+  #L24516a.  call temp:= `url`(v3) @signature `Lokhttp3/Request;.url:()Lokhttp3/HttpUrl;` @kind virtual;
+  #L245170.  v3:= temp @kind object;
+  #L245172.  call temp:= `url`(v3) @signature `Lokhttp3/HttpUrl;.url:()Ljava/net/URL;` @kind virtual;
+  #L245178.  v3:= temp @kind object;
+  #L24517a.  v1.`okhttp3.internal.huc.OkHttpURLConnection.url` @type ^`java.net.URL` := v3 @kind object;
+  #L24517e.  v3:= v1.`okhttp3.internal.huc.OkHttpURLConnection.lock` @type ^`java.lang.Object` @kind object;
+  #L245182.  call `notifyAll`(v3) @signature `Ljava/lang/Object;.notifyAll:()V` @kind virtual;
+  #L245188.  @monitorexit v2
+  #L24518a.  return @kind void;
+  #L24518c.  v3:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L24518e.  @monitorexit v2
+  #L245190.  throw v3;
+  catch `java.lang.Throwable` @[L245152..L245190] goto L24518c;
+}
+procedure `void` `setConnectTimeout`(`okhttp3.internal.huc.OkHttpURLConnection` v3 @kind this, `int` v4 ) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.setConnectTimeout:(I)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L2451b0.  v0:= v3.`okhttp3.internal.huc.OkHttpURLConnection.client` @type ^`okhttp3.OkHttpClient` @kind object;
+  #L2451b4.  call temp:= `newBuilder`(v0) @signature `Lokhttp3/OkHttpClient;.newBuilder:()Lokhttp3/OkHttpClient$Builder;` @kind virtual;
+  #L2451ba.  v0:= temp @kind object;
+  #L2451bc.  v1:= (`long`) v4 @kind i2l;
+  #L2451be.  v4:= `@@java.util.concurrent.TimeUnit.MILLISECONDS` @type ^`java.util.concurrent.TimeUnit` @kind object;
+  #L2451c2.  call temp:= `connectTimeout`(v0, v1, v4) @signature `Lokhttp3/OkHttpClient$Builder;.connectTimeout:(JLjava/util/concurrent/TimeUnit;)Lokhttp3/OkHttpClient$Builder;` @kind virtual;
+  #L2451c8.  v4:= temp @kind object;
+  #L2451ca.  call temp:= `build`(v4) @signature `Lokhttp3/OkHttpClient$Builder;.build:()Lokhttp3/OkHttpClient;` @kind virtual;
+  #L2451d0.  v4:= temp @kind object;
+  #L2451d2.  v3.`okhttp3.internal.huc.OkHttpURLConnection.client` @type ^`okhttp3.OkHttpClient` := v4 @kind object;
+  #L2451d6.  return @kind void;
+}
+procedure `void` `setFixedLengthStreamingMode`(`okhttp3.internal.huc.OkHttpURLConnection` v2 @kind this, `int` v3 ) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.setFixedLengthStreamingMode:(I)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L2451e8.  v0:= (`long`) v3 @kind i2l;
+  #L2451ea.  call `setFixedLengthStreamingMode`(v2, v0) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.setFixedLengthStreamingMode:(J)V` @kind virtual;
+  #L2451f0.  return @kind void;
+}
+procedure `void` `setFixedLengthStreamingMode`(`okhttp3.internal.huc.OkHttpURLConnection` v3 @kind this, `long` v4 ) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.setFixedLengthStreamingMode:(J)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L245204.  v0:= v3.`java.net.HttpURLConnection.connected` @type ^`boolean` @kind boolean;
+  #L245208.  if v0 != 0 then goto L24525a;
+  #L24520c.  v0:= v3.`okhttp3.internal.huc.OkHttpURLConnection.chunkLength` @type ^`int`;
+  #L245210.  if v0 > 0 then goto L24524a;
+  #L245214.  v0:= 0L;
+  #L245218.  v2:= lcmp(v4, v0);
+  #L24521c.  if v2 < 0 then goto L24523a;
+  #L245220.  v3.`okhttp3.internal.huc.OkHttpURLConnection.fixedContentLength` @type ^`long` := v4 @kind wide;
+  #L245224.  v0:= 2147483647L;
+  #L24522a.  call temp:= `min`(v4, v0) @signature `Ljava/lang/Math;.min:(JJ)J` @kind static;
+  #L245230.  v4:= temp @kind wide;
+  #L245232.  v4:= (`int`) v4 @kind l2i;
+  #L245234.  v3.`java.net.HttpURLConnection.fixedContentLength` @type ^`int` := v4;
+  #L245238.  return @kind void;
+  #L24523a.  v4:= new `java.lang.IllegalArgumentException`;
+  #L24523e.  v5:= "contentLength < 0" @kind object;
+  #L245242.  call `<init>`(v4, v5) @signature `Ljava/lang/IllegalArgumentException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L245248.  throw v4;
+  #L24524a.  v4:= new `java.lang.IllegalStateException`;
+  #L24524e.  v5:= "Already in chunked mode" @kind object;
+  #L245252.  call `<init>`(v4, v5) @signature `Ljava/lang/IllegalStateException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L245258.  throw v4;
+  #L24525a.  v4:= new `java.lang.IllegalStateException`;
+  #L24525e.  v5:= "Already connected" @kind object;
+  #L245262.  call `<init>`(v4, v5) @signature `Ljava/lang/IllegalStateException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L245268.  throw v4;
+}
+procedure `void` `setIfModifiedSince`(`okhttp3.internal.huc.OkHttpURLConnection` v3 @kind this, `long` v4 ) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.setIfModifiedSince:(J)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L24527c.  call `setIfModifiedSince`(v3, v4) @signature `Ljava/net/HttpURLConnection;.setIfModifiedSince:(J)V` @kind super;
+  #L245282.  v4:= v3.`okhttp3.internal.huc.OkHttpURLConnection.ifModifiedSince` @type ^`long` @kind wide;
+  #L245286.  v0:= 0L;
+  #L24528a.  v2:= lcmp(v4, v0);
+  #L24528e.  if v2 == 0 then goto L2452b8;
+  #L245292.  v4:= v3.`okhttp3.internal.huc.OkHttpURLConnection.requestHeaders` @type ^`okhttp3.Headers$Builder` @kind object;
+  #L245296.  v5:= "If-Modified-Since" @kind object;
+  #L24529a.  v0:= new `java.util.Date`;
+  #L24529e.  v1:= v3.`okhttp3.internal.huc.OkHttpURLConnection.ifModifiedSince` @type ^`long` @kind wide;
+  #L2452a2.  call `<init>`(v0, v1) @signature `Ljava/util/Date;.<init>:(J)V` @kind direct;
+  #L2452a8.  call temp:= `format`(v0) @signature `Lokhttp3/internal/http/HttpDate;.format:(Ljava/util/Date;)Ljava/lang/String;` @kind static;
+  #L2452ae.  v0:= temp @kind object;
+  #L2452b0.  call temp:= `set`(v4, v5, v0) @signature `Lokhttp3/Headers$Builder;.set:(Ljava/lang/String;Ljava/lang/String;)Lokhttp3/Headers$Builder;` @kind virtual;
+  #L2452b6.  goto L2452c6;
+  #L2452b8.  v4:= v3.`okhttp3.internal.huc.OkHttpURLConnection.requestHeaders` @type ^`okhttp3.Headers$Builder` @kind object;
+  #L2452bc.  v5:= "If-Modified-Since" @kind object;
+  #L2452c0.  call temp:= `removeAll`(v4, v5) @signature `Lokhttp3/Headers$Builder;.removeAll:(Ljava/lang/String;)Lokhttp3/Headers$Builder;` @kind virtual;
+  #L2452c6.  return @kind void;
+}
+procedure `void` `setInstanceFollowRedirects`(`okhttp3.internal.huc.OkHttpURLConnection` v1 @kind this, `boolean` v2 ) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.setInstanceFollowRedirects:(Z)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L2452d8.  v0:= v1.`okhttp3.internal.huc.OkHttpURLConnection.client` @type ^`okhttp3.OkHttpClient` @kind object;
+  #L2452dc.  call temp:= `newBuilder`(v0) @signature `Lokhttp3/OkHttpClient;.newBuilder:()Lokhttp3/OkHttpClient$Builder;` @kind virtual;
+  #L2452e2.  v0:= temp @kind object;
+  #L2452e4.  call temp:= `followRedirects`(v0, v2) @signature `Lokhttp3/OkHttpClient$Builder;.followRedirects:(Z)Lokhttp3/OkHttpClient$Builder;` @kind virtual;
+  #L2452ea.  v2:= temp @kind object;
+  #L2452ec.  call temp:= `build`(v2) @signature `Lokhttp3/OkHttpClient$Builder;.build:()Lokhttp3/OkHttpClient;` @kind virtual;
+  #L2452f2.  v2:= temp @kind object;
+  #L2452f4.  v1.`okhttp3.internal.huc.OkHttpURLConnection.client` @type ^`okhttp3.OkHttpClient` := v2 @kind object;
+  #L2452f8.  return @kind void;
+}
+procedure `void` `setReadTimeout`(`okhttp3.internal.huc.OkHttpURLConnection` v3 @kind this, `int` v4 ) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.setReadTimeout:(I)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L24530c.  v0:= v3.`okhttp3.internal.huc.OkHttpURLConnection.client` @type ^`okhttp3.OkHttpClient` @kind object;
+  #L245310.  call temp:= `newBuilder`(v0) @signature `Lokhttp3/OkHttpClient;.newBuilder:()Lokhttp3/OkHttpClient$Builder;` @kind virtual;
+  #L245316.  v0:= temp @kind object;
+  #L245318.  v1:= (`long`) v4 @kind i2l;
+  #L24531a.  v4:= `@@java.util.concurrent.TimeUnit.MILLISECONDS` @type ^`java.util.concurrent.TimeUnit` @kind object;
+  #L24531e.  call temp:= `readTimeout`(v0, v1, v4) @signature `Lokhttp3/OkHttpClient$Builder;.readTimeout:(JLjava/util/concurrent/TimeUnit;)Lokhttp3/OkHttpClient$Builder;` @kind virtual;
+  #L245324.  v4:= temp @kind object;
+  #L245326.  call temp:= `build`(v4) @signature `Lokhttp3/OkHttpClient$Builder;.build:()Lokhttp3/OkHttpClient;` @kind virtual;
+  #L24532c.  v4:= temp @kind object;
+  #L24532e.  v3.`okhttp3.internal.huc.OkHttpURLConnection.client` @type ^`okhttp3.OkHttpClient` := v4 @kind object;
+  #L245332.  return @kind void;
+}
+procedure `void` `setRequestMethod`(`okhttp3.internal.huc.OkHttpURLConnection` v3 @kind this, `java.lang.String` v4 @kind object) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.setRequestMethod:(Ljava/lang/String;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L245344.  v0:= `@@okhttp3.internal.huc.OkHttpURLConnection.METHODS` @type ^`java.util.Set` @kind object;
+  #L245348.  call temp:= `contains`(v0, v4) @signature `Ljava/util/Set;.contains:(Ljava/lang/Object;)Z` @kind interface;
+  #L24534e.  v0:= temp;
+  #L245350.  if v0 == 0 then goto L24535a;
+  #L245354.  v3.`okhttp3.internal.huc.OkHttpURLConnection.method` @type ^`java.lang.String` := v4 @kind object;
+  #L245358.  return @kind void;
+  #L24535a.  v0:= new `java.net.ProtocolException`;
+  #L24535e.  v1:= new `java.lang.StringBuilder`;
+  #L245362.  call `<init>`(v1) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L245368.  v2:= "Expected one of " @kind object;
+  #L24536c.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L245372.  v2:= `@@okhttp3.internal.huc.OkHttpURLConnection.METHODS` @type ^`java.util.Set` @kind object;
+  #L245376.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L24537c.  v2:= " but was " @kind object;
+  #L245380.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L245386.  call temp:= `append`(v1, v4) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L24538c.  call temp:= `toString`(v1) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L245392.  v4:= temp @kind object;
+  #L245394.  call `<init>`(v0, v4) @signature `Ljava/net/ProtocolException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L24539a.  throw v0;
+}
+procedure `void` `setRequestProperty`(`okhttp3.internal.huc.OkHttpURLConnection` v3 @kind this, `java.lang.String` v4 @kind object, `java.lang.String` v5 @kind object) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.setRequestProperty:(Ljava/lang/String;Ljava/lang/String;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L2453ac.  v0:= v3.`okhttp3.internal.huc.OkHttpURLConnection.connected` @type ^`boolean` @kind boolean;
+  #L2453b0.  if v0 != 0 then goto L245418;
+  #L2453b4.  if v4 == 0 then goto L245408;
+  #L2453b8.  if v5 != 0 then goto L2453fc;
+  #L2453bc.  call temp:= `get`() @signature `Lokhttp3/internal/platform/Platform;.get:()Lokhttp3/internal/platform/Platform;` @kind static;
+  #L2453c2.  v5:= temp @kind object;
+  #L2453c4.  v0:= 5I;
+  #L2453c6.  v1:= new `java.lang.StringBuilder`;
+  #L2453ca.  call `<init>`(v1) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L2453d0.  v2:= "Ignoring header " @kind object;
+  #L2453d4.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2453da.  call temp:= `append`(v1, v4) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2453e0.  v4:= " because its value was null." @kind object;
+  #L2453e4.  call temp:= `append`(v1, v4) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2453ea.  call temp:= `toString`(v1) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L2453f0.  v4:= temp @kind object;
+  #L2453f2.  v1:= 0I;
+  #L2453f4.  call `log`(v5, v0, v4, v1) @signature `Lokhttp3/internal/platform/Platform;.log:(ILjava/lang/String;Ljava/lang/Throwable;)V` @kind virtual;
+  #L2453fa.  return @kind void;
+  #L2453fc.  v0:= v3.`okhttp3.internal.huc.OkHttpURLConnection.requestHeaders` @type ^`okhttp3.Headers$Builder` @kind object;
+  #L245400.  call temp:= `set`(v0, v4, v5) @signature `Lokhttp3/Headers$Builder;.set:(Ljava/lang/String;Ljava/lang/String;)Lokhttp3/Headers$Builder;` @kind virtual;
+  #L245406.  return @kind void;
+  #L245408.  v4:= new `java.lang.NullPointerException`;
+  #L24540c.  v5:= "field == null" @kind object;
+  #L245410.  call `<init>`(v4, v5) @signature `Ljava/lang/NullPointerException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L245416.  throw v4;
+  #L245418.  v4:= new `java.lang.IllegalStateException`;
+  #L24541c.  v5:= "Cannot set request property after connection is made" @kind object;
+  #L245420.  call `<init>`(v4, v5) @signature `Ljava/lang/IllegalStateException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L245426.  throw v4;
+}
+procedure `boolean` `usingProxy`(`okhttp3.internal.huc.OkHttpURLConnection` v3 @kind this) @signature `Lokhttp3/internal/huc/OkHttpURLConnection;.usingProxy:()Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L24434c.  v0:= v3.`okhttp3.internal.huc.OkHttpURLConnection.proxy` @type ^`java.net.Proxy` @kind object;
+  #L244350.  v1:= 1I;
+  #L244352.  if v0 == 0 then goto L244358;
+  #L244356.  return v1;
+  #L244358.  v0:= v3.`okhttp3.internal.huc.OkHttpURLConnection.client` @type ^`okhttp3.OkHttpClient` @kind object;
+  #L24435c.  call temp:= `proxy`(v0) @signature `Lokhttp3/OkHttpClient;.proxy:()Ljava/net/Proxy;` @kind virtual;
+  #L244362.  v0:= temp @kind object;
+  #L244364.  if v0 == 0 then goto L24437a;
+  #L244368.  call temp:= `type`(v0) @signature `Ljava/net/Proxy;.type:()Ljava/net/Proxy$Type;` @kind virtual;
+  #L24436e.  v0:= temp @kind object;
+  #L244370.  v2:= `@@java.net.Proxy$Type.DIRECT` @type ^`java.net.Proxy$Type` @kind object;
+  #L244374.  if v0 == v2 then goto L24437a;
+  #L244378.  goto L24437c;
+  #L24437a.  v1:= 0I;
+  #L24437c.  return v1;
+}

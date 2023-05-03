@@ -1,0 +1,708 @@
+record `okhttp3.internal.http2.Http2Writer` @kind class @AccessFlag PUBLIC_FINAL extends `java.io.Closeable` @kind interface {
+  `okio.Buffer` `okhttp3.internal.http2.Http2Writer.a` @AccessFlag PRIVATE_FINAL;
+  `int` `okhttp3.internal.http2.Http2Writer.b` @AccessFlag PRIVATE;
+  `boolean` `okhttp3.internal.http2.Http2Writer.c` @AccessFlag PRIVATE;
+  `okhttp3.internal.http2.Hpack$Writer` `okhttp3.internal.http2.Http2Writer.d` @AccessFlag PRIVATE_FINAL;
+  `okio.BufferedSink` `okhttp3.internal.http2.Http2Writer.e` @AccessFlag PRIVATE_FINAL;
+  `boolean` `okhttp3.internal.http2.Http2Writer.f` @AccessFlag PRIVATE_FINAL;
+}
+global `okhttp3.internal.http2.Http2Writer$Companion` `@@okhttp3.internal.http2.Http2Writer.Companion` @AccessFlag PUBLIC_STATIC_FINAL;
+global `java.util.logging.Logger` `@@okhttp3.internal.http2.Http2Writer.g` @AccessFlag PRIVATE_STATIC_FINAL;
+procedure `void` `<clinit>`() @signature `Lokhttp3/internal/http2/Http2Writer;.<clinit>:()V` @AccessFlag STATIC_CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+
+  #L155284.  v0:= new `okhttp3.internal.http2.Http2Writer$Companion`;
+  #L155288.  v1:= 0I;
+  #L15528a.  call `<init>`(v0, v1) @signature `Lokhttp3/internal/http2/Http2Writer$Companion;.<init>:(Lkotlin/jvm/internal/DefaultConstructorMarker;)V` @kind direct;
+  #L155290.  `@@okhttp3.internal.http2.Http2Writer.Companion` @type ^`okhttp3.internal.http2.Http2Writer$Companion` := v0 @kind object;
+  #L155294.  v0:= constclass @type ^`okhttp3.internal.http2.Http2` @kind object;
+  #L155298.  call temp:= `getName`(v0) @signature `Ljava/lang/Class;.getName:()Ljava/lang/String;` @kind virtual;
+  #L15529e.  v0:= temp @kind object;
+  #L1552a0.  call temp:= `getLogger`(v0) @signature `Ljava/util/logging/Logger;.getLogger:(Ljava/lang/String;)Ljava/util/logging/Logger;` @kind static;
+  #L1552a6.  v0:= temp @kind object;
+  #L1552a8.  `@@okhttp3.internal.http2.Http2Writer.g` @type ^`java.util.logging.Logger` := v0 @kind object;
+  #L1552ac.  return @kind void;
+}
+procedure `void` `<init>`(`okhttp3.internal.http2.Http2Writer` v7 @kind this, `okio.BufferedSink` v8 @kind object, `boolean` v9 ) @signature `Lokhttp3/internal/http2/Http2Writer;.<init>:(Lokio/BufferedSink;Z)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+
+  #L1552c0.  v0:= "sink" @kind object;
+  #L1552c4.  call `checkNotNullParameter`(v8, v0) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V` @kind static;
+  #L1552ca.  call `<init>`(v7) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L1552d0.  v7.`okhttp3.internal.http2.Http2Writer.e` @type ^`okio.BufferedSink` := v8 @kind object;
+  #L1552d4.  v7.`okhttp3.internal.http2.Http2Writer.f` @type ^`boolean` := v9 @kind boolean;
+  #L1552d8.  v4:= new `okio.Buffer`;
+  #L1552dc.  call `<init>`(v4) @signature `Lokio/Buffer;.<init>:()V` @kind direct;
+  #L1552e2.  v7.`okhttp3.internal.http2.Http2Writer.a` @type ^`okio.Buffer` := v4 @kind object;
+  #L1552e6.  v8:= 16384I;
+  #L1552ea.  v7.`okhttp3.internal.http2.Http2Writer.b` @type ^`int` := v8;
+  #L1552ee.  v8:= new `okhttp3.internal.http2.Hpack$Writer`;
+  #L1552f2.  v2:= 0I;
+  #L1552f4.  v3:= 0I;
+  #L1552f6.  v5:= 3I;
+  #L1552f8.  v6:= 0I;
+  #L1552fa.  v1:= v8 @kind object;
+  #L1552fc.  call `<init>`(v1, v2, v3, v4, v5, v6) @signature `Lokhttp3/internal/http2/Hpack$Writer;.<init>:(IZLokio/Buffer;ILkotlin/jvm/internal/DefaultConstructorMarker;)V` @kind direct;
+  #L155302.  v7.`okhttp3.internal.http2.Http2Writer.d` @type ^`okhttp3.internal.http2.Hpack$Writer` := v8 @kind object;
+  #L155306.  return @kind void;
+}
+procedure `void` `a`(`okhttp3.internal.http2.Http2Writer` v7 @kind this, `int` v8 , `long` v9 ) @signature `Lokhttp3/internal/http2/Http2Writer;.a:(IJ)V` @AccessFlag PRIVATE_FINAL {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+
+  #L155bc0.  v0:= 0L;
+  #L155bc4.  v2:= lcmp(v9, v0);
+  #L155bc8.  if v2 <= 0 then goto L155c06;
+  #L155bcc.  v2:= v7.`okhttp3.internal.http2.Http2Writer.b` @type ^`int`;
+  #L155bd0.  v2:= (`long`) v2 @kind i2l;
+  #L155bd2.  call temp:= `min`(v2, v9) @signature `Ljava/lang/Math;.min:(JJ)J` @kind static;
+  #L155bd8.  v2:= temp @kind wide;
+  #L155bda.  v9:= v9 - v2 @kind long;
+  #L155bdc.  v4:= (`int`) v2 @kind l2i;
+  #L155bde.  v5:= 9I;
+  #L155be2.  v6:= lcmp(v9, v0);
+  #L155be6.  if v6 != 0 then goto L155bee;
+  #L155bea.  v0:= 4I;
+  #L155bec.  goto L155bf0;
+  #L155bee.  v0:= 0I;
+  #L155bf0.  call `frameHeader`(v7, v8, v4, v5, v0) @signature `Lokhttp3/internal/http2/Http2Writer;.frameHeader:(IIII)V` @kind virtual;
+  #L155bf6.  v0:= v7.`okhttp3.internal.http2.Http2Writer.e` @type ^`okio.BufferedSink` @kind object;
+  #L155bfa.  v1:= v7.`okhttp3.internal.http2.Http2Writer.a` @type ^`okio.Buffer` @kind object;
+  #L155bfe.  call `write`(v0, v1, v2) @signature `Lokio/Sink;.write:(Lokio/Buffer;J)V` @kind interface;
+  #L155c04.  goto L155bc0;
+  #L155c06.  return @kind void;
+}
+procedure `void` `applyAndAckSettings`(`okhttp3.internal.http2.Http2Writer` v2 @kind this, `okhttp3.internal.http2.Settings` v3 @kind object) @signature `Lokhttp3/internal/http2/Http2Writer;.applyAndAckSettings:(Lokhttp3/internal/http2/Settings;)V` @AccessFlag PUBLIC_FINAL {
+    temp;
+    v0;
+    v1;
+
+  #L155318.  @monitorenter v2
+  #L15531a.  v0:= "peerSettings" @kind object;
+  #L15531e.  call `checkNotNullParameter`(v3, v0) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V` @kind static;
+  #L155324.  v0:= v2.`okhttp3.internal.http2.Http2Writer.c` @type ^`boolean` @kind boolean;
+  #L155328.  if v0 != 0 then goto L155376;
+  #L15532c.  v0:= v2.`okhttp3.internal.http2.Http2Writer.b` @type ^`int`;
+  #L155330.  call temp:= `getMaxFrameSize`(v3, v0) @signature `Lokhttp3/internal/http2/Settings;.getMaxFrameSize:(I)I` @kind virtual;
+  #L155336.  v0:= temp;
+  #L155338.  v2.`okhttp3.internal.http2.Http2Writer.b` @type ^`int` := v0;
+  #L15533c.  call temp:= `getHeaderTableSize`(v3) @signature `Lokhttp3/internal/http2/Settings;.getHeaderTableSize:()I` @kind virtual;
+  #L155342.  v0:= temp;
+  #L155344.  v1:= -1I;
+  #L155346.  if v0 == v1 then goto L15535c;
+  #L15534a.  v0:= v2.`okhttp3.internal.http2.Http2Writer.d` @type ^`okhttp3.internal.http2.Hpack$Writer` @kind object;
+  #L15534e.  call temp:= `getHeaderTableSize`(v3) @signature `Lokhttp3/internal/http2/Settings;.getHeaderTableSize:()I` @kind virtual;
+  #L155354.  v3:= temp;
+  #L155356.  call `resizeHeaderTable`(v0, v3) @signature `Lokhttp3/internal/http2/Hpack$Writer;.resizeHeaderTable:(I)V` @kind virtual;
+  #L15535c.  v3:= 4I;
+  #L15535e.  v0:= 1I;
+  #L155360.  v1:= 0I;
+  #L155362.  call `frameHeader`(v2, v1, v1, v3, v0) @signature `Lokhttp3/internal/http2/Http2Writer;.frameHeader:(IIII)V` @kind virtual;
+  #L155368.  v3:= v2.`okhttp3.internal.http2.Http2Writer.e` @type ^`okio.BufferedSink` @kind object;
+  #L15536c.  call `flush`(v3) @signature `Lokio/BufferedSink;.flush:()V` @kind interface;
+  #L155372.  @monitorexit v2
+  #L155374.  return @kind void;
+  #L155376.  v3:= new `java.io.IOException`;
+  #L15537a.  v0:= "closed" @kind object;
+  #L15537e.  call `<init>`(v3, v0) @signature `Ljava/io/IOException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L155384.  throw v3;
+  #L155386.  v3:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L155388.  @monitorexit v2
+  #L15538a.  throw v3;
+  catch `java.lang.Throwable` @[L15531a..L155372] goto L155386;
+  catch `java.lang.Throwable` @[L155376..L155386] goto L155386;
+}
+procedure `void` `close`(`okhttp3.internal.http2.Http2Writer` v1 @kind this) @signature `Lokhttp3/internal/http2/Http2Writer;.close:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L1553b0.  @monitorenter v1
+  #L1553b2.  v0:= 1I;
+  #L1553b4.  v1.`okhttp3.internal.http2.Http2Writer.c` @type ^`boolean` := v0 @kind boolean;
+  #L1553b8.  v0:= v1.`okhttp3.internal.http2.Http2Writer.e` @type ^`okio.BufferedSink` @kind object;
+  #L1553bc.  call `close`(v0) @signature `Lokio/Sink;.close:()V` @kind interface;
+  #L1553c2.  @monitorexit v1
+  #L1553c4.  return @kind void;
+  #L1553c6.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L1553c8.  @monitorexit v1
+  #L1553ca.  throw v0;
+  catch `java.lang.Throwable` @[L1553b4..L1553c2] goto L1553c6;
+}
+procedure `void` `connectionPreface`(`okhttp3.internal.http2.Http2Writer` v3 @kind this) @signature `Lokhttp3/internal/http2/Http2Writer;.connectionPreface:()V` @AccessFlag PUBLIC_FINAL {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L1553e8.  @monitorenter v3
+  #L1553ea.  v0:= v3.`okhttp3.internal.http2.Http2Writer.c` @type ^`boolean` @kind boolean;
+  #L1553ee.  if v0 != 0 then goto L155470;
+  #L1553f2.  v0:= v3.`okhttp3.internal.http2.Http2Writer.f` @type ^`boolean` @kind boolean;
+  #L1553f6.  if v0 != 0 then goto L1553fe;
+  #L1553fa.  @monitorexit v3
+  #L1553fc.  return @kind void;
+  #L1553fe.  v0:= `@@okhttp3.internal.http2.Http2Writer.g` @type ^`java.util.logging.Logger` @kind object;
+  #L155402.  v1:= `@@java.util.logging.Level.FINE` @type ^`java.util.logging.Level` @kind object;
+  #L155406.  call temp:= `isLoggable`(v0, v1) @signature `Ljava/util/logging/Logger;.isLoggable:(Ljava/util/logging/Level;)Z` @kind virtual;
+  #L15540c.  v1:= temp;
+  #L15540e.  if v1 == 0 then goto L155454;
+  #L155412.  v1:= new `java.lang.StringBuilder`;
+  #L155416.  call `<init>`(v1) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L15541c.  v2:= ">> CONNECTION " @kind object;
+  #L155420.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L155426.  v2:= `@@okhttp3.internal.http2.Http2.CONNECTION_PREFACE` @type ^`okio.ByteString` @kind object;
+  #L15542a.  call temp:= `hex`(v2) @signature `Lokio/ByteString;.hex:()Ljava/lang/String;` @kind virtual;
+  #L155430.  v2:= temp @kind object;
+  #L155432.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L155438.  call temp:= `toString`(v1) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L15543e.  v1:= temp @kind object;
+  #L155440.  v2:= 0I;
+  #L155442.  v2:= new `java.lang.Object`[v2];
+  #L155446.  call temp:= `format`(v1, v2) @signature `Lokhttp3/internal/Util;.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;` @kind static;
+  #L15544c.  v1:= temp @kind object;
+  #L15544e.  call `fine`(v0, v1) @signature `Ljava/util/logging/Logger;.fine:(Ljava/lang/String;)V` @kind virtual;
+  #L155454.  v0:= v3.`okhttp3.internal.http2.Http2Writer.e` @type ^`okio.BufferedSink` @kind object;
+  #L155458.  v1:= `@@okhttp3.internal.http2.Http2.CONNECTION_PREFACE` @type ^`okio.ByteString` @kind object;
+  #L15545c.  call temp:= `write`(v0, v1) @signature `Lokio/BufferedSink;.write:(Lokio/ByteString;)Lokio/BufferedSink;` @kind interface;
+  #L155462.  v0:= v3.`okhttp3.internal.http2.Http2Writer.e` @type ^`okio.BufferedSink` @kind object;
+  #L155466.  call `flush`(v0) @signature `Lokio/BufferedSink;.flush:()V` @kind interface;
+  #L15546c.  @monitorexit v3
+  #L15546e.  return @kind void;
+  #L155470.  v0:= new `java.io.IOException`;
+  #L155474.  v1:= "closed" @kind object;
+  #L155478.  call `<init>`(v0, v1) @signature `Ljava/io/IOException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L15547e.  throw v0;
+  #L155480.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L155482.  @monitorexit v3
+  #L155484.  throw v0;
+  catch `java.lang.Throwable` @[L1553ea..L1553f6] goto L155480;
+  catch `java.lang.Throwable` @[L1553fe..L15546c] goto L155480;
+  catch `java.lang.Throwable` @[L155470..L155480] goto L155480;
+}
+procedure `void` `data`(`okhttp3.internal.http2.Http2Writer` v1 @kind this, `boolean` v2 , `int` v3 , `okio.Buffer` v4 @kind object, `int` v5 ) @signature `Lokhttp3/internal/http2/Http2Writer;.data:(ZILokio/Buffer;I)V` @AccessFlag PUBLIC_FINAL {
+    temp;
+    v0;
+
+  #L1554b4.  @monitorenter v1
+  #L1554b6.  v0:= v1.`okhttp3.internal.http2.Http2Writer.c` @type ^`boolean` @kind boolean;
+  #L1554ba.  if v0 != 0 then goto L1554c8;
+  #L1554be.  call `dataFrame`(v1, v3, v2, v4, v5) @signature `Lokhttp3/internal/http2/Http2Writer;.dataFrame:(IILokio/Buffer;I)V` @kind virtual;
+  #L1554c4.  @monitorexit v1
+  #L1554c6.  return @kind void;
+  #L1554c8.  v2:= new `java.io.IOException`;
+  #L1554cc.  v3:= "closed" @kind object;
+  #L1554d0.  call `<init>`(v2, v3) @signature `Ljava/io/IOException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L1554d6.  throw v2;
+  #L1554d8.  v2:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L1554da.  @monitorexit v1
+  #L1554dc.  throw v2;
+  catch `java.lang.Throwable` @[L1554b6..L1554c4] goto L1554d8;
+  catch `java.lang.Throwable` @[L1554c8..L1554d8] goto L1554d8;
+}
+procedure `void` `dataFrame`(`okhttp3.internal.http2.Http2Writer` v2 @kind this, `int` v3 , `int` v4 , `okio.Buffer` v5 @kind object, `int` v6 ) @signature `Lokhttp3/internal/http2/Http2Writer;.dataFrame:(IILokio/Buffer;I)V` @AccessFlag PUBLIC_FINAL {
+    temp;
+    v0;
+    v1;
+
+  #L155504.  v0:= 0I;
+  #L155506.  call `frameHeader`(v2, v3, v6, v0, v4) @signature `Lokhttp3/internal/http2/Http2Writer;.frameHeader:(IIII)V` @kind virtual;
+  #L15550c.  if v6 <= 0 then goto L155522;
+  #L155510.  v3:= v2.`okhttp3.internal.http2.Http2Writer.e` @type ^`okio.BufferedSink` @kind object;
+  #L155514.  call `checkNotNull`(v5) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNull:(Ljava/lang/Object;)V` @kind static;
+  #L15551a.  v0:= (`long`) v6 @kind i2l;
+  #L15551c.  call `write`(v3, v5, v0) @signature `Lokio/Sink;.write:(Lokio/Buffer;J)V` @kind interface;
+  #L155522.  return @kind void;
+}
+procedure `void` `flush`(`okhttp3.internal.http2.Http2Writer` v2 @kind this) @signature `Lokhttp3/internal/http2/Http2Writer;.flush:()V` @AccessFlag PUBLIC_FINAL {
+    temp;
+    v0;
+    v1;
+
+  #L155534.  @monitorenter v2
+  #L155536.  v0:= v2.`okhttp3.internal.http2.Http2Writer.c` @type ^`boolean` @kind boolean;
+  #L15553a.  if v0 != 0 then goto L15554c;
+  #L15553e.  v0:= v2.`okhttp3.internal.http2.Http2Writer.e` @type ^`okio.BufferedSink` @kind object;
+  #L155542.  call `flush`(v0) @signature `Lokio/BufferedSink;.flush:()V` @kind interface;
+  #L155548.  @monitorexit v2
+  #L15554a.  return @kind void;
+  #L15554c.  v0:= new `java.io.IOException`;
+  #L155550.  v1:= "closed" @kind object;
+  #L155554.  call `<init>`(v0, v1) @signature `Ljava/io/IOException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L15555a.  throw v0;
+  #L15555c.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L15555e.  @monitorexit v2
+  #L155560.  throw v0;
+  catch `java.lang.Throwable` @[L155536..L155548] goto L15555c;
+  catch `java.lang.Throwable` @[L15554c..L15555c] goto L15555c;
+}
+procedure `void` `frameHeader`(`okhttp3.internal.http2.Http2Writer` v8 @kind this, `int` v9 , `int` v10 , `int` v11 , `int` v12 ) @signature `Lokhttp3/internal/http2/Http2Writer;.frameHeader:(IIII)V` @AccessFlag PUBLIC_FINAL {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+
+  #L155588.  v0:= `@@okhttp3.internal.http2.Http2Writer.g` @type ^`java.util.logging.Logger` @kind object;
+  #L15558c.  v1:= `@@java.util.logging.Level.FINE` @type ^`java.util.logging.Level` @kind object;
+  #L155590.  call temp:= `isLoggable`(v0, v1) @signature `Ljava/util/logging/Logger;.isLoggable:(Ljava/util/logging/Level;)Z` @kind virtual;
+  #L155596.  v1:= temp;
+  #L155598.  if v1 == 0 then goto L1555b8;
+  #L15559c.  v2:= `@@okhttp3.internal.http2.Http2.INSTANCE` @type ^`okhttp3.internal.http2.Http2` @kind object;
+  #L1555a0.  v3:= 0I;
+  #L1555a2.  v4:= v9;
+  #L1555a4.  v5:= v10;
+  #L1555a6.  v6:= v11;
+  #L1555a8.  v7:= v12;
+  #L1555aa.  call temp:= `frameLog`(v2, v3, v4, v5, v6, v7) @signature `Lokhttp3/internal/http2/Http2;.frameLog:(ZIIII)Ljava/lang/String;` @kind virtual;
+  #L1555b0.  v1:= temp @kind object;
+  #L1555b2.  call `fine`(v0, v1) @signature `Ljava/util/logging/Logger;.fine:(Ljava/lang/String;)V` @kind virtual;
+  #L1555b8.  v0:= v8.`okhttp3.internal.http2.Http2Writer.b` @type ^`int`;
+  #L1555bc.  v1:= 1I;
+  #L1555be.  v2:= 0I;
+  #L1555c0.  if v10 > v0 then goto L1555c8;
+  #L1555c4.  v0:= 1I;
+  #L1555c6.  goto L1555ca;
+  #L1555c8.  v0:= 0I;
+  #L1555ca.  if v0 == 0 then goto L155658;
+  #L1555ce.  v3:= 2147483648L;
+  #L1555d8.  v0:= (`int`) v3 @kind l2i;
+  #L1555da.  v0:= v0 ^& v9 @kind int;
+  #L1555dc.  if v0 != 0 then goto L1555e2;
+  #L1555e0.  goto L1555e4;
+  #L1555e2.  v1:= 0I;
+  #L1555e4.  if v1 == 0 then goto L155622;
+  #L1555e8.  v0:= v8.`okhttp3.internal.http2.Http2Writer.e` @type ^`okio.BufferedSink` @kind object;
+  #L1555ec.  call `writeMedium`(v0, v10) @signature `Lokhttp3/internal/Util;.writeMedium:(Lokio/BufferedSink;I)V` @kind static;
+  #L1555f2.  v10:= v8.`okhttp3.internal.http2.Http2Writer.e` @type ^`okio.BufferedSink` @kind object;
+  #L1555f6.  v11:= v11 ^& 255;
+  #L1555fa.  call temp:= `writeByte`(v10, v11) @signature `Lokio/BufferedSink;.writeByte:(I)Lokio/BufferedSink;` @kind interface;
+  #L155600.  v10:= v8.`okhttp3.internal.http2.Http2Writer.e` @type ^`okio.BufferedSink` @kind object;
+  #L155604.  v11:= v12 ^& 255;
+  #L155608.  call temp:= `writeByte`(v10, v11) @signature `Lokio/BufferedSink;.writeByte:(I)Lokio/BufferedSink;` @kind interface;
+  #L15560e.  v10:= v8.`okhttp3.internal.http2.Http2Writer.e` @type ^`okio.BufferedSink` @kind object;
+  #L155612.  v11:= 2147483647I;
+  #L155618.  v9:= v9 ^& v11 @kind int;
+  #L15561a.  call temp:= `writeInt`(v10, v9) @signature `Lokio/BufferedSink;.writeInt:(I)Lokio/BufferedSink;` @kind interface;
+  #L155620.  return @kind void;
+  #L155622.  v10:= new `java.lang.StringBuilder`;
+  #L155626.  call `<init>`(v10) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L15562c.  v11:= "reserved bit set: " @kind object;
+  #L155630.  call temp:= `append`(v10, v11) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L155636.  call temp:= `append`(v10, v9) @signature `Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder;` @kind virtual;
+  #L15563c.  call temp:= `toString`(v10) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L155642.  v9:= temp @kind object;
+  #L155644.  v10:= new `java.lang.IllegalArgumentException`;
+  #L155648.  call temp:= `toString`(v9) @signature `Ljava/lang/Object;.toString:()Ljava/lang/String;` @kind virtual;
+  #L15564e.  v9:= temp @kind object;
+  #L155650.  call `<init>`(v10, v9) @signature `Ljava/lang/IllegalArgumentException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L155656.  throw v10;
+  #L155658.  v9:= new `java.lang.StringBuilder`;
+  #L15565c.  call `<init>`(v9) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L155662.  v11:= "FRAME_SIZE_ERROR length > " @kind object;
+  #L155666.  call temp:= `append`(v9, v11) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L15566c.  v11:= v8.`okhttp3.internal.http2.Http2Writer.b` @type ^`int`;
+  #L155670.  call temp:= `append`(v9, v11) @signature `Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder;` @kind virtual;
+  #L155676.  v11:= ": " @kind object;
+  #L15567a.  call temp:= `append`(v9, v11) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L155680.  call temp:= `append`(v9, v10) @signature `Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder;` @kind virtual;
+  #L155686.  call temp:= `toString`(v9) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L15568c.  v9:= temp @kind object;
+  #L15568e.  v10:= new `java.lang.IllegalArgumentException`;
+  #L155692.  call temp:= `toString`(v9) @signature `Ljava/lang/Object;.toString:()Ljava/lang/String;` @kind virtual;
+  #L155698.  v9:= temp @kind object;
+  #L15569a.  call `<init>`(v10, v9) @signature `Ljava/lang/IllegalArgumentException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L1556a0.  throw v10;
+}
+procedure `okhttp3.internal.http2.Hpack$Writer` `getHpackWriter`(`okhttp3.internal.http2.Http2Writer` v1 @kind this) @signature `Lokhttp3/internal/http2/Http2Writer;.getHpackWriter:()Lokhttp3/internal/http2/Hpack$Writer;` @AccessFlag PUBLIC_FINAL {
+    temp;
+    v0;
+
+  #L15526c.  v0:= v1.`okhttp3.internal.http2.Http2Writer.d` @type ^`okhttp3.internal.http2.Hpack$Writer` @kind object;
+  #L155270.  return v0 @kind object;
+}
+procedure `void` `goAway`(`okhttp3.internal.http2.Http2Writer` v4 @kind this, `int` v5 , `okhttp3.internal.http2.ErrorCode` v6 @kind object, `byte`[] v7 @kind object) @signature `Lokhttp3/internal/http2/Http2Writer;.goAway:(ILokhttp3/internal/http2/ErrorCode;[B)V` @AccessFlag PUBLIC_FINAL {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L1556b4.  @monitorenter v4
+  #L1556b6.  v0:= "errorCode" @kind object;
+  #L1556ba.  call `checkNotNullParameter`(v6, v0) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V` @kind static;
+  #L1556c0.  v0:= "debugData" @kind object;
+  #L1556c4.  call `checkNotNullParameter`(v7, v0) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V` @kind static;
+  #L1556ca.  v0:= v4.`okhttp3.internal.http2.Http2Writer.c` @type ^`boolean` @kind boolean;
+  #L1556ce.  if v0 != 0 then goto L155758;
+  #L1556d2.  call temp:= `getHttpCode`(v6) @signature `Lokhttp3/internal/http2/ErrorCode;.getHttpCode:()I` @kind virtual;
+  #L1556d8.  v0:= temp;
+  #L1556da.  v1:= -1I;
+  #L1556dc.  v2:= 1I;
+  #L1556de.  v3:= 0I;
+  #L1556e0.  if v0 == v1 then goto L1556e8;
+  #L1556e4.  v0:= 1I;
+  #L1556e6.  goto L1556ea;
+  #L1556e8.  v0:= 0I;
+  #L1556ea.  if v0 == 0 then goto L155740;
+  #L1556ee.  v0:= length @variable v7;
+  #L1556f0.  v0:= v0 + 8;
+  #L1556f4.  v1:= 7I;
+  #L1556f6.  call `frameHeader`(v4, v3, v0, v1, v3) @signature `Lokhttp3/internal/http2/Http2Writer;.frameHeader:(IIII)V` @kind virtual;
+  #L1556fc.  v0:= v4.`okhttp3.internal.http2.Http2Writer.e` @type ^`okio.BufferedSink` @kind object;
+  #L155700.  call temp:= `writeInt`(v0, v5) @signature `Lokio/BufferedSink;.writeInt:(I)Lokio/BufferedSink;` @kind interface;
+  #L155706.  v5:= v4.`okhttp3.internal.http2.Http2Writer.e` @type ^`okio.BufferedSink` @kind object;
+  #L15570a.  call temp:= `getHttpCode`(v6) @signature `Lokhttp3/internal/http2/ErrorCode;.getHttpCode:()I` @kind virtual;
+  #L155710.  v6:= temp;
+  #L155712.  call temp:= `writeInt`(v5, v6) @signature `Lokio/BufferedSink;.writeInt:(I)Lokio/BufferedSink;` @kind interface;
+  #L155718.  v5:= length @variable v7;
+  #L15571a.  if v5 != 0 then goto L155720;
+  #L15571e.  v3:= 1I;
+  #L155720.  v5:= v3 ^~ 1;
+  #L155724.  if v5 == 0 then goto L155732;
+  #L155728.  v5:= v4.`okhttp3.internal.http2.Http2Writer.e` @type ^`okio.BufferedSink` @kind object;
+  #L15572c.  call temp:= `write`(v5, v7) @signature `Lokio/BufferedSink;.write:([B)Lokio/BufferedSink;` @kind interface;
+  #L155732.  v5:= v4.`okhttp3.internal.http2.Http2Writer.e` @type ^`okio.BufferedSink` @kind object;
+  #L155736.  call `flush`(v5) @signature `Lokio/BufferedSink;.flush:()V` @kind interface;
+  #L15573c.  @monitorexit v4
+  #L15573e.  return @kind void;
+  #L155740.  v5:= "errorCode.httpCode == -1" @kind object;
+  #L155744.  v6:= new `java.lang.IllegalArgumentException`;
+  #L155748.  call temp:= `toString`(v5) @signature `Ljava/lang/Object;.toString:()Ljava/lang/String;` @kind virtual;
+  #L15574e.  v5:= temp @kind object;
+  #L155750.  call `<init>`(v6, v5) @signature `Ljava/lang/IllegalArgumentException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L155756.  throw v6;
+  #L155758.  v5:= new `java.io.IOException`;
+  #L15575c.  v6:= "closed" @kind object;
+  #L155760.  call `<init>`(v5, v6) @signature `Ljava/io/IOException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L155766.  throw v5;
+  #L155768.  v5:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L15576a.  @monitorexit v4
+  #L15576c.  throw v5;
+  catch `java.lang.Throwable` @[L1556b6..L15573c] goto L155768;
+  catch `java.lang.Throwable` @[L155740..L155768] goto L155768;
+}
+procedure `void` `headers`(`okhttp3.internal.http2.Http2Writer` v6 @kind this, `boolean` v7 , `int` v8 , `java.util.List` v9 @kind object) @signature `Lokhttp3/internal/http2/Http2Writer;.headers:(ZILjava/util/List;)V` @AccessFlag PUBLIC_FINAL {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L155794.  @monitorenter v6
+  #L155796.  v0:= "headerBlock" @kind object;
+  #L15579a.  call `checkNotNullParameter`(v9, v0) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V` @kind static;
+  #L1557a0.  v0:= v6.`okhttp3.internal.http2.Http2Writer.c` @type ^`boolean` @kind boolean;
+  #L1557a4.  if v0 != 0 then goto L15580a;
+  #L1557a8.  v0:= v6.`okhttp3.internal.http2.Http2Writer.d` @type ^`okhttp3.internal.http2.Hpack$Writer` @kind object;
+  #L1557ac.  call `writeHeaders`(v0, v9) @signature `Lokhttp3/internal/http2/Hpack$Writer;.writeHeaders:(Ljava/util/List;)V` @kind virtual;
+  #L1557b2.  v9:= v6.`okhttp3.internal.http2.Http2Writer.a` @type ^`okio.Buffer` @kind object;
+  #L1557b6.  call temp:= `size`(v9) @signature `Lokio/Buffer;.size:()J` @kind virtual;
+  #L1557bc.  v0:= temp @kind wide;
+  #L1557be.  v9:= v6.`okhttp3.internal.http2.Http2Writer.b` @type ^`int`;
+  #L1557c2.  v2:= (`long`) v9 @kind i2l;
+  #L1557c4.  call temp:= `min`(v2, v0) @signature `Ljava/lang/Math;.min:(JJ)J` @kind static;
+  #L1557ca.  v2:= temp @kind wide;
+  #L1557cc.  v9:= lcmp(v0, v2);
+  #L1557d0.  if v9 != 0 then goto L1557d8;
+  #L1557d4.  v4:= 4I;
+  #L1557d6.  goto L1557da;
+  #L1557d8.  v4:= 0I;
+  #L1557da.  if v7 == 0 then goto L1557e2;
+  #L1557de.  v4:= v4 ^| 1;
+  #L1557e2.  v7:= (`int`) v2 @kind l2i;
+  #L1557e4.  v5:= 1I;
+  #L1557e6.  call `frameHeader`(v6, v8, v7, v5, v4) @signature `Lokhttp3/internal/http2/Http2Writer;.frameHeader:(IIII)V` @kind virtual;
+  #L1557ec.  v7:= v6.`okhttp3.internal.http2.Http2Writer.e` @type ^`okio.BufferedSink` @kind object;
+  #L1557f0.  v4:= v6.`okhttp3.internal.http2.Http2Writer.a` @type ^`okio.Buffer` @kind object;
+  #L1557f4.  call `write`(v7, v4, v2) @signature `Lokio/Sink;.write:(Lokio/Buffer;J)V` @kind interface;
+  #L1557fa.  if v9 <= 0 then goto L155806;
+  #L1557fe.  v0:= v0 - v2 @kind long;
+  #L155800.  call `a`(v6, v8, v0) @signature `Lokhttp3/internal/http2/Http2Writer;.a:(IJ)V` @kind direct;
+  #L155806.  @monitorexit v6
+  #L155808.  return @kind void;
+  #L15580a.  v7:= new `java.io.IOException`;
+  #L15580e.  v8:= "closed" @kind object;
+  #L155812.  call `<init>`(v7, v8) @signature `Ljava/io/IOException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L155818.  throw v7;
+  #L15581a.  v7:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L15581c.  @monitorexit v6
+  #L15581e.  throw v7;
+  catch `java.lang.Throwable` @[L155796..L155806] goto L15581a;
+  catch `java.lang.Throwable` @[L15580a..L15581a] goto L15581a;
+}
+procedure `int` `maxDataLength`(`okhttp3.internal.http2.Http2Writer` v1 @kind this) @signature `Lokhttp3/internal/http2/Http2Writer;.maxDataLength:()I` @AccessFlag PUBLIC_FINAL {
+    temp;
+    v0;
+
+  #L155254.  v0:= v1.`okhttp3.internal.http2.Http2Writer.b` @type ^`int`;
+  #L155258.  return v0;
+}
+procedure `void` `ping`(`okhttp3.internal.http2.Http2Writer` v3 @kind this, `boolean` v4 , `int` v5 , `int` v6 ) @signature `Lokhttp3/internal/http2/Http2Writer;.ping:(ZII)V` @AccessFlag PUBLIC_FINAL {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L155844.  @monitorenter v3
+  #L155846.  v0:= v3.`okhttp3.internal.http2.Http2Writer.c` @type ^`boolean` @kind boolean;
+  #L15584a.  if v0 != 0 then goto L155888;
+  #L15584e.  v0:= 8I;
+  #L155852.  v1:= 6I;
+  #L155854.  v2:= 0I;
+  #L155856.  if v4 == 0 then goto L15585e;
+  #L15585a.  v4:= 1I;
+  #L15585c.  goto L155860;
+  #L15585e.  v4:= 0I;
+  #L155860.  call `frameHeader`(v3, v2, v0, v1, v4) @signature `Lokhttp3/internal/http2/Http2Writer;.frameHeader:(IIII)V` @kind virtual;
+  #L155866.  v4:= v3.`okhttp3.internal.http2.Http2Writer.e` @type ^`okio.BufferedSink` @kind object;
+  #L15586a.  call temp:= `writeInt`(v4, v5) @signature `Lokio/BufferedSink;.writeInt:(I)Lokio/BufferedSink;` @kind interface;
+  #L155870.  v4:= v3.`okhttp3.internal.http2.Http2Writer.e` @type ^`okio.BufferedSink` @kind object;
+  #L155874.  call temp:= `writeInt`(v4, v6) @signature `Lokio/BufferedSink;.writeInt:(I)Lokio/BufferedSink;` @kind interface;
+  #L15587a.  v4:= v3.`okhttp3.internal.http2.Http2Writer.e` @type ^`okio.BufferedSink` @kind object;
+  #L15587e.  call `flush`(v4) @signature `Lokio/BufferedSink;.flush:()V` @kind interface;
+  #L155884.  @monitorexit v3
+  #L155886.  return @kind void;
+  #L155888.  v4:= new `java.io.IOException`;
+  #L15588c.  v5:= "closed" @kind object;
+  #L155890.  call `<init>`(v4, v5) @signature `Ljava/io/IOException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L155896.  throw v4;
+  #L155898.  v4:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L15589a.  @monitorexit v3
+  #L15589c.  throw v4;
+  catch `java.lang.Throwable` @[L155846..L155884] goto L155898;
+  catch `java.lang.Throwable` @[L155888..L155898] goto L155898;
+}
+procedure `void` `pushPromise`(`okhttp3.internal.http2.Http2Writer` v7 @kind this, `int` v8 , `int` v9 , `java.util.List` v10 @kind object) @signature `Lokhttp3/internal/http2/Http2Writer;.pushPromise:(IILjava/util/List;)V` @AccessFlag PUBLIC_FINAL {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+
+  #L1558c4.  @monitorenter v7
+  #L1558c6.  v0:= "requestHeaders" @kind object;
+  #L1558ca.  call `checkNotNullParameter`(v10, v0) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V` @kind static;
+  #L1558d0.  v0:= v7.`okhttp3.internal.http2.Http2Writer.c` @type ^`boolean` @kind boolean;
+  #L1558d4.  if v0 != 0 then goto L155950;
+  #L1558d8.  v0:= v7.`okhttp3.internal.http2.Http2Writer.d` @type ^`okhttp3.internal.http2.Hpack$Writer` @kind object;
+  #L1558dc.  call `writeHeaders`(v0, v10) @signature `Lokhttp3/internal/http2/Hpack$Writer;.writeHeaders:(Ljava/util/List;)V` @kind virtual;
+  #L1558e2.  v10:= v7.`okhttp3.internal.http2.Http2Writer.a` @type ^`okio.Buffer` @kind object;
+  #L1558e6.  call temp:= `size`(v10) @signature `Lokio/Buffer;.size:()J` @kind virtual;
+  #L1558ec.  v0:= temp @kind wide;
+  #L1558ee.  v10:= v7.`okhttp3.internal.http2.Http2Writer.b` @type ^`int`;
+  #L1558f2.  v2:= (`long`) v10 @kind i2l;
+  #L1558f4.  v4:= 4L;
+  #L1558f8.  v2:= v2 - v4 @kind long;
+  #L1558fa.  call temp:= `min`(v2, v0) @signature `Ljava/lang/Math;.min:(JJ)J` @kind static;
+  #L155900.  v2:= temp @kind wide;
+  #L155902.  v10:= (`int`) v2 @kind l2i;
+  #L155904.  v2:= v10 + 4;
+  #L155908.  v3:= 5I;
+  #L15590a.  v4:= (`long`) v10 @kind i2l;
+  #L15590c.  v10:= lcmp(v0, v4);
+  #L155910.  if v10 != 0 then goto L155918;
+  #L155914.  v6:= 4I;
+  #L155916.  goto L15591a;
+  #L155918.  v6:= 0I;
+  #L15591a.  call `frameHeader`(v7, v8, v2, v3, v6) @signature `Lokhttp3/internal/http2/Http2Writer;.frameHeader:(IIII)V` @kind virtual;
+  #L155920.  v2:= v7.`okhttp3.internal.http2.Http2Writer.e` @type ^`okio.BufferedSink` @kind object;
+  #L155924.  v3:= 2147483647I;
+  #L15592a.  v9:= v9 ^& v3 @kind int;
+  #L15592c.  call temp:= `writeInt`(v2, v9) @signature `Lokio/BufferedSink;.writeInt:(I)Lokio/BufferedSink;` @kind interface;
+  #L155932.  v9:= v7.`okhttp3.internal.http2.Http2Writer.e` @type ^`okio.BufferedSink` @kind object;
+  #L155936.  v2:= v7.`okhttp3.internal.http2.Http2Writer.a` @type ^`okio.Buffer` @kind object;
+  #L15593a.  call `write`(v9, v2, v4) @signature `Lokio/Sink;.write:(Lokio/Buffer;J)V` @kind interface;
+  #L155940.  if v10 <= 0 then goto L15594c;
+  #L155944.  v0:= v0 - v4 @kind long;
+  #L155946.  call `a`(v7, v8, v0) @signature `Lokhttp3/internal/http2/Http2Writer;.a:(IJ)V` @kind direct;
+  #L15594c.  @monitorexit v7
+  #L15594e.  return @kind void;
+  #L155950.  v8:= new `java.io.IOException`;
+  #L155954.  v9:= "closed" @kind object;
+  #L155958.  call `<init>`(v8, v9) @signature `Ljava/io/IOException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L15595e.  throw v8;
+  #L155960.  v8:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L155962.  @monitorexit v7
+  #L155964.  throw v8;
+  catch `java.lang.Throwable` @[L1558c6..L15594c] goto L155960;
+  catch `java.lang.Throwable` @[L155950..L155960] goto L155960;
+}
+procedure `void` `rstStream`(`okhttp3.internal.http2.Http2Writer` v3 @kind this, `int` v4 , `okhttp3.internal.http2.ErrorCode` v5 @kind object) @signature `Lokhttp3/internal/http2/Http2Writer;.rstStream:(ILokhttp3/internal/http2/ErrorCode;)V` @AccessFlag PUBLIC_FINAL {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L15598c.  @monitorenter v3
+  #L15598e.  v0:= "errorCode" @kind object;
+  #L155992.  call `checkNotNullParameter`(v5, v0) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V` @kind static;
+  #L155998.  v0:= v3.`okhttp3.internal.http2.Http2Writer.c` @type ^`boolean` @kind boolean;
+  #L15599c.  if v0 != 0 then goto L1559fc;
+  #L1559a0.  call temp:= `getHttpCode`(v5) @signature `Lokhttp3/internal/http2/ErrorCode;.getHttpCode:()I` @kind virtual;
+  #L1559a6.  v0:= temp;
+  #L1559a8.  v1:= -1I;
+  #L1559aa.  v2:= 0I;
+  #L1559ac.  if v0 == v1 then goto L1559b4;
+  #L1559b0.  v0:= 1I;
+  #L1559b2.  goto L1559b6;
+  #L1559b4.  v0:= 0I;
+  #L1559b6.  if v0 == 0 then goto L1559e4;
+  #L1559ba.  v0:= 4I;
+  #L1559bc.  v1:= 3I;
+  #L1559be.  call `frameHeader`(v3, v4, v0, v1, v2) @signature `Lokhttp3/internal/http2/Http2Writer;.frameHeader:(IIII)V` @kind virtual;
+  #L1559c4.  v4:= v3.`okhttp3.internal.http2.Http2Writer.e` @type ^`okio.BufferedSink` @kind object;
+  #L1559c8.  call temp:= `getHttpCode`(v5) @signature `Lokhttp3/internal/http2/ErrorCode;.getHttpCode:()I` @kind virtual;
+  #L1559ce.  v5:= temp;
+  #L1559d0.  call temp:= `writeInt`(v4, v5) @signature `Lokio/BufferedSink;.writeInt:(I)Lokio/BufferedSink;` @kind interface;
+  #L1559d6.  v4:= v3.`okhttp3.internal.http2.Http2Writer.e` @type ^`okio.BufferedSink` @kind object;
+  #L1559da.  call `flush`(v4) @signature `Lokio/BufferedSink;.flush:()V` @kind interface;
+  #L1559e0.  @monitorexit v3
+  #L1559e2.  return @kind void;
+  #L1559e4.  v4:= "Failed requirement." @kind object;
+  #L1559e8.  v5:= new `java.lang.IllegalArgumentException`;
+  #L1559ec.  call temp:= `toString`(v4) @signature `Ljava/lang/Object;.toString:()Ljava/lang/String;` @kind virtual;
+  #L1559f2.  v4:= temp @kind object;
+  #L1559f4.  call `<init>`(v5, v4) @signature `Ljava/lang/IllegalArgumentException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L1559fa.  throw v5;
+  #L1559fc.  v4:= new `java.io.IOException`;
+  #L155a00.  v5:= "closed" @kind object;
+  #L155a04.  call `<init>`(v4, v5) @signature `Ljava/io/IOException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L155a0a.  throw v4;
+  #L155a0c.  v4:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L155a0e.  @monitorexit v3
+  #L155a10.  throw v4;
+  catch `java.lang.Throwable` @[L15598e..L1559e0] goto L155a0c;
+  catch `java.lang.Throwable` @[L1559e4..L155a0c] goto L155a0c;
+}
+procedure `void` `settings`(`okhttp3.internal.http2.Http2Writer` v5 @kind this, `okhttp3.internal.http2.Settings` v6 @kind object) @signature `Lokhttp3/internal/http2/Http2Writer;.settings:(Lokhttp3/internal/http2/Settings;)V` @AccessFlag PUBLIC_FINAL {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L155a38.  @monitorenter v5
+  #L155a3a.  v0:= "settings" @kind object;
+  #L155a3e.  call `checkNotNullParameter`(v6, v0) @signature `Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V` @kind static;
+  #L155a44.  v0:= v5.`okhttp3.internal.http2.Http2Writer.c` @type ^`boolean` @kind boolean;
+  #L155a48.  if v0 != 0 then goto L155abc;
+  #L155a4c.  call temp:= `size`(v6) @signature `Lokhttp3/internal/http2/Settings;.size:()I` @kind virtual;
+  #L155a52.  v0:= temp;
+  #L155a54.  v0:= v0 * 6;
+  #L155a58.  v1:= 4I;
+  #L155a5a.  v2:= 0I;
+  #L155a5c.  call `frameHeader`(v5, v2, v0, v1, v2) @signature `Lokhttp3/internal/http2/Http2Writer;.frameHeader:(IIII)V` @kind virtual;
+  #L155a62.  v0:= 10I;
+  #L155a66.  if v2 >= v0 then goto L155aae;
+  #L155a6a.  call temp:= `isSet`(v6, v2) @signature `Lokhttp3/internal/http2/Settings;.isSet:(I)Z` @kind virtual;
+  #L155a70.  v3:= temp;
+  #L155a72.  if v3 != 0 then goto L155a78;
+  #L155a76.  goto L155aa8;
+  #L155a78.  if v2 == v1 then goto L155a8a;
+  #L155a7c.  v3:= 7I;
+  #L155a7e.  if v2 == v3 then goto L155a86;
+  #L155a82.  v3:= v2;
+  #L155a84.  goto L155a8c;
+  #L155a86.  v3:= 4I;
+  #L155a88.  goto L155a8c;
+  #L155a8a.  v3:= 3I;
+  #L155a8c.  v4:= v5.`okhttp3.internal.http2.Http2Writer.e` @type ^`okio.BufferedSink` @kind object;
+  #L155a90.  call temp:= `writeShort`(v4, v3) @signature `Lokio/BufferedSink;.writeShort:(I)Lokio/BufferedSink;` @kind interface;
+  #L155a96.  v3:= v5.`okhttp3.internal.http2.Http2Writer.e` @type ^`okio.BufferedSink` @kind object;
+  #L155a9a.  call temp:= `get`(v6, v2) @signature `Lokhttp3/internal/http2/Settings;.get:(I)I` @kind virtual;
+  #L155aa0.  v4:= temp;
+  #L155aa2.  call temp:= `writeInt`(v3, v4) @signature `Lokio/BufferedSink;.writeInt:(I)Lokio/BufferedSink;` @kind interface;
+  #L155aa8.  v2:= v2 + 1;
+  #L155aac.  goto L155a66;
+  #L155aae.  v6:= v5.`okhttp3.internal.http2.Http2Writer.e` @type ^`okio.BufferedSink` @kind object;
+  #L155ab2.  call `flush`(v6) @signature `Lokio/BufferedSink;.flush:()V` @kind interface;
+  #L155ab8.  @monitorexit v5
+  #L155aba.  return @kind void;
+  #L155abc.  v6:= new `java.io.IOException`;
+  #L155ac0.  v0:= "closed" @kind object;
+  #L155ac4.  call `<init>`(v6, v0) @signature `Ljava/io/IOException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L155aca.  throw v6;
+  #L155acc.  v6:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L155ace.  @monitorexit v5
+  #L155ad0.  throw v6;
+  catch `java.lang.Throwable` @[L155a3a..L155ab8] goto L155acc;
+  catch `java.lang.Throwable` @[L155abc..L155acc] goto L155acc;
+}
+procedure `void` `windowUpdate`(`okhttp3.internal.http2.Http2Writer` v4 @kind this, `int` v5 , `long` v6 ) @signature `Lokhttp3/internal/http2/Http2Writer;.windowUpdate:(IJ)V` @AccessFlag PUBLIC_FINAL {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L155af8.  @monitorenter v4
+  #L155afa.  v0:= v4.`okhttp3.internal.http2.Http2Writer.c` @type ^`boolean` @kind boolean;
+  #L155afe.  if v0 != 0 then goto L155b84;
+  #L155b02.  v0:= 0L;
+  #L155b06.  v2:= 0I;
+  #L155b08.  v3:= lcmp(v6, v0);
+  #L155b0c.  if v3 == 0 then goto L155b22;
+  #L155b10.  v0:= 2147483647L;
+  #L155b16.  v3:= lcmp(v6, v0);
+  #L155b1a.  if v3 > 0 then goto L155b22;
+  #L155b1e.  v0:= 1I;
+  #L155b20.  goto L155b24;
+  #L155b22.  v0:= 0I;
+  #L155b24.  if v0 == 0 then goto L155b4e;
+  #L155b28.  v0:= 4I;
+  #L155b2a.  v1:= 8I;
+  #L155b2e.  call `frameHeader`(v4, v5, v0, v1, v2) @signature `Lokhttp3/internal/http2/Http2Writer;.frameHeader:(IIII)V` @kind virtual;
+  #L155b34.  v5:= v4.`okhttp3.internal.http2.Http2Writer.e` @type ^`okio.BufferedSink` @kind object;
+  #L155b38.  v7:= (`int`) v6 @kind l2i;
+  #L155b3a.  call temp:= `writeInt`(v5, v7) @signature `Lokio/BufferedSink;.writeInt:(I)Lokio/BufferedSink;` @kind interface;
+  #L155b40.  v5:= v4.`okhttp3.internal.http2.Http2Writer.e` @type ^`okio.BufferedSink` @kind object;
+  #L155b44.  call `flush`(v5) @signature `Lokio/BufferedSink;.flush:()V` @kind interface;
+  #L155b4a.  @monitorexit v4
+  #L155b4c.  return @kind void;
+  #L155b4e.  v5:= new `java.lang.StringBuilder`;
+  #L155b52.  call `<init>`(v5) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L155b58.  v0:= "windowSizeIncrement == 0 || windowSizeIncrement > 0x7fffffffL: " @kind object;
+  #L155b5c.  call temp:= `append`(v5, v0) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L155b62.  call temp:= `append`(v5, v6) @signature `Ljava/lang/StringBuilder;.append:(J)Ljava/lang/StringBuilder;` @kind virtual;
+  #L155b68.  call temp:= `toString`(v5) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L155b6e.  v5:= temp @kind object;
+  #L155b70.  v6:= new `java.lang.IllegalArgumentException`;
+  #L155b74.  call temp:= `toString`(v5) @signature `Ljava/lang/Object;.toString:()Ljava/lang/String;` @kind virtual;
+  #L155b7a.  v5:= temp @kind object;
+  #L155b7c.  call `<init>`(v6, v5) @signature `Ljava/lang/IllegalArgumentException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L155b82.  throw v6;
+  #L155b84.  v5:= new `java.io.IOException`;
+  #L155b88.  v6:= "closed" @kind object;
+  #L155b8c.  call `<init>`(v5, v6) @signature `Ljava/io/IOException;.<init>:(Ljava/lang/String;)V` @kind direct;
+  #L155b92.  throw v5;
+  #L155b94.  v5:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L155b96.  @monitorexit v4
+  #L155b98.  throw v5;
+  catch `java.lang.Throwable` @[L155afa..L155b4a] goto L155b94;
+  catch `java.lang.Throwable` @[L155b4e..L155b94] goto L155b94;
+}

@@ -1,0 +1,833 @@
+record `plugin.google.maps.PluginLocationService` @kind class @AccessFlag PUBLIC extends `org.apache.cordova.CordovaPlugin` @kind class {
+  `int` `plugin.google.maps.PluginLocationService.ACTIVITY_LOCATION_DIALOG` @AccessFlag PRIVATE_FINAL;
+  `int` `plugin.google.maps.PluginLocationService.ACTIVITY_LOCATION_PAGE` @AccessFlag PRIVATE_FINAL;
+  `java.lang.String` `plugin.google.maps.PluginLocationService.TAG` @AccessFlag PRIVATE_FINAL;
+  `android.app.Activity` `plugin.google.maps.PluginLocationService.activity` @AccessFlag PRIVATE;
+  `java.util.HashMap` `plugin.google.maps.PluginLocationService.bufferForLocationDialog` @AccessFlag PRIVATE;
+  `com.google.android.gms.common.api.GoogleApiClient` `plugin.google.maps.PluginLocationService.googleApiClient` @AccessFlag PRIVATE;
+  `java.util.ArrayList` `plugin.google.maps.PluginLocationService.highAccuracyRequestList` @AccessFlag PRIVATE;
+  `java.util.ArrayList` `plugin.google.maps.PluginLocationService.regularAccuracyRequestList` @AccessFlag PRIVATE;
+}
+global `android.location.Location` `@@plugin.google.maps.PluginLocationService.lastLocation` @AccessFlag PRIVATE_STATIC;
+global `java.lang.Object` `@@plugin.google.maps.PluginLocationService.semaphore` @AccessFlag PUBLIC_STATIC_FINAL;
+procedure `void` `<clinit>`() @signature `Lplugin/google/maps/PluginLocationService;.<clinit>:()V` @AccessFlag STATIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L278424.  v0:= new `java.lang.Object`;
+  #L278428.  call `<init>`(v0) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L27842e.  `@@plugin.google.maps.PluginLocationService.semaphore` @type ^`java.lang.Object` := v0 @kind object;
+  #L278432.  return @kind void;
+}
+procedure `void` `<init>`(`plugin.google.maps.PluginLocationService` v1 @kind this) @signature `Lplugin/google/maps/PluginLocationService;.<init>:()V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L278444.  call `<init>`(v1) @signature `Lorg/apache/cordova/CordovaPlugin;.<init>:()V` @kind direct;
+  #L27844a.  v0:= "PluginLocationService" @kind object;
+  #L27844e.  v1.`plugin.google.maps.PluginLocationService.TAG` @type ^`java.lang.String` := v0 @kind object;
+  #L278452.  v0:= new `java.util.HashMap`;
+  #L278456.  call `<init>`(v0) @signature `Ljava/util/HashMap;.<init>:()V` @kind direct;
+  #L27845c.  v1.`plugin.google.maps.PluginLocationService.bufferForLocationDialog` @type ^`java.util.HashMap` := v0 @kind object;
+  #L278460.  v0:= 2140772608I;
+  #L278466.  v1.`plugin.google.maps.PluginLocationService.ACTIVITY_LOCATION_DIALOG` @type ^`int` := v0;
+  #L27846a.  v0:= 2140772609I;
+  #L278470.  v1.`plugin.google.maps.PluginLocationService.ACTIVITY_LOCATION_PAGE` @type ^`int` := v0;
+  #L278474.  v0:= 0I;
+  #L278476.  v1.`plugin.google.maps.PluginLocationService.googleApiClient` @type ^`com.google.android.gms.common.api.GoogleApiClient` := v0 @kind object;
+  #L27847a.  v0:= new `java.util.ArrayList`;
+  #L27847e.  call `<init>`(v0) @signature `Ljava/util/ArrayList;.<init>:()V` @kind direct;
+  #L278484.  v1.`plugin.google.maps.PluginLocationService.regularAccuracyRequestList` @type ^`java.util.ArrayList` := v0 @kind object;
+  #L278488.  v0:= new `java.util.ArrayList`;
+  #L27848c.  call `<init>`(v0) @signature `Ljava/util/ArrayList;.<init>:()V` @kind direct;
+  #L278492.  v1.`plugin.google.maps.PluginLocationService.highAccuracyRequestList` @type ^`java.util.ArrayList` := v0 @kind object;
+  #L278496.  return @kind void;
+}
+procedure `void` `_inviteLocationUpdateAfterActivityResult`(`plugin.google.maps.PluginLocationService` v3 @kind this, `android.os.Bundle` v4 @kind object) @signature `Lplugin/google/maps/PluginLocationService;._inviteLocationUpdateAfterActivityResult:(Landroid/os/Bundle;)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L2784a8.  v0:= "enableHighAccuracy" @kind object;
+  #L2784ac.  call temp:= `getBoolean`(v4, v0) @signature `Landroid/os/Bundle;.getBoolean:(Ljava/lang/String;)Z` @kind virtual;
+  #L2784b2.  v0:= temp;
+  #L2784b4.  v1:= "callbackId" @kind object;
+  #L2784b8.  call temp:= `getString`(v4, v1) @signature `Landroid/os/Bundle;.getString:(Ljava/lang/String;)Ljava/lang/String;` @kind virtual;
+  #L2784be.  v4:= temp @kind object;
+  #L2784c0.  v1:= new `org.apache.cordova.CallbackContext`;
+  #L2784c4.  v2:= v3.`plugin.google.maps.PluginLocationService.webView` @type ^`org.apache.cordova.CordovaWebView` @kind object;
+  #L2784c8.  call `<init>`(v1, v4, v2) @signature `Lorg/apache/cordova/CallbackContext;.<init>:(Ljava/lang/String;Lorg/apache/cordova/CordovaWebView;)V` @kind direct;
+  #L2784ce.  v4:= 0I;
+  #L2784d0.  call `_requestLocationUpdate`(v3, v4, v0, v1) @signature `Lplugin/google/maps/PluginLocationService;._requestLocationUpdate:(ZZLorg/apache/cordova/CallbackContext;)V` @kind direct;
+  #L2784d6.  return @kind void;
+}
+procedure `void` `_onActivityResultLocationPage`(`plugin.google.maps.PluginLocationService` v10 @kind this, `android.os.Bundle` v11 @kind object) @signature `Lplugin/google/maps/PluginLocationService;._onActivityResultLocationPage:(Landroid/os/Bundle;)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+    v9;
+
+  #L2784e8.  v0:= "callbackId" @kind object;
+  #L2784ec.  call temp:= `getString`(v11, v0) @signature `Landroid/os/Bundle;.getString:(Ljava/lang/String;)Ljava/lang/String;` @kind virtual;
+  #L2784f2.  v0:= temp @kind object;
+  #L2784f4.  v1:= new `org.apache.cordova.CallbackContext`;
+  #L2784f8.  v2:= v10.`plugin.google.maps.PluginLocationService.webView` @type ^`org.apache.cordova.CordovaWebView` @kind object;
+  #L2784fc.  call `<init>`(v1, v0, v2) @signature `Lorg/apache/cordova/CallbackContext;.<init>:(Ljava/lang/String;Lorg/apache/cordova/CordovaWebView;)V` @kind direct;
+  #L278502.  v0:= v10.`plugin.google.maps.PluginLocationService.activity` @type ^`android.app.Activity` @kind object;
+  #L278506.  v2:= "location" @kind object;
+  #L27850a.  call temp:= `getSystemService`(v0, v2) @signature `Landroid/app/Activity;.getSystemService:(Ljava/lang/String;)Ljava/lang/Object;` @kind virtual;
+  #L278510.  v0:= temp @kind object;
+  #L278512.  v0:= (`android.location.LocationManager`) v0 @kind object;
+  #L278516.  call temp:= `getAllProviders`(v0) @signature `Landroid/location/LocationManager;.getAllProviders:()Ljava/util/List;` @kind virtual;
+  #L27851c.  v2:= temp @kind object;
+  #L27851e.  v3:= "PluginLocationService" @kind object;
+  #L278522.  v4:= "---debug at getMyLocation(available providers)--" @kind object;
+  #L278526.  call temp:= `d`(v3, v4) @signature `Landroid/util/Log;.d:(Ljava/lang/String;Ljava/lang/String;)I` @kind static;
+  #L27852c.  call temp:= `iterator`(v2) @signature `Ljava/util/List;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L278532.  v2:= temp @kind object;
+  #L278534.  v3:= 0I;
+  #L278536.  v4:= 0I;
+  #L278538.  call temp:= `hasNext`(v2) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L27853e.  v5:= temp;
+  #L278540.  if v5 == 0 then goto L2785c8;
+  #L278544.  call temp:= `next`(v2) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L27854a.  v5:= temp @kind object;
+  #L27854c.  v5:= (`java.lang.String`) v5 @kind object;
+  #L278550.  v6:= "passive" @kind object;
+  #L278554.  call temp:= `equals`(v6, v5) @signature `Ljava/lang/String;.equals:(Ljava/lang/Object;)Z` @kind virtual;
+  #L27855a.  v6:= temp;
+  #L27855c.  if v6 == 0 then goto L278562;
+  #L278560.  goto L278538;
+  #L278562.  call temp:= `isProviderEnabled`(v0, v5) @signature `Landroid/location/LocationManager;.isProviderEnabled:(Ljava/lang/String;)Z` @kind virtual;
+  #L278568.  v6:= temp;
+  #L27856a.  if v6 == 0 then goto L278572;
+  #L27856e.  v4:= v4 + 1;
+  #L278572.  v7:= "PluginLocationService" @kind object;
+  #L278576.  v8:= new `java.lang.StringBuilder`;
+  #L27857a.  call `<init>`(v8) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L278580.  v9:= "   " @kind object;
+  #L278584.  call temp:= `append`(v8, v9) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L27858a.  call temp:= `append`(v8, v5) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L278590.  v5:= " = " @kind object;
+  #L278594.  call temp:= `append`(v8, v5) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L27859a.  if v6 == 0 then goto L2785a4;
+  #L27859e.  v5:= "" @kind object;
+  #L2785a2.  goto L2785a8;
+  #L2785a4.  v5:= "not " @kind object;
+  #L2785a8.  call temp:= `append`(v8, v5) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2785ae.  v5:= "available" @kind object;
+  #L2785b2.  call temp:= `append`(v8, v5) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2785b8.  call temp:= `toString`(v8) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L2785be.  v5:= temp @kind object;
+  #L2785c0.  call temp:= `d`(v7, v5) @signature `Landroid/util/Log;.d:(Ljava/lang/String;Ljava/lang/String;)I` @kind static;
+  #L2785c6.  goto L278538;
+  #L2785c8.  if v4 != 0 then goto L27861a;
+  #L2785cc.  v11:= new `org.json.JSONObject`;
+  #L2785d0.  call `<init>`(v11) @signature `Lorg/json/JSONObject;.<init>:()V` @kind direct;
+  #L2785d6.  v0:= "status" @kind object;
+  #L2785da.  call temp:= `put`(v11, v0, v3) @signature `Lorg/json/JSONObject;.put:(Ljava/lang/String;Z)Lorg/json/JSONObject;` @kind virtual;
+  #L2785e0.  v0:= "error_code" @kind object;
+  #L2785e4.  v2:= "not_available" @kind object;
+  #L2785e8.  call temp:= `put`(v11, v0, v2) @signature `Lorg/json/JSONObject;.put:(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;` @kind virtual;
+  #L2785ee.  v0:= "error_message" @kind object;
+  #L2785f2.  v2:= v10.`plugin.google.maps.PluginLocationService.activity` @type ^`android.app.Activity` @kind object;
+  #L2785f6.  v3:= "pgm_no_location_providers" @kind object;
+  #L2785fa.  call temp:= `getPgmStrings`(v2, v3) @signature `Lplugin/google/maps/PluginUtil;.getPgmStrings:(Landroid/app/Activity;Ljava/lang/String;)Ljava/lang/String;` @kind static;
+  #L278600.  v2:= temp @kind object;
+  #L278602.  call temp:= `put`(v11, v0, v2) @signature `Lorg/json/JSONObject;.put:(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;` @kind virtual;
+  #L278608.  goto L278612;
+  #L27860a.  v0:= Exception @type ^`org.json.JSONException` @kind object;
+  #L27860c.  call `printStackTrace`(v0) @signature `Lorg/json/JSONException;.printStackTrace:()V` @kind virtual;
+  #L278612.  call `error`(v1, v11) @signature `Lorg/apache/cordova/CallbackContext;.error:(Lorg/json/JSONObject;)V` @kind virtual;
+  #L278618.  return @kind void;
+  #L27861a.  call `_inviteLocationUpdateAfterActivityResult`(v10, v11) @signature `Lplugin/google/maps/PluginLocationService;._inviteLocationUpdateAfterActivityResult:(Landroid/os/Bundle;)V` @kind direct;
+  #L278620.  return @kind void;
+  catch `org.json.JSONException` @[L2785d6..L278608] goto L27860a;
+}
+procedure `void` `_requestLocationUpdate`(`plugin.google.maps.PluginLocationService` v5 @kind this, `boolean` v6 , `boolean` v7 , `org.apache.cordova.CallbackContext` v8 @kind object) @signature `Lplugin/google/maps/PluginLocationService;._requestLocationUpdate:(ZZLorg/apache/cordova/CallbackContext;)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L278644.  v0:= "PluginLocationService" @kind object;
+  #L278648.  v1:= new `java.lang.StringBuilder`;
+  #L27864c.  call `<init>`(v1) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L278652.  v2:= "---->_requestLocationUpdate (isRetry = " @kind object;
+  #L278656.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L27865c.  call temp:= `append`(v1, v6) @signature `Ljava/lang/StringBuilder;.append:(Z)Ljava/lang/StringBuilder;` @kind virtual;
+  #L278662.  v2:= ")" @kind object;
+  #L278666.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L27866c.  call temp:= `toString`(v1) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L278672.  v1:= temp @kind object;
+  #L278674.  call temp:= `d`(v0, v1) @signature `Landroid/util/Log;.d:(Ljava/lang/String;Ljava/lang/String;)I` @kind static;
+  #L27867a.  if v7 != 0 then goto L27869a;
+  #L27867e.  v0:= "Genymotion" @kind object;
+  #L278682.  v1:= `@@android.os.Build.MANUFACTURER` @type ^`java.lang.String` @kind object;
+  #L278686.  call temp:= `equals`(v0, v1) @signature `Ljava/lang/String;.equals:(Ljava/lang/Object;)Z` @kind virtual;
+  #L27868c.  v0:= temp;
+  #L27868e.  if v0 == 0 then goto L278694;
+  #L278692.  goto L27869a;
+  #L278694.  v0:= 102I;
+  #L278698.  goto L27869e;
+  #L27869a.  v0:= 100I;
+  #L27869e.  if v6 != 0 then goto L2786e2;
+  #L2786a2.  v6:= v5.`plugin.google.maps.PluginLocationService.cordova` @type ^`org.apache.cordova.CordovaInterface` @kind object;
+  #L2786a6.  call temp:= `getActivity`(v6) @signature `Lorg/apache/cordova/CordovaInterface;.getActivity:()Landroid/app/Activity;` @kind interface;
+  #L2786ac.  v6:= temp @kind object;
+  #L2786ae.  call temp:= `getFusedLocationProviderClient`(v6) @signature `Lcom/google/android/gms/location/LocationServices;.getFusedLocationProviderClient:(Landroid/app/Activity;)Lcom/google/android/gms/location/FusedLocationProviderClient;` @kind static;
+  #L2786b4.  v6:= temp @kind object;
+  #L2786b6.  call temp:= `getLastLocation`(v6) @signature `Lcom/google/android/gms/location/FusedLocationProviderClient;.getLastLocation:()Lcom/google/android/gms/tasks/Task;` @kind virtual;
+  #L2786bc.  v6:= temp @kind object;
+  #L2786be.  v0:= new `plugin.google.maps.PluginLocationService$7`;
+  #L2786c2.  call `<init>`(v0, v5, v7, v8) @signature `Lplugin/google/maps/PluginLocationService$7;.<init>:(Lplugin/google/maps/PluginLocationService;ZLorg/apache/cordova/CallbackContext;)V` @kind direct;
+  #L2786c8.  call temp:= `addOnSuccessListener`(v6, v0) @signature `Lcom/google/android/gms/tasks/Task;.addOnSuccessListener:(Lcom/google/android/gms/tasks/OnSuccessListener;)Lcom/google/android/gms/tasks/Task;` @kind virtual;
+  #L2786ce.  v6:= temp @kind object;
+  #L2786d0.  v0:= new `plugin.google.maps.PluginLocationService$6`;
+  #L2786d4.  call `<init>`(v0, v5, v7, v8) @signature `Lplugin/google/maps/PluginLocationService$6;.<init>:(Lplugin/google/maps/PluginLocationService;ZLorg/apache/cordova/CallbackContext;)V` @kind direct;
+  #L2786da.  call temp:= `addOnFailureListener`(v6, v0) @signature `Lcom/google/android/gms/tasks/Task;.addOnFailureListener:(Lcom/google/android/gms/tasks/OnFailureListener;)Lcom/google/android/gms/tasks/Task;` @kind virtual;
+  #L2786e0.  return @kind void;
+  #L2786e2.  call temp:= `create`() @signature `Lcom/google/android/gms/location/LocationRequest;.create:()Lcom/google/android/gms/location/LocationRequest;` @kind static;
+  #L2786e8.  v6:= temp @kind object;
+  #L2786ea.  v1:= 5000L;
+  #L2786ee.  call temp:= `setFastestInterval`(v6, v1) @signature `Lcom/google/android/gms/location/LocationRequest;.setFastestInterval:(J)Lcom/google/android/gms/location/LocationRequest;` @kind virtual;
+  #L2786f4.  v6:= temp @kind object;
+  #L2786f6.  v3:= 10000L;
+  #L2786fa.  call temp:= `setInterval`(v6, v3) @signature `Lcom/google/android/gms/location/LocationRequest;.setInterval:(J)Lcom/google/android/gms/location/LocationRequest;` @kind virtual;
+  #L278700.  v6:= temp @kind object;
+  #L278702.  call temp:= `setPriority`(v6, v0) @signature `Lcom/google/android/gms/location/LocationRequest;.setPriority:(I)Lcom/google/android/gms/location/LocationRequest;` @kind virtual;
+  #L278708.  v6:= temp @kind object;
+  #L27870a.  v3:= 12000L;
+  #L27870e.  call temp:= `setExpirationDuration`(v6, v3) @signature `Lcom/google/android/gms/location/LocationRequest;.setExpirationDuration:(J)Lcom/google/android/gms/location/LocationRequest;` @kind virtual;
+  #L278714.  v6:= temp @kind object;
+  #L278716.  call temp:= `setMaxWaitTime`(v6, v1) @signature `Lcom/google/android/gms/location/LocationRequest;.setMaxWaitTime:(J)Lcom/google/android/gms/location/LocationRequest;` @kind virtual;
+  #L27871c.  v6:= temp @kind object;
+  #L27871e.  v7:= v5.`plugin.google.maps.PluginLocationService.cordova` @type ^`org.apache.cordova.CordovaInterface` @kind object;
+  #L278722.  call temp:= `getActivity`(v7) @signature `Lorg/apache/cordova/CordovaInterface;.getActivity:()Landroid/app/Activity;` @kind interface;
+  #L278728.  v7:= temp @kind object;
+  #L27872a.  call temp:= `getFusedLocationProviderClient`(v7) @signature `Lcom/google/android/gms/location/LocationServices;.getFusedLocationProviderClient:(Landroid/app/Activity;)Lcom/google/android/gms/location/FusedLocationProviderClient;` @kind static;
+  #L278730.  v7:= temp @kind object;
+  #L278732.  v0:= new `plugin.google.maps.PluginLocationService$8`;
+  #L278736.  call `<init>`(v0, v5, v8) @signature `Lplugin/google/maps/PluginLocationService$8;.<init>:(Lplugin/google/maps/PluginLocationService;Lorg/apache/cordova/CallbackContext;)V` @kind direct;
+  #L27873c.  call temp:= `myLooper`() @signature `Landroid/os/Looper;.myLooper:()Landroid/os/Looper;` @kind static;
+  #L278742.  v8:= temp @kind object;
+  #L278744.  call temp:= `requestLocationUpdates`(v7, v6, v0, v8) @signature `Lcom/google/android/gms/location/FusedLocationProviderClient;.requestLocationUpdates:(Lcom/google/android/gms/location/LocationRequest;Lcom/google/android/gms/location/LocationCallback;Landroid/os/Looper;)Lcom/google/android/gms/tasks/Task;` @kind virtual;
+  #L27874a.  return @kind void;
+}
+procedure `void` `_userRefusedToUseLocationAfterActivityResult`(`plugin.google.maps.PluginLocationService` v4 @kind this, `android.os.Bundle` v5 @kind object) @signature `Lplugin/google/maps/PluginLocationService;._userRefusedToUseLocationAfterActivityResult:(Landroid/os/Bundle;)V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L27875c.  v0:= "callbackId" @kind object;
+  #L278760.  call temp:= `getString`(v5, v0) @signature `Landroid/os/Bundle;.getString:(Ljava/lang/String;)Ljava/lang/String;` @kind virtual;
+  #L278766.  v5:= temp @kind object;
+  #L278768.  v0:= new `org.apache.cordova.CallbackContext`;
+  #L27876c.  v1:= v4.`plugin.google.maps.PluginLocationService.webView` @type ^`org.apache.cordova.CordovaWebView` @kind object;
+  #L278770.  call `<init>`(v0, v5, v1) @signature `Lorg/apache/cordova/CallbackContext;.<init>:(Ljava/lang/String;Lorg/apache/cordova/CordovaWebView;)V` @kind direct;
+  #L278776.  v5:= new `org.json.JSONObject`;
+  #L27877a.  call `<init>`(v5) @signature `Lorg/json/JSONObject;.<init>:()V` @kind direct;
+  #L278780.  v1:= "status" @kind object;
+  #L278784.  v2:= 0I;
+  #L278786.  call temp:= `put`(v5, v1, v2) @signature `Lorg/json/JSONObject;.put:(Ljava/lang/String;Z)Lorg/json/JSONObject;` @kind virtual;
+  #L27878c.  v1:= "error_code" @kind object;
+  #L278790.  v2:= "service_denied" @kind object;
+  #L278794.  call temp:= `put`(v5, v1, v2) @signature `Lorg/json/JSONObject;.put:(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;` @kind virtual;
+  #L27879a.  v1:= "error_message" @kind object;
+  #L27879e.  v2:= v4.`plugin.google.maps.PluginLocationService.activity` @type ^`android.app.Activity` @kind object;
+  #L2787a2.  v3:= "pgm_location_rejected_by_user" @kind object;
+  #L2787a6.  call temp:= `getPgmStrings`(v2, v3) @signature `Lplugin/google/maps/PluginUtil;.getPgmStrings:(Landroid/app/Activity;Ljava/lang/String;)Ljava/lang/String;` @kind static;
+  #L2787ac.  v2:= temp @kind object;
+  #L2787ae.  call temp:= `put`(v5, v1, v2) @signature `Lorg/json/JSONObject;.put:(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;` @kind virtual;
+  #L2787b4.  goto L2787be;
+  #L2787b6.  v1:= Exception @type ^`org.json.JSONException` @kind object;
+  #L2787b8.  call `printStackTrace`(v1) @signature `Lorg/json/JSONException;.printStackTrace:()V` @kind virtual;
+  #L2787be.  call `error`(v0, v5) @signature `Lorg/apache/cordova/CallbackContext;.error:(Lorg/json/JSONObject;)V` @kind virtual;
+  #L2787c4.  return @kind void;
+  catch `org.json.JSONException` @[L278780..L2787b4] goto L2787b6;
+}
+procedure `java.util.ArrayList` `access$000`(`plugin.google.maps.PluginLocationService` v0 @kind object) @signature `Lplugin/google/maps/PluginLocationService;.access$000:(Lplugin/google/maps/PluginLocationService;)Ljava/util/ArrayList;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L2783f4.  v0:= v0.`plugin.google.maps.PluginLocationService.regularAccuracyRequestList` @type ^`java.util.ArrayList` @kind object;
+  #L2783f8.  return v0 @kind object;
+}
+procedure `java.util.ArrayList` `access$100`(`plugin.google.maps.PluginLocationService` v0 @kind object) @signature `Lplugin/google/maps/PluginLocationService;.access$100:(Lplugin/google/maps/PluginLocationService;)Ljava/util/ArrayList;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L27840c.  v0:= v0.`plugin.google.maps.PluginLocationService.highAccuracyRequestList` @type ^`java.util.ArrayList` @kind object;
+  #L278410.  return v0 @kind object;
+}
+procedure `com.google.android.gms.common.api.GoogleApiClient` `access$200`(`plugin.google.maps.PluginLocationService` v0 @kind object) @signature `Lplugin/google/maps/PluginLocationService;.access$200:(Lplugin/google/maps/PluginLocationService;)Lcom/google/android/gms/common/api/GoogleApiClient;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L2783dc.  v0:= v0.`plugin.google.maps.PluginLocationService.googleApiClient` @type ^`com.google.android.gms.common.api.GoogleApiClient` @kind object;
+  #L2783e0.  return v0 @kind object;
+}
+procedure `void` `access$300`(`plugin.google.maps.PluginLocationService` v0 @kind object) @signature `Lplugin/google/maps/PluginLocationService;.access$300:(Lplugin/google/maps/PluginLocationService;)V` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L2787e8.  call `requestLocation`(v0) @signature `Lplugin/google/maps/PluginLocationService;.requestLocation:()V` @kind direct;
+  #L2787ee.  return @kind void;
+}
+procedure `void` `access$400`(`plugin.google.maps.PluginLocationService` v0 @kind object, `boolean` v1 , `boolean` v2 , `org.apache.cordova.CallbackContext` v3 @kind object) @signature `Lplugin/google/maps/PluginLocationService;.access$400:(Lplugin/google/maps/PluginLocationService;ZZLorg/apache/cordova/CallbackContext;)V` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L278800.  call `_requestLocationUpdate`(v0, v1, v2, v3) @signature `Lplugin/google/maps/PluginLocationService;._requestLocationUpdate:(ZZLorg/apache/cordova/CallbackContext;)V` @kind direct;
+  #L278806.  return @kind void;
+}
+procedure `android.location.Location` `access$500`() @signature `Lplugin/google/maps/PluginLocationService;.access$500:()Landroid/location/Location;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+    v0;
+
+  #L27837c.  v0:= `@@plugin.google.maps.PluginLocationService.lastLocation` @type ^`android.location.Location` @kind object;
+  #L278380.  return v0 @kind object;
+}
+procedure `android.location.Location` `access$502`(`android.location.Location` v0 @kind object) @signature `Lplugin/google/maps/PluginLocationService;.access$502:(Landroid/location/Location;)Landroid/location/Location;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L278394.  `@@plugin.google.maps.PluginLocationService.lastLocation` @type ^`android.location.Location` := v0 @kind object;
+  #L278398.  return v0 @kind object;
+}
+procedure `android.app.Activity` `access$600`(`plugin.google.maps.PluginLocationService` v0 @kind object) @signature `Lplugin/google/maps/PluginLocationService;.access$600:(Lplugin/google/maps/PluginLocationService;)Landroid/app/Activity;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L278364.  v0:= v0.`plugin.google.maps.PluginLocationService.activity` @type ^`android.app.Activity` @kind object;
+  #L278368.  return v0 @kind object;
+}
+procedure `void` `requestLocation`(`plugin.google.maps.PluginLocationService` v5 @kind this) @signature `Lplugin/google/maps/PluginLocationService;.requestLocation:()V` @AccessFlag PRIVATE {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L278f24.  v0:= "PluginLocationService" @kind object;
+  #L278f28.  v1:= new `java.lang.StringBuilder`;
+  #L278f2c.  call `<init>`(v1) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L278f32.  v2:= "--->regularAccuracyRequestList.size = " @kind object;
+  #L278f36.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L278f3c.  v2:= v5.`plugin.google.maps.PluginLocationService.regularAccuracyRequestList` @type ^`java.util.ArrayList` @kind object;
+  #L278f40.  call temp:= `size`(v2) @signature `Ljava/util/ArrayList;.size:()I` @kind virtual;
+  #L278f46.  v2:= temp;
+  #L278f48.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder;` @kind virtual;
+  #L278f4e.  call temp:= `toString`(v1) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L278f54.  v1:= temp @kind object;
+  #L278f56.  call temp:= `d`(v0, v1) @signature `Landroid/util/Log;.d:(Ljava/lang/String;Ljava/lang/String;)I` @kind static;
+  #L278f5c.  v0:= v5.`plugin.google.maps.PluginLocationService.regularAccuracyRequestList` @type ^`java.util.ArrayList` @kind object;
+  #L278f60.  call temp:= `size`(v0) @signature `Ljava/util/ArrayList;.size:()I` @kind virtual;
+  #L278f66.  v0:= temp;
+  #L278f68.  v1:= 0I;
+  #L278f6a.  if v0 <= 0 then goto L278f86;
+  #L278f6e.  v0:= new `plugin.google.maps.PluginLocationService$4`;
+  #L278f72.  v2:= "regular-callback" @kind object;
+  #L278f76.  v3:= v5.`plugin.google.maps.PluginLocationService.webView` @type ^`org.apache.cordova.CordovaWebView` @kind object;
+  #L278f7a.  call `<init>`(v0, v5, v2, v3) @signature `Lplugin/google/maps/PluginLocationService$4;.<init>:(Lplugin/google/maps/PluginLocationService;Ljava/lang/String;Lorg/apache/cordova/CordovaWebView;)V` @kind direct;
+  #L278f80.  call `_requestLocationUpdate`(v5, v1, v1, v0) @signature `Lplugin/google/maps/PluginLocationService;._requestLocationUpdate:(ZZLorg/apache/cordova/CallbackContext;)V` @kind direct;
+  #L278f86.  v0:= "PluginLocationService" @kind object;
+  #L278f8a.  v2:= new `java.lang.StringBuilder`;
+  #L278f8e.  call `<init>`(v2) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L278f94.  v3:= "--->highAccuracyRequestList.size = " @kind object;
+  #L278f98.  call temp:= `append`(v2, v3) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L278f9e.  v3:= v5.`plugin.google.maps.PluginLocationService.highAccuracyRequestList` @type ^`java.util.ArrayList` @kind object;
+  #L278fa2.  call temp:= `size`(v3) @signature `Ljava/util/ArrayList;.size:()I` @kind virtual;
+  #L278fa8.  v3:= temp;
+  #L278faa.  call temp:= `append`(v2, v3) @signature `Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder;` @kind virtual;
+  #L278fb0.  call temp:= `toString`(v2) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L278fb6.  v2:= temp @kind object;
+  #L278fb8.  call temp:= `d`(v0, v2) @signature `Landroid/util/Log;.d:(Ljava/lang/String;Ljava/lang/String;)I` @kind static;
+  #L278fbe.  v0:= v5.`plugin.google.maps.PluginLocationService.highAccuracyRequestList` @type ^`java.util.ArrayList` @kind object;
+  #L278fc2.  call temp:= `size`(v0) @signature `Ljava/util/ArrayList;.size:()I` @kind virtual;
+  #L278fc8.  v0:= temp;
+  #L278fca.  if v0 <= 0 then goto L278fe8;
+  #L278fce.  v0:= 1I;
+  #L278fd0.  v2:= new `plugin.google.maps.PluginLocationService$5`;
+  #L278fd4.  v3:= "regular-callback" @kind object;
+  #L278fd8.  v4:= v5.`plugin.google.maps.PluginLocationService.webView` @type ^`org.apache.cordova.CordovaWebView` @kind object;
+  #L278fdc.  call `<init>`(v2, v5, v3, v4) @signature `Lplugin/google/maps/PluginLocationService$5;.<init>:(Lplugin/google/maps/PluginLocationService;Ljava/lang/String;Lorg/apache/cordova/CordovaWebView;)V` @kind direct;
+  #L278fe2.  call `_requestLocationUpdate`(v5, v1, v0, v2) @signature `Lplugin/google/maps/PluginLocationService;._requestLocationUpdate:(ZZLorg/apache/cordova/CallbackContext;)V` @kind direct;
+  #L278fe8.  return @kind void;
+}
+procedure `void` `setLastLocation`(`android.location.Location` v0 @kind object) @signature `Lplugin/google/maps/PluginLocationService;.setLastLocation:(Landroid/location/Location;)V` @AccessFlag PUBLIC_STATIC {
+    temp;
+
+  #L278ffc.  `@@plugin.google.maps.PluginLocationService.lastLocation` @type ^`android.location.Location` := v0 @kind object;
+  #L279000.  return @kind void;
+}
+procedure `boolean` `execute`(`plugin.google.maps.PluginLocationService` v2 @kind this, `java.lang.String` v3 @kind object, `org.json.JSONArray` v4 @kind object, `org.apache.cordova.CallbackContext` v5 @kind object) @signature `Lplugin/google/maps/PluginLocationService;.execute:(Ljava/lang/String;Lorg/json/JSONArray;Lorg/apache/cordova/CallbackContext;)Z` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L2783ac.  v0:= v2.`plugin.google.maps.PluginLocationService.cordova` @type ^`org.apache.cordova.CordovaInterface` @kind object;
+  #L2783b0.  call temp:= `getThreadPool`(v0) @signature `Lorg/apache/cordova/CordovaInterface;.getThreadPool:()Ljava/util/concurrent/ExecutorService;` @kind interface;
+  #L2783b6.  v0:= temp @kind object;
+  #L2783b8.  v1:= new `plugin.google.maps.PluginLocationService$1`;
+  #L2783bc.  call `<init>`(v1, v2, v3, v4, v5) @signature `Lplugin/google/maps/PluginLocationService$1;.<init>:(Lplugin/google/maps/PluginLocationService;Ljava/lang/String;Lorg/json/JSONArray;Lorg/apache/cordova/CallbackContext;)V` @kind direct;
+  #L2783c2.  call temp:= `submit`(v0, v1) @signature `Ljava/util/concurrent/ExecutorService;.submit:(Ljava/lang/Runnable;)Ljava/util/concurrent/Future;` @kind interface;
+  #L2783c8.  v3:= 1I;
+  #L2783ca.  return v3;
+}
+procedure `void` `getMyLocation`(`plugin.google.maps.PluginLocationService` v10 @kind this, `org.json.JSONArray` v11 @kind object, `org.apache.cordova.CallbackContext` v12 @kind object) @signature `Lplugin/google/maps/PluginLocationService;.getMyLocation:(Lorg/json/JSONArray;Lorg/apache/cordova/CallbackContext;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+    v9;
+
+  #L278818.  v0:= `@@plugin.google.maps.PluginLocationService.semaphore` @type ^`java.lang.Object` @kind object;
+  #L27881c.  @monitorenter v0
+  #L27881e.  v1:= v10.`plugin.google.maps.PluginLocationService.activity` @type ^`android.app.Activity` @kind object;
+  #L278822.  v2:= "location" @kind object;
+  #L278826.  call temp:= `getSystemService`(v1, v2) @signature `Landroid/app/Activity;.getSystemService:(Ljava/lang/String;)Ljava/lang/Object;` @kind virtual;
+  #L27882c.  v1:= temp @kind object;
+  #L27882e.  v1:= (`android.location.LocationManager`) v1 @kind object;
+  #L278832.  call temp:= `getAllProviders`(v1) @signature `Landroid/location/LocationManager;.getAllProviders:()Ljava/util/List;` @kind virtual;
+  #L278838.  v2:= temp @kind object;
+  #L27883a.  v3:= "PluginLocationService" @kind object;
+  #L27883e.  v4:= "---debug at getMyLocation(available providers)--" @kind object;
+  #L278842.  call temp:= `d`(v3, v4) @signature `Landroid/util/Log;.d:(Ljava/lang/String;Ljava/lang/String;)I` @kind static;
+  #L278848.  call temp:= `iterator`(v2) @signature `Ljava/util/List;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L27884e.  v2:= temp @kind object;
+  #L278850.  v3:= 0I;
+  #L278852.  v4:= 0I;
+  #L278854.  call temp:= `hasNext`(v2) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L27885a.  v5:= temp;
+  #L27885c.  if v5 == 0 then goto L2788e4;
+  #L278860.  call temp:= `next`(v2) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L278866.  v5:= temp @kind object;
+  #L278868.  v5:= (`java.lang.String`) v5 @kind object;
+  #L27886c.  v6:= "passive" @kind object;
+  #L278870.  call temp:= `equals`(v6, v5) @signature `Ljava/lang/String;.equals:(Ljava/lang/Object;)Z` @kind virtual;
+  #L278876.  v6:= temp;
+  #L278878.  if v6 == 0 then goto L27887e;
+  #L27887c.  goto L278854;
+  #L27887e.  call temp:= `isProviderEnabled`(v1, v5) @signature `Landroid/location/LocationManager;.isProviderEnabled:(Ljava/lang/String;)Z` @kind virtual;
+  #L278884.  v6:= temp;
+  #L278886.  if v6 == 0 then goto L27888e;
+  #L27888a.  v4:= v4 + 1;
+  #L27888e.  v7:= "PluginLocationService" @kind object;
+  #L278892.  v8:= new `java.lang.StringBuilder`;
+  #L278896.  call `<init>`(v8) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L27889c.  v9:= "   " @kind object;
+  #L2788a0.  call temp:= `append`(v8, v9) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2788a6.  call temp:= `append`(v8, v5) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2788ac.  v5:= " = " @kind object;
+  #L2788b0.  call temp:= `append`(v8, v5) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2788b6.  if v6 == 0 then goto L2788c0;
+  #L2788ba.  v5:= "" @kind object;
+  #L2788be.  goto L2788c4;
+  #L2788c0.  v5:= "not " @kind object;
+  #L2788c4.  call temp:= `append`(v8, v5) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2788ca.  v5:= "available" @kind object;
+  #L2788ce.  call temp:= `append`(v8, v5) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L2788d4.  call temp:= `toString`(v8) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L2788da.  v5:= temp @kind object;
+  #L2788dc.  call temp:= `d`(v7, v5) @signature `Landroid/util/Log;.d:(Ljava/lang/String;Ljava/lang/String;)I` @kind static;
+  #L2788e2.  goto L278854;
+  #L2788e4.  if v4 != 0 then goto L278938;
+  #L2788e8.  v11:= new `org.json.JSONObject`;
+  #L2788ec.  call `<init>`(v11) @signature `Lorg/json/JSONObject;.<init>:()V` @kind direct;
+  #L2788f2.  v1:= "status" @kind object;
+  #L2788f6.  call temp:= `put`(v11, v1, v3) @signature `Lorg/json/JSONObject;.put:(Ljava/lang/String;Z)Lorg/json/JSONObject;` @kind virtual;
+  #L2788fc.  v1:= "error_code" @kind object;
+  #L278900.  v2:= "not_available" @kind object;
+  #L278904.  call temp:= `put`(v11, v1, v2) @signature `Lorg/json/JSONObject;.put:(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;` @kind virtual;
+  #L27890a.  v1:= "error_message" @kind object;
+  #L27890e.  v2:= v10.`plugin.google.maps.PluginLocationService.activity` @type ^`android.app.Activity` @kind object;
+  #L278912.  v3:= "pgm_no_location_providers" @kind object;
+  #L278916.  call temp:= `getPgmStrings`(v2, v3) @signature `Lplugin/google/maps/PluginUtil;.getPgmStrings:(Landroid/app/Activity;Ljava/lang/String;)Ljava/lang/String;` @kind static;
+  #L27891c.  v2:= temp @kind object;
+  #L27891e.  call temp:= `put`(v11, v1, v2) @signature `Lorg/json/JSONObject;.put:(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;` @kind virtual;
+  #L278924.  goto L27892e;
+  #L278926.  v1:= Exception @type ^`org.json.JSONException` @kind object;
+  #L278928.  call `printStackTrace`(v1) @signature `Lorg/json/JSONException;.printStackTrace:()V` @kind virtual;
+  #L27892e.  call `error`(v12, v11) @signature `Lorg/apache/cordova/CallbackContext;.error:(Lorg/json/JSONObject;)V` @kind virtual;
+  #L278934.  @monitorexit v0
+  #L278936.  return @kind void;
+  #L278938.  call temp:= `getJSONObject`(v11, v3) @signature `Lorg/json/JSONArray;.getJSONObject:(I)Lorg/json/JSONObject;` @kind virtual;
+  #L27893e.  v11:= temp @kind object;
+  #L278940.  v2:= "enableHighAccuracy" @kind object;
+  #L278944.  call temp:= `has`(v11, v2) @signature `Lorg/json/JSONObject;.has:(Ljava/lang/String;)Z` @kind virtual;
+  #L27894a.  v2:= temp;
+  #L27894c.  if v2 == 0 then goto L27895e;
+  #L278950.  v2:= "enableHighAccuracy" @kind object;
+  #L278954.  call temp:= `getBoolean`(v11, v2) @signature `Lorg/json/JSONObject;.getBoolean:(Ljava/lang/String;)Z` @kind virtual;
+  #L27895a.  v11:= temp;
+  #L27895c.  goto L278960;
+  #L27895e.  v11:= 0I;
+  #L278960.  if v11 == 0 then goto L2789c4;
+  #L278964.  v2:= "gps" @kind object;
+  #L278968.  call temp:= `isProviderEnabled`(v1, v2) @signature `Landroid/location/LocationManager;.isProviderEnabled:(Ljava/lang/String;)Z` @kind virtual;
+  #L27896e.  v1:= temp;
+  #L278970.  if v1 != 0 then goto L2789c4;
+  #L278974.  v11:= new `org.json.JSONObject`;
+  #L278978.  call `<init>`(v11) @signature `Lorg/json/JSONObject;.<init>:()V` @kind direct;
+  #L27897e.  v1:= "status" @kind object;
+  #L278982.  call temp:= `put`(v11, v1, v3) @signature `Lorg/json/JSONObject;.put:(Ljava/lang/String;Z)Lorg/json/JSONObject;` @kind virtual;
+  #L278988.  v1:= "error_code" @kind object;
+  #L27898c.  v2:= "not_available" @kind object;
+  #L278990.  call temp:= `put`(v11, v1, v2) @signature `Lorg/json/JSONObject;.put:(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;` @kind virtual;
+  #L278996.  v1:= "error_message" @kind object;
+  #L27899a.  v2:= v10.`plugin.google.maps.PluginLocationService.activity` @type ^`android.app.Activity` @kind object;
+  #L27899e.  v3:= "pgm_no_location_service_is_disabled" @kind object;
+  #L2789a2.  call temp:= `getPgmStrings`(v2, v3) @signature `Lplugin/google/maps/PluginUtil;.getPgmStrings:(Landroid/app/Activity;Ljava/lang/String;)Ljava/lang/String;` @kind static;
+  #L2789a8.  v2:= temp @kind object;
+  #L2789aa.  call temp:= `put`(v11, v1, v2) @signature `Lorg/json/JSONObject;.put:(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;` @kind virtual;
+  #L2789b0.  goto L2789ba;
+  #L2789b2.  v1:= Exception @type ^`org.json.JSONException` @kind object;
+  #L2789b4.  call `printStackTrace`(v1) @signature `Lorg/json/JSONException;.printStackTrace:()V` @kind virtual;
+  #L2789ba.  call `error`(v12, v11) @signature `Lorg/apache/cordova/CallbackContext;.error:(Lorg/json/JSONObject;)V` @kind virtual;
+  #L2789c0.  @monitorexit v0
+  #L2789c2.  return @kind void;
+  #L2789c4.  if v11 == 0 then goto L2789d4;
+  #L2789c8.  v11:= v10.`plugin.google.maps.PluginLocationService.highAccuracyRequestList` @type ^`java.util.ArrayList` @kind object;
+  #L2789cc.  call temp:= `add`(v11, v12) @signature `Ljava/util/ArrayList;.add:(Ljava/lang/Object;)Z` @kind virtual;
+  #L2789d2.  goto L2789de;
+  #L2789d4.  v11:= v10.`plugin.google.maps.PluginLocationService.regularAccuracyRequestList` @type ^`java.util.ArrayList` @kind object;
+  #L2789d8.  call temp:= `add`(v11, v12) @signature `Ljava/util/ArrayList;.add:(Ljava/lang/Object;)Z` @kind virtual;
+  #L2789de.  v11:= v10.`plugin.google.maps.PluginLocationService.googleApiClient` @type ^`com.google.android.gms.common.api.GoogleApiClient` @kind object;
+  #L2789e2.  if v11 == 0 then goto L2789fa;
+  #L2789e6.  v11:= v10.`plugin.google.maps.PluginLocationService.googleApiClient` @type ^`com.google.android.gms.common.api.GoogleApiClient` @kind object;
+  #L2789ea.  call temp:= `isConnecting`(v11) @signature `Lcom/google/android/gms/common/api/GoogleApiClient;.isConnecting:()Z` @kind virtual;
+  #L2789f0.  v11:= temp;
+  #L2789f2.  if v11 == 0 then goto L2789fa;
+  #L2789f6.  @monitorexit v0
+  #L2789f8.  return @kind void;
+  #L2789fa.  @monitorexit v0
+  #L2789fc.  v11:= v10.`plugin.google.maps.PluginLocationService.cordova` @type ^`org.apache.cordova.CordovaInterface` @kind object;
+  #L278a00.  call temp:= `getActivity`(v11) @signature `Lorg/apache/cordova/CordovaInterface;.getActivity:()Landroid/app/Activity;` @kind interface;
+  #L278a06.  v11:= temp @kind object;
+  #L278a08.  call temp:= `getApplicationContext`(v11) @signature `Landroid/app/Activity;.getApplicationContext:()Landroid/content/Context;` @kind virtual;
+  #L278a0e.  v11:= temp @kind object;
+  #L278a10.  v0:= "android.permission.ACCESS_COARSE_LOCATION" @kind object;
+  #L278a14.  call temp:= `checkSelfPermission`(v11, v0) @signature `Landroid/support/v4/content/PermissionChecker;.checkSelfPermission:(Landroid/content/Context;Ljava/lang/String;)I` @kind static;
+  #L278a1a.  v11:= temp;
+  #L278a1c.  v0:= 1I;
+  #L278a1e.  if v11 != 0 then goto L278a26;
+  #L278a22.  v11:= 1I;
+  #L278a24.  goto L278a28;
+  #L278a26.  v11:= 0I;
+  #L278a28.  if v11 != 0 then goto L278b34;
+  #L278a2c.  v11:= `@@plugin.google.maps.PluginLocationService.semaphore` @type ^`java.lang.Object` @kind object;
+  #L278a30.  @monitorenter v11
+  #L278a32.  v1:= v10.`plugin.google.maps.PluginLocationService.cordova` @type ^`org.apache.cordova.CordovaInterface` @kind object;
+  #L278a36.  call temp:= `hashCode`(v12) @signature `Ljava/lang/Object;.hashCode:()I` @kind virtual;
+  #L278a3c.  v2:= temp;
+  #L278a3e.  v4:= "android.permission.ACCESS_FINE_LOCATION" @kind object;
+  #L278a42.  v5:= "android.permission.ACCESS_COARSE_LOCATION" @kind object;
+  #L278a46.  temp:= new `java.lang.String`[v4, v5];
+  #L278a4c.  v4:= temp @kind object;
+  #L278a4e.  call `requestPermissions`(v1, v10, v2, v4) @signature `Lorg/apache/cordova/CordovaInterface;.requestPermissions:(Lorg/apache/cordova/CordovaPlugin;I[Ljava/lang/String;)V` @kind interface;
+  #L278a54.  v1:= `@@plugin.google.maps.PluginLocationService.semaphore` @type ^`java.lang.Object` @kind object;
+  #L278a58.  call `wait`(v1) @signature `Ljava/lang/Object;.wait:()V` @kind virtual;
+  #L278a5e.  goto L278a68;
+  #L278a60.  v1:= Exception @type ^`java.lang.InterruptedException` @kind object;
+  #L278a62.  call `printStackTrace`(v1) @signature `Ljava/lang/InterruptedException;.printStackTrace:()V` @kind virtual;
+  #L278a68.  @monitorexit v11
+  #L278a6a.  v11:= v10.`plugin.google.maps.PluginLocationService.cordova` @type ^`org.apache.cordova.CordovaInterface` @kind object;
+  #L278a6e.  call temp:= `getActivity`(v11) @signature `Lorg/apache/cordova/CordovaInterface;.getActivity:()Landroid/app/Activity;` @kind interface;
+  #L278a74.  v11:= temp @kind object;
+  #L278a76.  call temp:= `getApplicationContext`(v11) @signature `Landroid/app/Activity;.getApplicationContext:()Landroid/content/Context;` @kind virtual;
+  #L278a7c.  v11:= temp @kind object;
+  #L278a7e.  v1:= "android.permission.ACCESS_COARSE_LOCATION" @kind object;
+  #L278a82.  call temp:= `checkSelfPermission`(v11, v1) @signature `Landroid/support/v4/content/PermissionChecker;.checkSelfPermission:(Landroid/content/Context;Ljava/lang/String;)I` @kind static;
+  #L278a88.  v11:= temp;
+  #L278a8a.  if v11 != 0 then goto L278a90;
+  #L278a8e.  v3:= 1I;
+  #L278a90.  if v3 != 0 then goto L278b34;
+  #L278a94.  v11:= new `org.apache.cordova.PluginResult`;
+  #L278a98.  v12:= `@@org.apache.cordova.PluginResult$Status.ERROR` @type ^`org.apache.cordova.PluginResult$Status` @kind object;
+  #L278a9c.  v0:= v10.`plugin.google.maps.PluginLocationService.activity` @type ^`android.app.Activity` @kind object;
+  #L278aa0.  v1:= "pgm_location_rejected_by_user" @kind object;
+  #L278aa4.  call temp:= `getPgmStrings`(v0, v1) @signature `Lplugin/google/maps/PluginUtil;.getPgmStrings:(Landroid/app/Activity;Ljava/lang/String;)Ljava/lang/String;` @kind static;
+  #L278aaa.  v0:= temp @kind object;
+  #L278aac.  call `<init>`(v11, v12, v0) @signature `Lorg/apache/cordova/PluginResult;.<init>:(Lorg/apache/cordova/PluginResult$Status;Ljava/lang/String;)V` @kind direct;
+  #L278ab2.  v1:= `@@plugin.google.maps.PluginLocationService.semaphore` @type ^`java.lang.Object` @kind object;
+  #L278ab6.  @monitorenter v1
+  #L278ab8.  v12:= v10.`plugin.google.maps.PluginLocationService.regularAccuracyRequestList` @type ^`java.util.ArrayList` @kind object;
+  #L278abc.  call temp:= `iterator`(v12) @signature `Ljava/util/ArrayList;.iterator:()Ljava/util/Iterator;` @kind virtual;
+  #L278ac2.  v12:= temp @kind object;
+  #L278ac4.  call temp:= `hasNext`(v12) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L278aca.  v0:= temp;
+  #L278acc.  if v0 == 0 then goto L278ae4;
+  #L278ad0.  call temp:= `next`(v12) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L278ad6.  v0:= temp @kind object;
+  #L278ad8.  v0:= (`org.apache.cordova.CallbackContext`) v0 @kind object;
+  #L278adc.  call `sendPluginResult`(v0, v11) @signature `Lorg/apache/cordova/CallbackContext;.sendPluginResult:(Lorg/apache/cordova/PluginResult;)V` @kind virtual;
+  #L278ae2.  goto L278ac4;
+  #L278ae4.  v12:= v10.`plugin.google.maps.PluginLocationService.highAccuracyRequestList` @type ^`java.util.ArrayList` @kind object;
+  #L278ae8.  call temp:= `iterator`(v12) @signature `Ljava/util/ArrayList;.iterator:()Ljava/util/Iterator;` @kind virtual;
+  #L278aee.  v12:= temp @kind object;
+  #L278af0.  call temp:= `hasNext`(v12) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L278af6.  v0:= temp;
+  #L278af8.  if v0 == 0 then goto L278b10;
+  #L278afc.  call temp:= `next`(v12) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L278b02.  v0:= temp @kind object;
+  #L278b04.  v0:= (`org.apache.cordova.CallbackContext`) v0 @kind object;
+  #L278b08.  call `sendPluginResult`(v0, v11) @signature `Lorg/apache/cordova/CallbackContext;.sendPluginResult:(Lorg/apache/cordova/PluginResult;)V` @kind virtual;
+  #L278b0e.  goto L278af0;
+  #L278b10.  v11:= v10.`plugin.google.maps.PluginLocationService.regularAccuracyRequestList` @type ^`java.util.ArrayList` @kind object;
+  #L278b14.  call `clear`(v11) @signature `Ljava/util/ArrayList;.clear:()V` @kind virtual;
+  #L278b1a.  v11:= v10.`plugin.google.maps.PluginLocationService.highAccuracyRequestList` @type ^`java.util.ArrayList` @kind object;
+  #L278b1e.  call `clear`(v11) @signature `Ljava/util/ArrayList;.clear:()V` @kind virtual;
+  #L278b24.  @monitorexit v1
+  #L278b26.  return @kind void;
+  #L278b28.  v11:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L278b2a.  @monitorexit v1
+  #L278b2c.  throw v11;
+  #L278b2e.  v12:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L278b30.  @monitorexit v11
+  #L278b32.  throw v12;
+  #L278b34.  v11:= `@@plugin.google.maps.PluginLocationService.lastLocation` @type ^`android.location.Location` @kind object;
+  #L278b38.  if v11 == 0 then goto L278c10;
+  #L278b3c.  call temp:= `getInstance`() @signature `Ljava/util/Calendar;.getInstance:()Ljava/util/Calendar;` @kind static;
+  #L278b42.  v11:= temp @kind object;
+  #L278b44.  call temp:= `getTimeInMillis`(v11) @signature `Ljava/util/Calendar;.getTimeInMillis:()J` @kind virtual;
+  #L278b4a.  v1:= temp @kind wide;
+  #L278b4c.  v11:= `@@plugin.google.maps.PluginLocationService.lastLocation` @type ^`android.location.Location` @kind object;
+  #L278b50.  call temp:= `getTime`(v11) @signature `Landroid/location/Location;.getTime:()J` @kind virtual;
+  #L278b56.  v3:= temp @kind wide;
+  #L278b58.  v1:= v1 - v3 @kind long;
+  #L278b5a.  v3:= 2000L;
+  #L278b5e.  v11:= lcmp(v1, v3);
+  #L278b62.  if v11 > 0 then goto L278c10;
+  #L278b66.  v11:= `@@plugin.google.maps.PluginLocationService.lastLocation` @type ^`android.location.Location` @kind object;
+  #L278b6a.  call temp:= `location2Json`(v11) @signature `Lplugin/google/maps/PluginUtil;.location2Json:(Landroid/location/Location;)Lorg/json/JSONObject;` @kind static;
+  #L278b70.  v11:= temp @kind object;
+  #L278b72.  v12:= "status" @kind object;
+  #L278b76.  call temp:= `put`(v11, v12, v0) @signature `Lorg/json/JSONObject;.put:(Ljava/lang/String;Z)Lorg/json/JSONObject;` @kind virtual;
+  #L278b7c.  v12:= new `org.apache.cordova.PluginResult`;
+  #L278b80.  v0:= `@@org.apache.cordova.PluginResult$Status.OK` @type ^`org.apache.cordova.PluginResult$Status` @kind object;
+  #L278b84.  call `<init>`(v12, v0, v11) @signature `Lorg/apache/cordova/PluginResult;.<init>:(Lorg/apache/cordova/PluginResult$Status;Lorg/json/JSONObject;)V` @kind direct;
+  #L278b8a.  v11:= `@@plugin.google.maps.PluginLocationService.semaphore` @type ^`java.lang.Object` @kind object;
+  #L278b8e.  @monitorenter v11
+  #L278b90.  v0:= v10.`plugin.google.maps.PluginLocationService.regularAccuracyRequestList` @type ^`java.util.ArrayList` @kind object;
+  #L278b94.  call temp:= `iterator`(v0) @signature `Ljava/util/ArrayList;.iterator:()Ljava/util/Iterator;` @kind virtual;
+  #L278b9a.  v0:= temp @kind object;
+  #L278b9c.  call temp:= `hasNext`(v0) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L278ba2.  v1:= temp;
+  #L278ba4.  if v1 == 0 then goto L278bbc;
+  #L278ba8.  call temp:= `next`(v0) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L278bae.  v1:= temp @kind object;
+  #L278bb0.  v1:= (`org.apache.cordova.CallbackContext`) v1 @kind object;
+  #L278bb4.  call `sendPluginResult`(v1, v12) @signature `Lorg/apache/cordova/CallbackContext;.sendPluginResult:(Lorg/apache/cordova/PluginResult;)V` @kind virtual;
+  #L278bba.  goto L278b9c;
+  #L278bbc.  v0:= v10.`plugin.google.maps.PluginLocationService.highAccuracyRequestList` @type ^`java.util.ArrayList` @kind object;
+  #L278bc0.  call temp:= `iterator`(v0) @signature `Ljava/util/ArrayList;.iterator:()Ljava/util/Iterator;` @kind virtual;
+  #L278bc6.  v0:= temp @kind object;
+  #L278bc8.  call temp:= `hasNext`(v0) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L278bce.  v1:= temp;
+  #L278bd0.  if v1 == 0 then goto L278be8;
+  #L278bd4.  call temp:= `next`(v0) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L278bda.  v1:= temp @kind object;
+  #L278bdc.  v1:= (`org.apache.cordova.CallbackContext`) v1 @kind object;
+  #L278be0.  call `sendPluginResult`(v1, v12) @signature `Lorg/apache/cordova/CallbackContext;.sendPluginResult:(Lorg/apache/cordova/PluginResult;)V` @kind virtual;
+  #L278be6.  goto L278bc8;
+  #L278be8.  v12:= v10.`plugin.google.maps.PluginLocationService.regularAccuracyRequestList` @type ^`java.util.ArrayList` @kind object;
+  #L278bec.  call `clear`(v12) @signature `Ljava/util/ArrayList;.clear:()V` @kind virtual;
+  #L278bf2.  v12:= v10.`plugin.google.maps.PluginLocationService.highAccuracyRequestList` @type ^`java.util.ArrayList` @kind object;
+  #L278bf6.  call `clear`(v12) @signature `Ljava/util/ArrayList;.clear:()V` @kind virtual;
+  #L278bfc.  @monitorexit v11
+  #L278bfe.  goto L278c0e;
+  #L278c00.  v12:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L278c02.  @monitorexit v11
+  #L278c04.  throw v12;
+  #L278c06.  v11:= Exception @type ^`org.json.JSONException` @kind object;
+  #L278c08.  call `printStackTrace`(v11) @signature `Lorg/json/JSONException;.printStackTrace:()V` @kind virtual;
+  #L278c0e.  return @kind void;
+  #L278c10.  v11:= v10.`plugin.google.maps.PluginLocationService.googleApiClient` @type ^`com.google.android.gms.common.api.GoogleApiClient` @kind object;
+  #L278c14.  if v11 != 0 then goto L278c6e;
+  #L278c18.  v11:= new `com.google.android.gms.common.api.GoogleApiClient$Builder`;
+  #L278c1c.  v0:= v10.`plugin.google.maps.PluginLocationService.activity` @type ^`android.app.Activity` @kind object;
+  #L278c20.  call `<init>`(v11, v0) @signature `Lcom/google/android/gms/common/api/GoogleApiClient$Builder;.<init>:(Landroid/content/Context;)V` @kind direct;
+  #L278c26.  v0:= `@@com.google.android.gms.location.LocationServices.API` @type ^`com.google.android.gms.common.api.Api` @kind object;
+  #L278c2a.  call temp:= `addApi`(v11, v0) @signature `Lcom/google/android/gms/common/api/GoogleApiClient$Builder;.addApi:(Lcom/google/android/gms/common/api/Api;)Lcom/google/android/gms/common/api/GoogleApiClient$Builder;` @kind virtual;
+  #L278c30.  v11:= temp @kind object;
+  #L278c32.  v0:= new `plugin.google.maps.PluginLocationService$3`;
+  #L278c36.  call `<init>`(v0, v10, v12) @signature `Lplugin/google/maps/PluginLocationService$3;.<init>:(Lplugin/google/maps/PluginLocationService;Lorg/apache/cordova/CallbackContext;)V` @kind direct;
+  #L278c3c.  call temp:= `addConnectionCallbacks`(v11, v0) @signature `Lcom/google/android/gms/common/api/GoogleApiClient$Builder;.addConnectionCallbacks:(Lcom/google/android/gms/common/api/GoogleApiClient$ConnectionCallbacks;)Lcom/google/android/gms/common/api/GoogleApiClient$Builder;` @kind virtual;
+  #L278c42.  v11:= temp @kind object;
+  #L278c44.  v12:= new `plugin.google.maps.PluginLocationService$2`;
+  #L278c48.  call `<init>`(v12, v10) @signature `Lplugin/google/maps/PluginLocationService$2;.<init>:(Lplugin/google/maps/PluginLocationService;)V` @kind direct;
+  #L278c4e.  call temp:= `addOnConnectionFailedListener`(v11, v12) @signature `Lcom/google/android/gms/common/api/GoogleApiClient$Builder;.addOnConnectionFailedListener:(Lcom/google/android/gms/common/api/GoogleApiClient$OnConnectionFailedListener;)Lcom/google/android/gms/common/api/GoogleApiClient$Builder;` @kind virtual;
+  #L278c54.  v11:= temp @kind object;
+  #L278c56.  call temp:= `build`(v11) @signature `Lcom/google/android/gms/common/api/GoogleApiClient$Builder;.build:()Lcom/google/android/gms/common/api/GoogleApiClient;` @kind virtual;
+  #L278c5c.  v11:= temp @kind object;
+  #L278c5e.  v10.`plugin.google.maps.PluginLocationService.googleApiClient` @type ^`com.google.android.gms.common.api.GoogleApiClient` := v11 @kind object;
+  #L278c62.  v11:= v10.`plugin.google.maps.PluginLocationService.googleApiClient` @type ^`com.google.android.gms.common.api.GoogleApiClient` @kind object;
+  #L278c66.  call `connect`(v11) @signature `Lcom/google/android/gms/common/api/GoogleApiClient;.connect:()V` @kind virtual;
+  #L278c6c.  goto L278c9a;
+  #L278c6e.  call temp:= `isConnected`(v11) @signature `Lcom/google/android/gms/common/api/GoogleApiClient;.isConnected:()Z` @kind virtual;
+  #L278c74.  v11:= temp;
+  #L278c76.  if v11 == 0 then goto L278c82;
+  #L278c7a.  call `requestLocation`(v10) @signature `Lplugin/google/maps/PluginLocationService;.requestLocation:()V` @kind direct;
+  #L278c80.  goto L278c9a;
+  #L278c82.  v11:= "PluginLocationService" @kind object;
+  #L278c86.  v12:= "===> googleApiClient.isConnected() is not connected" @kind object;
+  #L278c8a.  call temp:= `e`(v11, v12) @signature `Landroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/String;)I` @kind static;
+  #L278c90.  v11:= v10.`plugin.google.maps.PluginLocationService.googleApiClient` @type ^`com.google.android.gms.common.api.GoogleApiClient` @kind object;
+  #L278c94.  call `connect`(v11) @signature `Lcom/google/android/gms/common/api/GoogleApiClient;.connect:()V` @kind virtual;
+  #L278c9a.  return @kind void;
+  #L278c9c.  v11:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L278c9e.  @monitorexit v0
+  #L278ca0.  throw v11;
+  #L278ca2.  return @kind void;
+  catch `java.lang.Throwable` @[L27881e..L2788f2] goto L278c9c;
+  catch `org.json.JSONException` @[L2788f2..L278924] goto L278926;
+  catch `java.lang.Throwable` @[L2788f2..L278924] goto L278c9c;
+  catch `java.lang.Throwable` @[L278928..L27897e] goto L278c9c;
+  catch `org.json.JSONException` @[L27897e..L2789b0] goto L2789b2;
+  catch `java.lang.Throwable` @[L27897e..L2789b0] goto L278c9c;
+  catch `java.lang.Throwable` @[L2789b4..L2789fc] goto L278c9c;
+  catch `java.lang.Throwable` @[L278a32..L278a54] goto L278b2e;
+  catch `java.lang.InterruptedException` @[L278a54..L278a5e] goto L278a60;
+  catch `java.lang.Throwable` @[L278a54..L278a5e] goto L278b2e;
+  catch `java.lang.Throwable` @[L278a62..L278a6a] goto L278b2e;
+  catch `java.lang.Throwable` @[L278ab8..L278b2c] goto L278b28;
+  catch `java.lang.Throwable` @[L278b30..L278b32] goto L278b2e;
+  catch `org.json.JSONException` @[L278b66..L278b90] goto L278c06;
+  catch `java.lang.Throwable` @[L278b90..L278c04] goto L278c00;
+  catch `org.json.JSONException` @[L278c04..L278c06] goto L278c06;
+  catch `java.lang.Throwable` @[L278c9e..L278ca0] goto L278c9c;
+}
+procedure `void` `hasPermission`(`plugin.google.maps.PluginLocationService` v3 @kind this, `org.json.JSONArray` v4 @kind object, `org.apache.cordova.CallbackContext` v5 @kind object) @signature `Lplugin/google/maps/PluginLocationService;.hasPermission:(Lorg/json/JSONArray;Lorg/apache/cordova/CallbackContext;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L278d4c.  v4:= `@@plugin.google.maps.PluginLocationService.semaphore` @type ^`java.lang.Object` @kind object;
+  #L278d50.  @monitorenter v4
+  #L278d52.  v0:= v3.`plugin.google.maps.PluginLocationService.cordova` @type ^`org.apache.cordova.CordovaInterface` @kind object;
+  #L278d56.  call temp:= `getActivity`(v0) @signature `Lorg/apache/cordova/CordovaInterface;.getActivity:()Landroid/app/Activity;` @kind interface;
+  #L278d5c.  v0:= temp @kind object;
+  #L278d5e.  call temp:= `getApplicationContext`(v0) @signature `Landroid/app/Activity;.getApplicationContext:()Landroid/content/Context;` @kind virtual;
+  #L278d64.  v0:= temp @kind object;
+  #L278d66.  v1:= "android.permission.ACCESS_COARSE_LOCATION" @kind object;
+  #L278d6a.  call temp:= `checkSelfPermission`(v0, v1) @signature `Landroid/support/v4/content/PermissionChecker;.checkSelfPermission:(Landroid/content/Context;Ljava/lang/String;)I` @kind static;
+  #L278d70.  v0:= temp;
+  #L278d72.  v1:= 1I;
+  #L278d74.  v2:= 0I;
+  #L278d76.  if v0 != 0 then goto L278d7e;
+  #L278d7a.  v0:= 1I;
+  #L278d7c.  goto L278d80;
+  #L278d7e.  v0:= 0I;
+  #L278d80.  if v0 == 0 then goto L278d86;
+  #L278d84.  goto L278d88;
+  #L278d86.  v1:= 0I;
+  #L278d88.  call `success`(v5, v1) @signature `Lorg/apache/cordova/CallbackContext;.success:(I)V` @kind virtual;
+  #L278d8e.  @monitorexit v4
+  #L278d90.  return @kind void;
+  #L278d92.  v5:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L278d94.  @monitorexit v4
+  #L278d96.  throw v5;
+  catch `java.lang.Throwable` @[L278d52..L278d96] goto L278d92;
+}
+procedure `void` `initialize`(`plugin.google.maps.PluginLocationService` v0 @kind this, `org.apache.cordova.CordovaInterface` v1 @kind object, `org.apache.cordova.CordovaWebView` v2 @kind object) @signature `Lplugin/google/maps/PluginLocationService;.initialize:(Lorg/apache/cordova/CordovaInterface;Lorg/apache/cordova/CordovaWebView;)V` @AccessFlag PUBLIC {
+    temp;
+
+  #L278db4.  call `initialize`(v0, v1, v2) @signature `Lorg/apache/cordova/CordovaPlugin;.initialize:(Lorg/apache/cordova/CordovaInterface;Lorg/apache/cordova/CordovaWebView;)V` @kind super;
+  #L278dba.  call temp:= `getActivity`(v1) @signature `Lorg/apache/cordova/CordovaInterface;.getActivity:()Landroid/app/Activity;` @kind interface;
+  #L278dc0.  v1:= temp @kind object;
+  #L278dc2.  v0.`plugin.google.maps.PluginLocationService.activity` @type ^`android.app.Activity` := v1 @kind object;
+  #L278dc6.  return @kind void;
+}
+procedure `void` `onActivityResult`(`plugin.google.maps.PluginLocationService` v2 @kind this, `int` v3 , `int` v4 , `android.content.Intent` v5 @kind object) @signature `Lplugin/google/maps/PluginLocationService;.onActivityResult:(IILandroid/content/Intent;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L278dd8.  call `onActivityResult`(v2, v3, v4, v5) @signature `Lorg/apache/cordova/CordovaPlugin;.onActivityResult:(IILandroid/content/Intent;)V` @kind super;
+  #L278dde.  v5:= v2.`plugin.google.maps.PluginLocationService.bufferForLocationDialog` @type ^`java.util.HashMap` @kind object;
+  #L278de2.  v0:= new `java.lang.StringBuilder`;
+  #L278de6.  call `<init>`(v0) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L278dec.  v1:= "bundle_" @kind object;
+  #L278df0.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L278df6.  call temp:= `append`(v0, v3) @signature `Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder;` @kind virtual;
+  #L278dfc.  call temp:= `toString`(v0) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L278e02.  v0:= temp @kind object;
+  #L278e04.  call temp:= `containsKey`(v5, v0) @signature `Ljava/util/HashMap;.containsKey:(Ljava/lang/Object;)Z` @kind virtual;
+  #L278e0a.  v5:= temp;
+  #L278e0c.  if v5 != 0 then goto L278e20;
+  #L278e10.  v3:= "PluginLocationService" @kind object;
+  #L278e14.  v4:= "no key" @kind object;
+  #L278e18.  call temp:= `e`(v3, v4) @signature `Landroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/String;)I` @kind static;
+  #L278e1e.  return @kind void;
+  #L278e20.  v5:= v2.`plugin.google.maps.PluginLocationService.bufferForLocationDialog` @type ^`java.util.HashMap` @kind object;
+  #L278e24.  v0:= new `java.lang.StringBuilder`;
+  #L278e28.  call `<init>`(v0) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L278e2e.  v1:= "bundle_" @kind object;
+  #L278e32.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L278e38.  call temp:= `append`(v0, v3) @signature `Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder;` @kind virtual;
+  #L278e3e.  call temp:= `toString`(v0) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L278e44.  v3:= temp @kind object;
+  #L278e46.  call temp:= `get`(v5, v3) @signature `Ljava/util/HashMap;.get:(Ljava/lang/Object;)Ljava/lang/Object;` @kind virtual;
+  #L278e4c.  v3:= temp @kind object;
+  #L278e4e.  v3:= (`android.os.Bundle`) v3 @kind object;
+  #L278e52.  v5:= "PluginLocationService" @kind object;
+  #L278e56.  v0:= new `java.lang.StringBuilder`;
+  #L278e5a.  call `<init>`(v0) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L278e60.  v1:= "====> onActivityResult (" @kind object;
+  #L278e64.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L278e6a.  call temp:= `append`(v0, v4) @signature `Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder;` @kind virtual;
+  #L278e70.  v1:= ")" @kind object;
+  #L278e74.  call temp:= `append`(v0, v1) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L278e7a.  call temp:= `toString`(v0) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L278e80.  v0:= temp @kind object;
+  #L278e82.  call temp:= `d`(v5, v0) @signature `Landroid/util/Log;.d:(Ljava/lang/String;Ljava/lang/String;)I` @kind static;
+  #L278e88.  v5:= "type" @kind object;
+  #L278e8c.  call temp:= `getInt`(v3, v5) @signature `Landroid/os/Bundle;.getInt:(Ljava/lang/String;)I` @kind virtual;
+  #L278e92.  v5:= temp;
+  #L278e94.  goto L278ebc;
+  #L278e9a.  goto L278eba;
+  #L278e9c.  call `_onActivityResultLocationPage`(v2, v3) @signature `Lplugin/google/maps/PluginLocationService;._onActivityResultLocationPage:(Landroid/os/Bundle;)V` @kind direct;
+  #L278ea2.  goto L278eba;
+  #L278ea4.  goto L278ecc;
+  #L278eaa.  goto L278eba;
+  #L278eac.  call `_userRefusedToUseLocationAfterActivityResult`(v2, v3) @signature `Lplugin/google/maps/PluginLocationService;._userRefusedToUseLocationAfterActivityResult:(Landroid/os/Bundle;)V` @kind direct;
+  #L278eb2.  goto L278eba;
+  #L278eb4.  call `_inviteLocationUpdateAfterActivityResult`(v2, v3) @signature `Lplugin/google/maps/PluginLocationService;._inviteLocationUpdateAfterActivityResult:(Landroid/os/Bundle;)V` @kind direct;
+  #L278eba.  return @kind void;
+  #L278ebc.  switch v5
+                  | 2140772608 => goto L278ea4
+                  | 2140772609 => goto L278e9c
+                  | else => goto L278e9a;
+  #L278ecc.  switch v4
+                  | -1 => goto L278eb4
+                  | 0 => goto L278eac
+                  | else => goto L278eaa;
+}
+procedure `void` `onRequestPermissionResult`(`plugin.google.maps.PluginLocationService` v0 @kind this, `int` v1 , `java.lang.String`[] v2 @kind object, `int`[] v3 @kind object) @signature `Lplugin/google/maps/PluginLocationService;.onRequestPermissionResult:(I[Ljava/lang/String;[I)V` @AccessFlag PUBLIC {
+    temp;
+
+  #L278eec.  v1:= `@@plugin.google.maps.PluginLocationService.semaphore` @type ^`java.lang.Object` @kind object;
+  #L278ef0.  @monitorenter v1
+  #L278ef2.  v2:= `@@plugin.google.maps.PluginLocationService.semaphore` @type ^`java.lang.Object` @kind object;
+  #L278ef6.  call `notify`(v2) @signature `Ljava/lang/Object;.notify:()V` @kind virtual;
+  #L278efc.  @monitorexit v1
+  #L278efe.  return @kind void;
+  #L278f00.  v2:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L278f02.  @monitorexit v1
+  #L278f04.  throw v2;
+  catch `java.lang.Throwable` @[L278ef2..L278f04] goto L278f00;
+}

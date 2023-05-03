@@ -1,0 +1,1 @@
+define(["jquery","underscore","Backbone","text!views/errors/InternetUnavailableException.tpl"],function(e,t,n,r){var i=(new EncryptedLocalStorage("secret"),n.View.extend({el:"#container",events:{},render:function(){return hideSpinner(),this.$el.html(t.template(r)).i18n(),this.$el.trigger("create"),this}}));return i});

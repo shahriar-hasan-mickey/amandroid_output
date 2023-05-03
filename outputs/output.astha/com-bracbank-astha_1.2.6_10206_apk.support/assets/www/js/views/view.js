@@ -1,0 +1,1 @@
+define(["jquery","Backbone","underscore","models/model","text!templates/main.html"],function(e,t,n,i,l){var m=t.View.extend({el:"#main",initialize:function(){this.model=new i({message:"Hello World"}),this.template=n.template(l,{model:this.model.toJSON()})},render:function(){e(this.el).append(this.template)}});return new m});

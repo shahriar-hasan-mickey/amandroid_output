@@ -1,0 +1,649 @@
+record `plugin.google.maps.MyPluginLayout` @kind class @AccessFlag PUBLIC extends `android.widget.FrameLayout` @kind class, `android.view.ViewTreeObserver$OnScrollChangedListener` @kind interface, `android.view.ViewTreeObserver$OnGlobalLayoutListener` @kind interface {
+  `java.util.Map` `plugin.google.maps.MyPluginLayout.CACHE_FIND_DOM` @AccessFlag PUBLIC;
+  `java.util.Map` `plugin.google.maps.MyPluginLayout.HTMLNodeRectFs` @AccessFlag PUBLIC;
+  `java.util.Map` `plugin.google.maps.MyPluginLayout.HTMLNodes` @AccessFlag PUBLIC;
+  `java.lang.Object` `plugin.google.maps.MyPluginLayout._lockHtmlNodes` @AccessFlag PUBLIC_FINAL;
+  `android.view.View` `plugin.google.maps.MyPluginLayout.browserView` @AccessFlag PRIVATE;
+  `android.content.Context` `plugin.google.maps.MyPluginLayout.context` @AccessFlag PRIVATE;
+  `android.graphics.Paint` `plugin.google.maps.MyPluginLayout.debugPaint` @AccessFlag PRIVATE;
+  `plugin.google.maps.MyPluginLayout$FrontLayerLayout` `plugin.google.maps.MyPluginLayout.frontLayer` @AccessFlag PRIVATE;
+  `boolean` `plugin.google.maps.MyPluginLayout.isDebug` @AccessFlag PUBLIC;
+  `boolean` `plugin.google.maps.MyPluginLayout.isScrolling` @AccessFlag PRIVATE;
+  `boolean` `plugin.google.maps.MyPluginLayout.isSuspended` @AccessFlag PUBLIC;
+  `android.app.Activity` `plugin.google.maps.MyPluginLayout.mActivity` @AccessFlag PRIVATE;
+  `boolean` `plugin.google.maps.MyPluginLayout.needUpdatePosition` @AccessFlag PUBLIC;
+  `java.util.Map` `plugin.google.maps.MyPluginLayout.pluginOverlays` @AccessFlag PUBLIC;
+  `java.lang.Runnable` `plugin.google.maps.MyPluginLayout.resizeWorker` @AccessFlag PRIVATE;
+  `android.widget.FrameLayout` `plugin.google.maps.MyPluginLayout.scrollFrameLayout` @AccessFlag PUBLIC;
+  `android.widget.ScrollView` `plugin.google.maps.MyPluginLayout.scrollView` @AccessFlag PRIVATE;
+  `boolean` `plugin.google.maps.MyPluginLayout.stopFlag` @AccessFlag PUBLIC;
+  `java.util.Map` `plugin.google.maps.MyPluginLayout.touchableWrappers` @AccessFlag PRIVATE;
+  `float` `plugin.google.maps.MyPluginLayout.zoomScale` @AccessFlag PRIVATE;
+}
+global `java.lang.String` `@@plugin.google.maps.MyPluginLayout.TAG` @AccessFlag PRIVATE_STATIC_FINAL;
+global `java.util.Timer` `@@plugin.google.maps.MyPluginLayout.redrawTimer` @AccessFlag PRIVATE_STATIC;
+global `java.lang.Object` `@@plugin.google.maps.MyPluginLayout.timerLock` @AccessFlag PRIVATE_STATIC_FINAL;
+procedure `void` `<clinit>`() @signature `Lplugin/google/maps/MyPluginLayout;.<clinit>:()V` @AccessFlag STATIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L27394c.  v0:= new `java.lang.Object`;
+  #L273950.  call `<init>`(v0) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L273956.  `@@plugin.google.maps.MyPluginLayout.timerLock` @type ^`java.lang.Object` := v0 @kind object;
+  #L27395a.  return @kind void;
+}
+procedure `void` `<init>`(`plugin.google.maps.MyPluginLayout` v4 @kind this, `org.apache.cordova.CordovaWebView` v5 @kind object, `android.app.Activity` v6 @kind object) @signature `Lplugin/google/maps/MyPluginLayout;.<init>:(Lorg/apache/cordova/CordovaWebView;Landroid/app/Activity;)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+
+  #L27396c.  call temp:= `getView`(v5) @signature `Lorg/apache/cordova/CordovaWebView;.getView:()Landroid/view/View;` @kind interface;
+  #L273972.  v0:= temp @kind object;
+  #L273974.  call temp:= `getContext`(v0) @signature `Landroid/view/View;.getContext:()Landroid/content/Context;` @kind virtual;
+  #L27397a.  v0:= temp @kind object;
+  #L27397c.  call `<init>`(v4, v0) @signature `Landroid/widget/FrameLayout;.<init>:(Landroid/content/Context;)V` @kind direct;
+  #L273982.  v0:= new `java.util.concurrent.ConcurrentHashMap`;
+  #L273986.  call `<init>`(v0) @signature `Ljava/util/concurrent/ConcurrentHashMap;.<init>:()V` @kind direct;
+  #L27398c.  v4.`plugin.google.maps.MyPluginLayout.pluginOverlays` @type ^`java.util.Map` := v0 @kind object;
+  #L273990.  v0:= new `java.util.concurrent.ConcurrentHashMap`;
+  #L273994.  call `<init>`(v0) @signature `Ljava/util/concurrent/ConcurrentHashMap;.<init>:()V` @kind direct;
+  #L27399a.  v4.`plugin.google.maps.MyPluginLayout.touchableWrappers` @type ^`java.util.Map` := v0 @kind object;
+  #L27399e.  v0:= 0I;
+  #L2739a0.  v4.`plugin.google.maps.MyPluginLayout.isScrolling` @type ^`boolean` := v0 @kind boolean;
+  #L2739a4.  v4.`plugin.google.maps.MyPluginLayout.isDebug` @type ^`boolean` := v0 @kind boolean;
+  #L2739a8.  v1:= new `java.lang.Object`;
+  #L2739ac.  call `<init>`(v1) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L2739b2.  v4.`plugin.google.maps.MyPluginLayout._lockHtmlNodes` @type ^`java.lang.Object` := v1 @kind object;
+  #L2739b6.  v1:= new `java.util.concurrent.ConcurrentHashMap`;
+  #L2739ba.  call `<init>`(v1) @signature `Ljava/util/concurrent/ConcurrentHashMap;.<init>:()V` @kind direct;
+  #L2739c0.  v4.`plugin.google.maps.MyPluginLayout.CACHE_FIND_DOM` @type ^`java.util.Map` := v1 @kind object;
+  #L2739c4.  v1:= new `java.util.concurrent.ConcurrentHashMap`;
+  #L2739c8.  call `<init>`(v1) @signature `Ljava/util/concurrent/ConcurrentHashMap;.<init>:()V` @kind direct;
+  #L2739ce.  v4.`plugin.google.maps.MyPluginLayout.HTMLNodes` @type ^`java.util.Map` := v1 @kind object;
+  #L2739d2.  v1:= new `java.util.concurrent.ConcurrentHashMap`;
+  #L2739d6.  call `<init>`(v1) @signature `Ljava/util/concurrent/ConcurrentHashMap;.<init>:()V` @kind direct;
+  #L2739dc.  v4.`plugin.google.maps.MyPluginLayout.HTMLNodeRectFs` @type ^`java.util.Map` := v1 @kind object;
+  #L2739e0.  v1:= 0I;
+  #L2739e2.  v4.`plugin.google.maps.MyPluginLayout.mActivity` @type ^`android.app.Activity` := v1 @kind object;
+  #L2739e6.  v1:= new `android.graphics.Paint`;
+  #L2739ea.  call `<init>`(v1) @signature `Landroid/graphics/Paint;.<init>:()V` @kind direct;
+  #L2739f0.  v4.`plugin.google.maps.MyPluginLayout.debugPaint` @type ^`android.graphics.Paint` := v1 @kind object;
+  #L2739f4.  v4.`plugin.google.maps.MyPluginLayout.stopFlag` @type ^`boolean` := v0 @kind boolean;
+  #L2739f8.  v4.`plugin.google.maps.MyPluginLayout.needUpdatePosition` @type ^`boolean` := v0 @kind boolean;
+  #L2739fc.  v4.`plugin.google.maps.MyPluginLayout.isSuspended` @type ^`boolean` := v0 @kind boolean;
+  #L273a00.  v1:= new `plugin.google.maps.MyPluginLayout$1`;
+  #L273a04.  call `<init>`(v1, v4) @signature `Lplugin/google/maps/MyPluginLayout$1;.<init>:(Lplugin/google/maps/MyPluginLayout;)V` @kind direct;
+  #L273a0a.  v4.`plugin.google.maps.MyPluginLayout.resizeWorker` @type ^`java.lang.Runnable` := v1 @kind object;
+  #L273a0e.  call temp:= `getView`(v5) @signature `Lorg/apache/cordova/CordovaWebView;.getView:()Landroid/view/View;` @kind interface;
+  #L273a14.  v5:= temp @kind object;
+  #L273a16.  v4.`plugin.google.maps.MyPluginLayout.browserView` @type ^`android.view.View` := v5 @kind object;
+  #L273a1a.  v5:= v4.`plugin.google.maps.MyPluginLayout.browserView` @type ^`android.view.View` @kind object;
+  #L273a1e.  call temp:= `getViewTreeObserver`(v5) @signature `Landroid/view/View;.getViewTreeObserver:()Landroid/view/ViewTreeObserver;` @kind virtual;
+  #L273a24.  v5:= temp @kind object;
+  #L273a26.  call `addOnGlobalLayoutListener`(v5, v4) @signature `Landroid/view/ViewTreeObserver;.addOnGlobalLayoutListener:(Landroid/view/ViewTreeObserver$OnGlobalLayoutListener;)V` @kind virtual;
+  #L273a2c.  v4.`plugin.google.maps.MyPluginLayout.mActivity` @type ^`android.app.Activity` := v6 @kind object;
+  #L273a30.  v5:= v4.`plugin.google.maps.MyPluginLayout.browserView` @type ^`android.view.View` @kind object;
+  #L273a34.  call temp:= `getParent`(v5) @signature `Landroid/view/View;.getParent:()Landroid/view/ViewParent;` @kind virtual;
+  #L273a3a.  v5:= temp @kind object;
+  #L273a3c.  v5:= (`android.view.ViewGroup`) v5 @kind object;
+  #L273a40.  v6:= v4.`plugin.google.maps.MyPluginLayout.browserView` @type ^`android.view.View` @kind object;
+  #L273a44.  call temp:= `getContext`(v6) @signature `Landroid/view/View;.getContext:()Landroid/content/Context;` @kind virtual;
+  #L273a4a.  v6:= temp @kind object;
+  #L273a4c.  v4.`plugin.google.maps.MyPluginLayout.context` @type ^`android.content.Context` := v6 @kind object;
+  #L273a50.  call temp:= `getSystem`() @signature `Landroid/content/res/Resources;.getSystem:()Landroid/content/res/Resources;` @kind static;
+  #L273a56.  v6:= temp @kind object;
+  #L273a58.  call temp:= `getDisplayMetrics`(v6) @signature `Landroid/content/res/Resources;.getDisplayMetrics:()Landroid/util/DisplayMetrics;` @kind virtual;
+  #L273a5e.  v6:= temp @kind object;
+  #L273a60.  v6:= v6.`android.util.DisplayMetrics.density` @type ^`float`;
+  #L273a64.  v4.`plugin.google.maps.MyPluginLayout.zoomScale` @type ^`float` := v6;
+  #L273a68.  v6:= "MyPluginLayout" @kind object;
+  #L273a6c.  v1:= new `java.lang.StringBuilder`;
+  #L273a70.  call `<init>`(v1) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L273a76.  v2:= "--> zoomScale = " @kind object;
+  #L273a7a.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L273a80.  v2:= v4.`plugin.google.maps.MyPluginLayout.zoomScale` @type ^`float`;
+  #L273a84.  call temp:= `append`(v1, v2) @signature `Ljava/lang/StringBuilder;.append:(F)Ljava/lang/StringBuilder;` @kind virtual;
+  #L273a8a.  call temp:= `toString`(v1) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L273a90.  v1:= temp @kind object;
+  #L273a92.  call temp:= `e`(v6, v1) @signature `Landroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/String;)I` @kind static;
+  #L273a98.  v6:= new `plugin.google.maps.MyPluginLayout$FrontLayerLayout`;
+  #L273a9c.  v1:= v4.`plugin.google.maps.MyPluginLayout.context` @type ^`android.content.Context` @kind object;
+  #L273aa0.  call `<init>`(v6, v4, v1) @signature `Lplugin/google/maps/MyPluginLayout$FrontLayerLayout;.<init>:(Lplugin/google/maps/MyPluginLayout;Landroid/content/Context;)V` @kind direct;
+  #L273aa6.  v4.`plugin.google.maps.MyPluginLayout.frontLayer` @type ^`plugin.google.maps.MyPluginLayout$FrontLayerLayout` := v6 @kind object;
+  #L273aaa.  v6:= new `android.widget.ScrollView`;
+  #L273aae.  v1:= v4.`plugin.google.maps.MyPluginLayout.context` @type ^`android.content.Context` @kind object;
+  #L273ab2.  call `<init>`(v6, v1) @signature `Landroid/widget/ScrollView;.<init>:(Landroid/content/Context;)V` @kind direct;
+  #L273ab8.  v4.`plugin.google.maps.MyPluginLayout.scrollView` @type ^`android.widget.ScrollView` := v6 @kind object;
+  #L273abc.  v6:= v4.`plugin.google.maps.MyPluginLayout.scrollView` @type ^`android.widget.ScrollView` @kind object;
+  #L273ac0.  v1:= new `android.widget.FrameLayout$LayoutParams`;
+  #L273ac4.  v2:= -1I;
+  #L273ac6.  call `<init>`(v1, v2, v2) @signature `Landroid/widget/FrameLayout$LayoutParams;.<init>:(II)V` @kind direct;
+  #L273acc.  call `setLayoutParams`(v6, v1) @signature `Landroid/widget/ScrollView;.setLayoutParams:(Landroid/view/ViewGroup$LayoutParams;)V` @kind virtual;
+  #L273ad2.  v6:= v4.`plugin.google.maps.MyPluginLayout.browserView` @type ^`android.view.View` @kind object;
+  #L273ad6.  call `removeView`(v5, v6) @signature `Landroid/view/ViewGroup;.removeView:(Landroid/view/View;)V` @kind virtual;
+  #L273adc.  v6:= v4.`plugin.google.maps.MyPluginLayout.frontLayer` @type ^`plugin.google.maps.MyPluginLayout$FrontLayerLayout` @kind object;
+  #L273ae0.  v1:= v4.`plugin.google.maps.MyPluginLayout.browserView` @type ^`android.view.View` @kind object;
+  #L273ae4.  call `addView`(v6, v1) @signature `Lplugin/google/maps/MyPluginLayout$FrontLayerLayout;.addView:(Landroid/view/View;)V` @kind virtual;
+  #L273aea.  v6:= new `android.widget.FrameLayout`;
+  #L273aee.  v1:= v4.`plugin.google.maps.MyPluginLayout.context` @type ^`android.content.Context` @kind object;
+  #L273af2.  call `<init>`(v6, v1) @signature `Landroid/widget/FrameLayout;.<init>:(Landroid/content/Context;)V` @kind direct;
+  #L273af8.  v4.`plugin.google.maps.MyPluginLayout.scrollFrameLayout` @type ^`android.widget.FrameLayout` := v6 @kind object;
+  #L273afc.  v6:= v4.`plugin.google.maps.MyPluginLayout.scrollFrameLayout` @type ^`android.widget.FrameLayout` @kind object;
+  #L273b00.  v1:= new `android.widget.FrameLayout$LayoutParams`;
+  #L273b04.  v3:= -2I;
+  #L273b06.  call `<init>`(v1, v2, v3) @signature `Landroid/widget/FrameLayout$LayoutParams;.<init>:(II)V` @kind direct;
+  #L273b0c.  call `setLayoutParams`(v6, v1) @signature `Landroid/widget/FrameLayout;.setLayoutParams:(Landroid/view/ViewGroup$LayoutParams;)V` @kind virtual;
+  #L273b12.  v6:= new `android.view.View`;
+  #L273b16.  v1:= v4.`plugin.google.maps.MyPluginLayout.context` @type ^`android.content.Context` @kind object;
+  #L273b1a.  call `<init>`(v6, v1) @signature `Landroid/view/View;.<init>:(Landroid/content/Context;)V` @kind direct;
+  #L273b20.  v1:= new `android.widget.FrameLayout$LayoutParams`;
+  #L273b24.  v2:= 1I;
+  #L273b26.  v3:= 99999I;
+  #L273b2c.  call `<init>`(v1, v2, v3) @signature `Landroid/widget/FrameLayout$LayoutParams;.<init>:(II)V` @kind direct;
+  #L273b32.  call `setLayoutParams`(v6, v1) @signature `Landroid/view/View;.setLayoutParams:(Landroid/view/ViewGroup$LayoutParams;)V` @kind virtual;
+  #L273b38.  v1:= v4.`plugin.google.maps.MyPluginLayout.scrollFrameLayout` @type ^`android.widget.FrameLayout` @kind object;
+  #L273b3c.  call `addView`(v1, v6) @signature `Landroid/widget/FrameLayout;.addView:(Landroid/view/View;)V` @kind virtual;
+  #L273b42.  v6:= v4.`plugin.google.maps.MyPluginLayout.scrollView` @type ^`android.widget.ScrollView` @kind object;
+  #L273b46.  call `setHorizontalScrollBarEnabled`(v6, v2) @signature `Landroid/widget/ScrollView;.setHorizontalScrollBarEnabled:(Z)V` @kind virtual;
+  #L273b4c.  v6:= v4.`plugin.google.maps.MyPluginLayout.scrollView` @type ^`android.widget.ScrollView` @kind object;
+  #L273b50.  call `setVerticalScrollBarEnabled`(v6, v2) @signature `Landroid/widget/ScrollView;.setVerticalScrollBarEnabled:(Z)V` @kind virtual;
+  #L273b56.  v6:= v4.`plugin.google.maps.MyPluginLayout.scrollView` @type ^`android.widget.ScrollView` @kind object;
+  #L273b5a.  v1:= v4.`plugin.google.maps.MyPluginLayout.scrollFrameLayout` @type ^`android.widget.FrameLayout` @kind object;
+  #L273b5e.  call `addView`(v6, v1) @signature `Landroid/widget/ScrollView;.addView:(Landroid/view/View;)V` @kind virtual;
+  #L273b64.  v6:= v4.`plugin.google.maps.MyPluginLayout.browserView` @type ^`android.view.View` @kind object;
+  #L273b68.  call `setDrawingCacheEnabled`(v6, v0) @signature `Landroid/view/View;.setDrawingCacheEnabled:(Z)V` @kind virtual;
+  #L273b6e.  v6:= v4.`plugin.google.maps.MyPluginLayout.scrollView` @type ^`android.widget.ScrollView` @kind object;
+  #L273b72.  call `addView`(v4, v6) @signature `Lplugin/google/maps/MyPluginLayout;.addView:(Landroid/view/View;)V` @kind virtual;
+  #L273b78.  v6:= v4.`plugin.google.maps.MyPluginLayout.frontLayer` @type ^`plugin.google.maps.MyPluginLayout$FrontLayerLayout` @kind object;
+  #L273b7c.  call `addView`(v4, v6) @signature `Lplugin/google/maps/MyPluginLayout;.addView:(Landroid/view/View;)V` @kind virtual;
+  #L273b82.  call `addView`(v5, v4) @signature `Landroid/view/ViewGroup;.addView:(Landroid/view/View;)V` @kind virtual;
+  #L273b88.  v5:= v4.`plugin.google.maps.MyPluginLayout.browserView` @type ^`android.view.View` @kind object;
+  #L273b8c.  call `setBackgroundColor`(v5, v0) @signature `Landroid/view/View;.setBackgroundColor:(I)V` @kind virtual;
+  #L273b92.  v5:= v4.`plugin.google.maps.MyPluginLayout.scrollView` @type ^`android.widget.ScrollView` @kind object;
+  #L273b96.  call `setHorizontalScrollBarEnabled`(v5, v0) @signature `Landroid/widget/ScrollView;.setHorizontalScrollBarEnabled:(Z)V` @kind virtual;
+  #L273b9c.  v5:= v4.`plugin.google.maps.MyPluginLayout.scrollView` @type ^`android.widget.ScrollView` @kind object;
+  #L273ba0.  call `setVerticalScrollBarEnabled`(v5, v0) @signature `Landroid/widget/ScrollView;.setVerticalScrollBarEnabled:(Z)V` @kind virtual;
+  #L273ba6.  call `startTimer`(v4) @signature `Lplugin/google/maps/MyPluginLayout;.startTimer:()V` @kind virtual;
+  #L273bac.  return @kind void;
+}
+procedure `android.view.View` `access$000`(`plugin.google.maps.MyPluginLayout` v0 @kind object) @signature `Lplugin/google/maps/MyPluginLayout;.access$000:(Lplugin/google/maps/MyPluginLayout;)Landroid/view/View;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L27386c.  v0:= v0.`plugin.google.maps.MyPluginLayout.browserView` @type ^`android.view.View` @kind object;
+  #L273870.  return v0 @kind object;
+}
+procedure `java.util.Map` `access$100`(`plugin.google.maps.MyPluginLayout` v0 @kind object) @signature `Lplugin/google/maps/MyPluginLayout;.access$100:(Lplugin/google/maps/MyPluginLayout;)Ljava/util/Map;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L2738e4.  v0:= v0.`plugin.google.maps.MyPluginLayout.touchableWrappers` @type ^`java.util.Map` @kind object;
+  #L2738e8.  return v0 @kind object;
+}
+procedure `java.lang.Runnable` `access$200`(`plugin.google.maps.MyPluginLayout` v0 @kind object) @signature `Lplugin/google/maps/MyPluginLayout;.access$200:(Lplugin/google/maps/MyPluginLayout;)Ljava/lang/Runnable;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L2738cc.  v0:= v0.`plugin.google.maps.MyPluginLayout.resizeWorker` @type ^`java.lang.Runnable` @kind object;
+  #L2738d0.  return v0 @kind object;
+}
+procedure `android.app.Activity` `access$300`(`plugin.google.maps.MyPluginLayout` v0 @kind object) @signature `Lplugin/google/maps/MyPluginLayout;.access$300:(Lplugin/google/maps/MyPluginLayout;)Landroid/app/Activity;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L273824.  v0:= v0.`plugin.google.maps.MyPluginLayout.mActivity` @type ^`android.app.Activity` @kind object;
+  #L273828.  return v0 @kind object;
+}
+procedure `android.content.Context` `access$500`(`plugin.google.maps.MyPluginLayout` v0 @kind object) @signature `Lplugin/google/maps/MyPluginLayout;.access$500:(Lplugin/google/maps/MyPluginLayout;)Landroid/content/Context;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L27383c.  v0:= v0.`plugin.google.maps.MyPluginLayout.context` @type ^`android.content.Context` @kind object;
+  #L273840.  return v0 @kind object;
+}
+procedure `boolean` `access$700`(`plugin.google.maps.MyPluginLayout` v0 @kind object) @signature `Lplugin/google/maps/MyPluginLayout;.access$700:(Lplugin/google/maps/MyPluginLayout;)Z` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L27389c.  v0:= v0.`plugin.google.maps.MyPluginLayout.isScrolling` @type ^`boolean` @kind boolean;
+  #L2738a0.  return v0;
+}
+procedure `boolean` `access$702`(`plugin.google.maps.MyPluginLayout` v0 @kind object, `boolean` v1 ) @signature `Lplugin/google/maps/MyPluginLayout;.access$702:(Lplugin/google/maps/MyPluginLayout;Z)Z` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L2738b4.  v0.`plugin.google.maps.MyPluginLayout.isScrolling` @type ^`boolean` := v1 @kind boolean;
+  #L2738b8.  return v1;
+}
+procedure `android.graphics.Paint` `access$800`(`plugin.google.maps.MyPluginLayout` v0 @kind object) @signature `Lplugin/google/maps/MyPluginLayout;.access$800:(Lplugin/google/maps/MyPluginLayout;)Landroid/graphics/Paint;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L273854.  v0:= v0.`plugin.google.maps.MyPluginLayout.debugPaint` @type ^`android.graphics.Paint` @kind object;
+  #L273858.  return v0 @kind object;
+}
+procedure `android.widget.ScrollView` `access$900`(`plugin.google.maps.MyPluginLayout` v0 @kind object) @signature `Lplugin/google/maps/MyPluginLayout;.access$900:(Lplugin/google/maps/MyPluginLayout;)Landroid/widget/ScrollView;` @AccessFlag STATIC_SYNTHETIC {
+    temp;
+
+  #L273884.  v0:= v0.`plugin.google.maps.MyPluginLayout.scrollView` @type ^`android.widget.ScrollView` @kind object;
+  #L273888.  return v0 @kind object;
+}
+procedure `void` `addPluginOverlay`(`plugin.google.maps.MyPluginLayout` v6 @kind this, `plugin.google.maps.IPluginView` v7 @kind object) @signature `Lplugin/google/maps/MyPluginLayout;.addPluginOverlay:(Lplugin/google/maps/IPluginView;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+
+  #L273bc0.  call temp:= `getDivId`(v7) @signature `Lplugin/google/maps/IPluginView;.getDivId:()Ljava/lang/String;` @kind interface;
+  #L273bc6.  v0:= temp @kind object;
+  #L273bc8.  if v0 != 0 then goto L273bce;
+  #L273bcc.  return @kind void;
+  #L273bce.  v0:= v6.`plugin.google.maps.MyPluginLayout.HTMLNodes` @type ^`java.util.Map` @kind object;
+  #L273bd2.  call temp:= `getDivId`(v7) @signature `Lplugin/google/maps/IPluginView;.getDivId:()Ljava/lang/String;` @kind interface;
+  #L273bd8.  v1:= temp @kind object;
+  #L273bda.  call temp:= `containsKey`(v0, v1) @signature `Ljava/util/Map;.containsKey:(Ljava/lang/Object;)Z` @kind interface;
+  #L273be0.  v0:= temp;
+  #L273be2.  if v0 != 0 then goto L273c66;
+  #L273be6.  v0:= "MyPluginLayout" @kind object;
+  #L273bea.  v1:= "----> 200x200" @kind object;
+  #L273bee.  call temp:= `e`(v0, v1) @signature `Landroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/String;)I` @kind static;
+  #L273bf4.  v0:= new `android.os.Bundle`;
+  #L273bf8.  call `<init>`(v0) @signature `Landroid/os/Bundle;.<init>:()V` @kind direct;
+  #L273bfe.  v1:= "offsetX" @kind object;
+  #L273c02.  v2:= 0L;
+  #L273c06.  call `putDouble`(v0, v1, v2) @signature `Landroid/os/Bundle;.putDouble:(Ljava/lang/String;D)V` @kind virtual;
+  #L273c0c.  v1:= "offsetY" @kind object;
+  #L273c10.  v2:= 3000.0D;
+  #L273c1a.  call `putDouble`(v0, v1, v2) @signature `Landroid/os/Bundle;.putDouble:(Ljava/lang/String;D)V` @kind virtual;
+  #L273c20.  v1:= "isDummy" @kind object;
+  #L273c24.  v2:= 1I;
+  #L273c26.  call `putBoolean`(v0, v1, v2) @signature `Landroid/os/Bundle;.putBoolean:(Ljava/lang/String;Z)V` @kind virtual;
+  #L273c2c.  v1:= v6.`plugin.google.maps.MyPluginLayout.HTMLNodes` @type ^`java.util.Map` @kind object;
+  #L273c30.  call temp:= `getDivId`(v7) @signature `Lplugin/google/maps/IPluginView;.getDivId:()Ljava/lang/String;` @kind interface;
+  #L273c36.  v2:= temp @kind object;
+  #L273c38.  call temp:= `put`(v1, v2, v0) @signature `Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L273c3e.  v0:= v6.`plugin.google.maps.MyPluginLayout.HTMLNodeRectFs` @type ^`java.util.Map` @kind object;
+  #L273c42.  call temp:= `getDivId`(v7) @signature `Lplugin/google/maps/IPluginView;.getDivId:()Ljava/lang/String;` @kind interface;
+  #L273c48.  v1:= temp @kind object;
+  #L273c4a.  v2:= new `android.graphics.RectF`;
+  #L273c4e.  v3:= 0I;
+  #L273c50.  v4:= 1161527296I;
+  #L273c56.  v5:= 200.0F;
+  #L273c5a.  call `<init>`(v2, v3, v4, v5, v5) @signature `Landroid/graphics/RectF;.<init>:(FFFF)V` @kind direct;
+  #L273c60.  call temp:= `put`(v0, v1, v2) @signature `Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L273c66.  v0:= v6.`plugin.google.maps.MyPluginLayout.pluginOverlays` @type ^`java.util.Map` @kind object;
+  #L273c6a.  call temp:= `getOverlayId`(v7) @signature `Lplugin/google/maps/IPluginView;.getOverlayId:()Ljava/lang/String;` @kind interface;
+  #L273c70.  v1:= temp @kind object;
+  #L273c72.  call temp:= `put`(v0, v1, v7) @signature `Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L273c78.  v0:= v6.`plugin.google.maps.MyPluginLayout.mActivity` @type ^`android.app.Activity` @kind object;
+  #L273c7c.  v1:= new `plugin.google.maps.MyPluginLayout$4`;
+  #L273c80.  call `<init>`(v1, v6, v7) @signature `Lplugin/google/maps/MyPluginLayout$4;.<init>:(Lplugin/google/maps/MyPluginLayout;Lplugin/google/maps/IPluginView;)V` @kind direct;
+  #L273c86.  call `runOnUiThread`(v0, v1) @signature `Landroid/app/Activity;.runOnUiThread:(Ljava/lang/Runnable;)V` @kind virtual;
+  #L273c8c.  return @kind void;
+}
+procedure `void` `clearHtmlElements`(`plugin.google.maps.MyPluginLayout` v5 @kind this) @signature `Lplugin/google/maps/MyPluginLayout;.clearHtmlElements:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+
+  #L273ca0.  v0:= v5.`plugin.google.maps.MyPluginLayout._lockHtmlNodes` @type ^`java.lang.Object` @kind object;
+  #L273ca4.  @monitorenter v0
+  #L273ca6.  v1:= v5.`plugin.google.maps.MyPluginLayout.HTMLNodes` @type ^`java.util.Map` @kind object;
+  #L273caa.  call temp:= `keySet`(v1) @signature `Ljava/util/Map;.keySet:()Ljava/util/Set;` @kind interface;
+  #L273cb0.  v1:= temp @kind object;
+  #L273cb2.  v2:= v5.`plugin.google.maps.MyPluginLayout.HTMLNodes` @type ^`java.util.Map` @kind object;
+  #L273cb6.  call temp:= `size`(v2) @signature `Ljava/util/Map;.size:()I` @kind interface;
+  #L273cbc.  v2:= temp;
+  #L273cbe.  v2:= new `java.lang.String`[v2];
+  #L273cc2.  call temp:= `toArray`(v1, v2) @signature `Ljava/util/Set;.toArray:([Ljava/lang/Object;)[Ljava/lang/Object;` @kind interface;
+  #L273cc8.  v1:= temp @kind object;
+  #L273cca.  v1:= (`java.lang.String`[]) v1 @kind object;
+  #L273cce.  v2:= 0I;
+  #L273cd0.  v3:= v5.`plugin.google.maps.MyPluginLayout.HTMLNodes` @type ^`java.util.Map` @kind object;
+  #L273cd4.  call temp:= `size`(v3) @signature `Ljava/util/Map;.size:()I` @kind interface;
+  #L273cda.  v3:= temp;
+  #L273cdc.  if v2 >= v3 then goto L273d02;
+  #L273ce0.  v3:= v5.`plugin.google.maps.MyPluginLayout.HTMLNodes` @type ^`java.util.Map` @kind object;
+  #L273ce4.  v4:= v1[v2] @kind object;
+  #L273ce8.  call temp:= `remove`(v3, v4) @signature `Ljava/util/Map;.remove:(Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L273cee.  v3:= v5.`plugin.google.maps.MyPluginLayout.HTMLNodeRectFs` @type ^`java.util.Map` @kind object;
+  #L273cf2.  v4:= v1[v2] @kind object;
+  #L273cf6.  call temp:= `remove`(v3, v4) @signature `Ljava/util/Map;.remove:(Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L273cfc.  v2:= v2 + 1;
+  #L273d00.  goto L273cd0;
+  #L273d02.  @monitorexit v0
+  #L273d04.  return @kind void;
+  #L273d06.  v1:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L273d08.  @monitorexit v0
+  #L273d0a.  throw v1;
+  #L273d0c.  return @kind void;
+  catch `java.lang.Throwable` @[L273ca6..L273d0a] goto L273d06;
+}
+procedure `void` `inValidate`(`plugin.google.maps.MyPluginLayout` v1 @kind this) @signature `Lplugin/google/maps/MyPluginLayout;.inValidate:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L273d2c.  v0:= v1.`plugin.google.maps.MyPluginLayout.frontLayer` @type ^`plugin.google.maps.MyPluginLayout$FrontLayerLayout` @kind object;
+  #L273d30.  call `invalidate`(v0) @signature `Lplugin/google/maps/MyPluginLayout$FrontLayerLayout;.invalidate:()V` @kind virtual;
+  #L273d36.  return @kind void;
+}
+procedure `void` `onGlobalLayout`(`plugin.google.maps.MyPluginLayout` v1 @kind this) @signature `Lplugin/google/maps/MyPluginLayout;.onGlobalLayout:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L273d48.  v0:= v1.`plugin.google.maps.MyPluginLayout.browserView` @type ^`android.view.View` @kind object;
+  #L273d4c.  call temp:= `getViewTreeObserver`(v0) @signature `Landroid/view/View;.getViewTreeObserver:()Landroid/view/ViewTreeObserver;` @kind virtual;
+  #L273d52.  v0:= temp @kind object;
+  #L273d54.  call `removeGlobalOnLayoutListener`(v0, v1) @signature `Landroid/view/ViewTreeObserver;.removeGlobalOnLayoutListener:(Landroid/view/ViewTreeObserver$OnGlobalLayoutListener;)V` @kind virtual;
+  #L273d5a.  call `addOnScrollChangedListener`(v0, v1) @signature `Landroid/view/ViewTreeObserver;.addOnScrollChangedListener:(Landroid/view/ViewTreeObserver$OnScrollChangedListener;)V` @kind virtual;
+  #L273d60.  return @kind void;
+}
+procedure `void` `onScrollChanged`(`plugin.google.maps.MyPluginLayout` v3 @kind this) @signature `Lplugin/google/maps/MyPluginLayout;.onScrollChanged:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L273d74.  v0:= v3.`plugin.google.maps.MyPluginLayout.scrollView` @type ^`android.widget.ScrollView` @kind object;
+  #L273d78.  v1:= v3.`plugin.google.maps.MyPluginLayout.browserView` @type ^`android.view.View` @kind object;
+  #L273d7c.  call temp:= `getScrollX`(v1) @signature `Landroid/view/View;.getScrollX:()I` @kind virtual;
+  #L273d82.  v1:= temp;
+  #L273d84.  v2:= v3.`plugin.google.maps.MyPluginLayout.browserView` @type ^`android.view.View` @kind object;
+  #L273d88.  call temp:= `getScrollY`(v2) @signature `Landroid/view/View;.getScrollY:()I` @kind virtual;
+  #L273d8e.  v2:= temp;
+  #L273d90.  call `scrollTo`(v0, v1, v2) @signature `Landroid/widget/ScrollView;.scrollTo:(II)V` @kind virtual;
+  #L273d96.  return @kind void;
+}
+procedure `void` `putHTMLElements`(`plugin.google.maps.MyPluginLayout` v11 @kind this, `org.json.JSONObject` v12 @kind object) @signature `Lplugin/google/maps/MyPluginLayout;.putHTMLElements:(Lorg/json/JSONObject;)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+    v9;
+    v10;
+
+  #L273da8.  v0:= new `java.util.concurrent.ConcurrentHashMap`;
+  #L273dac.  call `<init>`(v0) @signature `Ljava/util/concurrent/ConcurrentHashMap;.<init>:()V` @kind direct;
+  #L273db2.  v1:= new `java.util.concurrent.ConcurrentHashMap`;
+  #L273db6.  call `<init>`(v1) @signature `Ljava/util/concurrent/ConcurrentHashMap;.<init>:()V` @kind direct;
+  #L273dbc.  call temp:= `Json2Bundle`(v12) @signature `Lplugin/google/maps/PluginUtil;.Json2Bundle:(Lorg/json/JSONObject;)Landroid/os/Bundle;` @kind static;
+  #L273dc2.  v12:= temp @kind object;
+  #L273dc4.  call temp:= `keySet`(v12) @signature `Landroid/os/Bundle;.keySet:()Ljava/util/Set;` @kind virtual;
+  #L273dca.  v2:= temp @kind object;
+  #L273dcc.  call temp:= `iterator`(v2) @signature `Ljava/util/Set;.iterator:()Ljava/util/Iterator;` @kind interface;
+  #L273dd2.  v2:= temp @kind object;
+  #L273dd4.  call temp:= `hasNext`(v2) @signature `Ljava/util/Iterator;.hasNext:()Z` @kind interface;
+  #L273dda.  v3:= temp;
+  #L273ddc.  if v3 == 0 then goto L273f60;
+  #L273de0.  call temp:= `next`(v2) @signature `Ljava/util/Iterator;.next:()Ljava/lang/Object;` @kind interface;
+  #L273de6.  v3:= temp @kind object;
+  #L273de8.  v3:= (`java.lang.String`) v3 @kind object;
+  #L273dec.  call temp:= `getBundle`(v12, v3) @signature `Landroid/os/Bundle;.getBundle:(Ljava/lang/String;)Landroid/os/Bundle;` @kind virtual;
+  #L273df2.  v4:= temp @kind object;
+  #L273df4.  if v4 != 0 then goto L273dfa;
+  #L273df8.  goto L273dd4;
+  #L273dfa.  v5:= "size" @kind object;
+  #L273dfe.  call temp:= `getBundle`(v4, v5) @signature `Landroid/os/Bundle;.getBundle:(Ljava/lang/String;)Landroid/os/Bundle;` @kind virtual;
+  #L273e04.  v5:= temp @kind object;
+  #L273e06.  if v5 != 0 then goto L273e0c;
+  #L273e0a.  goto L273dd4;
+  #L273e0c.  v6:= new `android.graphics.RectF`;
+  #L273e10.  call `<init>`(v6) @signature `Landroid/graphics/RectF;.<init>:()V` @kind direct;
+  #L273e16.  v7:= new `java.lang.StringBuilder`;
+  #L273e1a.  call `<init>`(v7) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L273e20.  v8:= "left" @kind object;
+  #L273e24.  call temp:= `get`(v5, v8) @signature `Landroid/os/Bundle;.get:(Ljava/lang/String;)Ljava/lang/Object;` @kind virtual;
+  #L273e2a.  v8:= temp @kind object;
+  #L273e2c.  call temp:= `append`(v7, v8) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L273e32.  v8:= "" @kind object;
+  #L273e36.  call temp:= `append`(v7, v8) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L273e3c.  call temp:= `toString`(v7) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L273e42.  v7:= temp @kind object;
+  #L273e44.  call temp:= `parseDouble`(v7) @signature `Ljava/lang/Double;.parseDouble:(Ljava/lang/String;)D` @kind static;
+  #L273e4a.  v7:= temp @kind wide;
+  #L273e4c.  v9:= v11.`plugin.google.maps.MyPluginLayout.zoomScale` @type ^`float`;
+  #L273e50.  v9:= (`double`) v9 @kind f2d;
+  #L273e52.  call temp:= `isNaN`(v9) @signature `Ljava/lang/Double;.isNaN:(D)Z` @kind static;
+  #L273e58.  v7:= v7 * v9 @kind double;
+  #L273e5c.  v7:= (`float`) v7 @kind d2f;
+  #L273e5e.  v6.`android.graphics.RectF.left` @type ^`float` := v7;
+  #L273e62.  v7:= new `java.lang.StringBuilder`;
+  #L273e66.  call `<init>`(v7) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L273e6c.  v8:= "top" @kind object;
+  #L273e70.  call temp:= `get`(v5, v8) @signature `Landroid/os/Bundle;.get:(Ljava/lang/String;)Ljava/lang/Object;` @kind virtual;
+  #L273e76.  v8:= temp @kind object;
+  #L273e78.  call temp:= `append`(v7, v8) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L273e7e.  v8:= "" @kind object;
+  #L273e82.  call temp:= `append`(v7, v8) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L273e88.  call temp:= `toString`(v7) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L273e8e.  v7:= temp @kind object;
+  #L273e90.  call temp:= `parseDouble`(v7) @signature `Ljava/lang/Double;.parseDouble:(Ljava/lang/String;)D` @kind static;
+  #L273e96.  v7:= temp @kind wide;
+  #L273e98.  v9:= v11.`plugin.google.maps.MyPluginLayout.zoomScale` @type ^`float`;
+  #L273e9c.  v9:= (`double`) v9 @kind f2d;
+  #L273e9e.  call temp:= `isNaN`(v9) @signature `Ljava/lang/Double;.isNaN:(D)Z` @kind static;
+  #L273ea4.  v7:= v7 * v9 @kind double;
+  #L273ea8.  v7:= (`float`) v7 @kind d2f;
+  #L273eaa.  v6.`android.graphics.RectF.top` @type ^`float` := v7;
+  #L273eae.  v7:= new `java.lang.StringBuilder`;
+  #L273eb2.  call `<init>`(v7) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L273eb8.  v8:= "right" @kind object;
+  #L273ebc.  call temp:= `get`(v5, v8) @signature `Landroid/os/Bundle;.get:(Ljava/lang/String;)Ljava/lang/Object;` @kind virtual;
+  #L273ec2.  v8:= temp @kind object;
+  #L273ec4.  call temp:= `append`(v7, v8) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L273eca.  v8:= "" @kind object;
+  #L273ece.  call temp:= `append`(v7, v8) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L273ed4.  call temp:= `toString`(v7) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L273eda.  v7:= temp @kind object;
+  #L273edc.  call temp:= `parseDouble`(v7) @signature `Ljava/lang/Double;.parseDouble:(Ljava/lang/String;)D` @kind static;
+  #L273ee2.  v7:= temp @kind wide;
+  #L273ee4.  v9:= v11.`plugin.google.maps.MyPluginLayout.zoomScale` @type ^`float`;
+  #L273ee8.  v9:= (`double`) v9 @kind f2d;
+  #L273eea.  call temp:= `isNaN`(v9) @signature `Ljava/lang/Double;.isNaN:(D)Z` @kind static;
+  #L273ef0.  v7:= v7 * v9 @kind double;
+  #L273ef4.  v7:= (`float`) v7 @kind d2f;
+  #L273ef6.  v6.`android.graphics.RectF.right` @type ^`float` := v7;
+  #L273efa.  v7:= new `java.lang.StringBuilder`;
+  #L273efe.  call `<init>`(v7) @signature `Ljava/lang/StringBuilder;.<init>:()V` @kind direct;
+  #L273f04.  v8:= "bottom" @kind object;
+  #L273f08.  call temp:= `get`(v5, v8) @signature `Landroid/os/Bundle;.get:(Ljava/lang/String;)Ljava/lang/Object;` @kind virtual;
+  #L273f0e.  v5:= temp @kind object;
+  #L273f10.  call temp:= `append`(v7, v5) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L273f16.  v5:= "" @kind object;
+  #L273f1a.  call temp:= `append`(v7, v5) @signature `Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;` @kind virtual;
+  #L273f20.  call temp:= `toString`(v7) @signature `Ljava/lang/StringBuilder;.toString:()Ljava/lang/String;` @kind virtual;
+  #L273f26.  v5:= temp @kind object;
+  #L273f28.  call temp:= `parseDouble`(v5) @signature `Ljava/lang/Double;.parseDouble:(Ljava/lang/String;)D` @kind static;
+  #L273f2e.  v7:= temp @kind wide;
+  #L273f30.  v5:= v11.`plugin.google.maps.MyPluginLayout.zoomScale` @type ^`float`;
+  #L273f34.  v9:= (`double`) v5 @kind f2d;
+  #L273f36.  call temp:= `isNaN`(v9) @signature `Ljava/lang/Double;.isNaN:(D)Z` @kind static;
+  #L273f3c.  v7:= v7 * v9 @kind double;
+  #L273f40.  v5:= (`float`) v7 @kind d2f;
+  #L273f42.  v6.`android.graphics.RectF.bottom` @type ^`float` := v5;
+  #L273f46.  call temp:= `put`(v1, v3, v6) @signature `Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L273f4c.  v5:= "size" @kind object;
+  #L273f50.  call `remove`(v4, v5) @signature `Landroid/os/Bundle;.remove:(Ljava/lang/String;)V` @kind virtual;
+  #L273f56.  call temp:= `put`(v0, v3, v4) @signature `Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L273f5c.  goto L273dd4;
+  #L273f60.  v12:= v11.`plugin.google.maps.MyPluginLayout.HTMLNodes` @type ^`java.util.Map` @kind object;
+  #L273f64.  v2:= v11.`plugin.google.maps.MyPluginLayout.HTMLNodeRectFs` @type ^`java.util.Map` @kind object;
+  #L273f68.  v3:= v11.`plugin.google.maps.MyPluginLayout._lockHtmlNodes` @type ^`java.lang.Object` @kind object;
+  #L273f6c.  @monitorenter v3
+  #L273f6e.  v11.`plugin.google.maps.MyPluginLayout.HTMLNodes` @type ^`java.util.Map` := v0 @kind object;
+  #L273f72.  v11.`plugin.google.maps.MyPluginLayout.HTMLNodeRectFs` @type ^`java.util.Map` := v1 @kind object;
+  #L273f76.  @monitorexit v3
+  #L273f78.  call temp:= `keySet`(v12) @signature `Ljava/util/Map;.keySet:()Ljava/util/Set;` @kind interface;
+  #L273f7e.  v0:= temp @kind object;
+  #L273f80.  call temp:= `size`(v12) @signature `Ljava/util/Map;.size:()I` @kind interface;
+  #L273f86.  v1:= temp;
+  #L273f88.  v1:= new `java.lang.String`[v1];
+  #L273f8c.  call temp:= `toArray`(v0, v1) @signature `Ljava/util/Set;.toArray:([Ljava/lang/Object;)[Ljava/lang/Object;` @kind interface;
+  #L273f92.  v0:= temp @kind object;
+  #L273f94.  v0:= (`java.lang.String`[]) v0 @kind object;
+  #L273f98.  v1:= 0I;
+  #L273f9a.  call temp:= `size`(v12) @signature `Ljava/util/Map;.size:()I` @kind interface;
+  #L273fa0.  v3:= temp;
+  #L273fa2.  if v1 >= v3 then goto L273fc0;
+  #L273fa6.  v3:= v0[v1] @kind object;
+  #L273faa.  call temp:= `remove`(v12, v3) @signature `Ljava/util/Map;.remove:(Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L273fb0.  v3:= v0[v1] @kind object;
+  #L273fb4.  call temp:= `remove`(v2, v3) @signature `Ljava/util/Map;.remove:(Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L273fba.  v1:= v1 + 1;
+  #L273fbe.  goto L273f9a;
+  #L273fc0.  return @kind void;
+  #L273fc2.  v12:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L273fc4.  @monitorexit v3
+  #L273fc6.  throw v12;
+  #L273fc8.  return @kind void;
+  catch `java.lang.Throwable` @[L273f6e..L273f78] goto L273fc2;
+  catch `java.lang.Throwable` @[L273fc4..L273fc6] goto L273fc2;
+}
+procedure `plugin.google.maps.IPluginView` `removePluginOverlay`(`plugin.google.maps.MyPluginLayout` v3 @kind this, `java.lang.String` v4 @kind object) @signature `Lplugin/google/maps/MyPluginLayout;.removePluginOverlay:(Ljava/lang/String;)Lplugin/google/maps/IPluginView;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L2738fc.  v0:= v3.`plugin.google.maps.MyPluginLayout.pluginOverlays` @type ^`java.util.Map` @kind object;
+  #L273900.  if v0 == 0 then goto L273938;
+  #L273904.  call temp:= `containsKey`(v0, v4) @signature `Ljava/util/Map;.containsKey:(Ljava/lang/Object;)Z` @kind interface;
+  #L27390a.  v0:= temp;
+  #L27390c.  if v0 != 0 then goto L273912;
+  #L273910.  goto L273938;
+  #L273912.  v0:= v3.`plugin.google.maps.MyPluginLayout.pluginOverlays` @type ^`java.util.Map` @kind object;
+  #L273916.  call temp:= `remove`(v0, v4) @signature `Ljava/util/Map;.remove:(Ljava/lang/Object;)Ljava/lang/Object;` @kind interface;
+  #L27391c.  v0:= temp @kind object;
+  #L27391e.  v0:= (`plugin.google.maps.IPluginView`) v0 @kind object;
+  #L273922.  v1:= v3.`plugin.google.maps.MyPluginLayout.mActivity` @type ^`android.app.Activity` @kind object;
+  #L273926.  v2:= new `plugin.google.maps.MyPluginLayout$3`;
+  #L27392a.  call `<init>`(v2, v3, v0, v4) @signature `Lplugin/google/maps/MyPluginLayout$3;.<init>:(Lplugin/google/maps/MyPluginLayout;Lplugin/google/maps/IPluginView;Ljava/lang/String;)V` @kind direct;
+  #L273930.  call `runOnUiThread`(v1, v2) @signature `Landroid/app/Activity;.runOnUiThread:(Ljava/lang/Runnable;)V` @kind virtual;
+  #L273936.  return v0 @kind object;
+  #L273938.  v4:= 0I;
+  #L27393a.  return v4 @kind object;
+}
+procedure `void` `scrollTo`(`plugin.google.maps.MyPluginLayout` v1 @kind this, `int` v2 , `int` v3 ) @signature `Lplugin/google/maps/MyPluginLayout;.scrollTo:(II)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+
+  #L273ff0.  v0:= v1.`plugin.google.maps.MyPluginLayout.scrollView` @type ^`android.widget.ScrollView` @kind object;
+  #L273ff4.  call `scrollTo`(v0, v2, v3) @signature `Landroid/widget/ScrollView;.scrollTo:(II)V` @kind virtual;
+  #L273ffa.  return @kind void;
+}
+procedure `void` `setDebug`(`plugin.google.maps.MyPluginLayout` v2 @kind this, `boolean` v3 ) @signature `Lplugin/google/maps/MyPluginLayout;.setDebug:(Z)V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L27400c.  v2.`plugin.google.maps.MyPluginLayout.isDebug` @type ^`boolean` := v3 @kind boolean;
+  #L274010.  v0:= v2.`plugin.google.maps.MyPluginLayout.mActivity` @type ^`android.app.Activity` @kind object;
+  #L274014.  v1:= new `plugin.google.maps.MyPluginLayout$2`;
+  #L274018.  call `<init>`(v1, v2, v3) @signature `Lplugin/google/maps/MyPluginLayout$2;.<init>:(Lplugin/google/maps/MyPluginLayout;Z)V` @kind direct;
+  #L27401e.  call `runOnUiThread`(v0, v1) @signature `Landroid/app/Activity;.runOnUiThread:(Ljava/lang/Runnable;)V` @kind virtual;
+  #L274024.  return @kind void;
+}
+procedure `void` `startTimer`(`plugin.google.maps.MyPluginLayout` v8 @kind this) @signature `Lplugin/google/maps/MyPluginLayout;.startTimer:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+
+  #L274038.  @monitorenter v8
+  #L27403a.  v0:= `@@plugin.google.maps.MyPluginLayout.timerLock` @type ^`java.lang.Object` @kind object;
+  #L27403e.  @monitorenter v0
+  #L274040.  v1:= `@@plugin.google.maps.MyPluginLayout.redrawTimer` @type ^`java.util.Timer` @kind object;
+  #L274044.  if v1 == 0 then goto L27404e;
+  #L274048.  @monitorexit v0
+  #L27404a.  @monitorexit v8
+  #L27404c.  return @kind void;
+  #L27404e.  v1:= new `java.util.Timer`;
+  #L274052.  call `<init>`(v1) @signature `Ljava/util/Timer;.<init>:()V` @kind direct;
+  #L274058.  `@@plugin.google.maps.MyPluginLayout.redrawTimer` @type ^`java.util.Timer` := v1 @kind object;
+  #L27405c.  v2:= `@@plugin.google.maps.MyPluginLayout.redrawTimer` @type ^`java.util.Timer` @kind object;
+  #L274060.  v3:= new `plugin.google.maps.MyPluginLayout$ResizeTask`;
+  #L274064.  v1:= 0I;
+  #L274066.  call `<init>`(v3, v8, v1) @signature `Lplugin/google/maps/MyPluginLayout$ResizeTask;.<init>:(Lplugin/google/maps/MyPluginLayout;Lplugin/google/maps/MyPluginLayout$1;)V` @kind direct;
+  #L27406c.  v4:= 0L;
+  #L274070.  v6:= 25L;
+  #L274074.  call `scheduleAtFixedRate`(v2, v3, v4, v6) @signature `Ljava/util/Timer;.scheduleAtFixedRate:(Ljava/util/TimerTask;JJ)V` @kind virtual;
+  #L27407a.  v1:= 0I;
+  #L27407c.  v8.`plugin.google.maps.MyPluginLayout.isSuspended` @type ^`boolean` := v1 @kind boolean;
+  #L274080.  @monitorexit v0
+  #L274082.  @monitorexit v8
+  #L274084.  return @kind void;
+  #L274086.  v1:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L274088.  @monitorexit v0
+  #L27408a.  throw v1;
+  #L27408c.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L27408e.  @monitorexit v8
+  #L274090.  throw v0;
+  catch `java.lang.Throwable` @[L27403a..L274040] goto L27408c;
+  catch `java.lang.Throwable` @[L274040..L27404a] goto L274086;
+  catch `java.lang.Throwable` @[L27404e..L274082] goto L274086;
+  catch `java.lang.Throwable` @[L274088..L27408a] goto L274086;
+  catch `java.lang.Throwable` @[L27408a..L27408c] goto L27408c;
+}
+procedure `void` `stopTimer`(`plugin.google.maps.MyPluginLayout` v3 @kind this) @signature `Lplugin/google/maps/MyPluginLayout;.stopTimer:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+    v2;
+
+  #L2740d4.  @monitorenter v3
+  #L2740d6.  v0:= `@@plugin.google.maps.MyPluginLayout.timerLock` @type ^`java.lang.Object` @kind object;
+  #L2740da.  @monitorenter v0
+  #L2740dc.  v1:= 0I;
+  #L2740de.  v2:= `@@plugin.google.maps.MyPluginLayout.redrawTimer` @type ^`java.util.Timer` @kind object;
+  #L2740e2.  if v2 == 0 then goto L27411e;
+  #L2740e6.  v2:= `@@plugin.google.maps.MyPluginLayout.redrawTimer` @type ^`java.util.Timer` @kind object;
+  #L2740ea.  call `cancel`(v2) @signature `Ljava/util/Timer;.cancel:()V` @kind virtual;
+  #L2740f0.  v2:= `@@plugin.google.maps.MyPluginLayout.redrawTimer` @type ^`java.util.Timer` @kind object;
+  #L2740f4.  call temp:= `purge`(v2) @signature `Ljava/util/Timer;.purge:()I` @kind virtual;
+  #L2740fa.  v2:= new `plugin.google.maps.MyPluginLayout$ResizeTask`;
+  #L2740fe.  call `<init>`(v2, v3, v1) @signature `Lplugin/google/maps/MyPluginLayout$ResizeTask;.<init>:(Lplugin/google/maps/MyPluginLayout;Lplugin/google/maps/MyPluginLayout$1;)V` @kind direct;
+  #L274104.  call `run`(v2) @signature `Lplugin/google/maps/MyPluginLayout$ResizeTask;.run:()V` @kind virtual;
+  #L27410a.  v2:= 1I;
+  #L27410c.  v3.`plugin.google.maps.MyPluginLayout.isSuspended` @type ^`boolean` := v2 @kind boolean;
+  #L274110.  goto L27411e;
+  #L274112.  v1:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L274114.  goto L274128;
+  #L274116.  v2:= Exception @type ^`java.lang.Exception` @kind object;
+  #L274118.  call `printStackTrace`(v2) @signature `Ljava/lang/Exception;.printStackTrace:()V` @kind virtual;
+  #L27411e.  `@@plugin.google.maps.MyPluginLayout.redrawTimer` @type ^`java.util.Timer` := v1 @kind object;
+  #L274122.  @monitorexit v0
+  #L274124.  @monitorexit v3
+  #L274126.  return @kind void;
+  #L274128.  @monitorexit v0
+  #L27412a.  throw v1;
+  #L27412c.  v0:= Exception @type ^`java.lang.Throwable` @kind object;
+  #L27412e.  @monitorexit v3
+  #L274130.  throw v0;
+  catch `java.lang.Throwable` @[L2740d6..L2740dc] goto L27412c;
+  catch `java.lang.Exception` @[L2740de..L274110] goto L274116;
+  catch `java.lang.Throwable` @[L2740de..L274110] goto L274112;
+  catch `java.lang.Throwable` @[L274118..L274124] goto L274112;
+  catch `java.lang.Throwable` @[L274128..L27412a] goto L274112;
+  catch `java.lang.Throwable` @[L27412a..L27412c] goto L27412c;
+}
+procedure `void` `updateMapPositions`(`plugin.google.maps.MyPluginLayout` v2 @kind this) @signature `Lplugin/google/maps/MyPluginLayout;.updateMapPositions:()V` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L274178.  v0:= v2.`plugin.google.maps.MyPluginLayout.mActivity` @type ^`android.app.Activity` @kind object;
+  #L27417c.  v1:= v2.`plugin.google.maps.MyPluginLayout.resizeWorker` @type ^`java.lang.Runnable` @kind object;
+  #L274180.  call `runOnUiThread`(v0, v1) @signature `Landroid/app/Activity;.runOnUiThread:(Ljava/lang/Runnable;)V` @kind virtual;
+  #L274186.  return @kind void;
+}

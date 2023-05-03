@@ -1,0 +1,128 @@
+record `retrofit.client.ApacheClient` @kind class @AccessFlag PUBLIC extends `retrofit.client.Client` @kind interface {
+  `org.apache.http.client.HttpClient` `retrofit.client.ApacheClient.client` @AccessFlag PRIVATE_FINAL;
+}
+procedure `void` `<init>`(`retrofit.client.ApacheClient` v1 @kind this) @signature `Lretrofit/client/ApacheClient;.<init>:()V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+    v0;
+
+  #L25165c.  call temp:= `createDefaultClient`() @signature `Lretrofit/client/ApacheClient;.createDefaultClient:()Lorg/apache/http/client/HttpClient;` @kind static;
+  #L251662.  v0:= temp @kind object;
+  #L251664.  call `<init>`(v1, v0) @signature `Lretrofit/client/ApacheClient;.<init>:(Lorg/apache/http/client/HttpClient;)V` @kind direct;
+  #L25166a.  return @kind void;
+}
+procedure `void` `<init>`(`retrofit.client.ApacheClient` v0 @kind this, `org.apache.http.client.HttpClient` v1 @kind object) @signature `Lretrofit/client/ApacheClient;.<init>:(Lorg/apache/http/client/HttpClient;)V` @AccessFlag PUBLIC_CONSTRUCTOR {
+    temp;
+
+  #L25167c.  call `<init>`(v0) @signature `Ljava/lang/Object;.<init>:()V` @kind direct;
+  #L251682.  v0.`retrofit.client.ApacheClient.client` @type ^`org.apache.http.client.HttpClient` := v1 @kind object;
+  #L251686.  return @kind void;
+}
+procedure `org.apache.http.client.HttpClient` `createDefaultClient`() @signature `Lretrofit/client/ApacheClient;.createDefaultClient:()Lorg/apache/http/client/HttpClient;` @AccessFlag PRIVATE_STATIC {
+    temp;
+    v0;
+    v1;
+
+  #L251500.  v0:= new `org.apache.http.params.BasicHttpParams`;
+  #L251504.  call `<init>`(v0) @signature `Lorg/apache/http/params/BasicHttpParams;.<init>:()V` @kind direct;
+  #L25150a.  v1:= 15000I;
+  #L25150e.  call `setConnectionTimeout`(v0, v1) @signature `Lorg/apache/http/params/HttpConnectionParams;.setConnectionTimeout:(Lorg/apache/http/params/HttpParams;I)V` @kind static;
+  #L251514.  v1:= 20000I;
+  #L251518.  call `setSoTimeout`(v0, v1) @signature `Lorg/apache/http/params/HttpConnectionParams;.setSoTimeout:(Lorg/apache/http/params/HttpParams;I)V` @kind static;
+  #L25151e.  v1:= new `org.apache.http.impl.client.DefaultHttpClient`;
+  #L251522.  call `<init>`(v1, v0) @signature `Lorg/apache/http/impl/client/DefaultHttpClient;.<init>:(Lorg/apache/http/params/HttpParams;)V` @kind direct;
+  #L251528.  return v1 @kind object;
+}
+procedure `org.apache.http.client.methods.HttpUriRequest` `createRequest`(`retrofit.client.Request` v1 @kind object) @signature `Lretrofit/client/ApacheClient;.createRequest:(Lretrofit/client/Request;)Lorg/apache/http/client/methods/HttpUriRequest;` @AccessFlag STATIC {
+    temp;
+    v0;
+
+  #L25153c.  call temp:= `getBody`(v1) @signature `Lretrofit/client/Request;.getBody:()Lretrofit/mime/TypedOutput;` @kind virtual;
+  #L251542.  v0:= temp @kind object;
+  #L251544.  if v0 == 0 then goto L251554;
+  #L251548.  v0:= new `retrofit.client.ApacheClient$GenericEntityHttpRequest`;
+  #L25154c.  call `<init>`(v0, v1) @signature `Lretrofit/client/ApacheClient$GenericEntityHttpRequest;.<init>:(Lretrofit/client/Request;)V` @kind direct;
+  #L251552.  return v0 @kind object;
+  #L251554.  v0:= new `retrofit.client.ApacheClient$GenericHttpRequest`;
+  #L251558.  call `<init>`(v0, v1) @signature `Lretrofit/client/ApacheClient$GenericHttpRequest;.<init>:(Lretrofit/client/Request;)V` @kind direct;
+  #L25155e.  return v0 @kind object;
+}
+procedure `retrofit.client.Response` `parseResponse`(`java.lang.String` v10 @kind object, `org.apache.http.HttpResponse` v11 @kind object) @signature `Lretrofit/client/ApacheClient;.parseResponse:(Ljava/lang/String;Lorg/apache/http/HttpResponse;)Lretrofit/client/Response;` @AccessFlag STATIC {
+    temp;
+    v0;
+    v1;
+    v2;
+    v3;
+    v4;
+    v5;
+    v6;
+    v7;
+    v8;
+    v9;
+
+  #L2515a8.  call temp:= `getStatusLine`(v11) @signature `Lorg/apache/http/HttpResponse;.getStatusLine:()Lorg/apache/http/StatusLine;` @kind interface;
+  #L2515ae.  v0:= temp @kind object;
+  #L2515b0.  call temp:= `getStatusCode`(v0) @signature `Lorg/apache/http/StatusLine;.getStatusCode:()I` @kind interface;
+  #L2515b6.  v3:= temp;
+  #L2515b8.  call temp:= `getReasonPhrase`(v0) @signature `Lorg/apache/http/StatusLine;.getReasonPhrase:()Ljava/lang/String;` @kind interface;
+  #L2515be.  v4:= temp @kind object;
+  #L2515c0.  v5:= new `java.util.ArrayList`;
+  #L2515c4.  call `<init>`(v5) @signature `Ljava/util/ArrayList;.<init>:()V` @kind direct;
+  #L2515ca.  call temp:= `getAllHeaders`(v11) @signature `Lorg/apache/http/HttpResponse;.getAllHeaders:()[Lorg/apache/http/Header;` @kind interface;
+  #L2515d0.  v0:= temp @kind object;
+  #L2515d2.  v1:= length @variable v0;
+  #L2515d4.  v2:= "application/octet-stream" @kind object;
+  #L2515d8.  v6:= 0I;
+  #L2515da.  if v6 >= v1 then goto L25161a;
+  #L2515de.  v7:= v0[v6] @kind object;
+  #L2515e2.  call temp:= `getName`(v7) @signature `Lorg/apache/http/Header;.getName:()Ljava/lang/String;` @kind interface;
+  #L2515e8.  v8:= temp @kind object;
+  #L2515ea.  call temp:= `getValue`(v7) @signature `Lorg/apache/http/Header;.getValue:()Ljava/lang/String;` @kind interface;
+  #L2515f0.  v7:= temp @kind object;
+  #L2515f2.  v9:= "Content-Type" @kind object;
+  #L2515f6.  call temp:= `equalsIgnoreCase`(v9, v8) @signature `Ljava/lang/String;.equalsIgnoreCase:(Ljava/lang/String;)Z` @kind virtual;
+  #L2515fc.  v9:= temp;
+  #L2515fe.  if v9 == 0 then goto L251604;
+  #L251602.  v2:= v7 @kind object;
+  #L251604.  v9:= new `retrofit.client.Header`;
+  #L251608.  call `<init>`(v9, v8, v7) @signature `Lretrofit/client/Header;.<init>:(Ljava/lang/String;Ljava/lang/String;)V` @kind direct;
+  #L25160e.  call temp:= `add`(v5, v9) @signature `Ljava/util/List;.add:(Ljava/lang/Object;)Z` @kind interface;
+  #L251614.  v6:= v6 + 1;
+  #L251618.  goto L2515da;
+  #L25161a.  v0:= 0I;
+  #L25161c.  call temp:= `getEntity`(v11) @signature `Lorg/apache/http/HttpResponse;.getEntity:()Lorg/apache/http/HttpEntity;` @kind interface;
+  #L251622.  v11:= temp @kind object;
+  #L251624.  if v11 == 0 then goto L25163a;
+  #L251628.  call temp:= `toByteArray`(v11) @signature `Lorg/apache/http/util/EntityUtils;.toByteArray:(Lorg/apache/http/HttpEntity;)[B` @kind static;
+  #L25162e.  v11:= temp @kind object;
+  #L251630.  v0:= new `retrofit.mime.TypedByteArray`;
+  #L251634.  call `<init>`(v0, v2, v11) @signature `Lretrofit/mime/TypedByteArray;.<init>:(Ljava/lang/String;[B)V` @kind direct;
+  #L25163a.  v6:= v0 @kind object;
+  #L25163c.  v11:= new `retrofit.client.Response`;
+  #L251640.  v1:= v11 @kind object;
+  #L251642.  v2:= v10 @kind object;
+  #L251644.  call `<init>`(v1, v2, v3, v4, v5, v6) @signature `Lretrofit/client/Response;.<init>:(Ljava/lang/String;ILjava/lang/String;Ljava/util/List;Lretrofit/mime/TypedInput;)V` @kind direct;
+  #L25164a.  return v11 @kind object;
+}
+procedure `org.apache.http.HttpResponse` `execute`(`retrofit.client.ApacheClient` v0 @kind this, `org.apache.http.client.HttpClient` v1 @kind object, `org.apache.http.client.methods.HttpUriRequest` v2 @kind object) @signature `Lretrofit/client/ApacheClient;.execute:(Lorg/apache/http/client/HttpClient;Lorg/apache/http/client/methods/HttpUriRequest;)Lorg/apache/http/HttpResponse;` @AccessFlag PROTECTED {
+    temp;
+
+  #L2514e4.  call temp:= `execute`(v1, v2) @signature `Lorg/apache/http/client/HttpClient;.execute:(Lorg/apache/http/client/methods/HttpUriRequest;)Lorg/apache/http/HttpResponse;` @kind interface;
+  #L2514ea.  v1:= temp @kind object;
+  #L2514ec.  return v1 @kind object;
+}
+procedure `retrofit.client.Response` `execute`(`retrofit.client.ApacheClient` v2 @kind this, `retrofit.client.Request` v3 @kind object) @signature `Lretrofit/client/ApacheClient;.execute:(Lretrofit/client/Request;)Lretrofit/client/Response;` @AccessFlag PUBLIC {
+    temp;
+    v0;
+    v1;
+
+  #L251570.  call temp:= `createRequest`(v3) @signature `Lretrofit/client/ApacheClient;.createRequest:(Lretrofit/client/Request;)Lorg/apache/http/client/methods/HttpUriRequest;` @kind static;
+  #L251576.  v0:= temp @kind object;
+  #L251578.  v1:= v2.`retrofit.client.ApacheClient.client` @type ^`org.apache.http.client.HttpClient` @kind object;
+  #L25157c.  call temp:= `execute`(v2, v1, v0) @signature `Lretrofit/client/ApacheClient;.execute:(Lorg/apache/http/client/HttpClient;Lorg/apache/http/client/methods/HttpUriRequest;)Lorg/apache/http/HttpResponse;` @kind virtual;
+  #L251582.  v0:= temp @kind object;
+  #L251584.  call temp:= `getUrl`(v3) @signature `Lretrofit/client/Request;.getUrl:()Ljava/lang/String;` @kind virtual;
+  #L25158a.  v3:= temp @kind object;
+  #L25158c.  call temp:= `parseResponse`(v3, v0) @signature `Lretrofit/client/ApacheClient;.parseResponse:(Ljava/lang/String;Lorg/apache/http/HttpResponse;)Lretrofit/client/Response;` @kind static;
+  #L251592.  v3:= temp @kind object;
+  #L251594.  return v3 @kind object;
+}

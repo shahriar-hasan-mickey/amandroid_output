@@ -1,0 +1,1 @@
+define(["underscore","Backbone"],function(e,r){var t=new EncryptedLocalStorage("secret"),o=r.Model.extend({errordet:[],initialize:function(){if(this.get("ackStatus")&&(ackStatus=this.get("ackStatus")),this.get("error")){var e=this.get("error");t.set("errordesc",e.errorDescription),t.set("errorcod",e.errorCode)}else t.set("errordesc","FAILURE")}});return o});
